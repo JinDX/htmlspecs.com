@@ -1,2 +1,2 @@
 # htmlspecs.com
-HTML Living Standard 中文翻译
+HTML Living Standard 中文
