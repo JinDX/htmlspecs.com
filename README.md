@@ -10,6 +10,6 @@ HTML Living Standard 中文
 - [x] console https://htmlspecs.com/console
 - [x] dom https://htmlspecs.com/dom
 - [x] notifications https://htmlspecs.com/notifications
-- [ ] fullscreen
+- [x] fullscreen https://htmlspecs.com/fullscreen
 - [ ] websockets
 - [ ] storage
