@@ -9,7 +9,7 @@ HTML Living Standard 中文
 - [x] Fetch https://htmlspecs.com/fetch
 - [x] console https://htmlspecs.com/console
 - [x] dom https://htmlspecs.com/dom
-- [ ] notifications
+- [x] notifications https://htmlspecs.com/notifications
 - [ ] fullscreen
 - [ ] websockets
 - [ ] storage
