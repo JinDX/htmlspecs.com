@@ -8,7 +8,7 @@ HTML Living Standard 中文
 - [x] HTML https://htmlspecs.com/
 - [x] Fetch https://htmlspecs.com/fetch
 - [x] console https://htmlspecs.com/console
-- [x] dom
+- [x] dom https://htmlspecs.com/dom
 - [ ] notifications
 - [ ] fullscreen
 - [ ] websockets
