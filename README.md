@@ -12,4 +12,4 @@ HTML Living Standard 中文
 - [x] notifications https://htmlspecs.com/notifications
 - [x] fullscreen https://htmlspecs.com/fullscreen
 - [x] websockets https://htmlspecs.com/websockets
-- [ ] storage
+- [x] storage https://htmlspecs.com/storage
