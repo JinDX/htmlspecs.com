@@ -11,5 +11,5 @@ HTML Living Standard 中文
 - [x] dom https://htmlspecs.com/dom
 - [x] notifications https://htmlspecs.com/notifications
 - [x] fullscreen https://htmlspecs.com/fullscreen
-- [ ] websockets
+- [x] websockets
 - [ ] storage
