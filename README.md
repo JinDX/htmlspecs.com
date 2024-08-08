@@ -13,7 +13,7 @@ HTML Living Standard 中文
 - [x] fullscreen https://htmlspecs.com/fullscreen
 - [x] websockets https://htmlspecs.com/websockets
 - [x] storage https://htmlspecs.com/storage
-- [ ] CSS Snapshot 2023
+- [x] CSS Snapshot 2023 https://htmlspecs.com/css/css-2023
 - [ ] Cascading Style Sheets Level 2 Revision 2 (CSS 2.2) Specification
 - [ ] CSS Color Level 3
 - [ ] CSS Namespaces
