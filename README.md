@@ -19,7 +19,7 @@ HTML 及相关 API，CSS 标准系列。
 - [x] CSS Namespaces https://htmlspecs.com/css/css-namespaces-3
 - [x] Selectors Level 3 https://htmlspecs.com/css/selectors-3
 - [x] Media Queries Level 3 https://htmlspecs.com/css/mediaqueries-3
-- [ ] CSS Style Attributes
+- [x] CSS Style Attributes https://htmlspecs.com/css/css-style-attr
 - [ ] CSS Cascading and Inheritance Level 3
 - [ ] CSS Fonts Level 3
 - [ ] CSS Writing Modes Level 3
