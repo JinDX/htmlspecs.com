@@ -1,5 +1,5 @@
 # htmlspecs.com
-HTML Living Standard 中文
+HTML 及相关 API，CSS 标准系列。
 
 
 ## TODO List
