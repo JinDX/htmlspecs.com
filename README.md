@@ -14,7 +14,7 @@ HTML Living Standard 中文
 - [x] websockets https://htmlspecs.com/websockets
 - [x] storage https://htmlspecs.com/storage
 - [x] CSS Snapshot 2023 https://htmlspecs.com/css/css-2023
-- [ ] Cascading Style Sheets Level 2 Revision 2 (CSS 2.2) Specification
+- [x] Cascading Style Sheets Level 2 Revision 2 (CSS 2.2) Specification https://htmlspecs.com/css/css22/
 - [ ] CSS Color Level 3
 - [ ] CSS Namespaces
 - [ ] Selectors Level 3
