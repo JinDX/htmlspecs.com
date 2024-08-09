@@ -17,7 +17,7 @@ HTML 及相关 API，CSS 标准系列。
 - [x] Cascading Style Sheets Level 2 Revision 2 (CSS 2.2) Specification https://htmlspecs.com/css/css22/
 - [x] CSS Color Level 3 https://htmlspecs.com/css/css-color-3
 - [x] CSS Namespaces https://htmlspecs.com/css/css-namespaces-3
-- [ ] Selectors Level 3
+- [x] Selectors Level 3 https://htmlspecs.com/css/selectors-3
 - [ ] Media Queries Level 3
 - [ ] CSS Style Attributes
 - [ ] CSS Cascading and Inheritance Level 3
