@@ -26,3 +26,13 @@ HTML 及相关 API，CSS 标准系列。
 - [x] CSS Basic User Interface Level 3 https://htmlspecs.com/css/css-ui-3
 - [x] CSS Box Model Level 3  https://htmlspecs.com/css/css-box-3
 - [x] CSS Containment Module Level 2  https://htmlspecs.com/css/css-contain-2
+- [ ] Payment Request API
+- [ ] Intersection Observer
+- [ ] Web Authentication:An API for accessing Public Key Credentials Level 2
+- [ ] Pointer Events
+- [ ] Web Audio API
+- [ ] WebAssembly Core Specification
+- [ ] WebRTC: Real-Time Communication in Browsers
+- [ ] Indexed Database API 3.0
+- [ ] Service Workers
+- [ ] Web Animations
