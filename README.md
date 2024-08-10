@@ -22,7 +22,7 @@ HTML 及相关 API，CSS 标准系列。
 - [x] CSS Style Attributes https://htmlspecs.com/css/css-style-attr
 - [x] CSS Cascading and Inheritance Level 3 https://htmlspecs.com/css/css-cascade-3
 - [x] CSS Fonts Level 3 https://htmlspecs.com/css/css-fonts-3
-- [ ] CSS Writing Modes Level 3 https://htmlspecs.com/css/css-writing-modes-3
+- [x] CSS Writing Modes Level 3 https://htmlspecs.com/css/css-writing-modes-3
 - [ ] CSS Basic User Interface Level 3 https://htmlspecs.com/css/css-ui-3
 - [ ] CSS Box Model Level 3  https://htmlspecs.com/css/css-box-3
 - [ ] CSS Containment Module Level 2  https://htmlspecs.com/css/css-contain-2
