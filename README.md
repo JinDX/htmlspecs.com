@@ -29,8 +29,8 @@ HTML 及相关 API，CSS 标准系列。
 - [x] Payment Request API https://htmlspecs.com/payment-request
 - [ ] Intersection Observer https://htmlspecs.com/intersection-observer
 - [ ] Web Authentication:An API for accessing Public Key Credentials Level 2 https://htmlspecs.com/webauthn-2
-- [ ] Pointer Events
-- [ ] Web Audio API
+- [ ] Pointer Events https://htmlspecs.com/pointerevents
+- [ ] Web Audio API https://htmlspecs.com/webaudio
 - [ ] WebAssembly Core Specification
 - [ ] WebRTC: Real-Time Communication in Browsers
 - [ ] Indexed Database API 3.0
