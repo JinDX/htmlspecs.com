@@ -28,7 +28,7 @@ HTML 及相关 API，CSS 标准系列。
 - [x] CSS Containment Module Level 2  https://htmlspecs.com/css/css-contain-2
 - [x] Payment Request API https://htmlspecs.com/payment-request
 - [x] Intersection Observer https://htmlspecs.com/intersection-observer
-- [ ] Web Authentication:An API for accessing Public Key Credentials Level 2 https://htmlspecs.com/webauthn-2
+- [x] Web Authentication:An API for accessing Public Key Credentials Level 2 https://htmlspecs.com/webauthn-2
 - [ ] Pointer Events https://htmlspecs.com/pointerevents
 - [ ] Web Audio API https://htmlspecs.com/webaudio
 - [ ] WebAssembly Core Specification
