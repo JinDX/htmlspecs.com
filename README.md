@@ -33,6 +33,6 @@ HTML 及相关 API，CSS 标准系列。
 - [x] Web Audio API https://htmlspecs.com/webaudio
 - [ ] ~~WebAssembly Core Specification~~
 - [x] WebRTC: Real-Time Communication in Browsers https://htmlspecs.com/webrtc
-- [ ] Indexed Database API 3.0  https://htmlspecs.com/IndexedDB
+- [x] Indexed Database API 3.0  https://htmlspecs.com/IndexedDB
 - [ ] Service Workers  https://htmlspecs.com/service-workers
 - [ ] Web Animations  https://htmlspecs.com/web-animations-1
