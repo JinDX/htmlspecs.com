@@ -32,7 +32,7 @@ HTML 及相关 API，CSS 标准系列。
 - [x] Pointer Events https://htmlspecs.com/pointerevents
 - [x] Web Audio API https://htmlspecs.com/webaudio
 - [ ] ~~WebAssembly Core Specification~~
-- [ ] WebRTC: Real-Time Communication in Browsers
+- [x] WebRTC: Real-Time Communication in Browsers https://htmlspecs.com/webrtc
 - [ ] Indexed Database API 3.0
 - [ ] Service Workers
 - [ ] Web Animations
