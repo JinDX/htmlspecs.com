@@ -34,5 +34,5 @@ HTML 及相关 API，CSS 标准系列。
 - [ ] ~~WebAssembly Core Specification~~
 - [x] WebRTC: Real-Time Communication in Browsers https://htmlspecs.com/webrtc
 - [x] Indexed Database API 3.0  https://htmlspecs.com/IndexedDB
-- [ ] Service Workers  https://htmlspecs.com/service-workers
+- [x] Service Workers  https://htmlspecs.com/service-workers
 - [ ] Web Animations  https://htmlspecs.com/web-animations-1
