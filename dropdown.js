@@ -82,17 +82,17 @@ links.forEach(function (link) {
     container.style.alignItems = "center";
     container.style.padding = "10px 15px";
     container.style.borderBottom = "1px solid #eee";
-    
+
     var a = document.createElement("a");
     a.href = link.href;
     a.textContent = link.text;
-    a.title = link.text;  
+    a.title = link.text;
     a.style.color = "#333";
     a.style.textDecoration = "none";
     a.style.flexGrow = "1";
-    a.style.overflow = "hidden"; 
-    a.style.whiteSpace = "nowrap"; 
-    a.style.textOverflow = "ellipsis"; 
+    a.style.overflow = "hidden";
+    a.style.whiteSpace = "nowrap";
+    a.style.textOverflow = "ellipsis";
     a.style.transition = "color 0.3s";
     a.onmouseover = function () {
         a.style.color = "#007BFF";
@@ -100,21 +100,6 @@ links.forEach(function (link) {
     a.onmouseout = function () {
         a.style.color = "#333";
     };
-
-    var tooltip = document.createElement("span");
-    tooltip.textContent = "在新标签页中打开";
-    tooltip.style.position = "fixed";
-    tooltip.style.backgroundColor = "#333";
-    tooltip.style.color = "#fff";
-    tooltip.style.padding = "5px";
-    tooltip.style.borderRadius = "3px";
-    tooltip.style.whiteSpace = "nowrap";
-    tooltip.style.fontSize = "12px";
-    tooltip.style.display = "none";
-    tooltip.style.zIndex = "10000";
-    document.body.appendChild(tooltip);
-
-    
 
     container.appendChild(a);
     dropdownContent.appendChild(container);
