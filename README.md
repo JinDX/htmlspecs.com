@@ -35,4 +35,4 @@ HTML 及相关 API，CSS 标准系列。
 - [x] WebRTC: Real-Time Communication in Browsers https://htmlspecs.com/webrtc
 - [x] Indexed Database API 3.0  https://htmlspecs.com/IndexedDB
 - [x] Service Workers  https://htmlspecs.com/service-workers
-- [ ] Web Animations  https://htmlspecs.com/web-animations-1
+- [x] Web Animations  https://htmlspecs.com/web-animations-1
