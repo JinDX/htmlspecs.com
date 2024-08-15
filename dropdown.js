@@ -114,3 +114,30 @@ window.onclick = function (event) {
         dropdownContent.style.display = "none";
     }
 };
+
+
+(function() {
+    var gaID;
+    var hostname = window.location.hostname;
+
+    if (hostname === 'htmlspecs.com') {
+        gaID = 'G-Z0H3G08TCK';
+    } else if (hostname === 'ecma262.com') {
+        gaID = 'G-DEEXSBMHX9';
+    } else {
+        return;
+    }
+
+    var script = document.createElement('script');
+    script.async = true;
+    script.src = 'https://www.googletagmanager.com/gtag/js?id=' + gaID;
+    document.head.appendChild(script);
+
+    script.onload = function() {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){ dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', gaID);
+    };
+})();
+
