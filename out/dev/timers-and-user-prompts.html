@@ -1,0 +1,246 @@
+<!DOCTYPE html><html class=split lang=en-US-x-hixie><script src=/link-fixup.js defer=""></script><meta charset=utf-8><meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name=viewport><title>HTML 标准，适用于网页开发者的版本</title><meta content=#3c790a name=theme-color><meta content="light dark" name=color-scheme><link rel=stylesheet href=https://resources.whatwg.org/standard-shared-with-dev.css crossorigin=""><link rel=icon href=https://resources.whatwg.org/logo.svg crossorigin=""><link rel=stylesheet href=/dev/styles.css crossorigin=""><script>
+    function toggleStatus(div) {
+      div.parentNode.classList.toggle('wrapped');
+    }
+    function setLinkFragment(link) {
+      link.hash = location.hash;
+    }
+  </script><body>
+  <script async="" src=/dev/search.js></script>
+  
+  
+  <header id=head class="head with-buttons">
+    <a href=https://whatwg.org/ class=logo><img width=100 alt=WHATWG crossorigin="" class=darkmode-aware src=https://resources.whatwg.org/logo.svg height=100></a>
+    
+    <hgroup><h1><a rel=home href=/dev/>HTML: 现行标准</a></h1><p id=dev-edition-h2>适用于网页开发者的版本 — 上次更新 <span class=pubdate>7 September 2024</span></hgroup>
+    
+
+    <div id=search>
+      <input placeholder="搜索。按 '/' 键" autocomplete=off name=query id=query type=search>
+      <ol id=results></ol>
+    </div>
+  </header>
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+  <nav><a href=dynamic-markup-insertion.html>← 8.4 Dynamic markup insertion</a> — <a href=./>Table of Contents</a> — <a href=system-state.html>8.9 System state and capabilities →</a></nav><ol class=toc><li><ol><li><a href=timers-and-user-prompts.html#timers><span class=secno>8.6</span> Timers</a><li><a href=timers-and-user-prompts.html#microtask-queuing><span class=secno>8.7</span> Microtask queuing</a><li><a href=timers-and-user-prompts.html#user-prompts><span class=secno>8.8</span> User prompts</a><ol><li><a href=timers-and-user-prompts.html#simple-dialogs><span class=secno>8.8.1</span> Simple dialogs</a><li><a href=timers-and-user-prompts.html#printing><span class=secno>8.8.2</span> Printing</a></ol></ol></ol><h3 id=timers><span class=secno>8.6</span> Timers<a href=#timers class=self-link></a></h3>
+
+  <p>The <code id=timers:dom-settimeout><a href=#dom-settimeout>setTimeout()</a></code> and <code id=timers:dom-setinterval><a href=#dom-setinterval>setInterval()</a></code> methods allow authors to schedule timer-based
+    callbacks.</p>
+
+  <dl class=domintro><dt><code><var>id</var> = self.<span id=dom-settimeout>setTimeout</span>(<var>handler</var> [, <var>timeout</var> [, ...<var>arguments</var> ] ])</code><dd>
+      <p>Schedules a timeout to run <var>handler</var> after <var>timeout</var> milliseconds. Any
+        <var>arguments</var> are passed straight through to the <var>handler</var>.
+      </p>
+    <dt><code><var>id</var> = self.<a href=#dom-settimeout id=timers:dom-settimeout-2>setTimeout</a>(<var>code</var> [, <var>timeout</var> ])</code><dd>
+      <p>Schedules a timeout to compile and run <var>code</var> after <var>timeout</var>
+        milliseconds.</p>
+    <dt><code>self.<span id=dom-cleartimeout>clearTimeout</span>(<var>id</var>)</code><dd>
+      <p>Cancels the timeout set with <code id=timers:dom-settimeout-3><a href=#dom-settimeout>setTimeout()</a></code> or <code id=timers:dom-setinterval-2><a href=#dom-setinterval>setInterval()</a></code> identified by <var>id</var>.</p>
+    <dt><code><var>id</var> = self.<span id=dom-setinterval>setInterval</span>(<var>handler</var> [, <var>timeout</var> [, ...<var>arguments</var> ] ])</code><dd>
+      <p>Schedules a timeout to run <var>handler</var> every <var>timeout</var> milliseconds. Any
+        <var>arguments</var> are passed straight through to the <var>handler</var>.
+      </p>
+    <dt><code><var>id</var> = self.<a href=#dom-setinterval id=timers:dom-setinterval-3>setInterval</a>(<var>code</var> [, <var>timeout</var> ])</code><dd>
+      <p>Schedules a timeout to compile and run <var>code</var> every <var>timeout</var>
+        milliseconds.</p>
+    <dt><code>self.<span id=dom-clearinterval>clearInterval</span>(<var>id</var>)</code><dd>
+      <p>Cancels the timeout set with <code id=timers:dom-setinterval-4><a href=#dom-setinterval>setInterval()</a></code> or <code id=timers:dom-settimeout-4><a href=#dom-settimeout>setTimeout()</a></code> identified by <var>id</var>.</p>
+    </dl>
+
+  <p class=note>Timers can be nested; after five such nested timers, however, the interval is
+    forced to be at least four milliseconds.</p>
+
+  <p class=note>This API does not guarantee that timers will run exactly on schedule. Delays due
+    to CPU load, other tasks, etc, are to be expected.</p>
+
+  
+
+  <div class=example>
+    <p>To run tasks of several milliseconds back to back without any delay, while still yielding back
+      to the browser to avoid starving the user interface (and to avoid the browser killing the script
+      for hogging the CPU), simply queue the next timer before performing work:</p>
+
+    <pre><code class=js>function doExpensiveWork() {
+  var done = false;
+  // ...
+  // this part of the function takes up to five milliseconds
+  // set done to true if we're done
+  // ...
+  return done;
+}
+
+function rescheduleWork() {
+  var id = setTimeout(rescheduleWork, 0); // preschedule next iteration
+  if (doExpensiveWork())
+    clearTimeout(id); // clear the timeout if we don't need it
+}
+
+function scheduleWork() {
+  setTimeout(rescheduleWork, 0);
+}
+
+scheduleWork(); // queues a task to do lots of work</code></pre>
+  </div>
+
+  
+
+  <h3 id=microtask-queuing><span class=secno>8.7</span> Microtask queuing<a href=#microtask-queuing class=self-link></a></h3><div class="mdn-anno wrapped"><button onclick=toggleStatus(this) class=mdn-anno-btn><b title="Support in all current engines." class=all-engines-flag>✔</b><span>MDN</span></button><div class=feature><p><a href=https://developer.mozilla.org/en-US/docs/Web/API/queueMicrotask title="The queueMicrotask() method, which is exposed on the Window or Worker interface, queues a microtask to be executed at a safe time prior to control returning to the browser's event loop.">queueMicrotask</a><p class=all-engines-text>Support in all current engines.<div class=support><span class="firefox yes"><span>Firefox</span><span>69+</span></span><span class="safari yes"><span>Safari</span><span>12.1+</span></span><span class="chrome yes"><span>Chrome</span><span>71+</span></span><hr><span class="opera unknown"><span>Opera</span><span>?</span></span><span class="edge_blink yes"><span>Edge</span><span>79+</span></span><hr><span class="edge unknown"><span>Edge (Legacy)</span><span>?</span></span><span class="ie no"><span>Internet Explorer</span><span>No</span></span><hr><span class="firefox_android unknown"><span>Firefox Android</span><span>?</span></span><span class="safari_ios unknown"><span>Safari iOS</span><span>?</span></span><span class="chrome_android unknown"><span>Chrome Android</span><span>?</span></span><span class="webview_android unknown"><span>WebView Android</span><span>?</span></span><span class="samsunginternet_android unknown"><span>Samsung Internet</span><span>?</span></span><span class="opera_android unknown"><span>Opera Android</span><span>?</span></span></div></div></div>
+
+  <dl class=domintro><dt><code><var>self</var>.<span id=dom-queuemicrotask>queueMicrotask</span>(<var>callback</var>)</code><dd>
+      <p><span>Queues</span> a <span>microtask</span> to run the given
+        <var>callback</var>.
+      </p>
+    </dl>
+
+  
+
+  <p>The <code id=microtask-queuing:dom-queuemicrotask><a href=#dom-queuemicrotask>queueMicrotask()</a></code> method allows authors to schedule
+    a callback on the <span>microtask queue</span>. This allows their code to run once the
+    <a id=microtask-queuing:javascript-execution-context-stack href=https://tc39.es/ecma262/#execution-context-stack data-x-internal=javascript-execution-context-stack>JavaScript execution context stack</a> is next empty, which happens once all currently
+    executing synchronous JavaScript has run to completion. This doesn't yield control back to the
+    <a id=microtask-queuing:event-loop href=webappapis.html#event-loop>event loop</a>, as would be the case when using, for example, <code id=microtask-queuing:dom-settimeout><a href=#dom-settimeout>setTimeout(<var>f</var>, 0)</a></code>.
+  </p>
+
+  <p>Authors ought to be aware that scheduling a lot of microtasks has the same performance
+    downsides as running a lot of synchronous code. Both will prevent the browser from doing its own
+    work, such as rendering. In many cases, <code id=microtask-queuing:dom-animationframeprovider-requestanimationframe><a href=imagebitmap-and-animations.html#dom-animationframeprovider-requestanimationframe>requestAnimationFrame()</a></code> or
+    <code id=microtask-queuing:requestidlecallback()><a data-x-internal=requestidlecallback() href=https://w3c.github.io/requestidlecallback/#the-requestidlecallback-method>requestIdleCallback()</a></code> is a better choice. In particular, if the goal is to run code
+    before the next rendering cycle, that is the purpose of <code id=microtask-queuing:dom-animationframeprovider-requestanimationframe-2><a href=imagebitmap-and-animations.html#dom-animationframeprovider-requestanimationframe>requestAnimationFrame()</a></code>.
+  </p>
+
+  <p>As can be seen from the following examples, the best way of thinking about <code id=microtask-queuing:dom-queuemicrotask-2><a href=#dom-queuemicrotask>queueMicrotask()</a></code> is as a mechanism for rearranging synchronous
+    code, effectively placing the queued code immediately after the currently executing synchronous
+    JavaScript has run to completion.</p>
+
+  <div class=example>
+    <p>The most common reason for using <code id=microtask-queuing:dom-queuemicrotask-3><a href=#dom-queuemicrotask>queueMicrotask()</a></code> is
+      to create consistent ordering, even in the cases where information is available synchronously,
+      without introducing undue delay.</p>
+
+    <p>For example, consider a custom element firing a <code>load</code> event, that also
+      maintains an internal cache of previously-loaded data. A naïve implementation might look
+      like:</p>
+
+    <pre><code class=js>MyElement.prototype.loadData = function (url) {
+  if (this._cache[url]) {
+    this._setData(this._cache[url]);
+    this.dispatchEvent(new Event("load"));
+  } else {
+    fetch(url).then(res => res.arrayBuffer()).then(data => {
+      this._cache[url] = data;
+      this._setData(data);
+      this.dispatchEvent(new Event("load"));
+    });
+  }
+};</code></pre>
+
+    <p>This naïve implementation is problematic, however, in that it causes its users to
+      experience inconsistent behavior. For example, code such as</p>
+
+    <pre><code class=js>element.addEventListener("load", () => console.log("loaded"));
+console.log("1");
+element.loadData();
+console.log("2");</code></pre>
+
+    <p>will sometimes log "1, 2, loaded" (if the data needs to be fetched), and sometimes log "1,
+      loaded, 2" (if the data is already cached). Similarly, after the call to <code>loadData()</code>, it will be inconsistent whether or not the data is set on the
+      element.</p>
+
+    <p>To get a consistent ordering, <code id=microtask-queuing:dom-queuemicrotask-4><a href=#dom-queuemicrotask>queueMicrotask()</a></code> can be
+      used:</p>
+
+    <pre><code class=js>MyElement.prototype.loadData = function (url) {
+  if (this._cache[url]) {<strong>
+    queueMicrotask(() => {
+      this._setData(this._cache[url]);
+      this.dispatchEvent(new Event("load"));
+    });</strong>
+  } else {
+    fetch(url).then(res => res.arrayBuffer()).then(data => {
+      this._cache[url] = data;
+      this._setData(data);
+      this.dispatchEvent(new Event("load"));
+    });
+  }
+};</code></pre>
+
+    <p>By essentially rearranging the queued code to be after the <a id=microtask-queuing:javascript-execution-context-stack-2 href=https://tc39.es/ecma262/#execution-context-stack data-x-internal=javascript-execution-context-stack>JavaScript execution context
+        stack</a> empties, this ensures a consistent ordering and update of the element's state.</p>
+  </div>
+
+  <div class=example>
+    <p>Another interesting use of <code id=microtask-queuing:dom-queuemicrotask-5><a href=#dom-queuemicrotask>queueMicrotask()</a></code> is to
+      allow uncoordinated "batching" of work by multiple callers. For example, consider a library
+      function that wants to send data somewhere as soon as possible, but doesn't want to make multiple
+      network requests if doing so is easily avoidable. One way to balance this would be like so:</p>
+
+    <pre><code class=js>const queuedToSend = [];
+
+function sendData(data) {
+  queuedToSend.push(data);
+
+  if (queuedToSend.length === 1) {
+    queueMicrotask(() => {
+      const stringToSend = JSON.stringify(queuedToSend);
+      queuedToSend.length = 0;
+
+      fetch("/endpoint", stringToSend);
+    });
+  }
+}</code></pre>
+
+    <p>With this architecture, multiple subsequent calls to <code>sendData()</code> within
+      the currently executing synchronous JavaScript will be batched together into one
+      <code id=microtask-queuing:fetch()><a data-x-internal=fetch() href=https://fetch.spec.whatwg.org/#dom-global-fetch>fetch()</a></code> call, but with no intervening event loop tasks preempting the fetch (as
+      would have happened with similar code that instead used <code id=microtask-queuing:dom-settimeout-2><a href=#dom-settimeout>setTimeout()</a></code>).
+    </p>
+  </div>
+
+
+  <h3 id=user-prompts><span class=secno>8.8</span> User prompts<a href=#user-prompts class=self-link></a></h3>
+
+  
+
+  <h4 id=simple-dialogs><span class=secno>8.8.1</span> Simple dialogs<a href=#simple-dialogs class=self-link></a></h4>
+
+  <dl class=domintro><dt><code><var>window</var>.<span id=dom-alert>alert</span>(<var>message</var>)</code><dd>
+      <p>Displays a modal alert with the given message, and waits for the user to dismiss
+        it.</p>
+    <dt><code><var>result</var> = <var>window</var>.<span id=dom-confirm>confirm</span>(<var>message</var>)</code><dd>
+      <p>Displays a modal OK/Cancel prompt with the given message, waits for the user to dismiss it,
+        and returns true if the user clicks OK and false if the user clicks Cancel.</p>
+    <dt><code><var>result</var> = <var>window</var>.<span id=dom-prompt>prompt</span>(<var>message</var> [, <var>default</var>])</code><dd>
+      <p>Displays a modal text control prompt with the given message, waits for the user to dismiss
+        it, and returns the value that the user entered. If the user cancels the prompt, then returns
+        null instead. If the second argument is present, then the given value is used as a default.</p>
+    </dl>
+
+  <p class=note>Logic that depends on <span>tasks</span> or <span>microtasks</span>, such as <a href=media.html#media-element id=simple-dialogs:media-element>media elements</a>
+    loading their <a id=simple-dialogs:media-data href=media.html#media-data>media data</a>, are stalled when these methods are invoked.</p>
+
+  
+
+
+  <h4 id=printing><span class=secno>8.8.2</span> Printing<a href=#printing class=self-link></a></h4><div class="mdn-anno wrapped"><button onclick=toggleStatus(this) class=mdn-anno-btn><b title="Support in all current engines." class=all-engines-flag>✔</b><span>MDN</span></button><div class=feature><p><a href=https://developer.mozilla.org/en-US/docs/Web/API/Window/print title="Opens the print dialog to print the current document.">Window/print</a><p class=all-engines-text>Support in all current engines.<div class=support><span class="firefox yes"><span>Firefox</span><span>1+</span></span><span class="safari yes"><span>Safari</span><span>1.1+</span></span><span class="chrome yes"><span>Chrome</span><span>1+</span></span><hr><span class="opera yes"><span>Opera</span><span>6+</span></span><span class="edge_blink yes"><span>Edge</span><span>79+</span></span><hr><span class="edge yes"><span>Edge (Legacy)</span><span>12+</span></span><span class="ie yes"><span>Internet Explorer</span><span>5+</span></span><hr><span class="firefox_android yes"><span>Firefox Android</span><span>114+</span></span><span class="safari_ios unknown"><span>Safari iOS</span><span>?</span></span><span class="chrome_android unknown"><span>Chrome Android</span><span>?</span></span><span class="webview_android unknown"><span>WebView Android</span><span>?</span></span><span class="samsunginternet_android unknown"><span>Samsung Internet</span><span>?</span></span><span class="opera_android yes"><span>Opera Android</span><span>10.1+</span></span></div></div></div>
+
+  <dl class=domintro><dt><code><var>window</var>.<span id=dom-print>print</span>()</code><dd>
+      <p>Prompts the user to print the page.</p>
+    </dl>
+
+  
+
+
+  <nav><a href=dynamic-markup-insertion.html>← 8.4 Dynamic markup insertion</a> — <a href=./>Table of Contents</a> — <a href=system-state.html>8.9 System state and capabilities →</a></nav>
