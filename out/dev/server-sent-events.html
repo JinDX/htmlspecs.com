@@ -1,0 +1,344 @@
+<!DOCTYPE html><html class=split lang=en-US-x-hixie><script src=/link-fixup.js defer=""></script><meta charset=utf-8><meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name=viewport><title>HTML 标准，适用于网页开发者的版本</title><meta content=#3c790a name=theme-color><meta content="light dark" name=color-scheme><link rel=stylesheet href=https://resources.whatwg.org/standard-shared-with-dev.css crossorigin=""><link rel=icon href=https://resources.whatwg.org/logo.svg crossorigin=""><link rel=stylesheet href=/dev/styles.css crossorigin=""><script>
+    function toggleStatus(div) {
+      div.parentNode.classList.toggle('wrapped');
+    }
+    function setLinkFragment(link) {
+      link.hash = location.hash;
+    }
+  </script><body>
+  <script async="" src=/dev/search.js></script>
+  
+  
+  <header id=head class="head with-buttons">
+    <a href=https://whatwg.org/ class=logo><img width=100 alt=WHATWG crossorigin="" class=darkmode-aware src=https://resources.whatwg.org/logo.svg height=100></a>
+    
+    <hgroup><h1><a rel=home href=/dev/>HTML: 现行标准</a></h1><p id=dev-edition-h2>适用于网页开发者的版本 — 上次更新 <span class=pubdate>7 September 2024</span></hgroup>
+    
+
+    <div id=search>
+      <input placeholder="搜索。按 '/' 键" autocomplete=off name=query id=query type=search>
+      <ol id=results></ol>
+    </div>
+  </header>
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+  <nav><a href=comms.html>← 9 Communication</a> — <a href=./>Table of Contents</a> — <a href=web-messaging.html>9.3 Cross-document messaging →</a></nav><ol class=toc><li><ol><li><a href=server-sent-events.html#server-sent-events><span class=secno>9.2</span> Server-sent events</a><ol><li><a href=server-sent-events.html#server-sent-events-intro><span class=secno>9.2.1</span> Introduction</a><li><a href=server-sent-events.html#the-eventsource-interface><span class=secno>9.2.2</span> The <code>EventSource</code> interface</a><li><a href=server-sent-events.html#the-last-event-id-header><span class=secno>9.2.3</span> The `<code>Last-Event-ID</code>` header</a><li><a href=server-sent-events.html#the-event-stream-format><span class=secno>9.2.4</span> The event stream format</a><li><a href=server-sent-events.html#authoring-notes><span class=secno>9.2.5</span> Authoring notes</a></ol></ol></ol><h3 id=server-sent-events><span class=secno>9.2</span> <dfn>Server-sent events</dfn><a href=#server-sent-events class=self-link></a></h3><div class="mdn-anno wrapped"><button onclick=toggleStatus(this) class=mdn-anno-btn><b title="Support in all current engines." class=all-engines-flag>✔</b><span>MDN</span></button><div class=feature><p><a href=https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events title="Traditionally, a web page has to send a request to the server to receive new data; that is, the page requests data from the server. With server-sent events, it's possible for a server to send new data to a web page at any time, by pushing messages to the web page. These incoming messages can be treated as Events + data inside the web page.">Server-sent_events</a><p class=all-engines-text>Support in all current engines.<div class=support><span class="firefox yes"><span>Firefox</span><span>6+</span></span><span class="safari yes"><span>Safari</span><span>5+</span></span><span class="chrome yes"><span>Chrome</span><span>6+</span></span><hr><span class="opera yes"><span>Opera</span><span>11+</span></span><span class="edge_blink yes"><span>Edge</span><span>79+</span></span><hr><span class="edge unknown"><span>Edge (Legacy)</span><span>?</span></span><span class="ie no"><span>Internet Explorer</span><span>No</span></span><hr><span class="firefox_android yes"><span>Firefox Android</span><span>45+</span></span><span class="safari_ios yes"><span>Safari iOS</span><span>5+</span></span><span class="chrome_android unknown"><span>Chrome Android</span><span>?</span></span><span class="webview_android unknown"><span>WebView Android</span><span>?</span></span><span class="samsunginternet_android unknown"><span>Samsung Internet</span><span>?</span></span><span class="opera_android yes"><span>Opera Android</span><span>11+</span></span></div></div></div>
+
+  <h4 id=server-sent-events-intro><span class=secno>9.2.1</span> Introduction<a href=#server-sent-events-intro class=self-link></a></h4>
+
+  
+
+  <p>To enable servers to push data to web pages over HTTP or using dedicated server-push protocols,
+    this specification introduces the <code id=server-sent-events-intro:eventsource><a href=#eventsource>EventSource</a></code> interface.</p>
+
+  <p>Using this API consists of creating an <code id=server-sent-events-intro:eventsource-2><a href=#eventsource>EventSource</a></code> object and registering an event
+    listener.</p>
+
+  <pre><code class=js>var source = new EventSource('updates.cgi');
+source.onmessage = function (event) {
+  alert(event.data);
+};</code></pre>
+
+  <p>On the server-side, the script ("<code>updates.cgi</code>" in this case) sends
+    messages in the following form, with the <code>text/event-stream</code> MIME type:</p>
+
+  <pre>data: This is the first message.
+
+data: This is the second message, it
+data: has two lines.
+
+data: This is the third message.</pre>
+
+  <hr>
+
+  <p>Authors can separate events by using different event types. Here is a stream that has two event
+    types, "add" and "remove":</p>
+
+  <pre>event: add
+data: 73857293
+
+event: remove
+data: 2153
+
+event: add
+data: 113411</pre>
+
+  <p>The script to handle such a stream would look like this (where <code>addHandler</code>
+    and <code>removeHandler</code> are functions that take one argument, the event):</p>
+
+  <pre><code class=js>var source = new EventSource('updates.cgi');
+source.addEventListener('add', addHandler, false);
+source.addEventListener('remove', removeHandler, false);</code></pre>
+
+  <p>The default event type is "message".</p>
+
+  <p>Event streams are always decoded as UTF-8. There is no way to specify another character
+    encoding.</p>
+
+  <hr>
+
+  <p>Event stream requests can be redirected using HTTP 301 and 307 redirects as with normal HTTP
+    requests. Clients will reconnect if the connection is closed; a client can be told to stop
+    reconnecting using the HTTP 204 No Content response code.</p>
+
+  <p>Using this API rather than emulating it using <code id=server-sent-events-intro:xmlhttprequest><a data-x-internal=xmlhttprequest href=https://xhr.spec.whatwg.org/#xmlhttprequest>XMLHttpRequest</a></code> or an
+    <code id=server-sent-events-intro:the-iframe-element><a href=iframe-embed-object.html#the-iframe-element>iframe</a></code> allows the user agent to make better use of network resources in cases where
+    the user agent implementer and the network operator are able to coordinate in advance. Amongst
+    other benefits, this can result in significant savings in battery life on portable devices. This
+    is discussed further in the section below on <a href=#eventsource-push>connectionless
+      push</a>.
+  </p>
+
+
+  <h4 id=the-eventsource-interface><span class=secno>9.2.2</span> The <code id=the-eventsource-interface:eventsource><a href=#eventsource>EventSource</a></code> interface<a href=#the-eventsource-interface class=self-link></a></h4><div class="mdn-anno wrapped"><button onclick=toggleStatus(this) class=mdn-anno-btn><b title="Support in all current engines." class=all-engines-flag>✔</b><span>MDN</span></button><div class=feature><p><a href=https://developer.mozilla.org/en-US/docs/Web/API/EventSource title="The EventSource interface is web content's interface to server-sent events.">EventSource</a><p class=all-engines-text>Support in all current engines.<div class=support><span class="firefox yes"><span>Firefox</span><span>6+</span></span><span class="safari yes"><span>Safari</span><span>5+</span></span><span class="chrome yes"><span>Chrome</span><span>6+</span></span><hr><span class="opera yes"><span>Opera</span><span>11+</span></span><span class="edge_blink yes"><span>Edge</span><span>79+</span></span><hr><span class="edge unknown"><span>Edge (Legacy)</span><span>?</span></span><span class="ie no"><span>Internet Explorer</span><span>No</span></span><hr><span class="firefox_android yes"><span>Firefox Android</span><span>45+</span></span><span class="safari_ios yes"><span>Safari iOS</span><span>5+</span></span><span class="chrome_android unknown"><span>Chrome Android</span><span>?</span></span><span class="webview_android unknown"><span>WebView Android</span><span>?</span></span><span class="samsunginternet_android unknown"><span>Samsung Internet</span><span>?</span></span><span class="opera_android yes"><span>Opera Android</span><span>11+</span></span></div></div></div>
+
+  <pre><code class=idl>[Exposed=(Window,Worker)]
+interface <dfn id=eventsource data-dfn-type=interface>EventSource</dfn> : <a id=the-eventsource-interface:eventtarget href=https://dom.spec.whatwg.org/#interface-eventtarget data-x-internal=eventtarget>EventTarget</a> {
+  <a href=#dom-eventsource id=the-eventsource-interface:dom-eventsource>constructor</a>(USVString url, optional <a href=#eventsourceinit id=the-eventsource-interface:eventsourceinit>EventSourceInit</a> eventSourceInitDict = {});
+
+  readonly attribute USVString <a href=#dom-eventsource-url id=the-eventsource-interface:dom-eventsource-url>url</a>;
+  readonly attribute boolean <a href=#dom-eventsource-withcredentials id=the-eventsource-interface:dom-eventsource-withcredentials>withCredentials</a>;
+
+  // ready state
+  const unsigned short <a href=#dom-eventsource-connecting id=the-eventsource-interface:dom-eventsource-connecting>CONNECTING</a> = 0;
+  const unsigned short <a href=#dom-eventsource-open id=the-eventsource-interface:dom-eventsource-open>OPEN</a> = 1;
+  const unsigned short <a href=#dom-eventsource-closed id=the-eventsource-interface:dom-eventsource-closed>CLOSED</a> = 2;
+  readonly attribute unsigned short <a href=#dom-eventsource-readystate id=the-eventsource-interface:dom-eventsource-readystate>readyState</a>;
+
+  // networking
+  attribute <a id=the-eventsource-interface:eventhandler href=webappapis.html#eventhandler>EventHandler</a> <a href=#handler-eventsource-onopen id=the-eventsource-interface:handler-eventsource-onopen>onopen</a>;
+  attribute <a id=the-eventsource-interface:eventhandler-2 href=webappapis.html#eventhandler>EventHandler</a> <a href=#handler-eventsource-onmessage id=the-eventsource-interface:handler-eventsource-onmessage>onmessage</a>;
+  attribute <a id=the-eventsource-interface:eventhandler-3 href=webappapis.html#eventhandler>EventHandler</a> <a href=#handler-eventsource-onerror id=the-eventsource-interface:handler-eventsource-onerror>onerror</a>;
+  undefined <a href=#dom-eventsource-close id=the-eventsource-interface:dom-eventsource-close>close</a>();
+};
+
+dictionary <dfn id=eventsourceinit data-dfn-type=dictionary>EventSourceInit</dfn> {
+  boolean <dfn data-dfn-for=EventSourceInit id=dom-eventsourceinit-withcredentials data-dfn-type=dict-member>withCredentials</dfn> = false;
+};</code></pre>
+
+  
+
+  <dl class=domintro><dt><code><var>source</var> = new <span id=dom-eventsource>EventSource</span>(
+   <var>url</var> [, { <a href=#dom-eventsourceinit-withcredentials id=the-eventsource-interface:dom-eventsourceinit-withcredentials>withCredentials</a>:
+   true } ])</code><dd>
+      <p>Creates a new <code id=the-eventsource-interface:eventsource-2><a href=#eventsource>EventSource</a></code> object.</p>
+
+      <p><var>url</var> is a string giving the <a id=the-eventsource-interface:url href=https://url.spec.whatwg.org/#concept-url data-x-internal=url>URL</a> that will provide the event
+        stream.</p>
+
+      <p>Setting <code id=the-eventsource-interface:dom-eventsourceinit-withcredentials-2><a href=#dom-eventsourceinit-withcredentials>withCredentials</a></code> to true
+        will set the <a href=https://fetch.spec.whatwg.org/#concept-request-credentials-mode id=the-eventsource-interface:concept-request-credentials-mode data-x-internal=concept-request-credentials-mode>credentials mode</a> for
+        connection requests to <var>url</var> to "<code>include</code>".</p>
+    <dt><code><var>source</var>.<span id=dom-eventsource-close>close</span>()</code><dd>
+      <p>Aborts any instances of the <a href=https://fetch.spec.whatwg.org/#concept-fetch id=the-eventsource-interface:concept-fetch data-x-internal=concept-fetch>fetch</a> algorithm started for
+        this <code id=the-eventsource-interface:eventsource-3><a href=#eventsource>EventSource</a></code> object, and sets the <code id=the-eventsource-interface:dom-eventsource-readystate-2><a href=#dom-eventsource-readystate>readyState</a></code> attribute to <code id=the-eventsource-interface:dom-eventsource-closed-2><a href=#dom-eventsource-closed>CLOSED</a></code>.</p>
+    <dt><code><var>source</var>.<span id=dom-eventsource-url>url</span></code><dd>
+      <p>Returns the <span>URL providing the event
+          stream</span>.</p>
+    <dt><code><var>source</var>.<span id=dom-eventsource-withcredentials>withCredentials</span></code><dd>
+      <p>Returns true if the <a href=https://fetch.spec.whatwg.org/#concept-request-credentials-mode id=the-eventsource-interface:concept-request-credentials-mode-2 data-x-internal=concept-request-credentials-mode>credentials mode</a>
+        for connection requests to the <span>URL providing the event
+          stream</span> is set to "<code>include</code>", and false otherwise.</p>
+    <dt><code><var>source</var>.<span id=dom-eventsource-readystate>readyState</span></code><dd>
+      <p>Returns the state of this <code id=the-eventsource-interface:eventsource-4><a href=#eventsource>EventSource</a></code> object's connection. It can have the
+        values described below.</p>
+    </dl>
+
+  
+
+  <dl><dt><dfn data-dfn-for=EventSource id=dom-eventsource-connecting data-dfn-type=const><code>CONNECTING</code></dfn> (numeric value 0)<dd>The connection has not yet been established, or it was closed and the user agent is
+      reconnecting.<dt><dfn data-dfn-for=EventSource id=dom-eventsource-open data-dfn-type=const><code>OPEN</code></dfn> (numeric value 1)<dd>The user agent has an open connection and is dispatching events as it receives them.<dt><dfn data-dfn-for=EventSource id=dom-eventsource-closed data-dfn-type=const><code>CLOSED</code></dfn> (numeric value 2)<dd>The connection is not open, and the user agent is not trying to reconnect. Either there was a
+      fatal error or the <code id=the-eventsource-interface:dom-eventsource-close-2><a href=#dom-eventsource-close>close()</a></code> method was invoked.</dl>
+
+  
+
+  <p>The following are the <a id=the-eventsource-interface:event-handlers href=webappapis.html#event-handlers>event handlers</a> (and their corresponding <span>event handler event types</span>)  supported,
+    as <a id=the-eventsource-interface:event-handler-idl-attributes href=webappapis.html#event-handler-idl-attributes>event handler IDL attributes</a>, by all objects implementing the
+    <code id=the-eventsource-interface:eventsource-5><a href=#eventsource>EventSource</a></code> interface:
+  </p>
+
+  <table><thead><tr><th><a href=webappapis.html#event-handlers id=the-eventsource-interface:event-handlers-2>Event handler</a>
+        <th><span>Event handler event type</span>
+    <tbody><tr><td><dfn data-dfn-for=EventSource id=handler-eventsource-onopen data-dfn-type=attribute><code>onopen</code></dfn>
+        <div class="mdn-anno wrapped before"><button onclick=toggleStatus(this) class=mdn-anno-btn><b title="Support in all current engines." class=all-engines-flag>✔</b><span>MDN</span></button><div class=feature><p><a href=https://developer.mozilla.org/en-US/docs/Web/API/EventSource/open_event title="The open event of the EventSource API is fired when a connection with an event source is opened.">EventSource/open_event</a><p class=all-engines-text>Support in all current engines.<div class=support><span class="firefox yes"><span>Firefox</span><span>6+</span></span><span class="safari yes"><span>Safari</span><span>5+</span></span><span class="chrome yes"><span>Chrome</span><span>6+</span></span><hr><span class="opera yes"><span>Opera</span><span>12+</span></span><span class="edge_blink yes"><span>Edge</span><span>79+</span></span><hr><span class="edge unknown"><span>Edge (Legacy)</span><span>?</span></span><span class="ie no"><span>Internet Explorer</span><span>No</span></span><hr><span class="firefox_android yes"><span>Firefox Android</span><span>45+</span></span><span class="safari_ios yes"><span>Safari iOS</span><span>5+</span></span><span class="chrome_android unknown"><span>Chrome Android</span><span>?</span></span><span class="webview_android unknown"><span>WebView Android</span><span>?</span></span><span class="samsunginternet_android unknown"><span>Samsung Internet</span><span>?</span></span><span class="opera_android yes"><span>Opera Android</span><span>12+</span></span></div></div></div><td> <code id=the-eventsource-interface:event-open><a href=indices.html#event-open>open</a></code>
+      <tr><td><dfn data-dfn-for=EventSource id=handler-eventsource-onmessage data-dfn-type=attribute><code>onmessage</code></dfn>
+        <div class="mdn-anno wrapped before"><button onclick=toggleStatus(this) class=mdn-anno-btn><b title="Support in all current engines." class=all-engines-flag>✔</b><span>MDN</span></button><div class=feature><p><a href=https://developer.mozilla.org/en-US/docs/Web/API/EventSource/message_event title="The message event of the EventSource API is fired when data is received through an event source.">EventSource/message_event</a><p class=all-engines-text>Support in all current engines.<div class=support><span class="firefox yes"><span>Firefox</span><span>6+</span></span><span class="safari yes"><span>Safari</span><span>5+</span></span><span class="chrome yes"><span>Chrome</span><span>6+</span></span><hr><span class="opera yes"><span>Opera</span><span>12+</span></span><span class="edge_blink yes"><span>Edge</span><span>79+</span></span><hr><span class="edge unknown"><span>Edge (Legacy)</span><span>?</span></span><span class="ie no"><span>Internet Explorer</span><span>No</span></span><hr><span class="firefox_android yes"><span>Firefox Android</span><span>45+</span></span><span class="safari_ios yes"><span>Safari iOS</span><span>5+</span></span><span class="chrome_android unknown"><span>Chrome Android</span><span>?</span></span><span class="webview_android unknown"><span>WebView Android</span><span>?</span></span><span class="samsunginternet_android unknown"><span>Samsung Internet</span><span>?</span></span><span class="opera_android yes"><span>Opera Android</span><span>12+</span></span></div></div></div><td> <code id=the-eventsource-interface:event-message><a href=indices.html#event-message>message</a></code>
+      <tr><td><dfn data-dfn-for=EventSource id=handler-eventsource-onerror data-dfn-type=attribute><code>onerror</code></dfn>
+        <div class="mdn-anno wrapped before"><button onclick=toggleStatus(this) class=mdn-anno-btn><b title="Support in all current engines." class=all-engines-flag>✔</b><span>MDN</span></button><div class=feature><p><a href=https://developer.mozilla.org/en-US/docs/Web/API/EventSource/error_event title="The error event of the EventSource API is fired when a connection with an event source fails to be opened.">EventSource/error_event</a><p class=all-engines-text>Support in all current engines.<div class=support><span class="firefox yes"><span>Firefox</span><span>6+</span></span><span class="safari yes"><span>Safari</span><span>5+</span></span><span class="chrome yes"><span>Chrome</span><span>6+</span></span><hr><span class="opera yes"><span>Opera</span><span>12+</span></span><span class="edge_blink yes"><span>Edge</span><span>79+</span></span><hr><span class="edge unknown"><span>Edge (Legacy)</span><span>?</span></span><span class="ie no"><span>Internet Explorer</span><span>No</span></span><hr><span class="firefox_android yes"><span>Firefox Android</span><span>45+</span></span><span class="safari_ios yes"><span>Safari iOS</span><span>5+</span></span><span class="chrome_android unknown"><span>Chrome Android</span><span>?</span></span><span class="webview_android unknown"><span>WebView Android</span><span>?</span></span><span class="samsunginternet_android unknown"><span>Samsung Internet</span><span>?</span></span><span class="opera_android yes"><span>Opera Android</span><span>12+</span></span></div></div></div><td> <code id=the-eventsource-interface:event-error><a href=indices.html#event-error>error</a></code>
+  </table>
+
+  <hr>
+
+  
+
+
+  <h4 id=the-last-event-id-header><span class=secno>9.2.3</span> The `<code id=the-last-event-id-header:last-event-id><a href=#last-event-id>Last-Event-ID</a></code>` header<a href=#the-last-event-id-header class=self-link></a></h4>
+
+  <p>The <dfn id=last-event-id data-dfn-type=http-header><code>Last-Event-ID</code></dfn>` HTTP request header reports an
+    <code id=the-last-event-id-header:eventsource><a href=#eventsource>EventSource</a></code> object's <span>last event ID
+      string</span> to the server when the user agent is to <span>reestablish the connection</span>.
+
+  <p class=XXX>See <a href=https://github.com/whatwg/html/issues/7363>whatwg/html issue
+      #7363</a> to define the value space better. It is essentially any UTF-8 encoded string, that does
+    not contain U+0000 NULL, U+000A LF, or U+000D CR.</p>
+
+
+  
+
+  <h4 id=the-event-stream-format><span class=secno>9.2.4</span> The event stream format<a href=#the-event-stream-format class=self-link></a></h4>
+
+  <p>This event stream format's <a id=the-event-stream-format:mime-type href=https://mimesniff.spec.whatwg.org/#mime-type data-x-internal=mime-type>MIME type</a> is <code>text/event-stream</code>.</p>
+
+  <p>The event stream format is as described by the <code>stream</code> production of the
+    following ABNF, the character set for which is Unicode. <a href=references.html#refsABNF>[ABNF]</a>
+  </p>
+
+  <pre><code class=abnf>stream        = [ bom ] *event
+event         = *( comment / field ) end-of-line
+comment       = colon *any-char end-of-line
+field         = 1*name-char [ colon [ space ] *any-char ] end-of-line
+end-of-line   = ( cr lf / cr / lf )
+
+; characters
+lf            = %x000A ; U+000A LINE FEED (LF)
+cr            = %x000D ; U+000D CARRIAGE RETURN (CR)
+space         = %x0020 ; U+0020 SPACE
+colon         = %x003A ; U+003A COLON (:)
+bom           = %xFEFF ; U+FEFF BYTE ORDER MARK
+name-char     = %x0000-0009 / %x000B-000C / %x000E-0039 / %x003B-10FFFF
+                ; a <a id=the-event-stream-format:scalar-value href=https://infra.spec.whatwg.org/#scalar-value data-x-internal=scalar-value>scalar value</a> other than U+000A LINE FEED (LF), U+000D CARRIAGE RETURN (CR), or U+003A COLON (:)
+any-char      = %x0000-0009 / %x000B-000C / %x000E-10FFFF
+                ; a <a id=the-event-stream-format:scalar-value-2 href=https://infra.spec.whatwg.org/#scalar-value data-x-internal=scalar-value>scalar value</a> other than U+000A LINE FEED (LF) or U+000D CARRIAGE RETURN (CR)</code></pre>
+
+  <p>Event streams in this format must always be encoded as UTF-8. <a href=references.html#refsENCODING>[ENCODING]</a>
+  </p>
+
+  <p>Lines must be separated by either a U+000D CARRIAGE RETURN U+000A LINE FEED (CRLF) character
+    pair, a single U+000A LINE FEED (LF) character, or a single U+000D CARRIAGE RETURN (CR)
+    character.</p>
+
+  
+
+
+  
+
+  <div class=example>
+    <p>The following event stream, once followed by a blank line:</p>
+    <pre>data: YHOO
+data: +2
+data: 10</pre>
+
+    <p>...would cause an event <code id=the-event-stream-format:event-message><a href=indices.html#event-message>message</a></code> with the interface
+      <code id=the-event-stream-format:messageevent><a href=comms.html#messageevent>MessageEvent</a></code> to be dispatched on the <code id=the-event-stream-format:eventsource><a href=#eventsource>EventSource</a></code> object. The event's
+      <code id=the-event-stream-format:dom-messageevent-data><a href=comms.html#dom-messageevent-data>data</a></code> attribute would contain the string "<code>YHOO\n+2\n10</code>" (where "<code>\n</code>" represents a newline).
+    </p>
+
+    <p>This could be used as follows:
+    <pre><code class=js>var stocks = new EventSource("https://stocks.example.com/ticker.php");
+stocks.onmessage = function (event) {
+  var data = event.data.split('\n');
+  updateStocks(data[0], data[1], data[2]);
+};</code></pre>
+
+    <p>...where <code>updateStocks()</code> is a function defined as:</p>
+
+    <pre><code class=js>function updateStocks(symbol, delta, value) { ... }</code></pre>
+
+    <p>...or some such.</p>
+  </div>
+
+  <div class=example>
+    <p>The following stream contains four blocks. The first block has just a comment, and will fire
+      nothing. The second block has two fields with names "data" and "id" respectively; an event will
+      be fired for this block, with the data "first event", and will then set the last event ID to "1"
+      so that if the connection died between this block and the next, the server would be sent a
+      `<code id=the-event-stream-format:last-event-id><a href=#last-event-id>Last-Event-ID</a></code>` header with the value `<code>1</code>`. The third block
+      fires an event with data "second event", and also has an "id" field, this time with no value,
+      which resets the last event ID to the empty string (meaning no `<code id=the-event-stream-format:last-event-id-2><a href=#last-event-id>Last-Event-ID</a></code>`
+      header will now be sent in the event of a reconnection being attempted). Finally, the last block
+      just fires an event with the data " third event" (with a single leading space
+      character). Note that the last still has to end with a blank line, the end of the stream is not
+      enough to trigger the dispatch of the last event.</p>
+
+    <pre>: test stream
+
+data: first event
+id: 1
+
+data:second event
+id
+
+data:  third event
+</pre>
+  </div>
+
+  <div class=example>
+    <p>The following stream fires two events:</p>
+
+    <pre>data
+
+data
+data
+
+data:</pre>
+
+    <p>The first block fires events with the data set to the empty string, as would the last block if
+      it was followed by a blank line. The middle block fires an event with the data set to a single
+      newline character. The last block is discarded because it is not followed by a blank line.</p>
+  </div>
+
+  <div class=example>
+    <p>The following stream fires two identical events:</p>
+
+    <pre>data:test
+
+data: test
+</pre>
+
+    <p>This is because the space after the colon is ignored if present.</p>
+  </div>
+
+
+  <h4 id=authoring-notes><span class=secno>9.2.5</span> Authoring notes<a href=#authoring-notes class=self-link></a></h4>
+
+  <p>Legacy proxy servers are known to, in certain cases, drop HTTP connections after a short
+    timeout. To protect against such proxy servers, authors can include a comment line (one starting
+    with a ':' character) every 15 seconds or so.</p>
+
+  <p>Authors wishing to relate event source connections to each other or to specific documents
+    previously served might find that relying on IP addresses doesn't work, as individual clients can
+    have multiple IP addresses (due to having multiple proxy servers) and individual IP addresses can
+    have multiple clients (due to sharing a proxy server). It is better to include a unique identifier
+    in the document when it is served and then pass that identifier as part of the URL when the
+    connection is established.</p>
+
+  <p>Authors are also cautioned that HTTP chunking can have unexpected negative effects on the
+    reliability of this protocol, in particular if the chunking is done by a different layer unaware
+    of the timing requirements. If this is a problem, chunking can be disabled for serving event
+    streams.</p> 
+
+  <p>Clients that support HTTP's per-server connection limitation might run into trouble when
+    opening multiple pages from a site if each page has an <code id=authoring-notes:eventsource><a href=#eventsource>EventSource</a></code> to the same
+    domain. Authors can avoid this using the relatively complex mechanism of using unique domain names
+    per connection, or by allowing the user to enable or disable the <code id=authoring-notes:eventsource-2><a href=#eventsource>EventSource</a></code>
+    functionality on a per-page basis, or by sharing a single <code id=authoring-notes:eventsource-3><a href=#eventsource>EventSource</a></code> object using a
+    <a href=workers.html#sharedworkerglobalscope-2 id=authoring-notes:sharedworkerglobalscope-2>shared worker</a>.
+  </p>
+
+  
+
+
+  <nav><a href=comms.html>← 9 Communication</a> — <a href=./>Table of Contents</a> — <a href=web-messaging.html>9.3 Cross-document messaging →</a></nav>
