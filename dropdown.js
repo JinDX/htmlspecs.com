@@ -35,7 +35,7 @@ var cssLinks = [
     { text: "CSS Box Model Level 3", href: "https://htmlspecs.com/css/css-box-3" },
     { text: "CSS Containment Module Level 2", href: "https://htmlspecs.com/css/css-contain-2" }
 ];
-// 创建 GitHub 图标按钮
+
 var githubButton = document.createElement("a");
 githubButton.href = "https://github.com/JinDX/htmlspecs.com";
 if (hostname === 'ecma262.com') {
