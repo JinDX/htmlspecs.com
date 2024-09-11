@@ -15,6 +15,18 @@ HTML 及相关 API，CSS 标准系列。
 - [x] storage https://htmlspecs.com/storage
 - [x] CSS Snapshot 2023 https://htmlspecs.com/css/css-2023
 - [x] Cascading Style Sheets Level 2 Revision 2 (CSS 2.2) Specification https://htmlspecs.com/css/css22/
+- [ ] CSS Flexible Box Layout Module Level 1 https://htmlspecs.com/css/css-flexbox-1
+- [ ] CSS Grid Layout Module Level 1 https://htmlspecs.com/css/css-grid-1
+- [ ] CSS Grid Layout Module Level 2 https://htmlspecs.com/css/css-grid-2
+- [ ] CSS Color Module Level 5 https://htmlspecs.com/css/css-color-5
+- [ ] CSS Fonts Module Level 4 https://htmlspecs.com/css/css-fonts-4
+- [ ] CSS Media Queries Level 5 https://htmlspecs.com/css/mediaqueries-5
+- [ ] CSS Overscroll Behavior https://htmlspecs.com/css/css-overscroll
+- [ ] CSS Motion Path Module Level 1 https://htmlspecs.com/css/motion-path
+- [ ] CSS Box Model Level 4 https://htmlspecs.com/css/css-box-4
+- [ ] CSS Display Module Level 3 https://htmlspecs.com/css/css-display-3
+- [ ] CSS Pseudo-Elements Module Level 4 https://htmlspecs.com/css/css-pseudo-4
+- [ ] CSS Images Module Level 4 https://htmlspecs.com/css/css-images-4
 - [x] CSS Color Level 3 https://htmlspecs.com/css/css-color-3
 - [x] CSS Namespaces https://htmlspecs.com/css/css-namespaces-3
 - [x] Selectors Level 3 https://htmlspecs.com/css/selectors-3
@@ -26,6 +38,11 @@ HTML 及相关 API，CSS 标准系列。
 - [x] CSS Basic User Interface Level 3 https://htmlspecs.com/css/css-ui-3
 - [x] CSS Box Model Level 3  https://htmlspecs.com/css/css-box-3
 - [x] CSS Containment Module Level 2  https://htmlspecs.com/css/css-contain-2
+- [ ] File API  https://htmlspecs.com/FileAPI
+- [ ] Performance Timeline  https://htmlspecs.com/performance-timeline
+- [ ] Resize Observer  https://htmlspecs.com/resize-observer
+- [ ] Web Share API  https://htmlspecs.com/web-share
+- [ ] Push API  https://htmlspecs.com/push-api
 - [x] Payment Request API https://htmlspecs.com/payment-request
 - [x] Intersection Observer https://htmlspecs.com/intersection-observer
 - [x] Web Authentication:An API for accessing Public Key Credentials Level 2 https://htmlspecs.com/webauthn-2
