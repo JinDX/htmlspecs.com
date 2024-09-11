@@ -22,6 +22,7 @@ var links = [
     { text: "CSS Basic User Interface Level 3", href: "https://htmlspecs.com/css/css-ui-3" },
     { text: "CSS Box Model Level 3 ", href: "https://htmlspecs.com/css/css-box-3" },
     { text: "CSS Containment Module Level 2 ", href: "https://htmlspecs.com/css/css-contain-2" },
+    { text: "File API", href: "https://htmlspecs.com/FileAPI" },
     { text: "Payment Request API ", href: "https://htmlspecs.com/payment-request" },
     { text: "Intersection Observer", href: "https://htmlspecs.com/intersection-observer" },
     { text: "Web Authentication Level 2", href: "https://htmlspecs.com/webauthn-2" },
