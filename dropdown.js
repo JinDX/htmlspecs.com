@@ -68,6 +68,7 @@ dropdownContent.style.top = "60px";
 dropdownContent.style.right = "20px";
 dropdownContent.style.width = "400px";
 dropdownContent.style.height = "80%";
+dropdownContent.style.maxHeight = "80vh";
 dropdownContent.style.backgroundColor = "white";
 dropdownContent.style.border = "1px solid #ddd";
 dropdownContent.style.borderRadius = "4px";
@@ -103,7 +104,7 @@ links.forEach(function (link) {
         cssTitle.style.alignItems = "center";
         cssTitle.style.textDecoration = "none";
         cssTitle.style.userSelect = "none";
-        cssTitle.style.borderBottom = "none"; 
+        cssTitle.style.borderBottom = "none";
 
         var triangle = document.createElement("span");
         triangle.style.borderTop = "6px solid transparent";
@@ -112,7 +113,7 @@ links.forEach(function (link) {
         triangle.style.display = "inline-block";
         triangle.style.marginRight = "10px";
         triangle.style.transition = "transform 0.3s ease";
-        triangle.style.transform = "rotate(0deg)"; 
+        triangle.style.transform = "rotate(0deg)";
 
         cssTitle.prepend(triangle);
 
@@ -142,17 +143,16 @@ links.forEach(function (link) {
         cssTitle.onclick = function () {
             var isCollapsed = cssContent.style.display === "none";
             cssContent.style.display = isCollapsed ? "block" : "none";
-            triangle.style.transform = isCollapsed ? "rotate(90deg)" : "rotate(0deg)"; 
+            triangle.style.transform = isCollapsed ? "rotate(90deg)" : "rotate(0deg)";
         };
 
-        // 添加炫目效果：彩虹文字和背景渐变
         cssTitle.onmouseover = function () {
             cssTitle.style.backgroundImage = "linear-gradient(135deg, #ff0000, #ff9900, #ffff00, #00ff00, #00ffff, #0000ff, #9900ff)";
             cssTitle.style.backgroundSize = "200% 200%";
             cssTitle.style.animation = "gradient 5s ease infinite";
             cssTitle.style.color = "transparent";
             cssTitle.style.backgroundClip = "text";
-            cssTitle.style.webkitBackgroundClip = "text"; 
+            cssTitle.style.webkitBackgroundClip = "text";
         };
         cssTitle.onmouseout = function () {
             cssTitle.style.backgroundImage = "none";
@@ -174,13 +174,20 @@ window.onclick = function (event) {
     }
 };
 
-// 添加CSS动画的样式
 var style = document.createElement('style');
 style.innerHTML = `
   @keyframes gradient {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
+  }
+
+  @media (max-width: 600px) {
+    #dropdownContent {
+      width: 100%;
+      left: 0;
+      right: 0;
+    }
   }
 `;
 document.head.appendChild(style);
