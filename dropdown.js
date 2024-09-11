@@ -1,4 +1,3 @@
-
 var links = [
     { text: "HTML", href: "https://htmlspecs.com/" },
     { text: "ECMA-262", href: "https://ecma262.com/" },
@@ -9,6 +8,19 @@ var links = [
     { text: "fullscreen", href: "https://htmlspecs.com/fullscreen" },
     { text: "websockets", href: "https://htmlspecs.com/websockets" },
     { text: "storage", href: "https://htmlspecs.com/storage" },
+    { text: "File API", href: "https://htmlspecs.com/FileAPI" },
+    { text: "Payment Request API", href: "https://htmlspecs.com/payment-request" },
+    { text: "Intersection Observer", href: "https://htmlspecs.com/intersection-observer" },
+    { text: "Web Authentication Level 2", href: "https://htmlspecs.com/webauthn-2" },
+    { text: "Pointer Events", href: "https://htmlspecs.com/pointerevents" },
+    { text: "Web Audio API", href: "https://htmlspecs.com/webaudio" },
+    { text: "WebRTC", href: "https://htmlspecs.com/webrtc" },
+    { text: "Indexed Database API 3.0", href: "https://htmlspecs.com/IndexedDB" },
+    { text: "Service Workers", href: "https://htmlspecs.com/service-workers" },
+    { text: "Web Animations", href: "https://htmlspecs.com/web-animations-1" }
+];
+
+var cssLinks = [
     { text: "CSS Snapshot 2023", href: "https://htmlspecs.com/css/css-2023" },
     { text: "CSS 2.2 Specification", href: "https://htmlspecs.com/css/css22/" },
     { text: "CSS Color Level 3", href: "https://htmlspecs.com/css/css-color-3" },
@@ -20,20 +32,9 @@ var links = [
     { text: "CSS Fonts Level 3", href: "https://htmlspecs.com/css/css-fonts-3" },
     { text: "CSS Writing Modes Level 3", href: "https://htmlspecs.com/css/css-writing-modes-3" },
     { text: "CSS Basic User Interface Level 3", href: "https://htmlspecs.com/css/css-ui-3" },
-    { text: "CSS Box Model Level 3 ", href: "https://htmlspecs.com/css/css-box-3" },
-    { text: "CSS Containment Module Level 2 ", href: "https://htmlspecs.com/css/css-contain-2" },
-    { text: "File API", href: "https://htmlspecs.com/FileAPI" },
-    { text: "Payment Request API ", href: "https://htmlspecs.com/payment-request" },
-    { text: "Intersection Observer", href: "https://htmlspecs.com/intersection-observer" },
-    { text: "Web Authentication Level 2", href: "https://htmlspecs.com/webauthn-2" },
-    { text: "Pointer Events", href: "https://htmlspecs.com/pointerevents" },
-    { text: "Web Audio API", href: "https://htmlspecs.com/webaudio" },
-    { text: "WebRTC", href: "https://htmlspecs.com/webrtc" },
-    { text: "Indexed Database API 3.0", href: " https://htmlspecs.com/IndexedDB" },
-    { text: "Service Workers ", href: "https://htmlspecs.com/service-workers" },
-    { text: "Web Animations", href: " https://htmlspecs.com/web-animations-1" }
+    { text: "CSS Box Model Level 3", href: "https://htmlspecs.com/css/css-box-3" },
+    { text: "CSS Containment Module Level 2", href: "https://htmlspecs.com/css/css-contain-2" }
 ];
-
 
 var dropdownButton = document.createElement("button");
 dropdownButton.id = "dropdownButton";
@@ -59,41 +60,31 @@ dropdownButton.onmouseout = function () {
 };
 document.body.appendChild(dropdownButton);
 
-
-
 var dropdownContent = document.createElement("div");
 dropdownContent.id = "dropdownContent";
 dropdownContent.style.display = "none";
 dropdownContent.style.position = "absolute";
 dropdownContent.style.top = "60px";
 dropdownContent.style.right = "20px";
-dropdownContent.style.width = "300px";
+dropdownContent.style.width = "400px";
+dropdownContent.style.height = "80%";
 dropdownContent.style.backgroundColor = "white";
 dropdownContent.style.border = "1px solid #ddd";
 dropdownContent.style.borderRadius = "4px";
 dropdownContent.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.1)";
 dropdownContent.style.zIndex = "1000";
 dropdownContent.style.overflowY = "auto";
-dropdownContent.style.maxHeight = "800px";
 document.body.appendChild(dropdownContent);
 
 links.forEach(function (link) {
-    var container = document.createElement("div");
-    container.style.display = "flex";
-    container.style.alignItems = "center";
-    container.style.padding = "10px 15px";
-    container.style.borderBottom = "1px solid #eee";
-
     var a = document.createElement("a");
     a.href = link.href;
     a.textContent = link.text;
     a.title = link.text;
+    a.style.display = "block";
+    a.style.padding = "10px 15px";
     a.style.color = "#333";
     a.style.textDecoration = "none";
-    a.style.flexGrow = "1";
-    a.style.overflow = "hidden";
-    a.style.whiteSpace = "nowrap";
-    a.style.textOverflow = "ellipsis";
     a.style.transition = "color 0.3s";
     a.onmouseover = function () {
         a.style.color = "#007BFF";
@@ -101,9 +92,76 @@ links.forEach(function (link) {
     a.onmouseout = function () {
         a.style.color = "#333";
     };
+    dropdownContent.appendChild(a);
 
-    container.appendChild(a);
-    dropdownContent.appendChild(container);
+    if (link.text === "ECMA-262") {
+        var cssTitle = document.createElement("div");
+        cssTitle.textContent = "CSS相关";
+        cssTitle.style.padding = "10px 15px";
+        cssTitle.style.cursor = "pointer";
+        cssTitle.style.display = "flex";
+        cssTitle.style.alignItems = "center";
+        cssTitle.style.textDecoration = "none";
+        cssTitle.style.userSelect = "none";
+        cssTitle.style.borderBottom = "none"; 
+
+        var triangle = document.createElement("span");
+        triangle.style.borderTop = "6px solid transparent";
+        triangle.style.borderBottom = "6px solid transparent";
+        triangle.style.borderLeft = "6px solid #333";
+        triangle.style.display = "inline-block";
+        triangle.style.marginRight = "10px";
+        triangle.style.transition = "transform 0.3s ease";
+        triangle.style.transform = "rotate(0deg)"; 
+
+        cssTitle.prepend(triangle);
+
+        var cssContent = document.createElement("div");
+        cssContent.style.display = "none";
+        cssContent.style.padding = "0 15px";
+
+        cssLinks.forEach(function (link) {
+            var a = document.createElement("a");
+            a.href = link.href;
+            a.textContent = link.text;
+            a.title = link.text;
+            a.style.display = "block";
+            a.style.padding = "8px 20px";
+            a.style.color = "#333";
+            a.style.textDecoration = "none";
+            a.style.transition = "color 0.3s";
+            a.onmouseover = function () {
+                a.style.color = "#007BFF";
+            };
+            a.onmouseout = function () {
+                a.style.color = "#333";
+            };
+            cssContent.appendChild(a);
+        });
+
+        cssTitle.onclick = function () {
+            var isCollapsed = cssContent.style.display === "none";
+            cssContent.style.display = isCollapsed ? "block" : "none";
+            triangle.style.transform = isCollapsed ? "rotate(90deg)" : "rotate(0deg)"; 
+        };
+
+        // 添加炫目效果：彩虹文字和背景渐变
+        cssTitle.onmouseover = function () {
+            cssTitle.style.backgroundImage = "linear-gradient(135deg, #ff0000, #ff9900, #ffff00, #00ff00, #00ffff, #0000ff, #9900ff)";
+            cssTitle.style.backgroundSize = "200% 200%";
+            cssTitle.style.animation = "gradient 5s ease infinite";
+            cssTitle.style.color = "transparent";
+            cssTitle.style.backgroundClip = "text";
+            cssTitle.style.webkitBackgroundClip = "text"; 
+        };
+        cssTitle.onmouseout = function () {
+            cssTitle.style.backgroundImage = "none";
+            cssTitle.style.color = "black";
+        };
+
+        dropdownContent.appendChild(cssTitle);
+        dropdownContent.appendChild(cssContent);
+    }
 });
 
 dropdownButton.onclick = function () {
@@ -111,34 +169,18 @@ dropdownButton.onclick = function () {
 };
 
 window.onclick = function (event) {
-    if (!event.target.matches('#dropdownButton')) {
+    if (!event.target.matches('#dropdownButton') && !dropdownContent.contains(event.target)) {
         dropdownContent.style.display = "none";
     }
 };
 
-
-(function() {
-    var gaID;
-    var hostname = window.location.hostname;
-
-    if (hostname === 'htmlspecs.com') {
-        gaID = 'G-Z0H3G08TCK';
-    } else if (hostname === 'ecma262.com') {
-        gaID = 'G-DEEXSBMHX9';
-    } else {
-        return;
-    }
-
-    var script = document.createElement('script');
-    script.async = true;
-    script.src = 'https://www.googletagmanager.com/gtag/js?id=' + gaID;
-    document.head.appendChild(script);
-
-    script.onload = function() {
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){ dataLayer.push(arguments); }
-        gtag('js', new Date());
-        gtag('config', gaID);
-    };
-})();
-
+// 添加CSS动画的样式
+var style = document.createElement('style');
+style.innerHTML = `
+  @keyframes gradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+`;
+document.head.appendChild(style);
