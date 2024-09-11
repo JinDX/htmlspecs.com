@@ -38,7 +38,7 @@ var cssLinks = [
 
 var githubButton = document.createElement("a");
 githubButton.href = "https://github.com/JinDX/htmlspecs.com";
-if (hostname === 'ecma262.com') {
+if (window.location.hostname === 'ecma262.com') {
     githubButton.href = "https://github.com/JinDX/ecma262.com";
 }
 githubButton.target = "_blank";
