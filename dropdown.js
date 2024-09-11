@@ -1,39 +1,39 @@
 var links = [
     { text: "HTML", href: "https://htmlspecs.com/" },
     { text: "ECMA-262", href: "https://ecma262.com/" },
+    { text: "dom", href: "https://htmlspecs.com/dom" },
     { text: "Fetch", href: "https://htmlspecs.com/fetch" },
     { text: "console", href: "https://htmlspecs.com/console" },
-    { text: "dom", href: "https://htmlspecs.com/dom" },
+    { text: "websockets", href: "https://htmlspecs.com/websockets" },
     { text: "notifications", href: "https://htmlspecs.com/notifications" },
     { text: "fullscreen", href: "https://htmlspecs.com/fullscreen" },
-    { text: "websockets", href: "https://htmlspecs.com/websockets" },
     { text: "storage", href: "https://htmlspecs.com/storage" },
     { text: "File API", href: "https://htmlspecs.com/FileAPI" },
-    { text: "Payment Request API", href: "https://htmlspecs.com/payment-request" },
-    { text: "Intersection Observer", href: "https://htmlspecs.com/intersection-observer" },
-    { text: "Web Authentication Level 2", href: "https://htmlspecs.com/webauthn-2" },
-    { text: "Pointer Events", href: "https://htmlspecs.com/pointerevents" },
-    { text: "Web Audio API", href: "https://htmlspecs.com/webaudio" },
-    { text: "WebRTC", href: "https://htmlspecs.com/webrtc" },
     { text: "Indexed Database API 3.0", href: "https://htmlspecs.com/IndexedDB" },
     { text: "Service Workers", href: "https://htmlspecs.com/service-workers" },
-    { text: "Web Animations", href: "https://htmlspecs.com/web-animations-1" }
+    { text: "WebRTC", href: "https://htmlspecs.com/webrtc" },
+    { text: "Pointer Events", href: "https://htmlspecs.com/pointerevents" },
+    { text: "Intersection Observer", href: "https://htmlspecs.com/intersection-observer" },
+    { text: "Web Audio API", href: "https://htmlspecs.com/webaudio" },
+    { text: "Web Animations", href: "https://htmlspecs.com/web-animations-1" },
+    { text: "Payment Request API", href: "https://htmlspecs.com/payment-request" },
+    { text: "Web Authentication Level 2", href: "https://htmlspecs.com/webauthn-2" }
 ];
 
 var cssLinks = [
-    { text: "CSS Snapshot 2023", href: "https://htmlspecs.com/css/css-2023" },
-    { text: "CSS 2.2 Specification", href: "https://htmlspecs.com/css/css22/" },
-    { text: "CSS Color Level 3", href: "https://htmlspecs.com/css/css-color-3" },
-    { text: "CSS Namespaces", href: "https://htmlspecs.com/css/css-namespaces-3" },
+    { text: "CSS Box Model Level 3", href: "https://htmlspecs.com/css/css-box-3" },
+    { text: "CSS Cascading and Inheritance Level 3", href: "https://htmlspecs.com/css/css-cascade-3" },
     { text: "Selectors Level 3", href: "https://htmlspecs.com/css/selectors-3" },
+    { text: "CSS Fonts Level 3", href: "https://htmlspecs.com/css/css-fonts-3" },
+    { text: "CSS Color Level 3", href: "https://htmlspecs.com/css/css-color-3" },
     { text: "Media Queries Level 3", href: "https://htmlspecs.com/css/mediaqueries-3" },
     { text: "CSS Style Attributes", href: "https://htmlspecs.com/css/css-style-attr" },
-    { text: "CSS Cascading and Inheritance Level 3", href: "https://htmlspecs.com/css/css-cascade-3" },
-    { text: "CSS Fonts Level 3", href: "https://htmlspecs.com/css/css-fonts-3" },
     { text: "CSS Writing Modes Level 3", href: "https://htmlspecs.com/css/css-writing-modes-3" },
     { text: "CSS Basic User Interface Level 3", href: "https://htmlspecs.com/css/css-ui-3" },
-    { text: "CSS Box Model Level 3", href: "https://htmlspecs.com/css/css-box-3" },
-    { text: "CSS Containment Module Level 2", href: "https://htmlspecs.com/css/css-contain-2" }
+    { text: "CSS Namespaces", href: "https://htmlspecs.com/css/css-namespaces-3" },
+    { text: "CSS Containment Module Level 2", href: "https://htmlspecs.com/css/css-contain-2" },
+    { text: "CSS Snapshot 2023", href: "https://htmlspecs.com/css/css-2023" },
+    { text: "CSS 2.2 Specification", href: "https://htmlspecs.com/css/css22/" }
 ];
 
 var githubButton = document.createElement("a");
