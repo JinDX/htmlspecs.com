@@ -35,14 +35,42 @@ var cssLinks = [
     { text: "CSS Box Model Level 3", href: "https://htmlspecs.com/css/css-box-3" },
     { text: "CSS Containment Module Level 2", href: "https://htmlspecs.com/css/css-contain-2" }
 ];
+// 创建 GitHub 图标按钮
+var githubButton = document.createElement("a");
+githubButton.href = "https://github.com/JinDX/htmlspecs.com";
+if (hostname === 'ecma262.com') {
+    githubButton.href = "https://github.com/JinDX/ecma262.com";
+}
+githubButton.target = "_blank";
+githubButton.style.display = "inline-block";
+githubButton.style.width = "40px";
+githubButton.style.height = "40px";
+githubButton.style.backgroundImage = "url('https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png')";
+githubButton.style.backgroundSize = "cover";
+githubButton.style.borderRadius = "50%";
+githubButton.style.boxShadow = "0 2px 6px rgba(0, 0, 0, 0.2)";
+githubButton.style.cursor = "pointer";
+githubButton.style.marginRight = "10px";
+
+githubButton.title = "查看 GitHub 源码";
+
+
+githubButton.onmouseover = function () {
+    githubButton.style.transform = "scale(1.2)";
+    githubButton.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.4)";
+};
+
+githubButton.onmouseout = function () {
+    githubButton.style.transform = "scale(1)";
+    githubButton.style.boxShadow = "0 2px 6px rgba(0, 0, 0, 0.2)";
+};
 
 var dropdownButton = document.createElement("button");
 dropdownButton.id = "dropdownButton";
 dropdownButton.textContent = "其他标准";
-dropdownButton.style.position = "absolute";
+dropdownButton.style.display = "inline-block";
 dropdownButton.style.zIndex = "3";
-dropdownButton.style.top = "20px";
-dropdownButton.style.right = "20px";
+dropdownButton.style.marginLeft = "10px";
 dropdownButton.style.backgroundColor = "#6c757d";
 dropdownButton.style.color = "white";
 dropdownButton.style.padding = "10px 15px";
@@ -58,7 +86,19 @@ dropdownButton.onmouseover = function () {
 dropdownButton.onmouseout = function () {
     dropdownButton.style.backgroundColor = "#6c757d";
 };
-document.body.appendChild(dropdownButton);
+
+var buttonContainer = document.createElement("div");
+buttonContainer.style.position = "absolute";
+buttonContainer.style.top = "20px";
+buttonContainer.style.right = "20px";
+buttonContainer.style.display = "flex";
+buttonContainer.style.alignItems = "center";
+
+buttonContainer.appendChild(githubButton);
+buttonContainer.appendChild(dropdownButton);
+
+document.body.appendChild(buttonContainer);
+
 
 var dropdownContent = document.createElement("div");
 dropdownContent.id = "dropdownContent";
@@ -191,3 +231,29 @@ style.innerHTML = `
   }
 `;
 document.head.appendChild(style);
+
+
+(function () {
+    var gaID;
+    var hostname = window.location.hostname;
+
+    if (hostname === 'htmlspecs.com') {
+        gaID = 'G-Z0H3G08TCK';
+    } else if (hostname === 'ecma262.com') {
+        gaID = 'G-DEEXSBMHX9';
+    } else {
+        return;
+    }
+
+    var script = document.createElement('script');
+    script.async = true;
+    script.src = 'https://www.googletagmanager.com/gtag/js?id=' + gaID;
+    document.head.appendChild(script);
+
+    script.onload = function () {
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', gaID);
+    };
+})();
