@@ -41,7 +41,7 @@ HTML 及相关 API，CSS 标准系列。
 - [x] CSS Containment Module Level 2  https://htmlspecs.com/css/css-contain-2
 - [x] File API  https://htmlspecs.com/FileAPI
 - [x] Performance Timeline  https://htmlspecs.com/performance-timeline
-- [ ] Resize Observer  https://htmlspecs.com/resize-observer
+- [x] Resize Observer  https://htmlspecs.com/resize-observer
 - [ ] Web Share API  https://htmlspecs.com/web-share
 - [ ] Push API  https://htmlspecs.com/push-api
 - [x] Payment Request API https://htmlspecs.com/payment-request

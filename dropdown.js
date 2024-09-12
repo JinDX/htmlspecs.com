@@ -18,7 +18,9 @@ var links = [
     { text: "Web Audio API", href: "https://htmlspecs.com/webaudio" },
     { text: "Web Animations", href: "https://htmlspecs.com/web-animations-1" },
     { text: "Payment Request API", href: "https://htmlspecs.com/payment-request" },
-    { text: "Web Authentication Level 2", href: "https://htmlspecs.com/webauthn-2" }
+    { text: "Web Authentication Level 2", href: "https://htmlspecs.com/webauthn-2" },
+    { text: "Resize Observer", href: "https://htmlspecs.com/resize-observer" }
+
 ];
 
 var cssLinks = [
