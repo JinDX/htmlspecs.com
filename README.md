@@ -9,7 +9,7 @@ HTML 及相关 API，CSS 标准系列。
 - [x] Fetch https://htmlspecs.com/fetch
 - [x] console https://htmlspecs.com/console
 - [x] dom https://htmlspecs.com/dom
-- [ ] URL https://htmlspecs.com/url
+- [x] URL https://htmlspecs.com/url
 - [ ] URL Pattern https://htmlspecs.com/urlpattern
 - [x] notifications https://htmlspecs.com/notifications
 - [x] fullscreen https://htmlspecs.com/fullscreen
