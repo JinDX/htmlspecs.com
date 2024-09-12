@@ -13,6 +13,7 @@ var links = [
     { text: "Service Workers", href: "https://htmlspecs.com/service-workers" },
     { text: "WebRTC", href: "https://htmlspecs.com/webrtc" },
     { text: "Pointer Events", href: "https://htmlspecs.com/pointerevents" },
+    { text: "Performance Timeline", href: "https://htmlspecs.com/performance-timeline" },
     { text: "Intersection Observer", href: "https://htmlspecs.com/intersection-observer" },
     { text: "Web Audio API", href: "https://htmlspecs.com/webaudio" },
     { text: "Web Animations", href: "https://htmlspecs.com/web-animations-1" },
