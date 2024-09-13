@@ -31,7 +31,7 @@ var cssLinks = [
     { text: "Selectors Level 3", href: "https://htmlspecs.com/css/selectors-3" },
     { text: "CSS Box Model Level 3", href: "https://htmlspecs.com/css/css-box-3" },
     { text: "CSS Display Module Level 3", href: "https://htmlspecs.com/css/css-display-3" },
-    // { text: "CSS Flexible Box Layout Module Level 1", href: "https://htmlspecs.com/css/css-flexbox-1" },
+    { text: "CSS Flexible Box Layout Module Level 1", href: "https://htmlspecs.com/css/css-flexbox-1" },
     // { text: "CSS Grid Layout Module Level 1", href: "https://htmlspecs.com/css/css-grid-1" },
     { text: "CSS Color Level 3", href: "https://htmlspecs.com/css/css-color-3" },
     { text: "CSS Fonts Level 3", href: "https://htmlspecs.com/css/css-fonts-3" },
