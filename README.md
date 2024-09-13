@@ -23,7 +23,7 @@ HTML 及相关 API，CSS 标准系列。
 - [ ] CSS Color Module Level 5 https://htmlspecs.com/css/css-color-5
 - [ ] CSS Fonts Module Level 4 https://htmlspecs.com/css/css-fonts-4
 - [ ] CSS Media Queries Level 5 https://htmlspecs.com/css/mediaqueries-5
-- [ ] CSS Overscroll Behavior https://htmlspecs.com/css/css-overscroll
+- [ ] CSS Overscroll Behavior https://htmlspecs.com/css/css-overscroll-1
 - [ ] CSS Motion Path Module Level 1 https://htmlspecs.com/css/motion-1
 - [ ] CSS Box Model Level 4 https://htmlspecs.com/css/css-box-4
 - [ ] CSS Display Module Level 3 https://htmlspecs.com/css/css-display-3
