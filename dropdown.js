@@ -205,8 +205,8 @@ links.forEach(function (link) {
         };
 
         cssTitle.onmouseover = function () {
-            cssTitle.style.backgroundImage = "linear-gradient(135deg, #ff0000, #ff9900, #ffff00, #00ff00, #00ffff, #0000ff, #9900ff)";
-            cssTitle.style.backgroundSize = "200% 200%";
+            cssTitle.style.backgroundImage = "linear-gradient(135deg, #ff0000, #ff6600, #ffcc00, #33cc33, #00ffff, #0066ff, #cc00ff, #ff3399)";
+            cssTitle.style.backgroundSize = "300% 300%";
             cssTitle.style.animation = "gradient 5s ease infinite";
             cssTitle.style.color = "transparent";
             cssTitle.style.backgroundClip = "text";
