@@ -44,7 +44,7 @@ HTML 及相关 API，CSS 标准系列。
 - [x] Performance Timeline  https://htmlspecs.com/performance-timeline
 - [x] Resize Observer  https://htmlspecs.com/resize-observer
 - [x] Web Share API  https://htmlspecs.com/web-share
-- [ ] Push API  https://htmlspecs.com/push-api
+- [x] Push API  https://htmlspecs.com/push-api
 - [x] Payment Request API https://htmlspecs.com/payment-request
 - [x] Intersection Observer https://htmlspecs.com/intersection-observer
 - [x] Web Authentication:An API for accessing Public Key Credentials Level 2 https://htmlspecs.com/webauthn-2
