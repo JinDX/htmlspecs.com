@@ -26,7 +26,7 @@ HTML 及相关 API，CSS 标准系列。
 - [ ] CSS Overscroll Behavior https://htmlspecs.com/css/css-overscroll-1
 - [ ] CSS Motion Path Module Level 1 https://htmlspecs.com/css/motion-1
 - [ ] CSS Box Model Level 4 https://htmlspecs.com/css/css-box-4
-- [ ] CSS Display Module Level 3 https://htmlspecs.com/css/css-display-3
+- [x] CSS Display Module Level 3 https://htmlspecs.com/css/css-display-3
 - [ ] CSS Pseudo-Elements Module Level 4 https://htmlspecs.com/css/css-pseudo-4
 - [ ] CSS Images Module Level 4 https://htmlspecs.com/css/css-images-4
 - [x] CSS Color Level 3 https://htmlspecs.com/css/css-color-3
