@@ -39,8 +39,22 @@ var cssLinks = [
     { text: "CSS Namespaces", href: "https://htmlspecs.com/css/css-namespaces-3" },
     { text: "CSS Containment Module Level 2", href: "https://htmlspecs.com/css/css-contain-2" },
     { text: "CSS Snapshot 2023", href: "https://htmlspecs.com/css/css-2023" },
-    { text: "CSS 2.2 Specification", href: "https://htmlspecs.com/css/css22/" }
+    { text: "CSS 2.2 Specification", href: "https://htmlspecs.com/css/css22/" },
+
+    // { text: "CSS Flexible Box Layout Module Level 1", href: "https://htmlspecs.com/css/css-flexbox-1" },
+    // { text: "CSS Grid Layout Module Level 1", href: "https://htmlspecs.com/css/css-grid-1" },
+    // { text: "CSS Grid Layout Module Level 2", href: "https://htmlspecs.com/css/css-grid-2" },
+    // { text: "CSS Color Module Level 5", href: "https://htmlspecs.com/css/css-color-5" },
+    // { text: "CSS Fonts Module Level 4", href: "https://htmlspecs.com/css/css-fonts-4" },
+    // { text: "CSS Media Queries Level 5", href: "https://htmlspecs.com/css/mediaqueries-5" },
+    // { text: "CSS Overscroll Behavior", href: "https://htmlspecs.com/css/css-overscroll" },
+    // { text: "CSS Motion Path Module Level 1", href: "https://htmlspecs.com/css/motion-path" },
+    // { text: "CSS Box Model Level 4", href: "https://htmlspecs.com/css/css-box-4" },
+    // { text: "CSS Display Module Level 3", href: "https://htmlspecs.com/css/css-display-3" },
+    // { text: "CSS Pseudo-Elements Module Level 4", href: "https://htmlspecs.com/css/css-pseudo-4" },
+    // { text: "CSS Images Module Level 4", href: "https://htmlspecs.com/css/css-images-4" }
 ];
+
 
 var githubButton = document.createElement("a");
 githubButton.href = "https://github.com/JinDX/htmlspecs.com";
