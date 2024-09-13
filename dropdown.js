@@ -21,7 +21,7 @@ var links = [
     { text: "Web Authentication Level 2", href: "https://htmlspecs.com/webauthn-2" },
     { text: "Resize Observer", href: "https://htmlspecs.com/resize-observer" },
     
-    // { text: "Web Share API", href: "https://htmlspecs.com/web-share" },
+    { text: "Web Share API", href: "https://htmlspecs.com/web-share" },
     // { text: "Push API", href: "https://htmlspecs.com/push-api" },
     { text: "URL", href: "https://htmlspecs.com/url" },
     { text: "URL Pattern", href: "https://htmlspecs.com/urlpattern" },
