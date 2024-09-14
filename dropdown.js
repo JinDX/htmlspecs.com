@@ -70,7 +70,7 @@ githubButton.style.boxShadow = "0 2px 6px rgba(0, 0, 0, 0.2)";
 githubButton.style.cursor = "pointer";
 githubButton.style.marginRight = "10px";
 
-githubButton.title = "查看 GitHub 源码";
+githubButton.title = "查看 GitHub 源码，加星 ⭐";
 
 
 githubButton.onmouseover = function () {
