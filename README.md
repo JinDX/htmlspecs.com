@@ -20,7 +20,7 @@ HTML 及相关 API，CSS 标准系列。
 - [x] CSS Flexible Box Layout Module Level 1 https://htmlspecs.com/css/css-flexbox-1
 - [x] CSS Grid Layout Module Level 1 https://htmlspecs.com/css/css-grid-1
 - [ ] CSS Grid Layout Module Level 2 https://htmlspecs.com/css/css-grid-2
-- [ ] CSS Color Module Level 5 https://htmlspecs.com/css/css-color-5
+- [x] CSS Color Module Level 5 https://htmlspecs.com/css/css-color-5
 - [ ] CSS Fonts Module Level 4 https://htmlspecs.com/css/css-fonts-4
 - [ ] CSS Media Queries Level 5 https://htmlspecs.com/css/mediaqueries-5
 - [ ] CSS Overscroll Behavior https://htmlspecs.com/css/css-overscroll-1
