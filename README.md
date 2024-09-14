@@ -28,7 +28,7 @@ HTML 及相关 API，CSS 标准系列。
 - [ ] CSS Box Model Level 4 https://htmlspecs.com/css/css-box-4
 - [x] CSS Display Module Level 3 https://htmlspecs.com/css/css-display-3
 - [x] CSS Pseudo-Elements Module Level 4 https://htmlspecs.com/css/css-pseudo-4
-- [ ] CSS Images Module Level 4 https://htmlspecs.com/css/css-images-4
+- [x] CSS Images Module Level 4 https://htmlspecs.com/css/css-images-4
 - [x] CSS Color Level 3 https://htmlspecs.com/css/css-color-3
 - [x] CSS Namespaces https://htmlspecs.com/css/css-namespaces-3
 - [x] Selectors Level 3 https://htmlspecs.com/css/selectors-3

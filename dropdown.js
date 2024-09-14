@@ -38,7 +38,7 @@ var cssLinks = [
     { text: "Media Queries Level 3", href: "https://htmlspecs.com/css/mediaqueries-3" },
     { text: "CSS Basic User Interface Level 3", href: "https://htmlspecs.com/css/css-ui-3" },
     { text: "CSS Pseudo-Elements Module Level 4", href: "https://htmlspecs.com/css/css-pseudo-4" },
-    // { text: "CSS Images Module Level 4", href: "https://htmlspecs.com/css/css-images-4" },
+    { text: "CSS Images Module Level 4", href: "https://htmlspecs.com/css/css-images-4" },
     { text: "CSS Writing Modes Level 3", href: "https://htmlspecs.com/css/css-writing-modes-3" },
     { text: "CSS 2.2 Specification", href: "https://htmlspecs.com/css/css22/" },
     // { text: "CSS Color Module Level 5", href: "https://htmlspecs.com/css/css-color-5" },
