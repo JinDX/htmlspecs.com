@@ -27,32 +27,54 @@ var links = [
 ];
 
 var cssLinks = [
+    // Foundational
+    { text: "CSS Snapshot 2023", href: "https://htmlspecs.com/css/css-2023" },
+    { text: "CSS 2.2 Specification", href: "https://htmlspecs.com/css/css22/" },
     { text: "CSS Cascading and Inheritance Level 3", href: "https://htmlspecs.com/css/css-cascade-3" },
+    { text: "CSS Style Attributes", href: "https://htmlspecs.com/css/css-style-attr" },
+    { text: "CSS Namespaces", href: "https://htmlspecs.com/css/css-namespaces-3" },
     { text: "Selectors Level 3", href: "https://htmlspecs.com/css/selectors-3" },
+    { text: "CSS Basic User Interface Level 3", href: "https://htmlspecs.com/css/css-ui-3" },
+
+    // Box Model and Display
     { text: "CSS Box Model Level 3", href: "https://htmlspecs.com/css/css-box-3" },
+    // { text: "CSS Box Model Level 4", href: "https://htmlspecs.com/css/css-box-4" },
     { text: "CSS Display Module Level 3", href: "https://htmlspecs.com/css/css-display-3" },
+
+    // Colors
+    { text: "CSS Color Level 3", href: "https://htmlspecs.com/css/css-color-3" },
+    { text: "CSS Color Module Level 5", href: "https://htmlspecs.com/css/css-color-5" },
+
+    // Fonts
+    { text: "CSS Fonts Level 3", href: "https://htmlspecs.com/css/css-fonts-3" },
+    { text: "CSS Fonts Module Level 4", href: "https://htmlspecs.com/css/css-fonts-4" },
+
+    // Media Queries
+    { text: "Media Queries Level 3", href: "https://htmlspecs.com/css/mediaqueries-3" },
+    { text: "Media Queries Level 5", href: "https://htmlspecs.com/css/mediaqueries-5" },
+
+    // Layout
     { text: "CSS Flexible Box Layout Module Level 1", href: "https://htmlspecs.com/css/css-flexbox-1" },
     { text: "CSS Grid Layout Module Level 1", href: "https://htmlspecs.com/css/css-grid-1" },
-    { text: "CSS Color Level 3", href: "https://htmlspecs.com/css/css-color-3" },
-    { text: "CSS Fonts Level 3", href: "https://htmlspecs.com/css/css-fonts-3" },
-    { text: "Media Queries Level 3", href: "https://htmlspecs.com/css/mediaqueries-3" },
-    { text: "CSS Basic User Interface Level 3", href: "https://htmlspecs.com/css/css-ui-3" },
-    { text: "CSS Pseudo-Elements Module Level 4", href: "https://htmlspecs.com/css/css-pseudo-4" },
-    { text: "CSS Images Module Level 4", href: "https://htmlspecs.com/css/css-images-4" },
-    { text: "CSS Writing Modes Level 3", href: "https://htmlspecs.com/css/css-writing-modes-3" },
-    { text: "CSS 2.2 Specification", href: "https://htmlspecs.com/css/css22/" },
-    { text: "CSS Color Module Level 5", href: "https://htmlspecs.com/css/css-color-5" },
-    { text: "CSS Fonts Module Level 4", href: "https://htmlspecs.com/css/css-fonts-4" },
     { text: "CSS Grid Layout Module Level 2", href: "https://htmlspecs.com/css/css-grid-2" },
-    { text: "Media Queries Level 5", href: "https://htmlspecs.com/css/mediaqueries-5" },
-    { text: "CSS Overscroll Behavior", href: "https://htmlspecs.com/css/css-overscroll-1" },
-    { text: "CSS Motion Path Module Level 1", href: "https://htmlspecs.com/css/motion-1" },
-    // { text: "CSS Box Model Level 4", href: "https://htmlspecs.com/css/css-box-4" },
+
+    // Writing Modes
+    { text: "CSS Writing Modes Level 3", href: "https://htmlspecs.com/css/css-writing-modes-3" },
+
+    // Pseudo-elements
+    { text: "CSS Pseudo-Elements Module Level 4", href: "https://htmlspecs.com/css/css-pseudo-4" },
+
+    // Images
+    { text: "CSS Images Module Level 4", href: "https://htmlspecs.com/css/css-images-4" },
+
+    // Containment
     { text: "CSS Containment Module Level 2", href: "https://htmlspecs.com/css/css-contain-2" },
-    { text: "CSS Snapshot 2023", href: "https://htmlspecs.com/css/css-2023" },
-    { text: "CSS Style Attributes", href: "https://htmlspecs.com/css/css-style-attr" },
-    { text: "CSS Namespaces", href: "https://htmlspecs.com/css/css-namespaces-3" }
+
+    // Others
+    { text: "CSS Overscroll Behavior", href: "https://htmlspecs.com/css/css-overscroll-1" },
+    { text: "CSS Motion Path Module Level 1", href: "https://htmlspecs.com/css/motion-1" }
 ];
+
 
 var githubButton = document.createElement("a");
 githubButton.href = "https://github.com/JinDX/htmlspecs.com";
