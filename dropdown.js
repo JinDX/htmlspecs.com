@@ -42,11 +42,11 @@ var cssLinks = [
     { text: "CSS Display Module Level 3", href: "https://htmlspecs.com/css/css-display-3" },
 
     // Colors
-    { text: "CSS Color Level 3", href: "https://htmlspecs.com/css/css-color-3" },
+    { text: "CSS Color Module Level 3", href: "https://htmlspecs.com/css/css-color-3" },
     { text: "CSS Color Module Level 5", href: "https://htmlspecs.com/css/css-color-5" },
 
     // Fonts
-    { text: "CSS Fonts Level 3", href: "https://htmlspecs.com/css/css-fonts-3" },
+    { text: "CSS Fonts Module Level 3", href: "https://htmlspecs.com/css/css-fonts-3" },
     { text: "CSS Fonts Module Level 4", href: "https://htmlspecs.com/css/css-fonts-4" },
 
     // Media Queries
