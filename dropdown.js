@@ -42,7 +42,7 @@ var cssLinks = [
     { text: "CSS Writing Modes Level 3", href: "https://htmlspecs.com/css/css-writing-modes-3" },
     { text: "CSS 2.2 Specification", href: "https://htmlspecs.com/css/css22/" },
     { text: "CSS Color Module Level 5", href: "https://htmlspecs.com/css/css-color-5" },
-    // { text: "CSS Fonts Module Level 4", href: "https://htmlspecs.com/css/css-fonts-4" },
+    { text: "CSS Fonts Module Level 4", href: "https://htmlspecs.com/css/css-fonts-4" },
     // { text: "CSS Grid Layout Module Level 2", href: "https://htmlspecs.com/css/css-grid-2" },
     // { text: "CSS Media Queries Level 5", href: "https://htmlspecs.com/css/mediaqueries-5" },
     // { text: "CSS Overscroll Behavior", href: "https://htmlspecs.com/css/css-overscroll-1" },
