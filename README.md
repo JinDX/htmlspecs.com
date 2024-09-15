@@ -24,7 +24,7 @@ HTML 及相关 API，CSS 标准系列。
 - [x] CSS Fonts Module Level 4 https://htmlspecs.com/css/css-fonts-4
 - [x] Media Queries Level 5 https://htmlspecs.com/css/mediaqueries-5
 - [x] CSS Overscroll Behavior https://htmlspecs.com/css/css-overscroll-1
-- [ ] CSS Motion Path Module Level 1 https://htmlspecs.com/css/motion-1
+- [x] CSS Motion Path Module Level 1 https://htmlspecs.com/css/motion-1
 - [ ] CSS Box Model Level 4 https://htmlspecs.com/css/css-box-4
 - [x] CSS Display Module Level 3 https://htmlspecs.com/css/css-display-3
 - [x] CSS Pseudo-Elements Module Level 4 https://htmlspecs.com/css/css-pseudo-4

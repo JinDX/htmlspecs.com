@@ -46,7 +46,7 @@ var cssLinks = [
     { text: "CSS Grid Layout Module Level 2", href: "https://htmlspecs.com/css/css-grid-2" },
     { text: "Media Queries Level 5", href: "https://htmlspecs.com/css/mediaqueries-5" },
     { text: "CSS Overscroll Behavior", href: "https://htmlspecs.com/css/css-overscroll-1" },
-    // { text: "CSS Motion Path Module Level 1", href: "https://htmlspecs.com/css/motion-1" },
+    { text: "CSS Motion Path Module Level 1", href: "https://htmlspecs.com/css/motion-1" },
     // { text: "CSS Box Model Level 4", href: "https://htmlspecs.com/css/css-box-4" },
     { text: "CSS Containment Module Level 2", href: "https://htmlspecs.com/css/css-contain-2" },
     { text: "CSS Snapshot 2023", href: "https://htmlspecs.com/css/css-2023" },
