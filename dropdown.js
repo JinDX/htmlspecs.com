@@ -72,7 +72,11 @@ var cssLinks = [
 
     // Others
     { text: "CSS Overscroll Behavior", href: "https://htmlspecs.com/css/css-overscroll-1", src: "https://www.w3.org/TR/css-overscroll-1/" },
-    { text: "CSS Motion Path Module Level 1", href: "https://htmlspecs.com/css/motion-1", src: "https://www.w3.org/TR/motion-1/" }
+    { text: "CSS Motion Path Module Level 1", href: "https://htmlspecs.com/css/motion-1", src: "https://www.w3.org/TR/motion-1/" },
+
+    // CSS Variables and CSSOM
+    // { text: "CSS Custom Properties for Cascading Variables Module Level 1", href: "https://htmlspecs.com/css/css-variables-1", src: "https://www.w3.org/TR/css-variables-1/" },
+    // { text: "CSS Object Model (CSSOM)", href: "https://htmlspecs.com/css/cssom-1", src: "https://www.w3.org/TR/cssom-1/" }
 ];
 
 var githubButton = document.createElement("a");
