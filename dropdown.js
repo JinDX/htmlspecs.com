@@ -1,29 +1,50 @@
 var links = [
+    // Core Specifications
     { text: "HTML", href: "https://htmlspecs.com/", src: "https://html.spec.whatwg.org/multipage/" },
     { text: "ECMA-262", href: "https://ecma262.com/", src: "https://tc39.es/ecma262/" },
-    { text: "dom", href: "https://htmlspecs.com/dom", src: "https://dom.spec.whatwg.org/" },
-    { text: "Service Workers", href: "https://htmlspecs.com/service-workers", src: "https://www.w3.org/TR/service-workers/" },
-    { text: "Fetch", href: "https://htmlspecs.com/fetch", src: "https://fetch.spec.whatwg.org/" },
-    { text: "Indexed Database API 3.0", href: "https://htmlspecs.com/IndexedDB", src: "https://www.w3.org/TR/IndexedDB-3/" },
-    { text: "Web Authentication Level 2", href: "https://htmlspecs.com/webauthn-2", src: "https://www.w3.org/TR/webauthn-2/" },
+    { text: "DOM", href: "https://htmlspecs.com/dom", src: "https://dom.spec.whatwg.org/" },
+
+    // URLs and Patterns
     { text: "URL", href: "https://htmlspecs.com/url", src: "https://url.spec.whatwg.org/" },
-    { text: "Payment Request API", href: "https://htmlspecs.com/payment-request", src: "https://www.w3.org/TR/payment-request/" },
+    { text: "URL Pattern", href: "https://htmlspecs.com/urlpattern", src: "https://wicg.github.io/urlpattern/" },
+
+    // Network and Communication
+    { text: "Fetch", href: "https://htmlspecs.com/fetch", src: "https://fetch.spec.whatwg.org/" },
+    { text: "WebSockets", href: "https://htmlspecs.com/websockets", src: "https://www.w3.org/TR/websockets/" },
+    { text: "Service Workers", href: "https://htmlspecs.com/service-workers", src: "https://www.w3.org/TR/service-workers/" },
     { text: "Push API", href: "https://htmlspecs.com/push-api", src: "https://w3c.github.io/push-api/" },
     { text: "WebRTC", href: "https://htmlspecs.com/webrtc", src: "https://www.w3.org/TR/webrtc/" },
-    { text: "Pointer Events", href: "https://htmlspecs.com/pointerevents", src: "https://www.w3.org/TR/pointerevents/" },
-    { text: "Performance Timeline", href: "https://htmlspecs.com/performance-timeline", src: "https://www.w3.org/TR/performance-timeline/" },
-    { text: "Web Animations", href: "https://htmlspecs.com/web-animations-1", src: "https://www.w3.org/TR/web-animations-1/" },
-    { text: "Intersection Observer", href: "https://htmlspecs.com/intersection-observer", src: "https://www.w3.org/TR/intersection-observer/" },
-    { text: "Resize Observer", href: "https://htmlspecs.com/resize-observer", src: "https://www.w3.org/TR/resize-observer/" },
-    { text: "Web Share API", href: "https://htmlspecs.com/web-share", src: "https://www.w3.org/TR/web-share/" },
-    { text: "Web Audio API", href: "https://htmlspecs.com/webaudio", src: "https://www.w3.org/TR/webaudio/" },
-    { text: "notifications", href: "https://htmlspecs.com/notifications", src: "https://notifications.spec.whatwg.org/" },
-    { text: "console", href: "https://htmlspecs.com/console", src: "https://console.spec.whatwg.org/" },
-    { text: "fullscreen", href: "https://htmlspecs.com/fullscreen", src: "https://fullscreen.spec.whatwg.org/" },
-    { text: "storage", href: "https://htmlspecs.com/storage", src: "https://storage.spec.whatwg.org/" },
+    { text: "Payment Request API", href: "https://htmlspecs.com/payment-request", src: "https://www.w3.org/TR/payment-request/" },
+
+    // Storage and Data
+    { text: "Indexed Database API 3.0", href: "https://htmlspecs.com/IndexedDB", src: "https://www.w3.org/TR/IndexedDB-3/" },
+    { text: "Storage", href: "https://htmlspecs.com/storage", src: "https://storage.spec.whatwg.org/" },
     { text: "File API", href: "https://htmlspecs.com/FileAPI", src: "https://www.w3.org/TR/FileAPI/" },
-    { text: "URL Pattern", href: "https://htmlspecs.com/urlpattern", src: "https://wicg.github.io/urlpattern/" },
-    { text: "websockets", href: "https://htmlspecs.com/websockets", src: "https://www.w3.org/TR/websockets/" }
+
+    // Device and Hardware Access
+    { text: "Pointer Events", href: "https://htmlspecs.com/pointerevents", src: "https://www.w3.org/TR/pointerevents/" }, // 统一的指针输入事件模型
+    { text: "Fullscreen", href: "https://htmlspecs.com/fullscreen", src: "https://fullscreen.spec.whatwg.org/" }, // 控制元素全屏显示的 API
+    { text: "Notifications", href: "https://htmlspecs.com/notifications", src: "https://notifications.spec.whatwg.org/" }, // 允许网页向用户发送通知
+    { text: "Web Share API", href: "https://htmlspecs.com/web-share", src: "https://www.w3.org/TR/web-share/" }, // 支持调用原生分享界面
+    { text: "Web Audio API", href: "https://htmlspecs.com/webaudio", src: "https://www.w3.org/TR/webaudio/" }, // 提供高级的音频处理和合成功能
+    // { text: "Geolocation API", href: "https://htmlspecs.com/geolocation", src: "https://www.w3.org/TR/geolocation-API/" }, // 获取设备地理位置信息
+    // { text: "Device Orientation and Motion", href: "https://htmlspecs.com/orientation-event", src: "https://www.w3.org/TR/orientation-event/" }, // 访问设备方向和运动数据
+    // { text: "Pointer Lock 2.0", href: "https://htmlspecs.com/pointerlock", src: "https://www.w3.org/TR/pointerlock-2/" }, // 隐藏鼠标指针并直接接收鼠标移动数据
+    // { text: "Clipboard API and events", href: "https://htmlspecs.com/clipboard-apis", src: "https://www.w3.org/TR/clipboard-apis/" }, // 读写剪贴板内容的接口
+
+    // Performance and Observers
+    { text: "Performance Timeline", href: "https://htmlspecs.com/performance-timeline", src: "https://www.w3.org/TR/performance-timeline/" }, // 提供性能数据的接口
+    { text: "Intersection Observer", href: "https://htmlspecs.com/intersection-observer", src: "https://www.w3.org/TR/intersection-observer/" }, // 检测元素可见性变化
+    { text: "Resize Observer", href: "https://htmlspecs.com/resize-observer", src: "https://www.w3.org/TR/resize-observer/" }, // 监听元素尺寸变化
+
+    // Security and Authentication
+    { text: "Web Authentication Level 2", href: "https://htmlspecs.com/webauthn-2", src: "https://www.w3.org/TR/webauthn-2/" }, // 提供强大的用户身份验证机制
+
+    // Media and Graphics
+    { text: "Web Animations", href: "https://htmlspecs.com/web-animations-1", src: "https://www.w3.org/TR/web-animations-1/" }, // 统一的动画模型，控制元素动画
+
+    // Developer Tools
+    { text: "Console", href: "https://htmlspecs.com/console", src: "https://console.spec.whatwg.org/" } // 定义控制台接口，便于调试
 ];
 
 var cssLinks = [
@@ -67,17 +88,24 @@ var cssLinks = [
     // Images
     { text: "CSS Images Module Level 4", href: "https://htmlspecs.com/css/css-images-4", src: "https://www.w3.org/TR/css-images-4/" },
 
+    // Transforms and Animations
+    // { text: "CSS Transforms Module Level 1", href: "https://htmlspecs.com/css/css-transforms-1", src: "https://www.w3.org/TR/css-transforms-1/" },
+    // { text: "CSS Transforms Module Level 2", href: "https://htmlspecs.com/css/css-transforms-2", src: "https://www.w3.org/TR/css-transforms-2/" },
+    // { text: "CSS Transitions Module Level 2", href: "https://htmlspecs.com/css/css-transitions-2", src: "https://www.w3.org/TR/css-transitions-2/" },
+    // { text: "CSS Animations Module Level 1", href: "https://htmlspecs.com/css/css-animations-1", src: "https://www.w3.org/TR/css-animations-1/" },
+    { text: "CSS Motion Path Module Level 1", href: "https://htmlspecs.com/css/motion-1", src: "https://www.w3.org/TR/motion-1/" },
+
     // Containment
     { text: "CSS Containment Module Level 2", href: "https://htmlspecs.com/css/css-contain-2", src: "https://www.w3.org/TR/css-contain-2/" },
 
     // Others
     { text: "CSS Overscroll Behavior", href: "https://htmlspecs.com/css/css-overscroll-1", src: "https://www.w3.org/TR/css-overscroll-1/" },
-    { text: "CSS Motion Path Module Level 1", href: "https://htmlspecs.com/css/motion-1", src: "https://www.w3.org/TR/motion-1/" },
 
     // CSS Variables and CSSOM
     { text: "CSS Custom Properties for Cascading Variables Module Level 1", href: "https://htmlspecs.com/css/css-variables-1", src: "https://www.w3.org/TR/css-variables-1/" },
     // { text: "CSS Object Model (CSSOM)", href: "https://htmlspecs.com/css/cssom-1", src: "https://www.w3.org/TR/cssom-1/" }
 ];
+
 
 var githubButton = document.createElement("a");
 githubButton.href = "https://github.com/JinDX/htmlspecs.com";
