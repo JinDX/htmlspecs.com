@@ -41,7 +41,11 @@ HTML 及相关 API，CSS 标准系列。
 - [x] CSS Box Model Level 3  https://htmlspecs.com/css/css-box-3
 - [x] CSS Containment Module Level 2  https://htmlspecs.com/css/css-contain-2
 - [x] CSS Custom Properties for Cascading Variables Module Level 1 https://htmlspecs.com/css/css-variables-1
-- [ ] CSS Object Model (CSSOM) https://www.w3.org/TR/cssom-1
+- [ ] CSS Object Model (CSSOM) https://htmlspecs.com/css/cssom-1
+- [ ] CSS Animations Module Level 1 https://htmlspecs.com/css/css-animations-1
+- [ ] CSS Transitions Module Level 2 https://htmlspecs.com/css/css-transitions-2
+- [ ] CSS Transforms Module Level 1 https://htmlspecs.com/css/css-transforms-1
+- [ ] CSS Transforms Module Level 2 https://htmlspecs.com/css/css-transforms-2
 - [x] File API  https://htmlspecs.com/FileAPI
 - [x] Performance Timeline  https://htmlspecs.com/performance-timeline
 - [x] Resize Observer  https://htmlspecs.com/resize-observer
@@ -57,3 +61,6 @@ HTML 及相关 API，CSS 标准系列。
 - [x] Indexed Database API 3.0  https://htmlspecs.com/IndexedDB
 - [x] Service Workers  https://htmlspecs.com/service-workers
 - [x] Web Animations  https://htmlspecs.com/web-animations-1
+- [ ] Geolocation https://htmlspecs.com/geolocation
+- [ ] Device Orientation and Motion https://htmlspecs.com/orientation-event
+- [ ] Pointer Lock 2.0 https://htmlspecs.com/pointerlock
