@@ -22,29 +22,29 @@ var links = [
     { text: "File API", href: "https://htmlspecs.com/FileAPI", src: "https://www.w3.org/TR/FileAPI/" },
 
     // Device and Hardware Access
-    { text: "Pointer Events", href: "https://htmlspecs.com/pointerevents", src: "https://www.w3.org/TR/pointerevents/" }, // 统一的指针输入事件模型
-    { text: "Fullscreen", href: "https://htmlspecs.com/fullscreen", src: "https://fullscreen.spec.whatwg.org/" }, // 控制元素全屏显示的 API
-    { text: "Notifications", href: "https://htmlspecs.com/notifications", src: "https://notifications.spec.whatwg.org/" }, // 允许网页向用户发送通知
-    { text: "Web Share API", href: "https://htmlspecs.com/web-share", src: "https://www.w3.org/TR/web-share/" }, // 支持调用原生分享界面
-    { text: "Web Audio API", href: "https://htmlspecs.com/webaudio", src: "https://www.w3.org/TR/webaudio/" }, // 提供高级的音频处理和合成功能
-    // { text: "Geolocation API", href: "https://htmlspecs.com/geolocation", src: "https://www.w3.org/TR/geolocation-API/" }, // 获取设备地理位置信息
-    // { text: "Device Orientation and Motion", href: "https://htmlspecs.com/orientation-event", src: "https://www.w3.org/TR/orientation-event/" }, // 访问设备方向和运动数据
-    // { text: "Pointer Lock 2.0", href: "https://htmlspecs.com/pointerlock", src: "https://www.w3.org/TR/pointerlock-2/" }, // 隐藏鼠标指针并直接接收鼠标移动数据
-    // { text: "Clipboard API and events", href: "https://htmlspecs.com/clipboard-apis", src: "https://www.w3.org/TR/clipboard-apis/" }, // 读写剪贴板内容的接口
+    { text: "Pointer Events", href: "https://htmlspecs.com/pointerevents", src: "https://www.w3.org/TR/pointerevents/" },
+    { text: "Fullscreen", href: "https://htmlspecs.com/fullscreen", src: "https://fullscreen.spec.whatwg.org/" },
+    { text: "Notifications", href: "https://htmlspecs.com/notifications", src: "https://notifications.spec.whatwg.org/" },
+    { text: "Web Share API", href: "https://htmlspecs.com/web-share", src: "https://www.w3.org/TR/web-share/" },
+    { text: "Web Audio API", href: "https://htmlspecs.com/webaudio", src: "https://www.w3.org/TR/webaudio/" },
+    // { text: "Geolocation API", href: "https://htmlspecs.com/geolocation", src: "https://www.w3.org/TR/geolocation-API/" }, 
+    // { text: "Device Orientation and Motion", href: "https://htmlspecs.com/orientation-event", src: "https://www.w3.org/TR/orientation-event/" }, 
+    // { text: "Pointer Lock 2.0", href: "https://htmlspecs.com/pointerlock", src: "https://www.w3.org/TR/pointerlock-2/" }, 
+    // { text: "Clipboard API and events", href: "https://htmlspecs.com/clipboard-apis", src: "https://www.w3.org/TR/clipboard-apis/" }, 
 
     // Performance and Observers
-    { text: "Performance Timeline", href: "https://htmlspecs.com/performance-timeline", src: "https://www.w3.org/TR/performance-timeline/" }, // 提供性能数据的接口
-    { text: "Intersection Observer", href: "https://htmlspecs.com/intersection-observer", src: "https://www.w3.org/TR/intersection-observer/" }, // 检测元素可见性变化
-    { text: "Resize Observer", href: "https://htmlspecs.com/resize-observer", src: "https://www.w3.org/TR/resize-observer/" }, // 监听元素尺寸变化
+    { text: "Performance Timeline", href: "https://htmlspecs.com/performance-timeline", src: "https://www.w3.org/TR/performance-timeline/" },
+    { text: "Intersection Observer", href: "https://htmlspecs.com/intersection-observer", src: "https://www.w3.org/TR/intersection-observer/" },
+    { text: "Resize Observer", href: "https://htmlspecs.com/resize-observer", src: "https://www.w3.org/TR/resize-observer/" },
 
     // Security and Authentication
-    { text: "Web Authentication Level 2", href: "https://htmlspecs.com/webauthn-2", src: "https://www.w3.org/TR/webauthn-2/" }, // 提供强大的用户身份验证机制
+    { text: "Web Authentication Level 2", href: "https://htmlspecs.com/webauthn-2", src: "https://www.w3.org/TR/webauthn-2/" },
 
     // Media and Graphics
-    { text: "Web Animations", href: "https://htmlspecs.com/web-animations-1", src: "https://www.w3.org/TR/web-animations-1/" }, // 统一的动画模型，控制元素动画
+    { text: "Web Animations", href: "https://htmlspecs.com/web-animations-1", src: "https://www.w3.org/TR/web-animations-1/" },
 
     // Developer Tools
-    { text: "Console", href: "https://htmlspecs.com/console", src: "https://console.spec.whatwg.org/" } // 定义控制台接口，便于调试
+    { text: "Console", href: "https://htmlspecs.com/console", src: "https://console.spec.whatwg.org/" }
 ];
 
 var cssLinks = [
