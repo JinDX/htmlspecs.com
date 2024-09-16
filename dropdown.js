@@ -1,80 +1,79 @@
 var links = [
-    { text: "HTML", href: "https://htmlspecs.com/" },
-    { text: "ECMA-262", href: "https://ecma262.com/" },
-    { text: "dom", href: "https://htmlspecs.com/dom" },
-    { text: "Service Workers", href: "https://htmlspecs.com/service-workers" },
-    { text: "Fetch", href: "https://htmlspecs.com/fetch" },
-    { text: "Indexed Database API 3.0", href: "https://htmlspecs.com/IndexedDB" },
-    { text: "Web Authentication Level 2", href: "https://htmlspecs.com/webauthn-2" },
-    { text: "URL", href: "https://htmlspecs.com/url" },
-    { text: "Payment Request API", href: "https://htmlspecs.com/payment-request" },
-    { text: "Push API", href: "https://htmlspecs.com/push-api" },
-    { text: "WebRTC", href: "https://htmlspecs.com/webrtc" },
-    { text: "Pointer Events", href: "https://htmlspecs.com/pointerevents" },
-    { text: "Performance Timeline", href: "https://htmlspecs.com/performance-timeline" },
-    { text: "Web Animations", href: "https://htmlspecs.com/web-animations-1" },
-    { text: "Intersection Observer", href: "https://htmlspecs.com/intersection-observer" },
-    { text: "Resize Observer", href: "https://htmlspecs.com/resize-observer" },
-    { text: "Web Share API", href: "https://htmlspecs.com/web-share" },
-    { text: "Web Audio API", href: "https://htmlspecs.com/webaudio" },
-    { text: "notifications", href: "https://htmlspecs.com/notifications" },
-    { text: "console", href: "https://htmlspecs.com/console" },
-    { text: "fullscreen", href: "https://htmlspecs.com/fullscreen" },
-    { text: "storage", href: "https://htmlspecs.com/storage" },
-    { text: "File API", href: "https://htmlspecs.com/FileAPI" },
-    { text: "URL Pattern", href: "https://htmlspecs.com/urlpattern" },
-    { text: "websockets", href: "https://htmlspecs.com/websockets" }
+    { text: "HTML", href: "https://htmlspecs.com/", src: "https://html.spec.whatwg.org/multipage/" },
+    { text: "ECMA-262", href: "https://ecma262.com/", src: "https://tc39.es/ecma262/" },
+    { text: "dom", href: "https://htmlspecs.com/dom", src: "https://dom.spec.whatwg.org/" },
+    { text: "Service Workers", href: "https://htmlspecs.com/service-workers", src: "https://www.w3.org/TR/service-workers/" },
+    { text: "Fetch", href: "https://htmlspecs.com/fetch", src: "https://fetch.spec.whatwg.org/" },
+    { text: "Indexed Database API 3.0", href: "https://htmlspecs.com/IndexedDB", src: "https://www.w3.org/TR/IndexedDB-3/" },
+    { text: "Web Authentication Level 2", href: "https://htmlspecs.com/webauthn-2", src: "https://www.w3.org/TR/webauthn-2/" },
+    { text: "URL", href: "https://htmlspecs.com/url", src: "https://url.spec.whatwg.org/" },
+    { text: "Payment Request API", href: "https://htmlspecs.com/payment-request", src: "https://www.w3.org/TR/payment-request/" },
+    { text: "Push API", href: "https://htmlspecs.com/push-api", src: "https://w3c.github.io/push-api/" },
+    { text: "WebRTC", href: "https://htmlspecs.com/webrtc", src: "https://www.w3.org/TR/webrtc/" },
+    { text: "Pointer Events", href: "https://htmlspecs.com/pointerevents", src: "https://www.w3.org/TR/pointerevents/" },
+    { text: "Performance Timeline", href: "https://htmlspecs.com/performance-timeline", src: "https://www.w3.org/TR/performance-timeline/" },
+    { text: "Web Animations", href: "https://htmlspecs.com/web-animations-1", src: "https://www.w3.org/TR/web-animations-1/" },
+    { text: "Intersection Observer", href: "https://htmlspecs.com/intersection-observer", src: "https://www.w3.org/TR/intersection-observer/" },
+    { text: "Resize Observer", href: "https://htmlspecs.com/resize-observer", src: "https://www.w3.org/TR/resize-observer/" },
+    { text: "Web Share API", href: "https://htmlspecs.com/web-share", src: "https://www.w3.org/TR/web-share/" },
+    { text: "Web Audio API", href: "https://htmlspecs.com/webaudio", src: "https://www.w3.org/TR/webaudio/" },
+    { text: "notifications", href: "https://htmlspecs.com/notifications", src: "https://notifications.spec.whatwg.org/" },
+    { text: "console", href: "https://htmlspecs.com/console", src: "https://console.spec.whatwg.org/" },
+    { text: "fullscreen", href: "https://htmlspecs.com/fullscreen", src: "https://fullscreen.spec.whatwg.org/" },
+    { text: "storage", href: "https://htmlspecs.com/storage", src: "https://storage.spec.whatwg.org/" },
+    { text: "File API", href: "https://htmlspecs.com/FileAPI", src: "https://www.w3.org/TR/FileAPI/" },
+    { text: "URL Pattern", href: "https://htmlspecs.com/urlpattern", src: "https://wicg.github.io/urlpattern/" },
+    { text: "websockets", href: "https://htmlspecs.com/websockets", src: "https://www.w3.org/TR/websockets/" }
 ];
 
 var cssLinks = [
     // Foundational
-    { text: "CSS Snapshot 2023", href: "https://htmlspecs.com/css/css-2023" },
-    { text: "CSS 2.2 Specification", href: "https://htmlspecs.com/css/css22/" },
-    { text: "CSS Cascading and Inheritance Level 3", href: "https://htmlspecs.com/css/css-cascade-3" },
-    { text: "CSS Style Attributes", href: "https://htmlspecs.com/css/css-style-attr" },
-    { text: "CSS Namespaces", href: "https://htmlspecs.com/css/css-namespaces-3" },
-    { text: "Selectors Level 3", href: "https://htmlspecs.com/css/selectors-3" },
-    { text: "CSS Basic User Interface Level 3", href: "https://htmlspecs.com/css/css-ui-3" },
+    { text: "CSS Snapshot 2023", href: "https://htmlspecs.com/css/css-2023", src: "https://www.w3.org/TR/css-2023/" },
+    { text: "CSS 2.2 Specification", href: "https://htmlspecs.com/css/css22/", src: "https://www.w3.org/TR/CSS22/" },
+    { text: "CSS Cascading and Inheritance Level 3", href: "https://htmlspecs.com/css/css-cascade-3", src: "https://www.w3.org/TR/css-cascade-3/" },
+    { text: "CSS Style Attributes", href: "https://htmlspecs.com/css/css-style-attr", src: "https://www.w3.org/TR/css-style-attr/" },
+    { text: "CSS Namespaces", href: "https://htmlspecs.com/css/css-namespaces-3", src: "https://www.w3.org/TR/css-namespaces-3/" },
+    { text: "Selectors Level 3", href: "https://htmlspecs.com/css/selectors-3", src: "https://www.w3.org/TR/selectors-3/" },
+    { text: "CSS Basic User Interface Level 3", href: "https://htmlspecs.com/css/css-ui-3", src: "https://www.w3.org/TR/css-ui-3/" },
 
     // Box Model and Display
-    { text: "CSS Box Model Level 3", href: "https://htmlspecs.com/css/css-box-3" },
-    { text: "CSS Box Model Level 4", href: "https://htmlspecs.com/css/css-box-4" },
-    { text: "CSS Display Module Level 3", href: "https://htmlspecs.com/css/css-display-3" },
+    { text: "CSS Box Model Level 3", href: "https://htmlspecs.com/css/css-box-3", src: "https://www.w3.org/TR/css-box-3/" },
+    { text: "CSS Box Model Level 4", href: "https://htmlspecs.com/css/css-box-4", src: "https://www.w3.org/TR/css-box-4/" },
+    { text: "CSS Display Module Level 3", href: "https://htmlspecs.com/css/css-display-3", src: "https://www.w3.org/TR/css-display-3/" },
 
     // Colors
-    { text: "CSS Color Module Level 3", href: "https://htmlspecs.com/css/css-color-3" },
-    { text: "CSS Color Module Level 5", href: "https://htmlspecs.com/css/css-color-5" },
+    { text: "CSS Color Module Level 3", href: "https://htmlspecs.com/css/css-color-3", src: "https://www.w3.org/TR/css-color-3/" },
+    { text: "CSS Color Module Level 5", href: "https://htmlspecs.com/css/css-color-5", src: "https://www.w3.org/TR/css-color-5/" },
 
     // Fonts
-    { text: "CSS Fonts Module Level 3", href: "https://htmlspecs.com/css/css-fonts-3" },
-    { text: "CSS Fonts Module Level 4", href: "https://htmlspecs.com/css/css-fonts-4" },
+    { text: "CSS Fonts Module Level 3", href: "https://htmlspecs.com/css/css-fonts-3", src: "https://www.w3.org/TR/css-fonts-3/" },
+    { text: "CSS Fonts Module Level 4", href: "https://htmlspecs.com/css/css-fonts-4", src: "https://www.w3.org/TR/css-fonts-4/" },
 
     // Media Queries
-    { text: "Media Queries Level 3", href: "https://htmlspecs.com/css/mediaqueries-3" },
-    { text: "Media Queries Level 5", href: "https://htmlspecs.com/css/mediaqueries-5" },
+    { text: "Media Queries Level 3", href: "https://htmlspecs.com/css/mediaqueries-3", src: "https://www.w3.org/TR/mediaqueries-3/" },
+    { text: "Media Queries Level 5", href: "https://htmlspecs.com/css/mediaqueries-5", src: "https://www.w3.org/TR/mediaqueries-5/" },
 
     // Layout
-    { text: "CSS Flexible Box Layout Module Level 1", href: "https://htmlspecs.com/css/css-flexbox-1" },
-    { text: "CSS Grid Layout Module Level 1", href: "https://htmlspecs.com/css/css-grid-1" },
-    { text: "CSS Grid Layout Module Level 2", href: "https://htmlspecs.com/css/css-grid-2" },
+    { text: "CSS Flexible Box Layout Module Level 1", href: "https://htmlspecs.com/css/css-flexbox-1", src: "https://www.w3.org/TR/css-flexbox-1/" },
+    { text: "CSS Grid Layout Module Level 1", href: "https://htmlspecs.com/css/css-grid-1", src: "https://www.w3.org/TR/css-grid-1/" },
+    { text: "CSS Grid Layout Module Level 2", href: "https://htmlspecs.com/css/css-grid-2", src: "https://www.w3.org/TR/css-grid-2/" },
 
     // Writing Modes
-    { text: "CSS Writing Modes Level 3", href: "https://htmlspecs.com/css/css-writing-modes-3" },
+    { text: "CSS Writing Modes Level 3", href: "https://htmlspecs.com/css/css-writing-modes-3", src: "https://www.w3.org/TR/css-writing-modes-3/" },
 
     // Pseudo-elements
-    { text: "CSS Pseudo-Elements Module Level 4", href: "https://htmlspecs.com/css/css-pseudo-4" },
+    { text: "CSS Pseudo-Elements Module Level 4", href: "https://htmlspecs.com/css/css-pseudo-4", src: "https://www.w3.org/TR/css-pseudo-4/" },
 
     // Images
-    { text: "CSS Images Module Level 4", href: "https://htmlspecs.com/css/css-images-4" },
+    { text: "CSS Images Module Level 4", href: "https://htmlspecs.com/css/css-images-4", src: "https://www.w3.org/TR/css-images-4/" },
 
     // Containment
-    { text: "CSS Containment Module Level 2", href: "https://htmlspecs.com/css/css-contain-2" },
+    { text: "CSS Containment Module Level 2", href: "https://htmlspecs.com/css/css-contain-2", src: "https://www.w3.org/TR/css-contain-2/" },
 
     // Others
-    { text: "CSS Overscroll Behavior", href: "https://htmlspecs.com/css/css-overscroll-1" },
-    { text: "CSS Motion Path Module Level 1", href: "https://htmlspecs.com/css/motion-1" }
+    { text: "CSS Overscroll Behavior", href: "https://htmlspecs.com/css/css-overscroll-1", src: "https://www.w3.org/TR/css-overscroll-1/" },
+    { text: "CSS Motion Path Module Level 1", href: "https://htmlspecs.com/css/motion-1", src: "https://www.w3.org/TR/motion-1/" }
 ];
-
 
 var githubButton = document.createElement("a");
 githubButton.href = "https://github.com/JinDX/htmlspecs.com";
