@@ -29,7 +29,7 @@ var links = [
     { text: "Web Audio API", href: "https://htmlspecs.com/webaudio", src: "https://www.w3.org/TR/webaudio/" },
     { text: "Geolocation API", href: "https://htmlspecs.com/geolocation", src: "https://www.w3.org/TR/geolocation-API/" }, 
     { text: "Device Orientation and Motion", href: "https://htmlspecs.com/orientation-event", src: "https://www.w3.org/TR/orientation-event/" }, 
-    // { text: "Pointer Lock 2.0", href: "https://htmlspecs.com/pointerlock", src: "https://www.w3.org/TR/pointerlock-2/" }, 
+    { text: "Pointer Lock 2.0", href: "https://htmlspecs.com/pointerlock", src: "https://www.w3.org/TR/pointerlock-2/" }, 
     // { text: "Clipboard API and events", href: "https://htmlspecs.com/clipboard-apis", src: "https://www.w3.org/TR/clipboard-apis/" }, 
 
     // Performance and Observers
