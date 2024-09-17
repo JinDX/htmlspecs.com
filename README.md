@@ -59,6 +59,6 @@ HTML 及相关 API，CSS 标准系列。
 - [x] Service Workers  https://htmlspecs.com/service-workers
 - [x] Web Animations  https://htmlspecs.com/web-animations-1
 - [x] Geolocation https://htmlspecs.com/geolocation
-- [ ] Device Orientation and Motion https://htmlspecs.com/orientation-event
+- [x] Device Orientation and Motion https://htmlspecs.com/orientation-event
 - [ ] Pointer Lock 2.0 https://htmlspecs.com/pointerlock
 - [ ] Clipboard API and events https://htmlspecs.com/clipboard-apis
