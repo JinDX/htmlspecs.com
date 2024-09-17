@@ -92,7 +92,7 @@ var cssLinks = [
     { text: "CSS Transforms Module Level 1", href: "https://htmlspecs.com/css/css-transforms-1", src: "https://www.w3.org/TR/css-transforms-1/" },
     // { text: "CSS Transforms Module Level 2", href: "https://htmlspecs.com/css/css-transforms-2", src: "https://www.w3.org/TR/css-transforms-2/" },
     // { text: "CSS Transitions Level 2", href: "https://htmlspecs.com/css/css-transitions-2", src: "https://www.w3.org/TR/css-transitions-2/" },
-    // { text: "CSS Animations Level 1", href: "https://htmlspecs.com/css/css-animations-1", src: "https://www.w3.org/TR/css-animations-1/" },
+    { text: "CSS Animations Level 1", href: "https://htmlspecs.com/css/css-animations-1", src: "https://www.w3.org/TR/css-animations-1/" },
     // { text: "CSS Animations Level 2", href: "https://htmlspecs.com/css/css-animations-2", src: "https://www.w3.org/TR/css-animations-2/" },
     { text: "CSS Motion Path Module Level 1", href: "https://htmlspecs.com/css/motion-1", src: "https://www.w3.org/TR/motion-1/" },
 
