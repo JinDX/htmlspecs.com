@@ -61,4 +61,4 @@ HTML 及相关 API，CSS 标准系列。
 - [x] Geolocation https://htmlspecs.com/geolocation
 - [x] Device Orientation and Motion https://htmlspecs.com/orientation-event
 - [x] Pointer Lock 2.0 https://htmlspecs.com/pointerlock
-- [ ] Clipboard API and events https://htmlspecs.com/clipboard-apis
+- [x] Clipboard API and events https://htmlspecs.com/clipboard-apis
