@@ -104,7 +104,7 @@ var cssLinks = [
 
     // CSS Variables and CSSOM
     { text: "CSS Custom Properties for Cascading Variables Module Level 1", href: "https://htmlspecs.com/css/css-variables-1", src: "https://www.w3.org/TR/css-variables-1/" },
-    // { text: "CSS Object Model (CSSOM)", href: "https://htmlspecs.com/css/cssom-1", src: "https://www.w3.org/TR/cssom-1/" }
+    { text: "CSS Object Model (CSSOM)", href: "https://htmlspecs.com/css/cssom-1", src: "https://www.w3.org/TR/cssom-1/" }
 ];
 
 

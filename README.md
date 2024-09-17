@@ -38,7 +38,7 @@ HTML 及相关 API，CSS 标准系列。
 - [x] CSS Box Model Level 3  https://htmlspecs.com/css/css-box-3
 - [x] CSS Containment Module Level 2  https://htmlspecs.com/css/css-contain-2
 - [x] CSS Custom Properties for Cascading Variables Module Level 1 https://htmlspecs.com/css/css-variables-1
-- [ ] CSS Object Model (CSSOM) https://htmlspecs.com/css/cssom-1
+- [x] CSS Object Model (CSSOM) https://htmlspecs.com/css/cssom-1
 - [ ] CSS Animations Level 1 https://htmlspecs.com/css/css-animations-1
 - [ ] CSS Animations Level 2 https://htmlspecs.com/css/css-animations-2
 - [ ] CSS Transitions Level 2 https://htmlspecs.com/css/css-transitions-2
