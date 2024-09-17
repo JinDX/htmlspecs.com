@@ -42,7 +42,7 @@ HTML 及相关 API，CSS 标准系列。
 - [ ] CSS Animations Level 1 https://htmlspecs.com/css/css-animations-1
 - [ ] CSS Animations Level 2 https://htmlspecs.com/css/css-animations-2
 - [ ] CSS Transitions Level 2 https://htmlspecs.com/css/css-transitions-2
-- [ ] CSS Transforms Module Level 1 https://htmlspecs.com/css/css-transforms-1
+- [x] CSS Transforms Module Level 1 https://htmlspecs.com/css/css-transforms-1
 - [ ] CSS Transforms Module Level 2 https://htmlspecs.com/css/css-transforms-2
 - [x] File API  https://htmlspecs.com/FileAPI
 - [x] Performance Timeline  https://htmlspecs.com/performance-timeline
