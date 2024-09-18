@@ -10,9 +10,9 @@ var links = [
 
     // Network and Communication
     { text: "Fetch", href: "https://htmlspecs.com/fetch", src: "https://fetch.spec.whatwg.org/" },
-    { text: "WebSockets", href: "https://htmlspecs.com/websockets", src: "https://www.w3.org/TR/websockets/" },
+    { text: "WebSockets", href: "https://htmlspecs.com/websockets", src: "https://websockets.spec.whatwg.org/" },
     { text: "Service Workers", href: "https://htmlspecs.com/service-workers", src: "https://www.w3.org/TR/service-workers/" },
-    { text: "Push API", href: "https://htmlspecs.com/push-api", src: "https://w3c.github.io/push-api/" },
+    { text: "Push API", href: "https://htmlspecs.com/push-api", src: "https://www.w3.org/TR/push-api/" },
     { text: "WebRTC", href: "https://htmlspecs.com/webrtc", src: "https://www.w3.org/TR/webrtc/" },
     { text: "Payment Request API", href: "https://htmlspecs.com/payment-request", src: "https://www.w3.org/TR/payment-request/" },
 
@@ -27,7 +27,7 @@ var links = [
     { text: "Notifications", href: "https://htmlspecs.com/notifications", src: "https://notifications.spec.whatwg.org/" },
     { text: "Web Share API", href: "https://htmlspecs.com/web-share", src: "https://www.w3.org/TR/web-share/" },
     { text: "Web Audio API", href: "https://htmlspecs.com/webaudio", src: "https://www.w3.org/TR/webaudio/" },
-    { text: "Geolocation API", href: "https://htmlspecs.com/geolocation", src: "https://www.w3.org/TR/geolocation-API/" },
+    { text: "Geolocation API", href: "https://htmlspecs.com/geolocation", src: "https://www.w3.org/TR/geolocation/" },
     { text: "Device Orientation and Motion", href: "https://htmlspecs.com/orientation-event", src: "https://www.w3.org/TR/orientation-event/" },
     { text: "Pointer Lock 2.0", href: "https://htmlspecs.com/pointerlock", src: "https://www.w3.org/TR/pointerlock-2/" },
     { text: "Clipboard API and events", href: "https://htmlspecs.com/clipboard-apis", src: "https://www.w3.org/TR/clipboard-apis/" },
