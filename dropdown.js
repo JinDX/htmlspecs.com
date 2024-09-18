@@ -27,15 +27,23 @@ var links = [
     { text: "Notifications", href: "https://htmlspecs.com/notifications", src: "https://notifications.spec.whatwg.org/" },
     { text: "Web Share API", href: "https://htmlspecs.com/web-share", src: "https://www.w3.org/TR/web-share/" },
     { text: "Web Audio API", href: "https://htmlspecs.com/webaudio", src: "https://www.w3.org/TR/webaudio/" },
-    { text: "Geolocation API", href: "https://htmlspecs.com/geolocation", src: "https://www.w3.org/TR/geolocation-API/" }, 
-    { text: "Device Orientation and Motion", href: "https://htmlspecs.com/orientation-event", src: "https://www.w3.org/TR/orientation-event/" }, 
-    { text: "Pointer Lock 2.0", href: "https://htmlspecs.com/pointerlock", src: "https://www.w3.org/TR/pointerlock-2/" }, 
-    { text: "Clipboard API and events", href: "https://htmlspecs.com/clipboard-apis", src: "https://www.w3.org/TR/clipboard-apis/" }, 
+    { text: "Geolocation API", href: "https://htmlspecs.com/geolocation", src: "https://www.w3.org/TR/geolocation-API/" },
+    { text: "Device Orientation and Motion", href: "https://htmlspecs.com/orientation-event", src: "https://www.w3.org/TR/orientation-event/" },
+    { text: "Pointer Lock 2.0", href: "https://htmlspecs.com/pointerlock", src: "https://www.w3.org/TR/pointerlock-2/" },
+    { text: "Clipboard API and events", href: "https://htmlspecs.com/clipboard-apis", src: "https://www.w3.org/TR/clipboard-apis/" },
+    // 输入事件 Level 1：
+    // { text: "Input Events Level 1", href: "https://htmlspecs.com/input-events-1", src: "https://www.w3.org/TR/input-events-1/" },
 
     // Performance and Observers
     { text: "Performance Timeline", href: "https://htmlspecs.com/performance-timeline", src: "https://www.w3.org/TR/performance-timeline/" },
     { text: "Intersection Observer", href: "https://htmlspecs.com/intersection-observer", src: "https://www.w3.org/TR/intersection-observer/" },
     { text: "Resize Observer", href: "https://htmlspecs.com/resize-observer", src: "https://www.w3.org/TR/resize-observer/" },
+    // 导航计时：
+    // { text: "Navigation Timing Level 2", href: "https://htmlspecs.com/navigation-timing-2", src: "https://www.w3.org/TR/navigation-timing-2/" },
+    // 资源计时：
+    // { text: "Resource Timing Level 2", href: "https://htmlspecs.com/resource-timing-2", src: "https://www.w3.org/TR/resource-timing-2/" },
+    // 用户计时：
+    // { text: "User Timing Level 2", href: "https://htmlspecs.com/user-timing-2", src: "https://www.w3.org/TR/user-timing-2/" },
 
     // Security and Authentication
     { text: "Web Authentication Level 2", href: "https://htmlspecs.com/webauthn-2", src: "https://www.w3.org/TR/webauthn-2/" },
@@ -61,10 +69,14 @@ var cssLinks = [
     { text: "CSS Box Model Level 3", href: "https://htmlspecs.com/css/css-box-3", src: "https://www.w3.org/TR/css-box-3/" },
     { text: "CSS Box Model Level 4", href: "https://htmlspecs.com/css/css-box-4", src: "https://www.w3.org/TR/css-box-4/" },
     { text: "CSS Display Module Level 3", href: "https://htmlspecs.com/css/css-display-3", src: "https://www.w3.org/TR/css-display-3/" },
+    // CSS 背景与边框：
+    // { text: "CSS Backgrounds and Borders Level 3", href: "https://htmlspecs.com/css/css-backgrounds-3", src: "https://www.w3.org/TR/css-backgrounds-3/" },
 
     // Colors
     { text: "CSS Color Module Level 3", href: "https://htmlspecs.com/css/css-color-3", src: "https://www.w3.org/TR/css-color-3/" },
     { text: "CSS Color Module Level 5", href: "https://htmlspecs.com/css/css-color-5", src: "https://www.w3.org/TR/css-color-5/" },
+    // CSS 滤镜效果：
+    // { text: "CSS Filter Effects Module Level 1", href: "https://htmlspecs.com/css/filter-effects-1", src: "https://www.w3.org/TR/filter-effects-1/" },
 
     // Fonts
     { text: "CSS Fonts Module Level 3", href: "https://htmlspecs.com/css/css-fonts-3", src: "https://www.w3.org/TR/css-fonts-3/" },
@@ -78,6 +90,8 @@ var cssLinks = [
     { text: "CSS Flexible Box Layout Module Level 1", href: "https://htmlspecs.com/css/css-flexbox-1", src: "https://www.w3.org/TR/css-flexbox-1/" },
     { text: "CSS Grid Layout Module Level 1", href: "https://htmlspecs.com/css/css-grid-1", src: "https://www.w3.org/TR/css-grid-1/" },
     { text: "CSS Grid Layout Module Level 2", href: "https://htmlspecs.com/css/css-grid-2", src: "https://www.w3.org/TR/css-grid-2/" },
+    // CSS 多列布局：
+    // { text: "CSS Multi-column Layout Module Level 1", href: "https://htmlspecs.com/css/css-multicol-1", src: "https://www.w3.org/TR/css-multicol-1/" },
 
     // Writing Modes
     { text: "CSS Writing Modes Level 3", href: "https://htmlspecs.com/css/css-writing-modes-3", src: "https://www.w3.org/TR/css-writing-modes-3/" },
@@ -101,6 +115,8 @@ var cssLinks = [
 
     // Others
     { text: "CSS Overscroll Behavior", href: "https://htmlspecs.com/css/css-overscroll-1", src: "https://www.w3.org/TR/css-overscroll-1/" },
+    // CSS 滚动捕捉：
+    // { text: "CSS Scroll Snap Module Level 1", href: "https://htmlspecs.com/css/css-scroll-snap-1", src: "https://www.w3.org/TR/css-scroll-snap-1/" },
 
     // CSS Variables and CSSOM
     { text: "CSS Custom Properties for Cascading Variables Module Level 1", href: "https://htmlspecs.com/css/css-variables-1", src: "https://www.w3.org/TR/css-variables-1/" },

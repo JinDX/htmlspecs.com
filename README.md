@@ -44,6 +44,10 @@ HTML 及相关 API，CSS 标准系列。
 - [x] CSS Transitions Level 2 https://htmlspecs.com/css/css-transitions-2
 - [x] CSS Transforms Module Level 1 https://htmlspecs.com/css/css-transforms-1
 - [x] CSS Transforms Module Level 2 https://htmlspecs.com/css/css-transforms-2
+- [ ] CSS Backgrounds and Borders Level 3 https://htmlspecs.com/css/css-backgrounds-3
+- [ ] CSS Filter Effects Module Level 1 https://htmlspecs.com/css/filter-effects-1
+- [ ] CSS Multi-column Layout Module Level 1 https://htmlspecs.com/css/css-multicol-1
+- [ ] CSS Scroll Snap Module Level 1 https://htmlspecs.com/css/css-scroll-snap-1
 - [x] File API  https://htmlspecs.com/FileAPI
 - [x] Performance Timeline  https://htmlspecs.com/performance-timeline
 - [x] Resize Observer  https://htmlspecs.com/resize-observer
@@ -63,3 +67,7 @@ HTML 及相关 API，CSS 标准系列。
 - [x] Device Orientation and Motion https://htmlspecs.com/orientation-event
 - [x] Pointer Lock 2.0 https://htmlspecs.com/pointerlock
 - [x] Clipboard API and events https://htmlspecs.com/clipboard-apis
+- [ ] Navigation Timing Level 2 https://htmlspecs.com/navigation-timing-2
+- [ ] Resource Timing Level 2 https://htmlspecs.com/resource-timing-2
+- [ ] User Timing Level 2 https://htmlspecs.com/user-timing-2
+- [ ] Input Events Level 1 https://htmlspecs.com/input-events-1
