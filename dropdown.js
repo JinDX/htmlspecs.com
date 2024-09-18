@@ -77,10 +77,16 @@ var cssLinks = [
     { text: "CSS Color Module Level 5", href: "https://htmlspecs.com/css/css-color-5", src: "https://www.w3.org/TR/css-color-5/" },
     // CSS 滤镜效果：
     // { text: "CSS Filter Effects Module Level 1", href: "https://htmlspecs.com/css/filter-effects-1", src: "https://www.w3.org/TR/filter-effects-1/" },
+    // 合成与混合模式：
+    // { text: "Compositing and Blending Level 1", href: "https://htmlspecs.com/css/compositing-1", src: "https://www.w3.org/TR/compositing-1/" },
 
     // Fonts
     { text: "CSS Fonts Module Level 3", href: "https://htmlspecs.com/css/css-fonts-3", src: "https://www.w3.org/TR/css-fonts-3/" },
     { text: "CSS Fonts Module Level 4", href: "https://htmlspecs.com/css/css-fonts-4", src: "https://www.w3.org/TR/css-fonts-4/" },
+
+    // Text and Typography
+    // { text: "CSS Text Module Level 3", href: "https://htmlspecs.com/css/css-text-3", src: "https://www.w3.org/TR/css-text-3/" },
+    // { text: "CSS Text Module Level 4", href: "https://htmlspecs.com/css/css-text-4", src: "https://www.w3.org/TR/css-text-4/" },
 
     // Media Queries
     { text: "Media Queries Level 3", href: "https://htmlspecs.com/css/mediaqueries-3", src: "https://www.w3.org/TR/mediaqueries-3/" },
@@ -109,6 +115,8 @@ var cssLinks = [
     { text: "CSS Animations Level 1", href: "https://htmlspecs.com/css/css-animations-1", src: "https://www.w3.org/TR/css-animations-1/" },
     { text: "CSS Animations Level 2", href: "https://htmlspecs.com/css/css-animations-2", src: "https://www.w3.org/TR/css-animations-2/" },
     { text: "CSS Motion Path Module Level 1", href: "https://htmlspecs.com/css/motion-1", src: "https://www.w3.org/TR/motion-1/" },
+    // CSS 动画 Worklet API：
+    // { text: "CSS Animation Worklet API", href: "https://htmlspecs.com/css/css-animation-worklet-1", src: "https://www.w3.org/TR/css-animation-worklet-1/" },
 
     // Containment
     { text: "CSS Containment Module Level 2", href: "https://htmlspecs.com/css/css-contain-2", src: "https://www.w3.org/TR/css-contain-2/" },
@@ -120,7 +128,13 @@ var cssLinks = [
 
     // CSS Variables and CSSOM
     { text: "CSS Custom Properties for Cascading Variables Module Level 1", href: "https://htmlspecs.com/css/css-variables-1", src: "https://www.w3.org/TR/css-variables-1/" },
-    { text: "CSS Object Model (CSSOM)", href: "https://htmlspecs.com/css/cssom-1", src: "https://www.w3.org/TR/cssom-1/" }
+    { text: "CSS Object Model (CSSOM)", href: "https://htmlspecs.com/css/cssom-1", src: "https://www.w3.org/TR/cssom-1/" },
+
+    // CSS Houdini APIs
+    // { text: "CSS Typed OM Level 1", href: "https://htmlspecs.com/css/css-typed-om-1", src: "https://www.w3.org/TR/css-typed-om-1/" },
+    // { text: "CSS Paint API Level 1", href: "https://htmlspecs.com/css/css-paint-api-1", src: "https://www.w3.org/TR/css-paint-api-1/" },
+    // { text: "CSS Layout API Level 1", href: "https://htmlspecs.com/css/css-layout-api-1", src: "https://www.w3.org/TR/css-layout-api-1/" },
+    // { text: "CSS Properties and Values API Level 1", href: "https://htmlspecs.com/css/css-properties-values-api-1", src: "https://www.w3.org/TR/css-properties-values-api-1/" },
 ];
 
 
