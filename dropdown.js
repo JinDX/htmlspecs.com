@@ -318,7 +318,7 @@ style.innerHTML = `
     }
   }
   table.def th {
-    width: 5em;
+    min-width: 5em;
   }
 `;
 document.head.appendChild(style);
