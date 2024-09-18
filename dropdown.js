@@ -41,7 +41,7 @@ var links = [
     // 导航计时：
     // { text: "Navigation Timing Level 2", href: "https://htmlspecs.com/navigation-timing-2", src: "https://www.w3.org/TR/navigation-timing-2/" },
     // 资源计时：
-    // { text: "Resource Timing Level 2", href: "https://htmlspecs.com/resource-timing-2", src: "https://www.w3.org/TR/resource-timing-2/" },
+    // { text: "Resource Timing", href: "https://htmlspecs.com/resource-timing", src: "https://www.w3.org/TR/resource-timing/" },
     // 用户计时：
     // { text: "User Timing Level 2", href: "https://htmlspecs.com/user-timing-2", src: "https://www.w3.org/TR/user-timing-2/" },
 
