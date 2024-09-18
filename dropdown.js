@@ -317,6 +317,9 @@ style.innerHTML = `
       right: 0;
     }
   }
+  table.def th {
+    width: 5em;
+  }
 `;
 document.head.appendChild(style);
 
