@@ -75,7 +75,7 @@ HTML 及相关 API，CSS 标准系列。
 - [x] Device Orientation and Motion https://htmlspecs.com/orientation-event
 - [x] Pointer Lock 2.0 https://htmlspecs.com/pointerlock
 - [x] Clipboard API and events https://htmlspecs.com/clipboard-apis
-- [ ] Navigation Timing Level 2 https://htmlspecs.com/navigation-timing-2
+- [x] Navigation Timing Level 2 https://htmlspecs.com/navigation-timing-2
 - [ ] Resource Timing https://htmlspecs.com/resource-timing
 - [ ] User Timing Level 2 https://htmlspecs.com/user-timing-2
 - [ ] Input Events Level 1 https://htmlspecs.com/input-events-1
