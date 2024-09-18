@@ -70,7 +70,7 @@ var cssLinks = [
     { text: "CSS Box Model Level 4", href: "https://htmlspecs.com/css/css-box-4", src: "https://www.w3.org/TR/css-box-4/" },
     { text: "CSS Display Module Level 3", href: "https://htmlspecs.com/css/css-display-3", src: "https://www.w3.org/TR/css-display-3/" },
     // CSS 背景与边框：
-    // { text: "CSS Backgrounds and Borders Level 3", href: "https://htmlspecs.com/css/css-backgrounds-3", src: "https://www.w3.org/TR/css-backgrounds-3/" },
+    { text: "CSS Backgrounds and Borders Level 3", href: "https://htmlspecs.com/css/css-backgrounds-3", src: "https://www.w3.org/TR/css-backgrounds-3/" },
 
     // Colors
     { text: "CSS Color Module Level 3", href: "https://htmlspecs.com/css/css-color-3", src: "https://www.w3.org/TR/css-color-3/" },
