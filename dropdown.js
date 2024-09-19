@@ -39,7 +39,7 @@ var links = [
     { text: "Resize Observer", href: "https://htmlspecs.com/resize-observer", src: "https://www.w3.org/TR/resize-observer/" },
     { text: "Navigation Timing Level 2", href: "https://htmlspecs.com/navigation-timing-2", src: "https://www.w3.org/TR/navigation-timing-2/" },
     { text: "Resource Timing", href: "https://htmlspecs.com/resource-timing", src: "https://www.w3.org/TR/resource-timing/" },
-    // { text: "User Timing Level 2", href: "https://htmlspecs.com/user-timing-2", src: "https://www.w3.org/TR/user-timing-2/" },
+    { text: "User Timing Level 2", href: "https://htmlspecs.com/user-timing-2", src: "https://www.w3.org/TR/user-timing-2/" },
 
     // Security and Authentication
     { text: "Web Authentication Level 2", href: "https://htmlspecs.com/webauthn-2", src: "https://www.w3.org/TR/webauthn-2/" },

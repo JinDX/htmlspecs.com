@@ -77,5 +77,5 @@ HTML 及相关 API，CSS 标准系列。
 - [x] Clipboard API and events https://htmlspecs.com/clipboard-apis
 - [x] Navigation Timing Level 2 https://htmlspecs.com/navigation-timing-2
 - [x] Resource Timing https://htmlspecs.com/resource-timing
-- [ ] User Timing Level 2 https://htmlspecs.com/user-timing-2
+- [x] User Timing Level 2 https://htmlspecs.com/user-timing-2
 - [ ] Input Events Level 1 https://htmlspecs.com/input-events-1
