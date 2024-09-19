@@ -78,4 +78,4 @@ HTML 及相关 API，CSS 标准系列。
 - [x] Navigation Timing Level 2 https://htmlspecs.com/navigation-timing-2
 - [x] Resource Timing https://htmlspecs.com/resource-timing
 - [x] User Timing Level 2 https://htmlspecs.com/user-timing-2
-- [ ] Input Events Level 1 https://htmlspecs.com/input-events-1
+- [x] Input Events Level 1 https://htmlspecs.com/input-events-1
