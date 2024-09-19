@@ -6,7 +6,7 @@ var links = [
 
     // URLs and Patterns
     { text: "URL", href: "https://htmlspecs.com/url", src: "https://url.spec.whatwg.org/" },
-    { text: "URL Pattern", href: "https://htmlspecs.com/urlpattern", src: "https://wicg.github.io/urlpattern/" },
+    { text: "URL Pattern", href: "https://htmlspecs.com/urlpattern", src: "https://urlpattern.spec.whatwg.org/" },
 
     // Network and Communication
     { text: "Fetch", href: "https://htmlspecs.com/fetch", src: "https://fetch.spec.whatwg.org/" },
