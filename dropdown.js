@@ -70,7 +70,7 @@ var cssLinks = [
     // Colors
     { text: "CSS Color Module Level 3", href: "https://htmlspecs.com/css/css-color-3", src: "https://www.w3.org/TR/css-color-3/" },
     { text: "CSS Color Module Level 5", href: "https://htmlspecs.com/css/css-color-5", src: "https://www.w3.org/TR/css-color-5/" },
-    // { text: "CSS Filter Effects Module Level 1", href: "https://htmlspecs.com/css/filter-effects-1", src: "https://www.w3.org/TR/filter-effects-1/" },
+    { text: "CSS Filter Effects Module Level 1", href: "https://htmlspecs.com/css/filter-effects-1", src: "https://www.w3.org/TR/filter-effects-1/" },
     // { text: "Compositing and Blending Level 1", href: "https://htmlspecs.com/css/compositing-1", src: "https://www.w3.org/TR/compositing-1/" },
 
     // Fonts
