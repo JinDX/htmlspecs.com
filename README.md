@@ -48,7 +48,7 @@ HTML 及相关 API，CSS 标准系列。
 - [x] CSS Filter Effects Module Level 1 https://htmlspecs.com/css/filter-effects-1
 - [ ] CSS Multi-column Layout Module Level 1 https://htmlspecs.com/css/css-multicol-1
 - [ ] CSS Scroll Snap Module Level 1 https://htmlspecs.com/css/css-scroll-snap-1
-- [ ] Compositing and Blending Level 1 https://htmlspecs.com/css/compositing-1
+- [x] Compositing and Blending Level 1 https://htmlspecs.com/css/compositing-1
 - [ ] CSS Text Module Level 3 https://htmlspecs.com/css/css-text-3
 - [ ] CSS Text Module Level 4 https://htmlspecs.com/css/css-text-4
 - [ ] CSS Animation Worklet API https://htmlspecs.com/css/css-animation-worklet-1
