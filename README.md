@@ -46,7 +46,7 @@ HTML 及相关 API，CSS 标准系列。
 - [x] CSS Transforms Module Level 2 https://htmlspecs.com/css/css-transforms-2
 - [x] CSS Backgrounds and Borders Level 3 https://htmlspecs.com/css/css-backgrounds-3
 - [x] CSS Filter Effects Module Level 1 https://htmlspecs.com/css/filter-effects-1
-- [ ] CSS Multi-column Layout Module Level 1 https://htmlspecs.com/css/css-multicol-1
+- [x] CSS Multi-column Layout Module Level 1 https://htmlspecs.com/css/css-multicol-1
 - [ ] CSS Scroll Snap Module Level 1 https://htmlspecs.com/css/css-scroll-snap-1
 - [x] Compositing and Blending Level 1 https://htmlspecs.com/css/compositing-1
 - [x] CSS Text Module Level 3 https://htmlspecs.com/css/css-text-3

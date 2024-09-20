@@ -89,7 +89,7 @@ var cssLinks = [
     { text: "CSS Flexible Box Layout Module Level 1", href: "https://htmlspecs.com/css/css-flexbox-1", src: "https://www.w3.org/TR/css-flexbox-1/" },
     { text: "CSS Grid Layout Module Level 1", href: "https://htmlspecs.com/css/css-grid-1", src: "https://www.w3.org/TR/css-grid-1/" },
     { text: "CSS Grid Layout Module Level 2", href: "https://htmlspecs.com/css/css-grid-2", src: "https://www.w3.org/TR/css-grid-2/" },
-    // { text: "CSS Multi-column Layout Module Level 1", href: "https://htmlspecs.com/css/css-multicol-1", src: "https://www.w3.org/TR/css-multicol-1/" },
+    { text: "CSS Multi-column Layout Module Level 1", href: "https://htmlspecs.com/css/css-multicol-1", src: "https://www.w3.org/TR/css-multicol-1/" },
 
     // Writing Modes
     { text: "CSS Writing Modes Level 3", href: "https://htmlspecs.com/css/css-writing-modes-3", src: "https://www.w3.org/TR/css-writing-modes-3/" },
