@@ -79,7 +79,7 @@ var cssLinks = [
 
     // Text and Typography
     { text: "CSS Text Module Level 3", href: "https://htmlspecs.com/css/css-text-3", src: "https://www.w3.org/TR/css-text-3/" },
-    // { text: "CSS Text Module Level 4", href: "https://htmlspecs.com/css/css-text-4", src: "https://www.w3.org/TR/css-text-4/" },
+    { text: "CSS Text Module Level 4", href: "https://htmlspecs.com/css/css-text-4", src: "https://www.w3.org/TR/css-text-4/" },
 
     // Media Queries
     { text: "Media Queries Level 3", href: "https://htmlspecs.com/css/mediaqueries-3", src: "https://www.w3.org/TR/mediaqueries-3/" },
