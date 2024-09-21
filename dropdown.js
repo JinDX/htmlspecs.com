@@ -122,7 +122,7 @@ var cssLinks = [
 
     // CSS Houdini APIs
     { text: "CSS Typed OM Level 1", href: "https://htmlspecs.com/css/css-typed-om-1", src: "https://www.w3.org/TR/css-typed-om-1/" },
-    // { text: "CSS Paint API Level 1", href: "https://htmlspecs.com/css/css-paint-api-1", src: "https://www.w3.org/TR/css-paint-api-1/" },
+    { text: "CSS Paint API Level 1", href: "https://htmlspecs.com/css/css-paint-api-1", src: "https://www.w3.org/TR/css-paint-api-1/" },
     // { text: "CSS Layout API Level 1", href: "https://htmlspecs.com/css/css-layout-api-1", src: "https://www.w3.org/TR/css-layout-api-1/" },
     // { text: "CSS Properties and Values API Level 1", href: "https://htmlspecs.com/css/css-properties-values-api-1", src: "https://www.w3.org/TR/css-properties-values-api-1/" },
 ];
