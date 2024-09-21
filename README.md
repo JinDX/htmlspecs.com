@@ -53,7 +53,7 @@ HTML 及相关 API，CSS 标准系列。
 - [x] CSS Text Module Level 4 https://htmlspecs.com/css/css-text-4
 - [x] CSS Animation Worklet API https://htmlspecs.com/css/css-animation-worklet-1
 - [x] CSS Typed OM Level 1 https://htmlspecs.com/css/css-typed-om-1
-- [x] CSS Paint API Level 1 https://www.w3.org/TR/css-paint-api-1/
+- [x] CSS Paint API Level 1 https://htmlspecs.com/css/css-paint-api-1/
 - [ ] CSS Layout API Level 1 https://htmlspecs.com/css/css-layout-api-1
 - [ ] CSS Properties and Values API Level 1 https://htmlspecs.com/css/css-properties-values-api-1
 - [x] File API  https://htmlspecs.com/FileAPI
