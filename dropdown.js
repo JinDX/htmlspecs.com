@@ -105,7 +105,7 @@ const links = [
         "last-modified": "Sat, 21 Sep 2024 09:07:00 GMT"
     },
     {
-        text: "Notifications",
+        text: "Notifications API",
         href: "https://htmlspecs.com/notifications",
         src: "https://notifications.spec.whatwg.org/",
         "last-modified": "Fri, 20 Sep 2024 15:48:55 GMT"
