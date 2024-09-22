@@ -1,4 +1,4 @@
-var links = [
+window.links = [
     // Core Specifications
     { text: "HTML", href: "https://htmlspecs.com/", src: "https://html.spec.whatwg.org/multipage/" },
     { text: "ECMA-262", href: "https://ecma262.com/", src: "https://tc39.es/ecma262/" },
@@ -51,7 +51,7 @@ var links = [
     { text: "Console", href: "https://htmlspecs.com/console", src: "https://console.spec.whatwg.org/" }
 ];
 
-var cssLinks = [
+window.cssLinks = [
     // Foundational
     { text: "CSS Snapshot 2023", href: "https://htmlspecs.com/css/css-2023", src: "https://www.w3.org/TR/css-2023/" },
     { text: "CSS 2.2 Specification", href: "https://htmlspecs.com/css/css22/", src: "https://www.w3.org/TR/CSS22/" },
