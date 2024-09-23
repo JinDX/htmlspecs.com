@@ -19,6 +19,14 @@ const links = [
         "last-modified": "Fri, 20 Sep 2024 15:16:50 GMT"
     },
 
+    // Accessibility
+    // {
+    //     text: "Web Content Accessibility Guidelines (WCAG) 2.2",
+    //     href: "https://htmlspecs.com/WCAG22",
+    //     src: "https://www.w3.org/TR/WCAG22/",
+    //     "last-modified": "Thu, 05 Oct 2023 08:30:43 GMT"
+    // },
+
     // URLs and Patterns
     {
         text: "URL",
@@ -287,6 +295,12 @@ const cssLinks = [
         src: "https://www.w3.org/TR/css-backgrounds-3/",
         "last-modified": "Mon, 11 Mar 2024 17:22:44 GMT"
     },
+    // {
+    //     text: "CSS Box Alignment Module Level 3",
+    //     href: "https://htmlspecs.com/css/css-align-3",
+    //     src: "https://www.w3.org/TR/css-align-3/",
+    //     "last-modified": "Fri, 17 Feb 2023 19:17:10 GMT"
+    // },
 
     // Colors
     {
@@ -381,6 +395,12 @@ const cssLinks = [
         src: "https://www.w3.org/TR/css-multicol-1/",
         "last-modified": "Tue, 14 May 2024 20:30:50 GMT"
     },
+    // {
+    //     text: "CSS Shapes Module Level 1",
+    //     href: "https://htmlspecs.com/css/css-shapes-1",
+    //     src: "https://www.w3.org/TR/css-shapes-1/",
+    //     "last-modified": "Thu, 10 Nov 2022 21:13:52 GMT"
+    // },
 
     // Writing Modes
     {
@@ -457,6 +477,12 @@ const cssLinks = [
         src: "https://www.w3.org/TR/css-contain-2/",
         "last-modified": "Sat, 17 Sep 2022 18:01:51 GMT"
     },
+    // {
+    //     text: "CSS Containment Module Level 3",
+    //     href: "https://htmlspecs.com/css/css-contain-3",
+    //     src: "https://www.w3.org/TR/css-contain-3/",
+    //     "last-modified": "Thu, 18 Aug 2022 21:50:48 GMT"
+    // },
 
     // Others
     {
@@ -471,6 +497,13 @@ const cssLinks = [
         src: "https://www.w3.org/TR/css-scroll-snap-1/",
         "last-modified": "Wed, 10 Mar 2021 20:56:24 GMT"
     },
+    // {
+    //     text: "CSS Scrollbars Styling Module Level 1",
+    //     href: "https://htmlspecs.com/css/css-scrollbars-1",
+    //     src: "https://www.w3.org/TR/css-scrollbars-1/",
+    //     "last-modified": "Tue, 07 Dec 2021 00:51:03 GMT"
+    // },
+    
 
     // CSS Variables and CSSOM
     {

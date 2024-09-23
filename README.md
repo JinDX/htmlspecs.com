@@ -12,13 +12,13 @@ HTML 及相关 API，CSS 标准系列。
 - [x] fullscreen https://htmlspecs.com/fullscreen
 - [x] websockets https://htmlspecs.com/websockets
 - [x] storage https://htmlspecs.com/storage
-- [ ] Web Content Accessibility Guidelines (WCAG) 2.2
+- [ ] Web Content Accessibility Guidelines (WCAG) 2.2 https://htmlspecs.com/WCAG22
 - [x] CSS Snapshot 2023 https://htmlspecs.com/css/css-2023
-- [x] Cascading Style Sheets Level 2 Revision 2 (CSS 2.2) Specification https://htmlspecs.com/css/css22/
+- [x] Cascading Style Sheets Level 2 Revision 2 (CSS 2.2) Specification https://htmlspecs.com/css/css22
 - [x] CSS Flexible Box Layout Module Level 1 https://htmlspecs.com/css/css-flexbox-1
 - [x] CSS Grid Layout Module Level 1 https://htmlspecs.com/css/css-grid-1
 - [x] CSS Grid Layout Module Level 2 https://htmlspecs.com/css/css-grid-2
-- [ ] CSS Grid Layout Module Level 3
+- [ ] CSS Grid Layout Module Level 3 https://htmlspecs.com/css/css-grid-3
 - [x] CSS Color Module Level 5 https://htmlspecs.com/css/css-color-5
 - [x] CSS Fonts Module Level 4 https://htmlspecs.com/css/css-fonts-4
 - [x] Media Queries Level 5 https://htmlspecs.com/css/mediaqueries-5
@@ -39,7 +39,7 @@ HTML 及相关 API，CSS 标准系列。
 - [x] CSS Basic User Interface Level 3 https://htmlspecs.com/css/css-ui-3
 - [x] CSS Box Model Level 3  https://htmlspecs.com/css/css-box-3
 - [x] CSS Containment Module Level 2  https://htmlspecs.com/css/css-contain-2
-- [ ] CSS Containment Module Level 3
+- [ ] CSS Containment Module Level 3 https://htmlspecs.com/css/css-contain-3
 - [x] CSS Custom Properties for Cascading Variables Module Level 1 https://htmlspecs.com/css/css-variables-1
 - [x] CSS Object Model (CSSOM) https://htmlspecs.com/css/cssom-1
 - [x] CSS Animations Level 1 https://htmlspecs.com/css/css-animations-1
@@ -59,9 +59,9 @@ HTML 及相关 API，CSS 标准系列。
 - [x] CSS Paint API Level 1 https://htmlspecs.com/css/css-paint-api-1/
 - [x] CSS Layout API Level 1 https://htmlspecs.com/css/css-layout-api-1
 - [x] CSS Properties and Values API Level 1 https://htmlspecs.com/css/css-properties-values-api-1
-- [ ] CSS Box Alignment Module Level 3 https://www.w3.org/TR/css-align-3/
-- [ ] CSS Scrollbars Styling Module Level 1 https://www.w3.org/TR/css-scrollbars-1/
-- [ ] CSS Shapes Module Level 1 https://www.w3.org/TR/css-shapes-1/
+- [ ] CSS Box Alignment Module Level 3 https://htmlspecs.com/css/css-align-3
+- [ ] CSS Scrollbars Styling Module Level 1 https://htmlspecs.com/css/css-scrollbars-1
+- [ ] CSS Shapes Module Level 1 https://www.w3.org/TR/css-shapes-1
 - [x] File API  https://htmlspecs.com/FileAPI
 - [x] Performance Timeline  https://htmlspecs.com/performance-timeline
 - [x] Resize Observer  https://htmlspecs.com/resize-observer
