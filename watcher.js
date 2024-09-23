@@ -1,5 +1,5 @@
 const https = require('https');
-const window = require('./dropdown.js');
+const data = require('./data.js');
 
 const checkLinks = async (links) => {
     const requests = links.map(link => {
@@ -21,8 +21,8 @@ const checkLinks = async (links) => {
 };
 
 const main = async () => {
-    await checkLinks(window.links);
-    await checkLinks(window.cssLinks);
+    await checkLinks(data.links);
+    await checkLinks(data.cssLinks);
     console.log('All checks completed.');
     process.exit();
 };
