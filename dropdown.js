@@ -1,6 +1,6 @@
 function loadDataScript(callback) {
     var script = document.createElement('script');
-    script.src = '/data.js';
+    script.src = 'https://htmlspecs.com/data.js';
     script.onload = function () {
         callback();
     };
