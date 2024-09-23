@@ -6,6 +6,7 @@ function loadDataScript(callback) {
     };
     document.head.appendChild(script);
 }
+
 loadDataScript(function () {
     var githubButton = document.createElement("a");
     githubButton.href = "https://github.com/JinDX/htmlspecs.com";
