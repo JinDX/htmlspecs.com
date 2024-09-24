@@ -19,7 +19,7 @@ const links = [
         "last-modified": "Fri, 20 Sep 2024 15:16:50 GMT"
     },
 
-    Accessibility
+    // Accessibility
     {
         text: "Web Content Accessibility Guidelines (WCAG) 2.2",
         href: "https://htmlspecs.com/WCAG22",
