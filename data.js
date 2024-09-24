@@ -401,12 +401,12 @@ const cssLinks = [
         src: "https://www.w3.org/TR/css-multicol-1/",
         "last-modified": "Tue, 14 May 2024 20:30:50 GMT"
     },
-    // {
-    //     text: "CSS Shapes Module Level 1",
-    //     href: "https://htmlspecs.com/css/css-shapes-1",
-    //     src: "https://www.w3.org/TR/css-shapes-1/",
-    //     "last-modified": "Thu, 10 Nov 2022 21:13:52 GMT"
-    // },
+    {
+        text: "CSS Shapes Module Level 1",
+        href: "https://htmlspecs.com/css/css-shapes-1",
+        src: "https://www.w3.org/TR/css-shapes-1/",
+        "last-modified": "Thu, 10 Nov 2022 21:13:52 GMT"
+    },
 
     // Writing Modes
     {
