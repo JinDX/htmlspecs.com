@@ -19,13 +19,13 @@ const links = [
         "last-modified": "Fri, 20 Sep 2024 15:16:50 GMT"
     },
 
-    // Accessibility
-    // {
-    //     text: "Web Content Accessibility Guidelines (WCAG) 2.2",
-    //     href: "https://htmlspecs.com/WCAG22",
-    //     src: "https://www.w3.org/TR/WCAG22/",
-    //     "last-modified": "Thu, 05 Oct 2023 08:30:43 GMT"
-    // },
+    Accessibility
+    {
+        text: "Web Content Accessibility Guidelines (WCAG) 2.2",
+        href: "https://htmlspecs.com/WCAG22",
+        src: "https://www.w3.org/TR/WCAG22/",
+        "last-modified": "Thu, 05 Oct 2023 08:30:43 GMT"
+    },
 
     // URLs and Patterns
     {
