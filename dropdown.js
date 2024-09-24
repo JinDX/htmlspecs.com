@@ -1,9 +1,10 @@
+const BUTTON_COLOR = "#6c757d";
+const BUTTON_HOVER_COLOR = "#5a6268";
+
 function loadDataScript(callback) {
     var script = document.createElement('script');
     script.src = 'https://htmlspecs.com/data.js';
-    script.onload = function () {
-        callback();
-    };
+    script.onload = callback;
     document.head.appendChild(script);
 }
 
@@ -12,60 +13,38 @@ function createLink(href, text) {
     a.href = href;
     a.textContent = text;
     a.title = text;
-    a.style.display = "block";
-    a.style.padding = "10px 15px";
-    a.style.color = "#333";
-    a.style.textDecoration = "none";
-    a.style.transition = "color 0.3s";
-    a.style.overflow = "hidden";
-    a.style.whiteSpace = "nowrap";
-    a.style.textOverflow = "ellipsis";
-    a.style.width = "100%";
-    a.style.boxSizing = "border-box";
-    a.onmouseover = function () {
-        a.style.color = "#007BFF";
-    };
-    a.onmouseout = function () {
-        a.style.color = "#333";
-    };
+    a.style.cssText = `
+        display: block;
+        padding: 10px 15px;
+        color: #333;
+        text-decoration: none;
+        transition: color 0.3s;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        width: 100%;
+        box-sizing: border-box;
+    `;
+    a.onmouseover = () => a.style.color = "#007BFF";
+    a.onmouseout = () => a.style.color = "#333";
     return a;
 }
 
-loadDataScript(function () {
-    var githubButton = document.createElement("a");
-    githubButton.href = window.location.hostname === 'ecma262.com' ? "https://github.com/JinDX/ecma262.com" : "https://github.com/JinDX/htmlspecs.com";
-    githubButton.target = "_blank";
-    githubButton.style.cssText = `
-        display: inline-block;
-        width: 40px;
-        height: 40px;
-        background-image: url('https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png');
-        background-size: cover;
-        border-radius: 50%;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-        cursor: pointer;
-        margin-right: 10px;
-    `;
-    githubButton.title = "查看 GitHub 源码，加星 ⭐";
+function createButton(id, text, onClick) {
+    var button = document.createElement("button");
+    button.id = id;
+    button.textContent = text;
+    setButtonStyle(button);
+    button.onclick = onClick;
+    return button;
+}
 
-    githubButton.onmouseover = function () {
-        githubButton.style.transform = "scale(1.2)";
-        githubButton.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.4)";
-    };
-
-    githubButton.onmouseout = function () {
-        githubButton.style.transform = "scale(1)";
-        githubButton.style.boxShadow = "0 2px 6px rgba(0, 0, 0, 0.2)";
-    };
-
-    var dropdownButton = document.createElement("button");
-    dropdownButton.id = "dropdownButton";
-    dropdownButton.textContent = "其他标准";
-    dropdownButton.style.cssText = `
+function setButtonStyle(button) {
+    button.style.cssText = `
         display: inline-block;
         z-index: 3;
         margin-left: 10px;
-        background-color: #6c757d;
+        background-color: ${BUTTON_COLOR};
         color: white;
         padding: 10px 15px;
         font-size: 14px;
@@ -75,20 +54,47 @@ loadDataScript(function () {
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
         transition: background-color 0.3s;
     `;
-    dropdownButton.onmouseover = function () {
-        dropdownButton.style.backgroundColor = "#5a6268";
+}
+
+loadDataScript(function () {
+    var githubButton = createLink(
+        window.location.hostname === 'ecma262.com' ?
+            "https://github.com/JinDX/ecma262.com" :
+            "https://github.com/JinDX/htmlspecs.com",
+        ""
+    );
+    githubButton.style.cssText += `
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        background-image: url('https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png');
+        background-size: cover;
+        border-radius: 50%;
+        margin-right: 10px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    `;
+    githubButton.title = "查看 GitHub 源码，加星 ⭐";
+    githubButton.onmouseover = () => {
+        githubButton.style.transform = "scale(1.2)";
+        githubButton.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.4)";
     };
-    dropdownButton.onmouseout = function () {
-        dropdownButton.style.backgroundColor = "#6c757d";
+    githubButton.onmouseout = () => {
+        githubButton.style.transform = "scale(1)";
+        githubButton.style.boxShadow = "0 2px 6px rgba(0, 0, 0, 0.2)";
     };
+
+    var dropdownButton = createButton("dropdownButton", "其他标准", function () {
+        dropdownContent.style.display = dropdownContent.style.display === "block" ? "none" : "block";
+    });
 
     var buttonContainer = document.createElement("div");
-    buttonContainer.style.position = "absolute";
-    buttonContainer.style.top = "20px";
-    buttonContainer.style.right = "20px";
-    buttonContainer.style.display = "flex";
-    buttonContainer.style.alignItems = "center";
-
+    buttonContainer.style.cssText = `
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        display: flex;
+        align-items: center;
+    `;
     buttonContainer.appendChild(githubButton);
     buttonContainer.appendChild(dropdownButton);
     document.body.appendChild(buttonContainer);
@@ -118,11 +124,7 @@ loadDataScript(function () {
         if (link.text === "ECMA-262") {
             var cssTitle = createLink("#", "CSS相关");
             cssTitle.style.cursor = "pointer";
-            cssTitle.style.display = "flex";
-            cssTitle.style.alignItems = "center";
             cssTitle.style.padding = "10px 15px";
-            cssTitle.style.borderBottom = "none";
-
             var triangle = document.createElement("span");
             triangle.style.cssText = `
                 border-top: 6px solid transparent;
@@ -133,7 +135,6 @@ loadDataScript(function () {
                 transition: transform 0.3s ease;
             `;
             cssTitle.prepend(triangle);
-
             var cssContent = document.createElement("div");
             cssContent.style.display = "none";
             cssContent.style.padding = "0 15px";
@@ -153,10 +154,6 @@ loadDataScript(function () {
         }
     });
 
-    dropdownButton.onclick = function () {
-        dropdownContent.style.display = dropdownContent.style.display === "block" ? "none" : "block";
-    };
-
     window.onclick = function (event) {
         if (!event.target.matches('#dropdownButton') && !dropdownContent.contains(event.target)) {
             dropdownContent.style.display = "none";
@@ -165,17 +162,11 @@ loadDataScript(function () {
 
     var style = document.createElement('style');
     style.innerHTML = `
-        @keyframes gradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
         @media (max-width: 600px) {
             #dropdownContent {
                 width: 100%;
                 left: 0;
-                right: 0;
+                right: 0; 
             }
         }
         table.def th {
