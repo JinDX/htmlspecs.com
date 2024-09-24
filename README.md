@@ -59,7 +59,7 @@ HTML 及相关 API，CSS 标准系列。
 - [x] CSS Paint API Level 1 https://htmlspecs.com/css/css-paint-api-1/
 - [x] CSS Layout API Level 1 https://htmlspecs.com/css/css-layout-api-1
 - [x] CSS Properties and Values API Level 1 https://htmlspecs.com/css/css-properties-values-api-1
-- [ ] CSS Box Alignment Module Level 3 https://htmlspecs.com/css/css-align-3
+- [x] CSS Box Alignment Module Level 3 https://htmlspecs.com/css/css-align-3
 - [ ] CSS Scrollbars Styling Module Level 1 https://htmlspecs.com/css/css-scrollbars-1
 - [ ] CSS Shapes Module Level 1 https://www.w3.org/TR/css-shapes-1
 - [x] File API  https://htmlspecs.com/FileAPI

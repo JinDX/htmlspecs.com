@@ -295,12 +295,12 @@ const cssLinks = [
         src: "https://www.w3.org/TR/css-backgrounds-3/",
         "last-modified": "Mon, 11 Mar 2024 17:22:44 GMT"
     },
-    // {
-    //     text: "CSS Box Alignment Module Level 3",
-    //     href: "https://htmlspecs.com/css/css-align-3",
-    //     src: "https://www.w3.org/TR/css-align-3/",
-    //     "last-modified": "Fri, 17 Feb 2023 19:17:10 GMT"
-    // },
+    {
+        text: "CSS Box Alignment Module Level 3",
+        href: "https://htmlspecs.com/css/css-align-3",
+        src: "https://www.w3.org/TR/css-align-3/",
+        "last-modified": "Fri, 17 Feb 2023 19:17:10 GMT"
+    },
 
     // Colors
     {
