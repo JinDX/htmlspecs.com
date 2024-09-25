@@ -34,7 +34,7 @@ HTML 及相关 API，CSS 标准系列。
 - [x] Media Queries Level 3 https://htmlspecs.com/css/mediaqueries-3
 - [x] CSS Style Attributes https://htmlspecs.com/css/css-style-attr
 - [x] CSS Cascading and Inheritance Level 3 https://htmlspecs.com/css/css-cascade-3
-- [ ] CSS Cascading and Inheritance Level 4
+- [ ] CSS Cascading and Inheritance Level 4 https://htmlspecs.com/css/css-cascade-4
 - [x] CSS Fonts Level 3 https://htmlspecs.com/css/css-fonts-3
 - [x] CSS Writing Modes Level 3 https://htmlspecs.com/css/css-writing-modes-3
 - [x] CSS Basic User Interface Level 3 https://htmlspecs.com/css/css-ui-3
@@ -57,16 +57,16 @@ HTML 及相关 API，CSS 标准系列。
 - [x] CSS Text Module Level 4 https://htmlspecs.com/css/css-text-4
 - [x] CSS Animation Worklet API https://htmlspecs.com/css/css-animation-worklet-1
 - [x] CSS Typed OM Level 1 https://htmlspecs.com/css/css-typed-om-1
-- [x] CSS Paint API Level 1 https://htmlspecs.com/css/css-paint-api-1/
+- [x] CSS Paint API Level 1 https://htmlspecs.com/css/css-paint-api-1
 - [x] CSS Layout API Level 1 https://htmlspecs.com/css/css-layout-api-1
 - [x] CSS Properties and Values API Level 1 https://htmlspecs.com/css/css-properties-values-api-1
 - [x] CSS Box Alignment Module Level 3 https://htmlspecs.com/css/css-align-3
 - [x] CSS Scrollbars Styling Module Level 1 https://htmlspecs.com/css/css-scrollbars-1
-- [x] CSS Shapes Module Level 1 https://www.w3.org/TR/css-shapes-1
-- [ ] CSS Easing Functions Level 1
-- [ ] CSS Easing Functions Level 2
-- [ ] CSS Syntax Module Level 3
-- [ ] CSS Values and Units Module Level 3
+- [x] CSS Shapes Module Level 1 https://htmlspecs.com/css/css-shapes-1
+- [ ] CSS Easing Functions Level 1 https://htmlspecs.com/css/css-easing-1
+- [ ] CSS Easing Functions Level 2 https://htmlspecs.com/css/css-easing-2
+- [ ] CSS Syntax Module Level 3 https://htmlspecs.com/css/css-syntax-3
+- [ ] CSS Values and Units Module Level 3 https://htmlspecs.com/css/css-values-3
 - [x] File API  https://htmlspecs.com/FileAPI
 - [x] Performance Timeline  https://htmlspecs.com/performance-timeline
 - [x] Resize Observer  https://htmlspecs.com/resize-observer
