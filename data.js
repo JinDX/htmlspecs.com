@@ -220,7 +220,7 @@ const links = [
         text: "Console",
         href: "https://htmlspecs.com/console",
         src: "https://console.spec.whatwg.org/",
-        "last-modified": "Wed, 24 Jan 2024 10:43:11 GMT"
+        "last-modified": "Mon, 23 Sep 2024 18:57:53 GMT"
     }
 ];
 
