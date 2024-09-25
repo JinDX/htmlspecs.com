@@ -245,6 +245,12 @@ const cssLinks = [
         src: "https://www.w3.org/TR/css-cascade-3/",
         "last-modified": "Mon, 08 Feb 2021 18:06:41 GMT"
     },
+    // {
+    //     text: "CSS Cascading and Inheritance Level 4",
+    //     href: "https://htmlspecs.com/css/css-cascade-4",
+    //     src: "https://www.w3.org/TR/css-cascade-4/",
+    //     "last-modified": "Tue, 11 Jan 2022 15:25:49 GMT"
+    // },
     {
         text: "CSS Style Attributes",
         href: "https://htmlspecs.com/css/css-style-attr",
@@ -269,6 +275,18 @@ const cssLinks = [
         src: "https://www.w3.org/TR/css-ui-3/",
         "last-modified": "Thu, 21 Jun 2018 16:29:59 GMT"
     },
+    // {
+    //     text: "CSS Syntax Module Level 3",
+    //     href: "https://htmlspecs.com/css/css-syntax-3",
+    //     src: "https://www.w3.org/TR/css-syntax-3/",
+    //     "last-modified": "Fri, 24 Dec 2021 22:58:34 GMT"
+    // },
+    // {
+    //     text: "CSS Values and Units Module Level 3",
+    //     href: "https://htmlspecs.com/css/css-values-3",
+    //     src: "https://www.w3.org/TR/css-values-3/",
+    //     "last-modified": "Fri, 22 Mar 2024 21:15:08 GMT"
+    // },
 
     // Box Model and Display
     {
@@ -433,6 +451,18 @@ const cssLinks = [
     },
 
     // Transforms and Animations
+    // {
+    //     text: "CSS Easing Functions Level 1",
+    //     href: "https://htmlspecs.com/css/css-easing-1",
+    //     src: "https://www.w3.org/TR/css-easing-1/",
+    //     "last-modified": "Mon, 13 Feb 2023 22:59:19 GMT"
+    // },
+    // {
+    //     text: "CSS Easing Functions Level 2",
+    //     href: "https://htmlspecs.com/css/css-easing-2",
+    //     src: "https://www.w3.org/TR/css-easing-2/",
+    //     "last-modified": "Wed, 28 Aug 2024 15:46:16 GMT"
+    // },
     {
         text: "CSS Transforms Module Level 1",
         href: "https://htmlspecs.com/css/css-transforms-1",
@@ -549,7 +579,7 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-properties-values-api-1",
         src: "https://www.w3.org/TR/css-properties-values-api-1/",
         "last-modified": "Fri, 22 Mar 2024 13:06:46 GMT"
-    },
+    }
 ];
 
 if (typeof module !== 'undefined' && module.exports) {
