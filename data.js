@@ -483,12 +483,12 @@ const cssLinks = [
         src: "https://www.w3.org/TR/css-contain-2/",
         "last-modified": "Sat, 17 Sep 2022 18:01:51 GMT"
     },
-    // {
-    //     text: "CSS Containment Module Level 3",
-    //     href: "https://htmlspecs.com/css/css-contain-3",
-    //     src: "https://www.w3.org/TR/css-contain-3/",
-    //     "last-modified": "Thu, 18 Aug 2022 21:50:48 GMT"
-    // },
+    {
+        text: "CSS Containment Module Level 3",
+        href: "https://htmlspecs.com/css/css-contain-3",
+        src: "https://www.w3.org/TR/css-contain-3/",
+        "last-modified": "Thu, 18 Aug 2022 21:50:48 GMT"
+    },
 
     // Others
     {
