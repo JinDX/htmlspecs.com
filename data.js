@@ -503,12 +503,12 @@ const cssLinks = [
         src: "https://www.w3.org/TR/css-scroll-snap-1/",
         "last-modified": "Wed, 10 Mar 2021 20:56:24 GMT"
     },
-    // {
-    //     text: "CSS Scrollbars Styling Module Level 1",
-    //     href: "https://htmlspecs.com/css/css-scrollbars-1",
-    //     src: "https://www.w3.org/TR/css-scrollbars-1/",
-    //     "last-modified": "Tue, 07 Dec 2021 00:51:03 GMT"
-    // },
+    {
+        text: "CSS Scrollbars Styling Module Level 1",
+        href: "https://htmlspecs.com/css/css-scrollbars-1",
+        src: "https://www.w3.org/TR/css-scrollbars-1/",
+        "last-modified": "Tue, 07 Dec 2021 00:51:03 GMT"
+    },
     
 
     // CSS Variables and CSSOM
