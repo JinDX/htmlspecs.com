@@ -34,6 +34,7 @@ HTML 及相关 API，CSS 标准系列。
 - [x] Media Queries Level 3 https://htmlspecs.com/css/mediaqueries-3
 - [x] CSS Style Attributes https://htmlspecs.com/css/css-style-attr
 - [x] CSS Cascading and Inheritance Level 3 https://htmlspecs.com/css/css-cascade-3
+- [ ] CSS Cascading and Inheritance Level 4
 - [x] CSS Fonts Level 3 https://htmlspecs.com/css/css-fonts-3
 - [x] CSS Writing Modes Level 3 https://htmlspecs.com/css/css-writing-modes-3
 - [x] CSS Basic User Interface Level 3 https://htmlspecs.com/css/css-ui-3
@@ -62,6 +63,10 @@ HTML 及相关 API，CSS 标准系列。
 - [x] CSS Box Alignment Module Level 3 https://htmlspecs.com/css/css-align-3
 - [x] CSS Scrollbars Styling Module Level 1 https://htmlspecs.com/css/css-scrollbars-1
 - [x] CSS Shapes Module Level 1 https://www.w3.org/TR/css-shapes-1
+- [ ] CSS Easing Functions Level 1
+- [ ] CSS Easing Functions Level 2
+- [ ] CSS Syntax Module Level 3
+- [ ] CSS Values and Units Module Level 3
 - [x] File API  https://htmlspecs.com/FileAPI
 - [x] Performance Timeline  https://htmlspecs.com/performance-timeline
 - [x] Resize Observer  https://htmlspecs.com/resize-observer
