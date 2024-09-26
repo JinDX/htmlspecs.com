@@ -457,12 +457,12 @@ const cssLinks = [
         src: "https://www.w3.org/TR/css-easing-1/",
         "last-modified": "Mon, 13 Feb 2023 22:59:19 GMT"
     },
-    // {
-    //     text: "CSS Easing Functions Level 2",
-    //     href: "https://htmlspecs.com/css/css-easing-2",
-    //     src: "https://www.w3.org/TR/css-easing-2/",
-    //     "last-modified": "Wed, 28 Aug 2024 15:46:16 GMT"
-    // },
+    {
+        text: "CSS Easing Functions Level 2",
+        href: "https://htmlspecs.com/css/css-easing-2",
+        src: "https://www.w3.org/TR/css-easing-2/",
+        "last-modified": "Wed, 28 Aug 2024 15:46:16 GMT"
+    },
     {
         text: "CSS Transforms Module Level 1",
         href: "https://htmlspecs.com/css/css-transforms-1",
