@@ -245,12 +245,12 @@ const cssLinks = [
         src: "https://www.w3.org/TR/css-cascade-3/",
         "last-modified": "Mon, 08 Feb 2021 18:06:41 GMT"
     },
-    // {
-    //     text: "CSS Cascading and Inheritance Level 4",
-    //     href: "https://htmlspecs.com/css/css-cascade-4",
-    //     src: "https://www.w3.org/TR/css-cascade-4/",
-    //     "last-modified": "Tue, 11 Jan 2022 15:25:49 GMT"
-    // },
+    {
+        text: "CSS Cascading and Inheritance Level 4",
+        href: "https://htmlspecs.com/css/css-cascade-4",
+        src: "https://www.w3.org/TR/css-cascade-4/",
+        "last-modified": "Tue, 11 Jan 2022 15:25:49 GMT"
+    },
     {
         text: "CSS Style Attributes",
         href: "https://htmlspecs.com/css/css-style-attr",
