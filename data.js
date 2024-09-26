@@ -451,12 +451,12 @@ const cssLinks = [
     },
 
     // Transforms and Animations
-    // {
-    //     text: "CSS Easing Functions Level 1",
-    //     href: "https://htmlspecs.com/css/css-easing-1",
-    //     src: "https://www.w3.org/TR/css-easing-1/",
-    //     "last-modified": "Mon, 13 Feb 2023 22:59:19 GMT"
-    // },
+    {
+        text: "CSS Easing Functions Level 1",
+        href: "https://htmlspecs.com/css/css-easing-1",
+        src: "https://www.w3.org/TR/css-easing-1/",
+        "last-modified": "Mon, 13 Feb 2023 22:59:19 GMT"
+    },
     // {
     //     text: "CSS Easing Functions Level 2",
     //     href: "https://htmlspecs.com/css/css-easing-2",
