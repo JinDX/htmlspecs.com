@@ -275,12 +275,12 @@ const cssLinks = [
         src: "https://www.w3.org/TR/css-ui-3/",
         "last-modified": "Thu, 21 Jun 2018 16:29:59 GMT"
     },
-    // {
-    //     text: "CSS Syntax Module Level 3",
-    //     href: "https://htmlspecs.com/css/css-syntax-3",
-    //     src: "https://www.w3.org/TR/css-syntax-3/",
-    //     "last-modified": "Fri, 24 Dec 2021 22:58:34 GMT"
-    // },
+    {
+        text: "CSS Syntax Module Level 3",
+        href: "https://htmlspecs.com/css/css-syntax-3",
+        src: "https://www.w3.org/TR/css-syntax-3/",
+        "last-modified": "Fri, 24 Dec 2021 22:58:34 GMT"
+    },
     // {
     //     text: "CSS Values and Units Module Level 3",
     //     href: "https://htmlspecs.com/css/css-values-3",
