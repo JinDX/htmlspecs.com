@@ -66,7 +66,7 @@ HTML 及相关 API，CSS 标准系列。
 - [x] CSS Easing Functions Level 1 https://htmlspecs.com/css/css-easing-1
 - [x] CSS Easing Functions Level 2 https://htmlspecs.com/css/css-easing-2
 - [x] CSS Syntax Module Level 3 https://htmlspecs.com/css/css-syntax-3
-- [ ] CSS Values and Units Module Level 3 https://htmlspecs.com/css/css-values-3
+- [x] CSS Values and Units Module Level 3 https://htmlspecs.com/css/css-values-3
 - [x] File API  https://htmlspecs.com/FileAPI
 - [x] Performance Timeline  https://htmlspecs.com/performance-timeline
 - [x] Resize Observer  https://htmlspecs.com/resize-observer
