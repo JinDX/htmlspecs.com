@@ -220,6 +220,12 @@ const links = [
         src: "https://www.w3.org/TR/SVG2/",
         "last-modified": "Tue, 02 Oct 2018 17:56:01 GMT"
     },
+    {
+        text: "Picture-in-Picture",
+        href: "https://htmlspecs.com/picture-in-picture",
+        src: "https://www.w3.org/TR/picture-in-picture/",
+        "last-modified": "Wed, 02 Oct 2024 18:39:19 GMT"
+    },
 
     // Developer Tools
     {
@@ -229,6 +235,7 @@ const links = [
         "last-modified": "Mon, 23 Sep 2024 18:57:53 GMT"
     }
 ];
+
 
 
 const cssLinks = [
