@@ -214,6 +214,12 @@ const links = [
         src: "https://www.w3.org/TR/web-animations-1/",
         "last-modified": "Mon, 05 Jun 2023 02:28:05 GMT"
     },
+    {
+        text: "Scalable Vector Graphics (SVG) 2",
+        href: "https://htmlspecs.com/SVG2/",
+        src: "https://www.w3.org/TR/SVG2/",
+        "last-modified": "Tue, 02 Oct 2018 17:56:01 GMT"
+    }
 
     // Developer Tools
     {
@@ -539,7 +545,7 @@ const cssLinks = [
         src: "https://www.w3.org/TR/css-scrollbars-1/",
         "last-modified": "Tue, 07 Dec 2021 00:51:03 GMT"
     },
-    
+
 
     // CSS Variables and CSSOM
     {
