@@ -91,3 +91,6 @@ HTML 及相关 API，CSS 标准系列。
 - [x] User Timing Level 2 https://htmlspecs.com/user-timing-2
 - [x] Input Events Level 1 https://htmlspecs.com/input-events-1
 - [x] Scalable Vector Graphics (SVG) 2 https://htmlspecs.com/SVG2
+- [ ] Picture-in-Picture
+- [ ] EyeDropper API
+- [ ] VirtualKeyboard API
