@@ -219,7 +219,7 @@ const links = [
         href: "https://htmlspecs.com/SVG2/",
         src: "https://www.w3.org/TR/SVG2/",
         "last-modified": "Tue, 02 Oct 2018 17:56:01 GMT"
-    }
+    },
 
     // Developer Tools
     {
