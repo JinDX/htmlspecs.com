@@ -94,3 +94,5 @@ HTML 及相关 API，CSS 标准系列。
 - [x] Picture-in-Picture https://htmlspecs.com/picture-in-picture
 - [ ] EyeDropper API
 - [ ] VirtualKeyboard API
+- [ ] XMLHttpRequest
+- [ ] Touch Events - Level 2
