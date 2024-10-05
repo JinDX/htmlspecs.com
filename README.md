@@ -93,6 +93,6 @@ HTML 及相关 API，CSS 标准系列。
 - [x] Scalable Vector Graphics (SVG) 2 https://htmlspecs.com/SVG2
 - [x] Picture-in-Picture https://htmlspecs.com/picture-in-picture
 - [x] EyeDropper API https://htmlspecs.com/eyedropper-api
-- [ ] VirtualKeyboard API 
+- [x] VirtualKeyboard API  https://htmlspecs.com/virtual-keyboard
 - [ ] XMLHttpRequest
 - [ ] Touch Events - Level 2

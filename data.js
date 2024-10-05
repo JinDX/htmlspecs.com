@@ -125,6 +125,12 @@ const links = [
         "last-modified": "Fri, 20 Sep 2024 15:48:55 GMT"
     },
     {
+        text: "Virtual Keyboard",
+        href: "https://htmlspecs.com/virtual-keyboard",
+        src: "https://www.w3.org/TR/virtual-keyboard/",
+        "last-modified": "Thu, 05 May 2022 00:07:29 GMT"
+    },
+    {
         text: "Web Share API",
         href: "https://htmlspecs.com/web-share",
         src: "https://www.w3.org/TR/web-share/",
