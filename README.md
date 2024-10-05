@@ -92,7 +92,7 @@ HTML 及相关 API，CSS 标准系列。
 - [x] Input Events Level 1 https://htmlspecs.com/input-events-1
 - [x] Scalable Vector Graphics (SVG) 2 https://htmlspecs.com/SVG2
 - [x] Picture-in-Picture https://htmlspecs.com/picture-in-picture
-- [ ] EyeDropper API
-- [ ] VirtualKeyboard API
+- [x] EyeDropper API https://htmlspecs.com/eyedropper-api
+- [ ] VirtualKeyboard API 
 - [ ] XMLHttpRequest
 - [ ] Touch Events - Level 2
