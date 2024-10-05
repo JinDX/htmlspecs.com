@@ -125,6 +125,12 @@ const links = [
         "last-modified": "Sat, 21 Sep 2024 09:07:00 GMT"
     },
     {
+        text: "Touch Events - Level 2",
+        href: "https://htmlspecs.com/touchevents",
+        src: "https://w3c.github.io/touch-events/",
+        "last-modified": "Sat, 06 Jul 2024 14:32:59 GMT"
+    },
+    {
         text: "Notifications API",
         href: "https://htmlspecs.com/notifications",
         src: "https://notifications.spec.whatwg.org/",
