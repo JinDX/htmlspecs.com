@@ -190,12 +190,12 @@ const links = [
         src: "https://www.w3.org/TR/input-events-1/",
         "last-modified": "Wed, 27 Sep 2023 16:15:26 GMT"
     },
-    // {
-    //     text: "Permissions",
-    //     href: "https://htmlspecs.com/permissions",
-    //     src: "https://www.w3.org/TR/permissions/",
-    //     "last-modified": "Tue, 19 Mar 2024 14:01:55 GMT"
-    // },
+    {
+        text: "Permissions",
+        href: "https://htmlspecs.com/permissions",
+        src: "https://www.w3.org/TR/permissions/",
+        "last-modified": "Tue, 19 Mar 2024 14:01:55 GMT"
+    },
 
     // Performance and Observers
     {
