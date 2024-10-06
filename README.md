@@ -66,7 +66,13 @@ HTML 及相关 API，CSS 标准系列。
 - [x] CSS Easing Functions Level 1 https://htmlspecs.com/css/css-easing-1
 - [x] CSS Easing Functions Level 2 https://htmlspecs.com/css/css-easing-2
 - [x] CSS Syntax Module Level 3 https://htmlspecs.com/css/css-syntax-3
+- [ ] CSS Nesting Module
 - [x] CSS Values and Units Module Level 3 https://htmlspecs.com/css/css-values-3
+- [ ] CSS Overflow Module Level 4
+- [ ] CSS Custom Highlight API Module Level 1
+- [ ] CSS Masking Module Level 1
+- [ ] CSS Counter Styles Level 3
+- [ ] CSS Scroll Anchoring Module Level 1
 - [x] File API  https://htmlspecs.com/FileAPI
 - [x] Performance Timeline  https://htmlspecs.com/performance-timeline
 - [x] Resize Observer  https://htmlspecs.com/resize-observer
@@ -103,3 +109,7 @@ HTML 及相关 API，CSS 标准系列。
 - [ ] File and Directory Entries API
 - [ ] Visual Viewport API
 - [ ] Presentation API
+- [ ] WebTransport
+- [ ] Screen Orientation
+- [ ] Scroll-driven Animations
+- [ ] Web IDL
