@@ -96,3 +96,5 @@ HTML 及相关 API，CSS 标准系列。
 - [x] VirtualKeyboard API  https://htmlspecs.com/virtual-keyboard
 - [x] XMLHttpRequest https://htmlspecs.com/xhr
 - [x] Touch Events - Level 2 https://htmlspecs.com/touchevents
+- [ ] Permissions https://htmlspecs.com/permissions
+- [ ] Cookie Store API https://htmlspecs.com/cookie-store
