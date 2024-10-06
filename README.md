@@ -97,4 +97,4 @@ HTML 及相关 API，CSS 标准系列。
 - [x] XMLHttpRequest https://htmlspecs.com/xhr
 - [x] Touch Events - Level 2 https://htmlspecs.com/touchevents
 - [x] Permissions https://htmlspecs.com/permissions
-- [ ] Cookie Store API https://htmlspecs.com/cookie-store
+- [x] Cookie Store API https://htmlspecs.com/cookie-store
