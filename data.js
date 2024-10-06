@@ -104,6 +104,12 @@ const links = [
         src: "https://www.w3.org/TR/FileAPI/",
         "last-modified": "Fri, 24 May 2024 17:07:26 GMT"
     },
+    // {
+    //     text: "Cookie Store API",
+    //     href: "https://htmlspecs.com/cookie-store",
+    //     src: "https://wicg.github.io/cookie-store/",
+    //     "last-modified": "Mon, 15 Jul 2024 17:09:29 GMT"
+    // },
 
     // Device and Hardware Access
     {
@@ -184,6 +190,12 @@ const links = [
         src: "https://www.w3.org/TR/input-events-1/",
         "last-modified": "Wed, 27 Sep 2023 16:15:26 GMT"
     },
+    // {
+    //     text: "Permissions",
+    //     href: "https://htmlspecs.com/permissions",
+    //     src: "https://www.w3.org/TR/permissions/",
+    //     "last-modified": "Tue, 19 Mar 2024 14:01:55 GMT"
+    // },
 
     // Performance and Observers
     {
