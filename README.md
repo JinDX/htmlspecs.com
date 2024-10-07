@@ -68,7 +68,7 @@ HTML 及相关 API，CSS 标准系列。
 - [x] CSS Syntax Module Level 3 https://htmlspecs.com/css/css-syntax-3
 - [ ] CSS Nesting Module
 - [x] CSS Values and Units Module Level 3 https://htmlspecs.com/css/css-values-3
-- [ ] CSS Overflow Module Level 4
+- [x] CSS Overflow Module Level 4 https://htmlspecs.com/css/css-overflow-4
 - [ ] CSS Custom Highlight API Module Level 1
 - [ ] CSS Masking Module Level 1
 - [ ] CSS Counter Styles Level 3

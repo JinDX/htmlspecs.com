@@ -368,6 +368,12 @@ const cssLinks = [
         src: "https://www.w3.org/TR/css-align-3/",
         "last-modified": "Fri, 17 Feb 2023 19:17:10 GMT"
     },
+    {
+        text: "CSS Overflow Module Level 4",
+        href: "https://htmlspecs.com/css/css-overflow-4",
+        src: "https://www.w3.org/TR/css-overflow-4/",
+        "last-modified": "Tue, 21 Mar 2023 19:01:45 GMT"
+    },
 
     // Colors
     {
