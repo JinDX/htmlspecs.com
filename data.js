@@ -600,7 +600,7 @@ const cssLinks = [
         text: "CSS Nesting Module Level 1",
         href: "https://htmlspecs.com/css/css-nesting-1",
         src: "https://www.w3.org/TR/css-nesting-1/",
-        "last-modified": "Thu, 22 Jun 2024 18:00:15 GMT"
+        "last-modified": "Tue, 14 Feb 2023 05:20:59 GMT"
     },
 
     // CSS Variables and CSSOM
