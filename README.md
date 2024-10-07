@@ -66,7 +66,7 @@ HTML 及相关 API，CSS 标准系列。
 - [x] CSS Easing Functions Level 1 https://htmlspecs.com/css/css-easing-1
 - [x] CSS Easing Functions Level 2 https://htmlspecs.com/css/css-easing-2
 - [x] CSS Syntax Module Level 3 https://htmlspecs.com/css/css-syntax-3
-- [ ] CSS Nesting Module
+- [x] CSS Nesting Module https://htmlspecs.com/css/css-nesting-1
 - [x] CSS Values and Units Module Level 3 https://htmlspecs.com/css/css-values-3
 - [x] CSS Overflow Module Level 4 https://htmlspecs.com/css/css-overflow-4
 - [ ] CSS Custom Highlight API Module Level 1
