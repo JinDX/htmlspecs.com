@@ -331,6 +331,12 @@ const cssLinks = [
         "last-modified": "Fri, 24 Dec 2021 22:58:34 GMT"
     },
     {
+        text: "CSS Highlight API Level 1",
+        href: "https://htmlspecs.com/css/css-highlight-api-1",
+        src: "https://www.w3.org/TR/css-highlight-api-1/",
+        "last-modified": "Wed, 15 Dec 2021 03:55:54 GMT"
+    },
+    {
         text: "CSS Values and Units Module Level 3",
         href: "https://htmlspecs.com/css/css-values-3",
         src: "https://www.w3.org/TR/css-values-3/",
