@@ -434,6 +434,12 @@ const cssLinks = [
         src: "https://www.w3.org/TR/css-text-4/",
         "last-modified": "Wed, 29 May 2024 07:54:37 GMT"
     },
+    {
+        text: "CSS Counter Styles Level 3",
+        href: "https://htmlspecs.com/css/css-counter-styles-3",
+        src: "https://www.w3.org/TR/css-counter-styles-3/",
+        "last-modified": "Fri, 23 Jul 2021 06:05:41 GMT"
+    },    
 
     // Media Queries
     {
