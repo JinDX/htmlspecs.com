@@ -510,6 +510,12 @@ const cssLinks = [
         src: "https://www.w3.org/TR/css-images-4/",
         "last-modified": "Fri, 17 Feb 2023 19:20:53 GMT"
     },
+    {
+        text: "CSS Masking Module Level 1",
+        href: "https://htmlspecs.com/css/css-masking-1",
+        src: "https://www.w3.org/TR/css-masking-1/",
+        "last-modified": "Wed, 04 Aug 2021 13:20:14 GMT"
+    },
 
     // Transforms and Animations
     {

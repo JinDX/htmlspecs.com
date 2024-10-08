@@ -70,7 +70,7 @@ HTML 及相关 API，CSS 标准系列。
 - [x] CSS Values and Units Module Level 3 https://htmlspecs.com/css/css-values-3
 - [x] CSS Overflow Module Level 4 https://htmlspecs.com/css/css-overflow-4
 - [x] CSS Custom Highlight API Module Level 1 https://htmlspecs.com/css/css-highlight-api-1
-- [ ] CSS Masking Module Level 1
+- [x] CSS Masking Module Level 1  https://htmlspecs.com/css/css-masking-1
 - [ ] CSS Counter Styles Level 3
 - [ ] CSS Scroll Anchoring Module Level 1
 - [x] File API  https://htmlspecs.com/FileAPI
