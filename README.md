@@ -106,10 +106,10 @@ HTML 及相关 API，CSS 标准系列。
 - [x] Permissions https://htmlspecs.com/permissions
 - [x] Cookie Store API https://htmlspecs.com/cookie-store
 - [x] Screen Capture https://htmlspecs.com/screen-capture
-- [ ] File and Directory Entries API
-- [ ] Visual Viewport API
-- [ ] Presentation API
-- [ ] WebTransport
-- [ ] Screen Orientation
-- [ ] Scroll-driven Animations
-- [ ] Web IDL
+- [ ] File and Directory Entries API https://htmlspecs.com/entries-api
+- [ ] Visual Viewport API https://htmlspecs.com/visual-viewport
+- [ ] Presentation API https://htmlspecs.com/presentation-api
+- [ ] WebTransport https://htmlspecs.com/webtransport
+- [ ] Screen Orientation https://htmlspecs.com/screen-orientation
+- [ ] Scroll-driven Animations https://htmlspecs.com/scroll-animations-1
+- [ ] Web IDL https://htmlspecs.com/webidl

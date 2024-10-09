@@ -18,6 +18,12 @@ const links = [
         src: "https://dom.spec.whatwg.org/",
         "last-modified": "Fri, 20 Sep 2024 15:16:50 GMT"
     },
+    // {
+    //     text: "Web IDL",
+    //     href: "https://htmlspecs.com/webidl",
+    //     src: "https://webidl.spec.whatwg.org/",
+    //     "last-modified": "Mon, 16 Sep 2024 08:09:04 GMT"
+    // },
 
     // Accessibility
     {
@@ -60,6 +66,12 @@ const links = [
         src: "https://websockets.spec.whatwg.org/",
         "last-modified": "Wed, 24 Jan 2024 10:43:43 GMT"
     },
+    // {
+    //     text: "WebTransport",
+    //     href: "https://htmlspecs.com/webtransport",
+    //     src: "https://www.w3.org/TR/webtransport/",
+    //     "last-modified": "Fri, 31 May 2024 07:48:03 GMT"
+    // },
     {
         text: "Service Workers",
         href: "https://htmlspecs.com/service-workers",
@@ -110,6 +122,12 @@ const links = [
         src: "https://wicg.github.io/cookie-store/",
         "last-modified": "Mon, 15 Jul 2024 17:09:29 GMT"
     },
+    // {
+    //     text: "File and Directory Entries API",
+    //     href: "https://htmlspecs.com/entries-api",
+    //     src: "https://wicg.github.io/entries-api/",
+    //     "last-modified": "Fri, 07 Jun 2024 22:07:08 GMT"
+    // },
 
     // Device and Hardware Access
     {
@@ -118,6 +136,18 @@ const links = [
         src: "https://www.w3.org/TR/pointerevents/",
         "last-modified": "Tue, 02 Apr 2019 14:26:39 GMT"
     },
+    // {
+    //     text: "Visual Viewport API",
+    //     href: "https://htmlspecs.com/visual-viewport",
+    //     src: "https://wicg.github.io/visual-viewport/",
+    //     "last-modified": "Mon, 18 Mar 2024 15:26:37 GMT"
+    // },
+    // {
+    //     text: "Screen Orientation",
+    //     href: "https://htmlspecs.com/screen-orientation",
+    //     src: "https://www.w3.org/TR/screen-orientation/",
+    //     "last-modified": "Wed, 09 Aug 2023 07:27:08 GMT"
+    // },
     {
         text: "EyeDropper API",
         href: "https://htmlspecs.com/eyedropper-api",
@@ -274,6 +304,18 @@ const links = [
         src: "https://www.w3.org/TR/picture-in-picture/",
         "last-modified": "Wed, 02 Oct 2024 18:39:19 GMT"
     },
+    // {
+    //     text: "Presentation API",
+    //     href: "https://htmlspecs.com/presentation-api",
+    //     src: "https://www.w3.org/TR/presentation-api/",
+    //     "last-modified": "Tue, 08 Oct 2024 16:51:27 GMT"
+    // },
+    // {
+    //     text: "Scroll-driven Animations",
+    //     href: "https://htmlspecs.com/scroll-animations-1",
+    //     src: "https://www.w3.org/TR/scroll-animations-1/",
+    //     "last-modified": "Tue, 06 Jun 2023 20:03:38 GMT"
+    // },
 
     // Developer Tools
     {
