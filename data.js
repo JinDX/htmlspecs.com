@@ -122,12 +122,12 @@ const links = [
         src: "https://wicg.github.io/cookie-store/",
         "last-modified": "Mon, 15 Jul 2024 17:09:29 GMT"
     },
-    // {
-    //     text: "File and Directory Entries API",
-    //     href: "https://htmlspecs.com/entries-api",
-    //     src: "https://wicg.github.io/entries-api/",
-    //     "last-modified": "Fri, 07 Jun 2024 22:07:08 GMT"
-    // },
+    {
+        text: "File and Directory Entries API",
+        href: "https://htmlspecs.com/entries-api",
+        src: "https://wicg.github.io/entries-api/",
+        "last-modified": "Fri, 07 Jun 2024 22:07:08 GMT"
+    },
 
     // Device and Hardware Access
     {
