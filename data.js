@@ -439,7 +439,7 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-counter-styles-3",
         src: "https://www.w3.org/TR/css-counter-styles-3/",
         "last-modified": "Fri, 23 Jul 2021 06:05:41 GMT"
-    },    
+    },
 
     // Media Queries
     {
@@ -611,6 +611,12 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-scrollbars-1",
         src: "https://www.w3.org/TR/css-scrollbars-1/",
         "last-modified": "Tue, 07 Dec 2021 00:51:03 GMT"
+    },
+    {
+        text: "CSS Scroll Anchoring Module Level 1",
+        href: "https://htmlspecs.com/css/css-scroll-anchoring-1",
+        src: "https://www.w3.org/TR/css-scroll-anchoring-1/",
+        "last-modified": "Wed, 11 Nov 2020 23:04:41 GMT"
     },
 
     // Nesting and Variables
