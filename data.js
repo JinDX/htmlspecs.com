@@ -304,12 +304,12 @@ const links = [
         src: "https://www.w3.org/TR/picture-in-picture/",
         "last-modified": "Wed, 02 Oct 2024 18:39:19 GMT"
     },
-    // {
-    //     text: "Presentation API",
-    //     href: "https://htmlspecs.com/presentation-api",
-    //     src: "https://www.w3.org/TR/presentation-api/",
-    //     "last-modified": "Tue, 08 Oct 2024 16:51:27 GMT"
-    // },
+    {
+        text: "Presentation API",
+        href: "https://htmlspecs.com/presentation-api",
+        src: "https://www.w3.org/TR/presentation-api/",
+        "last-modified": "Tue, 08 Oct 2024 16:51:27 GMT"
+    },
     // {
     //     text: "Scroll-driven Animations",
     //     href: "https://htmlspecs.com/scroll-animations-1",
