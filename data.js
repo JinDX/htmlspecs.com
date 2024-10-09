@@ -136,12 +136,12 @@ const links = [
         src: "https://www.w3.org/TR/pointerevents/",
         "last-modified": "Tue, 02 Apr 2019 14:26:39 GMT"
     },
-    // {
-    //     text: "Visual Viewport API",
-    //     href: "https://htmlspecs.com/visual-viewport",
-    //     src: "https://wicg.github.io/visual-viewport/",
-    //     "last-modified": "Mon, 18 Mar 2024 15:26:37 GMT"
-    // },
+    {
+        text: "Visual Viewport API",
+        href: "https://htmlspecs.com/visual-viewport",
+        src: "https://wicg.github.io/visual-viewport/",
+        "last-modified": "Mon, 18 Mar 2024 15:26:37 GMT"
+    },
     // {
     //     text: "Screen Orientation",
     //     href: "https://htmlspecs.com/screen-orientation",

@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-hans">
 
 <head>
-    <title>Visual Viewport API</title>
+    <title>视觉视口 API</title>
     <meta charset='utf-8'>
     <script src='https://www.w3.org/Tools/respec/respec-w3c' async class='remove'></script>
     <script class='remove'>
@@ -57,8 +57,7 @@
 <body>
     <section id='abstract'>
         <p>
-            The APIs introduced by this document provide authors with a way to determine
-            and interact with the properties of the visual viewport.
+            本文档引入的 API 为开发者提供了一种确定和与视觉视口属性交互的方式。
         </p>
     </section>
 
@@ -66,81 +65,60 @@
     </section>
 
     <section id="intro" class="informative">
-        <h2>Introduction</h2>
+        <h2>简介</h2>
         <p>
-            Some user agents have split their viewport into two conceptual viewports, colloquially
-            known as the <em>visual</em> and <em>layout</em> viewports. This separation is useful in
-            enabling a user agent (UA) with a small screen to allow the user to zoom in on parts of the page
-            without causing the page to respond, for example, by obscuring the user's view with
-            <code>position: fixed</code> elements. As another example, mobile UAs often provide an <em>on-screen
-                keyboard</em> (OSK) for user input. Without the visual/layout split, a <code>position: fixed</code>
-            element would be pushed up when the OSK is shown, obscuring the user's view. Informally,
-            the layout viewport is what the web page uses when laying out its UI while the visual viewport
-            is the box on the page that the user can currently see, accounting for transient UI features like
-            pinch-zoom and the OSK.
+            一些用户代理将其视口分为两个概念性视口，通常称为<em>视觉</em>和<em>布局</em>视口。这种分离有助于
+            用户代理（UA）在小屏幕上允许用户放大页面的部分，而不导致页面响应，例如通过<code>position: fixed</code>
+            元素遮挡用户的视图。另一个例子是，移动 UA 通常提供一个<em>屏幕键盘</em>（OSK）供用户输入。如果没有视觉/布局
+            的分离，当显示 OSK 时，<code>position: fixed</code>元素会被推上去，遮挡用户的视图。非正式地讲，布局视口是
+            网页在布局其 UI 时使用的视口，而视觉视口则是用户当前可以看到的页面框，考虑了瞬态 UI 特性如捏合缩放和 OSK。
         </p>
         <p>
-            The existing APIs provided by UAs are ambiguous about which viewport they're relative to. For
-            example, <code>document.scrollingElement.scrollLeft</code> returns the scroll position of the
-            visual viewport while <code>document.scrollingElement.clientWidth</code> returns the width of
-            the layout viewport. <code>getBoundingClientRect</code> returns the rect relative to the layout
-            viewport while positioning non-fixed elements relative to the layout viewport is difficult. This
-            makes building UI that responds to scrolls across mobile and desktop UAs difficult. Worse still,
-            there's no way for the developer to be notified when the visual viewport changes. For example,
-            the only way to know when the user has zoomed is to poll or listen to touch events and continually
-            check <code>window.innerWidth</code>.
+            现有的 UA 提供的 API 并不明确它们是相对于哪个视口的。例如，<code>document.scrollingElement.scrollLeft</code>
+            返回视觉视口的滚动位置，而<code>document.scrollingElement.clientWidth</code>返回布局视口的宽度。
+            <code>getBoundingClientRect</code>返回的是相对于布局视口的矩形，而相对于布局视口定位非固定元素是困难的。
+            这使得在移动和桌面 UA 上构建响应滚动的 UI 变得困难。更糟糕的是，开发者无法在视觉视口发生变化时得到通知。
+            例如，唯一知道用户何时放大的方法是轮询或监听触摸事件，并不断检查<code>window.innerWidth</code>。
         </p>
         <p>
-            The Visual Viewport API is designed to provide an explicit mechanism for developers to query and
-            potentially modify the properties of the visual viewport. It also introduces events that allow the
-            page to listen for changes in the visual viewport, allowing UX that explicitly wants to react to
-            these changes to do so. For example, the page could keep a small text-formatting bar above the OSK.
+            视觉视口 API 旨在为开发者提供一种明确的机制，用于查询并可能修改视觉视口的属性。它还引入了事件，
+            允许页面监听视觉视口的变化，从而使希望明确响应这些变化的 UX 得以实现。例如，页面可以保持一个
+            小的文本格式栏在 OSK 之上。
         </p>
     </section>
 
     <section id="conformance"></section>
 
     <section>
-        <h2>Description</h2>
+        <h2>描述</h2>
         <section id="definition-of-the-visual-viewport">
-            <h3>Definition of the visual viewport</h3>
+            <h3>视觉视口的定义</h3>
             <p>
-                The <dfn>visual viewport</dfn> is a kind of <dfn data-cite="!CSS22/visuren.html#x1">viewport</dfn> whose
-                <dfn data-cite="!cssom-view-1/#scrolling-area">scrolling area</dfn> is
-                another <a>viewport</a>, called the <dfn>layout viewport</dfn>.
+                <dfn>视觉视口</dfn>是一种<dfn data-cite="!CSS22/visuren.html#x1">视口</dfn>，其
+                <dfn data-cite="!cssom-view-1/#scrolling-area">滚动区域</dfn>是另一个<a>视口</a>，称为<dfn>布局视口</dfn>。
             </p>
             <p>
-                In addition to scrolling, the <a>visual viewport</a> also allows
-                applying a scale transform to its <a>layout viewport</a>. This
-                transform is applied to the canvas of the <a>layout viewport</a>
-                and does not affect its internal coordinate space.
+                除了滚动之外，<a>视觉视口</a>还允许对其<a>布局视口</a>应用缩放变换。
+                此变换应用于<a>布局视口</a>的画布上，不影响其内部坐标空间。
+            </p>
             <div class="note">
-                The scale transform on the visual viewport is sometimes
-                referred to as "pinch-zoom". Conceptually, this transform
-                changes the size of the CSS <a>reference pixel</a> but
-                changes the size of the <a>layout viewport</a> proportionally
-                so that it acts like a magnifying glass, without causing
-                reflow of the page's contents.
+                视觉视口上的缩放变换有时被称为“捏合缩放”。从概念上讲，此变换改变了 CSS <a>参考像素</a>的大小，
+                但比例地改变了<a>布局视口</a>的大小，使其像放大镜一样工作，而不会导致页面内容的回流。
             </div>
+
+            <p>
+                缩放变换的大小被称为视觉视口的<dfn>缩放系数</dfn>。
             </p>
             <p>
-                The magnitude of the scale transform is known as the visual
-                viewport's <dfn>scale factor</dfn>
-            </p>
-            <p>
-                The <a>window</a> object has an <dfn>associated</dfn> <a>visual viewport</a>
-                which is a <a>VisualViewport</a> object. Every <a>visual
-                    viewport</a> is associated with exactly one <a>window</a> object
-                that never changes. The <dfn>associated document</dfn> of a <a>visual viewport</a>
-                is the <a data-cite="!HTML#concept-document-window">associated document</a> of its <a>associated</a>
-                window.
+                <a>window</a>对象有一个<dfn>关联的</dfn><a>视觉视口</a>，这是一个<a>VisualViewport</a>对象。每个<a>视觉视口</a>
+                都与一个<a>window</a>对象关联，该对象永远不会改变。<a>视觉视口</a>的<dfn>关联文档</dfn>是其<a>关联的</a>window的
+                <a data-cite="!HTML#concept-document-window">关联文档</a>。
             </p>
         </section>
         <section data-dfn-for="Window">
-            <h3>Extensions to the <code>Window</code> interface</h3>
+            <h3>对<code>Window</code>接口的扩展</h3>
             <p>
-                This document extends the <code><dfn data-cite="!HTML#window">Window</dfn></code>
-                interface defined by [[HTML]].
+                本文档扩展了[[HTML]]中定义的<code><dfn data-cite="!HTML#window">Window</dfn></code>接口。
             </p>
             <pre class="idl">
             partial interface Window {
@@ -150,60 +128,50 @@
             <dl>
                 <dt><dfn data-dfn-for="Window">visualViewport</dfn></dt>
                 <dd>
-                    If the <a>associated document</a> is
-                    <dfn data-cite="!HTML#fully-active">fully active</dfn>, return the
-                    <a>VisualViewport</a> object <a>associated</a> with the <a>window</a>. Otherwise, return null.
+                    如果<a>关联文档</a>
+                    <dfn data-cite="!HTML#fully-active">完全激活</dfn>，返回与<a>window</a>关联的
+                    <a>VisualViewport</a>对象。否则，返回 null。
                     <p class="note">
-                        Intuitively, the VisualViewport object is only returned and useful for a <a>window</a> whose
-                        <dfn data-cite="!HTML#document">Document</dfn> is currently being presented. If a reference is
-                        retained to a
-                        <a>VisualViewport</a> whose <a>associated Document</a> is not being currently presented, the
-                        values in that <a>VisualViewport</a> must not reveal any information about the
-                        <dfn data-cite="!HTML#browsing-context">browsing context</dfn>.
-                    <p>
+                        从直观上看，只有当前正在呈现其<a>文档</a>的<a>window</a>，才会返回并使用VisualViewport对象。
+                        如果保留了对某个<a>VisualViewport</a>的引用，而其<a>关联文档</a>当前未呈现，则该
+                        <a>VisualViewport</a>中的值不得泄露任何有关<a>浏览上下文</a>的信息。
+                    </p>
                 </dd>
             </dl>
         </section>
         <section data-dfn-for="VisualViewport" data-cite="HTML DOM">
-            <h3>The <dfn><code>VisualViewport</code></dfn> interface</h3>
+            <h3><dfn><code>VisualViewport</code></dfn>接口</h3>
             <p>
-                A <a>VisualViewport</a> object represents the <a>visual viewport</a> a <a>document</a> is
-                being presented in if it is <a>fully active</a>. Each <a>window</a> in a page has its own distinct
-                <a>VisualViewport</a> object.
+                <a>VisualViewport</a>对象表示一个<a>文档</a>在其中呈现的<a>视觉视口</a>，如果该文档是<a>完全激活</a>的。
+                页面中的每个<a>window</a>都有自己独特的<a>VisualViewport</a>对象。
             <p class="note">
-                A document being presented in any browsing context, including a
-                nested browsing context, will have its own visual viewport.
-                However, most user agents modify the visual viewport only on a
-                top-level browsing context. The visual viewport in a nested
-                browsing context is provided for ergonomic reasons.
+                在任何浏览上下文中呈现的文档，包括嵌套的浏览上下文，都会有其自己的视觉视口。
+                然而，大多数用户代理只在顶级浏览上下文中修改视觉视口。嵌套的浏览上下文中的视觉视口
+                是为了便于开发而提供的。
             </p>
             <p class="example">
-                For example: if a script retains a reference to a <a>VisualViewport</a> for an iframe, then
-                navigates the iframe to another location, reading the integral values from the
-                <a>VisualViewport</a> reference will return 0 because its window's Document is no longer
-                being presented in a browsing content; it is no longer fully-active.
-            <p>
+                例如：如果脚本保留了对某个 iframe 的<a>VisualViewport</a>的引用，然后将该 iframe 导航到另一个位置，
+                读取<a>VisualViewport</a>引用中的整数值将返回 0，因为其 window 的文档不再在浏览上下文中呈现；它已不再完全激活。
             </p>
             <p>
-                Unless otherwise stated, all returned values in this section are defined in <dfn
-                    data-cite="!css-values-4#px">CSS pixels</dfn>.
+                除非另有说明，本节中所有返回的值均以<dfn data-cite="!css-values-4#px">CSS 像素</dfn>定义。
             </p>
             <pre class="idl">
             [Exposed=Window]
             interface VisualViewport : EventTarget {
               readonly attribute double offsetLeft;
               readonly attribute double offsetTop;
-
+    
               readonly attribute double pageLeft;
               readonly attribute double pageTop;
-
+    
               readonly attribute double width;
               readonly attribute double height;
-
+    
               readonly attribute double scale;
-
+    
               readonly attribute FrozenArray&lt;DOMRect>? segments;
-
+    
               attribute EventHandler onresize;
               attribute EventHandler onscroll;
             };
@@ -212,191 +180,162 @@
                 <dt><dfn>offsetLeft</dfn></dt>
                 <dd>
                     <p>
-                        If the <a>visual viewport</a>'s <a>associated document</a> is not <a>fully active</a>, return 0.
+                        如果<a>视觉视口</a>的<a>关联文档</a>未<a>完全激活</a>，则返回 0。
                     </p>
                     <p>
-                        Otherwise, return the offset of the left edge of the <a>visual viewport</a> from the left edge
-                        of the <a>layout viewport</a>.
+                        否则，返回<a>视觉视口</a>左边缘与<a>布局视口</a>左边缘的偏移量。
                     </p>
                 </dd>
                 <dt><dfn>offsetTop</dfn></dt>
                 <dd>
                     <p>
-                        If the <a>visual viewport</a>'s <a>associated document</a> is not <a>fully active</a>, return 0.
+                        如果<a>视觉视口</a>的<a>关联文档</a>未<a>完全激活</a>，则返回 0。
                     </p>
                     <p>
-                        Otherwise, return the offset of the top edge of the visual viewport from the top edge of
-                        the <a>layout viewport</a>.
+                        否则，返回视觉视口顶部边缘与<a>布局视口</a>顶部边缘的偏移量。
                     </p>
                 </dd>
-
                 <dt><dfn>pageLeft</dfn></dt>
                 <dd>
                     <p>
-                        If the <a>visual viewport</a>'s <a>associated document</a> is not <a>fully active</a>, return 0.
+                        如果<a>视觉视口</a>的<a>关联文档</a>未<a>完全激活</a>，则返回 0。
                     </p>
                     <p>
-                        Otherwise, return the offset of the left edge of the visual viewport from the left edge of the
-                        <dfn data-cite="!CSS-DISPLAY-3#initial-containing-block">initial containing block</dfn> of the
-                        <a>layout viewport</a>'s <a>document</a>.
+                        否则，返回视觉视口左边缘与<a>布局视口</a>的<a>文档</a>的
+                        <dfn data-cite="!CSS-DISPLAY-3#initial-containing-block">初始包含块</dfn>左边缘的偏移量。
                     </p>
                 </dd>
                 <dt><dfn>pageTop</dfn></dt>
                 <dd>
                     <p>
-                        If the <a>visual viewport</a>'s <a>associated document</a> is not <a>fully active</a>, return 0.
+                        如果<a>视觉视口</a>的<a>关联文档</a>未<a>完全激活</a>，则返回 0。
                     </p>
                     <p>
-                        Otherwise, return the offset of the top edge of the visual viewport from the top edge of the
-                        <a>initial containing block</a> of the <a>layout viewport</a>'s <a>document</a>.
+                        否则，返回视觉视口顶部边缘与<a>布局视口</a>的<a>文档</a>的
+                        <a>初始包含块</a>顶部边缘的偏移量。
                     </p>
                 </dd>
-
                 <dt><dfn>width</dfn></dt>
                 <dd>
                     <p>
-                        If the <a>visual viewport</a>'s <a>associated document</a> is not <a>fully active</a>, return 0.
+                        如果<a>视觉视口</a>的<a>关联文档</a>未<a>完全激活</a>，则返回 0。
                     </p>
                     <p>
-                        Otherwise, return the width of the visual viewport in CSS pixels. This value
-                        excludes the width of any rendered
-                        <dfn data-cite="!CSS-OVERFLOW-4#classic-scrollbars">classic scrollbar</dfn>
-                        that is fixed to the visual viewport.
-                    <div class="note">
-                        A scrollbar that is fixed to the visual viewport is one that does
-                        not change size or location as the visual viewport is zoomed and
-                        panned.
-
-                        Because this value is in CSS pixels, when excluding the scrollbar
-                        width the UA must account for how large the scrollbar is in CSS
-                        pixels. That is, the amount excluded is lessened if the viewport
-                        is zoomed in and the scrollbars don't change size to the user.
-                    </div>
+                        否则，返回视觉视口的宽度（以 CSS 像素为单位）。该值不包括固定到视觉视口的任何渲染的
+                        <dfn data-cite="!CSS-OVERFLOW-4#classic-scrollbars">经典滚动条</dfn>的宽度。
                     </p>
+                    <div class="note">
+                        固定到视觉视口的滚动条是指在视觉视口缩放和平移时不会改变大小或位置的滚动条。
+
+                        由于该值以 CSS 像素为单位，因此在排除滚动条宽度时，用户代理必须考虑滚动条在 CSS 像素中的大小。
+                        即，如果视口被放大，且滚动条未随之改变大小，则排除的量会减少。
+                    </div>
                 </dd>
                 <dt><dfn>height</dfn></dt>
                 <dd>
                     <p>
-                        If the <a>visual viewport</a>'s <a>associated document</a> is not <a>fully active</a>, return 0.
+                        如果<a>视觉视口</a>的<a>关联文档</a>未<a>完全激活</a>，则返回 0。
                     </p>
                     <p>
-                        Otherwise, return the height of the visual viewport in CSS pixels. This value
-                        excludes the height of any rendered
-                        <a>classic scrollbar</a>
-                        that is fixed to the visual viewport.
-                    <div class="note">
-                        Because both the width and height attributes are expressed in CSS pixels, increasing either
-                        page-zoom or pinch-zoom will cause these values to shrink.
-                    </div>
+                        否则，返回视觉视口的高度（以 CSS 像素为单位）。该值不包括固定到视觉视口的任何渲染的
+                        <a>经典滚动条</a>的高度。
                     </p>
+                    <div class="note">
+                        由于宽度和高度属性均以 CSS 像素表示，增加页面缩放或捏合缩放会导致这些值缩小。
+                    </div>
                 </dd>
                 <dt><dfn>scale</dfn></dt>
                 <dd>
-                    Returns the <a>visual viewport</a>'s <a>scale factor</a>. It can be computed using the following
-                    algorithm:
+                    返回<a>视觉视口</a>的<a>缩放系数</a>。可使用以下算法计算：
                     <div class="note">
-                        Although often referred to as the pinch-zoom scale factor, it can be affected through means
-                        other than pinch-zooming. e.g. When the user agent centers and zooms in on a focused input
-                        element.
+                        尽管通常称为捏合缩放系数，但也可以通过其他方式影响，例如当用户代理居中并放大某个聚焦输入元素时。
                     </div>
                     <ol>
                         <li data-md>
-                            <p>If the <a>visual viewport</a>'s <a>associated document</a> is not <a>fully active</a>,
-                                return 0 and abort these steps.</p>
+                            <p>如果<a>视觉视口</a>的<a>关联文档</a>未<a>完全激活</a>，则返回 0 并终止这些步骤。</p>
                         </li>
                         <li data-md>
-                            <p>If there is no output device, return 1 and abort these steps.</p>
+                            <p>如果没有输出设备，则返回 1 并终止这些步骤。</p>
                         </li>
                         <li data-md>
                             <p>
-                                Let <var>CSS pixel size</var> be the size of a CSS
-                                <code><dfn data-cite="!CSS3-VALUES#reference-pixel">reference pixel</dfn></code>
-                                scaled by the current <dfn data-cite="!CSSOM-VIEW#page-zoom">page zoom</dfn> and the
-                                <a>scale factor</a> of the <a>visual viewport</a> associated with this <a>window</a>
+                                令<var>CSS 像素大小</var>为
+                                CSS<code><dfn data-cite="!CSS3-VALUES#reference-pixel">参考像素</dfn></code>
+                                的大小，按当前<a>页面缩放</a>比例和与该<a>window</a>关联的
+                                <a>视觉视口</a>的<a>缩放系数</a>进行缩放。
                             </p>
                         </li>
                         <li data-md>
-                            <p>Let <var>device pixel size</var> be the size of a device pixel of the output device.</p>
+                            <p>令<var>设备像素大小</var>为输出设备的设备像素大小。</p>
                         </li>
                         <li data-md>
                             <p>
-                                Let <var>device independent pixel size</var> be the product of <var>device pixel
-                                    size</var> and the
-                                <dfn data-cite="CSSOM-VIEW#dom-window-devicepixelratio">devicePixelRatio</dfn>
+                                令<var>设备独立像素大小</var>为<var>设备像素大小</var>与
+                                <dfn data-cite="CSSOM-VIEW#dom-window-devicepixelratio">devicePixelRatio</dfn>的乘积。
+                            </p>
                             <div class="note">
-                                Visual viewport scale (e.g. pinch-zoom) does not affect the devicePixelRatio.
+                                视觉视口缩放（例如捏合缩放）不会影响devicePixelRatio。
                             </div>
-                            </p>
                         </li>
                         <li data-md>
-                            <p>Return the result of dividing the <var>CSS pixel size</var> by the <var>device
-                                    independent pixel size</var>.
+                            <p>返回<var>CSS 像素大小</var>除以<var>设备独立像素大小</var>的结果。</p>
                         </li>
                     </ol>
                 </dd>
                 <dt><dfn>segments</dfn></dt>
-                <div class="note">
-                    The viewport segments property is currently in development and considered experimental.
-                </div>
                 <dd>
+                    <div class="note">
+                        视口分段属性目前正在开发中，且被认为是实验性的。
+                    </div>
                     <p>
-                        Returns an array of DOMRects that represent the dimensions of each existing viewport segment.
+                        返回表示每个现有视口段的尺寸的 DOMRect 数组。
                     </p>
                     <p>
-                        A viewport segment represents the region of the visual viewport that resides on a separate
-                        display or logical display region.
-                        When the visual viewport spans across some number of physical features of a device, these
-                        features in turn convey a logical separation of the space available for content.
+                        视口段表示视觉视口中位于单独显示器或逻辑显示区域上的区域。
+                        当视觉视口跨越设备的某些物理特性时，这些特性会传达一个逻辑上的空间分离。
                     </p>
                     <p>
-                        <code>segments</code> is null when there is only a single viewport segment. Returns null when
-                        called from within an iframe context.
+                        当只有一个视口段时，<code>segments</code>为 null。在 iframe 上下文中调用时返回 null。
                     </p>
+                    <div class="note">
+                        基于为每个视口段返回的数据，开发者将能够推断出可用的铰链数量以及铰链方向。
+                        浏览器窗口可以被移动或调整大小，导致段的数量或尺寸发生变化。在这些情况下，将触发resize事件，
+                        此时作者应重新查询此属性，因为返回的FrozenArray只是当前状态的快照。
+                    </div>
                 </dd>
-                <div class="note">
-                    Based on the data returned for each viewport segment, developers will be able to infer the number of
-                    hinges available as well as the hinge orientation.
-                    The browser window can be moved/resized such that the number of segments and/or their dimensions
-                    change. In these cases, resize events will fire at which point authors should re-query this
-                    property, as the returned FrozenArray is just a snapshot of the current state.
-                </div>
                 <dt><dfn>onresize</dfn></dt>
                 <dd>
-                    Event handler attribute for the resize event.
+                    resize事件的事件处理程序属性。
                 </dd>
                 <dt><dfn>onscroll</dfn></dt>
                 <dd>
-                    Event handler attribute for the scroll event.
+                    scroll事件的事件处理程序属性。
                 </dd>
             </dl>
         </section>
         <section id="additions-to-resizing-viewports">
-            <h3>Additions to the CSSOM-VIEW <code>Events</code> section</h3>
-            <p>Append following step as the last step of <dfn data-cite="!CSSOM-VIEW#run-the-resize-steps">run the
-                    resize steps</dfn>:</p>
+            <h3>对 CSSOM-VIEW <code>Events</code> 部分的补充</h3>
+            <p>将以下步骤作为<dfn data-cite="!CSSOM-VIEW#run-the-resize-steps">执行resize步骤</dfn>的最后一步追加：</p>
             <div class="monkeypatch" data-link-for="VisualViewport">
                 <ol start="2">
                     <li>
-                        If doc's associated <a>Window</a>'s <a>VisualViewport</a>'s <a>scale</a>,
-                        <a>width</a>, or <a>height</a> properties have changed since
-                        the last time these steps were run, [=fire an event=] named
-                        <code>resize</code> at the doc's associated <a>Window</a>'s
-                        <a>VisualViewport</a>.
+                        如果 doc 关联的<a>Window</a>的<a>VisualViewport</a>的<a>scale</a>、<a>width</a>或
+                        <a>height</a>属性自上次运行这些步骤以来发生了变化，则在 doc 关联的<a>Window</a>的
+                        <a>VisualViewport</a>上[=触发一个名为=]<code>resize</code>的事件。
                     </li>
                 </ol>
             </div>
 
-            <p>Replace step 1.1 of <dfn data-cite="!CSSOM-VIEW#run-the-scroll-steps">run the scroll steps</dfn> with:
-            </p>
+            <p>将<dfn data-cite="!CSSOM-VIEW#run-the-scroll-steps">执行滚动步骤</dfn>的第 1.1 步替换为：</p>
             <div class="monkeypatch" data-link-for="VisualViewport">
                 <ol>
                     <li>
                         <p>
-                            <strike>If target is a Document, fire an event named scroll that bubbles at target.</strike>
+                            <s>如果 target 是一个文档，则在 target 上触发一个冒泡的 scroll 事件。</s>
                         </p>
-                        If <code>target</code> is a <a>Document</a>, [=fire an event=] named <code>scroll</code> that
-                        bubbles at <code>target</code>. Then, [=fire an event=] named <code>scroll</code> at the
-                        <a>VisualViewport</a> of the Document's associated <a>Window</a>.
+                        如果<code>target</code>是一个<a>文档</a>，则在<code>target</code>上[=触发一个=]
+                        名为<code>scroll</code>的事件。然后，在文档关联的<a>Window</a>的
+                        <a>VisualViewport</a>上[=触发一个=]名为<code>scroll</code>的事件。
                     </li>
                 </ol>
             </div>

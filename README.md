@@ -107,7 +107,7 @@ HTML 及相关 API，CSS 标准系列。
 - [x] Cookie Store API https://htmlspecs.com/cookie-store
 - [x] Screen Capture https://htmlspecs.com/screen-capture
 - [x] File and Directory Entries API https://htmlspecs.com/entries-api
-- [ ] Visual Viewport API https://htmlspecs.com/visual-viewport
+- [x] Visual Viewport API https://htmlspecs.com/visual-viewport
 - [ ] Presentation API https://htmlspecs.com/presentation-api
 - [ ] WebTransport https://htmlspecs.com/webtransport
 - [ ] Screen Orientation https://htmlspecs.com/screen-orientation
