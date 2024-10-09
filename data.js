@@ -191,6 +191,12 @@ const links = [
         "last-modified": "Wed, 27 Sep 2023 16:15:26 GMT"
     },
     {
+        text: "Input Events Level 2",
+        href: "https://htmlspecs.com/input-events-2",
+        src: "https://www.w3.org/TR/input-events-2/",
+        "last-modified": "Wed, 25 Sep 2024 07:19:01 GMT"
+    },
+    {
         text: "Permissions",
         href: "https://htmlspecs.com/permissions",
         src: "https://www.w3.org/TR/permissions/",

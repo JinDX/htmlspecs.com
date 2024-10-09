@@ -96,7 +96,7 @@ HTML 及相关 API，CSS 标准系列。
 - [x] Resource Timing https://htmlspecs.com/resource-timing
 - [x] User Timing Level 2 https://htmlspecs.com/user-timing-2
 - [x] Input Events Level 1 https://htmlspecs.com/input-events-1
-- [ ] Input Events Level 2 
+- [x] Input Events Level 2 https://htmlspecs.com/input-events-2
 - [x] Scalable Vector Graphics (SVG) 2 https://htmlspecs.com/SVG2
 - [x] Picture-in-Picture https://htmlspecs.com/picture-in-picture
 - [x] EyeDropper API https://htmlspecs.com/eyedropper-api
