@@ -131,6 +131,12 @@ const links = [
         "last-modified": "Sat, 21 Sep 2024 09:07:00 GMT"
     },
     {
+        text: "Screen Capture",
+        href: "https://htmlspecs.com/screen-capture",
+        src: "https://www.w3.org/TR/screen-capture/",
+        "last-modified": "Thu, 27 Jun 2024 14:54:39 GMT"
+    },
+    {
         text: "Touch Events - Level 2",
         href: "https://htmlspecs.com/touchevents",
         src: "https://w3c.github.io/touch-events/",

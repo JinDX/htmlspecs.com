@@ -105,7 +105,7 @@ HTML 及相关 API，CSS 标准系列。
 - [x] Touch Events - Level 2 https://htmlspecs.com/touchevents
 - [x] Permissions https://htmlspecs.com/permissions
 - [x] Cookie Store API https://htmlspecs.com/cookie-store
-- [ ] Screen Capture
+- [x] Screen Capture https://htmlspecs.com/screen-capture
 - [ ] File and Directory Entries API
 - [ ] Visual Viewport API
 - [ ] Presentation API
