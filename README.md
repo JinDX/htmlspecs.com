@@ -110,6 +110,6 @@ HTML 及相关 API，CSS 标准系列。
 - [x] Visual Viewport API https://htmlspecs.com/visual-viewport
 - [x] Presentation API https://htmlspecs.com/presentation-api
 - [x] WebTransport https://htmlspecs.com/webtransport
-- [ ] Screen Orientation https://htmlspecs.com/screen-orientation
+- [x] Screen Orientation https://htmlspecs.com/screen-orientation
 - [ ] Scroll-driven Animations https://htmlspecs.com/scroll-animations-1
 - [ ] Web IDL https://htmlspecs.com/webidl

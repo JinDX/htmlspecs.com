@@ -142,12 +142,12 @@ const links = [
         src: "https://wicg.github.io/visual-viewport/",
         "last-modified": "Mon, 18 Mar 2024 15:26:37 GMT"
     },
-    // {
-    //     text: "Screen Orientation",
-    //     href: "https://htmlspecs.com/screen-orientation",
-    //     src: "https://www.w3.org/TR/screen-orientation/",
-    //     "last-modified": "Wed, 09 Aug 2023 07:27:08 GMT"
-    // },
+    {
+        text: "Screen Orientation",
+        href: "https://htmlspecs.com/screen-orientation",
+        src: "https://www.w3.org/TR/screen-orientation/",
+        "last-modified": "Wed, 09 Aug 2023 07:27:08 GMT"
+    },
     {
         text: "EyeDropper API",
         href: "https://htmlspecs.com/eyedropper-api",
