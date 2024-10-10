@@ -112,3 +112,4 @@ HTML 及相关 API，CSS 标准系列。
 - [x] WebTransport https://htmlspecs.com/webtransport
 - [x] Screen Orientation https://htmlspecs.com/screen-orientation
 - [x] Scroll-driven Animations https://htmlspecs.com/scroll-animations-1
+- [ ] Web IDL https://htmlspecs.com/webidl
