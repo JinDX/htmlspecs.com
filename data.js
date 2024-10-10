@@ -66,12 +66,12 @@ const links = [
         src: "https://websockets.spec.whatwg.org/",
         "last-modified": "Wed, 24 Jan 2024 10:43:43 GMT"
     },
-    // {
-    //     text: "WebTransport",
-    //     href: "https://htmlspecs.com/webtransport",
-    //     src: "https://www.w3.org/TR/webtransport/",
-    //     "last-modified": "Fri, 31 May 2024 07:48:03 GMT"
-    // },
+    {
+        text: "WebTransport",
+        href: "https://htmlspecs.com/webtransport",
+        src: "https://www.w3.org/TR/webtransport/",
+        "last-modified": "Fri, 31 May 2024 07:48:03 GMT"
+    },
     {
         text: "Service Workers",
         href: "https://htmlspecs.com/service-workers",
