@@ -310,12 +310,12 @@ const links = [
         src: "https://www.w3.org/TR/presentation-api/",
         "last-modified": "Tue, 08 Oct 2024 16:51:27 GMT"
     },
-    // {
-    //     text: "Scroll-driven Animations",
-    //     href: "https://htmlspecs.com/scroll-animations-1",
-    //     src: "https://www.w3.org/TR/scroll-animations-1/",
-    //     "last-modified": "Tue, 06 Jun 2023 20:03:38 GMT"
-    // },
+    {
+        text: "Scroll-driven Animations",
+        href: "https://htmlspecs.com/scroll-animations-1",
+        src: "https://www.w3.org/TR/scroll-animations-1/",
+        "last-modified": "Tue, 06 Jun 2023 20:03:38 GMT"
+    },
 
     // Developer Tools
     {
