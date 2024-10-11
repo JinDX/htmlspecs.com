@@ -180,7 +180,7 @@ loadDataScript(function () {
     var gaID;
     var hostname = window.location.hostname;
 
-    if (hostname === 'htmlspecs.com') {
+    if (/htmlspecs\.com$/.test(hostname)) {
         gaID = 'G-Z0H3G08TCK';
     } else if (hostname === 'ecma262.com') {
         gaID = 'G-DEEXSBMHX9';
