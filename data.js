@@ -18,12 +18,12 @@ const links = [
         src: "https://dom.spec.whatwg.org/",
         "last-modified": "Fri, 20 Sep 2024 15:16:50 GMT"
     },
-    // {
-    //     text: "Web IDL",
-    //     href: "https://htmlspecs.com/webidl",
-    //     src: "https://webidl.spec.whatwg.org/",
-    //     "last-modified": "Mon, 16 Sep 2024 08:09:04 GMT"
-    // },
+    {
+        text: "Web IDL",
+        href: "https://htmlspecs.com/webidl",
+        src: "https://webidl.spec.whatwg.org/",
+        "last-modified": "Mon, 16 Sep 2024 08:09:04 GMT"
+    },
 
     // Accessibility
     {
