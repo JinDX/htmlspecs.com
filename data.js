@@ -24,6 +24,13 @@ const links = [
         src: "https://webidl.spec.whatwg.org/",
         "last-modified": "Mon, 16 Sep 2024 08:09:04 GMT"
     },
+    // {
+    //     text: "Web Application Manifest",
+    //     href: "https://htmlspecs.com/appmanifest",
+    //     src: "https://www.w3.org/TR/appmanifest/",
+    //     "last-modified": "Fri, 11 Oct 2024 03:44:44 GMT"
+    // },
+    
 
     // Accessibility
     {
@@ -172,6 +179,12 @@ const links = [
         src: "https://w3c.github.io/touch-events/",
         "last-modified": "Sat, 06 Jul 2024 14:32:59 GMT"
     },
+    // {
+    //     text: "Contact Picker API",
+    //     href: "https://htmlspecs.com/contact-picker",
+    //     src: "https://www.w3.org/TR/contact-picker//",
+    //     "last-modified": "Mon, 08 Jul 2024 22:06:36 GMT"
+    // },
     {
         text: "Notifications API",
         href: "https://htmlspecs.com/notifications",
@@ -284,6 +297,19 @@ const links = [
         src: "https://www.w3.org/TR/webauthn-2/",
         "last-modified": "Tue, 06 Apr 2021 20:44:57 GMT"
     },
+    // {
+    //     text: "HTML Sanitizer API",
+    //     href: "https://htmlspecs.com/sanitizer-api",
+    //     src: "https://wicg.github.io/sanitizer-api/",
+    //     "last-modified": "Wed, 18 Sep 2024 11:18:48 GMT"
+    // },
+    // {
+    //     text: "Subresource Integrity (SRI)",
+    //     href: "https://htmlspecs.com/SRI",
+    //     src: "https://www.w3.org/TR/SRI/",
+    //     "last-modified": "Mon, 20 Jun 2016 15:01:23 GMT"
+    // },
+    
 
     // Media and Graphics
     {
@@ -410,6 +436,12 @@ const cssLinks = [
         src: "https://www.w3.org/TR/css-box-4/",
         "last-modified": "Sun, 04 Aug 2024 03:01:12 GMT"
     },
+    // {
+    //     text: "CSS Logical Properties and Values Level 1",
+    //     href: "https://htmlspecs.com/css/css-logical-1",
+    //     src: "https://www.w3.org/TR/css-logical-1/",
+    //     "last-modified": "Mon, 27 Aug 2018 21:52:47 GMT"
+    // },
     {
         text: "CSS Display Module Level 3",
         href: "https://htmlspecs.com/css/css-display-3",

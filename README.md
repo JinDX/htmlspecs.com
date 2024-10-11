@@ -21,7 +21,7 @@ HTML 及相关 API，CSS 标准系列。
 - [x] CSS Grid Layout Module Level 3 https://htmlspecs.com/css/css-grid-3
 - [x] CSS Fonts Module Level 4 https://htmlspecs.com/css/css-fonts-4
 - [x] Media Queries Level 5 https://htmlspecs.com/css/mediaqueries-5
-- [x] CSS Overscroll Behavior https://htmlspecs.com/css/css-overscroll-1
+- [x] CSS Overscroll Behavior Module Level 1 https://htmlspecs.com/css/css-overscroll-1
 - [x] CSS Motion Path Module Level 1 https://htmlspecs.com/css/motion-1
 - [x] CSS Box Model Level 4 https://htmlspecs.com/css/css-box-4
 - [x] CSS Display Module Level 3 https://htmlspecs.com/css/css-display-3
@@ -73,8 +73,7 @@ HTML 及相关 API，CSS 标准系列。
 - [x] CSS Masking Module Level 1  https://htmlspecs.com/css/css-masking-1
 - [x] CSS Counter Styles Level 3 https://htmlspecs.com/css/css-counter-styles-3
 - [x] CSS Scroll Anchoring Module Level 1 https://htmlspecs.com/css/css-scroll-anchoring-1
-- [ ] CSS Logical Properties and Values Level 1 https://www.w3.org/TR/css-logical-1/
-- [ ] CSS Overscroll Behavior Module Level 1 https://www.w3.org/TR/css-overscroll-1/
+- [ ] CSS Logical Properties and Values Level 1 https://htmlspecs.com/css/css-logical-1/
 - [x] File API  https://htmlspecs.com/FileAPI
 - [x] Performance Timeline  https://htmlspecs.com/performance-timeline
 - [x] Resize Observer  https://htmlspecs.com/resize-observer
@@ -115,7 +114,7 @@ HTML 及相关 API，CSS 标准系列。
 - [x] Screen Orientation https://htmlspecs.com/screen-orientation
 - [x] Scroll-driven Animations https://htmlspecs.com/scroll-animations-1
 - [x] Web IDL https://htmlspecs.com/webidl
-- [ ] HTML Sanitizer API https://wicg.github.io/sanitizer-api/
-- [ ] Web Application Manifest https://www.w3.org/TR/appmanifest/
-- [ ] Subresource Integrity https://www.w3.org/TR/SRI/
-- [ ] Contact Picker API https://www.w3.org/TR/contact-picker/
+- [ ] HTML Sanitizer API https://htmlspecs.com/sanitizer-api/
+- [ ] Web Application Manifest https://htmlspecs.com/appmanifest/
+- [ ] Subresource Integrity https://htmlspecs.com/SRI/
+- [ ] Contact Picker API https://htmlspecs.com/contact-picker/
