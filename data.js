@@ -506,6 +506,12 @@ const cssLinks = [
         src: "https://www.w3.org/TR/css-fonts-4/",
         "last-modified": "Wed, 31 Jan 2024 18:20:40 GMT"
     },
+    // {
+    //     text: "CSS Font Loading Module Level 3",
+    //     href: "https://htmlspecs.com/css/css-font-loading",
+    //     src: "https://www.w3.org/TR/css-font-loading",
+    //     "last-modified": "Mon, 03 Apr 2023 20:07:42 GMT"
+    // },
 
     // Text and Typography
     {
@@ -725,6 +731,12 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/cssom-1",
         src: "https://www.w3.org/TR/cssom-1/",
         "last-modified": "Tue, 24 Aug 2021 16:27:03 GMT"
+    },
+    {
+        text: "CSSOM View Module",
+        href: "https://htmlspecs.com/css/cssom-view",
+        src: "https://www.w3.org/TR/cssom-view/",
+        "last-modified": "Thu, 17 Mar 2016 06:51:10 GMT"
     },
 
     // CSS Houdini APIs

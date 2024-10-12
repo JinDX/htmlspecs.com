@@ -74,7 +74,7 @@ HTML 及相关 API，CSS 标准系列。
 - [x] CSS Counter Styles Level 3 https://htmlspecs.com/css/css-counter-styles-3
 - [x] CSS Scroll Anchoring Module Level 1 https://htmlspecs.com/css/css-scroll-anchoring-1
 - [x] CSS Logical Properties and Values Level 1 https://htmlspecs.com/css/css-logical-1
-- [ ] CSSOM View Module https://www.w3.org/TR/cssom-view
+- [x] CSSOM View Module https://www.w3.org/TR/cssom-view
 - [ ] CSS Font Loading Module Level 3 https://www.w3.org/TR/css-font-loading
 - [x] File API  https://htmlspecs.com/FileAPI
 - [x] Performance Timeline  https://htmlspecs.com/performance-timeline
