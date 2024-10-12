@@ -297,12 +297,12 @@ const links = [
         src: "https://www.w3.org/TR/webauthn-2/",
         "last-modified": "Tue, 06 Apr 2021 20:44:57 GMT"
     },
-    // {
-    //     text: "HTML Sanitizer API",
-    //     href: "https://htmlspecs.com/sanitizer-api",
-    //     src: "https://wicg.github.io/sanitizer-api/",
-    //     "last-modified": "Wed, 18 Sep 2024 11:18:48 GMT"
-    // },
+    {
+        text: "HTML Sanitizer API",
+        href: "https://htmlspecs.com/sanitizer-api",
+        src: "https://wicg.github.io/sanitizer-api/",
+        "last-modified": "Wed, 18 Sep 2024 11:18:48 GMT"
+    },
     // {
     //     text: "Subresource Integrity (SRI)",
     //     href: "https://htmlspecs.com/SRI",
