@@ -73,7 +73,7 @@ HTML 及相关 API，CSS 标准系列。
 - [x] CSS Masking Module Level 1  https://htmlspecs.com/css/css-masking-1
 - [x] CSS Counter Styles Level 3 https://htmlspecs.com/css/css-counter-styles-3
 - [x] CSS Scroll Anchoring Module Level 1 https://htmlspecs.com/css/css-scroll-anchoring-1
-- [ ] CSS Logical Properties and Values Level 1 https://htmlspecs.com/css/css-logical-1/
+- [x] CSS Logical Properties and Values Level 1 https://htmlspecs.com/css/css-logical-1/
 - [x] File API  https://htmlspecs.com/FileAPI
 - [x] Performance Timeline  https://htmlspecs.com/performance-timeline
 - [x] Resize Observer  https://htmlspecs.com/resize-observer

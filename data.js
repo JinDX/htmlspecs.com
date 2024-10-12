@@ -436,12 +436,12 @@ const cssLinks = [
         src: "https://www.w3.org/TR/css-box-4/",
         "last-modified": "Sun, 04 Aug 2024 03:01:12 GMT"
     },
-    // {
-    //     text: "CSS Logical Properties and Values Level 1",
-    //     href: "https://htmlspecs.com/css/css-logical-1",
-    //     src: "https://www.w3.org/TR/css-logical-1/",
-    //     "last-modified": "Mon, 27 Aug 2018 21:52:47 GMT"
-    // },
+    {
+        text: "CSS Logical Properties and Values Level 1",
+        href: "https://htmlspecs.com/css/css-logical-1",
+        src: "https://www.w3.org/TR/css-logical-1/",
+        "last-modified": "Mon, 27 Aug 2018 21:52:47 GMT"
+    },
     {
         text: "CSS Display Module Level 3",
         href: "https://htmlspecs.com/css/css-display-3",
