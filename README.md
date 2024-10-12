@@ -2,7 +2,7 @@
 HTML 及相关 API，CSS 标准系列。
 
 
-- [x] HTML https://htmlspecs.com/
+- [x] HTML https://htmlspecs.com
 - [x] Fetch https://htmlspecs.com/fetch
 - [x] console https://htmlspecs.com/console
 - [x] dom https://htmlspecs.com/dom
