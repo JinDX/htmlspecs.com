@@ -24,12 +24,12 @@ const links = [
         src: "https://webidl.spec.whatwg.org/",
         "last-modified": "Mon, 16 Sep 2024 08:09:04 GMT"
     },
-    // {
-    //     text: "Web Application Manifest",
-    //     href: "https://htmlspecs.com/appmanifest",
-    //     src: "https://www.w3.org/TR/appmanifest/",
-    //     "last-modified": "Fri, 11 Oct 2024 03:44:44 GMT"
-    // },
+    {
+        text: "Web Application Manifest",
+        href: "https://htmlspecs.com/appmanifest",
+        src: "https://www.w3.org/TR/appmanifest/",
+        "last-modified": "Fri, 11 Oct 2024 03:44:44 GMT"
+    },
     
 
     // Accessibility

@@ -115,6 +115,6 @@ HTML 及相关 API，CSS 标准系列。
 - [x] Scroll-driven Animations https://htmlspecs.com/scroll-animations-1
 - [x] Web IDL https://htmlspecs.com/webidl
 - [x] HTML Sanitizer API https://htmlspecs.com/sanitizer-api
-- [ ] Web Application Manifest https://htmlspecs.com/appmanifest
+- [x] Web Application Manifest https://htmlspecs.com/appmanifest
 - [ ] Subresource Integrity https://htmlspecs.com/SRI
 - [ ] Contact Picker API https://htmlspecs.com/contact-picker
