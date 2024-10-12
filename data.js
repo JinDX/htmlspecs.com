@@ -179,12 +179,12 @@ const links = [
         src: "https://w3c.github.io/touch-events/",
         "last-modified": "Sat, 06 Jul 2024 14:32:59 GMT"
     },
-    // {
-    //     text: "Contact Picker API",
-    //     href: "https://htmlspecs.com/contact-picker",
-    //     src: "https://www.w3.org/TR/contact-picker//",
-    //     "last-modified": "Mon, 08 Jul 2024 22:06:36 GMT"
-    // },
+    {
+        text: "Contact Picker API",
+        href: "https://htmlspecs.com/contact-picker",
+        src: "https://www.w3.org/TR/contact-picker//",
+        "last-modified": "Mon, 08 Jul 2024 22:06:36 GMT"
+    },
     {
         text: "Notifications API",
         href: "https://htmlspecs.com/notifications",

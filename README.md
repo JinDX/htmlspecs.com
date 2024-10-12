@@ -117,4 +117,4 @@ HTML 及相关 API，CSS 标准系列。
 - [x] HTML Sanitizer API https://htmlspecs.com/sanitizer-api
 - [x] Web Application Manifest https://htmlspecs.com/appmanifest
 - [x] Subresource Integrity https://htmlspecs.com/SRI
-- [ ] Contact Picker API https://htmlspecs.com/contact-picker
+- [x] Contact Picker API https://htmlspecs.com/contact-picker
