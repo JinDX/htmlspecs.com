@@ -303,12 +303,12 @@ const links = [
         src: "https://wicg.github.io/sanitizer-api/",
         "last-modified": "Wed, 18 Sep 2024 11:18:48 GMT"
     },
-    // {
-    //     text: "Subresource Integrity (SRI)",
-    //     href: "https://htmlspecs.com/SRI",
-    //     src: "https://www.w3.org/TR/SRI/",
-    //     "last-modified": "Mon, 20 Jun 2016 15:01:23 GMT"
-    // },
+    {
+        text: "Subresource Integrity (SRI)",
+        href: "https://htmlspecs.com/SRI",
+        src: "https://www.w3.org/TR/SRI/",
+        "last-modified": "Mon, 20 Jun 2016 15:01:23 GMT"
+    },
     
 
     // Media and Graphics
