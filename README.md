@@ -120,6 +120,6 @@ HTML 及相关 API，CSS 标准系列。
 - [x] Web Application Manifest https://htmlspecs.com/appmanifest
 - [x] Subresource Integrity https://htmlspecs.com/SRI
 - [x] Contact Picker API https://htmlspecs.com/contact-picker
-- [ ] WebOTP API https://wicg.github.io/web-otp
-- [ ] Device Posture API https://www.w3.org/TR/device-posture
-- [ ] Web Locks API https://www.w3.org/TR/web-locks
+- [ ] WebOTP API https://htmlspecs.com/web-otp
+- [ ] Device Posture API https://htmlspecs.com/device-posture
+- [ ] Web Locks API https://htmlspecs.com/web-locks

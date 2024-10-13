@@ -135,6 +135,12 @@ const links = [
         src: "https://wicg.github.io/entries-api/",
         "last-modified": "Fri, 07 Jun 2024 22:07:08 GMT"
     },
+    // {
+    //     text: "Web Locks API",
+    //     href: "https://htmlspecs.com/web-locks",
+    //     src: " https://www.w3.org/TR/web-locks/",
+    //     "last-modified": "Thu, 05 Jan 2023 07:56:36 GMT"
+    // },
 
     // Device and Hardware Access
     {
@@ -251,6 +257,18 @@ const links = [
         src: "https://www.w3.org/TR/permissions/",
         "last-modified": "Tue, 19 Mar 2024 14:01:55 GMT"
     },
+    // {
+    //     text: "WebOTP API",
+    //     href: "https://htmlspecs.com/web-otp",
+    //     src: "https://wicg.github.io/web-otp/",
+    //     "last-modified": "Mon, 28 Mar 2022 23:43:35 GMT"
+    // },
+    // {
+    //     text: "Device Posture API",
+    //     href: "https://htmlspecs.com/device-posture",
+    //     src: "https://www.w3.org/TR/device-posture/",
+    //     "last-modified": "Tue, 19 Mar 2024 14:01:55 GMT"
+    // },
 
     // Performance and Observers
     {
