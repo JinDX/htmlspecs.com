@@ -506,12 +506,12 @@ const cssLinks = [
         src: "https://www.w3.org/TR/css-fonts-4/",
         "last-modified": "Wed, 31 Jan 2024 18:20:40 GMT"
     },
-    // {
-    //     text: "CSS Font Loading Module Level 3",
-    //     href: "https://htmlspecs.com/css/css-font-loading",
-    //     src: "https://www.w3.org/TR/css-font-loading",
-    //     "last-modified": "Mon, 03 Apr 2023 20:07:42 GMT"
-    // },
+    {
+        text: "CSS Font Loading Module Level 3",
+        href: "https://htmlspecs.com/css/css-font-loading",
+        src: "https://www.w3.org/TR/css-font-loading",
+        "last-modified": "Mon, 03 Apr 2023 20:07:42 GMT"
+    },
 
     // Text and Typography
     {
