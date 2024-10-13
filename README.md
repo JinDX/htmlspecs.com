@@ -123,3 +123,4 @@ HTML 及相关 API，CSS 标准系列。
 - [x] WebOTP API https://htmlspecs.com/web-otp
 - [x] Device Posture API https://htmlspecs.com/device-posture
 - [x] Web Locks API https://htmlspecs.com/web-locks
+- [x] Badging API https://www.w3.org/TR/badging/

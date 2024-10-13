@@ -30,7 +30,7 @@ const links = [
         src: "https://www.w3.org/TR/appmanifest/",
         "last-modified": "Fri, 11 Oct 2024 03:44:44 GMT"
     },
-    
+
 
     // Accessibility
     {
@@ -198,6 +198,12 @@ const links = [
         "last-modified": "Fri, 20 Sep 2024 15:48:55 GMT"
     },
     {
+        text: "Badging API",
+        href: "https://htmlspecs.com/badging",
+        src: "https://www.w3.org/TR/badging/",
+        "last-modified": "Thu, 04 May 2023 08:20:46 GMT"
+    },
+    {
         text: "Virtual Keyboard",
         href: "https://htmlspecs.com/virtual-keyboard",
         src: "https://www.w3.org/TR/virtual-keyboard/",
@@ -327,7 +333,7 @@ const links = [
         src: "https://www.w3.org/TR/SRI/",
         "last-modified": "Mon, 20 Jun 2016 15:01:23 GMT"
     },
-    
+
 
     // Media and Graphics
     {
