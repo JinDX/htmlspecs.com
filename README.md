@@ -122,4 +122,4 @@ HTML 及相关 API，CSS 标准系列。
 - [x] Contact Picker API https://htmlspecs.com/contact-picker
 - [x] WebOTP API https://htmlspecs.com/web-otp
 - [x] Device Posture API https://htmlspecs.com/device-posture
-- [ ] Web Locks API https://htmlspecs.com/web-locks
+- [x] Web Locks API https://htmlspecs.com/web-locks

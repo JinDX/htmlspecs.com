@@ -135,12 +135,12 @@ const links = [
         src: "https://wicg.github.io/entries-api/",
         "last-modified": "Fri, 07 Jun 2024 22:07:08 GMT"
     },
-    // {
-    //     text: "Web Locks API",
-    //     href: "https://htmlspecs.com/web-locks",
-    //     src: " https://www.w3.org/TR/web-locks/",
-    //     "last-modified": "Thu, 05 Jan 2023 07:56:36 GMT"
-    // },
+    {
+        text: "Web Locks API",
+        href: "https://htmlspecs.com/web-locks",
+        src: " https://www.w3.org/TR/web-locks/",
+        "last-modified": "Thu, 05 Jan 2023 07:56:36 GMT"
+    },
 
     // Device and Hardware Access
     {
