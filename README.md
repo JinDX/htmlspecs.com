@@ -121,5 +121,5 @@ HTML 及相关 API，CSS 标准系列。
 - [x] Subresource Integrity https://htmlspecs.com/SRI
 - [x] Contact Picker API https://htmlspecs.com/contact-picker
 - [x] WebOTP API https://htmlspecs.com/web-otp
-- [ ] Device Posture API https://htmlspecs.com/device-posture
+- [x] Device Posture API https://htmlspecs.com/device-posture
 - [ ] Web Locks API https://htmlspecs.com/web-locks

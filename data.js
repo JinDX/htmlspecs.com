@@ -263,12 +263,12 @@ const links = [
         src: "https://wicg.github.io/web-otp/",
         "last-modified": "Mon, 28 Mar 2022 23:43:35 GMT"
     },
-    // {
-    //     text: "Device Posture API",
-    //     href: "https://htmlspecs.com/device-posture",
-    //     src: "https://www.w3.org/TR/device-posture/",
-    //     "last-modified": "Tue, 19 Mar 2024 14:01:55 GMT"
-    // },
+    {
+        text: "Device Posture API",
+        href: "https://htmlspecs.com/device-posture",
+        src: "https://www.w3.org/TR/device-posture/",
+        "last-modified": "Tue, 19 Mar 2024 14:01:55 GMT"
+    },
 
     // Performance and Observers
     {
