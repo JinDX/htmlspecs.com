@@ -339,12 +339,12 @@ const links = [
         src: "https://www.w3.org/TR/SRI/",
         "last-modified": "Mon, 20 Jun 2016 15:01:23 GMT"
     },
-    // {
-    //     text: "Content Security Policy Level 3",
-    //     href: "https://htmlspecs.com/webappsec-csp",
-    //     src: "https://w3c.github.io/webappsec-csp/",
-    //     "last-modified": "Mon, 14 Oct 2024 08:40:46 GMT"
-    // },
+    {
+        text: "Content Security Policy Level 3",
+        href: "https://htmlspecs.com/webappsec-csp",
+        src: "https://w3c.github.io/webappsec-csp/",
+        "last-modified": "Mon, 14 Oct 2024 08:40:46 GMT"
+    },
 
 
     // Media and Graphics

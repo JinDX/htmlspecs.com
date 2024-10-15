@@ -127,5 +127,5 @@ HTML 及相关 API，CSS 标准系列。
 - [x] Device Posture API https://htmlspecs.com/device-posture
 - [x] Web Locks API https://htmlspecs.com/web-locks
 - [x] Badging API https://htmlspecs.com/badging
-- [ ] Content Security Policy Level 3 https://htmlspecs.com/webappsec-csp
+- [x] Content Security Policy Level 3 https://htmlspecs.com/webappsec-csp
 - [x] Background Fetch https://htmlspecs.com/background-fetch
