@@ -516,12 +516,12 @@ const cssLinks = [
         src: "https://www.w3.org/TR/css-color-3/",
         "last-modified": "Thu, 13 Jan 2022 23:33:53 GMT"
     },
-    // {
-    //     text: "CSS Color Module Level 4",
-    //     href: "https://htmlspecs.com/css/css-color-4",
-    //     src: "https://www.w3.org/TR/css-color-4/",
-    //     "last-modified": "Fri, 09 Feb 2024 18:20:07 GMT"
-    // },
+    {
+        text: "CSS Color Module Level 4",
+        href: "https://htmlspecs.com/css/css-color-4",
+        src: "https://www.w3.org/TR/css-color-4/",
+        "last-modified": "Fri, 09 Feb 2024 18:20:07 GMT"
+    },
     {
         text: "CSS Color Module Level 5",
         href: "https://htmlspecs.com/css/css-color-5",
