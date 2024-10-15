@@ -103,6 +103,12 @@ const links = [
         src: "https://www.w3.org/TR/payment-request/",
         "last-modified": "Mon, 09 Sep 2024 18:06:00 GMT"
     },
+    // {
+    //     text: "Background Fetch",
+    //     href: "https://htmlspecs.com/background-fetch",
+    //     src: "https://wicg.github.io/background-fetch/",
+    //     "last-modified": "Wed, 21 Apr 2021 08:58:39 GMT"
+    // },
 
     // Storage and Data
     {
@@ -333,6 +339,12 @@ const links = [
         src: "https://www.w3.org/TR/SRI/",
         "last-modified": "Mon, 20 Jun 2016 15:01:23 GMT"
     },
+    // {
+    //     text: "Content Security Policy Level 3",
+    //     href: "https://htmlspecs.com/webappsec-csp",
+    //     src: "https://w3c.github.io/webappsec-csp/",
+    //     "last-modified": "Mon, 14 Oct 2024 08:40:46 GMT"
+    // },
 
 
     // Media and Graphics
@@ -403,6 +415,12 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-cascade-4",
         src: "https://www.w3.org/TR/css-cascade-4/",
         "last-modified": "Tue, 11 Jan 2022 15:25:49 GMT"
+    },
+    {
+        text: "CSS Cascading and Inheritance Level 5",
+        href: "https://htmlspecs.com/css/css-cascade-5",
+        src: "https://www.w3.org/TR/css-cascade-5/",
+        "last-modified": "Tue, 11 Jan 2022 16:48:45 GMT"
     },
     {
         text: "CSS Style Attributes",
@@ -498,6 +516,12 @@ const cssLinks = [
         src: "https://www.w3.org/TR/css-color-3/",
         "last-modified": "Thu, 13 Jan 2022 23:33:53 GMT"
     },
+    // {
+    //     text: "CSS Color Module Level 4",
+    //     href: "https://htmlspecs.com/css/css-color-4",
+    //     src: "https://www.w3.org/TR/css-color-4/",
+    //     "last-modified": "Fri, 09 Feb 2024 18:20:07 GMT"
+    // },
     {
         text: "CSS Color Module Level 5",
         href: "https://htmlspecs.com/css/css-color-5",
@@ -608,6 +632,14 @@ const cssLinks = [
         src: "https://www.w3.org/TR/css-shapes-1/",
         "last-modified": "Thu, 10 Nov 2022 21:13:52 GMT"
     },
+
+    //Navigation
+    // {
+    //     text: "CSS Spatial Navigation Level 1",
+    //     href: "https://htmlspecs.com/css/css-nav-1",
+    //     src: "https://www.w3.org/TR/css-nav-1/",
+    //     "last-modified": "Tue, 04 Feb 2020 17:51:36 GMT"
+    // },
 
     // Writing Modes
     {

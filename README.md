@@ -28,7 +28,7 @@ HTML 及相关 API，CSS 标准系列。
 - [x] CSS Pseudo-Elements Module Level 4 https://htmlspecs.com/css/css-pseudo-4
 - [x] CSS Images Module Level 4 https://htmlspecs.com/css/css-images-4
 - [x] CSS Color Module Level 3 https://htmlspecs.com/css/css-color-3
-- [ ] CSS Color Module Level 4 https://www.w3.org/TR/css-color-4
+- [ ] CSS Color Module Level 4 https://htmlspecs.com/css/css-color-4
 - [x] CSS Color Module Level 5 https://htmlspecs.com/css/css-color-5
 - [x] CSS Namespaces https://htmlspecs.com/css/css-namespaces-3
 - [x] Selectors Level 3 https://htmlspecs.com/css/selectors-3
@@ -36,8 +36,8 @@ HTML 及相关 API，CSS 标准系列。
 - [x] CSS Style Attributes https://htmlspecs.com/css/css-style-attr
 - [x] CSS Cascading and Inheritance Level 3 https://htmlspecs.com/css/css-cascade-3
 - [x] CSS Cascading and Inheritance Level 4 https://htmlspecs.com/css/css-cascade-4
-- [ ] CSS Cascading and Inheritance Level 5 https://www.w3.org/TR/css-cascade-5
-- [ ] CSS Spatial Navigation Level 1 https://www.w3.org/TR/css-nav-1
+- [ ] CSS Cascading and Inheritance Level 5 https://htmlspecs.com/css/css-cascade-5
+- [ ] CSS Spatial Navigation Level 1 https://htmlspecs.com/css/css-nav-1
 - [x] CSS Fonts Level 3 https://htmlspecs.com/css/css-fonts-3
 - [x] CSS Writing Modes Level 3 https://htmlspecs.com/css/css-writing-modes-3
 - [x] CSS Basic User Interface Level 3 https://htmlspecs.com/css/css-ui-3
@@ -127,5 +127,5 @@ HTML 及相关 API，CSS 标准系列。
 - [x] Device Posture API https://htmlspecs.com/device-posture
 - [x] Web Locks API https://htmlspecs.com/web-locks
 - [x] Badging API https://htmlspecs.com/badging
-- [ ] Content Security Policy Level 3 https://w3c.github.io/webappsec-csp
-- [ ] Background Fetch https://wicg.github.io/background-fetch
+- [ ] Content Security Policy Level 3 https://htmlspecs.com/webappsec-csp
+- [ ] Background Fetch https://htmlspecs.com/background-fetch
