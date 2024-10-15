@@ -103,12 +103,12 @@ const links = [
         src: "https://www.w3.org/TR/payment-request/",
         "last-modified": "Mon, 09 Sep 2024 18:06:00 GMT"
     },
-    // {
-    //     text: "Background Fetch",
-    //     href: "https://htmlspecs.com/background-fetch",
-    //     src: "https://wicg.github.io/background-fetch/",
-    //     "last-modified": "Wed, 21 Apr 2021 08:58:39 GMT"
-    // },
+    {
+        text: "Background Fetch",
+        href: "https://htmlspecs.com/background-fetch",
+        src: "https://wicg.github.io/background-fetch/",
+        "last-modified": "Wed, 21 Apr 2021 08:58:39 GMT"
+    },
 
     // Storage and Data
     {

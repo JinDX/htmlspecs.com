@@ -128,4 +128,4 @@ HTML 及相关 API，CSS 标准系列。
 - [x] Web Locks API https://htmlspecs.com/web-locks
 - [x] Badging API https://htmlspecs.com/badging
 - [ ] Content Security Policy Level 3 https://htmlspecs.com/webappsec-csp
-- [ ] Background Fetch https://htmlspecs.com/background-fetch
+- [x] Background Fetch https://htmlspecs.com/background-fetch
