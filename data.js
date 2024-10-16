@@ -634,12 +634,12 @@ const cssLinks = [
     },
 
     //Navigation
-    // {
-    //     text: "CSS Spatial Navigation Level 1",
-    //     href: "https://htmlspecs.com/css/css-nav-1",
-    //     src: "https://www.w3.org/TR/css-nav-1/",
-    //     "last-modified": "Tue, 04 Feb 2020 17:51:36 GMT"
-    // },
+    {
+        text: "CSS Spatial Navigation Level 1",
+        href: "https://htmlspecs.com/css/css-nav-1",
+        src: "https://www.w3.org/TR/css-nav-1/",
+        "last-modified": "Tue, 04 Feb 2020 17:51:36 GMT"
+    },
 
     // Writing Modes
     {
