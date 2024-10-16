@@ -36,7 +36,7 @@ HTML 及相关 API，CSS 标准系列。
 - [x] CSS Style Attributes https://htmlspecs.com/css/css-style-attr
 - [x] CSS Cascading and Inheritance Level 3 https://htmlspecs.com/css/css-cascade-3
 - [x] CSS Cascading and Inheritance Level 4 https://htmlspecs.com/css/css-cascade-4
-- [ ] CSS Cascading and Inheritance Level 5 https://htmlspecs.com/css/css-cascade-5
+- [x] CSS Cascading and Inheritance Level 5 https://htmlspecs.com/css/css-cascade-5
 - [ ] CSS Spatial Navigation Level 1 https://htmlspecs.com/css/css-nav-1
 - [x] CSS Fonts Level 3 https://htmlspecs.com/css/css-fonts-3
 - [x] CSS Writing Modes Level 3 https://htmlspecs.com/css/css-writing-modes-3
