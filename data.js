@@ -422,6 +422,12 @@ const cssLinks = [
         src: "https://www.w3.org/TR/css-cascade-5/",
         "last-modified": "Tue, 11 Jan 2022 16:48:45 GMT"
     },
+    // {
+    //     text: "CSS Cascading and Inheritance Level 6",
+    //     href: "https://htmlspecs.com/css/css-cascade-6",
+    //     src: "https://www.w3.org/TR/css-cascade-6/",
+    //     "last-modified": "Fri, 06 Sep 2024 18:39:02 GMT"
+    // },
     {
         text: "CSS Style Attributes",
         href: "https://htmlspecs.com/css/css-style-attr",
@@ -508,6 +514,12 @@ const cssLinks = [
         src: "https://www.w3.org/TR/css-overflow-4/",
         "last-modified": "Tue, 21 Mar 2023 19:01:45 GMT"
     },
+    // {
+    //     text: "CSS Overflow Module Level 5",
+    //     href: "https://htmlspecs.com/css/css-overflow-5",
+    //     src: "https://drafts.csswg.org/css-overflow-5/",
+    //     "last-modified": "Wed, 16 Oct 2024 10:54:57 GMT"
+    // },
 
     // Colors
     {
@@ -620,6 +632,12 @@ const cssLinks = [
         src: "https://www.w3.org/TR/css-grid-3/",
         "last-modified": "Tue, 17 Sep 2024 16:27:52 GMT"
     },
+    // {
+    //     text: "CSS Inline Layout Module Level 3",
+    //     href: "https://htmlspecs.com/css/css-inline-3",
+    //     src: "https://www.w3.org/TR/css-inline-3/",
+    //     "last-modified": "Mon, 12 Aug 2024 23:01:08 GMT"
+    // },
     {
         text: "CSS Multi-column Layout Module Level 1",
         href: "https://htmlspecs.com/css/css-multicol-1",
@@ -720,6 +738,12 @@ const cssLinks = [
         src: "https://www.w3.org/TR/motion-1/",
         "last-modified": "Fri, 14 Dec 2018 22:58:15 GMT"
     },
+    // {
+    //     text: "CSS View Transitions Module Level 1",
+    //     href: "https://htmlspecs.com/css/css-view-transitions-1",
+    //     src: "https://www.w3.org/TR/css-view-transitions-1/",
+    //     "last-modified": "Sun, 03 Sep 2023 13:07:46 GMT"
+    // },
     {
         text: "CSS Animation Worklet API",
         href: "https://htmlspecs.com/css/css-animation-worklet-1",
