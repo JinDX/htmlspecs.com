@@ -38,7 +38,7 @@ HTML 及相关 API，CSS 标准系列。
 - [x] CSS Cascading and Inheritance Level 4 https://htmlspecs.com/css/css-cascade-4
 - [x] CSS Cascading and Inheritance Level 5 https://htmlspecs.com/css/css-cascade-5
 - [x] CSS Cascading and Inheritance Level 6 https://htmlspecs.com/css/css-cascade-6
-- [ ] CSS View Transitions Module Level 1 https://htmlspecs.com/css/css-view-transitions-1
+- [x] CSS View Transitions Module Level 1 https://htmlspecs.com/css/css-view-transitions-1
 - [ ] CSS Inline Layout Module Level 3 https://htmlspecs.com/css/css-inline-3/
 - [x] CSS Spatial Navigation Level 1 https://htmlspecs.com/css/css-nav-1
 - [x] CSS Fonts Level 3 https://htmlspecs.com/css/css-fonts-3

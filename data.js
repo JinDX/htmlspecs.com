@@ -738,12 +738,12 @@ const cssLinks = [
         src: "https://www.w3.org/TR/motion-1/",
         "last-modified": "Fri, 14 Dec 2018 22:58:15 GMT"
     },
-    // {
-    //     text: "CSS View Transitions Module Level 1",
-    //     href: "https://htmlspecs.com/css/css-view-transitions-1",
-    //     src: "https://www.w3.org/TR/css-view-transitions-1/",
-    //     "last-modified": "Sun, 03 Sep 2023 13:07:46 GMT"
-    // },
+    {
+        text: "CSS View Transitions Module Level 1",
+        href: "https://htmlspecs.com/css/css-view-transitions-1",
+        src: "https://www.w3.org/TR/css-view-transitions-1/",
+        "last-modified": "Sun, 03 Sep 2023 13:07:46 GMT"
+    },
     {
         text: "CSS Animation Worklet API",
         href: "https://htmlspecs.com/css/css-animation-worklet-1",
