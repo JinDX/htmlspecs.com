@@ -37,12 +37,15 @@ HTML 及相关 API，CSS 标准系列。
 - [x] CSS Cascading and Inheritance Level 3 https://htmlspecs.com/css/css-cascade-3
 - [x] CSS Cascading and Inheritance Level 4 https://htmlspecs.com/css/css-cascade-4
 - [x] CSS Cascading and Inheritance Level 5 https://htmlspecs.com/css/css-cascade-5
+- [ ] CSS Cascading and Inheritance Level 6 https://www.w3.org/TR/css-cascade-6/
+- [ ] CSS View Transitions Module Level 1 https://www.w3.org/TR/css-view-transitions-1/
+- [ ] CSS Inline Layout Module Level 3 https://www.w3.org/TR/css-inline-3/
 - [x] CSS Spatial Navigation Level 1 https://htmlspecs.com/css/css-nav-1
 - [x] CSS Fonts Level 3 https://htmlspecs.com/css/css-fonts-3
 - [x] CSS Writing Modes Level 3 https://htmlspecs.com/css/css-writing-modes-3
 - [x] CSS Basic User Interface Level 3 https://htmlspecs.com/css/css-ui-3
-- [x] CSS Box Model Level 3  https://htmlspecs.com/css/css-box-3
-- [x] CSS Containment Module Level 2  https://htmlspecs.com/css/css-contain-2
+- [x] CSS Box Model Level 3 https://htmlspecs.com/css/css-box-3
+- [x] CSS Containment Module Level 2 https://htmlspecs.com/css/css-contain-2
 - [x] CSS Containment Module Level 3 https://htmlspecs.com/css/css-contain-3
 - [x] CSS Custom Properties for Cascading Variables Module Level 1 https://htmlspecs.com/css/css-variables-1
 - [x] CSS Object Model (CSSOM) https://htmlspecs.com/css/cssom-1
@@ -72,6 +75,7 @@ HTML 及相关 API，CSS 标准系列。
 - [x] CSS Nesting Module https://htmlspecs.com/css/css-nesting-1
 - [x] CSS Values and Units Module Level 3 https://htmlspecs.com/css/css-values-3
 - [x] CSS Overflow Module Level 4 https://htmlspecs.com/css/css-overflow-4
+- [ ] CSS Overflow Module Level 5 https://drafts.csswg.org/css-overflow-5/
 - [x] CSS Custom Highlight API Module Level 1 https://htmlspecs.com/css/css-highlight-api-1
 - [x] CSS Masking Module Level 1  https://htmlspecs.com/css/css-masking-1
 - [x] CSS Counter Styles Level 3 https://htmlspecs.com/css/css-counter-styles-3
