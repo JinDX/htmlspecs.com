@@ -632,12 +632,12 @@ const cssLinks = [
         src: "https://www.w3.org/TR/css-grid-3/",
         "last-modified": "Tue, 17 Sep 2024 16:27:52 GMT"
     },
-    // {
-    //     text: "CSS Inline Layout Module Level 3",
-    //     href: "https://htmlspecs.com/css/css-inline-3",
-    //     src: "https://www.w3.org/TR/css-inline-3/",
-    //     "last-modified": "Mon, 12 Aug 2024 23:01:08 GMT"
-    // },
+    {
+        text: "CSS Inline Layout Module Level 3",
+        href: "https://htmlspecs.com/css/css-inline-3",
+        src: "https://www.w3.org/TR/css-inline-3/",
+        "last-modified": "Mon, 12 Aug 2024 23:01:08 GMT"
+    },
     {
         text: "CSS Multi-column Layout Module Level 1",
         href: "https://htmlspecs.com/css/css-multicol-1",
