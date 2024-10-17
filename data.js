@@ -422,12 +422,12 @@ const cssLinks = [
         src: "https://www.w3.org/TR/css-cascade-5/",
         "last-modified": "Tue, 11 Jan 2022 16:48:45 GMT"
     },
-    // {
-    //     text: "CSS Cascading and Inheritance Level 6",
-    //     href: "https://htmlspecs.com/css/css-cascade-6",
-    //     src: "https://www.w3.org/TR/css-cascade-6/",
-    //     "last-modified": "Fri, 06 Sep 2024 18:39:02 GMT"
-    // },
+    {
+        text: "CSS Cascading and Inheritance Level 6",
+        href: "https://htmlspecs.com/css/css-cascade-6",
+        src: "https://www.w3.org/TR/css-cascade-6/",
+        "last-modified": "Fri, 06 Sep 2024 18:39:02 GMT"
+    },
     {
         text: "CSS Style Attributes",
         href: "https://htmlspecs.com/css/css-style-attr",
