@@ -39,7 +39,7 @@ HTML 及相关 API，CSS 标准系列。
 - [x] CSS Cascading and Inheritance Level 5 https://htmlspecs.com/css/css-cascade-5
 - [x] CSS Cascading and Inheritance Level 6 https://htmlspecs.com/css/css-cascade-6
 - [x] CSS View Transitions Module Level 1 https://htmlspecs.com/css/css-view-transitions-1
-- [ ] CSS View Transitions Module Level 2 https://www.w3.org/TR/css-view-transitions-2/
+- [ ] CSS View Transitions Module Level 2 https://htmlspecs.com/css/css-view-transitions-2/
 - [x] CSS Inline Layout Module Level 3 https://htmlspecs.com/css/css-inline-3/
 - [x] CSS Spatial Navigation Level 1 https://htmlspecs.com/css/css-nav-1
 - [x] CSS Fonts Level 3 https://htmlspecs.com/css/css-fonts-3
@@ -59,7 +59,7 @@ HTML 及相关 API，CSS 标准系列。
 - [x] CSS Filter Effects Module Level 1 https://htmlspecs.com/css/filter-effects-1
 - [x] CSS Multi-column Layout Module Level 1 https://htmlspecs.com/css/css-multicol-1
 - [x] CSS Scroll Snap Module Level 1 https://htmlspecs.com/css/css-scroll-snap-1
-- [ ] CSS Scroll Snap Module Level 2 https://www.w3.org/TR/css-scroll-snap-2/
+- [ ] CSS Scroll Snap Module Level 2 https://htmlspecs.com/css/css-scroll-snap-2/
 - [x] Compositing and Blending Level 1 https://htmlspecs.com/css/compositing-1
 - [x] CSS Text Module Level 3 https://htmlspecs.com/css/css-text-3
 - [x] CSS Text Module Level 4 https://htmlspecs.com/css/css-text-4
