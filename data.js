@@ -744,7 +744,7 @@ const cssLinks = [
         src: "https://www.w3.org/TR/css-view-transitions-1/",
         "last-modified": "Sun, 03 Sep 2023 13:07:46 GMT"
     },
-    
+
     {
         text: "CSS View Transitions Module Level 2",
         href: "https://htmlspecs.com/css/css-view-transitions-2",
@@ -784,6 +784,12 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-scroll-snap-1",
         src: "https://www.w3.org/TR/css-scroll-snap-1/",
         "last-modified": "Wed, 10 Mar 2021 20:56:24 GMT"
+    },
+    {
+        text: "CSS Scroll Snap Module Level 2",
+        href: "https://htmlspecs.com/css/css-scroll-snap-2",
+        src: "https://www.w3.org/TR/css-scroll-snap-2/",
+        "last-modified": "Fri, 19 Jul 2024 17:14:13 GMT"
     },
     {
         text: "CSS Scrollbars Styling Module Level 1",
