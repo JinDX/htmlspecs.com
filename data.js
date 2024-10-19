@@ -744,6 +744,13 @@ const cssLinks = [
         src: "https://www.w3.org/TR/css-view-transitions-1/",
         "last-modified": "Sun, 03 Sep 2023 13:07:46 GMT"
     },
+    
+    {
+        text: "CSS View Transitions Module Level 2",
+        href: "https://htmlspecs.com/css/css-view-transitions-2",
+        src: "https://www.w3.org/TR/css-view-transitions-2/",
+        "last-modified": "Tue, 14 May 2024 20:39:49 GMT"
+    },
     {
         text: "CSS Animation Worklet API",
         href: "https://htmlspecs.com/css/css-animation-worklet-1",
