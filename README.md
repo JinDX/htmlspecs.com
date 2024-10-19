@@ -45,18 +45,18 @@ HTML 及相关 API，CSS 标准系列。
 - [x] CSS Fonts Level 3 https://htmlspecs.com/css/css-fonts-3
 - [x] CSS Writing Modes Level 3 https://htmlspecs.com/css/css-writing-modes-3
 - [x] CSS Basic User Interface Module Level 3 https://htmlspecs.com/css/css-ui-3
-- [ ] CSS Basic User Interface Module Level 4 https://www.w3.org/TR/css-ui-4/
-- [ ] CSS Will Change Module Level 1 https://www.w3.org/TR/css-will-change-1/
-- [ ] CSS Box Sizing Module Level 3 https://www.w3.org/TR/css-sizing-3/
-- [ ] CSS Lists and Counters Module Level 3 https://www.w3.org/TR/css-lists-3/
-- [ ] CSS Positioned Layout Module Level 3 https://www.w3.org/TR/css-position-3/
-- [ ] CSS Color Adjustment Module Level 1 https://www.w3.org/TR/css-color-adjust-1/
-- [ ] CSS Conditional Rules Module Level 4 https://www.w3.org/TR/css-conditional-4/
-- [ ] Media Queries Level 4 https://www.w3.org/TR/mediaqueries-4/
-- [ ] CSS Writing Modes Level 4 https://www.w3.org/TR/css-writing-modes-4/
-- [ ] CSS Fragmentation Module Level 3 https://www.w3.org/TR/css-break-3/
-- [ ] CSS Text Decoration Level 3 https://www.w3.org/TR/css-text-decor-3/
-- [ ] CSS Speech Module Level 1 https://www.w3.org/TR/css-speech-1/
+- [ ] CSS Basic User Interface Module Level 4 https://htmlspecs.com/css/css-ui-4
+- [ ] CSS Will Change Module Level 1 https://htmlspecs.com/css/css-will-change-1
+- [ ] CSS Box Sizing Module Level 3 https://htmlspecs.com/css/css-sizing-3
+- [ ] CSS Lists and Counters Module Level 3 https://www.w3.org/TR/css-lists-3
+- [ ] CSS Positioned Layout Module Level 3 https://www.w3.org/TR/css-position-3
+- [ ] CSS Color Adjustment Module Level 1 https://www.w3.org/TR/css-color-adjust-1
+- [ ] CSS Conditional Rules Module Level 4 https://www.w3.org/TR/css-conditional-4
+- [ ] Media Queries Level 4 https://www.w3.org/TR/mediaqueries-4
+- [ ] CSS Writing Modes Level 4 https://www.w3.org/TR/css-writing-modes-4
+- [ ] CSS Fragmentation Module Level 3 https://www.w3.org/TR/css-break-3
+- [ ] CSS Text Decoration Level 3 https://www.w3.org/TR/css-text-decor-3
+- [ ] CSS Speech Module Level 1 https://www.w3.org/TR/css-speech-1
 - [x] CSS Box Model Level 3 https://htmlspecs.com/css/css-box-3
 - [x] CSS Containment Module Level 2 https://htmlspecs.com/css/css-contain-2
 - [x] CSS Containment Module Level 3 https://htmlspecs.com/css/css-contain-3
