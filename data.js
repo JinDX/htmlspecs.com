@@ -815,12 +815,12 @@ const cssLinks = [
         src: "https://www.w3.org/TR/css-scroll-anchoring-1/",
         "last-modified": "Wed, 11 Nov 2020 23:04:41 GMT"
     },
-    // {
-    //     text: "CSS Will Change Module Level 1",
-    //     href: "https://htmlspecs.com/css/css-will-change-1",
-    //     src: "https://www.w3.org/TR/css-will-change-1/",
-    //     "last-modified": "Fri, 29 Apr 2022 19:43:57 GMT"
-    // },
+    {
+        text: "CSS Will Change Module Level 1",
+        href: "https://htmlspecs.com/css/css-will-change-1",
+        src: "https://www.w3.org/TR/css-will-change-1/",
+        "last-modified": "Fri, 29 Apr 2022 19:43:57 GMT"
+    },
     // Nesting and Variables
     {
         text: "CSS Nesting Module Level 1",
