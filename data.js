@@ -552,12 +552,12 @@ const cssLinks = [
         src: "https://www.w3.org/TR/css-color-5/",
         "last-modified": "Tue, 27 Feb 2024 16:44:48 GMT"
     },
-    // {
-    //     text: "CSS Color Adjustment Module Level 1",
-    //     href: "https://htmlspecs.com/css/css-color-adjust-1",
-    //     src: "https://www.w3.org/TR/css-color-adjust-1/",
-    //     "last-modified": "Tue, 14 Jun 2022 20:58:16 GMT"
-    // },
+    {
+        text: "CSS Color Adjustment Module Level 1",
+        href: "https://htmlspecs.com/css/css-color-adjust-1",
+        src: "https://www.w3.org/TR/css-color-adjust-1/",
+        "last-modified": "Tue, 14 Jun 2022 20:58:16 GMT"
+    },
     {
         text: "CSS Filter Effects Module Level 1",
         href: "https://htmlspecs.com/css/filter-effects-1",
