@@ -667,6 +667,12 @@ const cssLinks = [
         src: "https://www.w3.org/TR/css-shapes-1/",
         "last-modified": "Thu, 10 Nov 2022 21:13:52 GMT"
     },
+    {
+        text: "CSS Positioned Layout Module Level 3",
+        href: "https://htmlspecs.com/css/css-position-3",
+        src: "https://www.w3.org/TR/css-position-3/",
+        "last-modified": "Sat, 10 Aug 2024 00:17:07 GMT"
+    },
 
     //Navigation
     {

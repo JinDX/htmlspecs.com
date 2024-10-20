@@ -49,7 +49,7 @@ HTML 及相关 API，CSS 标准系列。
 - [x] CSS Will Change Module Level 1 https://htmlspecs.com/css/css-will-change-1
 - [x] CSS Box Sizing Module Level 3 https://htmlspecs.com/css/css-sizing-3
 - [x] CSS Lists and Counters Module Level 3 https://htmlspecs.com/css/css-lists-3
-- [ ] CSS Positioned Layout Module Level 3 https://www.w3.org/TR/css-position-3
+- [x] CSS Positioned Layout Module Level 3 https://htmlspecs.com/css/css-position-3
 - [ ] CSS Color Adjustment Module Level 1 https://www.w3.org/TR/css-color-adjust-1
 - [ ] CSS Conditional Rules Module Level 4 https://www.w3.org/TR/css-conditional-4
 - [ ] Media Queries Level 4 https://www.w3.org/TR/mediaqueries-4
