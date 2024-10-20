@@ -51,7 +51,7 @@ HTML 及相关 API，CSS 标准系列。
 - [x] CSS Lists and Counters Module Level 3 https://htmlspecs.com/css/css-lists-3
 - [x] CSS Positioned Layout Module Level 3 https://htmlspecs.com/css/css-position-3
 - [x] CSS Color Adjustment Module Level 1 https://htmlspecs.com/css/css-color-adjust-1
-- [ ] CSS Conditional Rules Module Level 4 https://htmlspecs.com/css/css-conditional-4
+- [x] CSS Conditional Rules Module Level 4 https://htmlspecs.com/css/css-conditional-4
 - [ ] Media Queries Level 4 https://htmlspecs.com/css/mediaqueries-4
 - [ ] CSS Writing Modes Level 4 https://htmlspecs.com/css/css-writing-modes-4
 - [ ] CSS Fragmentation Module Level 3 https://htmlspecs.com/css/css-break-3

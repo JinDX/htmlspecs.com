@@ -572,12 +572,12 @@ const cssLinks = [
     },
 
     //Conditional Rules
-    // {
-    //     text: "CSS Conditional Rules Module Level 4",
-    //     href: "https://htmlspecs.com/css/css-conditional-4",
-    //     src: "https://www.w3.org/TR/css-conditional-4/",
-    //     "last-modified": "Tue, 15 Feb 2022 15:32:38 GMT"
-    // },
+    {
+        text: "CSS Conditional Rules Module Level 4",
+        href: "https://htmlspecs.com/css/css-conditional-4",
+        src: "https://www.w3.org/TR/css-conditional-4/",
+        "last-modified": "Tue, 15 Feb 2022 15:32:38 GMT"
+    },
 
     // Fonts
     {
