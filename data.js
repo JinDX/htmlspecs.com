@@ -484,12 +484,12 @@ const cssLinks = [
         src: "https://www.w3.org/TR/css-box-3/",
         "last-modified": "Thu, 04 Apr 2024 18:41:52 GMT"
     },
-    // {
-    //     text: "CSS Box Sizing Module Level 3",
-    //     href: "https://htmlspecs.com/css/css-sizing-3",
-    //     src: "https://www.w3.org/TR/css-sizing-3/",
-    //     "last-modified": "Fri, 17 Dec 2021 00:34:42 GMT"
-    // },
+    {
+        text: "CSS Box Sizing Module Level 3",
+        href: "https://htmlspecs.com/css/css-sizing-3",
+        src: "https://www.w3.org/TR/css-sizing-3/",
+        "last-modified": "Fri, 17 Dec 2021 00:34:42 GMT"
+    },
     {
         text: "CSS Box Model Level 4",
         href: "https://htmlspecs.com/css/css-box-4",
