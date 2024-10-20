@@ -552,6 +552,12 @@ const cssLinks = [
         src: "https://www.w3.org/TR/css-color-5/",
         "last-modified": "Tue, 27 Feb 2024 16:44:48 GMT"
     },
+    // {
+    //     text: "CSS Color Adjustment Module Level 1",
+    //     href: "https://htmlspecs.com/css/css-color-adjust-1",
+    //     src: "https://www.w3.org/TR/css-color-adjust-1/",
+    //     "last-modified": "Tue, 14 Jun 2022 20:58:16 GMT"
+    // },
     {
         text: "CSS Filter Effects Module Level 1",
         href: "https://htmlspecs.com/css/filter-effects-1",
@@ -564,6 +570,14 @@ const cssLinks = [
         src: "https://www.w3.org/TR/compositing-1/",
         "last-modified": "Sat, 16 Mar 2024 21:04:22 GMT"
     },
+
+    //Conditional Rules
+    // {
+    //     text: "CSS Conditional Rules Module Level 4",
+    //     href: "https://htmlspecs.com/css/css-conditional-4",
+    //     src: "https://www.w3.org/TR/css-conditional-4/",
+    //     "last-modified": "Tue, 15 Feb 2022 15:32:38 GMT"
+    // },
 
     // Fonts
     {
@@ -610,6 +624,15 @@ const cssLinks = [
         src: "https://www.w3.org/TR/css-lists-3/",
         "last-modified": "Tue, 17 Nov 2020 23:31:07 GMT"
     },
+
+    // Text Decoration
+    // {
+    //     text: "CSS Text Decoration Level 3",
+    //     href: "https://htmlspecs.com/css/css-text-decor-3",
+    //     src: "https://www.w3.org/TR/css-text-decor-3/",
+    //     "last-modified": "Thu, 05 May 2022 03:12:22 GMT"
+    // },
+
     // Media Queries
     {
         text: "Media Queries Level 3",
@@ -617,6 +640,12 @@ const cssLinks = [
         src: "https://www.w3.org/TR/mediaqueries-3/",
         "last-modified": "Tue, 21 May 2024 05:35:40 GMT"
     },
+    // {
+    //     text: "Media Queries Level 4",
+    //     href: "https://htmlspecs.com/css/mediaqueries-4",
+    //     src: "https://www.w3.org/TR/mediaqueries-4/",
+    //     "last-modified": "Sat, 25 Dec 2021 14:04:37 GMT"
+    // },
     {
         text: "Media Queries Level 5",
         href: "https://htmlspecs.com/css/mediaqueries-5",
@@ -689,6 +718,21 @@ const cssLinks = [
         src: "https://www.w3.org/TR/css-writing-modes-3/",
         "last-modified": "Thu, 30 Apr 2020 16:55:21 GMT"
     },
+    // {
+    //     text: "CSS Writing Modes Level 4",
+    //     href: "https://htmlspecs.com/css/css-writing-modes-4",
+    //     src: "https://www.w3.org/TR/css-writing-modes-4/",
+    //     "last-modified": "Thu, 30 Apr 2020 16:57:43 GMT"
+    // },
+
+    //Fragmentation
+    // {
+    //     text: "CSS Fragmentation Module Level 3",
+    //     href: "https://htmlspecs.com/css/css-break-3",
+    //     src: "https://www.w3.org/TR/css-break-3/",
+    //     "last-modified": "Mon, 03 Dec 2018 03:15:09 GMT"
+    // },
+
 
     // Pseudo-elements
     {
@@ -794,6 +838,14 @@ const cssLinks = [
         src: "https://www.w3.org/TR/css-contain-3/",
         "last-modified": "Thu, 18 Aug 2022 21:50:48 GMT"
     },
+
+    //Speech
+    // {
+    //     text: "CSS Speech Module Level 1",
+    //     href: "https://htmlspecs.com/css/css-speech-1",
+    //     src: "https://www.w3.org/TR/css-speech-1/",
+    //     "last-modified": "Tue, 14 Feb 2023 01:37:24 GMT"
+    // },
 
     // Others
     {
