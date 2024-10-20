@@ -45,7 +45,7 @@ HTML 及相关 API，CSS 标准系列。
 - [x] CSS Fonts Level 3 https://htmlspecs.com/css/css-fonts-3
 - [x] CSS Writing Modes Level 3 https://htmlspecs.com/css/css-writing-modes-3
 - [x] CSS Basic User Interface Module Level 3 https://htmlspecs.com/css/css-ui-3
-- [ ] CSS Basic User Interface Module Level 4 https://htmlspecs.com/css/css-ui-4
+- [x] CSS Basic User Interface Module Level 4 https://htmlspecs.com/css/css-ui-4
 - [ ] CSS Will Change Module Level 1 https://htmlspecs.com/css/css-will-change-1
 - [ ] CSS Box Sizing Module Level 3 https://htmlspecs.com/css/css-sizing-3
 - [ ] CSS Lists and Counters Module Level 3 https://www.w3.org/TR/css-lists-3

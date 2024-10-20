@@ -452,12 +452,12 @@ const cssLinks = [
         src: "https://www.w3.org/TR/css-ui-3/",
         "last-modified": "Thu, 21 Jun 2018 16:29:59 GMT"
     },
-    // {
-    //     text: "CSS Basic User Interface Module Level 4",
-    //     href: "https://htmlspecs.com/css/css-ui-4",
-    //     src: "https://www.w3.org/TR/css-ui-4/",
-    //     "last-modified": "Tue, 16 Mar 2021 06:16:37 GMT"
-    // },
+    {
+        text: "CSS Basic User Interface Module Level 4",
+        href: "https://htmlspecs.com/css/css-ui-4",
+        src: "https://www.w3.org/TR/css-ui-4/",
+        "last-modified": "Tue, 16 Mar 2021 06:16:37 GMT"
+    },
     {
         text: "CSS Syntax Module Level 3",
         href: "https://htmlspecs.com/css/css-syntax-3",
