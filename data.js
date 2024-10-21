@@ -725,13 +725,13 @@ const cssLinks = [
         "last-modified": "Thu, 30 Apr 2020 16:57:43 GMT"
     },
 
-    //Fragmentation
-    // {
-    //     text: "CSS Fragmentation Module Level 3",
-    //     href: "https://htmlspecs.com/css/css-break-3",
-    //     src: "https://www.w3.org/TR/css-break-3/",
-    //     "last-modified": "Mon, 03 Dec 2018 03:15:09 GMT"
-    // },
+    Fragmentation
+    {
+        text: "CSS Fragmentation Module Level 3",
+        href: "https://htmlspecs.com/css/css-break-3",
+        src: "https://www.w3.org/TR/css-break-3/",
+        "last-modified": "Mon, 03 Dec 2018 03:15:09 GMT"
+    },
 
 
     // Pseudo-elements
