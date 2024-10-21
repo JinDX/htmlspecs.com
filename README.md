@@ -53,7 +53,7 @@ HTML 及相关 API，CSS 标准系列。
 - [x] CSS Color Adjustment Module Level 1 https://htmlspecs.com/css/css-color-adjust-1
 - [x] CSS Conditional Rules Module Level 4 https://htmlspecs.com/css/css-conditional-4
 - [x] Media Queries Level 4 https://htmlspecs.com/css/mediaqueries-4
-- [ ] CSS Writing Modes Level 4 https://htmlspecs.com/css/css-writing-modes-4
+- [x] CSS Writing Modes Level 4 https://htmlspecs.com/css/css-writing-modes-4
 - [ ] CSS Fragmentation Module Level 3 https://htmlspecs.com/css/css-break-3
 - [ ] CSS Text Decoration Level 3 https://htmlspecs.com/css/css-text-decor-3
 - [ ] CSS Speech Module Level 1 https://htmlspecs.com/css/css-speech-1

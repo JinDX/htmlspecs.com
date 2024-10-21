@@ -718,12 +718,12 @@ const cssLinks = [
         src: "https://www.w3.org/TR/css-writing-modes-3/",
         "last-modified": "Thu, 30 Apr 2020 16:55:21 GMT"
     },
-    // {
-    //     text: "CSS Writing Modes Level 4",
-    //     href: "https://htmlspecs.com/css/css-writing-modes-4",
-    //     src: "https://www.w3.org/TR/css-writing-modes-4/",
-    //     "last-modified": "Thu, 30 Apr 2020 16:57:43 GMT"
-    // },
+    {
+        text: "CSS Writing Modes Level 4",
+        href: "https://htmlspecs.com/css/css-writing-modes-4",
+        src: "https://www.w3.org/TR/css-writing-modes-4/",
+        "last-modified": "Thu, 30 Apr 2020 16:57:43 GMT"
+    },
 
     //Fragmentation
     // {
