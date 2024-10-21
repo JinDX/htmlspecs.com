@@ -626,12 +626,12 @@ const cssLinks = [
     },
 
     // Text Decoration
-    // {
-    //     text: "CSS Text Decoration Level 3",
-    //     href: "https://htmlspecs.com/css/css-text-decor-3",
-    //     src: "https://www.w3.org/TR/css-text-decor-3/",
-    //     "last-modified": "Thu, 05 May 2022 03:12:22 GMT"
-    // },
+    {
+        text: "CSS Text Decoration Level 3",
+        href: "https://htmlspecs.com/css/css-text-decor-3",
+        src: "https://www.w3.org/TR/css-text-decor-3/",
+        "last-modified": "Thu, 05 May 2022 03:12:22 GMT"
+    },
 
     // Media Queries
     {
@@ -725,7 +725,7 @@ const cssLinks = [
         "last-modified": "Thu, 30 Apr 2020 16:57:43 GMT"
     },
 
-    Fragmentation
+    //Fragmentation
     {
         text: "CSS Fragmentation Module Level 3",
         href: "https://htmlspecs.com/css/css-break-3",
