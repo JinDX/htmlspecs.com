@@ -840,12 +840,12 @@ const cssLinks = [
     },
 
     //Speech
-    // {
-    //     text: "CSS Speech Module Level 1",
-    //     href: "https://htmlspecs.com/css/css-speech-1",
-    //     src: "https://www.w3.org/TR/css-speech-1/",
-    //     "last-modified": "Tue, 14 Feb 2023 01:37:24 GMT"
-    // },
+    {
+        text: "CSS Speech Module Level 1",
+        href: "https://htmlspecs.com/css/css-speech-1",
+        src: "https://www.w3.org/TR/css-speech-1/",
+        "last-modified": "Tue, 14 Feb 2023 01:37:24 GMT"
+    },
 
     // Others
     {
