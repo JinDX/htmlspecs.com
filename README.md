@@ -83,7 +83,7 @@ HTML 及相关 API，CSS 标准系列。
 
 
 ## CSS
-- [Cascading Style Sheets Level 2 Revision 2 (CSS 2.2)](https://htmlspecs.com/css/css22)（[Source](https://www.w3.org/TR/CSS22/)
+- [Cascading Style Sheets Level 2 Revision 2 (CSS 2.2)](https://htmlspecs.com/css/css22)（[Source](https://www.w3.org/TR/CSS22/) - 工作草案）
 
 ### 颜色
 - [CSS Color Module Level 3](https://htmlspecs.com/css/css-color-3)（[Source](https://www.w3.org/TR/2022/REC-css-color-3-20220118/) - 推荐标准）
