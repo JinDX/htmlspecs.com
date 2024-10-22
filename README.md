@@ -9,7 +9,7 @@ HTML 及相关 API，CSS 标准系列。
 - [URL](https://htmlspecs.com/url)（[Source](https://url.spec.whatwg.org/)）
 - [URL Pattern](https://htmlspecs.com/urlpattern)（[Source](https://urlpattern.spec.whatwg.org/)）
 - [Web IDL](https://htmlspecs.com/webidl)（[Source](https://webidl.spec.whatwg.org/)）
-- [Web Application Manifest](https://htmlspecs.com/appmanifest)（[Source](https://www.w3.org/TR/2024/WD-appmanifest-20241011/) - 草案状态）
+- [Web Application Manifest](https://htmlspecs.com/appmanifest)（[Source](https://www.w3.org/TR/2024/WD-appmanifest-20241011/) - 工作草案）
 
 ### 可访问性
 - [WCAG 2.2](https://htmlspecs.com/WCAG22)（[Source](https://www.w3.org/TR/2023/REC-WCAG22-20231005/) - 推荐标准）
@@ -18,65 +18,65 @@ HTML 及相关 API，CSS 标准系列。
 - [Fetch](https://htmlspecs.com/fetch)（[Source](https://fetch.spec.whatwg.org/)）
 - [XMLHttpRequest](https://htmlspecs.com/xhr)（[Source](https://xhr.spec.whatwg.org/)）
 - [WebSockets](https://htmlspecs.com/websockets)（[Source](https://websockets.spec.whatwg.org/)）
-- [WebTransport](https://htmlspecs.com/webtransport)（[Source](https://www.w3.org/TR/2024/WD-webtransport-20240531/) - 草案状态）
+- [WebTransport](https://htmlspecs.com/webtransport)（[Source](https://www.w3.org/TR/2024/WD-webtransport-20240531/) - 工作草案）
 - [Service Workers](https://htmlspecs.com/service-workers)（[Source](https://www.w3.org/TR/2022/CRD-service-workers-20220712/) - 候选推荐标准）
-- [Push API](https://htmlspecs.com/push-api)（[Source](https://www.w3.org/TR/2024/WD-push-api-20240903/) - 草案状态）
+- [Push API](https://htmlspecs.com/push-api)（[Source](https://www.w3.org/TR/2024/WD-push-api-20240903/) - 工作草案）
 - [WebRTC](https://htmlspecs.com/webrtc)（[Source](https://www.w3.org/TR/2024/REC-webrtc-20241008/) - 推荐标准）
 - [Payment Request API](https://htmlspecs.com/payment-request)（[Source](https://www.w3.org/TR/2024/CRD-payment-request-20240909/) - 候选推荐标准）
-- [Background Fetch](https://htmlspecs.com/background-fetch)（[Source](https://wicg.github.io/background-fetch/)）
+- [Background Fetch](https://htmlspecs.com/background-fetch)（[Source](https://wicg.github.io/background-fetch/) - 社区组草案报告）
 
 ### 存储和数据
-- [Indexed Database API 3.0](https://htmlspecs.com/IndexedDB)（[Source](https://www.w3.org/TR/2024/WD-IndexedDB-3-20241015/) - 草案状态）
+- [Indexed Database API 3.0](https://htmlspecs.com/IndexedDB)（[Source](https://www.w3.org/TR/2024/WD-IndexedDB-3-20241015/) - 工作草案）
 - [Storage](https://htmlspecs.com/storage)（[Source](https://storage.spec.whatwg.org/)）
-- [File API](https://htmlspecs.com/FileAPI)（[Source](https://www.w3.org/TR/2024/WD-FileAPI-20240524/)）
-- [Cookie Store API](https://htmlspecs.com/cookie-store)（[Source](https://wicg.github.io/cookie-store/)）
-- [File and Directory Entries API](https://htmlspecs.com/entries-api)（[Source](https://wicg.github.io/entries-api/)）
-- [Web Locks API](https://htmlspecs.com/web-locks)（[Source](https://www.w3.org/TR/2023/WD-web-locks-20230105/) - 草案状态）
+- [File API](https://htmlspecs.com/FileAPI)（[Source](https://www.w3.org/TR/2024/WD-FileAPI-20240524/) - 工作草案）
+- [Cookie Store API](https://htmlspecs.com/cookie-store)（[Source](https://wicg.github.io/cookie-store/) - 社区组草案报告）
+- [File and Directory Entries API](https://htmlspecs.com/entries-api)（[Source](https://wicg.github.io/entries-api/) - 社区组草案报告）
+- [Web Locks API](https://htmlspecs.com/web-locks)（[Source](https://www.w3.org/TR/2023/WD-web-locks-20230105/) - 工作草案）
 
 ### 设备和硬件访问
-- [Pointer Events](https://htmlspecs.com/pointerevents)（[Source](https://www.w3.org/TR/pointerevents/)）
-- [Visual Viewport API](https://htmlspecs.com/visual-viewport)（[Source](https://www.w3.org/TR/2019/REC-pointerevents2-20190404/)）
-- [Screen Orientation](https://htmlspecs.com/screen-orientation)（[Source](https://www.w3.org/TR/2023/WD-screen-orientation-20230809/) - 草案状态）
-- [EyeDropper API](https://htmlspecs.com/eyedropper-api)（[Source](https://wicg.github.io/eyedropper-api/)）
+- [Pointer Events](https://htmlspecs.com/pointerevents)（[Source](https://www.w3.org/TR/pointerevents/) - 推荐标准）
+- [Visual Viewport API](https://htmlspecs.com/visual-viewport)（[Source](https://www.w3.org/TR/2019/REC-pointerevents2-20190404/) - 社区组草案报告）
+- [Screen Orientation](https://htmlspecs.com/screen-orientation)（[Source](https://www.w3.org/TR/2023/WD-screen-orientation-20230809/) - 工作草案）
+- [EyeDropper API](https://htmlspecs.com/eyedropper-api)（[Source](https://wicg.github.io/eyedropper-api/) - 社区组草案报告）
 - [Fullscreen](https://htmlspecs.com/fullscreen)（[Source](https://fullscreen.spec.whatwg.org/)）
-- [Screen Capture](https://htmlspecs.com/screen-capture)（[Source](https://www.w3.org/TR/2024/WD-screen-capture-20240627/)）
-- [Touch Events - Level 2](https://htmlspecs.com/touchevents)（[Source](https://w3c.github.io/touch-events/)）
-- [Contact Picker API](https://htmlspecs.com/contact-picker)（[Source](https://www.w3.org/TR/2024/WD-contact-picker-20240708/) - 草案状态）
+- [Screen Capture](https://htmlspecs.com/screen-capture)（[Source](https://www.w3.org/TR/2024/WD-screen-capture-20240627/) - 工作草案 ）
+- [Touch Events - Level 2](https://htmlspecs.com/touchevents)（[Source](https://w3c.github.io/touch-events/) - 社区组最终报告）
+- [Contact Picker API](https://htmlspecs.com/contact-picker)（[Source](https://www.w3.org/TR/2024/WD-contact-picker-20240708/) - 工作草案）
 - [Notifications API](https://htmlspecs.com/notifications)（[Source](https://notifications.spec.whatwg.org/)）
-- [Badging API](https://htmlspecs.com/badging)（[Source](https://www.w3.org/TR/2023/WD-badging-20230503/) - 草案状态）
-- [Virtual Keyboard](https://htmlspecs.com/virtual-keyboard)（[Source](https://www.w3.org/TR/2022/WD-virtual-keyboard-20220505/) - 草案状态）
-- [Web Share API](https://htmlspecs.com/web-share)（[Source](https://www.w3.org/TR/2023/REC-web-share-20230530/)）
-- [Web Audio API](https://htmlspecs.com/webaudio)（[Source](https://www.w3.org/TR/2021/REC-webaudio-20210617/)）
+- [Badging API](https://htmlspecs.com/badging)（[Source](https://www.w3.org/TR/2023/WD-badging-20230503/) - 工作草案）
+- [Virtual Keyboard](https://htmlspecs.com/virtual-keyboard)（[Source](https://www.w3.org/TR/2022/WD-virtual-keyboard-20220505/) - 工作草案）
+- [Web Share API](https://htmlspecs.com/web-share)（[Source](https://www.w3.org/TR/2023/REC-web-share-20230530/) - 推荐标准）
+- [Web Audio API](https://htmlspecs.com/webaudio)（[Source](https://www.w3.org/TR/2021/REC-webaudio-20210617/) - 推荐标准）
 - [Geolocation API](https://htmlspecs.com/geolocation)（[Source](https://www.w3.org/TR/2024/REC-geolocation-20240916/) - 推荐标准）
-- [Device Orientation and Motion](https://htmlspecs.com/orientation-event)（[Source](https://www.w3.org/TR/2024/WD-orientation-event-20240514/)）
-- [Pointer Lock 2.0](https://htmlspecs.com/pointerlock)（[Source](https://www.w3.org/TR/2024/WD-pointerlock-2-20240617/)）
-- [Clipboard API and events](https://htmlspecs.com/clipboard-apis)（[Source](https://www.w3.org/TR/2023/WD-clipboard-apis-20230516/)）
-- [Input Events Level 1](https://htmlspecs.com/input-events-1)（[Source](https://www.w3.org/TR/2023/DISC-input-events-1-20230928/)）
-- [Input Events Level 2](https://htmlspecs.com/input-events-2)（[Source](https://www.w3.org/TR/2024/WD-input-events-2-20241018/)）
-- [Permissions](https://htmlspecs.com/permissions)（[Source](https://www.w3.org/TR/2024/WD-permissions-20240319/)）
-- [WebOTP API](https://htmlspecs.com/web-otp)（[Source](https://wicg.github.io/web-otp/)）
-- [Device Posture API](https://htmlspecs.com/device-posture)（[Source](https://www.w3.org/TR/2024/WD-device-posture-20241007/) - 草案状态）
+- [Device Orientation and Motion](https://htmlspecs.com/orientation-event)（[Source](https://www.w3.org/TR/2024/WD-orientation-event-20240514/) - 工作草案）
+- [Pointer Lock 2.0](https://htmlspecs.com/pointerlock)（[Source](https://www.w3.org/TR/2024/WD-pointerlock-2-20240617/) - 工作草案）
+- [Clipboard API and events](https://htmlspecs.com/clipboard-apis)（[Source](https://www.w3.org/TR/2023/WD-clipboard-apis-20230516/) -  工作草案）
+- [Input Events Level 1](https://htmlspecs.com/input-events-1)（[Source](https://www.w3.org/TR/2023/DISC-input-events-1-20230928/) - 停止草案）
+- [Input Events Level 2](https://htmlspecs.com/input-events-2)（[Source](https://www.w3.org/TR/2024/WD-input-events-2-20241018/) - 工作草案）
+- [Permissions](https://htmlspecs.com/permissions)（[Source](https://www.w3.org/TR/2024/WD-permissions-20240319/) - 工作草案）
+- [WebOTP API](https://htmlspecs.com/web-otp)（[Source](https://wicg.github.io/web-otp/) - 社区组草案报告）
+- [Device Posture API](https://htmlspecs.com/device-posture)（[Source](https://www.w3.org/TR/2024/WD-device-posture-20241007/) - 工作草案）
 
 ### 性能和观察者
 - [Performance Timeline](https://htmlspecs.com/performance-timeline)（[Source](https://www.w3.org/TR/2024/CRD-performance-timeline-20240216/) - 候选推荐标准）
-- [Intersection Observer](https://htmlspecs.com/intersection-observer)（[Source](https://www.w3.org/TR/2023/WD-intersection-observer-20231018/) - 草案状态）
-- [Resize Observer](https://htmlspecs.com/resize-observer)（[Source](https://www.w3.org/TR/2020/WD-resize-observer-1-20200211/)）
-- [Navigation Timing Level 2](https://htmlspecs.com/navigation-timing-2)（[Source](https://www.w3.org/TR/2024/WD-navigation-timing-2-20240729/) - 草案状态）
+- [Intersection Observer](https://htmlspecs.com/intersection-observer)（[Source](https://www.w3.org/TR/2023/WD-intersection-observer-20231018/) - 工作草案）
+- [Resize Observer](https://htmlspecs.com/resize-observer)（[Source](https://www.w3.org/TR/2020/WD-resize-observer-1-20200211/) - 工作草案）
+- [Navigation Timing Level 2](https://htmlspecs.com/navigation-timing-2)（[Source](https://www.w3.org/TR/2024/WD-navigation-timing-2-20240729/) - 工作草案）
 - [Resource Timing](https://htmlspecs.com/resource-timing)（[Source](https://www.w3.org/TR/2024/CRD-resource-timing-20240524/) - 候选推荐标准）
-- [User Timing Level 2](https://htmlspecs.com/user-timing-2)（[Source](https://www.w3.org/TR/2019/REC-user-timing-2-20190226/)）
+- [User Timing Level 2](https://htmlspecs.com/user-timing-2)（[Source](https://www.w3.org/TR/2019/REC-user-timing-2-20190226/) - 推荐标准）
 
 ### 安全和认证
-- [Web Authentication Level 2](https://htmlspecs.com/webauthn-2)（[Source](https://www.w3.org/TR/2021/REC-webauthn-2-20210408/)）
-- [HTML Sanitizer API](https://htmlspecs.com/sanitizer-api)（[Source](https://wicg.github.io/sanitizer-api/)）
-- [Subresource Integrity (SRI)](https://htmlspecs.com/SRI)（[Source](https://www.w3.org/TR/2016/REC-SRI-20160623/)）
-- [Content Security Policy Level 3](https://htmlspecs.com/webappsec-csp)（[Source](https://www.w3.org/TR/2024/WD-CSP3-20241014/) - 草案状态）
+- [Web Authentication Level 2](https://htmlspecs.com/webauthn-2)（[Source](https://www.w3.org/TR/2021/REC-webauthn-2-20210408/) - 推荐标准）
+- [HTML Sanitizer API](https://htmlspecs.com/sanitizer-api)（[Source](https://wicg.github.io/sanitizer-api/) - 社区组草案）
+- [Subresource Integrity (SRI)](https://htmlspecs.com/SRI)（[Source](https://www.w3.org/TR/2016/REC-SRI-20160623/) - 推荐标准）
+- [Content Security Policy Level 3](https://htmlspecs.com/webappsec-csp)（[Source](https://www.w3.org/TR/2024/WD-CSP3-20241014/) - 工作草案）
 
 ### 媒体和图形
-- [Web Animations](https://htmlspecs.com/web-animations-1)（[Source](https://www.w3.org/TR/2023/WD-web-animations-1-20230605/) - 草案状态）
-- [SVG 2](https://htmlspecs.com/SVG2/)（[Source](https://www.w3.org/TR/2018/CR-SVG2-20181004/)）
-- [Picture-in-Picture](https://htmlspecs.com/picture-in-picture)（[Source](https://www.w3.org/TR/2024/WD-picture-in-picture-20241002/) - 草案状态）
+- [Web Animations](https://htmlspecs.com/web-animations-1)（[Source](https://www.w3.org/TR/2023/WD-web-animations-1-20230605/) - 工作草案）
+- [SVG 2](https://htmlspecs.com/SVG2/)（[Source](https://www.w3.org/TR/2018/CR-SVG2-20181004/) - 候选推荐）
+- [Picture-in-Picture](https://htmlspecs.com/picture-in-picture)（[Source](https://www.w3.org/TR/2024/WD-picture-in-picture-20241002/) - 工作草案）
 - [Presentation API](https://htmlspecs.com/presentation-api)（[Source](https://www.w3.org/TR/2024/CRD-presentation-api-20241008/) - 候选推荐标准）
-- [Scroll-driven Animations](https://htmlspecs.com/scroll-animations-1)（[Source](https://www.w3.org/TR/2023/WD-scroll-animations-1-20230606/)）
+- [Scroll-driven Animations](https://htmlspecs.com/scroll-animations-1)（[Source](https://www.w3.org/TR/2023/WD-scroll-animations-1-20230606/) - 工作草案）
 
 ### 开发者工具
 - [Console](https://htmlspecs.com/console)（[Source](https://console.spec.whatwg.org/)）
@@ -168,10 +168,10 @@ HTML 及相关 API，CSS 标准系列。
 - [CSS Speech Module Level 1](https://htmlspecs.com/css/css-speech-1)（[Source](https://www.w3.org/TR/2023/CRD-css-speech-1-20230214/) - 候选推荐标准）
 
 ### 其他
-- [CSS Snapshot 2023](https://htmlspecs.com/css/css-2023)（[Source](https://www.w3.org/TR/css-2023/)/) - 工作草案）
-- [CSS Namespaces](https://htmlspecs.com/css/css-namespaces-3)（[Source](https://www.w3.org/TR/2014/REC-css-namespaces-3-20140320/)/) - 推荐标准）
-- [Selectors Level 3](https://htmlspecs.com/css/selectors-3)（[Source](https://www.w3.org/TR/2018/REC-selectors-3-20181106/)/) - 推荐标准）
-- [CSS Style Attributes](https://htmlspecs.com/css/css-style-attr)（[Source](https://www.w3.org/TR/2013/REC-css-style-attr-20131107/)/) - 推荐标准）
+- [CSS Snapshot 2023](https://htmlspecs.com/css/css-2023)（[Source](https://www.w3.org/TR/css-2023/) - 工作草案）
+- [CSS Namespaces](https://htmlspecs.com/css/css-namespaces-3)（[Source](https://www.w3.org/TR/2014/REC-css-namespaces-3-20140320/) - 推荐标准）
+- [Selectors Level 3](https://htmlspecs.com/css/selectors-3)（[Source](https://www.w3.org/TR/2018/REC-selectors-3-20181106/) - 推荐标准）
+- [CSS Style Attributes](https://htmlspecs.com/css/css-style-attr)（[Source](https://www.w3.org/TR/2013/REC-css-style-attr-20131107/) - 推荐标准）
 - [CSS Overscroll Behavior Module Level 1](https://htmlspecs.com/css/css-overscroll-1)（[Source](https://www.w3.org/TR/2019/WD-css-overscroll-1-20190606/) - 工作草案）
 - [CSS Scroll Snap Module Level 1](https://htmlspecs.com/css/css-scroll-snap-1)（[Source](https://www.w3.org/TR/2021/CR-css-scroll-snap-1-20210311/) - 候选推荐标准）
 - [CSS Scroll Snap Module Level 2](https://htmlspecs.com/css/css-scroll-snap-2)（[Source](https://www.w3.org/TR/2024/WD-css-scroll-snap-2-20240723/) - 工作草案）
