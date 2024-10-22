@@ -152,7 +152,7 @@ const links = [
     {
         text: "Pointer Events",
         href: "https://htmlspecs.com/pointerevents",
-        src: "https://www.w3.org/TR/pointerevents/",
+        src: "https://www.w3.org/TR/2019/REC-pointerevents2-20190404/",
         "last-modified": "Tue, 02 Apr 2019 14:26:39 GMT"
     },
     {

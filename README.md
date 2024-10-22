@@ -34,7 +34,7 @@ HTML 及相关 API，CSS 标准系列。
 - [Web Locks API](https://htmlspecs.com/web-locks)（[Source](https://www.w3.org/TR/2023/WD-web-locks-20230105/) - 工作草案）
 
 ### 设备和硬件访问
-- [Pointer Events](https://htmlspecs.com/pointerevents)（[Source](https://www.w3.org/TR/pointerevents/) - 推荐标准）
+- [Pointer Events](https://htmlspecs.com/pointerevents)（[Source](https://www.w3.org/TR/2019/REC-pointerevents2-20190404/) - 推荐标准）
 - [Visual Viewport API](https://htmlspecs.com/visual-viewport)（[Source](https://www.w3.org/TR/2019/REC-pointerevents2-20190404/) - 社区组草案报告）
 - [Screen Orientation](https://htmlspecs.com/screen-orientation)（[Source](https://www.w3.org/TR/2023/WD-screen-orientation-20230809/) - 工作草案）
 - [EyeDropper API](https://htmlspecs.com/eyedropper-api)（[Source](https://wicg.github.io/eyedropper-api/) - 社区组草案报告）
