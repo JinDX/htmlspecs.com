@@ -211,18 +211,10 @@ loadDataScript(function () {
     if (matchingLinks.length > 0) {
         (function addDisclaimer() {
             var disclaimer = document.createElement('div');
-            disclaimer.className = 'transheader';
-            disclaimer.style.cssText = `
-    display: block;
-    border: 2px solid #d1a800;
-    padding: 2%;
-    background: #ffeb66;
-    font-weight: bold;
-    color: #333;
-`;
+            disclaimer.className = 'note';
 
             disclaimer.innerHTML = `
-            <p class="transtitle">【注意】</p>
+            <span class="marker">【注意】</span>
             <p>这是一份志愿者翻译，译文中可能包含错误。本译文仅供参考，应以 W3C 网站上的原始英文版本（<a href='${matchingLinks[0].src}'>${matchingLinks[0].text}</a>）为准。</p>
         `;
 
