@@ -401,7 +401,7 @@ const cssLinks = [
     {
         text: "CSS 2.2 Specification",
         href: "https://htmlspecs.com/css/css22/",
-        src: "http://www.w3.org/TR/2016/WD-CSS22-20160412/",
+        src: "https://www.w3.org/TR/2016/WD-CSS22-20160412/",
         "last-modified": "Fri, 08 Apr 2016 13:16:51 GMT"
     },
     {
