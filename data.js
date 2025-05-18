@@ -4,7 +4,7 @@ const links = [
         text: "HTML",
         href: "https://htmlspecs.com/",
         src: "https://html.spec.whatwg.org/multipage/",
-        "last-modified": "Thu, 19 Sep 2024 08:12:39 GMT"
+        "last-modified": "Fri, 16 May 2025 12:26:23 GMT"
     },
     {
         text: "ECMA-262",
@@ -139,7 +139,7 @@ const links = [
         text: "File and Directory Entries API",
         href: "https://htmlspecs.com/entries-api",
         src: "https://wicg.github.io/entries-api/",
-        "last-modified": "Fri, 07 Jun 2024 22:07:08 GMT"
+        "last-modified": "Tue, 04 Feb 2025 17:11:37 GMT"
     },
     {
         text: "Web Locks API",
