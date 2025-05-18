@@ -94,8 +94,8 @@ const links = [
     {
         text: "WebRTC",
         href: "https://htmlspecs.com/webrtc",
-        src: "https://www.w3.org/TR/2024/REC-webrtc-20241008/",
-        "last-modified": "Tue, 08 Oct 2024 08:37:20 GMT"
+        src: "https://www.w3.org/TR/2025/REC-webrtc-20250313/",
+        "last-modified": "Fri, 14 Mar 2025 10:25:11 GMT"
     },
     {
         text: "Payment Request API",
