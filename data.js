@@ -16,7 +16,7 @@ const links = [
         text: "DOM",
         href: "https://htmlspecs.com/dom",
         src: "https://dom.spec.whatwg.org/",
-        "last-modified": "Fri, 20 Sep 2024 15:16:50 GMT"
+        "last-modified": "Mon, 14 Apr 2025 15:51:50 GMT"
     },
     {
         text: "Web IDL",
