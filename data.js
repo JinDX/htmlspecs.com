@@ -384,7 +384,7 @@ const links = [
         text: "Console",
         href: "https://htmlspecs.com/console",
         src: "https://console.spec.whatwg.org/",
-        "last-modified": "Mon, 23 Sep 2024 18:57:53 GMT"
+        "last-modified": "Mon, 16 Dec 2024 08:57:48 GMT"
     }
 ];
 
