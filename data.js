@@ -65,7 +65,7 @@ const links = [
         text: "XMLHttpRequest ",
         href: "https://htmlspecs.com/xhr",
         src: "https://xhr.spec.whatwg.org/",
-        "last-modified": "Mon, 12 Aug 2024 13:13:47 GMT"
+        "last-modified": "Tue, 11 Mar 2025 01:01:51 GMT"
     },
     {
         text: "WebSockets",
