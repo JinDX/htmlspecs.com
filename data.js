@@ -51,7 +51,7 @@ const links = [
         text: "URL Pattern",
         href: "https://htmlspecs.com/urlpattern",
         src: "https://urlpattern.spec.whatwg.org/",
-        "last-modified": "Thu, 29 Aug 2024 15:13:13 GMT"
+        "last-modified": "Wed, 26 Mar 2025 12:10:10 GMT"
     },
 
     // Network and Communication
