@@ -273,7 +273,7 @@ const links = [
         text: "WebOTP API",
         href: "https://htmlspecs.com/web-otp",
         src: "https://wicg.github.io/web-otp/",
-        "last-modified": "Mon, 28 Mar 2022 23:43:35 GMT"
+        "last-modified": "Tue, 04 Feb 2025 17:18:16 GMT"
     },
     {
         text: "Device Posture API",
