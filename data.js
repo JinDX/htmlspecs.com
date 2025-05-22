@@ -133,7 +133,7 @@ const links = [
         text: "Cookie Store API",
         href: "https://htmlspecs.com/cookie-store",
         src: "https://wicg.github.io/cookie-store/",
-        "last-modified": "Mon, 15 Jul 2024 17:09:29 GMT"
+        "last-modified": "Tue, 13 May 2025 13:13:51 GMT"
     },
     {
         text: "File and Directory Entries API",
