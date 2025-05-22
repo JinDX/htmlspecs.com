@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Visual Viewport API</title>
+    <meta charset='utf-8'>
+    <script src='https://www.w3.org/Tools/respec/respec-w3c' async class='remove'></script>
+    <script class='remove'>
+        var respecConfig = {
+            specStatus: "CG-DRAFT",
+            latestVersion: null,
+            edDraftURI: "https://wicg.github.io/visual-viewport/",
+            testSuiteURI: "https://github.com/web-platform-tests/wpt/tree/master/visual-viewport",
+            github: "WICG/visual-viewport",
+            editors: [
+                {
+                    name: "David Bokan",
+                    url: "",
+                    company: "Google",
+                    companyURL: "https://www.google.com/"
+                },
+            ],
+            otherLinks: [{
+                key: 'Participation',
+                data: [
+                    {
+                        value: 'Feedback / discussion in the WICG',
+                        href: 'https://discourse.wicg.io/t/explicit-api-for-visual-viewport/1399'
+                    }, {
+                        value: 'Viewport segments discussion',
+                        href: 'https://www.w3.org/2021/02/24-webscreens-minutes'
+                    }
+                ]
+            }],
+            group: "wicg",
+            xref: ["dom", "html", "geometry-1"],
+        };
+    </script>
+    <style>
+        div.monkeypatch:before {
+            content: 'Monkeypatching';
+            color: grey;
+            font-style: italic;
+            float: right;
+            display: block;
+            padding: 2px 10px;
+        }
+
+        div.monkeypatch {
+            padding: 10px 0 0 20px;
+            border-left: 5px solid #EEE5D3;
+            background-color: #FBFAE9;
+        }
+    </style>
+</head>
+
+<body>
+    <section id='abstract'>
+        <p>
+            The APIs introduced by this document provide authors with a way to determine
+            and interact with the properties of the visual viewport.
+        </p>
+    </section>
+
+    <section id='sotd'>
+    </section>
+
+    <section id="intro" class="informative">
+        <h2>Introduction</h2>
+        <p>
+            Some user agents have split their viewport into two conceptual viewports, colloquially
+            known as the <em>visual</em> and <em>layout</em> viewports. This separation is useful in
+            enabling a user agent (UA) with a small screen to allow the user to zoom in on parts of the page
+            without causing the page to respond, for example, by obscuring the user's view with
+            <code>position: fixed</code> elements. As another example, mobile UAs often provide an <em>on-screen
+                keyboard</em> (OSK) for user input. Without the visual/layout split, a <code>position: fixed</code>
+            element would be pushed up when the OSK is shown, obscuring the user's view. Informally,
+            the layout viewport is what the web page uses when laying out its UI while the visual viewport
+            is the box on the page that the user can currently see, accounting for transient UI features like
+            pinch-zoom and the OSK.
+        </p>
+        <p>
+            The existing APIs provided by UAs are ambiguous about which viewport they're relative to. For
+            example, <code>document.scrollingElement.scrollLeft</code> returns the scroll position of the
+            visual viewport while <code>document.scrollingElement.clientWidth</code> returns the width of
+            the layout viewport. <code>getBoundingClientRect</code> returns the rect relative to the layout
+            viewport while positioning non-fixed elements relative to the layout viewport is difficult. This
+            makes building UI that responds to scrolls across mobile and desktop UAs difficult. Worse still,
+            there's no way for the developer to be notified when the visual viewport changes. For example,
+            the only way to know when the user has zoomed is to poll or listen to touch events and continually
+            check <code>window.innerWidth</code>.
+        </p>
+        <p>
+            The Visual Viewport API is designed to provide an explicit mechanism for developers to query and
+            potentially modify the properties of the visual viewport. It also introduces events that allow the
+            page to listen for changes in the visual viewport, allowing UX that explicitly wants to react to
+            these changes to do so. For example, the page could keep a small text-formatting bar above the OSK.
+        </p>
+    </section>
+
+    <section id="conformance"></section>
+
+    <section>
+        <h2>Description</h2>
+        <section id="definition-of-the-visual-viewport">
+            <h3>Definition of the visual viewport</h3>
+            <p>
+                The <dfn>visual viewport</dfn> is a kind of <dfn data-cite="!CSS22/visuren.html#x1">viewport</dfn> whose
+                <dfn data-cite="!cssom-view-1/#scrolling-area">scrolling area</dfn> is
+                another <a>viewport</a>, called the <dfn>layout viewport</dfn>.
+            </p>
+            <p>
+                In addition to scrolling, the <a>visual viewport</a> also allows
+                applying a scale transform to its <a>layout viewport</a>. This
+                transform is applied to the canvas of the <a>layout viewport</a>
+                and does not affect its internal coordinate space.
+            <div class="note">
+                The scale transform on the visual viewport is sometimes
+                referred to as "pinch-zoom". Conceptually, this transform
+                changes the size of the CSS <a>reference pixel</a> but
+                changes the size of the <a>layout viewport</a> proportionally
+                so that it acts like a magnifying glass, without causing
+                reflow of the page's contents.
+            </div>
+            </p>
+            <p>
+                The magnitude of the scale transform is known as the visual
+                viewport's <dfn>scale factor</dfn>
+            </p>
+            <p>
+                The <a>window</a> object has an <dfn>associated</dfn> <a>visual viewport</a>
+                which is a <a>VisualViewport</a> object. Every <a>visual
+                    viewport</a> is associated with exactly one <a>window</a> object
+                that never changes. The <dfn>associated document</dfn> of a <a>visual viewport</a>
+                is the <a data-cite="!HTML#concept-document-window">associated document</a> of its <a>associated</a>
+                window.
+            </p>
+        </section>
+        <section data-dfn-for="Window">
+            <h3>Extensions to the <code>Window</code> interface</h3>
+            <p>
+                This document extends the <code><dfn data-cite="!HTML#window">Window</dfn></code>
+                interface defined by [[HTML]].
+            </p>
+            <pre class="idl">
+            partial interface Window {
+              [SameObject, Replaceable] readonly attribute VisualViewport? visualViewport;
+            };
+          </pre>
+            <dl>
+                <dt><dfn data-dfn-for="Window">visualViewport</dfn></dt>
+                <dd>
+                    If the <a>associated document</a> is
+                    <dfn data-cite="!HTML#fully-active">fully active</dfn>, return the
+                    <a>VisualViewport</a> object <a>associated</a> with the <a>window</a>. Otherwise, return null.
+                    <p class="note">
+                        Intuitively, the VisualViewport object is only returned and useful for a <a>window</a> whose
+                        <dfn data-cite="!HTML#document">Document</dfn> is currently being presented. If a reference is
+                        retained to a
+                        <a>VisualViewport</a> whose <a>associated Document</a> is not being currently presented, the
+                        values in that <a>VisualViewport</a> must not reveal any information about the
+                        <dfn data-cite="!HTML#browsing-context">browsing context</dfn>.
+                    <p>
+                </dd>
+            </dl>
+        </section>
+        <section data-dfn-for="VisualViewport" data-cite="HTML DOM">
+            <h3>The <dfn><code>VisualViewport</code></dfn> interface</h3>
+            <p>
+                A <a>VisualViewport</a> object represents the <a>visual viewport</a> a <a>document</a> is
+                being presented in if it is <a>fully active</a>. Each <a>window</a> in a page has its own distinct
+                <a>VisualViewport</a> object.
+            <p class="note">
+                A document being presented in any browsing context, including a
+                nested browsing context, will have its own visual viewport.
+                However, most user agents modify the visual viewport only on a
+                top-level browsing context. The visual viewport in a nested
+                browsing context is provided for ergonomic reasons.
+            </p>
+            <p class="example">
+                For example: if a script retains a reference to a <a>VisualViewport</a> for an iframe, then
+                navigates the iframe to another location, reading the integral values from the
+                <a>VisualViewport</a> reference will return 0 because its window's Document is no longer
+                being presented in a browsing content; it is no longer fully-active.
+            <p>
+            </p>
+            <p>
+                Unless otherwise stated, all returned values in this section are defined in <dfn
+                    data-cite="!css-values-4#px">CSS pixels</dfn>.
+            </p>
+            <pre class="idl">
+            [Exposed=Window]
+            interface VisualViewport : EventTarget {
+              readonly attribute double offsetLeft;
+              readonly attribute double offsetTop;
+
+              readonly attribute double pageLeft;
+              readonly attribute double pageTop;
+
+              readonly attribute double width;
+              readonly attribute double height;
+
+              readonly attribute double scale;
+
+              readonly attribute FrozenArray&lt;DOMRect>? segments;
+
+              attribute EventHandler onresize;
+              attribute EventHandler onscroll;
+            };
+          </pre>
+            <dl>
+                <dt><dfn>offsetLeft</dfn></dt>
+                <dd>
+                    <p>
+                        If the <a>visual viewport</a>'s <a>associated document</a> is not <a>fully active</a>, return 0.
+                    </p>
+                    <p>
+                        Otherwise, return the offset of the left edge of the <a>visual viewport</a> from the left edge
+                        of the <a>layout viewport</a>.
+                    </p>
+                </dd>
+                <dt><dfn>offsetTop</dfn></dt>
+                <dd>
+                    <p>
+                        If the <a>visual viewport</a>'s <a>associated document</a> is not <a>fully active</a>, return 0.
+                    </p>
+                    <p>
+                        Otherwise, return the offset of the top edge of the visual viewport from the top edge of
+                        the <a>layout viewport</a>.
+                    </p>
+                </dd>
+
+                <dt><dfn>pageLeft</dfn></dt>
+                <dd>
+                    <p>
+                        If the <a>visual viewport</a>'s <a>associated document</a> is not <a>fully active</a>, return 0.
+                    </p>
+                    <p>
+                        Otherwise, return the offset of the left edge of the visual viewport from the left edge of the
+                        <dfn data-cite="!CSS-DISPLAY-3#initial-containing-block">initial containing block</dfn> of the
+                        <a>layout viewport</a>'s <a>document</a>.
+                    </p>
+                </dd>
+                <dt><dfn>pageTop</dfn></dt>
+                <dd>
+                    <p>
+                        If the <a>visual viewport</a>'s <a>associated document</a> is not <a>fully active</a>, return 0.
+                    </p>
+                    <p>
+                        Otherwise, return the offset of the top edge of the visual viewport from the top edge of the
+                        <a>initial containing block</a> of the <a>layout viewport</a>'s <a>document</a>.
+                    </p>
+                </dd>
+
+                <dt><dfn>width</dfn></dt>
+                <dd>
+                    <p>
+                        If the <a>visual viewport</a>'s <a>associated document</a> is not <a>fully active</a>, return 0.
+                    </p>
+                    <p>
+                        Otherwise, return the width of the visual viewport in CSS pixels. This value
+                        excludes the width of any rendered
+                        <dfn data-cite="!CSS-OVERFLOW-4#classic-scrollbars">classic scrollbar</dfn>
+                        that is fixed to the visual viewport.
+                    <div class="note">
+                        A scrollbar that is fixed to the visual viewport is one that does
+                        not change size or location as the visual viewport is zoomed and
+                        panned.
+
+                        Because this value is in CSS pixels, when excluding the scrollbar
+                        width the UA must account for how large the scrollbar is in CSS
+                        pixels. That is, the amount excluded is lessened if the viewport
+                        is zoomed in and the scrollbars don't change size to the user.
+                    </div>
+                    </p>
+                </dd>
+                <dt><dfn>height</dfn></dt>
+                <dd>
+                    <p>
+                        If the <a>visual viewport</a>'s <a>associated document</a> is not <a>fully active</a>, return 0.
+                    </p>
+                    <p>
+                        Otherwise, return the height of the visual viewport in CSS pixels. This value
+                        excludes the height of any rendered
+                        <a>classic scrollbar</a>
+                        that is fixed to the visual viewport.
+                    <div class="note">
+                        Because both the width and height attributes are expressed in CSS pixels, increasing either
+                        page-zoom or pinch-zoom will cause these values to shrink.
+                    </div>
+                    </p>
+                </dd>
+                <dt><dfn>scale</dfn></dt>
+                <dd>
+                    Returns the <a>visual viewport</a>'s <a>scale factor</a>. It can be computed using the following
+                    algorithm:
+                    <div class="note">
+                        Although often referred to as the pinch-zoom scale factor, it can be affected through means
+                        other than pinch-zooming. e.g. When the user agent centers and zooms in on a focused input
+                        element.
+                    </div>
+                    <ol>
+                        <li data-md>
+                            <p>If the <a>visual viewport</a>'s <a>associated document</a> is not <a>fully active</a>,
+                                return 0 and abort these steps.</p>
+                        </li>
+                        <li data-md>
+                            <p>If there is no output device, return 1 and abort these steps.</p>
+                        </li>
+                        <li data-md>
+                            <p>
+                                Let <var>CSS pixel size</var> be the size of a CSS
+                                <code><dfn data-cite="!CSS3-VALUES#reference-pixel">reference pixel</dfn></code>
+                                scaled by the current <dfn data-cite="!CSSOM-VIEW#page-zoom">page zoom</dfn> and the
+                                <a>scale factor</a> of the <a>visual viewport</a> associated with this <a>window</a>
+                            </p>
+                        </li>
+                        <li data-md>
+                            <p>Let <var>device pixel size</var> be the size of a device pixel of the output device.</p>
+                        </li>
+                        <li data-md>
+                            <p>
+                                Let <var>device independent pixel size</var> be the product of <var>device pixel
+                                    size</var> and the
+                                <dfn data-cite="CSSOM-VIEW#dom-window-devicepixelratio">devicePixelRatio</dfn>
+                            <div class="note">
+                                Visual viewport scale (e.g. pinch-zoom) does not affect the devicePixelRatio.
+                            </div>
+                            </p>
+                        </li>
+                        <li data-md>
+                            <p>Return the result of dividing the <var>CSS pixel size</var> by the <var>device
+                                    independent pixel size</var>.
+                        </li>
+                    </ol>
+                </dd>
+                <dt><dfn>segments</dfn></dt>
+                <div class="note">
+                    The viewport segments property is currently in development and considered experimental.
+                </div>
+                <dd>
+                    <p>
+                        Returns an array of DOMRects that represent the dimensions of each existing viewport segment.
+                    </p>
+                    <p>
+                        A viewport segment represents the region of the visual viewport that resides on a separate
+                        display or logical display region.
+                        When the visual viewport spans across some number of physical features of a device, these
+                        features in turn convey a logical separation of the space available for content.
+                    </p>
+                    <p>
+                        <code>segments</code> is null when there is only a single viewport segment. Returns null when
+                        called from within an iframe context.
+                    </p>
+                </dd>
+                <div class="note">
+                    Based on the data returned for each viewport segment, developers will be able to infer the number of
+                    hinges available as well as the hinge orientation.
+                    The browser window can be moved/resized such that the number of segments and/or their dimensions
+                    change. In these cases, resize events will fire at which point authors should re-query this
+                    property, as the returned FrozenArray is just a snapshot of the current state.
+                </div>
+                <dt><dfn>onresize</dfn></dt>
+                <dd>
+                    Event handler attribute for the resize event.
+                </dd>
+                <dt><dfn>onscroll</dfn></dt>
+                <dd>
+                    Event handler attribute for the scroll event.
+                </dd>
+            </dl>
+        </section>
+        <section id="additions-to-resizing-viewports">
+            <h3>Additions to the CSSOM-VIEW <code>Events</code> section</h3>
+            <p>Append following step as the last step of <dfn data-cite="!CSSOM-VIEW#run-the-resize-steps">run the
+                    resize steps</dfn>:</p>
+            <div class="monkeypatch" data-link-for="VisualViewport">
+                <ol start="2">
+                    <li>
+                        If doc's associated <a>Window</a>'s <a>VisualViewport</a>'s <a>scale</a>,
+                        <a>width</a>, or <a>height</a> properties have changed since
+                        the last time these steps were run, [=fire an event=] named
+                        <code>resize</code> at the doc's associated <a>Window</a>'s
+                        <a>VisualViewport</a>.
+                    </li>
+                </ol>
+            </div>
+
+            <p>Replace step 1.1 of <dfn data-cite="!CSSOM-VIEW#run-the-scroll-steps">run the scroll steps</dfn> with:
+            </p>
+            <div class="monkeypatch" data-link-for="VisualViewport">
+                <ol>
+                    <li>
+                        <p>
+                            <strike>If target is a Document, fire an event named scroll that bubbles at target.</strike>
+                        </p>
+                        If <code>target</code> is a <a>Document</a>, [=fire an event=] named <code>scroll</code> that
+                        bubbles at <code>target</code>. Then, [=fire an event=] named <code>scroll</code> at the
+                        <a>VisualViewport</a> of the Document's associated <a>Window</a>.
+                    </li>
+                </ol>
+            </div>
+        </section>
+    </section>
+</body>
+
+</html>

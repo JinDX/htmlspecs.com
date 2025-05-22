@@ -159,7 +159,7 @@ const links = [
         text: "Visual Viewport API",
         href: "https://htmlspecs.com/visual-viewport",
         src: "https://www.w3.org/TR/2019/REC-pointerevents2-20190404/",
-        "last-modified": "Mon, 18 Mar 2024 15:26:37 GMT"
+        "last-modified": "Wed, 30 Apr 2025 19:05:24 GMT"
     },
     {
         text: "Screen Orientation",
