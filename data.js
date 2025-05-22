@@ -158,7 +158,7 @@ const links = [
     {
         text: "Visual Viewport API",
         href: "https://htmlspecs.com/visual-viewport",
-        src: "https://www.w3.org/TR/2019/REC-pointerevents2-20190404/",
+        src: "https://wicg.github.io/visual-viewport/",
         "last-modified": "Wed, 30 Apr 2025 19:05:24 GMT"
     },
     {
