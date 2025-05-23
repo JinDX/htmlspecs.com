@@ -55,7 +55,7 @@ HTML 及相关 API，CSS 标准系列。
 - [Input Events Level 2](https://htmlspecs.com/input-events-2)（[Source](https://www.w3.org/TR/2024/WD-input-events-2-20241018/) - 工作草案）
 - [Permissions](https://htmlspecs.com/permissions)（[Source](https://www.w3.org/TR/2024/WD-permissions-20240319/) - 工作草案）
 - [WebOTP API](https://htmlspecs.com/web-otp)（[Source](https://wicg.github.io/web-otp/) - 社区组草案报告）
-- [Device Posture API](https://htmlspecs.com/device-posture)（[Source](https://www.w3.org/TR/2024/WD-device-posture-20241007/) - 工作草案）
+- [Device Posture API](https://htmlspecs.com/device-posture)（[Source](https://www.w3.org/TR/device-posture/) - 候选推荐标准快照）
 
 ### 性能和观察者
 - [Performance Timeline](https://htmlspecs.com/performance-timeline)（[Source](https://www.w3.org/TR/2024/CRD-performance-timeline-20240216/) - 候选推荐标准）
