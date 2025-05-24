@@ -543,8 +543,8 @@ const cssLinks = [
     {
         text: "CSS Color Module Level 4",
         href: "https://htmlspecs.com/css/css-color-4",
-        src: "https://www.w3.org/TR/2024/CRD-css-color-4-20240213/",
-        "last-modified": "Fri, 09 Feb 2024 18:20:07 GMT"
+        src: "https://www.w3.org/TR/2025/CRD-css-color-4-20250424/",
+        "last-modified": "Fri, 25 Apr 2025 14:44:50 GMT"
     },
     {
         text: "CSS Color Module Level 5",
