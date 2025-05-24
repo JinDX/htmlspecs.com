@@ -529,8 +529,8 @@ const cssLinks = [
     {
         text: "CSS Overflow Module Level 5",
         href: "https://htmlspecs.com/css/css-overflow-5",
-        src: "https://drafts.csswg.org/css-overflow-5/",
-        "last-modified": "Wed, 16 Oct 2024 10:54:57 GMT"
+        src: "https://www.w3.org/TR/2024/WD-css-overflow-5-20241217/",
+        "last-modified": "Fri, 13 Dec 2024 15:56:37 GMT"
     },
 
     // Colors
