@@ -13,7 +13,7 @@ const checkLinks = async (links) => {
                     const diffMin = diffMs / 1000 / 60;
                     if (diffMin >= 1) { // 差距到分鐘
                         console.log(
-                            `${link.text}: new=${newTime.toISOString()} old=${oldTime.toISOString()} (Δ${diffMin.toFixed(1)}min)`
+                            `${link.text}: new=${newTime.toUTCString()} old=${oldTime.toUTCString()} (Δ${diffMin.toFixed(1)}min)`
                         );
                     }
                 }
