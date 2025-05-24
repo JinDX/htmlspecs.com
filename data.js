@@ -201,7 +201,7 @@ const links = [
         text: "Notifications API",
         href: "https://htmlspecs.com/notifications",
         src: "https://notifications.spec.whatwg.org/",
-        "last-modified": "Fri, 20 Sep 2024 15:48:55 GMT"
+        "last-modified": "Mon, 20 Jan 2025 08:47:25 GMT"
     },
     {
         text: "Badging API",
@@ -273,7 +273,7 @@ const links = [
         text: "WebOTP API",
         href: "https://htmlspecs.com/web-otp",
         src: "https://wicg.github.io/web-otp/",
-        "last-modified": "Tue, 04 Feb 2025 17:18:16 GMT"
+        "last-modified": "Tue, 04 Feb 2025 17:18:17 GMT"
     },
     {
         text: "Device Posture API",
