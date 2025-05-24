@@ -604,7 +604,7 @@ const cssLinks = [
         text: "CSS Text Module Level 3",
         href: "https://htmlspecs.com/css/css-text-3",
         src: "https://www.w3.org/TR/2024/CRD-css-text-3-20240930/",
-        "last-modified": "Sun, 03 Sep 2023 22:27:00 GMT"
+        "last-modified": "Mon, 30 Sep 2024 23:06:09 GMT"
     },
     {
         text: "CSS Text Module Level 4",
