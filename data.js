@@ -133,7 +133,7 @@ const links = [
         text: "Cookie Store API",
         href: "https://htmlspecs.com/cookie-store",
         src: "https://wicg.github.io/cookie-store/",
-        "last-modified": "Thu, 22 May 2025 22:17:33 GMT"
+        "last-modified": "Thu, 22 May 2025 22:17:32 GMT"
     },
     {
         text: "File and Directory Entries API",
@@ -273,7 +273,7 @@ const links = [
         text: "WebOTP API",
         href: "https://htmlspecs.com/web-otp",
         src: "https://wicg.github.io/web-otp/",
-        "last-modified": "Tue, 04 Feb 2025 17:18:17 GMT"
+        "last-modified": "Tue, 04 Feb 2025 17:18:16 GMT"
     },
     {
         text: "Device Posture API",
