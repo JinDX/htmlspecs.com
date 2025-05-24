@@ -177,7 +177,7 @@ const links = [
         text: "Fullscreen",
         href: "https://htmlspecs.com/fullscreen",
         src: "https://fullscreen.spec.whatwg.org/",
-        "last-modified": "Sat, 21 Sep 2024 09:07:00 GMT"
+        "last-modified": "Tue, 11 Feb 2025 12:22:57 GMT"
     },
     {
         text: "Screen Capture",
