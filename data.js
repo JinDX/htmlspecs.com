@@ -675,8 +675,8 @@ const cssLinks = [
     {
         text: "CSS Grid Layout Module Level 3",
         href: "https://htmlspecs.com/css/css-grid-3",
-        src: "https://www.w3.org/TR/2024/WD-css-grid-3-20241003/",
-        "last-modified": "Tue, 17 Sep 2024 16:27:52 GMT"
+        src: "https://www.w3.org/TR/2025/WD-css-grid-3-20250207/",
+        "last-modified": "Fri, 07 Feb 2025 23:43:42 GMT"
     },
     {
         text: "CSS Inline Layout Module Level 3",
