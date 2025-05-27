@@ -64,6 +64,8 @@ HTML 及相关 API，CSS 标准系列。
 - [Navigation Timing Level 2](https://htmlspecs.com/navigation-timing-2)（[Source](https://www.w3.org/TR/2024/WD-navigation-timing-2-20240729/) - 工作草案）
 - [Resource Timing](https://htmlspecs.com/resource-timing)（[Source](https://www.w3.org/TR/2024/CRD-resource-timing-20240524/) - 候选推荐标准）
 - [User Timing Level 2](https://htmlspecs.com/user-timing-2)（[Source](https://www.w3.org/TR/2019/REC-user-timing-2-20190226/) - 推荐标准）
+- [Observable](https://htmlspecs.com/observable)（[Source](https://wicg.github.io/observable/) - 社区组草案报告）
+
 
 ### 安全和认证
 - [Web Authentication Level 2](https://htmlspecs.com/webauthn-2)（[Source](https://www.w3.org/TR/2021/REC-webauthn-2-20210408/) - 推荐标准）

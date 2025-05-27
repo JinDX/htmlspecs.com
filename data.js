@@ -319,6 +319,12 @@ const links = [
         src: "https://www.w3.org/TR/2019/REC-user-timing-2-20190226/",
         "last-modified": "Mon, 25 Feb 2019 00:38:04 GMT"
     },
+    {
+        text: "Observable",
+        href: "https://htmlspecs.com/observable",
+        src: "https://wicg.github.io/observable/",
+        "last-modified": "Sat, 19 Apr 2025 18:06:55 GMT"
+    },
 
     // Security and Authentication
     {
