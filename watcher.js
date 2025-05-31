@@ -5,36 +5,40 @@ const checkLinks = async (links) => {
   const w3Links = links.filter(item => item.src.includes('w3.org'));
   links = links.filter(item => !item.src.includes('w3.org'));
 
-  const w3Requests = w3Links.map(link => {
+  const w3Requests = w3Links.map((link, index) => {
     return new Promise(resolve => {
       const options = {
         headers: {
           'Referer': link.src
         }
       };
-      https.get('https://www.w3.org/TR/tr-outdated-spec', options, res => {
-        if (res.statusCode < 200 || res.statusCode >= 400) {
-          return resolve();
-        }
-        let rawData = '';
-        res.on('data', chunk => {
-          rawData += chunk;
-        });
-        res.on('end', () => {
-          try {
-            const currentSpec = JSON.parse(rawData);
-            if (currentSpec && currentSpec.warning && currentSpec.latestUrl) {
-              console.log(`${link.text} (${link.src})`);
-            }
-          } catch (err) {
-            console.error(`Error parsing w3.org response for ${link.src}: ${err.message}`);
+
+      setTimeout(() => {
+        https.get('https://www.w3.org/TR/tr-outdated-spec', options, res => {
+          if (res.statusCode < 200 || res.statusCode >= 400) {
+            // console.warn(`Request failed for ${link.src}, status=${res.statusCode}`);
+            return resolve();
           }
+          let rawData = '';
+          res.on('data', chunk => {
+            rawData += chunk;
+          });
+          res.on('end', () => {
+            try {
+              const currentSpec = JSON.parse(rawData);
+              if (currentSpec && currentSpec.warning && currentSpec.latestUrl) {
+                console.log(`过期的${link.text} (${link.src})`);
+              }
+            } catch (err) {
+              console.error(`Error parsing w3.org response for ${link.src}: ${err.message}`);
+            }
+            resolve();
+          });
+        }).on('error', err => {
+          console.error(`Request to w3.org failed for ${link.src}: ${err.message}`);
           resolve();
         });
-      }).on('error', err => {
-        console.error(`Request to w3.org failed for ${link.src}: ${err.message}`);
-        resolve();
-      });
+      }, index * 500);
     });
   });
 
