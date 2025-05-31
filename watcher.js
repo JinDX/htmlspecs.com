@@ -27,7 +27,7 @@ const checkLinks = async (links) => {
             try {
               const currentSpec = JSON.parse(rawData);
               if (currentSpec && currentSpec.warning && currentSpec.latestUrl) {
-                console.log(`过期的${link.text} (${link.src})`);
+                console.log(`${link.text} (${link.src})`);
               }
             } catch (err) {
               console.error(`Error parsing w3.org response for ${link.src}: ${err.message}`);
