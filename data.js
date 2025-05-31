@@ -36,7 +36,7 @@ const links = [
     {
         text: "Web Content Accessibility Guidelines (WCAG) 2.2",
         href: "https://htmlspecs.com/WCAG22",
-        src: "https://www.w3.org/TR/2023/REC-WCAG22-20231005/",
+        src: "https://www.w3.org/TR/2024/REC-WCAG22-20241212/",
         "last-modified": "Thu, 05 Oct 2023 08:30:43 GMT"
     },
 
