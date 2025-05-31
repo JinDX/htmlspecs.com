@@ -13,7 +13,6 @@ const checkLinks = async (links) => {
         }
       };
       https.get('https://www.w3.org/TR/tr-outdated-spec', options, res => {
-        console.log(res.statusCode);
         if (res.statusCode < 200 || res.statusCode >= 400) {
           return resolve();
         }
