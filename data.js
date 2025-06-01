@@ -82,7 +82,7 @@ const links = [
     {
         text: "Service Workers",
         href: "https://htmlspecs.com/service-workers",
-        src: "https://www.w3.org/TR/2022/CRD-service-workers-20220712/",
+        src: "https://www.w3.org/TR/2025/CRD-service-workers-20250306/",
         "last-modified": "Mon, 11 Jul 2022 11:23:13 GMT"
     },
     {
