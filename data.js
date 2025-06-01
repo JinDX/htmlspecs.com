@@ -100,7 +100,7 @@ const links = [
     {
         text: "Payment Request API",
         href: "https://htmlspecs.com/payment-request",
-        src: "https://www.w3.org/TR/2024/CRD-payment-request-20240909/",
+        src: "https://www.w3.org/TR/2025/CRD-payment-request-20250402/",
         "last-modified": "Mon, 09 Sep 2024 18:06:00 GMT"
     },
     {
