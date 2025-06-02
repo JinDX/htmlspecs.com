@@ -89,7 +89,7 @@ HTML 及相关 API，CSS 标准系列。
 
 ### 颜色
 - [CSS Color Module Level 3](https://htmlspecs.com/css/css-color-3)（[Source](https://www.w3.org/TR/2022/REC-css-color-3-20220118/) - 推荐标准）
-- [CSS Color Module Level 4](https://htmlspecs.com/css/css-color-4)（[Source](https://www.w3.org/TR/2024/CRD-css-color-4-20240213/) - 候选推荐标准）
+- [CSS Color Module Level 4](https://htmlspecs.com/css/css-color-4)（[Source](https://www.w3.org/TR/2025/CRD-css-color-4-20250424/) - 候选推荐标准）
 - [CSS Color Module Level 5](https://htmlspecs.com/css/css-color-5)（[Source](https://www.w3.org/TR/2024/WD-css-color-5-20240229/) - 工作草案）
 - [CSS Color Adjustment Module Level 1](https://htmlspecs.com/css/css-color-adjust-1)（[Source](https://www.w3.org/TR/2022/CRD-css-color-adjust-1-20220614/) - 候选推荐标准）
 - [CSS Filter Effects Module Level 1](https://htmlspecs.com/css/filter-effects-1)（[Source](https://www.w3.org/TR/2018/WD-filter-effects-1-20181218/) - 工作草案）
