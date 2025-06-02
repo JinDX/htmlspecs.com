@@ -236,7 +236,7 @@ const links = [
     {
         text: "Device Orientation and Motion",
         href: "https://htmlspecs.com/orientation-event",
-        src: "https://www.w3.org/TR/2024/WD-orientation-event-20240514/",
+        src: "https://www.w3.org/TR/2025/CRD-orientation-event-20250212/",
         "last-modified": "Tue, 14 May 2024 10:35:28 GMT"
     },
     {
