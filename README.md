@@ -48,7 +48,7 @@ HTML 及相关 API，CSS 标准系列。
 - [Web Share API](https://htmlspecs.com/web-share)（[Source](https://www.w3.org/TR/2023/REC-web-share-20230530/) - 推荐标准）
 - [Web Audio API](https://htmlspecs.com/webaudio)（[Source](https://www.w3.org/TR/2021/REC-webaudio-20210617/) - 推荐标准）
 - [Geolocation API](https://htmlspecs.com/geolocation)（[Source](https://www.w3.org/TR/2024/REC-geolocation-20240916/) - 推荐标准）
-- [Device Orientation and Motion](https://htmlspecs.com/orientation-event)（[Source](https://www.w3.org/TR/2024/WD-orientation-event-20240514/) - 工作草案）
+- [Device Orientation and Motion](https://htmlspecs.com/orientation-event)（[Source](https://www.w3.org/TR/2025/CRD-orientation-event-20250212/) - 候选推荐草案）
 - [Pointer Lock 2.0](https://htmlspecs.com/pointerlock)（[Source](https://www.w3.org/TR/2024/WD-pointerlock-2-20240617/) - 工作草案）
 - [Clipboard API and events](https://htmlspecs.com/clipboard-apis)（[Source](https://www.w3.org/TR/2023/WD-clipboard-apis-20230516/) -  工作草案）
 - [Input Events Level 1](https://htmlspecs.com/input-events-1)（[Source](https://www.w3.org/TR/2023/DISC-input-events-1-20230928/) - 停止草案）
