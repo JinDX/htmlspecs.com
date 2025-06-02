@@ -375,7 +375,7 @@ const links = [
     {
         text: "Presentation API",
         href: "https://htmlspecs.com/presentation-api",
-        src: "https://www.w3.org/TR/2024/CRD-presentation-api-20241008/",
+        src: "https://www.w3.org/TR/2025/CRD-presentation-api-20250212/",
         "last-modified": "Tue, 08 Oct 2024 16:51:27 GMT"
     },
     {

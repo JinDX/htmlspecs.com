@@ -77,7 +77,7 @@ HTML 及相关 API，CSS 标准系列。
 - [Web Animations](https://htmlspecs.com/web-animations-1)（[Source](https://www.w3.org/TR/2023/WD-web-animations-1-20230605/) - 工作草案）
 - [SVG 2](https://htmlspecs.com/SVG2/)（[Source](https://www.w3.org/TR/2018/CR-SVG2-20181004/) - 候选推荐）
 - [Picture-in-Picture](https://htmlspecs.com/picture-in-picture)（[Source](https://www.w3.org/TR/2024/WD-picture-in-picture-20241002/) - 工作草案）
-- [Presentation API](https://htmlspecs.com/presentation-api)（[Source](https://www.w3.org/TR/2024/CRD-presentation-api-20241008/) - 候选推荐标准）
+- [Presentation API](https://htmlspecs.com/presentation-api)（[Source](https://www.w3.org/TR/2025/CRD-presentation-api-20250212/) - 候选推荐标准）
 - [Scroll-driven Animations](https://htmlspecs.com/scroll-animations-1)（[Source](https://www.w3.org/TR/2023/WD-scroll-animations-1-20230606/) - 工作草案）
 
 ### 开发者工具
