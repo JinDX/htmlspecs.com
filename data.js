@@ -808,7 +808,7 @@ const cssLinks = [
     {
         text: "CSS Motion Path Module Level 1",
         href: "https://htmlspecs.com/css/motion-1",
-        src: "https://www.w3.org/TR/2018/WD-motion-1-20181218/",
+        src: "https://www.w3.org/TR/2024/WD-motion-1-20241105/",
         "last-modified": "Fri, 14 Dec 2018 22:58:15 GMT"
     },
     {
