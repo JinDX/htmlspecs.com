@@ -705,7 +705,7 @@ const cssLinks = [
     {
         text: "CSS Positioned Layout Module Level 3",
         href: "https://htmlspecs.com/css/css-position-3",
-        src: "https://www.w3.org/TR/2024/WD-css-position-3-20240810/",
+        src: "https://www.w3.org/TR/2025/WD-css-position-3-20250311/",
         "last-modified": "Sat, 10 Aug 2024 00:17:07 GMT"
     },
 
