@@ -523,7 +523,7 @@ const cssLinks = [
     {
         text: "CSS Box Alignment Module Level 3",
         href: "https://htmlspecs.com/css/css-align-3",
-        src: "https://www.w3.org/TR/2023/WD-css-align-3-20230217/",
+        src: "https://www.w3.org/TR/2025/WD-css-align-3-20250311/",
         "last-modified": "Fri, 17 Feb 2023 19:17:10 GMT"
     },
     {
