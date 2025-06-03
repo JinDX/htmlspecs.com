@@ -159,7 +159,7 @@ HTML 及相关 API，CSS 标准系列。
 - [CSS Animations Level 2](https://htmlspecs.com/css/css-animations-2)（[Source](https://www.w3.org/TR/2023/WD-css-animations-2-20230602/) - 工作草案）
 - [CSS Motion Path Module Level 1](https://htmlspecs.com/css/motion-1)（[Source](https://www.w3.org/TR/2024/WD-motion-1-20241105/) - 工作草案）
 - [CSS View Transitions Module Level 1](https://htmlspecs.com/css/css-view-transitions-1)（[Source](https://www.w3.org/TR/2023/CR-css-view-transitions-1-20230905/) - 候选推荐标准）
-- [CSS View Transitions Module Level 2](https://htmlspecs.com/css/css-view-transitions-2)（[Source](https://www.w3.org/TR/2024/WD-css-view-transitions-2-20240516/) - 工作草案）
+- [CSS View Transitions Module Level 2](https://htmlspecs.com/css/css-view-transitions-2)（[Source](https://www.w3.org/TR/2024/WD-css-view-transitions-2-20241113/) - 工作草案）
 - [CSS Animation Worklet API](https://htmlspecs.com/css/css-animation-worklet-1)（[Source](https://www.w3.org/TR/2019/WD-css-animation-worklet-1-20190625/) - 工作草案）
 
 ### 包含
