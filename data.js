@@ -687,7 +687,7 @@ const cssLinks = [
     {
         text: "CSS Inline Layout Module Level 3",
         href: "https://htmlspecs.com/css/css-inline-3",
-        src: "https://www.w3.org/TR/2024/WD-css-inline-3-20240812/",
+        src: "https://www.w3.org/TR/2024/WD-css-inline-3-20241218/",
         "last-modified": "Mon, 12 Aug 2024 23:01:08 GMT"
     },
     {
