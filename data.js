@@ -348,7 +348,7 @@ const links = [
     {
         text: "Content Security Policy Level 3",
         href: "https://htmlspecs.com/CSP3",
-        src: "https://www.w3.org/TR/2025/WD-CSP3-20250530/",
+        src: "https://www.w3.org/TR/2025/WD-CSP3-20250602/",
         "last-modified": "Wed, 30 Apr 2025 06:53:43 GMT"
     },
 
