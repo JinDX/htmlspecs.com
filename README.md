@@ -123,7 +123,7 @@ HTML 及相关 API，CSS 标准系列。
 - [CSS Grid Layout Module Level 1](https://htmlspecs.com/css/css-grid-1)（[Source](https://www.w3.org/TR/2025/CRD-css-grid-1-20250326/) - 候选推荐标准）
 - [CSS Grid Layout Module Level 2](https://htmlspecs.com/css/css-grid-2)（[Source](https://www.w3.org/TR/2025/CRD-css-grid-2-20250326/) - 候选推荐标准）
 - [CSS Grid Layout Module Level 3](https://htmlspecs.com/css/css-grid-3)（[Source](https://www.w3.org/TR/2025/WD-css-grid-3-20250207/) - 工作草案）
-- [CSS Inline Layout Module Level 3](https://htmlspecs.com/css/css-inline-3)（[Source](https://www.w3.org/TR/2024/WD-css-inline-3-20240812/) - 工作草案）
+- [CSS Inline Layout Module Level 3](https://htmlspecs.com/css/css-inline-3)（[Source](https://www.w3.org/TR/2024/WD-css-inline-3-20241218/) - 工作草案）
 - [CSS Multi-column Layout Module Level 1](https://htmlspecs.com/css/css-multicol-1)（[Source](https://www.w3.org/TR/2024/CR-css-multicol-1-20240516/) - 候选推荐标准）
 - [CSS Shapes Module Level 1](https://htmlspecs.com/css/css-shapes-1)（[Source](https://www.w3.org/TR/2022/CRD-css-shapes-1-20221115/) - 候选推荐标准）
 - [CSS Positioned Layout Module Level 3](https://htmlspecs.com/css/css-position-3)（[Source](https://www.w3.org/TR/2024/WD-css-position-3-20240810/) - 工作草案）
