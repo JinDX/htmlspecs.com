@@ -159,7 +159,7 @@ const links = [
         text: "Visual Viewport API",
         href: "https://htmlspecs.com/visual-viewport",
         src: "https://wicg.github.io/visual-viewport/",
-        "last-modified": "Wed, 30 Apr 2025 19:05:24 GMT"
+        "last-modified": "Mon, 02 Jun 2025 19:27:25 GMT"
     },
     {
         text: "Screen Orientation",
