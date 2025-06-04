@@ -62,7 +62,7 @@ HTML 及相关 API，CSS 标准系列。
 - [Intersection Observer](https://htmlspecs.com/intersection-observer)（[Source](https://www.w3.org/TR/2023/WD-intersection-observer-20231018/) - 工作草案）
 - [Resize Observer](https://htmlspecs.com/resize-observer)（[Source](https://www.w3.org/TR/2020/WD-resize-observer-1-20200211/) - 工作草案）
 - [Navigation Timing Level 2](https://htmlspecs.com/navigation-timing-2)（[Source](https://www.w3.org/TR/2025/WD-navigation-timing-2-20250213/) - 工作草案）
-- [Resource Timing](https://htmlspecs.com/resource-timing)（[Source](https://www.w3.org/TR/2025/CRD-resource-timing-20250213/) - 候选推荐标准）
+- [Resource Timing](https://htmlspecs.com/resource-timing)（[Source](https://www.w3.org/TR/2025/CRD-resource-timing-20250603/) - 候选推荐标准）
 - [User Timing Level 2](https://htmlspecs.com/user-timing-2)（[Source](https://www.w3.org/TR/2019/REC-user-timing-2-20190226/) - 推荐标准）
 - [Observable](https://htmlspecs.com/observable)（[Source](https://wicg.github.io/observable/) - 社区组草案报告）
 
