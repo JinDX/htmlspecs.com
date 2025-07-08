@@ -323,7 +323,7 @@ const links = [
         text: "Observable",
         href: "https://htmlspecs.com/observable",
         src: "https://wicg.github.io/observable/",
-        "last-modified": "Sat, 19 Apr 2025 18:06:55 GMT"
+        "last-modified": "Fri, 06 Jun 2025 17:10:48 GMT"
     },
 
     // Security and Authentication
