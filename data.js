@@ -59,7 +59,7 @@ const links = [
         text: "Fetch",
         href: "https://htmlspecs.com/fetch",
         src: "https://fetch.spec.whatwg.org/",
-        "last-modified": "Wed, 28 May 2025 16:32:30 GMT"
+        "last-modified": "Mon, 16 Jun 2025 07:36:24 GMT"
     },
     {
         text: "XMLHttpRequest ",
