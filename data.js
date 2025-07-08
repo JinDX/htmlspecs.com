@@ -10,7 +10,7 @@ const links = [
         text: "ECMA-262",
         href: "https://ecma262.com/",
         src: "https://tc39.es/ecma262/",
-        "last-modified": "Fri, 06 Sep 2024 20:15:26 GMT"
+        "last-modified": "Mon, 30 Jun 2025 22:06:54 GMT"
     },
     {
         text: "DOM",
