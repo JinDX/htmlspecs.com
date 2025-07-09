@@ -266,7 +266,7 @@ const links = [
     {
         text: "Permissions",
         href: "https://htmlspecs.com/permissions",
-        src: "https://www.w3.org/TR/2024/WD-permissions-20241220/",
+        src: "https://www.w3.org/TR/2025/WD-permissions-20250624/",
         "last-modified": "Tue, 19 Mar 2024 14:01:55 GMT"
     },
     {
