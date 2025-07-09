@@ -337,7 +337,7 @@ const links = [
         text: "HTML Sanitizer API",
         href: "https://htmlspecs.com/sanitizer-api",
         src: "https://wicg.github.io/sanitizer-api/",
-        "last-modified": "Wed, 14 May 2025 07:38:35 GMT"
+        "last-modified": "Wed, 02 Jul 2025 08:21:33 GMT"
     },
     {
         text: "Subresource Integrity (SRI)",
