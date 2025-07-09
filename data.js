@@ -76,7 +76,7 @@ const links = [
     {
         text: "WebTransport",
         href: "https://htmlspecs.com/webtransport",
-        src: "https://www.w3.org/TR/2025/WD-webtransport-20250212/",
+        src: "https://www.w3.org/TR/2025/WD-webtransport-20250702/",
         "last-modified": "Fri, 31 May 2024 07:48:03 GMT"
     },
     {
