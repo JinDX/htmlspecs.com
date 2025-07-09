@@ -744,7 +744,7 @@ const cssLinks = [
     {
         text: "CSS Pseudo-Elements Module Level 4",
         href: "https://htmlspecs.com/css/css-pseudo-4",
-        src: "https://www.w3.org/TR/2022/WD-css-pseudo-4-20221230/",
+        src: "https://www.w3.org/TR/2025/WD-css-pseudo-4-20250627/",
         "last-modified": "Fri, 30 Dec 2022 01:46:06 GMT"
     },
 
