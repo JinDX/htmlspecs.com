@@ -814,7 +814,7 @@ const cssLinks = [
     {
         text: "CSS View Transitions Module Level 1",
         href: "https://htmlspecs.com/css/css-view-transitions-1",
-        src: "https://www.w3.org/TR/2023/CR-css-view-transitions-1-20230905/",
+        src: "https://www.w3.org/TR/2024/CRD-css-view-transitions-1-20240328/",
         "last-modified": "Sun, 03 Sep 2023 13:07:46 GMT"
     },
 
