@@ -405,6 +405,12 @@ const cssLinks = [
         "last-modified": "Tue, 05 Dec 2023 16:06:23 GMT"
     },
     {
+        text: "CSS Snapshot 2024",
+        href: "https://htmlspecs.com/css/css-2024",
+        src: "https://www.w3.org/TR/2025/NOTE-css-2024-20250225/",
+        "last-modified": "Thu, 20 Feb 2025 19:34:11 GMT"
+    },
+    {
         text: "CSS 2.2 Specification",
         href: "https://htmlspecs.com/css/css22/",
         src: "https://www.w3.org/TR/2016/WD-CSS22-20160412/",
