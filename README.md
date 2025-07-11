@@ -13,7 +13,7 @@ HTML 及相关 API，CSS 标准系列。
 
 ### 可访问性
 - [WCAG 2.2](https://htmlspecs.com/WCAG22)（[Source](https://www.w3.org/TR/2023/REC-WCAG22-20231005/) - 推荐标准）
-- [ ] Accessible Rich Internet Applications (WAI-ARIA) 1.1 https://www.w3.org/TR/wai-aria-1.1/
+- [Accessible Rich Internet Applications (WAI-ARIA) 1.3](https://htmlspecs.com/wai-aria-1.3)（[Source](https://www.w3.org/TR/2024/WD-wai-aria-1.3-20240123/) - 工作草案）  
 
 ### 网络和通信
 - [Fetch](https://htmlspecs.com/fetch)（[Source](https://fetch.spec.whatwg.org/)）

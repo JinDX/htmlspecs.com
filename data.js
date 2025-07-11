@@ -39,6 +39,12 @@ const links = [
         src: "https://www.w3.org/TR/2024/REC-WCAG22-20241212/",
         "last-modified": "Thu, 05 Oct 2023 08:30:43 GMT"
     },
+    {
+        text: "Accessible Rich Internet Applications (WAI-ARIA) 1.3",
+        href: "https://htmlspecs.com/wai-aria-1.3",
+        src: "https://www.w3.org/TR/2024/WD-wai-aria-1.3-20240123/",
+        "last-modified": "Thu, 05 Oct 2023 08:30:43 GMT"
+    },
 
     // URLs and Patterns
     {
