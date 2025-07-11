@@ -351,6 +351,12 @@ const links = [
         src: "https://www.w3.org/TR/2025/WD-CSP3-20250710/",
         "last-modified": "Wed, 30 Apr 2025 06:53:43 GMT"
     },
+    {
+        text: "Secure Contexts",
+        href: "https://htmlspecs.com/secure-contexts",
+        src: "https://www.w3.org/TR/2023/CRD-secure-contexts-20231110/",
+        "last-modified": "Wed, 30 Apr 2025 06:53:43 GMT"
+    },
 
 
     // Media and Graphics

@@ -73,7 +73,7 @@ HTML 及相关 API，CSS 标准系列。
 - [HTML Sanitizer API](https://htmlspecs.com/sanitizer-api)（[Source](https://wicg.github.io/sanitizer-api/) - 社区组草案）
 - [Subresource Integrity (SRI)](https://htmlspecs.com/SRI)（[Source](https://www.w3.org/TR/2016/REC-SRI-20160623/) - 推荐标准）
 - [Content Security Policy Level 3](https://htmlspecs.com/CSP3)（[Source](https://www.w3.org/TR/2025/WD-CSP3-20250602/) - 工作草案）
-- [ ] Secure Contexts https://www.w3.org/TR/secure-contexts/
+- [Secure Contexts](https://htmlspecs.com/secure-contexts)（[Source](https://www.w3.org/TR/2023/CRD-secure-contexts-20231110/) - 候选推荐草案）
 
 ### 媒体和图形
 - [Web Animations](https://htmlspecs.com/web-animations-1)（[Source](https://www.w3.org/TR/2023/WD-web-animations-1-20230605/) - 工作草案）

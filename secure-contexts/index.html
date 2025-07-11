@@ -1,0 +1,3095 @@
+<!doctype html>
+<html lang="zh-hans">
+
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <title>安全上下文</title>
+    <meta content="CRD" name="w3c-status">
+    <link href="https://www.w3.org/TR/secure-contexts/" rel="canonical">
+    <style>
+        .secure {
+            fill: #8F8;
+        }
+
+        .non-secure {
+            fill: #F88;
+            stroke-dasharray: 5, 5;
+        }
+
+        rect,
+        circle {
+            stroke-width: 2;
+            stroke: black;
+            fill-opacity: 0.75;
+        }
+
+        text {
+            font-family: monospace;
+        }
+
+        text.rejection {
+            fill: #F00;
+            font-weight: 700;
+            font-size: 2em;
+        }
+
+        g path {
+            stroke-width: 2px;
+            stroke: #666;
+            fill-opacity: 0;
+            stroke-dasharray: 5px, 5px;
+        }
+    </style>
+    <style>
+        /* Boilerplate: style-autolinks */
+        .css.css,
+        .property.property,
+        .descriptor.descriptor {
+            color: var(--a-normal-text);
+            font-size: inherit;
+            font-family: inherit;
+        }
+
+        .css::before,
+        .property::before,
+        .descriptor::before {
+            content: "‘";
+        }
+
+        .css::after,
+        .property::after,
+        .descriptor::after {
+            content: "’";
+        }
+
+        .property,
+        .descriptor {
+            /* Don't wrap property and descriptor names */
+            white-space: nowrap;
+        }
+
+        .type {
+            /* CSS value <type> */
+            font-style: italic;
+        }
+
+        pre .property::before,
+        pre .property::after {
+            content: "";
+        }
+
+        [data-link-type="property"]::before,
+        [data-link-type="propdesc"]::before,
+        [data-link-type="descriptor"]::before,
+        [data-link-type="value"]::before,
+        [data-link-type="function"]::before,
+        [data-link-type="at-rule"]::before,
+        [data-link-type="selector"]::before,
+        [data-link-type="maybe"]::before {
+            content: "‘";
+        }
+
+        [data-link-type="property"]::after,
+        [data-link-type="propdesc"]::after,
+        [data-link-type="descriptor"]::after,
+        [data-link-type="value"]::after,
+        [data-link-type="function"]::after,
+        [data-link-type="at-rule"]::after,
+        [data-link-type="selector"]::after,
+        [data-link-type="maybe"]::after {
+            content: "’";
+        }
+
+        [data-link-type].production::before,
+        [data-link-type].production::after,
+        .prod [data-link-type]::before,
+        .prod [data-link-type]::after {
+            content: "";
+        }
+
+        [data-link-type=element],
+        [data-link-type=element-attr] {
+            font-family: Menlo, Consolas, "DejaVu Sans Mono", monospace;
+            font-size: .9em;
+        }
+
+        [data-link-type=element]::before {
+            content: "<"
+        }
+
+        [data-link-type=element]::after {
+            content: ">"
+        }
+
+        [data-link-type=biblio] {
+            white-space: pre;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --selflink-text: black;
+                --selflink-bg: silver;
+                --selflink-hover-text: white;
+            }
+        }
+    </style>
+    <style>
+        /* Boilerplate: style-colors */
+
+        /* Any --*-text not paired with a --*-bg is assumed to have a transparent bg */
+        :root {
+            color-scheme: light dark;
+
+            --text: black;
+            --bg: white;
+
+            --unofficial-watermark: url(https://www.w3.org/StyleSheets/TR/2016/logos/UD-watermark);
+
+            --logo-bg: #1a5e9a;
+            --logo-active-bg: #c00;
+            --logo-text: white;
+
+            --tocnav-normal-text: #707070;
+            --tocnav-normal-bg: var(--bg);
+            --tocnav-hover-text: var(--tocnav-normal-text);
+            --tocnav-hover-bg: #f8f8f8;
+            --tocnav-active-text: #c00;
+            --tocnav-active-bg: var(--tocnav-normal-bg);
+
+            --tocsidebar-text: var(--text);
+            --tocsidebar-bg: #f7f8f9;
+            --tocsidebar-shadow: rgba(0, 0, 0, .1);
+            --tocsidebar-heading-text: hsla(203, 20%, 40%, .7);
+
+            --toclink-text: var(--text);
+            --toclink-underline: #3980b5;
+            --toclink-visited-text: var(--toclink-text);
+            --toclink-visited-underline: #054572;
+
+            --heading-text: #005a9c;
+
+            --hr-text: var(--text);
+
+            --algo-border: #def;
+
+            --del-text: red;
+            --del-bg: transparent;
+            --ins-text: #080;
+            --ins-bg: transparent;
+
+            --a-normal-text: #034575;
+            --a-normal-underline: #bbb;
+            --a-visited-text: var(--a-normal-text);
+            --a-visited-underline: #707070;
+            --a-hover-bg: rgba(75%, 75%, 75%, .25);
+            --a-active-text: #c00;
+            --a-active-underline: #c00;
+
+            --blockquote-border: silver;
+            --blockquote-bg: transparent;
+            --blockquote-text: currentcolor;
+
+            --issue-border: #e05252;
+            --issue-bg: #fbe9e9;
+            --issue-text: var(--text);
+            --issueheading-text: #831616;
+
+            --example-border: #e0cb52;
+            --example-bg: #fcfaee;
+            --example-text: var(--text);
+            --exampleheading-text: #574b0f;
+
+            --note-border: #52e052;
+            --note-bg: #e9fbe9;
+            --note-text: var(--text);
+            --noteheading-text: hsl(120, 70%, 30%);
+            --notesummary-underline: silver;
+
+            --assertion-border: #aaa;
+            --assertion-bg: #eee;
+            --assertion-text: black;
+
+            --advisement-border: orange;
+            --advisement-bg: #fec;
+            --advisement-text: var(--text);
+            --advisementheading-text: #b35f00;
+
+            --warning-border: red;
+            --warning-bg: hsla(40, 100%, 50%, 0.95);
+            --warning-text: var(--text);
+
+            --amendment-border: #330099;
+            --amendment-bg: #F5F0FF;
+            --amendment-text: var(--text);
+            --amendmentheading-text: #220066;
+
+            --def-border: #8ccbf2;
+            --def-bg: #def;
+            --def-text: var(--text);
+            --defrow-border: #bbd7e9;
+
+            --datacell-border: silver;
+
+            --indexinfo-text: #707070;
+
+            --indextable-hover-text: black;
+            --indextable-hover-bg: #f7f8f9;
+
+            --outdatedspec-bg: rgba(0, 0, 0, .5);
+            --outdatedspec-text: black;
+            --outdated-bg: maroon;
+            --outdated-text: white;
+            --outdated-shadow: red;
+
+            --editedrec-bg: darkorange;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text: #ddd;
+                --bg: black;
+
+                --unofficial-watermark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cg fill='%23100808' transform='translate(200 200) rotate(-45) translate(-200 -200)' stroke='%23100808' stroke-width='3'%3E%3Ctext x='50%25' y='220' style='font: bold 70px sans-serif; text-anchor: middle; letter-spacing: 6px;'%3EUNOFFICIAL%3C/text%3E%3Ctext x='50%25' y='305' style='font: bold 70px sans-serif; text-anchor: middle; letter-spacing: 6px;'%3EDRAFT%3C/text%3E%3C/g%3E%3C/svg%3E");
+
+                --logo-bg: #1a5e9a;
+                --logo-active-bg: #c00;
+                --logo-text: white;
+
+                --tocnav-normal-text: #999;
+                --tocnav-normal-bg: var(--bg);
+                --tocnav-hover-text: var(--tocnav-normal-text);
+                --tocnav-hover-bg: #080808;
+                --tocnav-active-text: #f44;
+                --tocnav-active-bg: var(--tocnav-normal-bg);
+
+                --tocsidebar-text: var(--text);
+                --tocsidebar-bg: #080808;
+                --tocsidebar-shadow: rgba(255, 255, 255, .1);
+                --tocsidebar-heading-text: hsla(203, 20%, 40%, .7);
+
+                --toclink-text: var(--text);
+                --toclink-underline: #6af;
+                --toclink-visited-text: var(--toclink-text);
+                --toclink-visited-underline: #054572;
+
+                --heading-text: #8af;
+
+                --hr-text: var(--text);
+
+                --algo-border: #456;
+
+                --del-text: #f44;
+                --del-bg: transparent;
+                --ins-text: #4a4;
+                --ins-bg: transparent;
+
+                --a-normal-text: #6af;
+                --a-normal-underline: #555;
+                --a-visited-text: var(--a-normal-text);
+                --a-visited-underline: var(--a-normal-underline);
+                --a-hover-bg: rgba(25%, 25%, 25%, .2);
+                --a-active-text: #f44;
+                --a-active-underline: var(--a-active-text);
+
+                --borderedblock-bg: rgba(255, 255, 255, .05);
+
+                --blockquote-border: silver;
+                --blockquote-bg: var(--borderedblock-bg);
+                --blockquote-text: currentcolor;
+
+                --issue-border: #e05252;
+                --issue-bg: var(--borderedblock-bg);
+                --issue-text: var(--text);
+                --issueheading-text: hsl(0deg, 70%, 70%);
+
+                --example-border: hsl(50deg, 90%, 60%);
+                --example-bg: var(--borderedblock-bg);
+                --example-text: var(--text);
+                --exampleheading-text: hsl(50deg, 70%, 70%);
+
+                --note-border: hsl(120deg, 100%, 35%);
+                --note-bg: var(--borderedblock-bg);
+                --note-text: var(--text);
+                --noteheading-text: hsl(120, 70%, 70%);
+                --notesummary-underline: silver;
+
+                --assertion-border: #444;
+                --assertion-bg: var(--borderedblock-bg);
+                --assertion-text: var(--text);
+
+                --advisement-border: orange;
+                --advisement-bg: #222218;
+                --advisement-text: var(--text);
+                --advisementheading-text: #f84;
+
+                --warning-border: red;
+                --warning-bg: hsla(40, 100%, 20%, 0.95);
+                --warning-text: var(--text);
+
+                --amendment-border: #330099;
+                --amendment-bg: #080010;
+                --amendment-text: var(--text);
+                --amendmentheading-text: #cc00ff;
+
+                --def-border: #8ccbf2;
+                --def-bg: #080818;
+                --def-text: var(--text);
+                --defrow-border: #136;
+
+                --datacell-border: silver;
+
+                --indexinfo-text: #aaa;
+
+                --indextable-hover-text: var(--text);
+                --indextable-hover-bg: #181818;
+
+                --outdatedspec-bg: rgba(255, 255, 255, .5);
+                --outdatedspec-text: black;
+                --outdated-bg: maroon;
+                --outdated-text: white;
+                --outdated-shadow: red;
+
+                --editedrec-bg: darkorange;
+            }
+
+            /* In case a transparent-bg image doesn't expect to be on a dark bg,
+       which is quite common in practice... */
+            img {
+                background: white;
+            }
+        }
+    </style>
+    <style>
+        /* Boilerplate: style-counters */
+        body {
+            counter-reset: example figure issue;
+        }
+
+        .issue {
+            counter-increment: issue;
+        }
+
+        .issue:not(.no-marker)::before {
+            content: "Issue " counter(issue);
+        }
+
+        .example {
+            counter-increment: example;
+        }
+
+        .example:not(.no-marker)::before {
+            content: "Example " counter(example);
+        }
+
+        .invalid.example:not(.no-marker)::before,
+        .illegal.example:not(.no-marker)::before {
+            content: "Invalid Example" counter(example);
+        }
+
+        figcaption {
+            counter-increment: figure;
+        }
+
+        figcaption:not(.no-marker)::before {
+            content: "Figure " counter(figure) " ";
+        }
+    </style>
+    <style>
+        /* Boilerplate: style-dfn-panel */
+        :root {
+            --dfnpanel-bg: #ddd;
+            --dfnpanel-text: var(--text);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --dfnpanel-bg: #222;
+                --dfnpanel-text: var(--text);
+            }
+        }
+
+        .dfn-panel {
+            position: absolute;
+            z-index: 35;
+            width: 20em;
+            width: 300px;
+            height: auto;
+            max-height: 500px;
+            overflow: auto;
+            padding: 0.5em 0.75em;
+            font: small Helvetica Neue, sans-serif, Droid Sans Fallback;
+            background: var(--dfnpanel-bg);
+            color: var(--dfnpanel-text);
+            border: outset 0.2em;
+            white-space: normal;
+            /* in case it's moved into a pre */
+        }
+
+        .dfn-panel:not(.on) {
+            display: none;
+        }
+
+        .dfn-panel * {
+            margin: 0;
+            padding: 0;
+            text-indent: 0;
+        }
+
+        .dfn-panel>b {
+            display: block;
+        }
+
+        .dfn-panel a {
+            color: var(--dfnpanel-text);
+        }
+
+        .dfn-panel a:not(:hover) {
+            text-decoration: none !important;
+            border-bottom: none !important;
+        }
+
+        .dfn-panel>b+b {
+            margin-top: 0.25em;
+        }
+
+        .dfn-panel ul {
+            padding: 0 0 0 1em;
+            list-style: none;
+        }
+
+        .dfn-panel li a {
+            white-space: pre;
+            display: inline-block;
+            max-width: calc(300px - 1.5em - 1em);
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .dfn-panel.activated {
+            display: inline-block;
+            position: fixed;
+            left: .5em;
+            bottom: 2em;
+            margin: 0 auto;
+            max-width: calc(100vw - 1.5em - .4em - .5em);
+            max-height: 30vh;
+        }
+
+        .dfn-paneled[role="button"] {
+            cursor: pointer;
+        }
+    </style>
+    <style>
+        /* Boilerplate: style-dfn-panel */
+        :root {
+            --dfnpanel-bg: #ddd;
+            --dfnpanel-text: var(--text);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --dfnpanel-bg: #222;
+                --dfnpanel-text: var(--text);
+            }
+        }
+
+        .dfn-panel {
+            position: absolute;
+            z-index: 35;
+            width: 20em;
+            width: 300px;
+            height: auto;
+            max-height: 500px;
+            overflow: auto;
+            padding: 0.5em 0.75em;
+            font: small Helvetica Neue, sans-serif, Droid Sans Fallback;
+            background: var(--dfnpanel-bg);
+            color: var(--dfnpanel-text);
+            border: outset 0.2em;
+            white-space: normal;
+            /* in case it's moved into a pre */
+        }
+
+        .dfn-panel:not(.on) {
+            display: none;
+        }
+
+        .dfn-panel * {
+            margin: 0;
+            padding: 0;
+            text-indent: 0;
+        }
+
+        .dfn-panel>b {
+            display: block;
+        }
+
+        .dfn-panel a {
+            color: var(--dfnpanel-text);
+        }
+
+        .dfn-panel a:not(:hover) {
+            text-decoration: none !important;
+            border-bottom: none !important;
+        }
+
+        .dfn-panel>b+b {
+            margin-top: 0.25em;
+        }
+
+        .dfn-panel ul {
+            padding: 0 0 0 1em;
+            list-style: none;
+        }
+
+        .dfn-panel li a {
+            white-space: pre;
+            display: inline-block;
+            max-width: calc(300px - 1.5em - 1em);
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .dfn-panel.activated {
+            display: inline-block;
+            position: fixed;
+            left: .5em;
+            bottom: 2em;
+            margin: 0 auto;
+            max-width: calc(100vw - 1.5em - .4em - .5em);
+            max-height: 30vh;
+        }
+
+        .dfn-paneled[role="button"] {
+            cursor: pointer;
+        }
+    </style>
+    <style>
+        /* Boilerplate: style-issues */
+        a[href].issue-return {
+            float: right;
+            float: inline-end;
+            color: var(--issueheading-text);
+            font-weight: bold;
+            text-decoration: none;
+        }
+    </style>
+    <style>
+        /* Boilerplate: style-md-lists */
+        /* This is a weird hack for me not yet following the commonmark spec
+   regarding paragraph and lists. */
+        [data-md]> :first-child {
+            margin-top: 0;
+        }
+
+        [data-md]> :last-child {
+            margin-bottom: 0;
+        }
+    </style>
+    <style>
+        /* Boilerplate: style-selflinks */
+
+        :root {
+            --selflink-text: white;
+            --selflink-bg: gray;
+            --selflink-hover-text: black;
+        }
+
+        .heading,
+        .issue,
+        .note,
+        .example,
+        li,
+        dt {
+            position: relative;
+        }
+
+        a.self-link {
+            position: absolute;
+            top: 0;
+            left: calc(-1 * (3.5rem - 26px));
+            width: calc(3.5rem - 26px);
+            height: 2em;
+            text-align: center;
+            border: none;
+            transition: opacity .2s;
+            opacity: .5;
+        }
+
+        a.self-link:hover {
+            opacity: 1;
+        }
+
+        .heading>a.self-link {
+            font-size: 83%;
+        }
+
+        .example>a.self-link,
+        .note>a.self-link,
+        .issue>a.self-link {
+            /* These blocks are overflow:auto, so positioning outside
+       doesn't work. */
+            left: auto;
+            right: 0;
+        }
+
+        li>a.self-link {
+            left: calc(-1 * (3.5rem - 26px) - 2em);
+        }
+
+        dfn>a.self-link {
+            top: auto;
+            left: auto;
+            opacity: 0;
+            width: 1.5em;
+            height: 1.5em;
+            background: var(--selflink-bg);
+            color: var(--selflink-text);
+            font-style: normal;
+            transition: opacity .2s, background-color .2s, color .2s;
+        }
+
+        dfn:hover>a.self-link {
+            opacity: 1;
+        }
+
+        dfn>a.self-link:hover {
+            color: var(--selflink-hover-text);
+        }
+
+        a.self-link::before {
+            content: "¶";
+        }
+
+        .heading>a.self-link::before {
+            content: "§";
+        }
+
+        dfn>a.self-link::before {
+            content: "#";
+        }
+    </style>
+    <style>
+        /* Boilerplate: style-syntax-highlighting */
+
+        pre.idl.highlight {
+            background: var(--borderedblock-bg, var(--def-bg));
+        }
+    </style>
+    <style>
+        /* Boilerplate: style-syntax-highlighting */
+
+        code.highlight {
+            padding: .1em;
+            border-radius: .3em;
+        }
+
+        pre.highlight,
+        pre>code.highlight {
+            display: block;
+            padding: 1em;
+            margin: .5em 0;
+            overflow: auto;
+            border-radius: 0;
+        }
+
+        .highlight:not(.idl) {
+            background: rgba(0, 0, 0, .03);
+        }
+
+        c-[a] {
+            color: #990055
+        }
+
+        /* Keyword.Declaration */
+        c-[b] {
+            color: #990055
+        }
+
+        /* Keyword.Type */
+        c-[c] {
+            color: #708090
+        }
+
+        /* Comment */
+        c-[d] {
+            color: #708090
+        }
+
+        /* Comment.Multiline */
+        c-[e] {
+            color: #0077aa
+        }
+
+        /* Name.Attribute */
+        c-[f] {
+            color: #669900
+        }
+
+        /* Name.Tag */
+        c-[g] {
+            color: #222222
+        }
+
+        /* Name.Variable */
+        c-[k] {
+            color: #990055
+        }
+
+        /* Keyword */
+        c-[l] {
+            color: #000000
+        }
+
+        /* Literal */
+        c-[m] {
+            color: #000000
+        }
+
+        /* Literal.Number */
+        c-[n] {
+            color: #0077aa
+        }
+
+        /* Name */
+        c-[o] {
+            color: #999999
+        }
+
+        /* Operator */
+        c-[p] {
+            color: #999999
+        }
+
+        /* Punctuation */
+        c-[s] {
+            color: #a67f59
+        }
+
+        /* Literal.String */
+        c-[t] {
+            color: #a67f59
+        }
+
+        /* Literal.String.Single */
+        c-[u] {
+            color: #a67f59
+        }
+
+        /* Literal.String.Double */
+        c-[cp] {
+            color: #708090
+        }
+
+        /* Comment.Preproc */
+        c-[c1] {
+            color: #708090
+        }
+
+        /* Comment.Single */
+        c-[cs] {
+            color: #708090
+        }
+
+        /* Comment.Special */
+        c-[kc] {
+            color: #990055
+        }
+
+        /* Keyword.Constant */
+        c-[kn] {
+            color: #990055
+        }
+
+        /* Keyword.Namespace */
+        c-[kp] {
+            color: #990055
+        }
+
+        /* Keyword.Pseudo */
+        c-[kr] {
+            color: #990055
+        }
+
+        /* Keyword.Reserved */
+        c-[ld] {
+            color: #000000
+        }
+
+        /* Literal.Date */
+        c-[nc] {
+            color: #0077aa
+        }
+
+        /* Name.Class */
+        c-[no] {
+            color: #0077aa
+        }
+
+        /* Name.Constant */
+        c-[nd] {
+            color: #0077aa
+        }
+
+        /* Name.Decorator */
+        c-[ni] {
+            color: #0077aa
+        }
+
+        /* Name.Entity */
+        c-[ne] {
+            color: #0077aa
+        }
+
+        /* Name.Exception */
+        c-[nf] {
+            color: #0077aa
+        }
+
+        /* Name.Function */
+        c-[nl] {
+            color: #0077aa
+        }
+
+        /* Name.Label */
+        c-[nn] {
+            color: #0077aa
+        }
+
+        /* Name.Namespace */
+        c-[py] {
+            color: #0077aa
+        }
+
+        /* Name.Property */
+        c-[ow] {
+            color: #999999
+        }
+
+        /* Operator.Word */
+        c-[mb] {
+            color: #000000
+        }
+
+        /* Literal.Number.Bin */
+        c-[mf] {
+            color: #000000
+        }
+
+        /* Literal.Number.Float */
+        c-[mh] {
+            color: #000000
+        }
+
+        /* Literal.Number.Hex */
+        c-[mi] {
+            color: #000000
+        }
+
+        /* Literal.Number.Integer */
+        c-[mo] {
+            color: #000000
+        }
+
+        /* Literal.Number.Oct */
+        c-[sb] {
+            color: #a67f59
+        }
+
+        /* Literal.String.Backtick */
+        c-[sc] {
+            color: #a67f59
+        }
+
+        /* Literal.String.Char */
+        c-[sd] {
+            color: #a67f59
+        }
+
+        /* Literal.String.Doc */
+        c-[se] {
+            color: #a67f59
+        }
+
+        /* Literal.String.Escape */
+        c-[sh] {
+            color: #a67f59
+        }
+
+        /* Literal.String.Heredoc */
+        c-[si] {
+            color: #a67f59
+        }
+
+        /* Literal.String.Interpol */
+        c-[sx] {
+            color: #a67f59
+        }
+
+        /* Literal.String.Other */
+        c-[sr] {
+            color: #a67f59
+        }
+
+        /* Literal.String.Regex */
+        c-[ss] {
+            color: #a67f59
+        }
+
+        /* Literal.String.Symbol */
+        c-[vc] {
+            color: #0077aa
+        }
+
+        /* Name.Variable.Class */
+        c-[vg] {
+            color: #0077aa
+        }
+
+        /* Name.Variable.Global */
+        c-[vi] {
+            color: #0077aa
+        }
+
+        /* Name.Variable.Instance */
+        c-[il] {
+            color: #000000
+        }
+
+        /* Literal.Number.Integer.Long */
+
+
+        @media (prefers-color-scheme: dark) {
+            .highlight:not(.idl) {
+                background: rgba(255, 255, 255, .05);
+            }
+
+            c-[a] {
+                color: #d33682
+            }
+
+            /* Keyword.Declaration */
+            c-[b] {
+                color: #d33682
+            }
+
+            /* Keyword.Type */
+            c-[c] {
+                color: #2aa198
+            }
+
+            /* Comment */
+            c-[d] {
+                color: #2aa198
+            }
+
+            /* Comment.Multiline */
+            c-[e] {
+                color: #268bd2
+            }
+
+            /* Name.Attribute */
+            c-[f] {
+                color: #b58900
+            }
+
+            /* Name.Tag */
+            c-[g] {
+                color: #cb4b16
+            }
+
+            /* Name.Variable */
+            c-[k] {
+                color: #d33682
+            }
+
+            /* Keyword */
+            c-[l] {
+                color: #657b83
+            }
+
+            /* Literal */
+            c-[m] {
+                color: #657b83
+            }
+
+            /* Literal.Number */
+            c-[n] {
+                color: #268bd2
+            }
+
+            /* Name */
+            c-[o] {
+                color: #657b83
+            }
+
+            /* Operator */
+            c-[p] {
+                color: #657b83
+            }
+
+            /* Punctuation */
+            c-[s] {
+                color: #6c71c4
+            }
+
+            /* Literal.String */
+            c-[t] {
+                color: #6c71c4
+            }
+
+            /* Literal.String.Single */
+            c-[u] {
+                color: #6c71c4
+            }
+
+            /* Literal.String.Double */
+            c-[ch] {
+                color: #2aa198
+            }
+
+            /* Comment.Hashbang */
+            c-[cp] {
+                color: #2aa198
+            }
+
+            /* Comment.Preproc */
+            c-[cpf] {
+                color: #2aa198
+            }
+
+            /* Comment.PreprocFile */
+            c-[c1] {
+                color: #2aa198
+            }
+
+            /* Comment.Single */
+            c-[cs] {
+                color: #2aa198
+            }
+
+            /* Comment.Special */
+            c-[kc] {
+                color: #d33682
+            }
+
+            /* Keyword.Constant */
+            c-[kn] {
+                color: #d33682
+            }
+
+            /* Keyword.Namespace */
+            c-[kp] {
+                color: #d33682
+            }
+
+            /* Keyword.Pseudo */
+            c-[kr] {
+                color: #d33682
+            }
+
+            /* Keyword.Reserved */
+            c-[ld] {
+                color: #657b83
+            }
+
+            /* Literal.Date */
+            c-[nc] {
+                color: #268bd2
+            }
+
+            /* Name.Class */
+            c-[no] {
+                color: #268bd2
+            }
+
+            /* Name.Constant */
+            c-[nd] {
+                color: #268bd2
+            }
+
+            /* Name.Decorator */
+            c-[ni] {
+                color: #268bd2
+            }
+
+            /* Name.Entity */
+            c-[ne] {
+                color: #268bd2
+            }
+
+            /* Name.Exception */
+            c-[nf] {
+                color: #268bd2
+            }
+
+            /* Name.Function */
+            c-[nl] {
+                color: #268bd2
+            }
+
+            /* Name.Label */
+            c-[nn] {
+                color: #268bd2
+            }
+
+            /* Name.Namespace */
+            c-[py] {
+                color: #268bd2
+            }
+
+            /* Name.Property */
+            c-[ow] {
+                color: #657b83
+            }
+
+            /* Operator.Word */
+            c-[mb] {
+                color: #657b83
+            }
+
+            /* Literal.Number.Bin */
+            c-[mf] {
+                color: #657b83
+            }
+
+            /* Literal.Number.Float */
+            c-[mh] {
+                color: #657b83
+            }
+
+            /* Literal.Number.Hex */
+            c-[mi] {
+                color: #657b83
+            }
+
+            /* Literal.Number.Integer */
+            c-[mo] {
+                color: #657b83
+            }
+
+            /* Literal.Number.Oct */
+            c-[sa] {
+                color: #6c71c4
+            }
+
+            /* Literal.String.Affix */
+            c-[sb] {
+                color: #6c71c4
+            }
+
+            /* Literal.String.Backtick */
+            c-[sc] {
+                color: #6c71c4
+            }
+
+            /* Literal.String.Char */
+            c-[dl] {
+                color: #6c71c4
+            }
+
+            /* Literal.String.Delimiter */
+            c-[sd] {
+                color: #6c71c4
+            }
+
+            /* Literal.String.Doc */
+            c-[se] {
+                color: #6c71c4
+            }
+
+            /* Literal.String.Escape */
+            c-[sh] {
+                color: #6c71c4
+            }
+
+            /* Literal.String.Heredoc */
+            c-[si] {
+                color: #6c71c4
+            }
+
+            /* Literal.String.Interpol */
+            c-[sx] {
+                color: #6c71c4
+            }
+
+            /* Literal.String.Other */
+            c-[sr] {
+                color: #6c71c4
+            }
+
+            /* Literal.String.Regex */
+            c-[ss] {
+                color: #6c71c4
+            }
+
+            /* Literal.String.Symbol */
+            c-[fm] {
+                color: #268bd2
+            }
+
+            /* Name.Function.Magic */
+            c-[vc] {
+                color: #cb4b16
+            }
+
+            /* Name.Variable.Class */
+            c-[vg] {
+                color: #cb4b16
+            }
+
+            /* Name.Variable.Global */
+            c-[vi] {
+                color: #cb4b16
+            }
+
+            /* Name.Variable.Instance */
+            c-[vm] {
+                color: #cb4b16
+            }
+
+            /* Name.Variable.Magic */
+            c-[il] {
+                color: #657b83
+            }
+
+            /* Literal.Number.Integer.Long */
+        }
+    </style>
+    <link href="https://www.w3.org/StyleSheets/TR/2021/W3C-CRD" rel="stylesheet">
+
+<body class="h-entry">
+    <div class="head">
+        <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48"
+                    src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C" width="72"> </a> </p>
+        <h1>安全上下文</h1>
+        <p id="w3c-state"><a href="https://www.w3.org/standards/types#CRD">W3C 候选推荐标准草案</a>, <time class="dt-updated"
+                datetime="2023-11-10">2023 年 11 月 10 日</time></p>
+        <details open>
+            <summary>关于本文档的更多详情</summary>
+            <div data-fill-with="spec-metadata">
+                <dl>
+                    <dt>此版本：
+                    <dd><a class="u-url"
+                            href="https://www.w3.org/TR/2023/CRD-secure-contexts-20231110/">https://www.w3.org/TR/2023/CRD-secure-contexts-20231110/</a>
+                    <dt>最新发布版本：
+                    <dd><a href="https://www.w3.org/TR/secure-contexts/">https://www.w3.org/TR/secure-contexts/</a>
+                    <dt>编者草案：
+                    <dd><a
+                            href="https://w3c.github.io/webappsec-secure-contexts/">https://w3c.github.io/webappsec-secure-contexts/</a>
+                    <dt>先前版本：
+                    <dd><a href="https://www.w3.org/TR/2021/CRD-secure-contexts-20210918/"
+                            rel="prev">https://www.w3.org/TR/2021/CRD-secure-contexts-20210918/</a>
+                    <dt>历史：
+                    <dd><a class="u-url"
+                            href="https://www.w3.org/standards/history/secure-contexts/">https://www.w3.org/standards/history/secure-contexts/</a>
+                    <dt>反馈：
+                    <dd><span><a
+                                href="mailto:public-webappsec@w3.org?subject=%5Bsecure-contexts%5D%20YOUR%20TOPIC%20HERE">public-webappsec@w3.org</a>
+                            ，主题行格式为“<kbd>[secure-contexts] <i data-lt>… 消息主题 …</i></kbd>” (<a
+                                href="https://lists.w3.org/Archives/Public/public-webappsec/"
+                                rel="discussion">存档</a>)</span>
+                    <dd><a href="https://github.com/w3c/webappsec-secure-contexts/issues">GitHub</a>
+                    <dt>实现报告：
+                    <dd><a href="https://wpt.fyi/results/secure-contexts">https://wpt.fyi/results/secure-contexts</a>
+                    <dt class="editor">编者：
+                    <dd class="editor p-author h-card vcard" data-editor-id="56384"><a class="p-name fn u-email email"
+                            href="mailto:mkwst@google.com">Mike West</a> (<span class="p-org org">Google Inc.</span>)
+                    <dt class="editor">前任编者：
+                    <dd class="editor p-author h-card vcard"><span class="p-name fn">Yan Zhu</span> (<span
+                            class="p-org org">Brave</span>)
+                    <dt>参与：
+                    <dd><a href="https://github.com/w3c/webappsec-secure-contexts/issues/new">提交问题</a> (<a
+                            href="https://github.com/w3c/webappsec-secure-contexts/issues">未解决问题</a>)
+                </dl>
+            </div>
+        </details>
+        <div data-fill-with="warning"></div>
+        <p class="copyright" data-fill-with="copyright"><a href="https://www.w3.org/policies/#copyright">Copyright</a> ©
+            2023 <a href="https://www.w3.org/">World Wide Web Consortium</a>. <abbr
+                title="World Wide Web Consortium">W3C</abbr><sup>®</sup> <a
+                href="https://www.w3.org/policies/#Legal_Disclaimer">liability</a>, <a
+                href="https://www.w3.org/policies/#W3C_Trademarks">trademark</a> and <a
+                href="https://www.w3.org/copyright/software-license/" rel="license"
+                title="W3C Software and Document License">permissive document license</a> rules apply. </p>
+        <hr title="Separator for header">
+    </div>
+    <div class="p-summary" data-fill-with="abstract">
+        <h2 class="no-num no-toc no-ref heading settled" id="abstract"><span class="content">摘要</span></h2>
+        <p>本规范定义了“安全上下文”，从而允许用户代理实现者和规范作者仅在满足某些最低的身份验证和机密性标准时才启用某些功能。</p>
+    </div>
+    <h2 class="no-num no-toc no-ref heading settled" id="sotd"><span class="content">本文档的状态</span></h2>
+    <div data-fill-with="status">
+        <p> <em>本节描述了本文档在发布时的状态。当前的 W3C 出版物列表和本技术报告的最新修订版可以在 <a href="https://www.w3.org/TR/">W3C 技术报告索引
+                    https://www.w3.org/TR/</a> 中找到。</em> </p>
+        <p> 本文档由 <a href="https://www.w3.org/groups/wg/webappsec">Web 应用安全工作组</a>作为候选推荐标准草案发布，采用<a
+                href="https://www.w3.org/2023/Process-20231103/#recs-and-notes">推荐标准轨道</a>。本文档旨在成为 W3C 推荐标准。</p>
+        <p> 讨论本规范首选使用（<a href="https://lists.w3.org/Archives/Public/public-webappsec/">已存档的</a>）公共邮件列表 <a
+                href="mailto:public-webappsec@w3.org?Subject=%5Bsecure-contexts%5D%20PUT%20SUBJECT%20HERE">public-webappsec@w3.org</a>
+            （请参阅<a href="https://www.w3.org/Mail/Request">说明</a>）。
+            发送电子邮件时，
+            请在主题中包含文本“secure-contexts”，
+            最好是这样：
+            “[secure-contexts] <em>…评论摘要…</em>” </p>
+        <p> 作为候选推荐标准发布并不意味着 <abbr title="World Wide Web Consortium">W3C</abbr>
+            及其成员的认可。候选推荐标准草案整合了工作组打算在后续候选推荐标准快照中包含的先前候选推荐标准的更改。这是一个草案文件，可能随时被其他文件更新、替换或废弃。将本文档引用为正在进行的工作以外的内容是不合适的。</p>
+        <p> 本文档进入提议推荐标准阶段的准入标准是至少有两个独立且可互操作的用户代理实现了本规范的所有特性，这将通过工作组开发的测试套件中定义的用户代理测试来确定。工作组将准备一份实现报告以跟踪进展。</p>
+        <p> 本文档由一个在<a href="https://www.w3.org/Consortium/Patent-Policy/">W3C 专利政策</a>下运作的小组制作。
+            W3C 维护一份与该小组交付成果相关的任何<a href="https://www.w3.org/groups/wg/webappsec/ipr" rel="disclosure">专利披露的公开列表</a>；
+            该页面还包括披露专利的说明。
+            任何实际知晓某项专利包含其认为的<a href="https://www.w3.org/Consortium/Patent-Policy/#def-essential">必要权利要求</a>的个人必须根据<a
+                href="https://www.w3.org/Consortium/Patent-Policy/#sec-Disclosure">W3C 专利政策第 6 节</a>披露该信息。</p>
+        <p> 本文档受 <a href="https://www.w3.org/2023/Process-20231103/" id="w3c_process_revision">2023 年 11 月 3 日 W3C
+                流程文档</a>的约束。</p>
+        <p></p>
+    </div>
+    <div data-fill-with="at-risk"></div>
+    <nav data-fill-with="table-of-contents" id="toc">
+        <h2 class="no-num no-toc no-ref" id="contents">目录</h2>
+        <ol class="toc" role="directory">
+            <li>
+                <a href="#intro"><span class="secno">1</span> <span class="content">引言</span></a>
+                <ol class="toc">
+                    <li><a href="#examples-top-level"><span class="secno">1.1</span> <span
+                                class="content">顶级文档</span></a>
+                    </li>
+                    <li><a href="#examples-framed"><span class="secno">1.2</span> <span class="content">框架文档</span></a>
+                    </li>
+                    <li><a href="#examples-workers"><span class="secno">1.3</span> <span class="content">Web
+                                Workers</span></a>
+                    </li>
+                    <li><a href="#examples-shared-workers"><span class="secno">1.4</span> <span class="content">共享
+                                Workers</span></a>
+                    </li>
+                    <li><a href="#examples-service-workers"><span class="secno">1.5</span> <span class="content">服务
+                                Workers</span></a>
+                    </li>
+                </ol>
+            </li>
+            <li>
+                <a href="#framework"><span class="secno">2</span> <span class="content">框架</span></a>
+                <ol class="toc">
+                    <li><a href="#integration-idl"><span class="secno">2.1</span> <span class="content">与 WebIDL
+                                的集成</span></a>
+                    </li>
+                    <li>
+                        <a href="#monkey-patching-html"><span class="secno">2.2</span> <span class="content">与 HTML
+                                的集成</span></a>
+                        <ol class="toc">
+                            <li><a href="#shared-workers"><span class="secno">2.2.1</span> <span class="content">共享
+                                        Workers</span></a>
+                            </li>
+                            <li><a href="#monkey-patching-global-object"><span class="secno">2.2.2</span> <span
+                                        class="content">特性检测</span></a>
+                            </li>
+                            <li><a href="#is-settings-object-contextually-secure"><span class="secno">2.2.3</span> <span
+                                        class="content">安全和非安全上下文</span></a>
+                            </li>
+                        </ol>
+                    </li>
+                </ol>
+            </li>
+            <li>
+                <a href="#algorithms"><span class="secno">3</span> <span class="content">算法</span></a>
+                <ol class="toc">
+                    <li><a href="#is-origin-trustworthy"><span class="secno">3.1</span> <span class="content">
+                                <var>origin</var> 是否可能值得信赖？</span></a>
+                    </li>
+                    <li><a href="#is-url-trustworthy"><span class="secno">3.2</span> <span class="content">
+                                <var>url</var> 是否可能值得信赖？</span></a>
+                    </li>
+                </ol>
+            </li>
+            <li>
+                <a href="#threat-models-risks"><span class="secno">4</span> <span class="content"> 威胁模型和风险 </span></a>
+                <ol class="toc">
+                    <li>
+                        <a href="#threat-models"><span class="secno">4.1</span> <span class="content">威胁模型</span></a>
+                        <ol class="toc">
+                            <li><a href="#threat-passive"><span class="secno">4.1.1</span> <span
+                                        class="content">被动网络攻击者</span></a>
+                            </li>
+                            <li><a href="#threat-active"><span class="secno">4.1.2</span> <span
+                                        class="content">主动网络攻击者</span></a>
+                            </li>
+                        </ol>
+                    </li>
+                    <li><a href="#ancestors"><span class="secno">4.2</span> <span class="content">祖先风险</span></a>
+                    </li>
+                    <li><a href="#threat-risks"><span class="secno">4.3</span> <span
+                                class="content">与非安全上下文相关的风险</span></a>
+                    </li>
+                </ol>
+            </li>
+            <li>
+                <a href="#security-considerations"><span class="secno">5</span> <span class="content">安全考量</span></a>
+                <ol class="toc">
+                    <li><a href="#isolation"><span class="secno">5.1</span> <span class="content">不完全隔离</span></a>
+                    </li>
+                    <li><a href="#localhost"><span class="secno">5.2</span> <span
+                                class="content"><code>localhost</code></span></a>
+                    </li>
+                </ol>
+            </li>
+            <li><a href="#privacy-considerations"><span class="secno">6</span> <span class="content">隐私考量</span></a>
+            </li>
+            <li>
+                <a href="#implementation-considerations"><span class="secno">7</span> <span
+                        class="content">实现考量</span></a>
+                <ol class="toc">
+                    <li><a href="#packaged-applications"><span class="secno">7.1</span> <span
+                                class="content">打包应用程序</span></a>
+                    </li>
+                    <li><a href="#development-environments"><span class="secno">7.2</span> <span
+                                class="content">开发环境</span></a>
+                    </li>
+                    <li><a href="#new"><span class="secno">7.3</span> <span class="content">限制新特性</span></a>
+                    </li>
+                    <li>
+                        <a href="#legacy"><span class="secno">7.4</span> <span class="content">限制旧有特性</span></a>
+                        <ol class="toc">
+                            <li><a href="#legacy-example"><span class="secno">7.4.1</span> <span
+                                        class="content">示例：地理定位</span></a>
+                            </li>
+                        </ol>
+                    </li>
+                </ol>
+            </li>
+            <li><a href="#acknowledgements"><span class="secno">8</span> <span class="content">致谢</span></a>
+            </li>
+            <li>
+                <a href="#index"><span class="secno"></span> <span class="content">索引</span></a>
+                <ol class="toc">
+                    <li><a href="#index-defined-here"><span class="secno"></span> <span
+                                class="content">本规范定义的术语</span></a>
+                    </li>
+                    <li><a href="#index-defined-elsewhere"><span class="secno"></span> <span
+                                class="content">通过引用定义的术语</span></a>
+                    </li>
+                </ol>
+            </li>
+            <li>
+                <a href="#references"><span class="secno"></span> <span class="content">参考文献</span></a>
+                <ol class="toc">
+                    <li><a href="#normative"><span class="secno"></span> <span class="content">规范性参考文献</span></a>
+                    </li>
+                    <li><a href="#informative"><span class="secno"></span> <span class="content">信息性参考文献</span></a>
+                    </li>
+                </ol>
+            </li>
+        </ol>
+    </nav>
+    <main>
+        <section>
+            <h2 class="heading settled" data-level="1" id="intro"><span class="secno">1. </span><span
+                    class="content">引言</span><a class="self-link" href="#intro"></a></h2>
+            <p><em>本节不是规范性的。</em></p>
+            <p>随着 Web 平台不断扩展以支持更多有用和强大的应用程序，确保这些应用程序的功能仅在满足最低安全级别的上下文中启用变得越来越重要。作为 TAG 在 <a data-link-type="biblio"
+                    href="#biblio-securing-web" title="Securing the Web">[SECURING-WEB]</a> 中建议的延伸，本文档描述了 Web
+                上功能滥用的威胁模型（参见 <a href="#threat-models">§ 4.1 威胁模型</a>），并概述了应纳入新功能规范文档的规范性要求（参见 <a
+                    href="#implementation-considerations">§ 7 实现考量</a>）。</p>
+            <p>此处讨论的最明显的要求是，能够访问敏感或私密数据的应用程序代码必须通过保证数据完整性的、经过身份验证的通道进行机密传输。安全地交付代码不能确保应用程序将始终满足用户的安全和隐私要求，但这是一个必要的前提条件。
+            </p>
+            <p>不那么明显的是，通过经过身份验证和保密的通道交付的应用程序代码本身并不足以限制非安全上下文使用强大的功能。正如 <a href="#ancestors">§ 4.2 祖先风险</a>
+                所解释的，协作的框架可能被滥用以绕过对功能的其他可靠限制。下面定义的算法确保这些绕过是困难且用户可见的。</p>
+            <p>以下示例总结了随后的规范性文本：</p>
+            <h3 class="heading settled" data-level="1.1" id="examples-top-level"><span class="secno">1.1. </span><span
+                    class="content">顶级文档</span><a class="self-link" href="#examples-top-level"></a></h3>
+            <div class="example" id="example-c84aa709">
+                <a class="self-link" href="#example-c84aa709"></a>
+                <p>在<a data-link-type="dfn"
+                        href="https://html.spec.whatwg.org/multipage/document-sequences.html#top-level-browsing-context"
+                        id="ref-for-top-level-browsing-context">顶级浏览上下文</a>中打开的 <code>http://example.com/</code> 不是一个<a
+                        data-link-type="dfn"
+                        href="https://html.spec.whatwg.org/multipage/webappapis.html#secure-context"
+                        id="ref-for-secure-context">安全上下文</a>，因为它不是通过经过身份验证和加密的通道交付的。</p>
+                <svg height="200" width="400">
+                    <g transform="translate(10,10)">
+                        <rect class="non-secure" height="175" width="297" x="0" y="0"></rect>
+                        <text transform="translate(10, 20)">http://example.com/</text>
+                    </g>
+                </svg>
+            </div>
+            <div class="example" id="example-13e52697">
+                <a class="self-link" href="#example-13e52697"></a>
+                <p>在<a data-link-type="dfn"
+                        href="https://html.spec.whatwg.org/multipage/document-sequences.html#top-level-browsing-context"
+                        id="ref-for-top-level-browsing-context①">顶级浏览上下文</a>中打开的 <code>https://example.com/</code> 是一个<a
+                        data-link-type="dfn"
+                        href="https://html.spec.whatwg.org/multipage/webappapis.html#secure-context"
+                        id="ref-for-secure-context①">安全上下文</a>，因为它是通过经过身份验证和加密的通道交付的。</p>
+                <svg height="200" width="400">
+                    <g transform="translate(10,10)">
+                        <rect class="secure" height="175" width="297" x="0" y="0"></rect>
+                        <text transform="translate(10, 20)">https://example.com/</text>
+                    </g>
+                </svg>
+            </div>
+            <div class="example" id="example-7e6c3525">
+                <a class="self-link" href="#example-7e6c3525"></a>
+                <p>如果一个安全上下文在新窗口中打开 <code>https://example.com/</code>，那么该新窗口将是一个安全上下文，因为它本身就具备安全条件：</p>
+                <svg height="400" width="400">
+                    <g transform="translate(10,10)">
+                        <rect class="secure" height="175" width="297" x="0" y="0"></rect>
+                        <text transform="translate(10, 20)">https://secure.example.com/</text>
+                    </g>
+                    <g transform="translate(10,210)">
+                        <rect class="secure" height="175" width="297" x="0" y="0"></rect>
+                        <text transform="translate(10, 20)">https://another.example.com/</text>
+                    </g>
+                    <g>
+                        <path d="M150, 87 C 200 75, 350 75, 150 287"></path>
+                    </g>
+                </svg>
+            </div>
+            <div class="example" id="example-4ec7a126">
+                <a class="self-link" href="#example-4ec7a126"></a>
+                <p>同样，如果一个非安全上下文在新窗口中打开 <code>https://example.com/</code>，该新窗口将是一个安全上下文，即使其打开者是非安全的：</p>
+                <svg height="400" width="400">
+                    <g transform="translate(10,10)">
+                        <rect class="non-secure" height="175" width="297" x="0" y="0"></rect>
+                        <text transform="translate(10, 20)">http://non-secure.example.com/</text>
+                    </g>
+                    <g transform="translate(10,210)">
+                        <rect class="secure" height="175" width="297" x="0" y="0"></rect>
+                        <text transform="translate(10, 20)">https://another.example.com/</text>
+                    </g>
+                    <g>
+                        <path d="M150, 87 C 200 75, 350 75, 150 287"></path>
+                    </g>
+                </svg>
+            </div>
+            <h3 class="heading settled" data-level="1.2" id="examples-framed"><span class="secno">1.2. </span><span
+                    class="content">框架文档</span><a class="self-link" href="#examples-framed"></a></h3>
+            <p>如果框架文档来自<a data-link-type="dfn" href="#potentially-trustworthy-origin"
+                    id="ref-for-potentially-trustworthy-origin">潜在可信的源</a>，<em>并且</em>它们被嵌入到一个<a data-link-type="dfn"
+                    href="https://html.spec.whatwg.org/multipage/webappapis.html#secure-context"
+                    id="ref-for-secure-context③">安全上下文</a>中，那么它们可以是<a data-link-type="dfn"
+                    href="https://html.spec.whatwg.org/multipage/webappapis.html#secure-context"
+                    id="ref-for-secure-context②">安全上下文</a>。也就是说：</p>
+            <div class="example" id="example-d781493f">
+                <a class="self-link" href="#example-d781493f"></a> 如果在<a data-link-type="dfn"
+                    href="https://html.spec.whatwg.org/multipage/document-sequences.html#top-level-browsing-context"
+                    id="ref-for-top-level-browsing-context②">顶级浏览上下文</a>中打开的 <code>https://example.com/</code> 在一个框架中打开
+                <code>https://sub.example.com/</code>，那么两者都是<a data-link-type="dfn"
+                    href="https://html.spec.whatwg.org/multipage/webappapis.html#secure-context"
+                    id="ref-for-secure-context④">安全上下文</a>，因为它们都是通过经过身份验证和加密的通道交付的。
+                <p></p>
+                <svg height="200" width="400">
+                    <g transform="translate(10,10)">
+                        <rect class="secure" height="175" width="300" x="0" y="0"></rect>
+                        <text transform="translate(10, 20)">https://example.com/</text>
+                        <g transform="translate(20, 50)">
+                            <rect class="secure" height="105" width="250" x="0" y="0"></rect>
+                            <text transform="translate(10, 20)">https://sub.example.com/</text>
+                        </g>
+                    </g>
+                </svg>
+            </div>
+            <div class="example" id="example-824d8fc5">
+                <a class="self-link" href="#example-824d8fc5"></a>
+                <p>如果 <code>https://example.com/</code> 以某种方式能够框架
+                    <code>http://non-secure.example.com/</code>（也许用户覆盖了混合内容检查？），顶级框架将保持安全，但被框架的内容不是一个安全上下文。
+                </p>
+                <svg height="200" width="400">
+                    <g transform="translate(10,10)">
+                        <rect class="secure" height="175" width="300" x="0" y="0"></rect>
+                        <text transform="translate(10, 20)">https://example.com/</text>
+                        <g transform="translate(20, 50)">
+                            <rect class="non-secure" height="105" width="250" x="0" y="0"></rect>
+                            <text transform="translate(10, 20)">http://non-secure.example.com/</text>
+                        </g>
+                    </g>
+                </svg>
+            </div>
+            <div class="example" id="example-ca732a99">
+                <a class="self-link" href="#example-ca732a99"></a>
+                <p>另一方面，如果 <code>https://example.com/</code> 被框架在 <code>http://non-secure.example.com/</code>
+                    内部，那么它<em>不是</em>一个安全上下文，因为它的祖先不是通过经过身份验证和加密的通道交付的。</p>
+                <svg height="200" width="400">
+                    <g transform="translate(10,10)">
+                        <rect class="non-secure" height="175" width="300" x="0" y="0"></rect>
+                        <text transform="translate(10, 20)">http://non-secure.example.com/</text>
+                        <g transform="translate(20, 50)">
+                            <rect class="non-secure" height="105" width="250" x="0" y="0"></rect>
+                            <text transform="translate(10, 20)">https://example.com/</text>
+                        </g>
+                    </g>
+                </svg>
+            </div>
+            <h3 class="heading settled" data-level="1.3" id="examples-workers"><span class="secno">1.3. </span><span
+                    class="content">Web Workers</span><a class="self-link" href="#examples-workers"></a></h3>
+            <p>专用 Workers 在性质上类似于框架文档。当它们从<a data-link-type="dfn" href="#potentially-trustworthy-origin"
+                    id="ref-for-potentially-trustworthy-origin①">潜在可信的源</a>交付时，它们是<a data-link-type="dfn"
+                    href="https://html.spec.whatwg.org/multipage/webappapis.html#secure-context"
+                    id="ref-for-secure-context⑤">安全上下文</a>，但前提是其所有者本身就是一个<a data-link-type="dfn"
+                    href="https://html.spec.whatwg.org/multipage/webappapis.html#secure-context"
+                    id="ref-for-secure-context⑥">安全上下文</a>：</p>
+            <div class="example" id="example-81f4526b">
+                <a class="self-link" href="#example-81f4526b"></a>
+                <p>如果在<a data-link-type="dfn"
+                        href="https://html.spec.whatwg.org/multipage/document-sequences.html#top-level-browsing-context"
+                        id="ref-for-top-level-browsing-context③">顶级浏览上下文</a>中的 <code>https://example.com/</code> 运行
+                    <code>https://example.com/worker.js</code>，那么文档和 worker 都是<a data-link-type="dfn"
+                        href="https://html.spec.whatwg.org/multipage/webappapis.html#secure-context"
+                        id="ref-for-secure-context⑦">安全上下文</a>。
+                </p>
+                <svg height="200" width="600">
+                    <g transform="translate(10,10)">
+                        <rect class="secure" height="175" width="300" x="0" y="0"></rect>
+                        <text transform="translate(10, 20)">https://example.com/</text>
+                        <g transform="translate(400, 110)">
+                            <circle class="secure" r="50"></circle>
+                            <text transform="translate(-75, -55)">https://example.com/worker.js</text>
+                        </g>
+                        <g>
+                            <path d="M150, 87 C 200 75, 350 75, 405 110"></path>
+                        </g>
+                    </g>
+                </svg>
+            </div>
+            <div class="example" id="example-3fea90e7">
+                <a class="self-link" href="#example-3fea90e7"></a>
+                <p>如果在<a data-link-type="dfn"
+                        href="https://html.spec.whatwg.org/multipage/document-sequences.html#top-level-browsing-context"
+                        id="ref-for-top-level-browsing-context④">顶级浏览上下文</a>中的
+                    <code>http://non-secure.example.com/</code> 框架了 <code>https://example.com/</code>，后者运行
+                    <code>https://example.com/worker.js</code>，那么被框架的文档和 worker 都不是<a data-link-type="dfn"
+                        href="https://html.spec.whatwg.org/multipage/webappapis.html#secure-context"
+                        id="ref-for-secure-context⑧">安全上下文</a>。
+                </p>
+                <svg height="200" width="600">
+                    <g transform="translate(10,10)">
+                        <rect class="non-secure" height="175" width="297" x="0" y="0"></rect>
+                        <text transform="translate(10, 20)">http://non-secure.example.com/</text>
+                        <g transform="translate(20, 50)">
+                            <rect class="non-secure" height="105" width="250" x="0" y="0"></rect>
+                            <text transform="translate(10, 20)">https://example.com/</text>
+                        </g>
+                        <g transform="translate(400, 110)">
+                            <circle class="non-secure" r="50"></circle>
+                            <text transform="translate(-75, -55)">https://example.com/worker.js</text>
+                        </g>
+                        <g>
+                            <path d="M150, 87 C 200 75, 350 75, 405 110"></path>
+                        </g>
+                    </g>
+                </svg>
+            </div>
+            <h3 class="heading settled" data-level="1.4" id="examples-shared-workers"><span class="secno">1.4.
+                </span><span class="content">共享 Workers</span><a class="self-link" href="#examples-shared-workers"></a>
+            </h3>
+            <p>多个上下文可以附加到一个共享 Worker。如果一个<a data-link-type="dfn"
+                    href="https://html.spec.whatwg.org/multipage/webappapis.html#secure-context"
+                    id="ref-for-secure-context⑨">安全上下文</a>创建了一个共享 Worker，那么它就是一个<a data-link-type="dfn"
+                    href="https://html.spec.whatwg.org/multipage/webappapis.html#secure-context"
+                    id="ref-for-secure-context①⓪">安全上下文</a>，并且只能由其他<a data-link-type="dfn"
+                    href="https://html.spec.whatwg.org/multipage/webappapis.html#secure-context"
+                    id="ref-for-secure-context①①">安全上下文</a>附加。如果一个非安全上下文创建了一个共享 Worker，那么它<em>不是</em>一个<a
+                    data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#secure-context"
+                    id="ref-for-secure-context①②">安全上下文</a>，并且只能由其他非安全上下文附加。</p>
+            <div class="example" id="example-0fa14bd0">
+                <a class="self-link" href="#example-0fa14bd0"></a>
+                <p>如果在<a data-link-type="dfn"
+                        href="https://html.spec.whatwg.org/multipage/document-sequences.html#top-level-browsing-context"
+                        id="ref-for-top-level-browsing-context⑤">顶级浏览上下文</a>中的 <code>https://example.com/</code> 运行
+                    <code>https://example.com/worker.js</code> 作为共享 Worker，那么文档和 worker 都被认为是安全上下文。
+                </p>
+                <svg height="200" width="600">
+                    <g transform="translate(10,10)">
+                        <rect class="secure" height="175" width="300" x="0" y="0"></rect>
+                        <text transform="translate(10, 20)">https://example.com/</text>
+                        <g transform="translate(400, 110)">
+                            <circle class="secure" r="50"></circle>
+                            <text transform="translate(-75, -55)">https://example.com/worker.js</text>
+                        </g>
+                        <g>
+                            <path d="M150, 87 C 200 75, 350 75, 405 110"></path>
+                        </g>
+                    </g>
+                </svg>
+            </div>
+            <div class="example" id="example-5d65c447">
+                <a class="self-link" href="#example-5d65c447"></a>
+                <p>在另一个<a data-link-type="dfn"
+                        href="https://html.spec.whatwg.org/multipage/document-sequences.html#top-level-browsing-context"
+                        id="ref-for-top-level-browsing-context⑥">顶级浏览上下文</a>（例如，在新窗口中）的
+                    <code>https://example.com/</code> 是一个安全上下文，所以它可以访问安全的共享 worker：
+                </p>
+                <svg height="400" width="600">
+                    <g transform="translate(10,10)">
+                        <rect class="secure" height="175" width="300" x="0" y="0"></rect>
+                        <text transform="translate(10, 20)">https://example.com/</text>
+                        <g transform="translate(400, 110)">
+                            <circle class="secure" r="50"></circle>
+                            <text transform="translate(-75, -55)">https://example.com/worker.js</text>
+                        </g>
+                        <g>
+                            <path d="M150, 87 C 200 75, 350 75, 405 110"></path>
+                        </g>
+                    </g>
+                    <g transform="translate(10,200)">
+                        <rect class="secure" height="175" width="300" x="0" y="0"></rect>
+                        <text transform="translate(10, 20)">https://example.com/</text>
+                        <g>
+                            <path d="M150, 87 C 200 75, 350 75, 405 -80"></path>
+                        </g>
+                    </g>
+                </svg>
+            </div>
+            <div class="example" id="example-91d60405">
+                <a class="self-link" href="#example-91d60405"></a>
+                <p>嵌套在 <code>http://non-secure.example.com/</code> 中的 <code>https://example.com/</code> 可能无法连接到安全的
+                    worker，因为它不是一个安全上下文。</p>
+                <svg height="400" width="600">
+                    <g transform="translate(10,10)">
+                        <rect class="secure" height="175" width="300" x="0" y="0"></rect>
+                        <text transform="translate(10, 20)">https://example.com/</text>
+                        <g transform="translate(400, 110)">
+                            <circle class="secure" r="50"></circle>
+                            <text transform="translate(-75, -55)">https://example.com/worker.js</text>
+                        </g>
+                        <g>
+                            <path d="M150, 87 C 200 75, 350 75, 405 110"></path>
+                        </g>
+                    </g>
+                    <g transform="translate(10,200)">
+                        <rect class="non-secure" height="175" width="300" x="0" y="0"></rect>
+                        <text transform="translate(10, 20)">http://non-secure.example.com/</text>
+                        <g transform="translate(20, 50)">
+                            <rect class="non-secure" height="105" width="250" x="0" y="0"></rect>
+                            <text transform="translate(10, 20)">https://example.com/</text>
+                        </g>
+                        <g>
+                            <path d="M150, 87 C 200 75, 350 75, 405 20"></path>
+                            <text class="rejection" transform="translate(405, 20)">X</text>
+                        </g>
+                    </g>
+                </svg>
+            </div>
+            <div class="example" id="example-7ee428de">
+                <a class="self-link" href="#example-7ee428de"></a>
+                <p>同样，如果嵌套在 <code>http://non-secure.example.com/</code> 中的 <code>https://example.com/</code> 运行
+                    <code>https://example.com/worker.js</code> 作为共享 Worker，那么文档和 worker 都被认为是非安全的。
+                </p>
+                <svg height="400" width="600">
+                    <g transform="translate(10,10)">
+                        <rect class="non-secure" height="175" width="300" x="0" y="0"></rect>
+                        <text transform="translate(10, 20)">http://non-secure.example.com/</text>
+                        <g transform="translate(20, 50)">
+                            <rect class="non-secure" height="105" width="250" x="0" y="0"></rect>
+                            <text transform="translate(10, 20)">https://example.com/</text>
+                        </g>
+                        <g transform="translate(400, 110)">
+                            <circle class="non-secure" r="50"></circle>
+                            <text transform="translate(-75, -55)">https://example.com/worker.js</text>
+                        </g>
+                        <g>
+                            <path d="M150, 87 C 200 75, 350 75, 405 110"></path>
+                        </g>
+                    </g>
+                    <g transform="translate(10,200)">
+                        <rect class="secure" height="175" width="300" x="0" y="0"></rect>
+                        <text transform="translate(10, 20)">https://example.com/</text>
+                        <g>
+                            <path d="M150, 87 C 200 75, 350 75, 405 20"></path>
+                            <text class="rejection" transform="translate(405, 20)">X</text>
+                        </g>
+                    </g>
+                </svg>
+            </div>
+            <h3 class="heading settled" data-level="1.5" id="examples-service-workers"><span class="secno">1.5.
+                </span><span class="content">服务 Workers</span><a class="self-link" href="#examples-service-workers"></a>
+            </h3>
+            <p>服务 Workers 始终是<a data-link-type="dfn"
+                    href="https://html.spec.whatwg.org/multipage/webappapis.html#secure-context"
+                    id="ref-for-secure-context①③">安全上下文</a>。只有<a data-link-type="dfn"
+                    href="https://html.spec.whatwg.org/multipage/webappapis.html#secure-context"
+                    id="ref-for-secure-context①④">安全上下文</a>可以注册它们，并且它们只能拥有作为<a data-link-type="dfn"
+                    href="https://html.spec.whatwg.org/multipage/webappapis.html#secure-context"
+                    id="ref-for-secure-context①⑤">安全上下文</a>的客户端。</p>
+            <div class="example" id="example-7c2324e2">
+                <a class="self-link" href="#example-7c2324e2"></a>
+                <p>如果在<a data-link-type="dfn"
+                        href="https://html.spec.whatwg.org/multipage/document-sequences.html#top-level-browsing-context"
+                        id="ref-for-top-level-browsing-context⑦">顶级浏览上下文</a>中的 <code>https://example.com/</code> 注册了
+                    <code>https://example.com/service.js</code>，那么文档和服务 Worker 都被认为是安全上下文。
+                </p>
+                <svg height="200" width="600">
+                    <g transform="translate(10,10)">
+                        <rect class="secure" height="175" width="300" x="0" y="0"></rect>
+                        <text transform="translate(10, 20)">https://example.com/</text>
+                        <g transform="translate(400, 110)">
+                            <circle class="secure" r="50"></circle>
+                            <text transform="translate(-75, -55)">https://example.com/service.js</text>
+                        </g>
+                        <g>
+                            <path d="M150, 87 C 200 75, 350 75, 405 110"></path>
+                        </g>
+                    </g>
+                </svg>
+            </div>
+        </section>
+        <section class="non-normative">
+            <h2 class="heading settled" data-level="2" id="framework"><span class="secno">2. </span><span
+                    class="content">框架</span><a class="self-link" href="#framework"></a></h2>
+            <p><em>本节是非规范性的。</em></p>
+            <h3 class="heading settled" data-level="2.1" id="integration-idl"><span class="secno">2.1. </span><span
+                    class="content">与 WebIDL 的集成</span><a class="self-link" href="#integration-idl"></a></h3>
+            <p>一个新的 [<code
+                    class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#SecureContext" id="ref-for-SecureContext">SecureContext</a></code>]
+                属性可用于操作符，
+                它确保这些操作符只会被<a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#dfn-exposed"
+                    id="ref-for-dfn-exposed">暴露</a>到安全上下文中。
+                以下示例应该会有所帮助：</p>
+            <div class="example" id="example-5703efea">
+                <a class="self-link" href="#example-5703efea"></a>
+                <pre class="idl highlight def"><c-b>interface</c-b> <c-g>ExampleFeature</c-g> {
+    <span class="comment">// 此调用将在所有上下文中成功。</span>
+    <c-b>Promise</c-b>&lt;<c-b>double</c-b>&gt; <c-g>calculateNotSoSecretResult</c-g>();
+
+    <span class="comment">// 此操作不会暴露给非安全上下文。</span>
+    [<a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#SecureContext" id="ref-for-SecureContext①"><c-g>SecureContext</c-g></a>] <c-b>Promise</c-b>&lt;<c-b>double</c-b>&gt; <c-g>calculateSecretResult</c-g>();
+
+    <span class="comment">// 此处同样适用：该操作不会暴露给非安全上下文。</span>
+    [<a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#SecureContext" id="ref-for-SecureContext②"><c-g>SecureContext</c-g></a>] <c-b>boolean</c-b> <c-g>getSecretBoolean</c-g>();
+};
+
+[<a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#SecureContext" id="ref-for-SecureContext③"><c-g>SecureContext</c-g></a>]
+<c-b>interface</c-b> <c-g>SecureFeature</c-g> {
+    <span class="comment">// 此接口不会暴露给非安全上下文。</span>
+    <c-b>Promise</c-b>&lt;<c-b>any</c-b>&gt; <c-g>doAmazingThing</c-g>();
+};
+</pre>
+            </div>
+            <p>鼓励规范作者在定义新功能时使用此属性。</p>
+            <h3 class="heading settled" data-level="2.2" id="monkey-patching-html"><span class="secno">2.2. </span><span
+                    class="content">与 HTML 的集成</span><a class="self-link" href="#monkey-patching-html"></a>
+            </h3>
+            <h4 class="non-normative heading settled" data-level="2.2.1" id="shared-workers"><span class="secno">2.2.1.
+                </span><span class="content">共享 Workers</span><a class="self-link" href="#shared-workers"></a></h4>
+            <p><code
+                    class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/workers.html#sharedworker" id="ref-for-sharedworker">SharedWorker</a></code>
+                构造函数将在<a data-link-type="dfn"
+                    href="https://html.spec.whatwg.org/multipage/webappapis.html#secure-context"
+                    id="ref-for-secure-context①⑥">安全上下文</a>尝试附加到一个非<a data-link-type="dfn"
+                    href="https://html.spec.whatwg.org/multipage/webappapis.html#secure-context"
+                    id="ref-for-secure-context①⑦">安全上下文</a>的 Worker 时，以及非安全上下文尝试附加到一个<a data-link-type="dfn"
+                    href="https://html.spec.whatwg.org/multipage/webappapis.html#secure-context"
+                    id="ref-for-secure-context①⑧">安全上下文</a>的 Worker 时，抛出一个“<code
+                    class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#securityerror" id="ref-for-securityerror">SecurityError</a></code>”
+                <code
+                    class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#idl-DOMException" id="ref-for-idl-DOMException">DOMException</a></code>
+                异常。
+            </p>
+            <h4 class="heading settled" data-level="2.2.2" id="monkey-patching-global-object"><span class="secno">2.2.2.
+                </span><span class="content">特性检测</span><a class="self-link" href="#monkey-patching-global-object"></a>
+            </h4>
+            <p>应用程序可以通过检查定义在 <code
+                    class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/webappapis.html#windoworworkerglobalscope" id="ref-for-windoworworkerglobalscope">WindowOrWorkerGlobalScope</a></code>
+                上的 <code
+                    class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/webappapis.html#dom-issecurecontext" id="ref-for-dom-issecurecontext">isSecureContext</a></code>
+                布尔值来确定它是否在<a data-link-type="dfn"
+                    href="https://html.spec.whatwg.org/multipage/webappapis.html#secure-context"
+                    id="ref-for-secure-context①⑨">安全上下文</a>中执行。
+            </p>
+            <h4 class="heading settled" data-level="2.2.3" id="is-settings-object-contextually-secure"><span
+                    class="secno">2.2.3. </span><span class="content">安全和非安全上下文</span><a class="self-link"
+                    href="#is-settings-object-contextually-secure"></a></h4>
+            <p>HTML 标准定义了一个<a data-link-type="dfn"
+                    href="https://html.spec.whatwg.org/multipage/semantics.html#link-options-environment"
+                    id="ref-for-link-options-environment">环境</a>是<a data-link-type="dfn"
+                    href="https://html.spec.whatwg.org/multipage/webappapis.html#secure-context"
+                    id="ref-for-secure-context②⓪">安全上下文</a>还是<a data-link-type="dfn"
+                    href="https://html.spec.whatwg.org/multipage/webappapis.html#non-secure-context"
+                    id="ref-for-non-secure-context">非安全上下文</a>。这是其他规范使用的主要机制。</p>
+            <p>给定一个<a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#global-object"
+                    id="ref-for-global-object">全局对象</a>，规范可以检查其<a data-link-type="dfn"
+                    href="https://html.spec.whatwg.org/multipage/webappapis.html#relevant-settings-object"
+                    id="ref-for-relevant-settings-object">相关设置对象</a>（它是一个<a data-link-type="dfn"
+                    href="https://html.spec.whatwg.org/multipage/semantics.html#link-options-environment"
+                    id="ref-for-link-options-environment①">环境</a>）是否是一个<a data-link-type="dfn"
+                    href="https://html.spec.whatwg.org/multipage/webappapis.html#secure-context"
+                    id="ref-for-secure-context②①">安全上下文</a>。</p>
+        </section>
+        <section>
+            <h2 class="heading settled" data-level="3" id="algorithms"><span class="secno">3. </span><span
+                    class="content">算法</span><a class="self-link" href="#algorithms"></a></h2>
+            <h3 class="heading settled dfn-paneled" data-dfn-type="abstract-op" data-export data-level="3.1"
+                data-lt="Is origin potentially trustworthy?" id="is-origin-trustworthy"><span class="secno">3.1.
+                </span><span class="content"> <var>origin</var> 是否可能值得信赖？ </span><a class="self-link"
+                    href="#is-origin-trustworthy" id="ref-for-is-origin-trustworthy"></a></h3>
+            <p>一个<dfn class="dfn-paneled" data-dfn-type="dfn" data-export
+                    id="potentially-trustworthy-origin">潜在可信的源</dfn>是指用户代理通常可以信任其安全地传输数据的源。</p>
+            <p>该算法将某些主机、协议和源视为潜在可信的，即使它们可能没有以传统意义上的方式进行身份验证和加密。特别是，用户代理应该将 <code>file</code> URL
+                视为潜在可信的。原则上，用户代理可以将本地文件视为不可信的，但是，<em>根据用户代理在运行时可用的信息</em>，资源似乎已从磁盘安全地传输到用户代理。此外，将此类资源视为潜在可信的，对于在向公众部署应用程序之前构建应用程序的开发人员来说很方便。
+            </p>
+            <p>然而，这种对开发人员的友好性并非没有风险。优先考虑安全性而非此类便利性的用户代理可以选择更严格地分配信任，以排除 <code>file</code>。</p>
+            <p>另一方面，用户代理可以选择将此信任扩展到其他特定于供应商的 URL 方案，例如 <code>app:</code> 或 <code>chrome-extension:</code>，它可以<i
+                    lang="la">先验地</i>确定这些方案是可信的（详见 <a href="#packaged-applications">§ 7.1 打包应用程序</a>）。</p>
+            <p>给定一个<a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsers.html#concept-origin"
+                    id="ref-for-concept-origin">源</a>
+                (<var>origin</var>)，以下算法会酌情返回“<code>Potentially Trustworthy</code>”或“<code>Not Trustworthy</code>”。</p>
+            <ol>
+                <li data-md>
+                    <p>如果 <var>origin</var> 是一个<a data-link-type="dfn"
+                            href="https://html.spec.whatwg.org/multipage/browsers.html#concept-origin-opaque"
+                            id="ref-for-concept-origin-opaque">不透明源</a>，则返回“<code>Not Trustworthy</code>”。
+                    </p>
+                </li>
+                <li data-md>
+                    <p class="assertion">断言：<var>origin</var> 是一个<a data-link-type="dfn"
+                            href="https://html.spec.whatwg.org/multipage/browsers.html#concept-origin-tuple"
+                            id="ref-for-concept-origin-tuple">元组源</a>。</p>
+                </li>
+                <li data-md>
+                    <p>如果 <var>origin</var> 的<a data-link-type="dfn"
+                            href="https://html.spec.whatwg.org/multipage/browsers.html#concept-origin-scheme"
+                            id="ref-for-concept-origin-scheme">协议</a>是“<code>https</code>”或“<code>wss</code>”，
+                        则返回“<code>Potentially Trustworthy</code>”。</p>
+                    <p class="note" role="note"><span class="marker">注意：</span>这旨在与 <a data-link-type="biblio"
+                            href="#biblio-mix" title="Mixed Content">[MIX]</a> 中的<a data-link-type="dfn"
+                            href="https://www.w3.org/TR/mixed-content/#a-priori-authenticated-url"
+                            id="ref-for-a-priori-authenticated-url"><i lang="la">先验</i>认证 URL</a>概念类似。</p>
+                </li>
+                <li data-md>
+                    <p>如果 <var>origin</var> 的<a data-link-type="dfn"
+                            href="https://html.spec.whatwg.org/multipage/browsers.html#concept-origin-host"
+                            id="ref-for-concept-origin-host">主机</a>匹配 CIDR
+                        表示法 <code>127.0.0.0/8</code> 或 <code>::1/128</code> <a data-link-type="biblio"
+                            href="#biblio-rfc4632"
+                            title="Classless Inter-domain Routing (CIDR): The Internet Address Assignment and Aggregation Plan">[RFC4632]</a>
+                        之一，
+                        则返回“<code>Potentially Trustworthy</code>”。</p>
+                </li>
+                <li data-md>
+                    <p>如果用户代理符合 <a data-link-type="biblio" href="#biblio-let-localhost-be-localhost"
+                            title="Let 'localhost' be localhost.">[let-localhost-be-localhost]</a> 中的名称解析规则，并且以下之一为真：
+                    </p>
+                    <ul>
+                        <li data-md>
+                            <p><var>origin</var> 的<a data-link-type="dfn"
+                                    href="https://html.spec.whatwg.org/multipage/browsers.html#concept-origin-host"
+                                    id="ref-for-concept-origin-host①">主机</a>是“<code>localhost</code>”或“<code>localhost.</code>”
+                            </p>
+                        </li>
+                        <li data-md>
+                            <p><var>origin</var> 的<a data-link-type="dfn"
+                                    href="https://html.spec.whatwg.org/multipage/browsers.html#concept-origin-host"
+                                    id="ref-for-concept-origin-host②">主机</a>以“<code>.localhost</code>”或“<code>.localhost.</code>”结尾
+                            </p>
+                        </li>
+                    </ul>
+                    <p>则返回“<code>Potentially Trustworthy</code>”。</p>
+                    <p class="note" role="note"><span class="marker">注意：</span>有关此处要求的详细信息，请参阅 <a href="#localhost">§
+                            5.2 localhost</a>。</p>
+                </li>
+                <li data-md>
+                    <p>如果 <var>origin</var> 的<a data-link-type="dfn"
+                            href="https://html.spec.whatwg.org/multipage/browsers.html#concept-origin-scheme"
+                            id="ref-for-concept-origin-scheme①">协议</a>是“<code>file</code>”，则返回
+                        “<code>Potentially Trustworthy</code>”。</p>
+                </li>
+                <li data-md>
+                    <p>如果 <var>origin</var> 的<a data-link-type="dfn"
+                            href="https://html.spec.whatwg.org/multipage/browsers.html#concept-origin-scheme"
+                            id="ref-for-concept-origin-scheme②">协议</a>组件是用户代理认为已通过身份验证的组件，则返回“<code>Potentially Trustworthy</code>”。
+                    </p>
+                    <p class="note" role="note"><span class="marker">注意：</span>有关此处的详细信息，请参阅 <a
+                            href="#packaged-applications">§ 7.1 打包应用程序</a>。</p>
+                </li>
+                <li data-md>
+                    <p>如果 <var>origin</var> 已被配置为可信源，则返回
+                        “<code>Potentially Trustworthy</code>”。</p>
+                    <p class="note" role="note"><span class="marker">注意：</span>有关此处的详细信息，请参阅 <a
+                            href="#development-environments">§ 7.2 开发环境</a>。</p>
+                </li>
+                <li data-md>
+                    <p>返回“<code>Not Trustworthy</code>”。</p>
+                </li>
+            </ol>
+            <p class="note" role="note"><span class="marker">注意：</span><var>origin</var> 的<a data-link-type="dfn"
+                    href="https://html.spec.whatwg.org/multipage/browsers.html#concept-origin-domain"
+                    id="ref-for-concept-origin-domain">域</a>和<a data-link-type="dfn"
+                    href="https://html.spec.whatwg.org/multipage/browsers.html#concept-origin-port"
+                    id="ref-for-concept-origin-port">端口</a>都不会影响它是否被视为<a data-link-type="dfn"
+                    href="https://html.spec.whatwg.org/multipage/webappapis.html#secure-context"
+                    id="ref-for-secure-context②②">安全上下文</a>。
+            </p>
+            <h3 class="heading settled" data-level="3.2" id="is-url-trustworthy"><span class="secno">3.2. </span><span
+                    class="content"> <var>url</var> 是否可能值得信赖？ </span><a class="self-link"
+                    href="#is-url-trustworthy"></a></h3>
+            <p>一个<dfn data-dfn-type="dfn" data-export id="potentially-trustworthy-url">潜在可信的 URL<a class="self-link"
+                        href="#potentially-trustworthy-url"></a></dfn>
+                是指要么从其创建者继承上下文（<code>about:blank</code>、<code>about:srcdoc</code>、<code>data</code>），要么其<a
+                    data-link-type="dfn" href="https://url.spec.whatwg.org/#concept-url-origin"
+                    id="ref-for-concept-url-origin">源</a>是一个<a data-link-type="dfn"
+                    href="#potentially-trustworthy-origin" id="ref-for-potentially-trustworthy-origin②">潜在可信的源</a>。
+                给定一个<a data-link-type="dfn" href="https://url.spec.whatwg.org/#concept-url" id="ref-for-concept-url">URL
+                    记录</a>
+                (<var>url</var>)，以下算法会酌情返回“<code>Potentially Trustworthy</code>”或“<code>Not Trustworthy</code>”：</p>
+            <ol>
+                <li data-md>
+                    <p>如果 <var>url</var> 是“<code>about:blank</code>”或“<code>about:srcdoc</code>”，则返回
+                        “<code>Potentially Trustworthy</code>”。</p>
+                </li>
+                <li data-md>
+                    <p>如果 <var>url</var> 的<a data-link-type="dfn" href="https://url.spec.whatwg.org/#concept-url-scheme"
+                            id="ref-for-concept-url-scheme">协议</a>是“<code>data</code>”，则返回
+                        “<code>Potentially Trustworthy</code>”。</p>
+                </li>
+                <li data-md>
+                    <p>返回在 <var>url</var> 的<a data-link-type="dfn"
+                            href="https://url.spec.whatwg.org/#concept-url-origin"
+                            id="ref-for-concept-url-origin①">源</a>上执行 <a href="#is-origin-trustworthy"
+                            id="ref-for-is-origin-trustworthy①">§ 3.1 origin 是否可能值得信赖？</a> 的结果。
+                    </p>
+                    <p class="note" role="note"><span class="marker">注意：</span><code>blob:</code> URL
+                        的源是创建它们的上下文的源。因此，在可信源中创建的 blob 本身也将是潜在可信的。</p>
+                </li>
+            </ol>
+        </section>
+        <section>
+            <h2 class="heading settled" data-level="4" id="threat-models-risks"><span class="secno">4. </span><span
+                    class="content"> 威胁模型和风险 </span><a class="self-link" href="#threat-models-risks"></a></h2>
+            <p><em>本节是非规范性的。</em></p>
+            <h3 class="heading settled" data-level="4.1" id="threat-models"><span class="secno">4.1. </span><span
+                    class="content">威胁模型</span><a class="self-link" href="#threat-models"></a></h3>
+            <p>在存在网络攻击者的情况下，向未经身份验证的源授予权限等同于向任何源授予权限。互联网的现状是，我们必须确实假设存在网络攻击者。通常，网络攻击者分为两类：被动攻击者和主动攻击者。</p>
+            <h4 class="heading settled" data-level="4.1.1" id="threat-passive"><span class="secno">4.1.1. </span><span
+                    class="content">被动网络攻击者</span><a class="self-link" href="#threat-passive"></a></h4>
+            <p>“被动网络攻击者”是指能够观察流量但缺乏能力或选择不在本规范所关注的层面上修改流量的一方。</p>
+            <p>以这种方式对网络进行监视“在未经通信各方同意的情况下颠覆了他们的意图”，并且“在允许其他行为者进行监视的情况下，无论某些人可能认为他们多么仁慈，都无法防御最邪恶的行为者。” <a
+                    data-link-type="biblio" href="#biblio-rfc7258"
+                    title="Pervasive Monitoring Is an Attack">[RFC7258]</a> 因此，本文档中定义的算法需要提供应用层数据隐私的机制，而不仅仅是完整性。</p>
+            <h4 class="heading settled" data-level="4.1.2" id="threat-active"><span class="secno">4.1.2. </span><span
+                    class="content">主动网络攻击者</span><a class="self-link" href="#threat-active"></a></h4>
+            <p>“主动网络攻击者”具备“被动网络攻击者”的所有能力，并且还能够修改、阻止或重放任何通过网络的数据。这些能力可供各种能力的潜在对手使用，从提供或仅参与公共无线网络的受感染设备，到互联网服务提供商在为牟取经济利益而操纵流量时无意中引入安全和隐私漏洞（<a
+                    data-link-type="biblio" href="#biblio-verizon"
+                    title="Verizon looks to target its mobile subscribers with ads">[VERIZON]</a> 和 <a
+                    data-link-type="biblio" href="#biblio-comcast"
+                    title="Comcast Wi-Fi serving self-promotional ads via JavaScript injection">[COMCAST]</a>
+                是最近的例子），再到有直接意图损害安全或隐私并能够针对个人用户、组织甚至整个人群的各方。</p>
+            <h3 class="heading settled" data-level="4.2" id="ancestors"><span class="secno">4.2. </span><span
+                    class="content">祖先风险</span><a class="self-link" href="#ancestors"></a></h3>
+            <p><a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#secure-context"
+                    id="ref-for-secure-context②③">安全上下文</a>算法会遍历特定上下文的所有祖先，以确定该上下文本身是否安全。为什么我们不认为一个在
+                <code><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/iframe-embed-object.html#the-iframe-element" id="ref-for-the-iframe-element">iframe</a></code>
+                中安全交付的文档本身就是安全的呢？
+            </p>
+            <p>简短的回答是，这种模型会助长滥用。Chrome 对 <a data-link-type="biblio" href="#biblio-webcryptoapi"
+                    title="Web Cryptography API">[WEBCRYPTOAPI]</a> 的实现是早期将 API 锁定到安全上下文的实验，它没有遍历上下文的祖先。当时的假设是，将 API
+                锁定到本身安全交付的资源就足以确保安全使用。然而，结果是像 Netflix 这样的实体构建了基于
+                <code><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/iframe-embed-object.html#the-iframe-element" id="ref-for-the-iframe-element①">iframe</a></code>
+                和 <code>postMessage()</code> 的垫片，将 API 暴露给非安全上下文。这种限制只不过是一个减速带，减缓了对 API 的非安全访问，但在阻止此类访问方面完全无效。
+            </p>
+            <p>虽然本文档中的算法并未将非安全上下文与<a data-link-type="dfn"
+                    href="https://html.spec.whatwg.org/multipage/webappapis.html#secure-context"
+                    id="ref-for-secure-context②④">安全上下文</a>完全隔离（如 <a href="#isolation">§ 5.1 不完全隔离</a>
+                中所讨论的），但祖先检查为这些上下文应提供的身份验证、机密性和完整性保证提供了相当强大的保护。</p>
+            <h3 class="heading settled" data-level="4.3" id="threat-risks"><span class="secno">4.3. </span><span
+                    class="content">与非安全上下文相关的风险</span><a class="self-link" href="#threat-risks"></a></h3>
+            <p>某些对用户安全或隐私有明显影响的 Web 平台功能应仅在<a data-link-type="dfn"
+                    href="https://html.spec.whatwg.org/multipage/webappapis.html#secure-context"
+                    id="ref-for-secure-context②⑤">安全上下文中</a>可用，以防御上述威胁。在非安全上下文中可用的功能有将这些能力暴露给网络攻击者的风险：</p>
+            <ol>
+                <li> 读取和修改敏感数据（个人身份信息、凭据、支付工具等）的能力。<a data-link-type="biblio" href="#biblio-credential-management-1"
+                        title="Credential Management Level 1">[CREDENTIAL-MANAGEMENT-1]</a> 是一个处理敏感数据的 API 示例。
+                </li>
+                <li> 读取和修改用户设备上传感器输入的能力（摄像头、麦克风和 GPS 尤其值得注意，但也肯定包括像加速度计这样不那么明显危险的传感器）。<a data-link-type="biblio"
+                        href="#biblio-geolocation-api"
+                        title="Geolocation API Specification 2nd Edition">[GEOLOCATION-API]</a> 和 <a
+                        data-link-type="biblio" href="#biblio-mediacapture-streams"
+                        title="Media Capture and Streams">[MEDIACAPTURE-STREAMS]</a> 是使用传感器输入的历史功能示例。
+                </li>
+                <li> 访问用户有权访问的其他设备信息的能力。<a data-link-type="biblio" href="#biblio-discovery-api"
+                        title="Network Service Discovery">[DISCOVERY-API]</a> 和 <a data-link-type="biblio"
+                        href="#biblio-web-bluetooth" title="Web Bluetooth">[WEB-BLUETOOTH]</a> 是很好的例子。
+                </li>
+                <li> 使用临时或持久标识符跟踪用户的能力，包括在一段时间后重置自身的标识符（例如 <code>window.sessionStorage</code>）、用户可以手动重置的标识符（例如 <a
+                        data-link-type="biblio" href="#biblio-encrypted-media"
+                        title="Encrypted Media Extensions">[ENCRYPTED-MEDIA]</a>、Cookies <a data-link-type="biblio"
+                        href="#biblio-rfc6265" title="HTTP State Management Mechanism">[RFC6265]</a> 和 <a
+                        data-link-type="biblio" href="#biblio-indexeddb"
+                        title="Indexed Database API">[IndexedDB]</a>），以及识别用户不易重置的硬件特征。
+                </li>
+                <li> 为某个源引入跨浏览会话持续存在的状态的能力。<a data-link-type="biblio" href="#biblio-service-workers"
+                        title="Service Workers">[SERVICE-WORKERS]</a> 是一个很好的例子。
+                </li>
+                <li> 以某种方式操纵用户代理的本机 UI，从而移除、模糊或操纵与用户对其上下文理解相关的细节的能力。<a data-link-type="biblio" href="#biblio-fullscreen"
+                        title="Fullscreen API Standard">[FULLSCREEN]</a> 是一个很好的例子。
+                </li>
+                <li> 引入需要用户许可的某些功能的能力。
+                </li>
+            </ol>
+            <p>此列表并非详尽无遗，但应能让您了解在编写或实现规范时应考虑的风险类型。</p>
+            <p class="note" role="note"><span class="marker">注意：</span>虽然将功能本身限制在<a data-link-type="dfn"
+                    href="https://html.spec.whatwg.org/multipage/webappapis.html#secure-context"
+                    id="ref-for-secure-context②⑥">安全上下文</a>中至关重要，但我们不应忘记，承载此类信息的设施（例如新的网络访问机制，或其他可访问网络数据的通用功能）同样敏感。</p>
+        </section>
+        <section>
+            <h2 class="heading settled" data-level="5" id="security-considerations"><span class="secno">5. </span><span
+                    class="content">安全考量</span><a class="self-link" href="#security-considerations"></a></h2>
+            <h3 class="heading settled" data-level="5.1" id="isolation"><span class="secno">5.1. </span><span
+                    class="content">不完全隔离</span><a class="self-link" href="#isolation"></a></h3>
+            <p>本文档中的<a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#secure-context"
+                    id="ref-for-secure-context②⑦">安全上下文</a>定义并未完全隔离同一来源的“安全”视图和“非安全”视图。通过日益深奥的机制，例如
+                <code>localStorage</code>/<code>sessionStorage</code> 的内容、<code>storage</code>
+                事件、<code>BroadcastChannel</code> 等，数据泄露仍然是可能的。
+            </p>
+            <h3 class="heading settled" data-level="5.2" id="localhost"><span class="secno">5.2. </span><span
+                    class="content"><code>localhost</code></span><a class="self-link" href="#localhost"></a></h3>
+            <p><a data-link-type="biblio" href="#biblio-rfc6761" title="Special-Use Domain Names">[RFC6761]</a> 的第 6.3
+                节规定了 <code>localhost.</code> 和 <code>.localhost.</code>
+                内的名称解析是特殊的，并建议本地解析器应该/可以特殊处理它们。无论好坏，解析器通常会忽略这些建议，并在许多情况下将 <code>localhost</code> 发送到网络进行解析。</p>
+            <p>鉴于这种不确定性，用户代理可以将 localhost 名称视为具有<a data-link-type="dfn" href="#potentially-trustworthy-origin"
+                    id="ref-for-potentially-trustworthy-origin③">潜在可信来源</a>，当且仅当它们也遵守 <a data-link-type="biblio"
+                    href="#biblio-let-localhost-be-localhost"
+                    title="Let 'localhost' be localhost.">[let-localhost-be-localhost]</a> 中阐明的 localhost 名称解析规则（其核心是确保
+                <code>localhost</code> 永远不会解析为非环回地址）。
+            </p>
+        </section>
+        <section>
+            <h2 class="heading settled" data-level="6" id="privacy-considerations"><span class="secno">6. </span><span
+                    class="content">隐私考量</span><a class="self-link" href="#privacy-considerations"></a></h2>
+            <p>本文档中的<a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#secure-context"
+                    id="ref-for-secure-context②⑧">安全上下文</a>定义本身没有任何隐私影响。然而，它确实使其他具有有趣隐私影响的功能能够将自己锁定在可以确保完整性、真实性和机密性得到特定保证的上下文中。
+            </p>
+            <p>从隐私的角度来看，鼓励规范作者考虑为其定义的功能要求安全上下文。</p>
+        </section>
+        <section>
+            <h2 class="heading settled" data-level="7" id="implementation-considerations"><span class="secno">7.
+                </span><span class="content">实现考量</span><a class="self-link" href="#implementation-considerations"></a>
+            </h2>
+            <h3 class="heading settled" data-level="7.1" id="packaged-applications"><span class="secno">7.1.
+                </span><span class="content">打包应用程序</span><a class="self-link" href="#packaged-applications"></a></h3>
+            <p>支持打包应用程序的用户代理可以将某些 URL 方案视为“安全的”，只要其内容经过用户代理的身份验证。例如，FirefoxOS 应用程序资源由一个 URL 引用，其<a data-link-type="dfn"
+                    href="https://url.spec.whatwg.org/#concept-url-scheme" id="ref-for-concept-url-scheme①">方案</a>组件是
+                <code>app:</code>。同样，Chrome 的扩展和应用程序位于 <code>chrome-extension:</code> 方案上。这些可以合理地被认为是受信任的来源。
+            </p>
+            <h3 class="heading settled" data-level="7.2" id="development-environments"><span class="secno">7.2.
+                </span><span class="content">开发环境</span><a class="self-link" href="#development-environments"></a></h3>
+            <p>为了支持在非环回主机上运行预发布服务器的开发人员，用户代理可以允许用户将特定的来源集配置为可信的，即使 <a href="#is-origin-trustworthy"
+                    id="ref-for-is-origin-trustworthy②">§ 3.1 来源是否可能值得信赖？</a> 通常会返回“<code>Not Trustworthy</code>”。</p>
+            <h3 class="heading settled" data-level="7.3" id="new"><span class="secno">7.3. </span><span
+                    class="content">限制新特性</span><a class="self-link" href="#new"></a></h3>
+            <p><em>本节是非规范性的。</em></p>
+            <p>在为新特性编写规范时，我们建议作者和编辑通过检查<a data-link-type="dfn"
+                    href="https://html.spec.whatwg.org/multipage/webappapis.html#secure-context"
+                    id="ref-for-secure-context②⑨">安全上下文</a>来保护敏感的 API。例如，类似下面的方法可能是一个好方法：</p>
+            <div class="example" id="example-0fe6ea9a">
+                <a class="self-link" href="#example-0fe6ea9a"></a>
+                <ol>
+                    <li>
+                        如果<a data-link-type="dfn"
+                            href="https://html.spec.whatwg.org/multipage/webappapis.html#current-settings-object"
+                            id="ref-for-current-settings-object">当前设置对象</a><em>不是</em>一个<a data-link-type="dfn"
+                            href="https://html.spec.whatwg.org/multipage/webappapis.html#secure-context"
+                            id="ref-for-secure-context③⓪">安全上下文</a>，则：
+                        <ol>
+                            <li> [<i>在此处插入适当的内容：也许可以用 <code>SecurityError</code> 拒绝一个
+                                    Promise，可以调用一个错误回调，可以拒绝一个权限请求等。</i>]。
+                            </li>
+                        </ol>
+                    </li>
+                </ol>
+            </div>
+            <p>作者也可以通过使用 [<code
+                    class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#SecureContext" id="ref-for-SecureContext④">SecureContext</a></code>]
+                属性来保护敏感 API，从而确保它们只暴露给<a data-link-type="dfn"
+                    href="https://html.spec.whatwg.org/multipage/webappapis.html#secure-context"
+                    id="ref-for-secure-context③①">安全上下文</a>。</p>
+            <div class="example" id="example-2aa4b56a">
+                <a class="self-link" href="#example-2aa4b56a"></a>
+                <pre class="idl highlight def">[<a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#SecureContext" id="ref-for-SecureContext⑤"><c-g>SecureContext</c-g></a>]
+        <c-b>interface</c-b> <c-g>SensitiveFeature</c-g> {
+          <c-b>Promise</c-b>&lt;<c-b>double</c-b>&gt; <c-g>getTheSecretDouble</c-g>();
+        };
+        
+        <span class="comment">// 或者:</span>
+        
+        <c-b>interface</c-b> <c-g>AnotherSensitiveFeature</c-g> {
+          [<a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#SecureContext" id="ref-for-SecureContext⑥"><c-g>SecureContext</c-g></a>] <c-n>void</c-n> <c-g>doThatPowerfulThing</c-g>();
+        };
+        </pre>
+            </div>
+            <section class="non-normative">
+                <h3 class="heading settled" data-level="7.4" id="legacy"><span class="secno">7.4. </span><span
+                        class="content">限制旧有特性</span><a class="self-link" href="#legacy"></a></h3>
+                <p><em>本节是非规范性的。</em></p>
+                <p>上面的列表清楚地包括了一些当前在非安全通道上可用的现有功能。我们建议尽快<a data-link-type="biblio" href="#biblio-w3c-process"
+                        title="W3C Process Document">[W3C-PROCESS]</a>修改这些旧有功能，以开始要求<a data-link-type="dfn"
+                        href="https://html.spec.whatwg.org/multipage/webappapis.html#secure-context"
+                        id="ref-for-secure-context③②">安全上下文</a>。</p>
+                <ol>
+                    <li data-md>
+                        <p>如果某个此类功能尚未被广泛实现，我们建议立即<a data-link-type="dfn"
+                                href="https://www.w3.org/2023/Process-20231103/#revising-rec"
+                                id="ref-for-revising-rec">修改</a>规范，以包含对<a data-link-type="dfn"
+                                href="https://html.spec.whatwg.org/multipage/webappapis.html#secure-context"
+                                id="ref-for-secure-context③③">安全上下文</a>的限制。</p>
+                    </li>
+                    <li data-md>
+                        <p>如果某个此类功能已被广泛实现，但尚未被广泛使用，我们建议通过在现有实现中添加如 <a href="#new">§ 7.3 限制新特性</a> 中所述的检查，并相应地<a
+                                data-link-type="dfn" href="https://www.w3.org/2023/Process-20231103/#revising-rec"
+                                id="ref-for-revising-rec①">修改规范</a>，来迅速将其限制在<a data-link-type="dfn"
+                                href="https://html.spec.whatwg.org/multipage/webappapis.html#secure-context"
+                                id="ref-for-secure-context③④">安全上下文</a>中。</p>
+                    </li>
+                    <li data-md>
+                        <p>如果某个此类功能已被广泛使用，我们建议弃用现有功能；应<a data-link-type="dfn"
+                                href="https://www.w3.org/2023/Process-20231103/#revising-rec"
+                                id="ref-for-revising-rec②">修改</a>规范，以指出它不符合本文档中概述的限制，并应制定一个计划，既提供该功能的合规版本，又将现有用户迁移到该新版本中。
+                        </p>
+                    </li>
+                </ol>
+                <h4 class="heading settled" data-level="7.4.1" id="legacy-example"><span class="secno">7.4.1.
+                    </span><span class="content">示例：地理定位</span><a class="self-link" href="#legacy-example"></a></h4>
+                <p><a data-link-type="biblio" href="#biblio-geolocation-api"
+                        title="Geolocation API Specification 2nd Edition">[GEOLOCATION-API]</a>
+                    是此类功能的一个很好的具体例子；它在大量非安全网站上被广泛实现和使用。一个合理的前进路径可能如下所示：</p>
+                <ol>
+                    <li data-md>
+                        <p><a data-link-type="dfn" href="https://www.w3.org/2023/Process-20231103/#revising-rec"
+                                id="ref-for-revising-rec③">修改</a>规范，在执行 <code
+                                class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/geolocation/#dom-geolocation-getcurrentposition" id="ref-for-dom-geolocation-getcurrentposition">getCurrentPosition()</a></code>
+                            和 <code
+                                class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/geolocation/#dom-geolocation-watchposition" id="ref-for-dom-geolocation-watchposition">watchPosition()</a></code>
+                            的算法之前，包含对<a data-link-type="dfn"
+                                href="https://html.spec.whatwg.org/multipage/webappapis.html#secure-context"
+                                id="ref-for-secure-context③⑤">安全上下文</a>的检查。
+                        </p>
+                        <p>如果<a data-link-type="dfn"
+                                href="https://html.spec.whatwg.org/multipage/webappapis.html#current-settings-object"
+                                id="ref-for-current-settings-object①">当前设置对象</a>不是一个<a data-link-type="dfn"
+                                href="https://html.spec.whatwg.org/multipage/webappapis.html#secure-context"
+                                id="ref-for-secure-context③⑥">安全上下文</a>，
+                            则应中止算法，并调用 <code>errorCallback</code>，其 <code>code</code> 为 <code>PERMISSION_DENIED</code>。
+                        </p>
+                    </li>
+                    <li data-md>
+                        <p>用户代理应宣布明确的意图，在特定日期禁用非安全上下文的 API，并相应地警告开发人员（例如，通过控制台消息）。</p>
+                    </li>
+                    <li data-md>
+                        <p>在标志日到来之前，用户代理应宣布一个弃用时间表，以确保网站作者认识到需要在其代码完全停止工作之前进行修改，并在此期间保护用户。这样的计划可能包括以下任何或所有内容：</p>
+                        <ol>
+                            <li data-md>
+                                <p>禁止对非安全来源授予持久权限</p>
+                            </li>
+                            <li data-md>
+                                <p>降低非安全来源 API 的精度（例如，始终返回城市级别的数据而不是高精度数据）</p>
+                                <ol start="3">
+                                    <li data-md>
+                                        <p>修改 UI 以告知用户和网站作者风险</p>
+                                    </li>
+                                </ol>
+                            </li>
+                        </ol>
+                    </li>
+                </ol>
+            </section>
+        </section>
+        <section>
+            <h2 class="heading settled" data-level="8" id="acknowledgements"><span class="secno">8. </span><span
+                    class="content">致谢</span><a class="self-link" href="#acknowledgements"></a></h2>
+            <p>本文档主要基于 Chrome 安全团队在 <a data-link-type="biblio" href="#biblio-powerful-new-features"
+                    title="Prefer Secure Origins For Powerful New Features">[POWERFUL-NEW-FEATURES]</a> 上的工作。Chris
+                Palmer、Ryan Sleevi 和 David Dorwin 尤其积极参与。Anne van Kesteren、Jonathan Watt、Boris Zbarsky 和 Henri Sivonen
+                也提供了非常有帮助的反馈。</p>
+        </section>
+    </main>
+    <script src="https://www.w3.org/scripts/TR/2021/fixup.js"></script>
+    <h2 class="no-num no-ref heading settled" id="index"><span class="content">索引</span><a class="self-link"
+            href="#index"></a></h2>
+    <h3 class="no-num no-ref heading settled" id="index-defined-here"><span class="content">本规范定义的术语</span><a
+            class="self-link" href="#index-defined-here"></a></h3>
+    <ul class="index">
+        <li><a href="#is-origin-trustworthy">源是否可能值得信赖？</a><span>，在 § 3</span>
+        </li>
+        <li><a href="#potentially-trustworthy-origin">潜在可信源</a><span>，在 § 3.1</span>
+        </li>
+        <li><a href="#potentially-trustworthy-url">潜在可信 URL</a><span>，在 § 3.2</span>
+        </li>
+    </ul>
+    <h3 class="no-num no-ref heading settled" id="index-defined-elsewhere"><span class="content">由引用定义的术语</span><a
+            class="self-link" href="#index-defined-elsewhere"></a></h3>
+    <ul class="index">
+        <li>
+            <a data-link-type="biblio">[GEOLOCATION]</a> 定义了以下术语：
+            <ul>
+                <li><span class="dfn-paneled" id="5e67384e">getCurrentPosition()</span>
+                </li>
+                <li><span class="dfn-paneled" id="38485211">watchPosition()</span>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a data-link-type="biblio">[HTML]</a> 定义了以下术语：
+            <ul>
+                <li><span class="dfn-paneled" id="a13a702f">SharedWorker</span>
+                </li>
+                <li><span class="dfn-paneled" id="5f6d392d">WindowOrWorkerGlobalScope</span>
+                </li>
+                <li><span class="dfn-paneled" id="12b8dfc0">current settings object</span>
+                </li>
+                <li><span class="dfn-paneled" id="2672c7bc">domain</span>
+                </li>
+                <li><span class="dfn-paneled" id="a746ba16">environment</span>
+                </li>
+                <li><span class="dfn-paneled" id="4b6086d7">global object</span>
+                </li>
+                <li><span class="dfn-paneled" id="77a2ee6e">host</span>
+                </li>
+                <li><span class="dfn-paneled" id="87fcd40c">iframe</span>
+                </li>
+                <li><span class="dfn-paneled" id="db3b2dfc">isSecureContext</span>
+                </li>
+                <li><span class="dfn-paneled" id="5155c2d3">non-secure context</span>
+                </li>
+                <li><span class="dfn-paneled" id="b01b1359">opaque origin</span>
+                </li>
+                <li><span class="dfn-paneled" id="086e3aff">origin</span>
+                </li>
+                <li><span class="dfn-paneled" id="98e31e77">port</span>
+                </li>
+                <li><span class="dfn-paneled" id="9c4c1e66">relevant settings object</span>
+                </li>
+                <li><span class="dfn-paneled" id="a23d12a9">scheme</span>
+                </li>
+                <li><span class="dfn-paneled" id="65181da8">secure context</span>
+                </li>
+                <li><span class="dfn-paneled" id="ae2a6342">top-level browsing context</span>
+                </li>
+                <li><span class="dfn-paneled" id="1d2aa117">tuple origin</span>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a data-link-type="biblio">[MIX]</a> 定义了以下术语：
+            <ul>
+                <li><span class="dfn-paneled" id="fab13602">a priori authenticated url</span>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a data-link-type="biblio">[URL]</a> 定义了以下术语：
+            <ul>
+                <li><span class="dfn-paneled" id="959ad97b">origin</span>
+                </li>
+                <li><span class="dfn-paneled" id="3a711be7">scheme</span>
+                </li>
+                <li><span class="dfn-paneled" id="a8c7461b">url record</span>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a data-link-type="biblio">[W3C-PROCESS]</a> 定义了以下术语：
+            <ul>
+                <li><span class="dfn-paneled" id="a8e1631c">modify a specification</span>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a data-link-type="biblio">[WEBIDL]</a> 定义了以下术语：
+            <ul>
+                <li><span class="dfn-paneled" id="dca2de17">DOMException</span>
+                </li>
+                <li><span class="dfn-paneled" id="b75bb3bd">SecureContext</span>
+                </li>
+                <li><span class="dfn-paneled" id="c3e881ef">SecurityError</span>
+                </li>
+                <li><span class="dfn-paneled" id="25c36209">exposed</span>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    <h2 class="no-num no-ref heading settled" id="references"><span class="content">参考文献</span><a class="self-link"
+            href="#references"></a></h2>
+    <h3 class="no-num no-ref heading settled" id="normative"><span class="content">规范性参考文献</span><a class="self-link"
+            href="#normative"></a></h3>
+    <dl>
+        <dt id="biblio-html">[HTML]
+        </dt>
+        <dd>Anne van Kesteren; 等. <a href="https://html.spec.whatwg.org/multipage/"><cite>HTML 标准</cite></a>.
+            活标准. 网址: <a href="https://html.spec.whatwg.org/multipage/">https://html.spec.whatwg.org/multipage/</a>
+        </dd>
+        <dt id="biblio-let-localhost-be-localhost">[LET-LOCALHOST-BE-LOCALHOST]
+        </dt>
+        <dd>Mike West. <a
+                href="https://datatracker.ietf.org/doc/html/draft-ietf-dnsop-let-localhost-be-localhost"><cite>让
+                    'localhost' 成为 localhost。</cite></a>. 网址: <a
+                href="https://datatracker.ietf.org/doc/html/draft-ietf-dnsop-let-localhost-be-localhost">https://datatracker.ietf.org/doc/html/draft-ietf-dnsop-let-localhost-be-localhost</a>
+        </dd>
+        <dt id="biblio-rfc4632">[RFC4632]
+        </dt>
+        <dd>V. Fuller; T. Li. <a href="https://www.rfc-editor.org/rfc/rfc4632"><cite>无类别域间路由
+                    (CIDR)：互联网地址分配和聚合计划</cite></a>. 2006年8月. 最佳当前实践. 网址: <a
+                href="https://www.rfc-editor.org/rfc/rfc4632">https://www.rfc-editor.org/rfc/rfc4632</a>
+        </dd>
+        <dt id="biblio-url">[URL]
+        </dt>
+        <dd>Anne van Kesteren. <a href="https://url.spec.whatwg.org/"><cite>URL 标准</cite></a>. 活标准.
+            网址: <a href="https://url.spec.whatwg.org/">https://url.spec.whatwg.org/</a>
+        </dd>
+        <dt id="biblio-w3c-process">[W3C-PROCESS]
+        </dt>
+        <dd>Elika J. Etemad (fantasai); Florian Rivoal. <a href="https://www.w3.org/Consortium/Process/"><cite>W3C
+                    流程文档</cite></a>. 2021年11月2日. 网址: <a
+                href="https://www.w3.org/Consortium/Process/">https://www.w3.org/Consortium/Process/</a>
+        </dd>
+        <dt id="biblio-webidl">[WEBIDL]
+        </dt>
+        <dd>Edgar Chen; Timothy Gu. <a href="https://webidl.spec.whatwg.org/"><cite>Web IDL 标准</cite></a>. 活标准. 网址: <a
+                href="https://webidl.spec.whatwg.org/">https://webidl.spec.whatwg.org/</a>
+        </dd>
+    </dl>
+    <h3 class="no-num no-ref heading settled" id="informative"><span class="content">信息性参考文献</span><a class="self-link"
+            href="#informative"></a></h3>
+    <dl>
+        <dt id="biblio-comcast">[COMCAST]
+        </dt>
+        <dd>David Kravets. <a
+                href="https://arstechnica.com/tech-policy/2014/09/why-comcasts-javascript-ad-injections-threaten-security-net-neutrality/"><cite>Comcast
+                    Wi-Fi 通过 JavaScript 注入提供自我推销广告</cite></a>. 网址: <a
+                href="https://arstechnica.com/tech-policy/2014/09/why-comcasts-javascript-ad-injections-threaten-security-net-neutrality/">https://arstechnica.com/tech-policy/2014/09/why-comcasts-javascript-ad-injections-threaten-security-net-neutrality/</a>
+        </dd>
+        <dt id="biblio-credential-management-1">[CREDENTIAL-MANAGEMENT-1]
+        </dt>
+        <dd>Mike West. <a href="https://www.w3.org/TR/credential-management-1/"><cite>凭据管理级别 1</cite></a>. 2019年1月17日.
+            工作草案. 网址: <a
+                href="https://www.w3.org/TR/credential-management-1/">https://www.w3.org/TR/credential-management-1/</a>
+        </dd>
+        <dt id="biblio-discovery-api">[DISCOVERY-API]
+        </dt>
+        <dd>Rich Tibbett. <a href="https://www.w3.org/TR/discovery-api/"><cite>网络服务发现</cite></a>. 2017年1月12日. 备忘录. 网址:
+            <a href="https://www.w3.org/TR/discovery-api/">https://www.w3.org/TR/discovery-api/</a>
+        </dd>
+        <dt id="biblio-encrypted-media">[ENCRYPTED-MEDIA]
+        </dt>
+        <dd>David Dorwin; 等. <a href="https://www.w3.org/TR/encrypted-media/"><cite>加密媒体扩展</cite></a>. 2017年9月18日. 推荐标准.
+            网址: <a href="https://www.w3.org/TR/encrypted-media/">https://www.w3.org/TR/encrypted-media/</a>
+        </dd>
+        <dt id="biblio-fullscreen">[FULLSCREEN]
+        </dt>
+        <dd>Philip Jägenstedt. <a href="https://fullscreen.spec.whatwg.org/"><cite>全屏 API 标准</cite></a>.
+            活标准. 网址: <a href="https://fullscreen.spec.whatwg.org/">https://fullscreen.spec.whatwg.org/</a>
+        </dd>
+        <dt id="biblio-geolocation">[GEOLOCATION]
+        </dt>
+        <dd>Marcos Caceres; Reilly Grant. <a href="https://www.w3.org/TR/geolocation/"><cite>地理定位 API</cite></a>.
+            2022年9月1日. 推荐标准. 网址: <a href="https://www.w3.org/TR/geolocation/">https://www.w3.org/TR/geolocation/</a>
+        </dd>
+        <dt id="biblio-geolocation-api">[GEOLOCATION-API]
+        </dt>
+        <dd>Andrei Popescu. <a href="https://www.w3.org/TR/geolocation-API/"><cite>地理定位 API 规范第二版</cite></a>.
+            2016年11月8日. 推荐标准. 网址: <a
+                href="https://www.w3.org/TR/geolocation-API/">https://www.w3.org/TR/geolocation-API/</a>
+        </dd>
+        <dt id="biblio-indexeddb">[IndexedDB]
+        </dt>
+        <dd>Nikunj Mehta; 等. <a href="https://www.w3.org/TR/IndexedDB/"><cite>索引数据库 API</cite></a>. 2015年1月8日. 推荐标准. 网址:
+            <a href="https://www.w3.org/TR/IndexedDB/">https://www.w3.org/TR/IndexedDB/</a>
+        </dd>
+        <dt id="biblio-mediacapture-streams">[MEDIACAPTURE-STREAMS]
+        </dt>
+        <dd>Cullen Jennings; 等. <a href="https://www.w3.org/TR/mediacapture-streams/"><cite>媒体捕获和流</cite></a>.
+            2023年9月21日. 候选推荐标准. 网址: <a
+                href="https://www.w3.org/TR/mediacapture-streams/">https://www.w3.org/TR/mediacapture-streams/</a>
+        </dd>
+        <dt id="biblio-mix">[MIX]
+        </dt>
+        <dd>Emily Stark; Mike West; Carlos IbarraLopez. <a
+                href="https://www.w3.org/TR/mixed-content/"><cite>混合内容</cite></a>. 2023年2月23日. 候选推荐标准. 网址: <a
+                href="https://www.w3.org/TR/mixed-content/">https://www.w3.org/TR/mixed-content/</a>
+        </dd>
+        <dt id="biblio-powerful-new-features">[POWERFUL-NEW-FEATURES]
+        </dt>
+        <dd>Chrome Security Team. <a
+                href="https://www.chromium.org/Home/chromium-security/prefer-secure-origins-for-powerful-new-features"><cite>为强大的新功能首选安全源</cite></a>.
+            网址: <a
+                href="https://www.chromium.org/Home/chromium-security/prefer-secure-origins-for-powerful-new-features">https://www.chromium.org/Home/chromium-security/prefer-secure-origins-for-powerful-new-features</a>
+        </dd>
+        <dt id="biblio-rfc6265">[RFC6265]
+        </dt>
+        <dd>A. Barth. <a href="https://httpwg.org/specs/rfc6265.html"><cite>HTTP 状态管理机制</cite></a>.
+            2011年4月. 建议标准. 网址: <a href="https://httpwg.org/specs/rfc6265.html">https://httpwg.org/specs/rfc6265.html</a>
+        </dd>
+        <dt id="biblio-rfc6761">[RFC6761]
+        </dt>
+        <dd>S. Cheshire; M. Krochmal. <a href="https://www.rfc-editor.org/rfc/rfc6761"><cite>特殊用途域名</cite></a>. 2013年2月.
+            建议标准. 网址: <a href="https://www.rfc-editor.org/rfc/rfc6761">https://www.rfc-editor.org/rfc/rfc6761</a>
+        </dd>
+        <dt id="biblio-rfc7258">[RFC7258]
+        </dt>
+        <dd>S. Farrell; H. Tschofenig. <a href="https://www.rfc-editor.org/rfc/rfc7258"><cite>普遍监控是一种攻击</cite></a>.
+            2014年5月. 最佳当前实践. 网址: <a
+                href="https://www.rfc-editor.org/rfc/rfc7258">https://www.rfc-editor.org/rfc/rfc7258</a>
+        </dd>
+        <dt id="biblio-securing-web">[SECURING-WEB]
+        </dt>
+        <dd>Mark Nottingham. <a href="https://www.w3.org/2001/tag/doc/web-https"><cite>保护 Web</cite></a>. TAG 发现. 网址: <a
+                href="https://www.w3.org/2001/tag/doc/web-https">https://www.w3.org/2001/tag/doc/web-https</a>
+        </dd>
+        <dt id="biblio-service-workers">[SERVICE-WORKERS]
+        </dt>
+        <dd>Jake Archibald; Marijn Kruisselbrink. <a
+                href="https://www.w3.org/TR/service-workers/"><cite>服务工作线程</cite></a>. 2022年7月12日. 候选推荐标准. 网址: <a
+                href="https://www.w3.org/TR/service-workers/">https://www.w3.org/TR/service-workers/</a>
+        </dd>
+        <dt id="biblio-verizon">[VERIZON]
+        </dt>
+        <dd>Mark Bergen; Alex Kantrowitz. <a
+                href="http://adage.com/article/digital/verizon-target-mobile-subscribers-ads/293356/"><cite>Verizon
+                    计划通过广告定位其移动用户</cite></a>. 网址: <a
+                href="http://adage.com/article/digital/verizon-target-mobile-subscribers-ads/293356/">http://adage.com/article/digital/verizon-target-mobile-subscribers-ads/293356/</a>
+        </dd>
+        <dt id="biblio-web-bluetooth">[WEB-BLUETOOTH]
+        </dt>
+        <dd>Jeffrey Yasskin. <a href="https://webbluetoothcg.github.io/web-bluetooth/"><cite>Web 蓝牙</cite></a>.
+            社区组报告草案. 网址: <a
+                href="https://webbluetoothcg.github.io/web-bluetooth/">https://webbluetoothcg.github.io/web-bluetooth/</a>
+        </dd>
+        <dt id="biblio-webcryptoapi">[WEBCRYPTOAPI]
+        </dt>
+        <dd>Mark Watson. <a href="https://www.w3.org/TR/WebCryptoAPI/"><cite>Web 加密 API</cite></a>. 2017年1月26日. 推荐标准.
+            网址: <a href="https://www.w3.org/TR/WebCryptoAPI/">https://www.w3.org/TR/WebCryptoAPI/</a>
+        </dd>
+    </dl>
+    <script>/* Boilerplate: script-dfn-panel */
+        "use strict";
+        {
+            const dfnsJson = window.dfnsJson || {};
+
+            function genDfnPanel({ dfnID, url, dfnText, refSections, external }) {
+                return mk.aside({
+                    class: "dfn-panel",
+                    id: `infopanel-for-${dfnID}`,
+                    "data-for": dfnID,
+                    "aria-labelled-by": `infopaneltitle-for-${dfnID}`,
+                },
+                    mk.span({ id: `infopaneltitle-for-${dfnID}`, style: "display:none" },
+                        `Info about the '${dfnText}' ${external ? "external" : ""} reference.`),
+                    mk.a({ href: url }, url),
+                    mk.b({}, "Referenced in:"),
+                    mk.ul({},
+                        ...refSections.map(section =>
+                            mk.li({},
+                                ...section.refs.map((ref, refI) =>
+                                    [
+                                        mk.a({
+                                            href: `#${ref.id}`
+                                        },
+                                            (refI == 0) ? section.title : `(${refI + 1})`
+                                        ),
+                                        " ",
+                                    ]
+                                ),
+                            ),
+                        ),
+                    ),
+                );
+            }
+
+            function genAllDfnPanels() {
+                for (const panelData of Object.values(window.dfnpanelData)) {
+                    const dfnID = panelData.dfnID;
+                    const dfn = document.getElementById(dfnID);
+                    if (!dfn) {
+                        console.log(`Can't find dfn#${dfnID}.`, panelData);
+                    } else {
+                        const panel = genDfnPanel(panelData);
+                        append(document.body, panel);
+                        insertDfnPopupAction(dfn, panel)
+                    }
+                }
+            }
+
+            document.addEventListener("DOMContentLoaded", () => {
+                genAllDfnPanels();
+
+                // Add popup behavior to all dfns to show the corresponding dfn-panel.
+                var dfns = queryAll('.dfn-paneled');
+                for (let dfn of dfns) { ; }
+
+                document.body.addEventListener("click", (e) => {
+                    // If not handled already, just hide all dfn panels.
+                    hideAllDfnPanels();
+                });
+            })
+
+
+            function hideAllDfnPanels() {
+                // Turn off any currently "on" or "activated" panels.
+                queryAll(".dfn-panel.on, .dfn-panel.activated").forEach(el => hideDfnPanel(el));
+            }
+
+            function showDfnPanel(dfnPanel, dfn) {
+                hideAllDfnPanels(); // Only display one at this time.
+                dfn.setAttribute("aria-expanded", "true");
+                dfnPanel.classList.add("on");
+                dfnPanel.style.left = "5px";
+                dfnPanel.style.top = "0px";
+                const panelRect = dfnPanel.getBoundingClientRect();
+                const panelWidth = panelRect.right - panelRect.left;
+                if (panelRect.right > document.body.scrollWidth) {
+                    // Panel's overflowing the screen.
+                    // Just drop it below the dfn and flip it rightward instead.
+                    // This still wont' fix things if the screen is *really* wide,
+                    // but fixing that's a lot harder without 'anchor()'.
+                    dfnPanel.style.top = "1.5em";
+                    dfnPanel.style.left = "auto";
+                    dfnPanel.style.right = "0px";
+                }
+            }
+
+            function pinDfnPanel(dfnPanel) {
+                // Switch it to "activated" state, which pins it.
+                dfnPanel.classList.add("activated");
+                dfnPanel.style.left = null;
+                dfnPanel.style.top = null;
+            }
+
+            function hideDfnPanel(dfnPanel, dfn) {
+                if (!dfn) {
+                    dfn = document.getElementById(dfnPanel.getAttribute("data-for"));
+                }
+                dfn.setAttribute("aria-expanded", "false")
+                dfnPanel.classList.remove("on");
+                dfnPanel.classList.remove("activated");
+            }
+
+            function toggleDfnPanel(dfnPanel, dfn) {
+                if (dfnPanel.classList.contains("on")) {
+                    hideDfnPanel(dfnPanel, dfn);
+                } else {
+                    showDfnPanel(dfnPanel, dfn);
+                }
+            }
+
+            function insertDfnPopupAction(dfn, dfnPanel) {
+                // Find dfn panel
+                const panelWrapper = document.createElement('span');
+                panelWrapper.appendChild(dfnPanel);
+                panelWrapper.style.position = "relative";
+                panelWrapper.style.height = "0px";
+                dfn.insertAdjacentElement("afterend", panelWrapper);
+                dfn.setAttribute('role', 'button');
+                dfn.setAttribute('aria-expanded', 'false')
+                dfn.tabIndex = 0;
+                dfn.classList.add('has-dfn-panel');
+                dfn.addEventListener('click', (event) => {
+                    showDfnPanel(dfnPanel, dfn);
+                    event.stopPropagation();
+                });
+                dfn.addEventListener('keypress', (event) => {
+                    const kc = event.keyCode;
+                    // 32->Space, 13->Enter
+                    if (kc == 32 || kc == 13) {
+                        toggleDfnPanel(dfnPanel, dfn);
+                        event.stopPropagation();
+                        event.preventDefault();
+                    }
+                });
+
+                dfnPanel.addEventListener('click', (event) => {
+                    if (event.target.nodeName == 'A') {
+                        pinDfnPanel(dfnPanel);
+                    }
+                    event.stopPropagation();
+                });
+
+                dfnPanel.addEventListener('keydown', (event) => {
+                    if (event.keyCode == 27) { // Escape key
+                        hideDfnPanel(dfnPanel, dfn);
+                        event.stopPropagation();
+                        event.preventDefault();
+                    }
+                })
+            }
+        }
+    </script>
+    <script>/* Boilerplate: script-dfn-panel */
+        "use strict";
+        {
+            const dfnsJson = window.dfnsJson || {};
+
+            function genDfnPanel({ dfnID, url, dfnText, refSections, external }) {
+                return mk.aside({
+                    class: "dfn-panel",
+                    id: `infopanel-for-${dfnID}`,
+                    "data-for": dfnID,
+                    "aria-labelled-by": `infopaneltitle-for-${dfnID}`,
+                },
+                    mk.span({ id: `infopaneltitle-for-${dfnID}`, style: "display:none" },
+                        `Info about the '${dfnText}' ${external ? "external" : ""} reference.`),
+                    mk.a({ href: url }, url),
+                    mk.b({}, "Referenced in:"),
+                    mk.ul({},
+                        ...refSections.map(section =>
+                            mk.li({},
+                                ...section.refs.map((ref, refI) =>
+                                    [
+                                        mk.a({
+                                            href: `#${ref.id}`
+                                        },
+                                            (refI == 0) ? section.title : `(${refI + 1})`
+                                        ),
+                                        " ",
+                                    ]
+                                ),
+                            ),
+                        ),
+                    ),
+                );
+            }
+
+            function genAllDfnPanels() {
+                for (const panelData of Object.values(window.dfnpanelData)) {
+                    const dfnID = panelData.dfnID;
+                    const dfn = document.getElementById(dfnID);
+                    if (!dfn) {
+                        console.log(`Can't find dfn#${dfnID}.`, panelData);
+                    } else {
+                        const panel = genDfnPanel(panelData);
+                        append(document.body, panel);
+                        insertDfnPopupAction(dfn, panel)
+                    }
+                }
+            }
+
+            document.addEventListener("DOMContentLoaded", () => {
+                genAllDfnPanels();
+
+                // Add popup behavior to all dfns to show the corresponding dfn-panel.
+                var dfns = queryAll('.dfn-paneled');
+                for (let dfn of dfns) { ; }
+
+                document.body.addEventListener("click", (e) => {
+                    // If not handled already, just hide all dfn panels.
+                    hideAllDfnPanels();
+                });
+            })
+
+
+            function hideAllDfnPanels() {
+                // Turn off any currently "on" or "activated" panels.
+                queryAll(".dfn-panel.on, .dfn-panel.activated").forEach(el => hideDfnPanel(el));
+            }
+
+            function showDfnPanel(dfnPanel, dfn) {
+                hideAllDfnPanels(); // Only display one at this time.
+                dfn.setAttribute("aria-expanded", "true");
+                dfnPanel.classList.add("on");
+                dfnPanel.style.left = "5px";
+                dfnPanel.style.top = "0px";
+                const panelRect = dfnPanel.getBoundingClientRect();
+                const panelWidth = panelRect.right - panelRect.left;
+                if (panelRect.right > document.body.scrollWidth) {
+                    // Panel's overflowing the screen.
+                    // Just drop it below the dfn and flip it rightward instead.
+                    // This still wont' fix things if the screen is *really* wide,
+                    // but fixing that's a lot harder without 'anchor()'.
+                    dfnPanel.style.top = "1.5em";
+                    dfnPanel.style.left = "auto";
+                    dfnPanel.style.right = "0px";
+                }
+            }
+
+            function pinDfnPanel(dfnPanel) {
+                // Switch it to "activated" state, which pins it.
+                dfnPanel.classList.add("activated");
+                dfnPanel.style.left = null;
+                dfnPanel.style.top = null;
+            }
+
+            function hideDfnPanel(dfnPanel, dfn) {
+                if (!dfn) {
+                    dfn = document.getElementById(dfnPanel.getAttribute("data-for"));
+                }
+                dfn.setAttribute("aria-expanded", "false")
+                dfnPanel.classList.remove("on");
+                dfnPanel.classList.remove("activated");
+            }
+
+            function toggleDfnPanel(dfnPanel, dfn) {
+                if (dfnPanel.classList.contains("on")) {
+                    hideDfnPanel(dfnPanel, dfn);
+                } else {
+                    showDfnPanel(dfnPanel, dfn);
+                }
+            }
+
+            function insertDfnPopupAction(dfn, dfnPanel) {
+                // Find dfn panel
+                const panelWrapper = document.createElement('span');
+                panelWrapper.appendChild(dfnPanel);
+                panelWrapper.style.position = "relative";
+                panelWrapper.style.height = "0px";
+                dfn.insertAdjacentElement("afterend", panelWrapper);
+                dfn.setAttribute('role', 'button');
+                dfn.setAttribute('aria-expanded', 'false')
+                dfn.tabIndex = 0;
+                dfn.classList.add('has-dfn-panel');
+                dfn.addEventListener('click', (event) => {
+                    showDfnPanel(dfnPanel, dfn);
+                    event.stopPropagation();
+                });
+                dfn.addEventListener('keypress', (event) => {
+                    const kc = event.keyCode;
+                    // 32->Space, 13->Enter
+                    if (kc == 32 || kc == 13) {
+                        toggleDfnPanel(dfnPanel, dfn);
+                        event.stopPropagation();
+                        event.preventDefault();
+                    }
+                });
+
+                dfnPanel.addEventListener('click', (event) => {
+                    if (event.target.nodeName == 'A') {
+                        pinDfnPanel(dfnPanel);
+                    }
+                    event.stopPropagation();
+                });
+
+                dfnPanel.addEventListener('keydown', (event) => {
+                    if (event.keyCode == 27) { // Escape key
+                        hideDfnPanel(dfnPanel, dfn);
+                        event.stopPropagation();
+                        event.preventDefault();
+                    }
+                })
+            }
+        }
+    </script>
+    <script>/* Boilerplate: script-dfn-panel-json */
+        window.dfnpanelData = {};
+        window.dfnpanelData['5e67384e'] = { "dfnID": "5e67384e", "url": "https://www.w3.org/TR/geolocation/#dom-geolocation-getcurrentposition", "dfnText": "getCurrentPosition()", "refSections": [{ "refs": [{ "id": "ref-for-dom-geolocation-getcurrentposition" }], "title": "7.4.1. Example: Geolocation" }], "external": true };
+        window.dfnpanelData['38485211'] = { "dfnID": "38485211", "url": "https://www.w3.org/TR/geolocation/#dom-geolocation-watchposition", "dfnText": "watchPosition()", "refSections": [{ "refs": [{ "id": "ref-for-dom-geolocation-watchposition" }], "title": "7.4.1. Example: Geolocation" }], "external": true };
+        window.dfnpanelData['a13a702f'] = { "dfnID": "a13a702f", "url": "https://html.spec.whatwg.org/multipage/workers.html#sharedworker", "dfnText": "SharedWorker", "refSections": [{ "refs": [{ "id": "ref-for-sharedworker" }], "title": "2.2.1. Shared Workers" }], "external": true };
+        window.dfnpanelData['5f6d392d'] = { "dfnID": "5f6d392d", "url": "https://html.spec.whatwg.org/multipage/webappapis.html#windoworworkerglobalscope", "dfnText": "WindowOrWorkerGlobalScope", "refSections": [{ "refs": [{ "id": "ref-for-windoworworkerglobalscope" }], "title": "2.2.2. Feature Detection" }], "external": true };
+        window.dfnpanelData['12b8dfc0'] = { "dfnID": "12b8dfc0", "url": "https://html.spec.whatwg.org/multipage/webappapis.html#current-settings-object", "dfnText": "current settings object", "refSections": [{ "refs": [{ "id": "ref-for-current-settings-object" }], "title": "7.3. Restricting New Features" }, { "refs": [{ "id": "ref-for-current-settings-object\u2460" }], "title": "7.4.1. Example: Geolocation" }], "external": true };
+        window.dfnpanelData['2672c7bc'] = { "dfnID": "2672c7bc", "url": "https://html.spec.whatwg.org/multipage/browsers.html#concept-origin-domain", "dfnText": "domain", "refSections": [{ "refs": [{ "id": "ref-for-concept-origin-domain" }], "title": "3.1. \n    Is origin potentially trustworthy?\n  " }], "external": true };
+        window.dfnpanelData['a746ba16'] = { "dfnID": "a746ba16", "url": "https://html.spec.whatwg.org/multipage/semantics.html#link-options-environment", "dfnText": "environment", "refSections": [{ "refs": [{ "id": "ref-for-link-options-environment" }, { "id": "ref-for-link-options-environment\u2460" }], "title": "2.2.3. Secure and non-secure contexts" }], "external": true };
+        window.dfnpanelData['4b6086d7'] = { "dfnID": "4b6086d7", "url": "https://html.spec.whatwg.org/multipage/webappapis.html#global-object", "dfnText": "global object", "refSections": [{ "refs": [{ "id": "ref-for-global-object" }], "title": "2.2.3. Secure and non-secure contexts" }], "external": true };
+        window.dfnpanelData['77a2ee6e'] = { "dfnID": "77a2ee6e", "url": "https://html.spec.whatwg.org/multipage/browsers.html#concept-origin-host", "dfnText": "host", "refSections": [{ "refs": [{ "id": "ref-for-concept-origin-host" }, { "id": "ref-for-concept-origin-host\u2460" }, { "id": "ref-for-concept-origin-host\u2461" }], "title": "3.1. \n    Is origin potentially trustworthy?\n  " }], "external": true };
+        window.dfnpanelData['87fcd40c'] = { "dfnID": "87fcd40c", "url": "https://html.spec.whatwg.org/multipage/iframe-embed-object.html#the-iframe-element", "dfnText": "iframe", "refSections": [{ "refs": [{ "id": "ref-for-the-iframe-element" }, { "id": "ref-for-the-iframe-element\u2460" }], "title": "4.2. Ancestral Risk" }], "external": true };
+        window.dfnpanelData['db3b2dfc'] = { "dfnID": "db3b2dfc", "url": "https://html.spec.whatwg.org/multipage/webappapis.html#dom-issecurecontext", "dfnText": "isSecureContext", "refSections": [{ "refs": [{ "id": "ref-for-dom-issecurecontext" }], "title": "2.2.2. Feature Detection" }], "external": true };
+        window.dfnpanelData['5155c2d3'] = { "dfnID": "5155c2d3", "url": "https://html.spec.whatwg.org/multipage/webappapis.html#non-secure-context", "dfnText": "non-secure context", "refSections": [{ "refs": [{ "id": "ref-for-non-secure-context" }], "title": "2.2.3. Secure and non-secure contexts" }], "external": true };
+        window.dfnpanelData['b01b1359'] = { "dfnID": "b01b1359", "url": "https://html.spec.whatwg.org/multipage/browsers.html#concept-origin-opaque", "dfnText": "opaque origin", "refSections": [{ "refs": [{ "id": "ref-for-concept-origin-opaque" }], "title": "3.1. \n    Is origin potentially trustworthy?\n  " }], "external": true };
+        window.dfnpanelData['086e3aff'] = { "dfnID": "086e3aff", "url": "https://html.spec.whatwg.org/multipage/browsers.html#concept-origin", "dfnText": "origin", "refSections": [{ "refs": [{ "id": "ref-for-concept-origin" }], "title": "3.1. \n    Is origin potentially trustworthy?\n  " }], "external": true };
+        window.dfnpanelData['98e31e77'] = { "dfnID": "98e31e77", "url": "https://html.spec.whatwg.org/multipage/browsers.html#concept-origin-port", "dfnText": "port", "refSections": [{ "refs": [{ "id": "ref-for-concept-origin-port" }], "title": "3.1. \n    Is origin potentially trustworthy?\n  " }], "external": true };
+        window.dfnpanelData['9c4c1e66'] = { "dfnID": "9c4c1e66", "url": "https://html.spec.whatwg.org/multipage/webappapis.html#relevant-settings-object", "dfnText": "relevant settings object", "refSections": [{ "refs": [{ "id": "ref-for-relevant-settings-object" }], "title": "2.2.3. Secure and non-secure contexts" }], "external": true };
+        window.dfnpanelData['a23d12a9'] = { "dfnID": "a23d12a9", "url": "https://html.spec.whatwg.org/multipage/browsers.html#concept-origin-scheme", "dfnText": "scheme", "refSections": [{ "refs": [{ "id": "ref-for-concept-origin-scheme" }, { "id": "ref-for-concept-origin-scheme\u2460" }, { "id": "ref-for-concept-origin-scheme\u2461" }], "title": "3.1. \n    Is origin potentially trustworthy?\n  " }], "external": true };
+        window.dfnpanelData['65181da8'] = { "dfnID": "65181da8", "url": "https://html.spec.whatwg.org/multipage/webappapis.html#secure-context", "dfnText": "secure context", "refSections": [{ "refs": [{ "id": "ref-for-secure-context" }, { "id": "ref-for-secure-context\u2460" }], "title": "1.1. Top-level Documents" }, { "refs": [{ "id": "ref-for-secure-context\u2461" }, { "id": "ref-for-secure-context\u2462" }, { "id": "ref-for-secure-context\u2463" }], "title": "1.2. Framed Documents" }, { "refs": [{ "id": "ref-for-secure-context\u2464" }, { "id": "ref-for-secure-context\u2465" }, { "id": "ref-for-secure-context\u2466" }, { "id": "ref-for-secure-context\u2467" }], "title": "1.3. Web Workers" }, { "refs": [{ "id": "ref-for-secure-context\u2468" }, { "id": "ref-for-secure-context\u2460\u24ea" }, { "id": "ref-for-secure-context\u2460\u2460" }, { "id": "ref-for-secure-context\u2460\u2461" }], "title": "1.4. Shared Workers" }, { "refs": [{ "id": "ref-for-secure-context\u2460\u2462" }, { "id": "ref-for-secure-context\u2460\u2463" }, { "id": "ref-for-secure-context\u2460\u2464" }], "title": "1.5. Service Workers" }, { "refs": [{ "id": "ref-for-secure-context\u2460\u2465" }, { "id": "ref-for-secure-context\u2460\u2466" }, { "id": "ref-for-secure-context\u2460\u2467" }], "title": "2.2.1. Shared Workers" }, { "refs": [{ "id": "ref-for-secure-context\u2460\u2468" }], "title": "2.2.2. Feature Detection" }, { "refs": [{ "id": "ref-for-secure-context\u2461\u24ea" }, { "id": "ref-for-secure-context\u2461\u2460" }], "title": "2.2.3. Secure and non-secure contexts" }, { "refs": [{ "id": "ref-for-secure-context\u2461\u2461" }], "title": "3.1. \n    Is origin potentially trustworthy?\n  " }, { "refs": [{ "id": "ref-for-secure-context\u2461\u2462" }, { "id": "ref-for-secure-context\u2461\u2463" }], "title": "4.2. Ancestral Risk" }, { "refs": [{ "id": "ref-for-secure-context\u2461\u2464" }, { "id": "ref-for-secure-context\u2461\u2465" }], "title": "4.3. Risks associated with non-secure contexts" }, { "refs": [{ "id": "ref-for-secure-context\u2461\u2466" }], "title": "5.1. Incomplete Isolation" }, { "refs": [{ "id": "ref-for-secure-context\u2461\u2467" }], "title": "6. Privacy Considerations" }, { "refs": [{ "id": "ref-for-secure-context\u2461\u2468" }, { "id": "ref-for-secure-context\u2462\u24ea" }, { "id": "ref-for-secure-context\u2462\u2460" }], "title": "7.3. Restricting New Features" }, { "refs": [{ "id": "ref-for-secure-context\u2462\u2461" }, { "id": "ref-for-secure-context\u2462\u2462" }, { "id": "ref-for-secure-context\u2462\u2463" }], "title": "7.4. Restricting Legacy Features" }, { "refs": [{ "id": "ref-for-secure-context\u2462\u2464" }, { "id": "ref-for-secure-context\u2462\u2465" }], "title": "7.4.1. Example: Geolocation" }], "external": true };
+        window.dfnpanelData['ae2a6342'] = { "dfnID": "ae2a6342", "url": "https://html.spec.whatwg.org/multipage/document-sequences.html#top-level-browsing-context", "dfnText": "top-level browsing context", "refSections": [{ "refs": [{ "id": "ref-for-top-level-browsing-context" }, { "id": "ref-for-top-level-browsing-context\u2460" }], "title": "1.1. Top-level Documents" }, { "refs": [{ "id": "ref-for-top-level-browsing-context\u2461" }], "title": "1.2. Framed Documents" }, { "refs": [{ "id": "ref-for-top-level-browsing-context\u2462" }, { "id": "ref-for-top-level-browsing-context\u2463" }], "title": "1.3. Web Workers" }, { "refs": [{ "id": "ref-for-top-level-browsing-context\u2464" }, { "id": "ref-for-top-level-browsing-context\u2465" }], "title": "1.4. Shared Workers" }, { "refs": [{ "id": "ref-for-top-level-browsing-context\u2466" }], "title": "1.5. Service Workers" }], "external": true };
+        window.dfnpanelData['1d2aa117'] = { "dfnID": "1d2aa117", "url": "https://html.spec.whatwg.org/multipage/browsers.html#concept-origin-tuple", "dfnText": "tuple origin", "refSections": [{ "refs": [{ "id": "ref-for-concept-origin-tuple" }], "title": "3.1. \n    Is origin potentially trustworthy?\n  " }], "external": true };
+        window.dfnpanelData['fab13602'] = { "dfnID": "fab13602", "url": "https://www.w3.org/TR/mixed-content/#a-priori-authenticated-url", "dfnText": "a priori authenticated url", "refSections": [{ "refs": [{ "id": "ref-for-a-priori-authenticated-url" }], "title": "3.1. \n    Is origin potentially trustworthy?\n  " }], "external": true };
+        window.dfnpanelData['959ad97b'] = { "dfnID": "959ad97b", "url": "https://url.spec.whatwg.org/#concept-url-origin", "dfnText": "origin", "refSections": [{ "refs": [{ "id": "ref-for-concept-url-origin" }, { "id": "ref-for-concept-url-origin\u2460" }], "title": "3.2. \n    Is url potentially trustworthy?\n  " }], "external": true };
+        window.dfnpanelData['3a711be7'] = { "dfnID": "3a711be7", "url": "https://url.spec.whatwg.org/#concept-url-scheme", "dfnText": "scheme", "refSections": [{ "refs": [{ "id": "ref-for-concept-url-scheme" }], "title": "3.2. \n    Is url potentially trustworthy?\n  " }, { "refs": [{ "id": "ref-for-concept-url-scheme\u2460" }], "title": "7.1. Packaged Applications" }], "external": true };
+        window.dfnpanelData['a8c7461b'] = { "dfnID": "a8c7461b", "url": "https://url.spec.whatwg.org/#concept-url", "dfnText": "url record", "refSections": [{ "refs": [{ "id": "ref-for-concept-url" }], "title": "3.2. \n    Is url potentially trustworthy?\n  " }], "external": true };
+        window.dfnpanelData['a8e1631c'] = { "dfnID": "a8e1631c", "url": "https://www.w3.org/2023/Process-20231103/#revising-rec", "dfnText": "modify a specification", "refSections": [{ "refs": [{ "id": "ref-for-revising-rec" }, { "id": "ref-for-revising-rec\u2460" }, { "id": "ref-for-revising-rec\u2461" }], "title": "7.4. Restricting Legacy Features" }, { "refs": [{ "id": "ref-for-revising-rec\u2462" }], "title": "7.4.1. Example: Geolocation" }], "external": true };
+        window.dfnpanelData['dca2de17'] = { "dfnID": "dca2de17", "url": "https://webidl.spec.whatwg.org/#idl-DOMException", "dfnText": "DOMException", "refSections": [{ "refs": [{ "id": "ref-for-idl-DOMException" }], "title": "2.2.1. Shared Workers" }], "external": true };
+        window.dfnpanelData['b75bb3bd'] = { "dfnID": "b75bb3bd", "url": "https://webidl.spec.whatwg.org/#SecureContext", "dfnText": "SecureContext", "refSections": [{ "refs": [{ "id": "ref-for-SecureContext" }, { "id": "ref-for-SecureContext\u2460" }, { "id": "ref-for-SecureContext\u2461" }, { "id": "ref-for-SecureContext\u2462" }], "title": "2.1. Integration with WebIDL" }, { "refs": [{ "id": "ref-for-SecureContext\u2463" }, { "id": "ref-for-SecureContext\u2464" }, { "id": "ref-for-SecureContext\u2465" }], "title": "7.3. Restricting New Features" }], "external": true };
+        window.dfnpanelData['c3e881ef'] = { "dfnID": "c3e881ef", "url": "https://webidl.spec.whatwg.org/#securityerror", "dfnText": "SecurityError", "refSections": [{ "refs": [{ "id": "ref-for-securityerror" }], "title": "2.2.1. Shared Workers" }], "external": true };
+        window.dfnpanelData['25c36209'] = { "dfnID": "25c36209", "url": "https://webidl.spec.whatwg.org/#dfn-exposed", "dfnText": "exposed", "refSections": [{ "refs": [{ "id": "ref-for-dfn-exposed" }], "title": "2.1. Integration with WebIDL" }], "external": true };
+        window.dfnpanelData['is-origin-trustworthy'] = { "dfnID": "is-origin-trustworthy", "url": "#is-origin-trustworthy", "dfnText": "3.1. \n    Is origin potentially trustworthy?\n  ", "refSections": [{ "refs": [{ "id": "ref-for-is-origin-trustworthy" }], "title": "3.1. \n    Is origin potentially trustworthy?\n  " }, { "refs": [{ "id": "ref-for-is-origin-trustworthy" }], "title": "3.2. \n    Is url potentially trustworthy?\n  " }, { "refs": [{ "id": "ref-for-is-origin-trustworthy" }], "title": "7.2. Development Environments" }], "external": false };
+        window.dfnpanelData['potentially-trustworthy-origin'] = { "dfnID": "potentially-trustworthy-origin", "url": "#potentially-trustworthy-origin", "dfnText": "potentially trustworthy origin", "refSections": [{ "refs": [{ "id": "ref-for-potentially-trustworthy-origin" }], "title": "1.2. Framed Documents" }, { "refs": [{ "id": "ref-for-potentially-trustworthy-origin\u2460" }], "title": "1.3. Web Workers" }, { "refs": [{ "id": "ref-for-potentially-trustworthy-origin\u2461" }], "title": "3.2. \n    Is url potentially trustworthy?\n  " }, { "refs": [{ "id": "ref-for-potentially-trustworthy-origin\u2462" }], "title": "5.2. localhost" }], "external": false };
+    </script>
+    <script>/* Boilerplate: script-dom-helper */
+        function query(sel) { return document.querySelector(sel); }
+
+        function queryAll(sel) { return [...document.querySelectorAll(sel)]; }
+
+        function iter(obj) {
+            if (!obj) return [];
+            var it = obj[Symbol.iterator];
+            if (it) return it;
+            return Object.entries(obj);
+        }
+
+        function mk(tagname, attrs, ...children) {
+            const el = document.createElement(tagname);
+            for (const [k, v] of iter(attrs)) {
+                if (k.slice(0, 3) == "_on") {
+                    const eventName = k.slice(3);
+                    el.addEventListener(eventName, v);
+                } else if (k[0] == "_") {
+                    // property, not attribute
+                    el[k.slice(1)] = v;
+                } else {
+                    if (v === false || v == null) {
+                        continue;
+                    } else if (v === true) {
+                        el.setAttribute(k, "");
+                        continue;
+                    } else {
+                        el.setAttribute(k, v);
+                    }
+                }
+            }
+            append(el, children);
+            return el;
+        }
+
+        /* Create shortcuts for every known HTML element */
+        [
+            "a",
+            "abbr",
+            "acronym",
+            "address",
+            "applet",
+            "area",
+            "article",
+            "aside",
+            "audio",
+            "b",
+            "base",
+            "basefont",
+            "bdo",
+            "big",
+            "blockquote",
+            "body",
+            "br",
+            "button",
+            "canvas",
+            "caption",
+            "center",
+            "cite",
+            "code",
+            "col",
+            "colgroup",
+            "datalist",
+            "dd",
+            "del",
+            "details",
+            "dfn",
+            "dialog",
+            "div",
+            "dl",
+            "dt",
+            "em",
+            "embed",
+            "fieldset",
+            "figcaption",
+            "figure",
+            "font",
+            "footer",
+            "form",
+            "frame",
+            "frameset",
+            "head",
+            "header",
+            "h1",
+            "h2",
+            "h3",
+            "h4",
+            "h5",
+            "h6",
+            "hr",
+            "html",
+            "i",
+            "iframe",
+            "img",
+            "input",
+            "ins",
+            "kbd",
+            "label",
+            "legend",
+            "li",
+            "link",
+            "main",
+            "map",
+            "mark",
+            "meta",
+            "meter",
+            "nav",
+            "nobr",
+            "noscript",
+            "object",
+            "ol",
+            "optgroup",
+            "option",
+            "output",
+            "p",
+            "param",
+            "pre",
+            "progress",
+            "q",
+            "s",
+            "samp",
+            "script",
+            "section",
+            "select",
+            "small",
+            "source",
+            "span",
+            "strike",
+            "strong",
+            "style",
+            "sub",
+            "summary",
+            "sup",
+            "table",
+            "tbody",
+            "td",
+            "template",
+            "textarea",
+            "tfoot",
+            "th",
+            "thead",
+            "time",
+            "title",
+            "tr",
+            "u",
+            "ul",
+            "var",
+            "video",
+            "wbr",
+            "xmp",
+        ].forEach(tagname => {
+            mk[tagname] = (...args) => mk(tagname, ...args);
+        });
+
+        function* nodesFromChildList(children) {
+            for (const child of children.flat(Infinity)) {
+                if (child instanceof Node) {
+                    yield child;
+                } else {
+                    yield new Text(child);
+                }
+            }
+        }
+        function append(el, ...children) {
+            for (const child of nodesFromChildList(children)) {
+                if (el instanceof Node) el.appendChild(child);
+                else el.push(child);
+            }
+            return el;
+        }
+
+        function insertAfter(el, ...children) {
+            for (const child of nodesFromChildList(children)) {
+                el.parentNode.insertBefore(child, el.nextSibling);
+            }
+            return el;
+        }
+
+        function clearContents(el) {
+            el.innerHTML = "";
+            return el;
+        }
+
+        function parseHTML(markup) {
+            if (markup.toLowerCase().trim().indexOf('<!doctype') === 0) {
+                const doc = document.implementation.createHTMLDocument("");
+                doc.documentElement.innerHTML = markup;
+                return doc;
+            } else {
+                const el = mk.template({});
+                el.innerHTML = markup;
+                return el.content;
+            }
+        }
+    </script>
+    <script src="/dropdown.js"></script>
