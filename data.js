@@ -40,10 +40,10 @@ const links = [
         "last-modified": "Thu, 05 Oct 2023 08:30:43 GMT"
     },
     {
-        text: "Accessible Rich Internet Applications (WAI-ARIA) 1.3",
-        href: "https://htmlspecs.com/wai-aria-1.3",
-        src: "https://www.w3.org/TR/2024/WD-wai-aria-1.3-20240123/",
-        "last-modified": "Thu, 05 Oct 2023 08:30:43 GMT"
+        text: "Accessible Rich Internet Applications (WAI-ARIA) 1.2",
+        href: "https://htmlspecs.com/wai-aria",
+        src: "https://www.w3.org/TR/2023/REC-wai-aria-1.2-20230606/",
+        "last-modified": "-"
     },
 
     // URLs and Patterns
