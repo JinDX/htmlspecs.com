@@ -72,7 +72,7 @@ HTML 及相关 API，CSS 标准系列。
 - [Web Authentication Level 2](https://htmlspecs.com/webauthn-2)（[Source](https://www.w3.org/TR/2021/REC-webauthn-2-20210408/) - 推荐标准）
 - [HTML Sanitizer API](https://htmlspecs.com/sanitizer-api)（[Source](https://wicg.github.io/sanitizer-api/) - 社区组草案）
 - [Subresource Integrity (SRI)](https://htmlspecs.com/SRI)（[Source](https://www.w3.org/TR/2016/REC-SRI-20160623/) - 推荐标准）
-- [Content Security Policy Level 3](https://htmlspecs.com/CSP3)（[Source](https://www.w3.org/TR/2025/WD-CSP3-20250602/) - 工作草案）
+- [Content Security Policy Level 3](https://htmlspecs.com/CSP3)（[Source](https://www.w3.org/TR/2025/WD-CSP3-20250711/) - 工作草案）
 - [Secure Contexts](https://htmlspecs.com/secure-contexts)（[Source](https://www.w3.org/TR/2023/CRD-secure-contexts-20231110/) - 候选推荐草案）
 
 ### 媒体和图形
