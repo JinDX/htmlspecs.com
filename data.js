@@ -236,7 +236,7 @@ const links = [
     {
         text: "Geolocation API",
         href: "https://htmlspecs.com/geolocation",
-        src: "https://www.w3.org/TR/2025/REC-geolocation-20250411/",
+        src: "https://www.w3.org/TR/2025/REC-geolocation-20250711/",
         "last-modified": "Mon, 16 Sep 2024 19:13:56 GMT"
     },
     {
