@@ -67,8 +67,7 @@ HTML 及相关 API，CSS 标准系列。
 - [User Timing Level 2](https://htmlspecs.com/user-timing-2)（[Source](https://www.w3.org/TR/2019/REC-user-timing-2-20190226/) - 推荐标准）
 - [Observable](https://htmlspecs.com/observable)（[Source](https://wicg.github.io/observable/) - 社区组草案报告）
 - [Long Tasks API](https://htmlspecs.com/longtasks-1)（[Source](https://www.w3.org/TR/2024/WD-longtasks-1-20240524/) - 工作草案）
-<!-- 
-- [Observable](https://htmlspecs.com/reporting-1)（[Source](https://www.w3.org/TR/2025/WD-reporting-1-20250611/) - 工作草案） -->
+- [Reporting API](https://htmlspecs.com/reporting-1)（[Source](https://www.w3.org/TR/2025/WD-reporting-1-20250611/) - 工作草案）
 
 
 ### 安全和认证

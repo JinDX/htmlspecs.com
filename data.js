@@ -337,6 +337,12 @@ const links = [
         src: "https://www.w3.org/TR/2024/WD-longtasks-1-20240524/",
         "last-modified": "-"
     },
+    {
+        text: "Reporting API",
+        href: "https://htmlspecs.com/reporting-1",
+        src: "https://www.w3.org/TR/2025/WD-reporting-1-20250611/",
+        "last-modified": "-"
+    },
 
     // Security and Authentication
     {
