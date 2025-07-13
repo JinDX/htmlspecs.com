@@ -331,6 +331,12 @@ const links = [
         src: "https://wicg.github.io/observable/",
         "last-modified": "Fri, 06 Jun 2025 17:10:48 GMT"
     },
+    {
+        text: "Long Tasks API",
+        href: "https://htmlspecs.com/longtasks-1",
+        src: "https://www.w3.org/TR/2024/WD-longtasks-1-20240524/",
+        "last-modified": "-"
+    },
 
     // Security and Authentication
     {
