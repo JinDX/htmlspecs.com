@@ -2,6 +2,14 @@ const https = require('https');
 const data = require('./data.js');
 
 const checkLinks = async (links) => {
+  const total = links.length;
+  let finished = 0;
+
+  const showProgress = () => {
+    finished++;
+    process.stdout.write(`\rProgress: ${finished}/${total}`);
+  };
+
   const w3Links = links.filter(item => item.src.includes('w3.org'));
   links = links.filter(item => !item.src.includes('w3.org'));
 
@@ -16,7 +24,7 @@ const checkLinks = async (links) => {
       setTimeout(() => {
         https.get('https://www.w3.org/TR/tr-outdated-spec', options, res => {
           if (res.statusCode < 200 || res.statusCode >= 400) {
-            // console.warn(`Request failed for ${link.src}, status=${res.statusCode}`);
+            showProgress();
             return resolve();
           }
           let rawData = '';
@@ -27,15 +35,17 @@ const checkLinks = async (links) => {
             try {
               const currentSpec = JSON.parse(rawData);
               if (currentSpec && currentSpec.warning && currentSpec.latestUrl) {
-                console.log(`${link.text} (${link.src})`);
+                console.log(`\n${link.text} (${link.src})`);
               }
             } catch (err) {
-              console.error(`Error parsing w3.org response for ${link.src}: ${err.message}`);
+              console.error(`\nError parsing w3.org response for ${link.src}: ${err.message}`);
             }
+            showProgress();
             resolve();
           });
         }).on('error', err => {
-          console.error(`Request to w3.org failed for ${link.src}: ${err.message}`);
+          console.error(`\nRequest to w3.org failed for ${link.src}: ${err.message}`);
+          showProgress();
           resolve();
         });
       }, index * 500);
@@ -53,19 +63,22 @@ const checkLinks = async (links) => {
           const diffMin = diffMs / 1000 / 60;
           if (diffMin >= 1) {
             console.log(
-              `${link.text}: new=${newTime.toUTCString()} old=${oldTime.toUTCString()} (Δ${diffMin.toFixed(1)}min)`
+              `\n${link.text}: new=${newTime.toUTCString()} old=${oldTime.toUTCString()} (Δ${diffMin.toFixed(1)}min)`
             );
           }
         }
+        showProgress();
         resolve();
       }).on('error', e => {
-        console.error(`Error fetching ${link.src}: ${e.message}`);
+        console.error(`\nError fetching ${link.src}: ${e.message}`);
+        showProgress();
         resolve();
       });
     });
   });
 
   await Promise.all([...w3Requests, ...otherRequests]);
+  process.stdout.write('\n');
 };
 
 const main = async () => {
