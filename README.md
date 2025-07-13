@@ -19,17 +19,17 @@ HTML 及相关 API，CSS 标准系列。
 - [Fetch](https://htmlspecs.com/fetch)（[Source](https://fetch.spec.whatwg.org/)）
 - [XMLHttpRequest](https://htmlspecs.com/xhr)（[Source](https://xhr.spec.whatwg.org/)）
 - [WebSockets](https://htmlspecs.com/websockets)（[Source](https://websockets.spec.whatwg.org/)）
-- [WebTransport](https://htmlspecs.com/webtransport)（[Source](https://www.w3.org/TR/2024/WD-webtransport-20240531/) - 工作草案）
-- [Service Workers](https://htmlspecs.com/service-workers)（[Source](https://www.w3.org/TR/2022/CRD-service-workers-20220712/) - 候选推荐标准）
+- [WebTransport](https://htmlspecs.com/webtransport)（[Source](https://www.w3.org/TR/2025/WD-webtransport-20250702/) - 工作草案）
+- [Service Workers](https://htmlspecs.com/service-workers)（[Source](https://www.w3.org/TR/2025/CRD-service-workers-20250306/) - 候选推荐标准）
 - [Push API](https://htmlspecs.com/push-api)（[Source](https://www.w3.org/TR/2024/WD-push-api-20240903/) - 工作草案）
-- [WebRTC](https://htmlspecs.com/webrtc)（[Source](https://www.w3.org/TR/2024/REC-webrtc-20241008/) - 推荐标准）
-- [Payment Request API](https://htmlspecs.com/payment-request)（[Source](https://www.w3.org/TR/2024/CRD-payment-request-20240909/) - 候选推荐标准）
+- [WebRTC](https://htmlspecs.com/webrtc)（[Source](https://www.w3.org/TR/2025/REC-webrtc-20250313/) - 推荐标准）
+- [Payment Request API](https://htmlspecs.com/payment-request)（[Source](https://www.w3.org/TR/2025/CRD-payment-request-20250402/) - 候选推荐标准）
 - [Background Fetch](https://htmlspecs.com/background-fetch)（[Source](https://wicg.github.io/background-fetch/) - 社区组草案报告）
 
 ### 存储和数据
-- [Indexed Database API 3.0](https://htmlspecs.com/IndexedDB)（[Source](https://www.w3.org/TR/2024/WD-IndexedDB-3-20241015/) - 工作草案）
+- [Indexed Database API 3.0](https://htmlspecs.com/IndexedDB)（[Source](https://www.w3.org/TR/2025/WD-IndexedDB-3-20250703/) - 工作草案）
 - [Storage](https://htmlspecs.com/storage)（[Source](https://storage.spec.whatwg.org/)）
-- [File API](https://htmlspecs.com/FileAPI)（[Source](https://www.w3.org/TR/2024/WD-FileAPI-20240524/) - 工作草案）
+- [File API](https://htmlspecs.com/FileAPI)（[Source](https://www.w3.org/TR/2024/WD-FileAPI-20241204/) - 工作草案）
 - [Cookie Store API](https://htmlspecs.com/cookie-store)（[Source](https://wicg.github.io/cookie-store/) - 社区组草案报告）
 - [File and Directory Entries API](https://htmlspecs.com/entries-api)（[Source](https://wicg.github.io/entries-api/) - 社区组草案报告）
 - [Web Locks API](https://htmlspecs.com/web-locks)（[Source](https://www.w3.org/TR/2023/WD-web-locks-20230105/) - 工作草案）
@@ -40,7 +40,7 @@ HTML 及相关 API，CSS 标准系列。
 - [Screen Orientation](https://htmlspecs.com/screen-orientation)（[Source](https://www.w3.org/TR/2023/WD-screen-orientation-20230809/) - 工作草案）
 - [EyeDropper API](https://htmlspecs.com/eyedropper-api)（[Source](https://wicg.github.io/eyedropper-api/) - 社区组草案报告）
 - [Fullscreen](https://htmlspecs.com/fullscreen)（[Source](https://fullscreen.spec.whatwg.org/)）
-- [Screen Capture](https://htmlspecs.com/screen-capture)（[Source](https://www.w3.org/TR/2024/WD-screen-capture-20240627/) - 工作草案 ）
+- [Screen Capture](https://htmlspecs.com/screen-capture)（[Source](https://www.w3.org/TR/2025/WD-screen-capture-20250522/) - 工作草案 ）
 - [Touch Events - Level 2](https://htmlspecs.com/touchevents)（[Source](https://w3c.github.io/touch-events/) - 社区组最终报告）
 - [Contact Picker API](https://htmlspecs.com/contact-picker)（[Source](https://www.w3.org/TR/2024/WD-contact-picker-20240708/) - 工作草案）
 - [Notifications API](https://htmlspecs.com/notifications)（[Source](https://notifications.spec.whatwg.org/)）
@@ -54,9 +54,9 @@ HTML 及相关 API，CSS 标准系列。
 - [Clipboard API and events](https://htmlspecs.com/clipboard-apis)（[Source](https://www.w3.org/TR/2025/WD-clipboard-apis-20250516/) -  工作草案）
 - [Input Events Level 1](https://htmlspecs.com/input-events-1)（[Source](https://www.w3.org/TR/2023/DISC-input-events-1-20230928/) - 停止草案）
 - [Input Events Level 2](https://htmlspecs.com/input-events-2)（[Source](https://www.w3.org/TR/2024/WD-input-events-2-20241018/) - 工作草案）
-- [Permissions](https://htmlspecs.com/permissions)（[Source](https://www.w3.org/TR/2024/WD-permissions-20240319/) - 工作草案）
+- [Permissions](https://htmlspecs.com/permissions)（[Source](https://www.w3.org/TR/2025/WD-permissions-20250624/) - 工作草案）
 - [WebOTP API](https://htmlspecs.com/web-otp)（[Source](https://wicg.github.io/web-otp/) - 社区组草案报告）
-- [Device Posture API](https://htmlspecs.com/device-posture)（[Source](https://www.w3.org/TR/device-posture/) - 候选推荐标准快照）
+- [Device Posture API](https://htmlspecs.com/device-posture)（[Source](https://www.w3.org/TR/2024/CR-device-posture-20241126/) - 候选推荐标准快照）
 
 ### 性能和观察者
 - [Performance Timeline](https://htmlspecs.com/performance-timeline)（[Source](https://www.w3.org/TR/2024/CRD-performance-timeline-20240216/) - 候选推荐标准）
@@ -78,7 +78,7 @@ HTML 及相关 API，CSS 标准系列。
 ### 媒体和图形
 - [Web Animations](https://htmlspecs.com/web-animations-1)（[Source](https://www.w3.org/TR/2023/WD-web-animations-1-20230605/) - 工作草案）
 - [SVG 2](https://htmlspecs.com/SVG2/)（[Source](https://www.w3.org/TR/2018/CR-SVG2-20181004/) - 候选推荐）
-- [Picture-in-Picture](https://htmlspecs.com/picture-in-picture)（[Source](https://www.w3.org/TR/2024/WD-picture-in-picture-20241002/) - 工作草案）
+- [Picture-in-Picture](https://htmlspecs.com/picture-in-picture)（[Source](https://www.w3.org/TR/2024/WD-picture-in-picture-20241216/) - 工作草案）
 - [Presentation API](https://htmlspecs.com/presentation-api)（[Source](https://www.w3.org/TR/2025/CRD-presentation-api-20250212/) - 候选推荐标准）
 - [Scroll-driven Animations](https://htmlspecs.com/scroll-animations-1)（[Source](https://www.w3.org/TR/2023/WD-scroll-animations-1-20230606/) - 工作草案）
 
@@ -87,7 +87,7 @@ HTML 及相关 API，CSS 标准系列。
 
 
 ## CSS
-- [Cascading Style Sheets Level 2 Revision 2 (CSS 2.2)](https://htmlspecs.com/css/css22)（[Source](https://www.w3.org/TR/CSS22/) - 工作草案）
+- [Cascading Style Sheets Level 2 Revision 2 (CSS 2.2)](https://htmlspecs.com/css/css22)（[Source](https://www.w3.org/TR/2016/WD-CSS22-20160412/) - 工作草案）
 
 ### 颜色
 - [CSS Color Module Level 3](https://htmlspecs.com/css/css-color-3)（[Source](https://www.w3.org/TR/2022/REC-css-color-3-20220118/) - 推荐标准）
@@ -127,7 +127,7 @@ HTML 及相关 API，CSS 标准系列。
 - [CSS Grid Layout Module Level 3](https://htmlspecs.com/css/css-grid-3)（[Source](https://www.w3.org/TR/2025/WD-css-grid-3-20250207/) - 工作草案）
 - [CSS Inline Layout Module Level 3](https://htmlspecs.com/css/css-inline-3)（[Source](https://www.w3.org/TR/2024/WD-css-inline-3-20241218/) - 工作草案）
 - [CSS Multi-column Layout Module Level 1](https://htmlspecs.com/css/css-multicol-1)（[Source](https://www.w3.org/TR/2024/CR-css-multicol-1-20240516/) - 候选推荐标准）
-- [CSS Shapes Module Level 1](https://htmlspecs.com/css/css-shapes-1)（[Source](https://www.w3.org/TR/2022/CRD-css-shapes-1-20221115/) - 候选推荐标准）
+- [CSS Shapes Module Level 1](https://htmlspecs.com/css/css-shapes-1)（[Source](https://www.w3.org/TR/2025/CRD-css-shapes-1-20250612/) - 候选推荐标准）
 - [CSS Positioned Layout Module Level 3](https://htmlspecs.com/css/css-position-3)（[Source](https://www.w3.org/TR/2025/WD-css-position-3-20250311/) - 工作草案）
 - [CSS Box Sizing Module Level 3](https://htmlspecs.com/css/css-sizing-3)（[Source](https://www.w3.org/TR/2021/WD-css-sizing-3-20211217/) - 工作草案）
 - [CSS Box Alignment Module Level 3](https://htmlspecs.com/css/css-align-3)（[Source](https://www.w3.org/TR/2025/WD-css-align-3-20250311/) - 工作草案）
@@ -145,7 +145,7 @@ HTML 及相关 API，CSS 标准系列。
 - [CSS Fragmentation Module Level 3](https://htmlspecs.com/css/css-break-3)（[Source](https://www.w3.org/TR/2018/CR-css-break-3-20181204/) - 候选推荐标准）
 
 ### 伪元素
-- [CSS Pseudo-Elements Module Level 4](https://htmlspecs.com/css/css-pseudo-4)（[Source](https://www.w3.org/TR/2022/WD-css-pseudo-4-20221230/) - 工作草案）
+- [CSS Pseudo-Elements Module Level 4](https://htmlspecs.com/css/css-pseudo-4)（[Source](https://www.w3.org/TR/2025/WD-css-pseudo-4-20250627/) - 工作草案）
 
 ### 图像
 - [CSS Images Module Level 4](https://htmlspecs.com/css/css-images-4)（[Source](https://www.w3.org/TR/2023/WD-css-images-4-20230217/) - 工作草案）
@@ -203,3 +203,8 @@ HTML 及相关 API，CSS 标准系列。
 - [CSS Paint API Level 1](https://htmlspecs.com/css/css-paint-api-1)（[Source](https://www.w3.org/TR/2021/CRD-css-paint-api-1-20211216/) - 候选推荐标准）
 - [CSS Layout API Level 1](https://htmlspecs.com/css/css-layout-api-1)（[Source](https://www.w3.org/TR/2018/WD-css-layout-api-1-20180412/) - 工作草案）
 - [CSS Properties and Values API Level 1](https://htmlspecs.com/css/css-properties-values-api-1)（[Source](https://www.w3.org/TR/2024/WD-css-properties-values-api-1-20240326/) - 工作草案）
+
+
+
+reporting-1
+longtasks

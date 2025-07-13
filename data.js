@@ -284,7 +284,7 @@ const links = [
     {
         text: "Device Posture API",
         href: "https://htmlspecs.com/device-posture",
-        src: "https://www.w3.org/TR/device-posture/",
+        src: "https://www.w3.org/TR/2024/CR-device-posture-20241126/",
         "last-modified": "Thu, 21 Nov 2024 18:39:12 GMT"
     },
 
