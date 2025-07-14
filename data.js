@@ -355,6 +355,12 @@ const links = [
         src: "https://www.w3.org/TR/2025/WD-reporting-1-20250611/",
         "last-modified": "-"
     },
+    {
+        text: "Server Timing",
+        href: "https://htmlspecs.com/server-timing",
+        src: "https://www.w3.org/TR/2023/WD-server-timing-20230411/",
+        "last-modified": "-"
+    },
 
     // Security and Authentication
     {
