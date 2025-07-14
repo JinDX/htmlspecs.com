@@ -77,7 +77,7 @@ const links = [
         text: "WebSockets",
         href: "https://htmlspecs.com/websockets",
         src: "https://websockets.spec.whatwg.org/",
-        "last-modified": "Wed, 24 Jan 2024 10:43:43 GMT"
+        "last-modified": "Mon, 14 Jul 2025 12:56:37 GMT"
     },
     {
         text: "WebTransport",
@@ -444,7 +444,7 @@ const links = [
         text: "Console",
         href: "https://htmlspecs.com/console",
         src: "https://console.spec.whatwg.org/",
-        "last-modified": "Mon, 16 Dec 2024 08:57:48 GMT"
+        "last-modified": "Mon, 14 Jul 2025 12:59:40 GMT"
     }
 ];
 
