@@ -57,7 +57,8 @@ HTML 及相关 API，CSS 标准系列。
 - [Permissions](https://htmlspecs.com/permissions)（[Source](https://www.w3.org/TR/2025/WD-permissions-20250624/) - 工作草案）
 - [WebOTP API](https://htmlspecs.com/web-otp)（[Source](https://wicg.github.io/web-otp/) - 社区组草案报告）
 - [Device Posture API](https://htmlspecs.com/device-posture)（[Source](https://www.w3.org/TR/2024/CR-device-posture-20241126/) - 候选推荐标准快照）
-- https://www.w3.org/TR/ambient-light/
+- [Ambient Light Sensor](https://htmlspecs.com/ambient-light)（[Source](https://www.w3.org/TR/2025/WD-ambient-light-20250212/) - 工作草案）
+
 - https://www.w3.org/TR/battery-status/
 
 ### 性能和观察者
