@@ -22,7 +22,7 @@ const links = [
         text: "Web IDL",
         href: "https://htmlspecs.com/webidl",
         src: "https://webidl.spec.whatwg.org/",
-        "last-modified": "Thu, 10 Jul 2025 02:08:59 GMT"
+        "last-modified": "Mon, 14 Jul 2025 18:34:17 GMT"
     },
     {
         text: "Web Application Manifest",
@@ -71,7 +71,7 @@ const links = [
         text: "XMLHttpRequest ",
         href: "https://htmlspecs.com/xhr",
         src: "https://xhr.spec.whatwg.org/",
-        "last-modified": "Tue, 11 Mar 2025 01:01:51 GMT"
+        "last-modified": "Mon, 14 Jul 2025 18:35:39 GMT"
     },
     {
         text: "WebSockets",
