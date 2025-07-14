@@ -57,6 +57,8 @@ HTML 及相关 API，CSS 标准系列。
 - [Permissions](https://htmlspecs.com/permissions)（[Source](https://www.w3.org/TR/2025/WD-permissions-20250624/) - 工作草案）
 - [WebOTP API](https://htmlspecs.com/web-otp)（[Source](https://wicg.github.io/web-otp/) - 社区组草案报告）
 - [Device Posture API](https://htmlspecs.com/device-posture)（[Source](https://www.w3.org/TR/2024/CR-device-posture-20241126/) - 候选推荐标准快照）
+- https://www.w3.org/TR/ambient-light/
+- https://www.w3.org/TR/battery-status/
 
 ### 性能和观察者
 - [Performance Timeline](https://htmlspecs.com/performance-timeline)（[Source](https://www.w3.org/TR/2024/CRD-performance-timeline-20240216/) - 候选推荐标准）
@@ -68,6 +70,8 @@ HTML 及相关 API，CSS 标准系列。
 - [Observable](https://htmlspecs.com/observable)（[Source](https://wicg.github.io/observable/) - 社区组草案报告）
 - [Long Tasks API](https://htmlspecs.com/longtasks-1)（[Source](https://www.w3.org/TR/2024/WD-longtasks-1-20240524/) - 工作草案）
 - [Reporting API](https://htmlspecs.com/reporting-1)（[Source](https://www.w3.org/TR/2025/WD-reporting-1-20250611/) - 工作草案）
+- https://www.w3.org/TR/server-timing/
+- https://www.w3.org/TR/paint-timing/
 
 
 ### 安全和认证
@@ -76,6 +80,7 @@ HTML 及相关 API，CSS 标准系列。
 - [Subresource Integrity (SRI)](https://htmlspecs.com/SRI)（[Source](https://www.w3.org/TR/2016/REC-SRI-20160623/) - 推荐标准）
 - [Content Security Policy Level 3](https://htmlspecs.com/CSP3)（[Source](https://www.w3.org/TR/2025/WD-CSP3-20250711/) - 工作草案）
 - [Secure Contexts](https://htmlspecs.com/secure-contexts)（[Source](https://www.w3.org/TR/2023/CRD-secure-contexts-20231110/) - 候选推荐草案）
+- https://www.w3.org/TR/referrer-policy/
 
 ### 媒体和图形
 - [Web Animations](https://htmlspecs.com/web-animations-1)（[Source](https://www.w3.org/TR/2023/WD-web-animations-1-20230605/) - 工作草案）
