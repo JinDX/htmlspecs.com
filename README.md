@@ -1,7 +1,6 @@
 # htmlspecs.com
 HTML 及相关 API，CSS 标准系列。
 
-
 ### 核心规范
 - [HTML](https://htmlspecs.com/)（[Source](https://html.spec.whatwg.org/multipage/)）
 - [ECMAScript](https://ecma262.com/)（[Source](https://tc39.es/ecma262/)）
@@ -203,7 +202,6 @@ HTML 及相关 API，CSS 标准系列。
 - [CSS Syntax Module Level 3](https://htmlspecs.com/css/css-syntax-3)（[Source](https://www.w3.org/TR/2021/CRD-css-syntax-3-20211224/) - 候选推荐草案）
 - [CSS Values and Units Module Level 3](https://htmlspecs.com/css/css-values-3)（[Source](https://www.w3.org/TR/2024/CRD-css-values-3-20240322/) - 候选推荐草案）
 - [CSS Logical Properties and Values Level 1](https://htmlspecs.com/css/css-logical-1)（[Source](https://www.w3.org/TR/2018/WD-css-logical-1-20180827/) - 工作草案）
-
 
 ### CSS Houdini APIs
 - [CSS Typed OM Level 1](https://htmlspecs.com/css/css-typed-om-1)（[Source](https://www.w3.org/TR/2024/WD-css-typed-om-1-20240321/) - 工作草案）
