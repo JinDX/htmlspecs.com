@@ -293,6 +293,12 @@ const links = [
         src: "https://www.w3.org/TR/2025/WD-ambient-light-20250212/",
         "last-modified": "Thu, 21 Nov 2024 18:39:12 GMT"
     },
+    {
+        text: "Battery Status API",
+        href: "https://htmlspecs.com/battery-status",
+        src: "https://www.w3.org/TR/2024/WD-battery-status-20241024/",
+        "last-modified": "Thu, 21 Nov 2024 18:39:12 GMT"
+    },
 
     // Performance and Observers
     {
