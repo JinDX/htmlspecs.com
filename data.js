@@ -361,6 +361,12 @@ const links = [
         src: "https://www.w3.org/TR/2023/WD-server-timing-20230411/",
         "last-modified": "-"
     },
+    {
+        text: "Paint Timing",
+        href: "https://htmlspecs.com/paint-timing",
+        src: "https://www.w3.org/TR/2025/WD-paint-timing-20250517/",
+        "last-modified": "-"
+    },
 
     // Security and Authentication
     {

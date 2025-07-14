@@ -71,7 +71,7 @@ HTML 及相关 API，CSS 标准系列。
 - [Long Tasks API](https://htmlspecs.com/longtasks-1)（[Source](https://www.w3.org/TR/2024/WD-longtasks-1-20240524/) - 工作草案）
 - [Reporting API](https://htmlspecs.com/reporting-1)（[Source](https://www.w3.org/TR/2025/WD-reporting-1-20250611/) - 工作草案）
 - [Server Timing](https://htmlspecs.com/server-timing)（[Source](https://www.w3.org/TR/2023/WD-server-timing-20230411/) - 工作草案）
-- https://www.w3.org/TR/paint-timing/
+- [Paint Timing](https://htmlspecs.com/paint-timing)（[Source](https://www.w3.org/TR/2025/WD-paint-timing-20250517/) - 工作草案）
 
 
 ### 安全和认证
