@@ -399,6 +399,12 @@ const links = [
         src: "https://www.w3.org/TR/2023/CRD-secure-contexts-20231110/",
         "last-modified": "Wed, 30 Apr 2025 06:53:43 GMT"
     },
+    {
+        text: "Referrer Policy",
+        href: "https://htmlspecs.com/referrer-policy",
+        src: "https://www.w3.org/TR/2017/CR-referrer-policy-20170126/",
+        "last-modified": "-"
+    },
 
 
     // Media and Graphics
