@@ -83,7 +83,7 @@ HTML 及相关 API，CSS 标准系列。
 - [Content Security Policy Level 3](https://htmlspecs.com/CSP3)（[Source](https://www.w3.org/TR/2025/WD-CSP3-20250711/) - 工作草案）
 - [Secure Contexts](https://htmlspecs.com/secure-contexts)（[Source](https://www.w3.org/TR/2023/CRD-secure-contexts-20231110/) - 候选推荐草案）
 - [Referrer Policy](https://htmlspecs.com/referrer-policy)（[Source](https://www.w3.org/TR/2017/CR-referrer-policy-20170126/) - 候选推荐）
-- [ ] [Mixed Content](https://htmlspecs.com/mixed-content)（[Source](https://www.w3.org/TR/2023/CRD-mixed-content-20230223/) - 候选推荐草案）
+- [Mixed Content](https://htmlspecs.com/mixed-content)（[Source](https://www.w3.org/TR/2023/CRD-mixed-content-20230223/) - 候选推荐草案）
 
 ### 媒体和图形
 - [ ] [WebGPU](https://htmlspecs.com/webgpu)（[Source](https://www.w3.org/TR/2025/CRD-webgpu-20250711/) - 候选推荐草案）

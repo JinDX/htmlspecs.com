@@ -36,7 +36,7 @@ const links = [
         src: "https://mimesniff.spec.whatwg.org/",
         "last-modified": "Mon, 19 May 2025 10:51:24 GMT"
     },
-    
+
     {
         text: "Infra",
         href: "https://htmlspecs.com/infra",
@@ -422,6 +422,12 @@ const links = [
         text: "Referrer Policy",
         href: "https://htmlspecs.com/referrer-policy",
         src: "https://www.w3.org/TR/2017/CR-referrer-policy-20170126/",
+        "last-modified": "-"
+    },
+    {
+        text: "Mixed Content",
+        href: "https://htmlspecs.com/mixed-content",
+        src: "https://www.w3.org/TR/2023/CRD-mixed-content-20230223/",
         "last-modified": "-"
     },
 
