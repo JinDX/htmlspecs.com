@@ -31,6 +31,12 @@ const links = [
         "last-modified": "Mon, 16 Jun 2025 07:39:55 GMT"
     },
     {
+        text: "MIME Sniffing",
+        href: "https://htmlspecs.com/mimesniff",
+        src: "https://mimesniff.spec.whatwg.org/",
+        "last-modified": "Mon, 19 May 2025 10:51:24 GMT"
+    },
+    {
         text: "Web Application Manifest",
         href: "https://htmlspecs.com/appmanifest",
         src: "https://www.w3.org/TR/2025/WD-appmanifest-20250505/",

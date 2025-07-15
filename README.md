@@ -9,13 +9,13 @@ HTML 及相关 API，CSS 标准系列。
 - [URL Pattern](https://htmlspecs.com/urlpattern)（[Source](https://urlpattern.spec.whatwg.org/)）
 - [Web IDL](https://htmlspecs.com/webidl)（[Source](https://webidl.spec.whatwg.org/)）
 - [Encoding](https://htmlspecs.com/encoding)（[Source](https://encoding.spec.whatwg.org/)）
-- [ ] [MIME Sniffing Standard](https://htmlspecs.com/mimesniff)（[Source](https://mimesniff.spec.whatwg.org/)）
+- [MIME Sniffing](https://htmlspecs.com/mimesniff)（[Source](https://mimesniff.spec.whatwg.org/)）
 - [ ] [Infra Standard](https://htmlspecs.com/infra)（[Source](https://infra.spec.whatwg.org/)）
 - [Web Application Manifest](https://htmlspecs.com/appmanifest)（[Source](https://www.w3.org/TR/2024/WD-appmanifest-20241011/) - 工作草案）
 
 ### 可访问性
 - [WCAG 2.2](https://htmlspecs.com/WCAG22)（[Source](https://www.w3.org/TR/2024/REC-WCAG22-20241212/) - 推荐标准）
-- [Accessible Rich Internet Applications (WAI-ARIA) 1.2](https://htmlspecs.com/wai-aria)（[Source](https://www.w3.org/TR/2023/REC-wai-aria-1.2-20230606/) - 推荐标准）  
+- [Accessible Rich Internet Applications (WAI-ARIA) 1.2](https://htmlspecs.com/wai-aria)（[Source](https://www.w3.org/TR/2023/REC-wai-aria-1.2-20230606/) - 推荐标准）
 
 ### 网络和通信
 - [Fetch](https://htmlspecs.com/fetch)（[Source](https://fetch.spec.whatwg.org/)）
