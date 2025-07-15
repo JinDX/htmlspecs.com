@@ -8,6 +8,9 @@ HTML 及相关 API，CSS 标准系列。
 - [URL](https://htmlspecs.com/url)（[Source](https://url.spec.whatwg.org/)）
 - [URL Pattern](https://htmlspecs.com/urlpattern)（[Source](https://urlpattern.spec.whatwg.org/)）
 - [Web IDL](https://htmlspecs.com/webidl)（[Source](https://webidl.spec.whatwg.org/)）
+- [ ] [Encoding Standard](https://htmlspecs.com/encoding)（[Source](https://encoding.spec.whatwg.org/)）
+- [ ] [MIME Sniffing Standard](https://htmlspecs.com/mimesniff)（[Source](https://mimesniff.spec.whatwg.org/)）
+- [ ] [Infra Standard](https://htmlspecs.com/infra)（[Source](https://infra.spec.whatwg.org/)）
 - [Web Application Manifest](https://htmlspecs.com/appmanifest)（[Source](https://www.w3.org/TR/2024/WD-appmanifest-20241011/) - 工作草案）
 
 ### 可访问性
@@ -80,8 +83,10 @@ HTML 及相关 API，CSS 标准系列。
 - [Content Security Policy Level 3](https://htmlspecs.com/CSP3)（[Source](https://www.w3.org/TR/2025/WD-CSP3-20250711/) - 工作草案）
 - [Secure Contexts](https://htmlspecs.com/secure-contexts)（[Source](https://www.w3.org/TR/2023/CRD-secure-contexts-20231110/) - 候选推荐草案）
 - [Referrer Policy](https://htmlspecs.com/referrer-policy)（[Source](https://www.w3.org/TR/2017/CR-referrer-policy-20170126/) - 候选推荐）
+- [ ] [Mixed Content](https://htmlspecs.com/mixed-content)（[Source](https://www.w3.org/TR/2023/CRD-mixed-content-20230223//) - 候选推荐）
 
 ### 媒体和图形
+- [ ][WebGPU](https://htmlspecs.com/webgpu)（[Source](https://www.w3.org/TR/2025/CRD-webgpu-20250711/) - 社区组草案报告）
 - [Web Animations](https://htmlspecs.com/web-animations-1)（[Source](https://www.w3.org/TR/2023/WD-web-animations-1-20230605/) - 工作草案）
 - [SVG 2](https://htmlspecs.com/SVG2/)（[Source](https://www.w3.org/TR/2018/CR-SVG2-20181004/) - 候选推荐）
 - [Picture-in-Picture](https://htmlspecs.com/picture-in-picture)（[Source](https://www.w3.org/TR/2024/WD-picture-in-picture-20241216/) - 工作草案）
