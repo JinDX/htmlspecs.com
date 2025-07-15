@@ -36,6 +36,13 @@ const links = [
         src: "https://mimesniff.spec.whatwg.org/",
         "last-modified": "Mon, 19 May 2025 10:51:24 GMT"
     },
+    
+    {
+        text: "Infra",
+        href: "https://htmlspecs.com/infra",
+        src: "https://infra.spec.whatwg.org/",
+        "last-modified": "Mon, 19 May 2025 06:30:39 GMT"
+    },
     {
         text: "Web Application Manifest",
         href: "https://htmlspecs.com/appmanifest",

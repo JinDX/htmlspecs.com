@@ -10,7 +10,7 @@ HTML 及相关 API，CSS 标准系列。
 - [Web IDL](https://htmlspecs.com/webidl)（[Source](https://webidl.spec.whatwg.org/)）
 - [Encoding](https://htmlspecs.com/encoding)（[Source](https://encoding.spec.whatwg.org/)）
 - [MIME Sniffing](https://htmlspecs.com/mimesniff)（[Source](https://mimesniff.spec.whatwg.org/)）
-- [ ] [Infra Standard](https://htmlspecs.com/infra)（[Source](https://infra.spec.whatwg.org/)）
+- [Infra](https://htmlspecs.com/infra)（[Source](https://infra.spec.whatwg.org/)）
 - [Web Application Manifest](https://htmlspecs.com/appmanifest)（[Source](https://www.w3.org/TR/2024/WD-appmanifest-20241011/) - 工作草案）
 
 ### 可访问性
