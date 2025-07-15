@@ -8,7 +8,7 @@ HTML 及相关 API，CSS 标准系列。
 - [URL](https://htmlspecs.com/url)（[Source](https://url.spec.whatwg.org/)）
 - [URL Pattern](https://htmlspecs.com/urlpattern)（[Source](https://urlpattern.spec.whatwg.org/)）
 - [Web IDL](https://htmlspecs.com/webidl)（[Source](https://webidl.spec.whatwg.org/)）
-- [ ] [Encoding Standard](https://htmlspecs.com/encoding)（[Source](https://encoding.spec.whatwg.org/)）
+- [Encoding](https://htmlspecs.com/encoding)（[Source](https://encoding.spec.whatwg.org/)）
 - [ ] [MIME Sniffing Standard](https://htmlspecs.com/mimesniff)（[Source](https://mimesniff.spec.whatwg.org/)）
 - [ ] [Infra Standard](https://htmlspecs.com/infra)（[Source](https://infra.spec.whatwg.org/)）
 - [Web Application Manifest](https://htmlspecs.com/appmanifest)（[Source](https://www.w3.org/TR/2024/WD-appmanifest-20241011/) - 工作草案）

@@ -25,6 +25,12 @@ const links = [
         "last-modified": "Mon, 14 Jul 2025 18:34:17 GMT"
     },
     {
+        text: "Encoding",
+        href: "https://htmlspecs.com/encoding",
+        src: "https://encoding.spec.whatwg.org/",
+        "last-modified": "Mon, 16 Jun 2025 07:39:55 GMT"
+    },
+    {
         text: "Web Application Manifest",
         href: "https://htmlspecs.com/appmanifest",
         src: "https://www.w3.org/TR/2025/WD-appmanifest-20250505/",
