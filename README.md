@@ -86,7 +86,7 @@ HTML 及相关 API，CSS 标准系列。
 - [ ] [Mixed Content](https://htmlspecs.com/mixed-content)（[Source](https://www.w3.org/TR/2023/CRD-mixed-content-20230223/) - 候选推荐）
 
 ### 媒体和图形
-- [ ][WebGPU](https://htmlspecs.com/webgpu)（[Source](https://www.w3.org/TR/2025/CRD-webgpu-20250711/) - 社区组草案报告）
+- [ ] [WebGPU](https://htmlspecs.com/webgpu)（[Source](https://www.w3.org/TR/2025/CRD-webgpu-20250711/) - 社区组草案报告）
 - [Web Animations](https://htmlspecs.com/web-animations-1)（[Source](https://www.w3.org/TR/2023/WD-web-animations-1-20230605/) - 工作草案）
 - [SVG 2](https://htmlspecs.com/SVG2/)（[Source](https://www.w3.org/TR/2018/CR-SVG2-20181004/) - 候选推荐）
 - [Picture-in-Picture](https://htmlspecs.com/picture-in-picture)（[Source](https://www.w3.org/TR/2024/WD-picture-in-picture-20241216/) - 工作草案）
