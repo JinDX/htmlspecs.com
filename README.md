@@ -183,8 +183,8 @@ HTML 及相关 API，CSS 标准系列。
 - [CSS Speech Module Level 1](https://htmlspecs.com/css/css-speech-1)（[Source](https://www.w3.org/TR/2023/CRD-css-speech-1-20230214/) - 候选推荐标准）
 
 ### 其他
-- [CSS Snapshot 2023](https://htmlspecs.com/css/css-2023)（[Source](https://www.w3.org/TR/css-2023/) - Group Note）
-- [CSS Snapshot 2024](https://htmlspecs.com/css/css-2024)（[Source](https://www.w3.org/TR/css-2024/) - Group Note）
+- [CSS Snapshot 2023](https://htmlspecs.com/css/css-2023)（[Source](https://www.w3.org/TR/css-2023/) - 小组备忘）
+- [CSS Snapshot 2024](https://htmlspecs.com/css/css-2024)（[Source](https://www.w3.org/TR/css-2024/) - 小组备忘）
 - [CSS Namespaces](https://htmlspecs.com/css/css-namespaces-3)（[Source](https://www.w3.org/TR/2014/REC-css-namespaces-3-20140320/) - 推荐标准）
 - [Selectors Level 3](https://htmlspecs.com/css/selectors-3)（[Source](https://www.w3.org/TR/2018/REC-selectors-3-20181106/) - 推荐标准）
 - [CSS Style Attributes](https://htmlspecs.com/css/css-style-attr)（[Source](https://www.w3.org/TR/2013/REC-css-style-attr-20131107/) - 推荐标准）
