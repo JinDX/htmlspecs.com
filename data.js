@@ -434,6 +434,12 @@ const links = [
 
     // Media and Graphics
     {
+        text: "WebGPU",
+        href: "https://htmlspecs.com/webgpu",
+        src: "https://www.w3.org/TR/2025/CRD-webgpu-20250711/",
+        "last-modified": "-"
+    },
+    {
         text: "Web Animations",
         href: "https://htmlspecs.com/web-animations-1",
         src: "https://www.w3.org/TR/2023/WD-web-animations-1-20230605/",
