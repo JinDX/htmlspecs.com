@@ -19,6 +19,7 @@ HTML 及相关 API，CSS 标准系列。
 
 ### 网络和通信
 - [Fetch](https://htmlspecs.com/fetch)（[Source](https://fetch.spec.whatwg.org/)）
+- [ ] [Streams](https://htmlspecs.com/streams)（[Source](https://streams.spec.whatwg.org/)）
 - [XMLHttpRequest](https://htmlspecs.com/xhr)（[Source](https://xhr.spec.whatwg.org/)）
 - [WebSockets](https://htmlspecs.com/websockets)（[Source](https://websockets.spec.whatwg.org/)）
 - [WebTransport](https://htmlspecs.com/webtransport)（[Source](https://www.w3.org/TR/2025/WD-webtransport-20250702/) - 工作草案）
@@ -32,6 +33,7 @@ HTML 及相关 API，CSS 标准系列。
 - [Indexed Database API 3.0](https://htmlspecs.com/IndexedDB)（[Source](https://www.w3.org/TR/2025/WD-IndexedDB-3-20250703/) - 工作草案）
 - [Storage](https://htmlspecs.com/storage)（[Source](https://storage.spec.whatwg.org/)）
 - [File API](https://htmlspecs.com/FileAPI)（[Source](https://www.w3.org/TR/2024/WD-FileAPI-20241204/) - 工作草案）
+- [ ] [File System](https://htmlspecs.com/fs)（[Source](https://fs.spec.whatwg.org/)）
 - [Cookie Store API](https://htmlspecs.com/cookie-store)（[Source](https://wicg.github.io/cookie-store/) - 社区组草案报告）
 - [File and Directory Entries API](https://htmlspecs.com/entries-api)（[Source](https://wicg.github.io/entries-api/) - 社区组草案报告）
 - [Web Locks API](https://htmlspecs.com/web-locks)（[Source](https://www.w3.org/TR/2023/WD-web-locks-20230105/) - 工作草案）
