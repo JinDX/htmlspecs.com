@@ -143,7 +143,8 @@ loadDataScript(function () {
                 cssContent.appendChild(createLink(link.href, link.text));
             });
 
-            cssTitle.onclick = function () {
+            cssTitle.onclick = function (event) {
+                event.preventDefault();
                 var isCollapsed = cssContent.style.display === "none";
                 cssContent.style.display = isCollapsed ? "block" : "none";
                 triangle.style.transform = isCollapsed ? "rotate(90deg)" : "rotate(0deg)";
