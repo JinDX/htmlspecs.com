@@ -155,6 +155,12 @@ const links = [
         "last-modified": "Fri, 24 May 2024 17:07:26 GMT"
     },
     {
+        text: "File System",
+        href: "https://htmlspecs.com/fs",
+        src: "https://fs.spec.whatwg.org",
+        "last-modified": "Fri, 28 Jun 2024 23:01:56 GMT"
+    },
+    {
         text: "Cookie Store API",
         href: "https://htmlspecs.com/cookie-store",
         src: "https://wicg.github.io/cookie-store/",
