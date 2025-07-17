@@ -28,7 +28,7 @@ const links = [
         text: "Encoding",
         href: "https://htmlspecs.com/encoding",
         src: "https://encoding.spec.whatwg.org/",
-        "last-modified": "Mon, 16 Jun 2025 07:39:55 GMT"
+        "last-modified": "Wed, 16 Jul 2025 12:34:28 GMT"
     },
     {
         text: "MIME Sniffing",
