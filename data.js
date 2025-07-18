@@ -50,6 +50,12 @@ const links = [
         "last-modified": "Fri, 11 Oct 2024 03:44:44 GMT"
     },
     {
+        text: "Compatibility",
+        href: "https://htmlspecs.com/compat",
+        src: "https://compat.spec.whatwg.org//",
+        "last-modified": "Wed, 24 Jan 2024 10:48:20 GMT"
+    },
+    {
         text: "Quirks Mode",
         href: "https://htmlspecs.com/quirks",
         src: "https://quirks.spec.whatwg.org/",
