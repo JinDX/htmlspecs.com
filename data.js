@@ -49,6 +49,12 @@ const links = [
         src: "https://www.w3.org/TR/2025/WD-appmanifest-20250505/",
         "last-modified": "Fri, 11 Oct 2024 03:44:44 GMT"
     },
+    {
+        text: "Test Utils",
+        href: "https://htmlspecs.com/testutils",
+        src: "https://testutils.spec.whatwg.org/",
+        "last-modified": "Wed, 24 Jan 2024 10:41:25 GMT"
+    },
 
 
     // Accessibility

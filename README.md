@@ -15,7 +15,7 @@ HTML 及相关 API，CSS 标准系列。
 - [ ] [Compatibility](https://htmlspecs.com/compat)（[Source](https://compat.spec.whatwg.org/)）
 - [ ] [Compression](https://htmlspecs.com/compression)（[Source](https://compression.spec.whatwg.org/)）
 - [ ] [Quirks Mode](https://htmlspecs.com/quirks)（[Source](https://quirks.spec.whatwg.org/)）
-- [ ] [Test Utils](https://htmlspecs.com/testutils)（[Source](https://testutils.spec.whatwg.org/)）
+- [Test Utils](https://htmlspecs.com/testutils)（[Source](https://testutils.spec.whatwg.org/)）
 
 
 ### 可访问性
