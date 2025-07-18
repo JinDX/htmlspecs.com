@@ -243,7 +243,7 @@ const links = [
     {
         text: "Screen Capture",
         href: "https://htmlspecs.com/screen-capture",
-        src: "https://www.w3.org/TR/2025/WD-screen-capture-20250522/",
+        src: "https://www.w3.org/TR/2025/WD-screen-capture-20250717/",
         "last-modified": "Thu, 27 Jun 2024 14:54:39 GMT"
     },
     {
