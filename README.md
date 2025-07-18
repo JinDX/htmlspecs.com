@@ -12,6 +12,11 @@ HTML 及相关 API，CSS 标准系列。
 - [MIME Sniffing](https://htmlspecs.com/mimesniff)（[Source](https://mimesniff.spec.whatwg.org/)）
 - [Infra](https://htmlspecs.com/infra)（[Source](https://infra.spec.whatwg.org/)）
 - [Web Application Manifest](https://htmlspecs.com/appmanifest)（[Source](https://www.w3.org/TR/2024/WD-appmanifest-20241011/) - 工作草案）
+- [ ] [Compatibility](https://htmlspecs.com/compat)（[Source](https://compat.spec.whatwg.org/)）
+- [ ] [Compression](https://htmlspecs.com/compression)（[Source](https://compression.spec.whatwg.org/)）
+- [ ] [Quirks Mode](https://htmlspecs.com/quirks)（[Source](https://quirks.spec.whatwg.org/)）
+- [ ] [Test Utils](https://htmlspecs.com/testutils)（[Source](https://testutils.spec.whatwg.org/)）
+
 
 ### 可访问性
 - [WCAG 2.2](https://htmlspecs.com/WCAG22)（[Source](https://www.w3.org/TR/2024/REC-WCAG22-20241212/) - 推荐标准）
