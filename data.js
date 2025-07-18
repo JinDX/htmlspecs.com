@@ -87,6 +87,12 @@ const links = [
         "last-modified": "Wed, 16 Jul 2025 08:57:23 GMT"
     },
     {
+        text: "Streams",
+        href: "https://htmlspecs.com/streams",
+        src: "https://streams.spec.whatwg.org/",
+        "last-modified": "Thu, 03 Apr 2025 07:13:07 GMT"
+    },
+    {
         text: "XMLHttpRequest ",
         href: "https://htmlspecs.com/xhr",
         src: "https://xhr.spec.whatwg.org/",

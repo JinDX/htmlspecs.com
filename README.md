@@ -19,7 +19,7 @@ HTML 及相关 API，CSS 标准系列。
 
 ### 网络和通信
 - [Fetch](https://htmlspecs.com/fetch)（[Source](https://fetch.spec.whatwg.org/)）
-- [ ] [Streams](https://htmlspecs.com/streams)（[Source](https://streams.spec.whatwg.org/)）
+- [Streams](https://htmlspecs.com/streams)（[Source](https://streams.spec.whatwg.org/)）
 - [XMLHttpRequest](https://htmlspecs.com/xhr)（[Source](https://xhr.spec.whatwg.org/)）
 - [WebSockets](https://htmlspecs.com/websockets)（[Source](https://websockets.spec.whatwg.org/)）
 - [WebTransport](https://htmlspecs.com/webtransport)（[Source](https://www.w3.org/TR/2025/WD-webtransport-20250702/) - 工作草案）
