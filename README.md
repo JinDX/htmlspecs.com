@@ -11,7 +11,7 @@ HTML 及相关 API，CSS 标准系列。
 - [Encoding](https://htmlspecs.com/encoding)（[Source](https://encoding.spec.whatwg.org/)）
 - [MIME Sniffing](https://htmlspecs.com/mimesniff)（[Source](https://mimesniff.spec.whatwg.org/)）
 - [Infra](https://htmlspecs.com/infra)（[Source](https://infra.spec.whatwg.org/)）
-- [Web Application Manifest](https://htmlspecs.com/appmanifest)（[Source](https://www.w3.org/TR/2024/WD-appmanifest-20241011/) - 工作草案）
+- [Web Application Manifest](https://htmlspecs.com/appmanifest)（[Source](https://www.w3.org/TR/2025/WD-appmanifest-20250505/) - 工作草案）
 - [Compatibility](https://htmlspecs.com/compat)（[Source](https://compat.spec.whatwg.org/)）
 - [Compression](https://htmlspecs.com/compression)（[Source](https://compression.spec.whatwg.org/)）
 - [Quirks Mode](https://htmlspecs.com/quirks)（[Source](https://quirks.spec.whatwg.org/)）
