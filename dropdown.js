@@ -122,7 +122,7 @@ loadDataScript(function () {
         dropdownContent.appendChild(createLink(link.href, link.text));
 
         if (link.text === "ECMA-262") {
-            var cssTitle = createLink("#", "CSS相关");
+            var cssTitle = createLink("#", "CSS 相关");
             cssTitle.style.cursor = "pointer";
             cssTitle.style.padding = "10px 15px";
             var triangle = document.createElement("span");
