@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh">
+<html lang="zh-hans">
 
 <head>
     <meta charset="utf-8">
@@ -25,17 +25,19 @@
 <body>
     <section id="abstract">
         <p>
-            本文档描述了提供访问浏览器提供的取色器的API。
+            本文档描述了一个 API，可访问浏览器自带的取色器。
         </p>
     </section>
     <section id="sotd"></section>
     <section class="informative" id="introduction">
-        <h2>简介</h2>
+        <h2>介绍</h2>
         <p>
-            目前在网页上，创意应用开发者无法实现取色器，一种允许用户从屏幕上的像素中选择颜色的工具，包括请求颜色数据的网页之外的像素。
+            当前在网页上，创意应用开发者无法实现取色器工具，
+            该工具允许用户从屏幕上的像素选择颜色，包括那些在请求颜色数据的网页之外渲染的像素。
+
+        <p>
+            本 API 使作者能够在自定义颜色选择器的构建中使用浏览器自带的取色器。
         </p>
-        <p>
-            此API使开发者能够在构建自定义颜色选择器时使用浏览器提供的取色器。
         </p>
     </section>
     <section id="conformance"></section>
@@ -52,7 +54,7 @@
             <dl>
                 <dt><dfn data-dfn-for="ColorSelectionResult">sRGBHex</dfn></dt>
                 <dd>
-                    必须具有 <dfn data-cite="!HTML#valid-simple-colour">有效的简单颜色</dfn> 值
+                    必须有一个值，该值是一个<dfn data-cite="!HTML#valid-simple-colour">有效的简单颜色</dfn>
                 </dd>
             </dl>
         </section>
@@ -84,55 +86,56 @@
             <dl>
                 <dt><dfn data-dfn-for="EyeDropper">open()</dfn></dt>
                 <dd>
-                    该方法必须遵循以下步骤：
+                    此方法必须遵循以下步骤：
                     <ol>
                         <li>
-                            如果 [=this=] 的 [=相关全局对象=] 没有 [=短暂激活=]，则返回 [=一个被拒绝的新promise=]，并附带 "{{NotAllowedError}}"
-                            {{DOMException}}。
+                            如果 [=this=] 的 [=relevant global object=] 没有 [=transient activation=]，则返回一个被
+                            "{{NotAllowedError}}" {{DOMException}} 拒绝的新 promise。
                         </li>
                         <li>
-                            如果另一个取色器已经打开，则返回 [=一个被拒绝的新promise=]，并附带 "{{InvalidStateError}}" {{DOMException}}。
+                            如果已经有其他 eyedropper 打开，则返回一个被 "{{InvalidStateError}}" {{DOMException}} 拒绝的新 promise。
                         </li>
                         <li>
-                            让 |result| 成为 [=一个新的promise=]。
+                            令 |result| 为一个新 promise。
                         </li>
                         <li>
                             如果 options.<dfn data-cite="!dom#abortsignal">signal</dfn> 存在，则执行以下子步骤：
                             <ol>
                                 <li>
-                                    如果 options.[=signal=] 被 <dfn data-cite="!dom#dom-abortsignal-aborted">中止</dfn>，
-                                    则 [=拒绝=] |result| 并附带 options.[=signal=] 的 <dfn
-                                        data-cite="!dom#abortsignal-abort-reason">中止原因</dfn>，并返回 |result|。
+                                    如果 options.[=signal=] 已 <dfn data-cite="!dom#dom-abortsignal-aborted">中止</dfn>，
+                                    则以 options.[=signal=] 的 <dfn data-cite="!dom#abortsignal-abort-reason">中止原因</dfn> 拒绝
+                                    |result|，
+                                    并返回 |result|。
                                 </li>
                                 <li>
-                                    <dfn data-cite="!dom#abortsignal-add">将以下中止步骤</dfn> 添加到 options.[=signal=]：
+                                    <dfn data-cite="!dom#abortsignal-add">添加以下中止步骤</dfn>到 options.[=signal=]：
                                     <ol>
-                                        <li>退出“取色器模式”并关闭UI。</li>
-                                        <li>[=拒绝=] |result| 并附带 options.[=signal=] 的 <a
-                                                data-cite="!dom#abortsignal-abort-reason">中止原因</a>。</li>
+                                        <li>退出“取色器模式”并关闭 UI。</li>
+                                        <li>以 options.[=signal=] 的 <a data-cite="!dom#abortsignal-abort-reason">中止原因</a>
+                                            拒绝 |result|。</li>
                                     </ol>
                                 </li>
                             </ol>
                         </li>
                         <li>
-                            将网页置于“取色器模式”，此时用户输入将被抑制：不向网页发送UI事件。
+                            使网页进入“取色器模式”，此时用户输入被屏蔽：不会向网页分发 UI 事件。
                         </li>
                         <li>
-                            [=并行=]：
+                            [=In parallel=]：
                             <ol>
-                                <li>让 |colorSelectionResult| 成为用户成功选择颜色的结果。如果失败，则：
+                                <li>令 |colorSelectionResult| 为用户成功选择颜色的结果。如果失败则：
                                     <ol>
                                         <li>
-                                            如果用户取消选择，[=拒绝=] |result| 并附带 "{{AbortError}}" {{DOMException}}，否则
-                                            [=拒绝=] |result| 并附带 "{{OperationError}}" {{DOMException}}。
+                                            如果用户中止选择，则以 "{{AbortError}}" {{DOMException}} 拒绝 |result|；否则以
+                                            "{{OperationError}}" {{DOMException}} 拒绝 |result|。
                                         </li>
                                         <li>
                                             中止这些步骤。
                                         </li>
                                     </ol>
                                 </li>
-                                <li>退出“取色器模式”并关闭UI。</li>
-                                <li>[=解决=] |result| 并附带 |colorSelectionResult|。</li>
+                                <li>退出“取色器模式”并关闭 UI。</li>
+                                <li>以 |colorSelectionResult| 解析 |result|。</li>
                             </ol>
                         </li>
                         <li>
@@ -146,42 +149,41 @@
     <section>
         <h2>EyeDropper</h2>
         <p>
-            为了 {{EyeDropper/open}} 一个取色器，用户代理必须呈现符合以下规则的用户界面：
+            要 {{EyeDropper/open}} 一个 eyedropper，用户代理必须展示一个符合以下规则的用户界面：
         <ul>
             <li>
-                如果呈现用户界面失败或访问屏幕内容失败，则返回失败。
+                如果展示用户界面失败或访问屏幕内容失败，则返回失败。
             </li>
             <li>
-                UI 在允许颜色选择之前必须确保其可见。
+                UI 必须确保在允许选择颜色之前已显示。
             </li>
             <li>
-                UI 必须清楚地显示将要选择的颜色。
+                UI 必须明确显示将要被选择的颜色。
             </li>
             <li>
-                UI 必须提供一个取消/返回不选择颜色的选项。
+                UI 必须提供取消/返回且不选择颜色的选项。
             </li>
         </ul>
         </p>
     </section>
     <section class="informative" id="privacy">
-        <h2>安全性和隐私考虑</h2>
+        <h2>安全与隐私注意事项</h2>
         <p>
-            允许开发者访问用户机器的未受限像素数据的端点带来了安全挑战。
-            特别是，任何取色器的实现都不应允许网页“抓取”用户不打算与网页应用程序共享的信息，例如当用户在屏幕上移动鼠标时。
+            暴露允许开发者访问用户机器上无限制像素数据的端点会带来安全挑战。
+            特别是，任何 eyedropper 的实现都不应允许网页“屏幕抓取”用户未打算与网页应用分享的信息，
+            例如用户在屏幕上移动鼠标时。
+        <p>
+            一种缓解这种威胁的方法是要求只有在用户采取某些明确动作（如按下鼠标按钮）时，像素数据才可被网页应用访问。
         </p>
         <p>
-            减轻这种威胁的一种方法是要求在用户采取某些明确的操作（如按下鼠标按钮）时才将像素数据提供给网页应用程序。
+            此外，浏览器应明确提示用户已进入 eyedropper 模式，例如更改光标，并提供用户退出该模式的方式，比如按下 ESC 键，并不允许作者取消该行为。
         </p>
         <p>
-            此外，浏览器应在用户进入取色器模式时提供明确的提示，例如更改光标，并提供用户退出该模式的方法，
-            例如按下ESC键，并且不允许作者取消此行为。
+            在允许用户选择颜色前，浏览器应确保用户有机会看到 UI。可以通过强制 eyedropper 打开到允许选择颜色之间的最小时间间隔来实现。
         </p>
         <p>
-            在允许用户选择颜色之前，浏览器应确保用户有机会看到UI。
-            这可以通过在打开取色器和允许颜色选择之间强制执行最小时间间隔来实现。
+            进入 eyedropper 模式应需要可消耗的用户激活，例如点击网页上的按钮，以避免无意泄露像素数据。
         </p>
-        <p>
-            进入取色器模式的过渡应要求可消耗的用户激活，例如点击网页上的按钮，以帮助避免无意间暴露像素数据。
         </p>
     </section>
     <section class="informative" id="examples">
@@ -192,7 +194,7 @@
                 <pre>
             <xmp>
               if (window.EyeDropper == undefined) {
-                console.error('EyeDropper API 不支持该平台');
+                console.error('EyeDropper API 在此平台不支持');
               }
             </xmp>
           </pre>
@@ -205,18 +207,18 @@
             <xmp>
               <button id="eyedropperButton">打开取色器</button>
               <script>
-                // 创建 EyeDropper 对象
+                // 创建一个 EyeDropper 对象
                 let eyeDropper = new EyeDropper();
 
                 document.getElementById("eyedropperButton").addEventListener('click', e => {
                     // 进入取色器模式
                     eyeDropper.open()
                         .then(colorSelectionResult => {
-                            // 返回所选像素的十六进制颜色值 (#RRGGBB)
+                            // 返回所选像素的十六进制颜色值（#RRGGBB）
                             console.log(colorSelectionResult.sRGBHex);
                         })
                         .catch(error => {
-                            // 处理用户选择退出取色器模式而不选择颜色的情况
+                            // 处理用户选择退出取色器模式但未选色的情况
                         });
                 });
             </script>
@@ -227,8 +229,4 @@
     </section>
     <section id="idl-index" class="appendix"></section>
     <section id="references" class="appendix"></section>
-    <script src="/dropdown.js"></script>
-
 </body>
-
-</html>
