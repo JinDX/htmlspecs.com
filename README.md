@@ -21,6 +21,7 @@ HTML 及相关 API，CSS 标准系列。
 ### 可访问性
 - [WCAG 2.2](https://htmlspecs.com/WCAG22)（[Source](https://www.w3.org/TR/2024/REC-WCAG22-20241212/) - 推荐标准）
 - [Accessible Rich Internet Applications (WAI-ARIA) 1.2](https://htmlspecs.com/wai-aria)（[Source](https://www.w3.org/TR/2023/REC-wai-aria-1.2-20230606/) - 推荐标准）
+- [ ] [Accessible Rich Internet Applications (WAI-ARIA) 1.2](https://htmlspecs.com/accname-1.1)（[Source](https://www.w3.org/TR/2018/REC-accname-1.1-20181218/) - 推荐标准）
 
 ### 网络和通信
 - [Fetch](https://htmlspecs.com/fetch)（[Source](https://fetch.spec.whatwg.org/)）
@@ -33,6 +34,7 @@ HTML 及相关 API，CSS 标准系列。
 - [WebRTC](https://htmlspecs.com/webrtc)（[Source](https://www.w3.org/TR/2025/REC-webrtc-20250313/) - 推荐标准）
 - [Payment Request API](https://htmlspecs.com/payment-request)（[Source](https://www.w3.org/TR/2025/CRD-payment-request-20250402/) - 候选推荐标准）
 - [Background Fetch](https://htmlspecs.com/background-fetch)（[Source](https://wicg.github.io/background-fetch/) - 社区组草案报告）
+- [ ] [Beacon](https://htmlspecs.com/beacon)（[Source](https://www.w3.org/TR/2022/CRD-beacon-20220803/) - 候选推荐草案）
 
 ### 存储和数据
 - [Indexed Database API 3.0](https://htmlspecs.com/IndexedDB)（[Source](https://www.w3.org/TR/2025/WD-IndexedDB-3-20250703/) - 工作草案）
@@ -81,6 +83,7 @@ HTML 及相关 API，CSS 标准系列。
 - [Reporting API](https://htmlspecs.com/reporting-1)（[Source](https://www.w3.org/TR/2025/WD-reporting-1-20250611/) - 工作草案）
 - [Server Timing](https://htmlspecs.com/server-timing)（[Source](https://www.w3.org/TR/2023/WD-server-timing-20230411/) - 工作草案）
 - [Paint Timing](https://htmlspecs.com/paint-timing)（[Source](https://www.w3.org/TR/2025/WD-paint-timing-20250517/) - 工作草案）
+- [ ] [Event Timing API](https://htmlspecs.com/event-timing)（[Source](https://www.w3.org/TR/2025/WD-event-timing-20250526/) - 工作草案）
 
 
 ### 安全和认证
@@ -91,6 +94,7 @@ HTML 及相关 API，CSS 标准系列。
 - [Secure Contexts](https://htmlspecs.com/secure-contexts)（[Source](https://www.w3.org/TR/2023/CRD-secure-contexts-20231110/) - 候选推荐草案）
 - [Referrer Policy](https://htmlspecs.com/referrer-policy)（[Source](https://www.w3.org/TR/2017/CR-referrer-policy-20170126/) - 候选推荐）
 - [Mixed Content](https://htmlspecs.com/mixed-content)（[Source](https://www.w3.org/TR/2023/CRD-mixed-content-20230223/) - 候选推荐草案）
+- [ ] [Credential Management Level 1](https://htmlspecs.com/credential-management-1)（[Source](https://www.w3.org/TR/2024/WD-credential-management-1-20240813/) - 工作草案）
 
 ### 媒体和图形
 - [WebGPU](https://htmlspecs.com/webgpu)（[Source](https://www.w3.org/TR/2025/CRD-webgpu-20250711/) - 候选推荐草案）
@@ -99,6 +103,7 @@ HTML 及相关 API，CSS 标准系列。
 - [Picture-in-Picture](https://htmlspecs.com/picture-in-picture)（[Source](https://www.w3.org/TR/2024/WD-picture-in-picture-20241216/) - 工作草案）
 - [Presentation API](https://htmlspecs.com/presentation-api)（[Source](https://www.w3.org/TR/2025/CRD-presentation-api-20250212/) - 候选推荐标准）
 - [Scroll-driven Animations](https://htmlspecs.com/scroll-animations-1)（[Source](https://www.w3.org/TR/2023/WD-scroll-animations-1-20230606/) - 工作草案）
+- [ ] [Media Capture and Streams](https://htmlspecs.com/mediacapture-streams)（[Source](https://www.w3.org/TR/2025/CRD-mediacapture-streams-20250624/) - 候选推荐草案）
 
 ### 开发者工具
 - [Console](https://htmlspecs.com/console)（[Source](https://console.spec.whatwg.org/)）
