@@ -88,6 +88,12 @@ const links = [
         src: "https://www.w3.org/TR/2023/REC-wai-aria-1.2-20230606/",
         "last-modified": "-"
     },
+    {
+        text: "Accessible Name and Description Computation 1.1",
+        href: "https://htmlspecs.com/accname-1.1",
+        src: "https://www.w3.org/TR/2018/REC-accname-1.1-20181218/",
+        "last-modified": "-"
+    },
 
     // URLs and Patterns
     {
