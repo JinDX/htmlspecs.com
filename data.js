@@ -523,6 +523,12 @@ const links = [
         src: "https://www.w3.org/TR/2023/WD-scroll-animations-1-20230606/",
         "last-modified": "-"
     },
+    {
+        text: "Media Capture and Streams",
+        href: "https://htmlspecs.com/mediacapture-streams",
+        src: "https://www.w3.org/TR/2025/CRD-mediacapture-streams-20250624/",
+        "last-modified": "-"
+    },
 
     // Developer Tools
     {
