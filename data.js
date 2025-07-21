@@ -170,6 +170,12 @@ const links = [
         src: "https://wicg.github.io/background-fetch/",
         "last-modified": "Wed, 21 Apr 2021 08:58:39 GMT"
     },
+    {
+        text: "Beacon",
+        href: "https://htmlspecs.com/beacon",
+        src: "https://www.w3.org/TR/2022/CRD-beacon-20220803/",
+        "last-modified": "-"
+    },
 
     // Storage and Data
     {

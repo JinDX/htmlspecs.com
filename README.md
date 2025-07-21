@@ -34,7 +34,7 @@ HTML 及相关 API，CSS 标准系列。
 - [WebRTC](https://htmlspecs.com/webrtc)（[Source](https://www.w3.org/TR/2025/REC-webrtc-20250313/) - 推荐标准）
 - [Payment Request API](https://htmlspecs.com/payment-request)（[Source](https://www.w3.org/TR/2025/CRD-payment-request-20250402/) - 候选推荐标准）
 - [Background Fetch](https://htmlspecs.com/background-fetch)（[Source](https://wicg.github.io/background-fetch/) - 社区组草案报告）
-- [ ] [Beacon](https://htmlspecs.com/beacon)（[Source](https://www.w3.org/TR/2022/CRD-beacon-20220803/) - 候选推荐草案）
+- [Beacon](https://htmlspecs.com/beacon)（[Source](https://www.w3.org/TR/2022/CRD-beacon-20220803/) - 候选推荐草案）
 
 ### 存储和数据
 - [Indexed Database API 3.0](https://htmlspecs.com/IndexedDB)（[Source](https://www.w3.org/TR/2025/WD-IndexedDB-3-20250703/) - 工作草案）
