@@ -430,6 +430,12 @@ const links = [
     },
     {
         text: "Paint Timing",
+        href: "https://htmlspecs.com/event-timing",
+        src: "https://www.w3.org/TR/2025/WD-event-timing-20250526/",
+        "last-modified": "-"
+    },
+    {
+        text: "Event Timing API",
         href: "https://htmlspecs.com/paint-timing",
         src: "https://www.w3.org/TR/2025/WD-paint-timing-20250517/",
         "last-modified": "-"

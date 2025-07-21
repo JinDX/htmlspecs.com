@@ -83,7 +83,7 @@ HTML 及相关 API，CSS 标准系列。
 - [Reporting API](https://htmlspecs.com/reporting-1)（[Source](https://www.w3.org/TR/2025/WD-reporting-1-20250611/) - 工作草案）
 - [Server Timing](https://htmlspecs.com/server-timing)（[Source](https://www.w3.org/TR/2023/WD-server-timing-20230411/) - 工作草案）
 - [Paint Timing](https://htmlspecs.com/paint-timing)（[Source](https://www.w3.org/TR/2025/WD-paint-timing-20250517/) - 工作草案）
-- [ ] [Event Timing API](https://htmlspecs.com/event-timing)（[Source](https://www.w3.org/TR/2025/WD-event-timing-20250526/) - 工作草案）
+- [Event Timing API](https://htmlspecs.com/event-timing)（[Source](https://www.w3.org/TR/2025/WD-event-timing-20250526/) - 工作草案）
 
 
 ### 安全和认证
