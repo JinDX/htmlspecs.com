@@ -88,6 +88,12 @@ const links = [
         src: "https://www.w3.org/TR/2023/REC-wai-aria-1.2-20230606/",
         "last-modified": "-"
     },
+    {
+        text: "Accessible Name and Description Computation 1.1",
+        href: "https://htmlspecs.com/accname-1.1",
+        src: "https://www.w3.org/TR/2018/REC-accname-1.1-20181218/",
+        "last-modified": "-"
+    },
 
     // URLs and Patterns
     {
@@ -163,6 +169,12 @@ const links = [
         href: "https://htmlspecs.com/background-fetch",
         src: "https://wicg.github.io/background-fetch/",
         "last-modified": "Wed, 21 Apr 2021 08:58:39 GMT"
+    },
+    {
+        text: "Beacon",
+        href: "https://htmlspecs.com/beacon",
+        src: "https://www.w3.org/TR/2022/CRD-beacon-20220803/",
+        "last-modified": "-"
     },
 
     // Storage and Data
@@ -418,6 +430,12 @@ const links = [
     },
     {
         text: "Paint Timing",
+        href: "https://htmlspecs.com/event-timing",
+        src: "https://www.w3.org/TR/2025/WD-event-timing-20250526/",
+        "last-modified": "-"
+    },
+    {
+        text: "Event Timing API",
         href: "https://htmlspecs.com/paint-timing",
         src: "https://www.w3.org/TR/2025/WD-paint-timing-20250517/",
         "last-modified": "-"
@@ -466,6 +484,12 @@ const links = [
         src: "https://www.w3.org/TR/2023/CRD-mixed-content-20230223/",
         "last-modified": "-"
     },
+    {
+        text: "Credential Management Level 1",
+        href: "https://htmlspecs.com/credential-management-1",
+        src: "https://www.w3.org/TR/2024/WD-credential-management-1-20240813/",
+        "last-modified": "-"
+    },
 
 
     // Media and Graphics
@@ -503,6 +527,12 @@ const links = [
         text: "Scroll-driven Animations",
         href: "https://htmlspecs.com/scroll-animations-1",
         src: "https://www.w3.org/TR/2023/WD-scroll-animations-1-20230606/",
+        "last-modified": "-"
+    },
+    {
+        text: "Media Capture and Streams",
+        href: "https://htmlspecs.com/mediacapture-streams",
+        src: "https://www.w3.org/TR/2025/CRD-mediacapture-streams-20250624/",
         "last-modified": "-"
     },
 
