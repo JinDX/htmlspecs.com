@@ -4,7 +4,7 @@ const links = [
         text: "HTML",
         href: "https://htmlspecs.com/",
         src: "https://html.spec.whatwg.org/multipage/",
-        "last-modified": "Sat, 19 Jul 2025 02:25:09 GMT"
+        "last-modified": "Mon, 21 Jul 2025 09:11:02 GMT"
     },
     {
         text: "ECMA-262",
@@ -206,7 +206,7 @@ const links = [
         text: "Cookie Store API",
         href: "https://htmlspecs.com/cookie-store",
         src: "https://wicg.github.io/cookie-store/",
-        "last-modified": "Tue, 15 Jul 2025 12:45:22 GMT"
+        "last-modified": "Mon, 21 Jul 2025 05:23:32 GMT"
     },
     {
         text: "File and Directory Entries API",
