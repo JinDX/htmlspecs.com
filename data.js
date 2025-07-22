@@ -693,6 +693,12 @@ const cssLinks = [
         src: "https://www.w3.org/TR/2024/WD-css-overflow-5-20241217/",
         "last-modified": "-"
     },
+    {
+        text: "CSS Gap Decorations Module Level 1",
+        href: "https://htmlspecs.com/css/css-gaps-1",
+        src: "https://www.w3.org/TR/2025/WD-css-gaps-1-20250417/",
+        "last-modified": "-"
+    },
 
     // Colors
     {
