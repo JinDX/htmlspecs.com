@@ -1051,6 +1051,12 @@ const cssLinks = [
         src: "https://www.w3.org/TR/2022/CRD-css-will-change-1-20220505/",
         "last-modified": "-"
     },
+    {
+        text: "CSS Mixins Module Level 1",
+        href: "https://htmlspecs.com/css/css-mixins-1",
+        src: "https://www.w3.org/TR/2025/WD-css-mixins-1-20250515/",
+        "last-modified": "-"
+    },
     // Nesting and Variables
     {
         text: "CSS Nesting Module Level 1",
