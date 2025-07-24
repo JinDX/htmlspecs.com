@@ -34,7 +34,7 @@ const links = [
         text: "MIME Sniffing",
         href: "https://htmlspecs.com/mimesniff",
         src: "https://mimesniff.spec.whatwg.org/",
-        "last-modified": "Mon, 21 Jul 2025 08:17:49 GMT"
+        "last-modified": "Thu, 24 Jul 2025 08:57:24 GMT"
     },
 
     {
