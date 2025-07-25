@@ -244,7 +244,7 @@ const links = [
         text: "EyeDropper API",
         href: "https://htmlspecs.com/eyedropper-api",
         src: "https://wicg.github.io/eyedropper-api/",
-        "last-modified": "Wed, 30 Mar 2022 19:00:41 GMT"
+        "last-modified": "Wed, 30 Mar 202 19:00:41 GMT"
     },
     {
         text: "Fullscreen",
