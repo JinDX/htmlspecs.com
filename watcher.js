@@ -102,7 +102,7 @@ const checkLinks = async (links, category) => {
 
 const main = async () => {
   if (SAVE_RESULTS) {
-    fs.writeFileSync(RESULT_FILE, `# 标准规范检查结果\n\n运行时间：${new Date().toLocaleString('zh-CN', { hour12: false })}\n\n`);
+    fs.writeFileSync(RESULT_FILE, `# 标准规范检查结果\n\n`);
   }
   await checkLinks(data.links, '标准规范');
   await checkLinks(data.cssLinks, 'CSS 相关规范');
