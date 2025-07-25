@@ -1,4 +1,4 @@
-name: Update Standards Status
+name: Check Standard Updates Every 30 Minutes
 
 on:
   schedule:
@@ -6,30 +6,16 @@ on:
   workflow_dispatch:
 
 jobs:
-  update-specs:
+  check-standard-updates:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Run watcher (生成 updates.md)
-        run: node watcher.js --ci
-
-      - name: Ensure updates.md exists
-        run: touch updates.md
-
-      - name: Commit & push if changed
-        env:
-          GH_PAT: ${{ secrets.GH_PAT }}
-        run: |
-          git config --global user.email "action@github.com"
-          git config --global user.name "GitHub Action"
-          git add updates.md
-          git diff --cached --quiet || git commit -m "chore: update standards status [skip ci]"
-          git push https://x-access-token:${GH_PAT}@github.com/${GITHUB_REPOSITORY}.git main
+      - name: Check for Standard Updates
+        run: node watcher.js
