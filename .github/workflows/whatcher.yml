@@ -10,23 +10,28 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Run watcher (生成 updates.md)
+      - name: Run watcher
         run: node watcher.js --ci
 
       - name: Ensure updates.md exists
         run: touch updates.md
 
-      - name: Commit & Push changes
+      - name: Commit updates.md if changed
+        run: |
+          git config --global user.email "action@github.com"
+          git config --global user.name "GitHub Action"
+          git add updates.md
+          git diff --cached --quiet || git commit -m "chore: update standards status [skip ci]"
+
+      - name: Push changes
         uses: ad-m/github-push-action@v0.8.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.ref_name }}
-          message: "chore: update standards status [skip ci]"
+          branch: main
