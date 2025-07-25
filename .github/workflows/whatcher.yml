@@ -1,4 +1,4 @@
-name: Check Standard Updates Every 30 Minutes
+name: Update Spec File
 
 on:
   schedule:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  check-standard-updates:
+  update-spec:
     runs-on: ubuntu-latest
 
     steps:
@@ -17,13 +17,18 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Check for Standard Updates
-        run: node watcher.js
+      - name: Run watcher
+        run: node watcher.js --ci
+
+      - name: Ensure updates.md exists
+        run: touch updates.md
 
       - name: Commit and push updates.md if changed
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config --global user.email "action@github.com"
           git config --global user.name "GitHub Action"
           git add updates.md
           git diff --cached --quiet || git commit -m "chore: update standards status [skip ci]"
-          git push
+          git push https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git HEAD:${GITHUB_REF}
