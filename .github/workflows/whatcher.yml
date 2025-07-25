@@ -1,5 +1,9 @@
 name: Check Standard Updates Every 30 Minutes
 
+permissions:
+  contents: write
+  pull-requests: write
+
 on:
   schedule:
     - cron: '*/30 * * * *'
@@ -8,28 +12,24 @@ on:
 jobs:
   check-standard-updates:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-
       - name: Run watcher script and save results
         env:
           SAVE_RESULTS: "1"
         run: node watcher.js
-
-      - name: Commit results to repository
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
-          git add check-results.md
-          git commit -m "chore: update standard check results [skip ci]" || echo "Nothing to commit"
-          git push
+      - name: Create Pull Request for results
+        uses: peter-evans/create-pull-request@v5
+        with:
+          commit-message: "chore: update standard check results [skip ci]"
+          title: "Update standard check results"
+          body: |
+            自动更新标准检查结果。
+            合并后 `check-results.md` 文件会包含最新检测结果。
+          branch: "auto/update-standard-results"
+          add-paths: check-results.md
