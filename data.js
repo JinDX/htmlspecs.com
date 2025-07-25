@@ -10,7 +10,7 @@ const links = [
         text: "ECMA-262",
         href: "https://ecma262.com/",
         src: "https://tc39.es/ecma262/",
-        "last-modified": "Thu, 17 Jul 2025 22:36:13 GMT"
+        "last-modified": "Thu, 24 Jul 2025 15:38:22 GMT"
     },
     {
         text: "DOM",
@@ -53,7 +53,7 @@ const links = [
         text: "Compatibility",
         href: "https://htmlspecs.com/compat",
         src: "https://compat.spec.whatwg.org/",
-        "last-modified": "Sat, 19 Jul 2025 06:39:12 GMT"
+        "last-modified": "Thu, 24 Jul 2025 20:36:27 GMT"
     },
     {
         text: "Compression",
