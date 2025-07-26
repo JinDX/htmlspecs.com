@@ -614,6 +614,12 @@ const cssLinks = [
         "last-modified": "-"
     },
     {
+        text: "Selectors Level 4",
+        href: "https://htmlspecs.com/css/selectors-4",
+        src: "https://www.w3.org/TR/2022/WD-selectors-4-20221111/",
+        "last-modified": "-"
+    },
+    {
         text: "CSS Basic User Interface Module Level 3",
         href: "https://htmlspecs.com/css/css-ui-3",
         src: "https://www.w3.org/TR/2018/REC-css-ui-3-20180621/",
