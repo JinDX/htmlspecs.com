@@ -17,11 +17,11 @@ const checkLinks = async (links, category) => {
   const total = links.length;
   let finished = 0;
 
-  logResult(`## 检查类别：${category}\n`);
+  logResult(`## 检查类别：${category} 😊\n`);
 
   const showProgress = () => {
     finished++;
-    process.stdout.write(`\rProgress: ${finished}/${total}`);
+    process.stdout.write(`\r进度：${finished}/${total}`);
   };
 
   const w3Links = links.filter(item => item.src.includes('w3.org'));
@@ -49,18 +49,18 @@ const checkLinks = async (links, category) => {
             try {
               const currentSpec = JSON.parse(rawData);
               if (currentSpec && currentSpec.warning && currentSpec.latestUrl) {
-                const info = `- ⚠️ ${link.text} ([原链接](${link.src})) 已有新版本：[最新规范](${currentSpec.latestUrl})`;
+                const info = `- 注意：${link.text} ([原链接](${link.src})) 已有新版本：[最新规范](${currentSpec.latestUrl}) ✨`;
                 logResult(info);
               }
             } catch (err) {
-              const errorMsg = `- ❌ 解析 w3.org 响应失败：${link.src}: ${err.message}`;
+              const errorMsg = `- 解析 w3.org 响应失败：${link.src}: ${err.message} 😅`;
               logResult(errorMsg);
             }
             showProgress();
             resolve();
           });
         }).on('error', err => {
-          const errorMsg = `- ❌ 请求 w3.org 失败：${link.src}: ${err.message}`;
+          const errorMsg = `- 请求 w3.org 失败：${link.src}: ${err.message} 😢`;
           logResult(errorMsg);
           showProgress();
           resolve();
@@ -80,14 +80,14 @@ const checkLinks = async (links, category) => {
           const diffMin = diffMs / 1000 / 60;
           if (diffMin >= 1) {
             const info =
-              `- 🔄 ${link.text}:\n  - 新时间: ${newTime.toUTCString()}\n  - 旧时间: ${oldTime.toUTCString()}\n  - 链接: ${link.src}`;
+              `- ${link.text} 时间有更新啦：\n  - 新时间: ${newTime.toUTCString()}\n  - 旧时间: ${oldTime.toUTCString()}\n  - 链接: ${link.src}`;
             logResult(info);
           }
         }
         showProgress();
         resolve();
       }).on('error', e => {
-        const errorMsg = `- ❌ 获取 ${link.src} 失败: ${e.message}`;
+        const errorMsg = `- 获取 ${link.src} 失败: ${e.message} 😢`;
         logResult(errorMsg);
         showProgress();
         resolve();
@@ -102,11 +102,11 @@ const checkLinks = async (links, category) => {
 
 const main = async () => {
   if (SAVE_RESULTS) {
-    fs.writeFileSync(RESULT_FILE, `# 标准规范检查结果\n\n`);
+    fs.writeFileSync(RESULT_FILE, `# 规范检查结果汇总\n\n`);
   }
   await checkLinks(data.links, '标准规范');
   await checkLinks(data.cssLinks, 'CSS 相关规范');
-  logResult('All checks completed.');
+  logResult('全部检查完成啦！😊');
   process.exit(0);
 };
 
