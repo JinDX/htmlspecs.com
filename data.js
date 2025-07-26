@@ -4,7 +4,7 @@ const links = [
         text: "HTML",
         href: "https://htmlspecs.com/",
         src: "https://html.spec.whatwg.org/multipage/",
-        "last-modified": "Thu, 24 Jul 2025 02:01:22 GMT"
+        "last-modified": "Fri, 25 Jul 2025 09:26:38 GMT"
     },
     {
         text: "ECMA-262",
@@ -65,7 +65,7 @@ const links = [
         text: "Quirks Mode",
         href: "https://htmlspecs.com/quirks",
         src: "https://quirks.spec.whatwg.org/",
-        "last-modified": "Tue, 08 Apr 2025 11:25:07 GMT"
+        "last-modified": "Sat, 26 Jul 2025 05:24:03 GMT"
     },
     {
         text: "Test Utils",
@@ -502,7 +502,7 @@ const links = [
     {
         text: "WebGPU Shading Language",
         href: "https://htmlspecs.com/WGSL",
-        src: "https://www.w3.org/TR/2025/CRD-WGSL-20250724/",
+        src: "https://www.w3.org/TR/2025/CRD-WGSL-20250725/",
         "last-modified": "-"
     },
     {
@@ -611,6 +611,12 @@ const cssLinks = [
         text: "Selectors Level 3",
         href: "https://htmlspecs.com/css/selectors-3",
         src: "https://www.w3.org/TR/2018/REC-selectors-3-20181106/",
+        "last-modified": "-"
+    },
+    {
+        text: "Selectors Level 4",
+        href: "https://htmlspecs.com/css/selectors-4",
+        src: "https://www.w3.org/TR/2022/WD-selectors-4-20221111/",
         "last-modified": "-"
     },
     {

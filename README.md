@@ -203,6 +203,7 @@ HTML 及相关 API，CSS 标准系列。
 - [CSS Snapshot 2024](https://htmlspecs.com/css/css-2024)（[Source](https://www.w3.org/TR/css-2024/) - 小组备忘）
 - [CSS Namespaces](https://htmlspecs.com/css/css-namespaces-3)（[Source](https://www.w3.org/TR/2014/REC-css-namespaces-3-20140320/) - 推荐标准）
 - [Selectors Level 3](https://htmlspecs.com/css/selectors-3)（[Source](https://www.w3.org/TR/2018/REC-selectors-3-20181106/) - 推荐标准）
+- [Selectors Level 4](https://htmlspecs.com/css/selectors-4)（[Source](https://www.w3.org/TR/2022/WD-selectors-4-20221111/) - 工作草案）
 - [CSS Style Attributes](https://htmlspecs.com/css/css-style-attr)（[Source](https://www.w3.org/TR/2013/REC-css-style-attr-20131107/) - 推荐标准）
 - [CSS Overscroll Behavior Module Level 1](https://htmlspecs.com/css/css-overscroll-1)（[Source](https://www.w3.org/TR/2019/WD-css-overscroll-1-20190606/) - 工作草案）
 - [CSS Scroll Snap Module Level 1](https://htmlspecs.com/css/css-scroll-snap-1)（[Source](https://www.w3.org/TR/2021/CR-css-scroll-snap-1-20210311/) - 候选推荐标准）
@@ -215,9 +216,9 @@ HTML 及相关 API，CSS 标准系列。
 - [CSS Object Model (CSSOM)](https://htmlspecs.com/css/cssom-1)（[Source](https://www.w3.org/TR/2021/WD-cssom-1-20210826/) - 工作草案）
 - [CSSOM View Module](https://htmlspecs.com/css/cssom-view)（[Source](https://www.w3.org/TR/2016/WD-cssom-view-1-20160317/) - 工作草案）
 - [CSS Cascading and Inheritance Level 3](https://htmlspecs.com/css/css-cascade-3)（[Source](https://www.w3.org/TR/2021/REC-css-cascade-3-20210211/) - 推荐标准）
-- [CSS Cascading and Inheritance Level 4](https://htmlspecs.com/css/css-cascade-4)（[Source](https://www.w3.org/TR/2016/WD-cssom-view-1-20160317/) - 候选推荐快照）
-- [CSS Cascading and Inheritance Level 5](https://htmlspecs.com/css/css-cascade-5)（[Source](https://www.w3.org/TR/2016/WD-cssom-view-1-20160317/) - 候选推荐快照）
-- [CSS Cascading and Inheritance Level 6](https://htmlspecs.com/css/css-cascade-6)（[Source](https://www.w3.org/TR/2016/WD-cssom-view-1-20160317/) - 工作草案）
+- [CSS Cascading and Inheritance Level 4](https://htmlspecs.com/css/css-cascade-4)（[Source](https://www.w3.org/TR/2022/CR-css-cascade-4-20220113/) - 候选推荐快照）
+- [CSS Cascading and Inheritance Level 5](https://htmlspecs.com/css/css-cascade-5)（[Source](https://www.w3.org/TR/2022/CR-css-cascade-5-20220113/) - 候选推荐快照）
+- [CSS Cascading and Inheritance Level 6](https://htmlspecs.com/css/css-cascade-6)（[Source](https://www.w3.org/TR/2024/WD-css-cascade-6-20240906/) - 工作草案）
 - [CSS Basic User Interface Module Level 3](https://htmlspecs.com/css/css-ui-3)（[Source](https://www.w3.org/TR/2018/REC-css-ui-3-20180621/) - 推荐标准）
 - [CSS Basic User Interface Module Level 4](https://htmlspecs.com/css/css-ui-4)（[Source](https://www.w3.org/TR/2021/WD-css-ui-4-20210316/) - 工作草案）
 - [CSS Syntax Module Level 3](https://htmlspecs.com/css/css-syntax-3)（[Source](https://www.w3.org/TR/2021/CRD-css-syntax-3-20211224/) - 候选推荐草案）
