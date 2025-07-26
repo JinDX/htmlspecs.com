@@ -52,6 +52,7 @@ HTML 及相关 API，CSS 标准系列。
 - [EyeDropper API](https://htmlspecs.com/eyedropper-api)（[Source](https://wicg.github.io/eyedropper-api/) - 社区组草案报告）
 - [Fullscreen](https://htmlspecs.com/fullscreen)（[Source](https://fullscreen.spec.whatwg.org/)）
 - [Screen Capture](https://htmlspecs.com/screen-capture)（[Source](https://www.w3.org/TR/2025/WD-screen-capture-20250522/) - 工作草案 ）
+- [ ] [UI Events](https://htmlspecs.com/uievents)（[Source](https://www.w3.org/TR/2024/WD-uievents-20240907/) - 工作草案）
 - [Touch Events - Level 2](https://htmlspecs.com/touchevents)（[Source](https://w3c.github.io/touch-events/) - 社区组最终报告）
 - [Contact Picker API](https://htmlspecs.com/contact-picker)（[Source](https://www.w3.org/TR/2024/WD-contact-picker-20240708/) - 工作草案）
 - [Notifications API](https://htmlspecs.com/notifications)（[Source](https://notifications.spec.whatwg.org/)）
@@ -73,6 +74,7 @@ HTML 及相关 API，CSS 标准系列。
 
 ### 性能和观察者
 - [Performance Timeline](https://htmlspecs.com/performance-timeline)（[Source](https://www.w3.org/TR/2024/CRD-performance-timeline-20240216/) - 候选推荐标准）
+- [ ] [High Resolution Time](https://htmlspecs.com/hr-time-3)（[Source](https://www.w3.org/TR/2024/WD-hr-time-3-20241107/) - 工作草案）
 - [Intersection Observer](https://htmlspecs.com/intersection-observer)（[Source](https://www.w3.org/TR/2023/WD-intersection-observer-20231018/) - 工作草案）
 - [Resize Observer](https://htmlspecs.com/resize-observer)（[Source](https://www.w3.org/TR/2020/WD-resize-observer-1-20200211/) - 工作草案）
 - [Navigation Timing Level 2](https://htmlspecs.com/navigation-timing-2)（[Source](https://www.w3.org/TR/2025/WD-navigation-timing-2-20250213/) - 工作草案）
