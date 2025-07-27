@@ -160,6 +160,7 @@ HTML 及相关 API，CSS 标准系列。
 - [CSS Overflow Module Level 4](https://htmlspecs.com/css/css-overflow-4)（[Source](https://www.w3.org/TR/2023/WD-css-overflow-4-20230321/) - 工作草案）
 - [CSS Overflow Module Level 5](https://htmlspecs.com/css/css-overflow-5)（[Source](https://www.w3.org/TR/2024/WD-css-overflow-5-20241217/) - 工作草案）
 - [CSS Gap Decorations Module Level 1](https://htmlspecs.com/css/css-gaps-1)（[Source](https://www.w3.org/TR/2025/WD-css-gaps-1-20250417/) - 工作草案）
+- [CSS Anchor Positioning Module Level 1](https://htmlspecs.com/css/css-anchor-position-1)（[Source](https://www.w3.org/TR/2025/WD-css-anchor-position-1-20250509/) - 工作草案）
 
 ### 导航
 - [CSS Spatial Navigation Level 1](https://htmlspecs.com/css/css-nav-1)（[Source](https://www.w3.org/TR/2019/WD-css-nav-1-20191126/) - 工作草案）

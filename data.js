@@ -723,6 +723,12 @@ const cssLinks = [
         src: "https://www.w3.org/TR/2025/WD-css-gaps-1-20250417/",
         "last-modified": "-"
     },
+    {
+        text: "CSS Anchor Positioning Module Level 1",
+        href: "https://htmlspecs.com/css/css-anchor-position-1",
+        src: "https://www.w3.org/TR/2025/WD-css-anchor-position-1-20250509/",
+        "last-modified": "-"
+    },
 
     // Colors
     {
