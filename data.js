@@ -381,6 +381,12 @@ const links = [
         "last-modified": "-"
     },
     {
+        text: "High Resolution Time",
+        href: "https://htmlspecs.com/hr-time-3",
+        src: "https://www.w3.org/TR/2024/WD-hr-time-3-20241107/",
+        "last-modified": "-"
+    },
+    {
         text: "Intersection Observer",
         href: "https://htmlspecs.com/intersection-observer",
         src: "https://www.w3.org/TR/2023/WD-intersection-observer-20231018/",

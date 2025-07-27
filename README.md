@@ -74,7 +74,7 @@ HTML 及相关 API，CSS 标准系列。
 
 ### 性能和观察者
 - [Performance Timeline](https://htmlspecs.com/performance-timeline)（[Source](https://www.w3.org/TR/2024/CRD-performance-timeline-20240216/) - 候选推荐标准）
-- [ ] [High Resolution Time](https://htmlspecs.com/hr-time-3)（[Source](https://www.w3.org/TR/2024/WD-hr-time-3-20241107/) - 工作草案）
+- [High Resolution Time](https://htmlspecs.com/hr-time-3)（[Source](https://www.w3.org/TR/2024/WD-hr-time-3-20241107/) - 工作草案）
 - [Intersection Observer](https://htmlspecs.com/intersection-observer)（[Source](https://www.w3.org/TR/2023/WD-intersection-observer-20231018/) - 工作草案）
 - [Resize Observer](https://htmlspecs.com/resize-observer)（[Source](https://www.w3.org/TR/2020/WD-resize-observer-1-20200211/) - 工作草案）
 - [Navigation Timing Level 2](https://htmlspecs.com/navigation-timing-2)（[Source](https://www.w3.org/TR/2025/WD-navigation-timing-2-20250213/) - 工作草案）
