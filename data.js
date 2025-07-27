@@ -259,6 +259,12 @@ const links = [
         "last-modified": "-"
     },
     {
+        text: "UI Events",
+        href: "https://htmlspecs.com/uievents",
+        src: "https://www.w3.org/TR/2024/WD-uievents-20240907/",
+        "last-modified": "-"
+    },
+    {
         text: "Touch Events - Level 2",
         href: "https://htmlspecs.com/touchevents",
         src: "https://w3c.github.io/touch-events/",
