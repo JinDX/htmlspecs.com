@@ -80,7 +80,7 @@ const checkLinks = async (links, category) => {
           const diffMin = diffMs / 1000 / 60;
           if (diffMin >= 1) {
             const info =
-              `- ${link.text} 时间有更新啦：\n  - 新时间: ${newTime.toUTCString()}\n  - 旧时间: ${oldTime.toUTCString()}\n  - 链接: ${link.src}`;
+              `- ${link.text} 有更新啦：\n  - 新时间: ${newTime.toUTCString()}\n  - 旧时间: ${oldTime.toUTCString()}\n  - 链接: ${link.src}`;
             logResult(info);
           }
         }
