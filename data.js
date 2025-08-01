@@ -34,7 +34,7 @@ const links = [
         text: "MIME Sniffing",
         href: "https://htmlspecs.com/mimesniff",
         src: "https://mimesniff.spec.whatwg.org/",
-        "last-modified": "Thu, 24 Jul 2025 08:57:24 GMT"
+        "last-modified": "Mon, 28 Jul 2025 06:14:57 GMT"
     },
 
     {
@@ -53,7 +53,7 @@ const links = [
         text: "Compatibility",
         href: "https://htmlspecs.com/compat",
         src: "https://compat.spec.whatwg.org/",
-        "last-modified": "Thu, 24 Jul 2025 20:36:27 GMT"
+        "last-modified": "Sun, 27 Jul 2025 14:47:12 GMT"
     },
     {
         text: "Compression",
@@ -114,7 +114,7 @@ const links = [
         text: "Fetch",
         href: "https://htmlspecs.com/fetch",
         src: "https://fetch.spec.whatwg.org/",
-        "last-modified": "Wed, 16 Jul 2025 08:57:23 GMT"
+        "last-modified": "Tue, 29 Jul 2025 14:55:28 GMT"
     },
     {
         text: "Streams",
@@ -514,7 +514,7 @@ const links = [
     {
         text: "WebGPU Shading Language",
         href: "https://htmlspecs.com/WGSL",
-        src: "https://www.w3.org/TR/2025/CRD-WGSL-20250725/",
+        src: "https://www.w3.org/TR/2025/CRD-WGSL-20250730/",
         "last-modified": "-"
     },
     {
