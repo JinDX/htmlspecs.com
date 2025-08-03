@@ -41,7 +41,8 @@ HTML 及相关 API，CSS 标准系列。
 - [Storage](https://htmlspecs.com/storage)（[Source](https://storage.spec.whatwg.org/)）
 - [File API](https://htmlspecs.com/FileAPI)（[Source](https://www.w3.org/TR/2024/WD-FileAPI-20241204/) - 工作草案）
 - [File System](https://htmlspecs.com/fs)（[Source](https://fs.spec.whatwg.org/)）
-- [Cookie Store API](https://htmlspecs.com/cookie-store)（[Source](https://wicg.github.io/cookie-store/) - 社区组草案报告）
+<!-- - [Cookie Store API](https://htmlspecs.com/cookie-store)（[Source](https://wicg.github.io/cookie-store/) - 社区组草案报告） -->
+- [Cookie Store API](https://htmlspecs.com/cookiestore)（[Source](https://cookiestore.spec.whatwg.org/)）
 - [File and Directory Entries API](https://htmlspecs.com/entries-api)（[Source](https://wicg.github.io/entries-api/) - 社区组草案报告）
 - [Web Locks API](https://htmlspecs.com/web-locks)（[Source](https://www.w3.org/TR/2023/WD-web-locks-20230105/) - 工作草案）
 
