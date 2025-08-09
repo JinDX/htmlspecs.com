@@ -32,7 +32,7 @@ HTML 及相关 API，CSS 标准系列。
 - [Service Workers](https://htmlspecs.com/service-workers)（[Source](https://www.w3.org/TR/2025/CRD-service-workers-20250306/) - 候选推荐标准）
 - [Push API](https://htmlspecs.com/push-api)（[Source](https://www.w3.org/TR/2025/WD-push-api-20250806/) - 工作草案）
 - [WebRTC](https://htmlspecs.com/webrtc)（[Source](https://www.w3.org/TR/2025/REC-webrtc-20250313/) - 推荐标准）
-- [Payment Request API](https://htmlspecs.com/payment-request)（[Source](https://www.w3.org/TR/2025/CRD-payment-request-20250402/) - 候选推荐标准）
+- [Payment Request API](https://htmlspecs.com/payment-request)（[Source](https://www.w3.org/TR/2025/CRD-payment-request-20250808/) - 候选推荐标准）
 - [Background Fetch](https://htmlspecs.com/background-fetch)（[Source](https://wicg.github.io/background-fetch/) - 社区组草案报告）
 - [Beacon](https://htmlspecs.com/beacon)（[Source](https://www.w3.org/TR/2022/CRD-beacon-20220803/) - 候选推荐草案）
 
