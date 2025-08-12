@@ -280,7 +280,7 @@ const links = [
         text: "Notifications API",
         href: "https://htmlspecs.com/notifications",
         src: "https://notifications.spec.whatwg.org/",
-        "last-modified": "Tue, 05 Aug 2025 14:21:50 GMT"
+        "last-modified": "Tue, 12 Aug 2025 07:42:34 GMT"
     },
     {
         text: "Badging API",
