@@ -41,7 +41,7 @@ const links = [
         text: "Infra",
         href: "https://htmlspecs.com/infra",
         src: "https://infra.spec.whatwg.org/",
-        "last-modified": "Mon, 21 Jul 2025 09:10:43 GMT"
+        "last-modified": "Mon, 11 Aug 2025 12:27:30 GMT"
     },
     {
         text: "Web Application Manifest",
