@@ -53,7 +53,7 @@ const links = [
         text: "Compatibility",
         href: "https://htmlspecs.com/compat",
         src: "https://compat.spec.whatwg.org/",
-        "last-modified": "Sun, 27 Jul 2025 14:47:12 GMT"
+        "last-modified": "Tue, 12 Aug 2025 13:37:55 GMT"
     },
     {
         text: "Compression",
