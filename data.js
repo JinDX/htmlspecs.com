@@ -71,7 +71,7 @@ const links = [
         text: "Test Utils",
         href: "https://htmlspecs.com/testutils",
         src: "https://testutils.spec.whatwg.org/",
-        "last-modified": "Fri, 18 Jul 2025 06:29:36 GMT"
+        "last-modified": "Tue, 12 Aug 2025 13:17:31 GMT"
     },
 
 
