@@ -200,7 +200,7 @@ const links = [
         text: "File System",
         href: "https://htmlspecs.com/fs",
         src: "https://fs.spec.whatwg.org",
-        "last-modified": "Tue, 22 Jul 2025 07:16:04 GMT"
+        "last-modified": "Tue, 12 Aug 2025 13:35:38 GMT"
     },
     {
         text: "Cookie Store API",
