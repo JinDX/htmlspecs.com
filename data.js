@@ -752,7 +752,7 @@ const cssLinks = [
     {
         text: "CSS Color Adjustment Module Level 1",
         href: "https://htmlspecs.com/css/css-color-adjust-1",
-        src: "https://www.w3.org/TR/2022/CRD-css-color-adjust-1-20220614/",
+        src: "https://www.w3.org/TR/2025/CRD-css-color-adjust-1-20250812/",
         "last-modified": "-"
     },
     {
