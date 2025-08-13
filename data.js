@@ -206,7 +206,7 @@ const links = [
         text: "Cookie Store API",
         href: "https://htmlspecs.com/cookiestore",
         src: "https://cookiestore.spec.whatwg.org/",
-        "last-modified": "Tue, 12 Aug 2025 07:40:40 GMT"
+        "last-modified": "Tue, 12 Aug 2025 12:05:47 GMT"
     },
     {
         text: "File and Directory Entries API",
