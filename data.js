@@ -59,7 +59,7 @@ const links = [
         text: "Compression",
         href: "https://htmlspecs.com/compression",
         src: "https://compression.spec.whatwg.org/",
-        "last-modified": "Fri, 18 Jul 2025 06:30:54 GMT"
+        "last-modified": "Tue, 12 Aug 2025 13:10:52 GMT"
     },
     {
         text: "Quirks Mode",
