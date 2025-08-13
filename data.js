@@ -132,7 +132,7 @@ const links = [
         text: "WebSockets",
         href: "https://htmlspecs.com/websockets",
         src: "https://websockets.spec.whatwg.org/",
-        "last-modified": "Mon, 14 Jul 2025 12:56:37 GMT"
+        "last-modified": "Tue, 12 Aug 2025 13:35:02 GMT"
     },
     {
         text: "WebTransport",
