@@ -181,7 +181,7 @@ const links = [
     {
         text: "Indexed Database API 3.0",
         href: "https://htmlspecs.com/IndexedDB",
-        src: "https://www.w3.org/TR/2025/WD-IndexedDB-3-20250812/",
+        src: "https://www.w3.org/TR/2025/WD-IndexedDB-3-20250813/",
         "last-modified": "-"
     },
     {

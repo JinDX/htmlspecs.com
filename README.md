@@ -37,7 +37,7 @@ HTML 及相关 API，CSS 标准系列。
 - [Beacon](https://htmlspecs.com/beacon)（[Source](https://www.w3.org/TR/2022/CRD-beacon-20220803/) - 候选推荐草案）
 
 ### 存储和数据
-- [Indexed Database API 3.0](https://htmlspecs.com/IndexedDB)（[Source](https://www.w3.org/TR/2025/WD-IndexedDB-3-20250806/) - 工作草案）
+- [Indexed Database API 3.0](https://htmlspecs.com/IndexedDB)（[Source](https://www.w3.org/TR/2025/WD-IndexedDB-3-20250813/) - 工作草案）
 - [Storage](https://htmlspecs.com/storage)（[Source](https://storage.spec.whatwg.org/)）
 - [File API](https://htmlspecs.com/FileAPI)（[Source](https://www.w3.org/TR/2024/WD-FileAPI-20241204/) - 工作草案）
 - [File System](https://htmlspecs.com/fs)（[Source](https://fs.spec.whatwg.org/)）
