@@ -32,7 +32,7 @@ HTML 及相关 API，CSS 标准系列。
 - [Service Workers](https://htmlspecs.com/service-workers)（[Source](https://www.w3.org/TR/2025/CRD-service-workers-20250306/) - 候选推荐标准）
 - [Push API](https://htmlspecs.com/push-api)（[Source](https://www.w3.org/TR/2025/WD-push-api-20250806/) - 工作草案）
 - [WebRTC](https://htmlspecs.com/webrtc)（[Source](https://www.w3.org/TR/2025/REC-webrtc-20250313/) - 推荐标准）
-- [Payment Request API](https://htmlspecs.com/payment-request)（[Source](https://www.w3.org/TR/2025/CRD-payment-request-20250808/) - 候选推荐标准）
+- [Payment Request API](https://htmlspecs.com/payment-request)（[Source](https://www.w3.org/TR/2025/CRD-payment-request-20250815) - 候选推荐标准）
 - [Background Fetch](https://htmlspecs.com/background-fetch)（[Source](https://wicg.github.io/background-fetch/) - 社区组草案报告）
 - [Beacon](https://htmlspecs.com/beacon)（[Source](https://www.w3.org/TR/2022/CRD-beacon-20220803/) - 候选推荐草案）
 
@@ -66,7 +66,7 @@ HTML 及相关 API，CSS 标准系列。
 - [Pointer Lock 2.0](https://htmlspecs.com/pointerlock)（[Source](https://www.w3.org/TR/2024/WD-pointerlock-2-20240617/) - 工作草案）
 - [Clipboard API and events](https://htmlspecs.com/clipboard-apis)（[Source](https://www.w3.org/TR/2025/WD-clipboard-apis-20250516/) -  工作草案）
 - [Input Events Level 1](https://htmlspecs.com/input-events-1)（[Source](https://www.w3.org/TR/2023/DISC-input-events-1-20230928/) - 停止草案）
-- [Input Events Level 2](https://htmlspecs.com/input-events-2)（[Source](https://www.w3.org/TR/2024/WD-input-events-2-20241018/) - 工作草案）
+- [Input Events Level 2](https://htmlspecs.com/input-events-2)（[Source](https://www.w3.org/TR/2025/WD-input-events-2-20250814/) - 工作草案）
 - [Permissions](https://htmlspecs.com/permissions)（[Source](https://www.w3.org/TR/2025/WD-permissions-20250624/) - 工作草案）
 - [WebOTP API](https://htmlspecs.com/web-otp)（[Source](https://wicg.github.io/web-otp/) - 社区组草案报告）
 - [Device Posture API](https://htmlspecs.com/device-posture)（[Source](https://www.w3.org/TR/2024/CR-device-posture-20241126/) - 候选推荐标准快照）
