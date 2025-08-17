@@ -10,14 +10,14 @@ const LANGUAGES = {
         disclaimer: "这是一份志愿者翻译，译文中可能包含错误。本译文仅供参考，应以 W3C 网站上的原始英文版本（<a href='{src}'>{text}</a>）为准。"
     },
     jp: {
-        otherStandards: "その他の標準",
+        otherStandards: "他の標準",
         githubTitle: "GitHub ソースコードを見る、スター ⭐",
         cssRelated: "CSS 関連",
         marker: "【ご注意】",
         disclaimer: "これはボランティアによる翻訳です。翻訳には誤りが含まれている可能性があります。参考用にご利用ください。原本は W3C サイトの英語版（<a href='{src}'>{text}</a>）をご参照ください。"
     },
     ko: {
-        otherStandards: "기타 표준",
+        otherStandards: "다른 표준",
         githubTitle: "GitHub 소스 코드 보기, 스타 ⭐",
         cssRelated: "CSS 관련",
         marker: "【주의】",
@@ -253,7 +253,9 @@ loadDataScript(function () {
 
     function isCurrentUrlMatchingLink(href) {
         try {
-            return window.location.href.includes(href);
+            const currentHref = window.location.href.replace(/^(https?:\/\/)(jp\.|ko\.)?/, '$1');
+            const normalizedHref = href.replace(/^(https?:\/\/)(jp\.|ko\.)?/, '$1');
+            return currentHref.includes(normalizedHref);
         } catch (error) {
             console.error('Error accessing window.location.href:', error);
             return false;
