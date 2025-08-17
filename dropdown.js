@@ -1,6 +1,48 @@
 const BUTTON_COLOR = "#6c757d";
 const BUTTON_HOVER_COLOR = "#5a6268";
 
+const LANGUAGES = {
+    cn: {
+        otherStandards: "其他标准",
+        githubTitle: "查看 GitHub 源码，加星 ⭐",
+        cssRelated: "CSS 相关",
+        marker: "【注意】",
+        disclaimer: "这是一份志愿者翻译，译文中可能包含错误。本译文仅供参考，应以 W3C 网站上的原始英文版本（<a href='{src}'>{text}</a>）为准。"
+    },
+    jp: {
+        otherStandards: "その他の標準",
+        githubTitle: "GitHub ソースコードを見る、スター ⭐",
+        cssRelated: "CSS 関連",
+        marker: "【ご注意】",
+        disclaimer: "これはボランティアによる翻訳です。翻訳には誤りが含まれている可能性があります。参考用にご利用ください。原本は W3C サイトの英語版（<a href='{src}'>{text}</a>）をご参照ください。"
+    },
+    ko: {
+        otherStandards: "기타 표준",
+        githubTitle: "GitHub 소스 코드 보기, 스타 ⭐",
+        cssRelated: "CSS 관련",
+        marker: "【주의】",
+        disclaimer: "이 번역은 자원봉사자의 번역본입니다. 번역에 오류가 있을 수 있습니다. 참고용으로만 사용하시고, 원본은 W3C 웹사이트의 영어 버전(<a href='{src}'>{text}</a>)을 참고하세요."
+    }
+};
+
+function getCurrentLang() {
+    const hostname = window.location.hostname;
+    if (/^jp\.htmlspecs\.com$/.test(hostname)) return "jp";
+    if (/^ko\.htmlspecs\.com$/.test(hostname)) return "ko";
+    return "cn";
+}
+
+function rewriteHref(href) {
+    const lang = getCurrentLang();
+    if (lang === "jp") {
+        return href.replace("htmlspecs.com", "jp.htmlspecs.com");
+    }
+    if (lang === "ko") {
+        return href.replace("htmlspecs.com", "ko.htmlspecs.com");
+    }
+    return href;
+}
+
 function loadDataScript(callback) {
     var script = document.createElement('script');
     script.src = 'https://htmlspecs.com/data.js';
@@ -10,7 +52,7 @@ function loadDataScript(callback) {
 
 function createLink(href, text) {
     var a = document.createElement("a");
-    a.href = href;
+    a.href = rewriteHref(href);
     a.textContent = text;
     a.title = text;
     a.style.cssText = `
@@ -57,12 +99,33 @@ function setButtonStyle(button) {
 }
 
 loadDataScript(function () {
+    const lang = getCurrentLang();
+    const t = LANGUAGES[lang];
+
+    var filteredLinks = links;
+    var filteredCssLinks = cssLinks;
+
+    if (window.location.hostname === 'jp.htmlspecs.com' || window.location.hostname === 'ko.htmlspecs.com') {
+        filteredLinks = links.filter(link => link.lang.includes('j') || link.lang.includes('k'));
+        filteredCssLinks = cssLinks.filter(link => link.lang.includes('j') || link.lang.includes('k'));
+    }
+
+    var githubRepo;
+    if (window.location.hostname === 'ecma262.com') {
+        githubRepo = "JinDX/ecma262.com";
+    } else if (window.location.hostname === 'jp.htmlspecs.com') {
+        githubRepo = "JinDX/jp.htmlspecs.com";
+    } else if (window.location.hostname === 'ko.htmlspecs.com') {
+        githubRepo = "JinDX/ko.htmlspecs.com";
+    } else {
+        githubRepo = "JinDX/htmlspecs.com";
+    }
+
     var githubButton = createLink(
-        window.location.hostname === 'ecma262.com' ?
-            "https://github.com/JinDX/ecma262.com" :
-            "https://github.com/JinDX/htmlspecs.com",
+        `https://github.com/${githubRepo}`,
         ""
     );
+
     githubButton.style.cssText += `
         display: inline-block;
         width: 40px;
@@ -73,7 +136,7 @@ loadDataScript(function () {
         margin-right: 10px;
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
     `;
-    githubButton.title = "查看 GitHub 源码，加星 ⭐";
+    githubButton.title = t.githubTitle;
     githubButton.onmouseover = () => {
         githubButton.style.transform = "scale(1.2)";
         githubButton.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.4)";
@@ -83,7 +146,7 @@ loadDataScript(function () {
         githubButton.style.boxShadow = "0 2px 6px rgba(0, 0, 0, 0.2)";
     };
 
-    var dropdownButton = createButton("dropdownButton", "其他标准", function () {
+    var dropdownButton = createButton("dropdownButton", t.otherStandards, function () {
         dropdownContent.style.display = dropdownContent.style.display === "block" ? "none" : "block";
     });
 
@@ -118,11 +181,11 @@ loadDataScript(function () {
     `;
     document.body.appendChild(dropdownContent);
 
-    links.forEach(function (link) {
+    filteredLinks.forEach(function (link) {
         dropdownContent.appendChild(createLink(link.href, link.text));
 
         if (link.text === "ECMA-262") {
-            var cssTitle = createLink("#", "CSS 相关");
+            var cssTitle = createLink("#", t.cssRelated);
             cssTitle.style.cursor = "pointer";
             cssTitle.style.padding = "10px 15px";
             var triangle = document.createElement("span");
@@ -139,7 +202,7 @@ loadDataScript(function () {
             cssContent.style.display = "none";
             cssContent.style.padding = "0 15px";
 
-            cssLinks.forEach(function (link) {
+            filteredCssLinks.forEach(function (link) {
                 cssContent.appendChild(createLink(link.href, link.text));
             });
 
@@ -176,9 +239,6 @@ loadDataScript(function () {
     `;
     document.head.appendChild(style);
 
-
-
-    // 这是一份志愿者翻译，译文中可能包含错误。本译文仅供参考，应以 W3C 网站上的原始英文版本.......
     function extractRelevantLinks(data) {
         return data.filter(link => link.src.includes('w3.org') || link.src.includes('wicg.github.io'));
     }
@@ -208,21 +268,18 @@ loadDataScript(function () {
         console.error('Error while checking matching links:', error);
     }
 
-
     if (matchingLinks.length > 0) {
         (function addDisclaimer() {
             var disclaimer = document.createElement('div');
             disclaimer.className = 'note';
 
             disclaimer.innerHTML = `
-            <span class="marker">【注意】</span>
-            <p>这是一份志愿者翻译，译文中可能包含错误。本译文仅供参考，应以 W3C 网站上的原始英文版本（<a href='${matchingLinks[0].src}'>${matchingLinks[0].text}</a>）为准。</p>
-        `;
-
+<span class="marker">${t.marker}</span>
+<p>${t.disclaimer.replace('{src}', matchingLinks[0].src).replace('{text}', matchingLinks[0].text)}</p>
+`;
             document.body.insertAdjacentElement('afterbegin', disclaimer);
         })();
     }
-
 });
 
 (function () {
