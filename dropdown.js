@@ -113,10 +113,6 @@ loadDataScript(function () {
     var githubRepo;
     if (window.location.hostname === 'ecma262.com') {
         githubRepo = "JinDX/ecma262.com";
-    } else if (window.location.hostname === 'jp.htmlspecs.com') {
-        githubRepo = "JinDX/jp.htmlspecs.com";
-    } else if (window.location.hostname === 'ko.htmlspecs.com') {
-        githubRepo = "JinDX/ko.htmlspecs.com";
     } else {
         githubRepo = "JinDX/htmlspecs.com";
     }
