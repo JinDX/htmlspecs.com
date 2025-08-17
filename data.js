@@ -93,21 +93,21 @@ const links = [
         href: "https://htmlspecs.com/WCAG22",
         src: "https://www.w3.org/TR/2024/REC-WCAG22-20241212/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "Accessible Rich Internet Applications (WAI-ARIA) 1.2",
         href: "https://htmlspecs.com/wai-aria",
         src: "https://www.w3.org/TR/2023/REC-wai-aria-1.2-20230606/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "Accessible Name and Description Computation 1.1",
         href: "https://htmlspecs.com/accname-1.1",
         src: "https://www.w3.org/TR/2018/REC-accname-1.1-20181218/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
 
     // URLs and Patterns
@@ -116,14 +116,14 @@ const links = [
         href: "https://htmlspecs.com/url",
         src: "https://url.spec.whatwg.org/",
         "last-modified": "Tue, 12 Aug 2025 13:20:52 GMT",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "URL Pattern",
         href: "https://htmlspecs.com/urlpattern",
         src: "https://urlpattern.spec.whatwg.org/",
         "last-modified": "Tue, 12 Aug 2025 00:23:08 GMT",
-        lang: "c"
+        lang: "cjk"
     },
 
     // Network and Communication
@@ -132,77 +132,77 @@ const links = [
         href: "https://htmlspecs.com/fetch",
         src: "https://fetch.spec.whatwg.org/",
         "last-modified": "Tue, 12 Aug 2025 16:18:05 GMT",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "Streams",
         href: "https://htmlspecs.com/streams",
         src: "https://streams.spec.whatwg.org/",
         "last-modified": "Tue, 12 Aug 2025 13:20:16 GMT",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "XMLHttpRequest ",
         href: "https://htmlspecs.com/xhr",
         src: "https://xhr.spec.whatwg.org/",
         "last-modified": "Tue, 12 Aug 2025 13:34:36 GMT",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "WebSockets",
         href: "https://htmlspecs.com/websockets",
         src: "https://websockets.spec.whatwg.org/",
         "last-modified": "Tue, 12 Aug 2025 13:35:02 GMT",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "WebTransport",
         href: "https://htmlspecs.com/webtransport",
         src: "https://www.w3.org/TR/2025/WD-webtransport-20250702/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "Service Workers",
         href: "https://htmlspecs.com/service-workers",
         src: "https://www.w3.org/TR/2025/CRD-service-workers-20250306/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "Push API",
         href: "https://htmlspecs.com/push-api",
         src: "https://www.w3.org/TR/2025/WD-push-api-20250806/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "WebRTC",
         href: "https://htmlspecs.com/webrtc",
         src: "https://www.w3.org/TR/2025/REC-webrtc-20250313/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "Payment Request API",
         href: "https://htmlspecs.com/payment-request",
         src: "https://www.w3.org/TR/2025/CRD-payment-request-20250815/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "Background Fetch",
         href: "https://htmlspecs.com/background-fetch",
         src: "https://wicg.github.io/background-fetch/",
         "last-modified": "Wed, 21 Apr 2021 08:58:39 GMT",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "Beacon",
         href: "https://htmlspecs.com/beacon",
         src: "https://www.w3.org/TR/2022/CRD-beacon-20220803/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
 
     // Storage and Data
@@ -218,7 +218,7 @@ const links = [
         href: "https://htmlspecs.com/storage",
         src: "https://storage.spec.whatwg.org/",
         "last-modified": "Tue, 12 Aug 2025 13:09:18 GMT",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "File API",
@@ -232,14 +232,14 @@ const links = [
         href: "https://htmlspecs.com/fs",
         src: "https://fs.spec.whatwg.org",
         "last-modified": "Tue, 12 Aug 2025 13:35:38 GMT",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "Cookie Store API",
         href: "https://htmlspecs.com/cookiestore",
         src: "https://cookiestore.spec.whatwg.org/",
         "last-modified": "Thu, 14 Aug 2025 15:08:59 GMT",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "File and Directory Entries API",
@@ -649,7 +649,7 @@ const links = [
         href: "https://htmlspecs.com/console",
         src: "https://console.spec.whatwg.org/",
         "last-modified": "Tue, 12 Aug 2025 13:36:16 GMT",
-        lang: "c"
+        lang: "cjk"
     }
 ];
 
@@ -754,7 +754,7 @@ const cssLinks = [
         lang: "c"
     },
     {
-        text: "CSS Highlight API Level 1",
+        text: "CSS Custom Highlight API Module Level 1",
         href: "https://htmlspecs.com/css/css-highlight-api-1",
         src: "https://www.w3.org/TR/2021/WD-css-highlight-api-1-20211215/",
         "last-modified": "-",
@@ -809,7 +809,7 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-backgrounds-3",
         src: "https://www.w3.org/TR/2024/CRD-css-backgrounds-3-20240311/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "CSS Box Alignment Module Level 3",
@@ -881,14 +881,14 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/filter-effects-1",
         src: "https://www.w3.org/TR/2018/WD-filter-effects-1-20181218/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "Compositing and Blending Level 1",
         href: "https://htmlspecs.com/css/compositing-1",
         src: "https://www.w3.org/TR/2024/CRD-compositing-1-20240321/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
 
     //Conditional Rules
@@ -897,7 +897,7 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-conditional-4",
         src: "https://www.w3.org/TR/2022/CR-css-conditional-4-20220217/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
 
     // Fonts
