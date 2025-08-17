@@ -29,16 +29,20 @@ function getCurrentLang() {
     const hostname = window.location.hostname;
     if (/^jp\.htmlspecs\.com$/.test(hostname)) return "jp";
     if (/^ko\.htmlspecs\.com$/.test(hostname)) return "ko";
+    if (window.location.pathname.startsWith('/jp')) return "jp";
+    if (window.location.pathname.startsWith('/ko')) return "ko";
     return "cn";
 }
 
 function rewriteHref(href) {
     const lang = getCurrentLang();
     if (lang === "jp") {
-        return href.replace("htmlspecs.com", "jp.htmlspecs.com");
+        return href.replace("htmlspecs.com", "jp.htmlspecs.com")
+            .replace("ecma262.com/", "ecma262.com/jp");
     }
     if (lang === "ko") {
-        return href.replace("htmlspecs.com", "ko.htmlspecs.com");
+        return href.replace("htmlspecs.com", "ko.htmlspecs.com")
+            .replace("ecma262.com/", "ecma262.com/ko");
     }
     return href;
 }
@@ -105,9 +109,12 @@ loadDataScript(function () {
     var filteredLinks = links;
     var filteredCssLinks = cssLinks;
 
-    if (window.location.hostname === 'jp.htmlspecs.com' || window.location.hostname === 'ko.htmlspecs.com') {
-        filteredLinks = links.filter(link => link.lang.includes('j') || link.lang.includes('k'));
-        filteredCssLinks = cssLinks.filter(link => link.lang.includes('j') || link.lang.includes('k'));
+    if (window.location.hostname === 'jp.htmlspecs.com') {
+        filteredLinks = links.filter(link => link.lang.includes('j'));
+        filteredCssLinks = cssLinks.filter(link => link.lang.includes('j'));
+    } else if (window.location.hostname === 'ko.htmlspecs.com') {
+        filteredLinks = links.filter(link => link.lang.includes('k'));
+        filteredCssLinks = cssLinks.filter(link => link.lang.includes('k'));
     }
 
     var githubRepo;
