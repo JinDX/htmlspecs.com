@@ -246,7 +246,7 @@ const links = [
         href: "https://htmlspecs.com/entries-api",
         src: "https://wicg.github.io/entries-api/",
         "last-modified": "Tue, 04 Feb 2025 17:11:37 GMT",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "Web Locks API",
