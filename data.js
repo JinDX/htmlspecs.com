@@ -259,7 +259,7 @@ const links = [
     // Device and Hardware Access
     {
         text: "Pointer Events",
-        href: "https://htmlspecs.com/pointerevents",
+        href: "https://htmlspecs.com/pointerevents2",
         src: "https://www.w3.org/TR/2019/REC-pointerevents2-20190404/",
         "last-modified": "-",
         lang: "c"
