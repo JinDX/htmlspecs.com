@@ -109,10 +109,10 @@ loadDataScript(function () {
     var filteredLinks = links;
     var filteredCssLinks = cssLinks;
 
-    if (window.location.hostname === 'jp.htmlspecs.com') {
+    if (window.location.hostname === 'jp.htmlspecs.com' || window.location.pathname.startsWith('/jp')) {
         filteredLinks = links.filter(link => link.lang.includes('j'));
         filteredCssLinks = cssLinks.filter(link => link.lang.includes('j'));
-    } else if (window.location.hostname === 'ko.htmlspecs.com') {
+    } else if (window.location.hostname === 'ko.htmlspecs.com' || window.location.pathname.startsWith('/ko')) {
         filteredLinks = links.filter(link => link.lang.includes('k'));
         filteredCssLinks = cssLinks.filter(link => link.lang.includes('k'));
     }
