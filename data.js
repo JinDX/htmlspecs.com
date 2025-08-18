@@ -75,7 +75,7 @@ const links = [
         text: "Quirks Mode",
         href: "https://htmlspecs.com/quirks",
         src: "https://quirks.spec.whatwg.org/",
-        "last-modified": "Mon, 11 Aug 2025 15:27:31 GMT",
+        "last-modified": "Mon, 18 Aug 2025 07:04:16 GMT",
         lang: "cjk"
     },
     {
