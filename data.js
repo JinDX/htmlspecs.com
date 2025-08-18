@@ -276,7 +276,7 @@ const links = [
         href: "https://htmlspecs.com/screen-orientation",
         src: "https://www.w3.org/TR/2023/WD-screen-orientation-20230809/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "EyeDropper API",
