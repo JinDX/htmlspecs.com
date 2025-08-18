@@ -61,7 +61,7 @@ HTML 及相关 API，CSS 标准系列。
 - [Virtual Keyboard](https://htmlspecs.com/virtual-keyboard)（[Source](https://www.w3.org/TR/2022/WD-virtual-keyboard-20220505/) - 工作草案）
 - [Web Share API](https://htmlspecs.com/web-share)（[Source](https://www.w3.org/TR/2023/REC-web-share-20230530/) - 推荐标准）
 - [Web Audio API](https://htmlspecs.com/webaudio)（[Source](https://www.w3.org/TR/2021/REC-webaudio-20210617/) - 推荐标准）
-- [Geolocation API](https://htmlspecs.com/geolocation)（[Source](https://www.w3.org/TR/2025/REC-geolocation-20250711/) - 推荐标准）
+- [Geolocation API](https://htmlspecs.com/geolocation)（[Source](https://www.w3.org/TR/2025/REC-geolocation-20250818/) - 推荐标准）
 - [Device Orientation and Motion](https://htmlspecs.com/orientation-event)（[Source](https://www.w3.org/TR/2025/CRD-orientation-event-20250212/) - 候选推荐草案）
 - [Pointer Lock 2.0](https://htmlspecs.com/pointerlock)（[Source](https://www.w3.org/TR/2024/WD-pointerlock-2-20240617/) - 工作草案）
 - [Clipboard API and events](https://htmlspecs.com/clipboard-apis)（[Source](https://www.w3.org/TR/2025/WD-clipboard-apis-20250516/) -  工作草案）
