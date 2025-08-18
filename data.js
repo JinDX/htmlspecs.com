@@ -253,7 +253,7 @@ const links = [
         href: "https://htmlspecs.com/web-locks",
         src: " https://www.w3.org/TR/2023/WD-web-locks-20230105/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
 
     // Device and Hardware Access
