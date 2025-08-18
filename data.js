@@ -290,7 +290,7 @@ const links = [
         href: "https://htmlspecs.com/fullscreen",
         src: "https://fullscreen.spec.whatwg.org/",
         "last-modified": "Tue, 12 Aug 2025 13:38:17 GMT",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "Screen Capture",
