@@ -262,7 +262,7 @@ const links = [
         href: "https://htmlspecs.com/pointerevents2",
         src: "https://www.w3.org/TR/2019/REC-pointerevents2-20190404/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "Visual Viewport API",
