@@ -308,9 +308,9 @@ const links = [
     },
     {
         text: "Touch Events - Level 2",
-        href: "https://htmlspecs.com/touchevents",
-        src: "https://w3c.github.io/touch-events/",
-        "last-modified": "Sat, 06 Jul 2024 14:32:59 GMT",
+        href: "https://htmlspecs.com/touch-events",
+        src: "https://www.w3.org/community/reports/touchevents/CG-FINAL-touch-events-20240704/",
+        "last-modified": "Tue, 03 Jun 2025 16:00:58 GMT",
         lang: "cjk"
     },
     {
