@@ -318,7 +318,7 @@ const links = [
         href: "https://htmlspecs.com/contact-picker",
         src: "https://www.w3.org/TR/2024/WD-contact-picker-20240708/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "Notifications API",
