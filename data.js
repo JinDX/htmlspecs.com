@@ -311,7 +311,7 @@ const links = [
         href: "https://htmlspecs.com/touchevents",
         src: "https://w3c.github.io/touch-events/",
         "last-modified": "Sat, 06 Jul 2024 14:32:59 GMT",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "Contact Picker API",
