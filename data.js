@@ -304,7 +304,7 @@ const links = [
         href: "https://htmlspecs.com/uievents",
         src: "https://www.w3.org/TR/2024/WD-uievents-20240907/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "Touch Events - Level 2",
