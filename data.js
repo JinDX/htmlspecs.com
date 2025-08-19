@@ -325,7 +325,7 @@ const links = [
         href: "https://htmlspecs.com/notifications",
         src: "https://notifications.spec.whatwg.org/",
         "last-modified": "Tue, 12 Aug 2025 07:42:34 GMT",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "Badging API",
