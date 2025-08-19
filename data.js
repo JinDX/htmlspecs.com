@@ -332,7 +332,7 @@ const links = [
         href: "https://htmlspecs.com/badging",
         src: "https://www.w3.org/TR/2023/WD-badging-20230503/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "Virtual Keyboard",
