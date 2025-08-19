@@ -11,7 +11,7 @@ const links = [
         text: "ECMA-262",
         href: "https://ecma262.com/",
         src: "https://tc39.es/ecma262/",
-        "last-modified": "Sun, 17 Aug 2025 06:47:55 GMT",
+        "last-modified": "Tue, 19 Aug 2025 06:01:13 GMT",
         lang: "cjk"
     },
     {
@@ -138,7 +138,7 @@ const links = [
         text: "Streams",
         href: "https://htmlspecs.com/streams",
         src: "https://streams.spec.whatwg.org/",
-        "last-modified": "Tue, 12 Aug 2025 13:20:16 GMT",
+        "last-modified": "Tue, 19 Aug 2025 08:46:37 GMT",
         lang: "cjk"
     },
     {
