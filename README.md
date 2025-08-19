@@ -54,7 +54,7 @@ HTML 及相关 API，CSS 标准系列。
 - [Fullscreen](https://htmlspecs.com/fullscreen)（[Source](https://fullscreen.spec.whatwg.org/)）
 - [Screen Capture](https://htmlspecs.com/screen-capture)（[Source](https://www.w3.org/TR/2025/WD-screen-capture-20250522/) - 工作草案 ）
 - [UI Events](https://htmlspecs.com/uievents)（[Source](https://www.w3.org/TR/2024/WD-uievents-20240907/) - 工作草案）
-- [Touch Events - Level 2](https://htmlspecs.com/touchevents)（[Source](https://w3c.github.io/touch-events/) - 社区组最终报告）
+- [Touch Events - Level 2](https://htmlspecs.com/touch-events)（[Source](https://w3c.github.io/touch-events/) - 社区组最终报告）
 - [Contact Picker API](https://htmlspecs.com/contact-picker)（[Source](https://www.w3.org/TR/2024/WD-contact-picker-20240708/) - 工作草案）
 - [Notifications API](https://htmlspecs.com/notifications)（[Source](https://notifications.spec.whatwg.org/)）
 - [Badging API](https://htmlspecs.com/badging)（[Source](https://www.w3.org/TR/2023/WD-badging-20230503/) - 工作草案）
