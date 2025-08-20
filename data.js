@@ -339,7 +339,7 @@ const links = [
         href: "https://htmlspecs.com/virtual-keyboard",
         src: "https://www.w3.org/TR/2022/WD-virtual-keyboard-20220505/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "Web Share API",
