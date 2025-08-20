@@ -353,7 +353,7 @@ const links = [
         href: "https://htmlspecs.com/webaudio",
         src: "https://www.w3.org/TR/2024/WD-webaudio-1.1-20241105/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "Geolocation API",
