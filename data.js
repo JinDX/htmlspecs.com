@@ -351,7 +351,7 @@ const links = [
     {
         text: "Web Audio API",
         href: "https://htmlspecs.com/webaudio",
-        src: "https://www.w3.org/TR/2021/REC-webaudio-20210617/",
+        src: "https://www.w3.org/TR/2024/WD-webaudio-1.1-20241105/",
         "last-modified": "-",
         lang: "c"
     },
