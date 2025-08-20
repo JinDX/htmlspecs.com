@@ -346,7 +346,7 @@ const links = [
         href: "https://htmlspecs.com/web-share",
         src: "https://www.w3.org/TR/2023/REC-web-share-20230530/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "Web Audio API",
