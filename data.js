@@ -360,7 +360,7 @@ const links = [
         href: "https://htmlspecs.com/geolocation",
         src: "https://www.w3.org/TR/2025/REC-geolocation-20250818/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "Device Orientation and Motion",
