@@ -367,7 +367,7 @@ const links = [
         href: "https://htmlspecs.com/orientation-event",
         src: "https://www.w3.org/TR/2025/CRD-orientation-event-20250212/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "Pointer Lock 2.0",
