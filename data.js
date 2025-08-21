@@ -374,7 +374,7 @@ const links = [
         href: "https://htmlspecs.com/pointerlock",
         src: "https://www.w3.org/TR/2024/WD-pointerlock-2-20240617/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "Clipboard API and events",
