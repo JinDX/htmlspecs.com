@@ -104,7 +104,7 @@ HTML 及相关 API，CSS 标准系列。
 - [WebGPU Shading Language](https://htmlspecs.com/WGSL)（[Source](https://www.w3.org/TR/2025/CRD-WGSL-20250820/) - 候选推荐草案）
 - [Web Animations](https://htmlspecs.com/web-animations-1)（[Source](https://www.w3.org/TR/2023/WD-web-animations-1-20230605/) - 工作草案）
 - [SVG 2](https://htmlspecs.com/SVG2/)（[Source](https://www.w3.org/TR/2018/CR-SVG2-20181004/) - 候选推荐）
-- [Picture-in-Picture](https://htmlspecs.com/picture-in-picture)（[Source](https://www.w3.org/TR/2024/WD-picture-in-picture-20241216/) - 工作草案）
+- [Picture-in-Picture](https://htmlspecs.com/picture-in-picture)（[Source](https://www.w3.org/TR/2025/WD-picture-in-picture-20250820/) - 工作草案）
 - [Presentation API](https://htmlspecs.com/presentation-api)（[Source](https://www.w3.org/TR/2025/CRD-presentation-api-20250212/) - 候选推荐标准）
 - [Scroll-driven Animations](https://htmlspecs.com/scroll-animations-1)（[Source](https://www.w3.org/TR/2023/WD-scroll-animations-1-20230606/) - 工作草案）
 - [Media Capture and Streams](https://htmlspecs.com/mediacapture-streams)（[Source](https://www.w3.org/TR/2025/CRD-mediacapture-streams-20250624/) - 候选推荐草案）
