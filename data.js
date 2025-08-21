@@ -381,7 +381,7 @@ const links = [
         href: "https://htmlspecs.com/clipboard-apis",
         src: "https://www.w3.org/TR/2025/WD-clipboard-apis-20250516/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "Input Events Level 1",
