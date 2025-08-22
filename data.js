@@ -395,7 +395,7 @@ const links = [
         href: "https://htmlspecs.com/input-events-2",
         src: "https://www.w3.org/TR/2025/WD-input-events-2-20250814/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "Permissions",
