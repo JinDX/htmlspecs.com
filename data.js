@@ -388,7 +388,7 @@ const links = [
         href: "https://htmlspecs.com/input-events-1",
         src: "https://www.w3.org/TR/2023/DISC-input-events-1-20230928/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "Input Events Level 2",
