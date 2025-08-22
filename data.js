@@ -430,7 +430,7 @@ const links = [
         href: "https://htmlspecs.com/battery-status",
         src: "https://www.w3.org/TR/2024/WD-battery-status-20241024/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
 
     // Performance and Observers
