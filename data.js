@@ -423,7 +423,7 @@ const links = [
         href: "https://htmlspecs.com/ambient-light",
         src: "https://www.w3.org/TR/2025/WD-ambient-light-20250212/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "Battery Status API",
