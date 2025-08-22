@@ -416,7 +416,7 @@ const links = [
         href: "https://htmlspecs.com/device-posture",
         src: "https://www.w3.org/TR/2024/CR-device-posture-20241126/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "Ambient Light Sensor",
