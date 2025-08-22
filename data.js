@@ -460,7 +460,7 @@ const links = [
         href: "https://htmlspecs.com/resize-observer",
         src: "https://www.w3.org/TR/2020/WD-resize-observer-1-20200211/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "Navigation Timing Level 2",
