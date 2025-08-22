@@ -467,7 +467,7 @@ const links = [
         href: "https://htmlspecs.com/navigation-timing-2",
         src: "https://www.w3.org/TR/2025/WD-navigation-timing-2-20250213/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "Resource Timing",
