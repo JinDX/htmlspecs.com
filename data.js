@@ -402,7 +402,7 @@ const links = [
         href: "https://htmlspecs.com/permissions",
         src: "https://www.w3.org/TR/2025/WD-permissions-20250624/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "WebOTP API",
