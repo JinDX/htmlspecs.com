@@ -446,7 +446,7 @@ const links = [
         href: "https://htmlspecs.com/hr-time-3",
         src: "https://www.w3.org/TR/2024/WD-hr-time-3-20241107/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "Intersection Observer",
