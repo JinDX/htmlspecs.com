@@ -437,9 +437,9 @@ const links = [
     {
         text: "Performance Timeline",
         href: "https://htmlspecs.com/performance-timeline",
-        src: "https://www.w3.org/TR/2024/CRD-performance-timeline-20240216/",
+        src: "https://www.w3.org/TR/2025/CRD-performance-timeline-20250521/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "High Resolution Time",
