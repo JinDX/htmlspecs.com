@@ -409,7 +409,7 @@ const links = [
         href: "https://htmlspecs.com/web-otp",
         src: "https://wicg.github.io/web-otp/",
         "last-modified": "Tue, 04 Feb 2025 17:18:17 GMT",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "Device Posture API",
