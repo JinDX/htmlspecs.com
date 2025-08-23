@@ -532,7 +532,7 @@ const links = [
         href: "https://htmlspecs.com/webauthn-2",
         src: "https://www.w3.org/TR/2021/REC-webauthn-2-20210408/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "HTML Sanitizer API",
