@@ -474,21 +474,21 @@ const links = [
         href: "https://htmlspecs.com/resource-timing",
         src: "https://www.w3.org/TR/2025/CRD-resource-timing-20250820/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "User Timing Level 2",
         href: "https://htmlspecs.com/user-timing-2",
         src: "https://www.w3.org/TR/2019/REC-user-timing-2-20190226/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "Observable",
         href: "https://htmlspecs.com/observable",
         src: "https://wicg.github.io/observable/",
         "last-modified": "Fri, 06 Jun 2025 17:10:48 GMT",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "Long Tasks API",
