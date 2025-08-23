@@ -502,7 +502,7 @@ const links = [
         href: "https://htmlspecs.com/reporting-1",
         src: "https://www.w3.org/TR/2025/WD-reporting-1-20250611/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "Server Timing",
