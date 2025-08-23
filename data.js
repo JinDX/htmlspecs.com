@@ -495,7 +495,7 @@ const links = [
         href: "https://htmlspecs.com/longtasks-1",
         src: "https://www.w3.org/TR/2024/WD-longtasks-1-20240524/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "Reporting API",
