@@ -516,7 +516,7 @@ const links = [
         href: "https://htmlspecs.com/event-timing",
         src: "https://www.w3.org/TR/2025/WD-event-timing-20250526/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "Paint Timing",
