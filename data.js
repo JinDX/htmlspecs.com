@@ -509,7 +509,7 @@ const links = [
         href: "https://htmlspecs.com/server-timing",
         src: "https://www.w3.org/TR/2023/WD-server-timing-20230411/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "Paint Timing",
