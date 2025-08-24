@@ -574,14 +574,14 @@ const links = [
         href: "https://htmlspecs.com/mixed-content",
         src: "https://www.w3.org/TR/2023/CRD-mixed-content-20230223/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "Credential Management Level 1",
         href: "https://htmlspecs.com/credential-management-1",
         src: "https://www.w3.org/TR/2024/WD-credential-management-1-20240813/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
 
 
