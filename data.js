@@ -560,7 +560,7 @@ const links = [
         href: "https://htmlspecs.com/secure-contexts",
         src: "https://www.w3.org/TR/2023/CRD-secure-contexts-20231110/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "Referrer Policy",
