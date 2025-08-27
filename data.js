@@ -598,7 +598,7 @@ const links = [
         href: "https://htmlspecs.com/WGSL",
         src: "https://www.w3.org/TR/2025/CRD-WGSL-20250820/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "Web Animations",
