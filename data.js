@@ -612,14 +612,14 @@ const links = [
         href: "https://htmlspecs.com/SVG2/",
         src: "https://www.w3.org/TR/2018/CR-SVG2-20181004/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "Picture-in-Picture",
         href: "https://htmlspecs.com/picture-in-picture",
         src: "https://www.w3.org/TR/2025/WD-picture-in-picture-20250820/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "Presentation API",
