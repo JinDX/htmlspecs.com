@@ -633,7 +633,7 @@ const links = [
         href: "https://htmlspecs.com/scroll-animations-1",
         src: "https://www.w3.org/TR/2023/WD-scroll-animations-1-20230606/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "Media Capture and Streams",
