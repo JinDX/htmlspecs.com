@@ -640,7 +640,7 @@ const links = [
         href: "https://htmlspecs.com/mediacapture-streams",
         src: "https://www.w3.org/TR/2025/CRD-mediacapture-streams-20250624/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
 
     // Developer Tools
