@@ -920,7 +920,7 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-font-loading",
         src: "https://www.w3.org/TR/2023/WD-css-font-loading-3-20230406/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
 
     // Text and Typography
@@ -929,14 +929,14 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-text-3",
         src: "https://www.w3.org/TR/2024/CRD-css-text-3-20240930/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "CSS Text Module Level 4",
         href: "https://htmlspecs.com/css/css-text-4",
         src: "https://www.w3.org/TR/2024/WD-css-text-4-20240529/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "CSS Counter Styles Level 3",
