@@ -906,14 +906,14 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-fonts-3",
         src: "https://www.w3.org/TR/2018/REC-css-fonts-3-20180920/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "CSS Fonts Module Level 4",
         href: "https://htmlspecs.com/css/css-fonts-4",
         src: "https://www.w3.org/TR/2024/WD-css-fonts-4-20240201/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "CSS Font Loading Module Level 3",
