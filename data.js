@@ -943,7 +943,7 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-counter-styles-3",
         src: "https://www.w3.org/TR/2021/CR-css-counter-styles-3-20210727/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "CSS Lists and Counters Module Level 3",
