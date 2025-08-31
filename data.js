@@ -774,7 +774,7 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-box-3",
         src: "https://www.w3.org/TR/2024/REC-css-box-3-20240411/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "CSS Box Sizing Module Level 3",
@@ -788,7 +788,7 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-box-4",
         src: "https://www.w3.org/TR/2024/WD-css-box-4-20240804/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "CSS Logical Properties and Values Level 1",
