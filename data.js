@@ -959,7 +959,7 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-text-decor-3",
         src: "https://www.w3.org/TR/2022/CRD-css-text-decor-3-20220505/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
 
     // Media Queries
