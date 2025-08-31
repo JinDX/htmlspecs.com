@@ -975,14 +975,14 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/mediaqueries-4",
         src: "https://www.w3.org/TR/2021/CRD-mediaqueries-4-20211225/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "Media Queries Level 5",
         href: "https://htmlspecs.com/css/mediaqueries-5",
         src: "https://www.w3.org/TR/2021/WD-mediaqueries-5-20211218/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
 
     // Layout
