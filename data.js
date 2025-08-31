@@ -802,7 +802,7 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-display-3",
         src: "https://www.w3.org/TR/2023/CR-css-display-3-20230330/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "CSS Backgrounds and Borders Level 3",
