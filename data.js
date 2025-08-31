@@ -968,7 +968,7 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/mediaqueries-3",
         src: "https://www.w3.org/TR/2024/REC-mediaqueries-3-20240521/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "Media Queries Level 4",
