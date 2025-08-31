@@ -950,7 +950,7 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-lists-3",
         src: "https://www.w3.org/TR/2020/WD-css-lists-3-20201117/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
 
     // Text Decoration
