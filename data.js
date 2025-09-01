@@ -998,7 +998,7 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-grid-1",
         src: "https://www.w3.org/TR/2025/CRD-css-grid-1-20250326/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "CSS Grid Layout Module Level 2",
