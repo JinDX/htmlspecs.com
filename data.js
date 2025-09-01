@@ -1019,7 +1019,7 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-inline-3",
         src: "https://www.w3.org/TR/2024/WD-css-inline-3-20241218/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "CSS Multi-column Layout Module Level 1",
