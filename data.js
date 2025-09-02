@@ -823,14 +823,14 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-overflow-4",
         src: "https://www.w3.org/TR/2023/WD-css-overflow-4-20230321/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "CSS Overflow Module Level 5",
         href: "https://htmlspecs.com/css/css-overflow-5",
         src: "https://www.w3.org/TR/2024/WD-css-overflow-5-20241217/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "CSS Gap Decorations Module Level 1",
