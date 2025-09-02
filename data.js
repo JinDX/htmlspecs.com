@@ -1033,7 +1033,7 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-shapes-1",
         src: "https://www.w3.org/TR/2025/CRD-css-shapes-1-20250612/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "CSS Positioned Layout Module Level 3",
