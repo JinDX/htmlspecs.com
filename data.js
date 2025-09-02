@@ -1040,7 +1040,7 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-position-3",
         src: "https://www.w3.org/TR/2025/WD-css-position-3-20250311/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
 
     //Navigation
