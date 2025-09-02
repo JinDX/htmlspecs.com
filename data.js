@@ -781,7 +781,7 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-sizing-3",
         src: "https://www.w3.org/TR/2021/WD-css-sizing-3-20211217/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "CSS Box Model Level 4",
