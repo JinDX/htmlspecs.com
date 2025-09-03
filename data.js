@@ -844,7 +844,7 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-anchor-position-1",
         src: "https://www.w3.org/TR/2025/WD-css-anchor-position-1-20250509/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
 
     // Colors
