@@ -1058,7 +1058,7 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-writing-modes-3",
         src: "https://www.w3.org/TR/2019/REC-css-writing-modes-3-20191210/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "CSS Writing Modes Level 4",
