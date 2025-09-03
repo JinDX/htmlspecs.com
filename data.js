@@ -1093,7 +1093,7 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-images-4",
         src: "https://www.w3.org/TR/2023/WD-css-images-4-20230217/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "CSS Masking Module Level 1",
