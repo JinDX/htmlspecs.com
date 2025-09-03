@@ -1084,7 +1084,7 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-pseudo-4",
         src: "https://www.w3.org/TR/2025/WD-css-pseudo-4-20250627/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
 
     // Images
