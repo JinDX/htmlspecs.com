@@ -1100,7 +1100,7 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-masking-1",
         src: "https://www.w3.org/TR/2021/CRD-css-masking-1-20210805/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
 
     // Transforms and Animations
