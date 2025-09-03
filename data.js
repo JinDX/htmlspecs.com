@@ -1074,7 +1074,7 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-break-3",
         src: "https://www.w3.org/TR/2018/CR-css-break-3-20181204/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
 
 
