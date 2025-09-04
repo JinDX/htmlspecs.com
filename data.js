@@ -1165,7 +1165,7 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-view-transitions-1",
         src: "https://www.w3.org/TR/2024/CRD-css-view-transitions-1-20240328/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
 
     {
@@ -1173,7 +1173,7 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-view-transitions-2",
         src: "https://www.w3.org/TR/2024/WD-css-view-transitions-2-20241113/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "CSS Animation Worklet API",
