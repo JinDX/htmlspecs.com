@@ -1180,7 +1180,7 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-animation-worklet-1",
         src: "https://www.w3.org/TR/2019/WD-css-animation-worklet-1-20190625/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
 
     // Containment
