@@ -1189,14 +1189,14 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-contain-2",
         src: "https://www.w3.org/TR/2022/WD-css-contain-2-20220917/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "CSS Containment Module Level 3",
         href: "https://htmlspecs.com/css/css-contain-3",
         src: "https://www.w3.org/TR/2022/WD-css-contain-3-20220818/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
 
     //Speech
