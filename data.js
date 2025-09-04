@@ -1123,14 +1123,14 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-transforms-1",
         src: "https://www.w3.org/TR/2019/CR-css-transforms-1-20190214/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "CSS Transforms Module Level 2",
         href: "https://htmlspecs.com/css/css-transforms-2",
         src: "https://www.w3.org/TR/2021/WD-css-transforms-2-20211109/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "CSS Transitions Level 2",
