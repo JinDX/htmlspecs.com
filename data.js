@@ -1158,7 +1158,7 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/motion-1",
         src: "https://www.w3.org/TR/2024/WD-motion-1-20241105/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "CSS View Transitions Module Level 1",
