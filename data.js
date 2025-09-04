@@ -1144,14 +1144,14 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-animations-1",
         src: "https://www.w3.org/TR/2023/WD-css-animations-1-20230302/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "CSS Animations Level 2",
         href: "https://htmlspecs.com/css/css-animations-2",
         src: "https://www.w3.org/TR/2023/WD-css-animations-2-20230602/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "CSS Motion Path Module Level 1",
