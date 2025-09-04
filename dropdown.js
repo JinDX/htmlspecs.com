@@ -18,7 +18,7 @@ const LANGUAGES = {
     },
     ko: {
         otherStandards: "다른 표준",
-        githubTitle: "GitHub 소스 코드 보기, 스타 ⭐",
+        githubTitle: "GitHub 소스 코드 보기, 별 달아주세요 ⭐",
         cssRelated: "CSS 관련",
         marker: "【주의】",
         disclaimer: "이 번역은 자원봉사자의 번역본입니다. 번역에 오류가 있을 수 있습니다. 참고용으로만 사용하시고, 원본은 W3C 웹사이트의 영어 버전(<a href='{src}'>{text}</a>)을 참고하세요."
