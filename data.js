@@ -1109,14 +1109,14 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-easing-1",
         src: "https://www.w3.org/TR/2023/CRD-css-easing-1-20230213/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "CSS Easing Functions Level 2",
         href: "https://htmlspecs.com/css/css-easing-2",
         src: "https://www.w3.org/TR/2024/WD-css-easing-2-20240829/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "CSS Transforms Module Level 1",
