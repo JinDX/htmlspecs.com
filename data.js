@@ -1214,7 +1214,7 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-overscroll-1",
         src: "https://www.w3.org/TR/2019/WD-css-overscroll-1-20190606/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "CSS Scroll Snap Module Level 1",
