@@ -1249,7 +1249,7 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-will-change-1",
         src: "https://www.w3.org/TR/2022/CRD-css-will-change-1-20220505/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "CSS Mixins Module Level 1",
