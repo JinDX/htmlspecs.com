@@ -1264,7 +1264,7 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-nesting-1",
         src: "https://www.w3.org/TR/2023/WD-css-nesting-1-20230214/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
 
     // CSS Variables and CSSOM
@@ -1273,7 +1273,7 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-variables-1",
         src: "https://www.w3.org/TR/2022/CR-css-variables-1-20220616/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "CSS Object Model (CSSOM)",
