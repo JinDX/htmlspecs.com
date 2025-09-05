@@ -1235,14 +1235,14 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-scrollbars-1",
         src: "https://www.w3.org/TR/2021/CR-css-scrollbars-1-20211209/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "CSS Scroll Anchoring Module Level 1",
         href: "https://htmlspecs.com/css/css-scroll-anchoring-1",
         src: "https://www.w3.org/TR/2020/WD-css-scroll-anchoring-1-20201111/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "CSS Will Change Module Level 1",
