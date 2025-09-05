@@ -1221,14 +1221,14 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-scroll-snap-1",
         src: "https://www.w3.org/TR/2021/CR-css-scroll-snap-1-20210311/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "CSS Scroll Snap Module Level 2",
         href: "https://htmlspecs.com/css/css-scroll-snap-2",
         src: "https://www.w3.org/TR/2024/WD-css-scroll-snap-2-20240723/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "CSS Scrollbars Styling Module Level 1",
