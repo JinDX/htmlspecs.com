@@ -1205,7 +1205,7 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-speech-1",
         src: "https://www.w3.org/TR/2023/CRD-css-speech-1-20230214/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
 
     // Others
