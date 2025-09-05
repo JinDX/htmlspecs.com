@@ -723,7 +723,7 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/selectors-3",
         src: "https://www.w3.org/TR/2018/REC-selectors-3-20181106/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "Selectors Level 4",
