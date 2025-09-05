@@ -712,11 +712,11 @@ const cssLinks = [
         lang: "c"
     },
     {
-        text: "CSS Namespaces",
+        text: "CSS Namespaces Module Level 3",
         href: "https://htmlspecs.com/css/css-namespaces-3",
         src: "https://www.w3.org/TR/2014/REC-css-namespaces-3-20140320/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "Selectors Level 3",
