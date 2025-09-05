@@ -709,7 +709,7 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-style-attr",
         src: "https://www.w3.org/TR/2013/REC-css-style-attr-20131107/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "CSS Namespaces Module Level 3",
