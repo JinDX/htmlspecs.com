@@ -730,7 +730,7 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/selectors-4",
         src: "https://www.w3.org/TR/2022/WD-selectors-4-20221111/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "CSS Basic User Interface Module Level 3",
