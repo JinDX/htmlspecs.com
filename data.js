@@ -667,7 +667,7 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-2024",
         src: "https://www.w3.org/TR/2025/NOTE-css-2024-20250225/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "CSS 2.2 Specification",
