@@ -737,14 +737,14 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-ui-3",
         src: "https://www.w3.org/TR/2018/REC-css-ui-3-20180621/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "CSS Basic User Interface Module Level 4",
         href: "https://htmlspecs.com/css/css-ui-4",
         src: "https://www.w3.org/TR/2021/WD-css-ui-4-20210316/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "CSS Syntax Module Level 3",
