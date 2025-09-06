@@ -695,14 +695,14 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-cascade-5",
         src: "https://www.w3.org/TR/2022/CR-css-cascade-5-20220113/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "CSS Cascading and Inheritance Level 6",
         href: "https://htmlspecs.com/css/css-cascade-6",
         src: "https://www.w3.org/TR/2024/WD-css-cascade-6-20240906/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "CSS Style Attributes",
