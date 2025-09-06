@@ -1280,14 +1280,14 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/cssom-1",
         src: "https://www.w3.org/TR/2021/WD-cssom-1-20210826/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "CSSOM View Module",
         href: "https://htmlspecs.com/css/cssom-view",
         src: "https://www.w3.org/TR/2016/WD-cssom-view-1-20160317/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
 
     // CSS Houdini APIs
