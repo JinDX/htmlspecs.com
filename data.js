@@ -681,14 +681,14 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-cascade-3",
         src: "https://www.w3.org/TR/2021/REC-css-cascade-3-20210211/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "CSS Cascading and Inheritance Level 4",
         href: "https://htmlspecs.com/css/css-cascade-4",
         src: "https://www.w3.org/TR/2022/CR-css-cascade-4-20220113/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "CSS Cascading and Inheritance Level 5",
