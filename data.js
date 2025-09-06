@@ -751,7 +751,7 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-syntax-3",
         src: "https://www.w3.org/TR/2021/CRD-css-syntax-3-20211224/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "CSS Custom Highlight API Module Level 1",
