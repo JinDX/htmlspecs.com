@@ -53,7 +53,7 @@ const links = [
     {
         text: "Web Application Manifest",
         href: "https://htmlspecs.com/appmanifest",
-        src: "https://www.w3.org/TR/2025/WD-appmanifest-20250505/",
+        src: "https://www.w3.org/TR/2025/WD-appmanifest-20250903/",
         "last-modified": "-",
         lang: "cjk"
     },
