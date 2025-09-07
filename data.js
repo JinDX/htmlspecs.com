@@ -765,7 +765,7 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-values-3",
         src: "https://www.w3.org/TR/2024/CRD-css-values-3-20240322/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
 
     // Box Model and Display
@@ -795,7 +795,7 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-logical-1",
         src: "https://www.w3.org/TR/2018/WD-css-logical-1-20180827/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "CSS Display Module Level 3",
@@ -1256,7 +1256,7 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-mixins-1",
         src: "https://www.w3.org/TR/2025/WD-css-mixins-1-20250515/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     // Nesting and Variables
     {
