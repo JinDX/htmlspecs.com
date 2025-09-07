@@ -1296,14 +1296,14 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-typed-om-1",
         src: "https://www.w3.org/TR/2024/WD-css-typed-om-1-20240321/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "CSS Paint API Level 1",
         href: "https://htmlspecs.com/css/css-paint-api-1",
         src: "https://www.w3.org/TR/2021/CRD-css-paint-api-1-20211216/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "CSS Layout API Level 1",
