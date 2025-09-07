@@ -1310,14 +1310,14 @@ const cssLinks = [
         href: "https://htmlspecs.com/css/css-layout-api-1",
         src: "https://www.w3.org/TR/2018/WD-css-layout-api-1-20180412/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     },
     {
         text: "CSS Properties and Values API Level 1",
         href: "https://htmlspecs.com/css/css-properties-values-api-1",
         src: "https://www.w3.org/TR/2024/WD-css-properties-values-api-1-20240326/",
         "last-modified": "-",
-        lang: "c"
+        lang: "cjk"
     }
 ];
 
