@@ -100,7 +100,7 @@ HTML 及相关 API，CSS 标准系列。
 - [Credential Management Level 1](https://htmlspecs.com/credential-management-1)（[Source](https://www.w3.org/TR/2024/WD-credential-management-1-20240813/) - 工作草案）
 
 ### 媒体和图形
-- [WebGPU](https://htmlspecs.com/webgpu)（[Source](https://www.w3.org/TR/2025/CRD-webgpu-20250820/) - 候选推荐草案）
+- [WebGPU](https://htmlspecs.com/webgpu)（[Source](https://www.w3.org/TR/2025/CRD-webgpu-20250827/) - 候选推荐草案）
 - [WebGPU Shading Language](https://htmlspecs.com/WGSL)（[Source](https://www.w3.org/TR/2025/CRD-WGSL-20250820/) - 候选推荐草案）
 - [Web Animations](https://htmlspecs.com/web-animations-1)（[Source](https://www.w3.org/TR/2023/WD-web-animations-1-20230605/) - 工作草案）
 - [SVG 2](https://htmlspecs.com/SVG2/)（[Source](https://www.w3.org/TR/2018/CR-SVG2-20181004/) - 候选推荐）
