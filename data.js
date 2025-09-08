@@ -895,7 +895,7 @@ const cssLinks = [
     {
         text: "CSS Conditional Rules Module Level 4",
         href: "https://htmlspecs.com/css/css-conditional-4",
-        src: "https://www.w3.org/TR/2022/CR-css-conditional-4-20220217/",
+        src: "https://www.w3.org/TR/2025/CRD-css-conditional-4-20250904/",
         "last-modified": "-",
         lang: "cjk"
     },

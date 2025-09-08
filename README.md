@@ -123,7 +123,7 @@ HTML 及相关 API，CSS 标准系列。
 - [CSS Color Adjustment Module Level 1](https://htmlspecs.com/css/css-color-adjust-1)（[Source](https://www.w3.org/TR/2025/CRD-css-color-adjust-1-20250812/) - 候选推荐标准）
 - [CSS Filter Effects Module Level 1](https://htmlspecs.com/css/filter-effects-1)（[Source](https://www.w3.org/TR/2018/WD-filter-effects-1-20181218/) - 工作草案）
 - [Compositing and Blending Level 1](https://htmlspecs.com/css/compositing-1)（[Source](https://www.w3.org/TR/2024/CRD-compositing-1-20240321/) - 候选推荐标准）
-- [CSS Conditional Rules Module Level 4](https://htmlspecs.com/css/css-conditional-4)（[Source](https://www.w3.org/TR/2022/CR-css-conditional-4-20220217/) - 候选推荐标准）
+- [CSS Conditional Rules Module Level 4](https://htmlspecs.com/css/css-conditional-4)（[Source](https://www.w3.org/TR/2025/CRD-css-conditional-4-20250904/) - 候选推荐草案）
 - [CSS Backgrounds and Borders Level 3](https://htmlspecs.com/css/css-backgrounds-3)（[Source](https://www.w3.org/TR/2024/CRD-css-backgrounds-3-20240311/) - 候选推荐草案）
 - [CSS Custom Highlight API Module Level 1](https://htmlspecs.com/css/css-highlight-api-1)（[Source](https://www.w3.org/TR/2021/WD-css-highlight-api-1-20211215/) - 工作草案）
 
