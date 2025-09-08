@@ -57,7 +57,7 @@ HTML 及相关 API，CSS 标准系列。
 - [Touch Events - Level 2](https://htmlspecs.com/touch-events)（[Source](https://w3c.github.io/touch-events/) - 社区组最终报告）
 - [Contact Picker API](https://htmlspecs.com/contact-picker)（[Source](https://www.w3.org/TR/2024/WD-contact-picker-20240708/) - 工作草案）
 - [Notifications API](https://htmlspecs.com/notifications)（[Source](https://notifications.spec.whatwg.org/)）
-- [Badging API](https://htmlspecs.com/badging)（[Source](https://www.w3.org/TR/2023/WD-badging-20230503/) - 工作草案）
+- [Badging API](https://htmlspecs.com/badging)（[Source](https://www.w3.org/TR/2025/WD-badging-20250903/) - 工作草案）
 - [Virtual Keyboard](https://htmlspecs.com/virtual-keyboard)（[Source](https://www.w3.org/TR/2022/WD-virtual-keyboard-20220505/) - 工作草案）
 - [Web Share API](https://htmlspecs.com/web-share)（[Source](https://www.w3.org/TR/2023/REC-web-share-20230530/) - 推荐标准）
 - [Web Audio API](https://htmlspecs.com/webaudio)（[Source](https://www.w3.org/TR/2021/REC-webaudio-20210617/) - 推荐标准）
