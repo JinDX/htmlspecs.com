@@ -48,7 +48,7 @@ HTML 及相关 API，CSS 标准系列。
 
 ### 设备和硬件访问
 - [Pointer Events](https://htmlspecs.com/pointerevents2)（[Source](https://www.w3.org/TR/2019/REC-pointerevents2-20190404/) - 推荐标准）
-- [Visual Viewport API](https://htmlspecs.com/visual-viewport)（[Source](https://wicg.github.io/visual-viewport/) - 社区组草案报告）
+<!-- - [Visual Viewport API](https://htmlspecs.com/visual-viewport)（[Source](https://wicg.github.io/visual-viewport/) - 社区组草案报告） -->
 - [Screen Orientation](https://htmlspecs.com/screen-orientation)（[Source](https://www.w3.org/TR/2023/WD-screen-orientation-20230809/) - 工作草案）
 - [EyeDropper API](https://htmlspecs.com/eyedropper-api)（[Source](https://wicg.github.io/eyedropper-api/) - 社区组草案报告）
 - [Fullscreen](https://htmlspecs.com/fullscreen)（[Source](https://fullscreen.spec.whatwg.org/)）
