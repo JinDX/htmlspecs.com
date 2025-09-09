@@ -1,5 +1,8 @@
 const links = [
-    // Core Specifications
+    //# htmlspecs.com|ko.htmlspecs.com|jp.htmlspecs.com
+    //HTML 及相关 API，CSS 标准系列。|HTML 및 관련 API, CSS 표준 시리즈.|HTML および関連 API、CSS 仕様シリーズ。
+
+    //### 核心规范|핵심 표준|コア仕様
     {
         text: "HTML",
         href: "https://htmlspecs.com/",
@@ -9,7 +12,7 @@ const links = [
         state: "LS"
     },
     {
-        text: "ECMA-262",
+        text: "ECMAScript",
         href: "https://ecma262.com/",
         src: "https://tc39.es/ecma262/",
         "last-modified": "Tue, 19 Aug 2025 06:01:13 GMT",
@@ -21,6 +24,22 @@ const links = [
         href: "https://htmlspecs.com/dom",
         src: "https://dom.spec.whatwg.org/",
         "last-modified": "Mon, 11 Aug 2025 12:30:54 GMT",
+        lang: "cjk",
+        state: "LS"
+    },
+    {
+        text: "URL",
+        href: "https://htmlspecs.com/url",
+        src: "https://url.spec.whatwg.org/",
+        "last-modified": "Mon, 18 Aug 2025 06:58:25 GMT",
+        lang: "cjk",
+        state: "LS"
+    },
+    {
+        text: "URL Pattern",
+        href: "https://htmlspecs.com/urlpattern",
+        src: "https://urlpattern.spec.whatwg.org/",
+        "last-modified": "Tue, 12 Aug 2025 00:23:08 GMT",
         lang: "cjk",
         state: "LS"
     },
@@ -99,7 +118,7 @@ const links = [
     },
 
 
-    // Accessibility
+    //### 可访问性|접근성|アクセシビリティ
     {
         text: "Web Content Accessibility Guidelines (WCAG) 2.2",
         href: "https://htmlspecs.com/WCAG22",
@@ -125,25 +144,7 @@ const links = [
         state: "REC"
     },
 
-    // URLs and Patterns
-    {
-        text: "URL",
-        href: "https://htmlspecs.com/url",
-        src: "https://url.spec.whatwg.org/",
-        "last-modified": "Mon, 18 Aug 2025 06:58:25 GMT",
-        lang: "cjk",
-        state: "LS"
-    },
-    {
-        text: "URL Pattern",
-        href: "https://htmlspecs.com/urlpattern",
-        src: "https://urlpattern.spec.whatwg.org/",
-        "last-modified": "Tue, 12 Aug 2025 00:23:08 GMT",
-        lang: "cjk",
-        state: "LS"
-    },
-
-    // Network and Communication
+    //### 网络和通信|네트워크와 통신|ネットワークと通信
     {
         text: "Fetch",
         href: "https://htmlspecs.com/fetch",
@@ -233,7 +234,7 @@ const links = [
         state: "CRD"
     },
 
-    // Storage and Data
+    //### 存储和数据|저장 및 데이터|ストレージとデータ
     {
         text: "Indexed Database API 3.0",
         href: "https://htmlspecs.com/IndexedDB",
@@ -291,7 +292,7 @@ const links = [
         state: "WD"
     },
 
-    // Device and Hardware Access
+    //### 设备和硬件访问|디바이스 및 하드웨어 접근|デバイスとハードウェアアクセス
     {
         text: "Pointer Events",
         href: "https://htmlspecs.com/pointerevents2",
@@ -300,14 +301,6 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
-    // {
-    //     text: "Visual Viewport API",
-    //     href: "https://htmlspecs.com/visual-viewport",
-    //     src: "https://wicg.github.io/visual-viewport/",
-    //     "last-modified": "Mon, 02 Jun 2025 19:27:25 GMT",
-    //     lang: "c",
-    //     state: "WD"
-    // },
     {
         text: "Screen Orientation",
         href: "https://htmlspecs.com/screen-orientation",
@@ -493,7 +486,7 @@ const links = [
         state: "WD"
     },
 
-    // Performance and Observers
+    //### 性能和观察者|성능 및 옵저버|パフォーマンスとオブザーバ
     {
         text: "Performance Timeline",
         href: "https://htmlspecs.com/performance-timeline",
@@ -583,14 +576,6 @@ const links = [
         state: "WD"
     },
     {
-        text: "Event Timing API",
-        href: "https://htmlspecs.com/event-timing",
-        src: "https://www.w3.org/TR/2025/WD-event-timing-20250526/",
-        "last-modified": "-",
-        lang: "cjk",
-        state: "WD"
-    },
-    {
         text: "Paint Timing",
         href: "https://htmlspecs.com/paint-timing",
         src: "https://www.w3.org/TR/2025/WD-paint-timing-20250517/",
@@ -598,8 +583,16 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    {
+        text: "Event Timing API",
+        href: "https://htmlspecs.com/event-timing",
+        src: "https://www.w3.org/TR/2025/WD-event-timing-20250526/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
 
-    // Security and Authentication
+    //### 安全和认证|보안 및 인증|セキュリティと認証
     {
         text: "Web Authentication Level 2",
         href: "https://htmlspecs.com/webauthn-2",
@@ -666,7 +659,7 @@ const links = [
     },
 
 
-    // Media and Graphics
+    //### 媒体和图形|미디어 및 그래픽|メディアとグラフィックス
     {
         text: "WebGPU",
         href: "https://htmlspecs.com/webgpu",
@@ -732,7 +725,7 @@ const links = [
         state: "CRD"
     },
 
-    // Developer Tools
+    //### 开发者工具|개발자 도구|開発者ツール
     {
         text: "Console",
         href: "https://htmlspecs.com/console",
@@ -744,23 +737,8 @@ const links = [
 ];
 
 const cssLinks = [
-    // Foundational
-    {
-        text: "CSS Snapshot 2023",
-        href: "https://htmlspecs.com/css/css-2023",
-        src: "https://www.w3.org/TR/2023/NOTE-css-2023-20231207/",
-        "last-modified": "-",
-        lang: "c",
-        state: "NOTE"
-    },
-    {
-        text: "CSS Snapshot 2024",
-        href: "https://htmlspecs.com/css/css-2024",
-        src: "https://www.w3.org/TR/2025/NOTE-css-2024-20250225/",
-        "last-modified": "-",
-        lang: "cjk",
-        state: "NOTE"
-    },
+
+    //## CSS|CSS|CSS
     {
         text: "CSS 2.2 Specification",
         href: "https://htmlspecs.com/css/css22/",
@@ -769,202 +747,8 @@ const cssLinks = [
         lang: "cjk",
         state: "WD"
     },
-    {
-        text: "CSS Cascading and Inheritance Level 3",
-        href: "https://htmlspecs.com/css/css-cascade-3",
-        src: "https://www.w3.org/TR/2021/REC-css-cascade-3-20210211/",
-        "last-modified": "-",
-        lang: "cjk",
-        state: "REC"
-    },
-    {
-        text: "CSS Cascading and Inheritance Level 4",
-        href: "https://htmlspecs.com/css/css-cascade-4",
-        src: "https://www.w3.org/TR/2022/CR-css-cascade-4-20220113/",
-        "last-modified": "-",
-        lang: "cjk",
-        state: "CR"
-    },
-    {
-        text: "CSS Cascading and Inheritance Level 5",
-        href: "https://htmlspecs.com/css/css-cascade-5",
-        src: "https://www.w3.org/TR/2022/CR-css-cascade-5-20220113/",
-        "last-modified": "-",
-        lang: "cjk",
-        state: "CR"
-    },
-    {
-        text: "CSS Cascading and Inheritance Level 6",
-        href: "https://htmlspecs.com/css/css-cascade-6",
-        src: "https://www.w3.org/TR/2024/WD-css-cascade-6-20240906/",
-        "last-modified": "-",
-        lang: "cjk",
-        state: "WD"
-    },
-    {
-        text: "CSS Style Attributes",
-        href: "https://htmlspecs.com/css/css-style-attr",
-        src: "https://www.w3.org/TR/2013/REC-css-style-attr-20131107/",
-        "last-modified": "-",
-        lang: "cjk",
-        state: "REC"
-    },
-    {
-        text: "CSS Namespaces Module Level 3",
-        href: "https://htmlspecs.com/css/css-namespaces-3",
-        src: "https://www.w3.org/TR/2014/REC-css-namespaces-3-20140320/",
-        "last-modified": "-",
-        lang: "cjk",
-        state: "REC"
-    },
-    {
-        text: "Selectors Level 3",
-        href: "https://htmlspecs.com/css/selectors-3",
-        src: "https://www.w3.org/TR/2018/REC-selectors-3-20181106/",
-        "last-modified": "-",
-        lang: "cjk",
-        state: "REC"
-    },
-    {
-        text: "Selectors Level 4",
-        href: "https://htmlspecs.com/css/selectors-4",
-        src: "https://www.w3.org/TR/2022/WD-selectors-4-20221111/",
-        "last-modified": "-",
-        lang: "cjk",
-        state: "WD"
-    },
-    {
-        text: "CSS Basic User Interface Module Level 3",
-        href: "https://htmlspecs.com/css/css-ui-3",
-        src: "https://www.w3.org/TR/2018/REC-css-ui-3-20180621/",
-        "last-modified": "-",
-        lang: "cjk",
-        state: "REC"
-    },
-    {
-        text: "CSS Basic User Interface Module Level 4",
-        href: "https://htmlspecs.com/css/css-ui-4",
-        src: "https://www.w3.org/TR/2021/WD-css-ui-4-20210316/",
-        "last-modified": "-",
-        lang: "cjk",
-        state: "WD"
-    },
-    {
-        text: "CSS Syntax Module Level 3",
-        href: "https://htmlspecs.com/css/css-syntax-3",
-        src: "https://www.w3.org/TR/2021/CRD-css-syntax-3-20211224/",
-        "last-modified": "-",
-        lang: "cjk",
-        state: "CRD"
-    },
-    {
-        text: "CSS Custom Highlight API Module Level 1",
-        href: "https://htmlspecs.com/css/css-highlight-api-1",
-        src: "https://www.w3.org/TR/2021/WD-css-highlight-api-1-20211215/",
-        "last-modified": "-",
-        lang: "cjk",
-        state: "WD"
-    },
-    {
-        text: "CSS Values and Units Module Level 3",
-        href: "https://htmlspecs.com/css/css-values-3",
-        src: "https://www.w3.org/TR/2024/CRD-css-values-3-20240322/",
-        "last-modified": "-",
-        lang: "cjk",
-        state: "CRD"
-    },
 
-    // Box Model and Display
-    {
-        text: "CSS Box Model Level 3",
-        href: "https://htmlspecs.com/css/css-box-3",
-        src: "https://www.w3.org/TR/2024/REC-css-box-3-20240411/",
-        "last-modified": "-",
-        lang: "cjk",
-        state: "REC"
-    },
-    {
-        text: "CSS Box Sizing Module Level 3",
-        href: "https://htmlspecs.com/css/css-sizing-3",
-        src: "https://www.w3.org/TR/2021/WD-css-sizing-3-20211217/",
-        "last-modified": "-",
-        lang: "cjk",
-        state: "WD"
-    },
-    {
-        text: "CSS Box Model Level 4",
-        href: "https://htmlspecs.com/css/css-box-4",
-        src: "https://www.w3.org/TR/2024/WD-css-box-4-20240804/",
-        "last-modified": "-",
-        lang: "cjk",
-        state: "WD"
-    },
-    {
-        text: "CSS Logical Properties and Values Level 1",
-        href: "https://htmlspecs.com/css/css-logical-1",
-        src: "https://www.w3.org/TR/2018/WD-css-logical-1-20180827/",
-        "last-modified": "-",
-        lang: "cjk",
-        state: "WD"
-    },
-    {
-        text: "CSS Display Module Level 3",
-        href: "https://htmlspecs.com/css/css-display-3",
-        src: "https://www.w3.org/TR/2023/CR-css-display-3-20230330/",
-        "last-modified": "-",
-        lang: "cjk",
-        state: "CR"
-    },
-    {
-        text: "CSS Backgrounds and Borders Level 3",
-        href: "https://htmlspecs.com/css/css-backgrounds-3",
-        src: "https://www.w3.org/TR/2024/CRD-css-backgrounds-3-20240311/",
-        "last-modified": "-",
-        lang: "cjk",
-        state: "CRD"
-    },
-    {
-        text: "CSS Box Alignment Module Level 3",
-        href: "https://htmlspecs.com/css/css-align-3",
-        src: "https://www.w3.org/TR/2025/WD-css-align-3-20250311/",
-        "last-modified": "-",
-        lang: "cjk",
-        state: "WD"
-    },
-    {
-        text: "CSS Overflow Module Level 4",
-        href: "https://htmlspecs.com/css/css-overflow-4",
-        src: "https://www.w3.org/TR/2023/WD-css-overflow-4-20230321/",
-        "last-modified": "-",
-        lang: "cjk",
-        state: "WD"
-    },
-    {
-        text: "CSS Overflow Module Level 5",
-        href: "https://htmlspecs.com/css/css-overflow-5",
-        src: "https://www.w3.org/TR/2024/WD-css-overflow-5-20241217/",
-        "last-modified": "-",
-        lang: "cjk",
-        state: "WD"
-    },
-    {
-        text: "CSS Gap Decorations Module Level 1",
-        href: "https://htmlspecs.com/css/css-gaps-1",
-        src: "https://www.w3.org/TR/2025/WD-css-gaps-1-20250417/",
-        "last-modified": "-",
-        lang: "cjk",
-        state: "WD"
-    },
-    {
-        text: "CSS Anchor Positioning Module Level 1",
-        href: "https://htmlspecs.com/css/css-anchor-position-1",
-        src: "https://www.w3.org/TR/2025/WD-css-anchor-position-1-20250509/",
-        "last-modified": "-",
-        lang: "cjk",
-        state: "WD"
-    },
-
-    // Colors
+    //### 颜色|색상|色
     {
         text: "CSS Color Module Level 3",
         href: "https://htmlspecs.com/css/css-color-3",
@@ -1013,8 +797,6 @@ const cssLinks = [
         lang: "cjk",
         state: "CRD"
     },
-
-    //Conditional Rules
     {
         text: "CSS Conditional Rules Module Level 4",
         href: "https://htmlspecs.com/css/css-conditional-4",
@@ -1023,8 +805,24 @@ const cssLinks = [
         lang: "cjk",
         state: "CRD"
     },
+    {
+        text: "CSS Backgrounds and Borders Level 3",
+        href: "https://htmlspecs.com/css/css-backgrounds-3",
+        src: "https://www.w3.org/TR/2024/CRD-css-backgrounds-3-20240311/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "CRD"
+    },
+    {
+        text: "CSS Custom Highlight API Module Level 1",
+        href: "https://htmlspecs.com/css/css-highlight-api-1",
+        src: "https://www.w3.org/TR/2021/WD-css-highlight-api-1-20211215/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
 
-    // Fonts
+    //### 字体|글꼴|フォント
     {
         text: "CSS Fonts Module Level 3",
         href: "https://htmlspecs.com/css/css-fonts-3",
@@ -1050,7 +848,7 @@ const cssLinks = [
         state: "WD"
     },
 
-    // Text and Typography
+    //### 文本和排版|텍스트 및 타이포그래피|テキストとタイポグラフィ
     {
         text: "CSS Text Module Level 3",
         href: "https://htmlspecs.com/css/css-text-3",
@@ -1083,8 +881,6 @@ const cssLinks = [
         lang: "cjk",
         state: "WD"
     },
-
-    // Text Decoration
     {
         text: "CSS Text Decoration Level 3",
         href: "https://htmlspecs.com/css/css-text-decor-3",
@@ -1094,7 +890,7 @@ const cssLinks = [
         state: "CRD"
     },
 
-    // Media Queries
+    //### 媒体查询|미디어 쿼리|メディアクエリ
     {
         text: "Media Queries Level 3",
         href: "https://htmlspecs.com/css/mediaqueries-3",
@@ -1120,7 +916,31 @@ const cssLinks = [
         state: "WD"
     },
 
-    // Layout
+    //### 布局|레이아웃|レイアウト
+    {
+        text: "CSS Box Model Level 3",
+        href: "https://htmlspecs.com/css/css-box-3",
+        src: "https://www.w3.org/TR/2024/REC-css-box-3-20240411/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "REC"
+    },
+    {
+        text: "CSS Box Model Level 4",
+        href: "https://htmlspecs.com/css/css-box-4",
+        src: "https://www.w3.org/TR/2024/WD-css-box-4-20240804/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
+    {
+        text: "CSS Display Module Level 3",
+        href: "https://htmlspecs.com/css/css-display-3",
+        src: "https://www.w3.org/TR/2023/CR-css-display-3-20230330/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "CR"
+    },
     {
         text: "CSS Flexible Box Layout Module Level 1",
         href: "https://htmlspecs.com/css/css-flexbox-1",
@@ -1185,8 +1005,56 @@ const cssLinks = [
         lang: "cjk",
         state: "WD"
     },
+    {
+        text: "CSS Box Sizing Module Level 3",
+        href: "https://htmlspecs.com/css/css-sizing-3",
+        src: "https://www.w3.org/TR/2021/WD-css-sizing-3-20211217/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
+    {
+        text: "CSS Box Alignment Module Level 3",
+        href: "https://htmlspecs.com/css/css-align-3",
+        src: "https://www.w3.org/TR/2025/WD-css-align-3-20250311/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
+    {
+        text: "CSS Overflow Module Level 4",
+        href: "https://htmlspecs.com/css/css-overflow-4",
+        src: "https://www.w3.org/TR/2023/WD-css-overflow-4-20230321/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
+    {
+        text: "CSS Overflow Module Level 5",
+        href: "https://htmlspecs.com/css/css-overflow-5",
+        src: "https://www.w3.org/TR/2024/WD-css-overflow-5-20241217/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
+    {
+        text: "CSS Gap Decorations Module Level 1",
+        href: "https://htmlspecs.com/css/css-gaps-1",
+        src: "https://www.w3.org/TR/2025/WD-css-gaps-1-20250417/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
+    {
+        text: "CSS Anchor Positioning Module Level 1",
+        href: "https://htmlspecs.com/css/css-anchor-position-1",
+        src: "https://www.w3.org/TR/2025/WD-css-anchor-position-1-20250509/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
 
-    //Navigation
+    //### 导航|내비게이션|ナビゲーション
     {
         text: "CSS Spatial Navigation Level 1",
         href: "https://htmlspecs.com/css/css-nav-1",
@@ -1196,7 +1064,7 @@ const cssLinks = [
         state: "WD"
     },
 
-    // Writing Modes
+    //### 书写模式|쓰기 모드|書字モード
     {
         text: "CSS Writing Modes Level 3",
         href: "https://htmlspecs.com/css/css-writing-modes-3",
@@ -1214,7 +1082,7 @@ const cssLinks = [
         state: "CR"
     },
 
-    //Fragmentation
+    //### 分割|분할|分割
     {
         text: "CSS Fragmentation Module Level 3",
         href: "https://htmlspecs.com/css/css-break-3",
@@ -1224,8 +1092,7 @@ const cssLinks = [
         state: "CR"
     },
 
-
-    // Pseudo-elements
+    //### 伪元素|의사 요소|疑似要素
     {
         text: "CSS Pseudo-Elements Module Level 4",
         href: "https://htmlspecs.com/css/css-pseudo-4",
@@ -1235,7 +1102,7 @@ const cssLinks = [
         state: "WD"
     },
 
-    // Images
+    //### 图像|이미지|画像
     {
         text: "CSS Images Module Level 4",
         href: "https://htmlspecs.com/css/css-images-4",
@@ -1253,7 +1120,7 @@ const cssLinks = [
         state: "CRD"
     },
 
-    // Transforms and Animations
+    //### 变换和动画|변환 및 애니메이션|変換とアニメーション
     {
         text: "CSS Easing Functions Level 1",
         href: "https://htmlspecs.com/css/css-easing-1",
@@ -1344,7 +1211,7 @@ const cssLinks = [
         state: "WD"
     },
 
-    // Containment
+    //### 包含|컨테인먼트|コンテインメント
     {
         text: "CSS Containment Module Level 2",
         href: "https://htmlspecs.com/css/css-contain-2",
@@ -1362,7 +1229,7 @@ const cssLinks = [
         state: "WD"
     },
 
-    //Speech
+    //### 语音|음성|音声
     {
         text: "CSS Speech Module Level 1",
         href: "https://htmlspecs.com/css/css-speech-1",
@@ -1372,9 +1239,57 @@ const cssLinks = [
         state: "CRD"
     },
 
-    // Others
+    // ### 其他|其他|기타|その他
     {
-        text: "CSS Overscroll Behavior",
+        text: "CSS Snapshot 2023",
+        href: "https://htmlspecs.com/css/css-2023",
+        src: "https://www.w3.org/TR/2023/NOTE-css-2023-20231207/",
+        "last-modified": "-",
+        lang: "c",
+        state: "NOTE"
+    },
+    {
+        text: "CSS Snapshot 2024",
+        href: "https://htmlspecs.com/css/css-2024",
+        src: "https://www.w3.org/TR/2025/NOTE-css-2024-20250225/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "NOTE"
+    },
+    {
+        text: "CSS Namespaces Module Level 3",
+        href: "https://htmlspecs.com/css/css-namespaces-3",
+        src: "https://www.w3.org/TR/2014/REC-css-namespaces-3-20140320/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "REC"
+    },
+    {
+        text: "Selectors Level 3",
+        href: "https://htmlspecs.com/css/selectors-3",
+        src: "https://www.w3.org/TR/2018/REC-selectors-3-20181106/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "REC"
+    },
+    {
+        text: "Selectors Level 4",
+        href: "https://htmlspecs.com/css/selectors-4",
+        src: "https://www.w3.org/TR/2022/WD-selectors-4-20221111/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
+    {
+        text: "CSS Style Attributes",
+        href: "https://htmlspecs.com/css/css-style-attr",
+        src: "https://www.w3.org/TR/2013/REC-css-style-attr-20131107/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "REC"
+    },
+    {
+        text: "CSS Overscroll Behavior Module Level 1",
         href: "https://htmlspecs.com/css/css-overscroll-1",
         src: "https://www.w3.org/TR/2019/WD-css-overscroll-1-20190606/",
         "last-modified": "-",
@@ -1422,15 +1337,6 @@ const cssLinks = [
         state: "CRD"
     },
     {
-        text: "CSS Mixins Module Level 1",
-        href: "https://htmlspecs.com/css/css-mixins-1",
-        src: "https://www.w3.org/TR/2025/WD-css-mixins-1-20250515/",
-        "last-modified": "-",
-        lang: "cjk",
-        state: "WD"
-    },
-    // Nesting and Variables
-    {
         text: "CSS Nesting Module Level 1",
         href: "https://htmlspecs.com/css/css-nesting-1",
         src: "https://www.w3.org/TR/2023/WD-css-nesting-1-20230214/",
@@ -1438,8 +1344,6 @@ const cssLinks = [
         lang: "cjk",
         state: "WD"
     },
-
-    // CSS Variables and CSSOM
     {
         text: "CSS Custom Properties for Cascading Variables Module Level 1",
         href: "https://htmlspecs.com/css/css-variables-1",
@@ -1464,8 +1368,89 @@ const cssLinks = [
         lang: "cjk",
         state: "WD"
     },
+    {
+        text: "CSS Cascading and Inheritance Level 3",
+        href: "https://htmlspecs.com/css/css-cascade-3",
+        src: "https://www.w3.org/TR/2021/REC-css-cascade-3-20210211/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "REC"
+    },
+    {
+        text: "CSS Cascading and Inheritance Level 4",
+        href: "https://htmlspecs.com/css/css-cascade-4",
+        src: "https://www.w3.org/TR/2022/CR-css-cascade-4-20220113/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "CR"
+    },
+    {
+        text: "CSS Cascading and Inheritance Level 5",
+        href: "https://htmlspecs.com/css/css-cascade-5",
+        src: "https://www.w3.org/TR/2022/CR-css-cascade-5-20220113/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "CR"
+    },
+    {
+        text: "CSS Cascading and Inheritance Level 6",
+        href: "https://htmlspecs.com/css/css-cascade-6",
+        src: "https://www.w3.org/TR/2024/WD-css-cascade-6-20240906/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
+    {
+        text: "CSS Basic User Interface Module Level 3",
+        href: "https://htmlspecs.com/css/css-ui-3",
+        src: "https://www.w3.org/TR/2018/REC-css-ui-3-20180621/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "REC"
+    },
+    {
+        text: "CSS Basic User Interface Module Level 4",
+        href: "https://htmlspecs.com/css/css-ui-4",
+        src: "https://www.w3.org/TR/2021/WD-css-ui-4-20210316/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
+    {
+        text: "CSS Syntax Module Level 3",
+        href: "https://htmlspecs.com/css/css-syntax-3",
+        src: "https://www.w3.org/TR/2021/CRD-css-syntax-3-20211224/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "CRD"
+    },
 
-    // CSS Houdini APIs
+    {
+        text: "CSS Values and Units Module Level 3",
+        href: "https://htmlspecs.com/css/css-values-3",
+        src: "https://www.w3.org/TR/2024/CRD-css-values-3-20240322/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "CRD"
+    },
+    {
+        text: "CSS Logical Properties and Values Level 1",
+        href: "https://htmlspecs.com/css/css-logical-1",
+        src: "https://www.w3.org/TR/2018/WD-css-logical-1-20180827/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
+    {
+        text: "CSS Mixins Module Level 1",
+        href: "https://htmlspecs.com/css/css-mixins-1",
+        src: "https://www.w3.org/TR/2025/WD-css-mixins-1-20250515/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
+
+    //### CSS Houdini APIs|CSS Houdini API|CSS Houdini API
     {
         text: "CSS Typed OM Level 1",
         href: "https://htmlspecs.com/css/css-typed-om-1",
