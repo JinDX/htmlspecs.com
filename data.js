@@ -1239,7 +1239,7 @@ const cssLinks = [
         state: "CRD"
     },
 
-    // ### 其他|其他|기타|その他
+    // ### 其他|기타|その他
     {
         text: "CSS Snapshot 2023",
         href: "https://htmlspecs.com/css/css-2023",
