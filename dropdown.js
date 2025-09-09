@@ -187,7 +187,7 @@ loadDataScript(function () {
     filteredLinks.forEach(function (link) {
         dropdownContent.appendChild(createLink(link.href, link.text));
 
-        if (link.text === "ECMA-262") {
+        if (link.text === "ECMAScript" || link.text === "ECMA-262") {
             var cssTitle = createLink("#", t.cssRelated);
             cssTitle.style.cursor = "pointer";
             cssTitle.style.padding = "10px 15px";
