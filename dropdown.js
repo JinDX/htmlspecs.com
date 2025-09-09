@@ -25,6 +25,18 @@ const LANGUAGES = {
     }
 };
 
+const stateMap = {
+    'LS': ['Living Standard', 'https://img.shields.io/badge/LS-3c790a'],
+    'Draft': ['Draft', 'https://img.shields.io/badge/Draft-ffcc00'],
+    'WD': ['Working Draft', 'https://img.shields.io/badge/WD-e66e33'],
+    'REC': ['Recommendation', 'https://img.shields.io/badge/REC-309c40'],
+    'CRD': ['Candidate Recommendation Draft', 'https://img.shields.io/badge/CRD-e2a669'],
+    'CR': ['Candidate Recommendation', 'https://img.shields.io/badge/CR-cfd510'],
+    'CG-FINAL': ['Community Group Final Report', 'https://img.shields.io/badge/CG--FINAL-ffcc00'],
+    'DISC': ['Discontinued Draft', 'https://img.shields.io/badge/DISC-ffcc00'],
+    'NOTE': ['Note', 'https://img.shields.io/badge/NOTE-309c40']
+};
+
 function getCurrentLang() {
     const hostname = window.location.hostname;
     if (/^jp\.htmlspecs\.com$/.test(hostname)) return "jp";
@@ -54,23 +66,41 @@ function loadDataScript(callback) {
     document.head.appendChild(script);
 }
 
-function createLink(href, text) {
+function createLink(href, text, state) {
     var a = document.createElement("a");
     a.href = rewriteHref(href);
-    a.textContent = text;
-    a.title = text;
+    const stateLabel = state && stateMap[state] ? stateMap[state][0] : '';
+    a.title = stateLabel ? `${text} (${stateLabel})` : text;
     a.style.cssText = `
-        display: block;
+        display: flex;
+        align-items: center;
+        gap: 8px;
         padding: 10px 15px;
         color: #333;
         text-decoration: none;
         transition: color 0.3s;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
         width: 100%;
         box-sizing: border-box;
     `;
+    var titleSpan = document.createElement('span');
+    titleSpan.textContent = text; // 只显示原始文本
+    titleSpan.style.cssText = `
+        flex: 1 1 auto;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    `;
+    a.appendChild(titleSpan);
+    if (state && stateMap[state]) {
+        const [label, badgeUrl] = stateMap[state];
+        const img = document.createElement('img');
+        img.src = badgeUrl;
+        img.alt = label;
+        img.loading = 'lazy';
+        img.style.cssText = 'height:20px; flex-shrink:0;';
+        a.appendChild(img);
+    }
     a.onmouseover = () => a.style.color = "#007BFF";
     a.onmouseout = () => a.style.color = "#333";
     return a;
@@ -185,7 +215,7 @@ loadDataScript(function () {
     document.body.appendChild(dropdownContent);
 
     filteredLinks.forEach(function (link) {
-        dropdownContent.appendChild(createLink(link.href, link.text));
+        dropdownContent.appendChild(createLink(link.href, link.text, link.state));
 
         if (link.text === "ECMAScript" || link.text === "ECMA-262") {
             var cssTitle = createLink("#", t.cssRelated);
@@ -206,7 +236,7 @@ loadDataScript(function () {
             cssContent.style.padding = "0 15px";
 
             filteredCssLinks.forEach(function (link) {
-                cssContent.appendChild(createLink(link.href, link.text));
+                cssContent.appendChild(createLink(link.href, link.text, link.state));
             });
 
             cssTitle.onclick = function (event) {
@@ -230,15 +260,10 @@ loadDataScript(function () {
     var style = document.createElement('style');
     style.innerHTML = `
         @media (max-width: 600px) {
-            #dropdownContent {
-                width: 100%;
-                left: 0;
-                right: 0; 
-            }
+            #dropdownContent { width: 100%; left: 0; right: 0; }
         }
-        table.def th {
-            min-width: 5em;
-        }
+        table.def th { min-width: 5em; }
+        /* 移除原文字徽章样式，使用动态 badge 图片 */
     `;
     document.head.appendChild(style);
 
