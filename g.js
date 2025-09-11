@@ -144,7 +144,11 @@ function generateMd(classified, cssClassified) {
         const items = cssClassified[cat.id];
         if (items && items.length) {
             const displayName = cat.names[langIndex] || cat.names[0];
-            md += `### ${displayName}\n`;
+            if (displayName === 'CSS') {
+                md += `## ${displayName}\n`;
+            } else {
+                md += `### ${displayName}\n`;
+            }
             items.forEach(l => md += linkToMd(l) + '\n');
             md += '\n';
         }
