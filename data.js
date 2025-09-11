@@ -1257,6 +1257,14 @@ const cssLinks = [
         state: "NOTE"
     },
     {
+        text: "CSS Snapshot 2025",
+        href: "https://htmlspecs.com/css/css-2025",
+        src: "https://www.w3.org/TR/2025/NOTE-css-2025-20250909/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "NOTE"
+    },
+    {
         text: "CSS Namespaces Module Level 3",
         href: "https://htmlspecs.com/css/css-namespaces-3",
         src: "https://www.w3.org/TR/2014/REC-css-namespaces-3-20140320/",

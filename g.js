@@ -68,9 +68,8 @@ function extractArray(name) {
         return [];
     }
 }
-const links = extractArray('links');
-
-const cssLinks = extractArray('cssLinks');
+const links = extractArray('links').filter(l => !l.lang || l.lang.includes(langArg));
+const cssLinks = extractArray('cssLinks').filter(l => !l.lang || l.lang.includes(langArg));
 let cssCategories = extractCategories(dataJsContent.match(/const\s+cssLinks\s*=\s*\[[\s\S]*?];/)?.[0] || '');
 
 let currentCssIdx = -1;
