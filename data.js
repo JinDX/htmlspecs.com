@@ -368,7 +368,7 @@ const links = [
     {
         text: "Badging API",
         href: "https://htmlspecs.com/badging",
-        src: "https://www.w3.org/TR/2025/WD-badging-20250903/",
+        src: "https://www.w3.org/TR/2025/WD-badging-20250910/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
