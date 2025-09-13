@@ -271,7 +271,7 @@ const links = [
         text: "Cookie Store API",
         href: "https://htmlspecs.com/cookiestore",
         src: "https://cookiestore.spec.whatwg.org/",
-        "last-modified": "Thu, 14 Aug 2025 15:08:59 GMT",
+        "last-modified": "Fri, 12 Sep 2025 06:47:23 GMT",
         lang: "cjk",
         state: "LS"
     },
