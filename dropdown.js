@@ -193,6 +193,7 @@ loadDataScript(function () {
         right: 20px;
         display: flex;
         align-items: center;
+        z-index: 999;
     `;
     buttonContainer.appendChild(githubButton);
     buttonContainer.appendChild(dropdownButton);
