@@ -5,7 +5,7 @@ const langArg = (process.argv[2] || 'c').toLowerCase();
 const langIndexMap = { c: 0, k: 1, j: 2 };
 const langIndex = langIndexMap[langArg] ?? 0;
 const langHostMap = { k: 'https://ko.htmlspecs.com', j: 'https://jp.htmlspecs.com' };
-const ecmaLocaleMap = { k: 'ko', j: 'jp' };
+const ecmaLocaleMap = { c:'c', k: 'k', j: 'j' };
 
 const dataJsPath = './data.js';
 const dataJsContent = fs.readFileSync(dataJsPath, 'utf8');
