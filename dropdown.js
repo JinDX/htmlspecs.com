@@ -41,8 +41,8 @@ function getCurrentLang() {
     const hostname = window.location.hostname;
     if (/^jp\.htmlspecs\.com$/.test(hostname)) return "jp";
     if (/^ko\.htmlspecs\.com$/.test(hostname)) return "ko";
-    if (window.location.pathname.startsWith('/jp')) return "jp";
-    if (window.location.pathname.startsWith('/ko')) return "ko";
+    if (window.location.pathname.startsWith('/j/')) return "jp";
+    if (window.location.pathname.startsWith('/k/')) return "ko";
     return "cn";
 }
 
@@ -50,11 +50,14 @@ function rewriteHref(href) {
     const lang = getCurrentLang();
     if (lang === "jp") {
         return href.replace("htmlspecs.com", "jp.htmlspecs.com")
-            .replace("ecma262.com/", "ecma262.com/jp");
+            .replace("ecma262.com/", "ecma262.com/j");
     }
     if (lang === "ko") {
         return href.replace("htmlspecs.com", "ko.htmlspecs.com")
-            .replace("ecma262.com/", "ecma262.com/ko");
+            .replace("ecma262.com/", "ecma262.com/k");
+    }
+    if (lang === "cn") {
+        return href.replace("ecma262.com/", "ecma262.com/c");
     }
     return href;
 }
