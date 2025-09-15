@@ -263,7 +263,7 @@ const links = [
         text: "File System",
         href: "https://htmlspecs.com/fs",
         src: "https://fs.spec.whatwg.org",
-        "last-modified": "Tue, 12 Aug 2025 13:35:38 GMT",
+        "last-modified": "Mon, 15 Sep 2025 04:51:01 GMT",
         lang: "cjk",
         state: "LS"
     },
