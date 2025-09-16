@@ -1371,7 +1371,7 @@ const cssLinks = [
     {
         text: "CSSOM View Module",
         href: "https://htmlspecs.com/css/cssom-view",
-        src: "https://www.w3.org/TR/2016/WD-cssom-view-1-20160317/",
+        src: "https://www.w3.org/TR/2025/WD-cssom-view-1-20250916/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
