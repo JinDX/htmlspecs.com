@@ -82,7 +82,7 @@ HTML 及相关 API，CSS 标准系列。
 - [Long Tasks API](https://htmlspecs.com/longtasks-1)（[Source](https://www.w3.org/TR/2024/WD-longtasks-1-20240524/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Reporting API](https://htmlspecs.com/reporting-1)（[Source](https://www.w3.org/TR/2025/WD-reporting-1-20250611/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Server Timing](https://htmlspecs.com/server-timing)（[Source](https://www.w3.org/TR/2023/WD-server-timing-20230411/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
-- [Paint Timing](https://htmlspecs.com/paint-timing)（[Source](https://www.w3.org/TR/2025/WD-paint-timing-20250517/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Paint Timing](https://htmlspecs.com/paint-timing)（[Source](https://www.w3.org/TR/2025/WD-paint-timing-20250915/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Event Timing API](https://htmlspecs.com/event-timing)（[Source](https://www.w3.org/TR/2025/WD-event-timing-20250526/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 
 ### 安全和认证
