@@ -15,7 +15,7 @@ const links = [
         text: "ECMAScript",
         href: "https://ecma262.com/",
         src: "https://tc39.es/ecma262/",
-        "last-modified": "Mon, 15 Sep 2025 23:53:10 GMT",
+        "last-modified": "Tue, 16 Sep 2025 22:43:40 GMT",
         lang: "cjk",
         state: "Draft"
     },
