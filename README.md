@@ -146,7 +146,7 @@ HTML 及相关 API，CSS 标准系列。
 - [CSS Flexible Box Layout Module Level 1](https://htmlspecs.com/css/css-flexbox-1)（[Source](https://www.w3.org/TR/2018/CR-css-flexbox-1-20181119/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
 - [CSS Grid Layout Module Level 1](https://htmlspecs.com/css/css-grid-1)（[Source](https://www.w3.org/TR/2025/CRD-css-grid-1-20250326/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [CSS Grid Layout Module Level 2](https://htmlspecs.com/css/css-grid-2)（[Source](https://www.w3.org/TR/2025/CRD-css-grid-2-20250326/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
-- [CSS Grid Layout Module Level 3](https://htmlspecs.com/css/css-grid-3)（[Source](https://www.w3.org/TR/2025/WD-css-grid-3-20250207/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [CSS Grid Layout Module Level 3](https://htmlspecs.com/css/css-grid-3)（[Source](https://www.w3.org/TR/2025/WD-css-grid-3-20250917/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Inline Layout Module Level 3](https://htmlspecs.com/css/css-inline-3)（[Source](https://www.w3.org/TR/2024/WD-css-inline-3-20241218/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Multi-column Layout Module Level 1](https://htmlspecs.com/css/css-multicol-1)（[Source](https://www.w3.org/TR/2024/CR-css-multicol-1-20240516/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
 - [CSS Shapes Module Level 1](https://htmlspecs.com/css/css-shapes-1)（[Source](https://www.w3.org/TR/2025/CRD-css-shapes-1-20250612/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
