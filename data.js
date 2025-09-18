@@ -1259,7 +1259,7 @@ const cssLinks = [
     {
         text: "CSS Snapshot 2025",
         href: "https://htmlspecs.com/css/css-2025",
-        src: "https://www.w3.org/TR/2025/NOTE-css-2025-20250909/",
+        src: "https://www.w3.org/TR/2025/NOTE-css-2025-20250918/",
         "last-modified": "-",
         lang: "cjk",
         state: "NOTE"
