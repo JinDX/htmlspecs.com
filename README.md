@@ -153,6 +153,7 @@ HTML 及相关 API，CSS 标准系列。
 - [CSS Positioned Layout Module Level 3](https://htmlspecs.com/css/css-position-3)（[Source](https://www.w3.org/TR/2025/WD-css-position-3-20250311/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Box Sizing Module Level 3](https://htmlspecs.com/css/css-sizing-3)（[Source](https://www.w3.org/TR/2021/WD-css-sizing-3-20211217/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Box Alignment Module Level 3](https://htmlspecs.com/css/css-align-3)（[Source](https://www.w3.org/TR/2025/WD-css-align-3-20250311/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [CSS Overflow Module Level 3](https://htmlspecs.com/css/css-overflow-3)（[Source](https://www.w3.org/TR/2023/WD-css-overflow-3-20230329/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Overflow Module Level 4](https://htmlspecs.com/css/css-overflow-4)（[Source](https://www.w3.org/TR/2023/WD-css-overflow-4-20230321/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Overflow Module Level 5](https://htmlspecs.com/css/css-overflow-5)（[Source](https://www.w3.org/TR/2024/WD-css-overflow-5-20241217/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Gap Decorations Module Level 1](https://htmlspecs.com/css/css-gaps-1)（[Source](https://www.w3.org/TR/2025/WD-css-gaps-1-20250417/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
