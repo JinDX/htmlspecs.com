@@ -750,14 +750,14 @@ const links = [
         lang: "cjk",
         state: "CRD"
     },
-    // {
-    //     text: "WebCodecs",
-    //     href: "https://htmlspecs.com/webcodecs",
-    //     src: "https://www.w3.org/TR/2025/WD-webcodecs-20250708/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "WebCodecs",
+        href: "https://htmlspecs.com/webcodecs",
+        src: "https://www.w3.org/TR/2025/WD-webcodecs-20250708/",
+        "last-modified": "Tue, 08 Jul 2025 23:41:58 GMT",
+        lang: "cjk",
+        state: "WD"
+    },
     // {
     //     text: "Media Session",
     //     href: "https://htmlspecs.com/mediasession",
