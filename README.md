@@ -54,7 +54,7 @@ HTML 及相关 API，CSS 标准系列。
 - [Touch Events - Level 2](https://htmlspecs.com/touch-events)（[Source](https://www.w3.org/community/reports/touchevents/CG-FINAL-touch-events-20240704/) ![Community Group Final Report](https://img.shields.io/badge/CG--FINAL-ffcc00)）
 - [Contact Picker API](https://htmlspecs.com/contact-picker)（[Source](https://www.w3.org/TR/2024/WD-contact-picker-20240708/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Notifications API](https://htmlspecs.com/notifications)（[Source](https://notifications.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
-- [Badging API](https://htmlspecs.com/badging)（[Source](https://www.w3.org/TR/2025/WD-badging-20250910/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Badging API](https://htmlspecs.com/badging)（[Source](https://www.w3.org/TR/2025/WD-badging-20250922/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Virtual Keyboard](https://htmlspecs.com/virtual-keyboard)（[Source](https://www.w3.org/TR/2022/WD-virtual-keyboard-20220505/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Web Share API](https://htmlspecs.com/web-share)（[Source](https://www.w3.org/TR/2023/REC-web-share-20230530/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Web Audio API](https://htmlspecs.com/webaudio)（[Source](https://www.w3.org/TR/2024/WD-webaudio-1.1-20241105/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
