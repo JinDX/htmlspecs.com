@@ -117,6 +117,32 @@ const links = [
         state: "LS"
     },
 
+    // // WebAssembly 相关|WebAssembly 관련|WebAssembly 関連
+    // {
+    //     text: "WebAssembly Core Specification",
+    //     href: "https://htmlspecs.com/webassembly-core",
+    //     src: "https://webassembly.github.io/spec/core/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
+    // {
+    //     text: "WebAssembly JS API",
+    //     href: "https://htmlspecs.com/webassembly-js-api",
+    //     src: "https://webassembly.github.io/spec/js-api/index.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
+    // {
+    //     text: "WebAssembly Web API",
+    //     href: "https://htmlspecs.com/webassembly-web-api",
+    //     src: "https://webassembly.github.io/spec/web-api/index.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
+
 
     //### 可访问性|접근성|アクセシビリティ
     {
@@ -724,6 +750,54 @@ const links = [
         lang: "cjk",
         state: "CRD"
     },
+    // {
+    //     text: "WebCodecs",
+    //     href: "https://htmlspecs.com/webcodecs",
+    //     src: "https://www.w3.org/TR/2025/WD-webcodecs-20250708/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
+    // {
+    //     text: "Media Session",
+    //     href: "https://htmlspecs.com/mediasession",
+    //     src: "https://www.w3.org/TR/2025/WD-mediasession-20250919/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
+    // {
+    //     text: "Media Capabilities",
+    //     href: "https://htmlspecs.com/media-capabilities",
+    //     src: "https://www.w3.org/TR/2025/WD-media-capabilities-20250825/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
+    // {
+    //     text: "Image Capture",
+    //     href: "https://htmlspecs.com/image-capture",
+    //     src: "https://www.w3.org/TR/2025/WD-image-capture-20250423/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
+    // {
+    //     text: "Encrypted Media Extensions",
+    //     href: "https://htmlspecs.com/encrypted-media",
+    //     src: "https://www.w3.org/TR/2025/WD-encrypted-media-2-20250821/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
+    // {
+    //     text: "WebXR Device API",
+    //     href: "https://htmlspecs.com/webxr",
+    //     src: "https://www.w3.org/TR/2025/CRD-webxr-20250417/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
 
     //### 开发者工具|개발자 도구|開発者ツール
     {
