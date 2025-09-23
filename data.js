@@ -766,14 +766,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "Media Capabilities",
-    //     href: "https://htmlspecs.com/media-capabilities",
-    //     src: "https://www.w3.org/TR/2025/WD-media-capabilities-20250825/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "Media Capabilities",
+        href: "https://htmlspecs.com/media-capabilities",
+        src: "https://www.w3.org/TR/2025/WD-media-capabilities-20250825/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     // {
     //     text: "Image Capture",
     //     href: "https://htmlspecs.com/image-capture",
