@@ -105,6 +105,7 @@ HTML 及相关 API，CSS 标准系列。
 - [Scroll-driven Animations](https://htmlspecs.com/scroll-animations-1)（[Source](https://www.w3.org/TR/2023/WD-scroll-animations-1-20230606/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Media Capture and Streams](https://htmlspecs.com/mediacapture-streams)（[Source](https://www.w3.org/TR/2025/CRD-mediacapture-streams-20250911/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [WebCodecs](https://htmlspecs.com/webcodecs)（[Source](https://www.w3.org/TR/2025/WD-webcodecs-20250708/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Media Session](https://htmlspecs.com/mediasession)（[Source](https://www.w3.org/TR/2025/WD-mediasession-20250919/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 
 ### 开发者工具
 - [Console](https://htmlspecs.com/console)（[Source](https://console.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
