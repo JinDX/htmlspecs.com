@@ -778,18 +778,18 @@ const links = [
         text: "Image Capture",
         href: "https://htmlspecs.com/image-capture",
         src: "https://www.w3.org/TR/2025/WD-image-capture-20250423/",
-        "last-modified": "Wed, 23 Apr 2025 08:25:23 GMT",
+        "last-modified": "-",
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "Encrypted Media Extensions",
-    //     href: "https://htmlspecs.com/encrypted-media",
-    //     src: "https://www.w3.org/TR/2025/WD-encrypted-media-2-20250821/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "Encrypted Media Extensions",
+        href: "https://htmlspecs.com/encrypted-media-2",
+        src: "https://www.w3.org/TR/2025/WD-encrypted-media-2-20250821/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     // {
     //     text: "WebXR Device API",
     //     href: "https://htmlspecs.com/webxr",
