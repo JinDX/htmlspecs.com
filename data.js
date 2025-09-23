@@ -754,7 +754,7 @@ const links = [
         text: "WebCodecs",
         href: "https://htmlspecs.com/webcodecs",
         src: "https://www.w3.org/TR/2025/WD-webcodecs-20250708/",
-        "last-modified": "Tue, 08 Jul 2025 23:41:58 GMT",
+        "last-modified": "-",
         lang: "cjk",
         state: "WD"
     },
@@ -762,7 +762,7 @@ const links = [
         text: "Media Session",
         href: "https://htmlspecs.com/mediasession",
         src: "https://www.w3.org/TR/2025/WD-mediasession-20250919/",
-        "last-modified": "Fri, 19 Sep 2025 23:14:23 GMT",
+        "last-modified": "-",
         lang: "cjk",
         state: "WD"
     },
