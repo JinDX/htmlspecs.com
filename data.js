@@ -758,14 +758,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "Media Session",
-    //     href: "https://htmlspecs.com/mediasession",
-    //     src: "https://www.w3.org/TR/2025/WD-mediasession-20250919/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "Media Session",
+        href: "https://htmlspecs.com/mediasession",
+        src: "https://www.w3.org/TR/2025/WD-mediasession-20250919/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     // {
     //     text: "Media Capabilities",
     //     href: "https://htmlspecs.com/media-capabilities",
