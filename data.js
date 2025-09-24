@@ -117,33 +117,6 @@ const links = [
         state: "LS"
     },
 
-    // // WebAssembly 相关|WebAssembly 관련|WebAssembly 関連
-    // {
-    //     text: "WebAssembly Core Specification",
-    //     href: "https://htmlspecs.com/wasm-core",
-    //     src: "https://webassembly.github.io/spec/core/bikeshed/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
-    // {
-    //     text: "WebAssembly JS API",
-    //     href: "https://htmlspecs.com/webassembly-js-api",
-    //     src: "https://webassembly.github.io/spec/js-api/index.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
-    // {
-    //     text: "WebAssembly Web API",
-    //     href: "https://htmlspecs.com/webassembly-web-api",
-    //     src: "https://webassembly.github.io/spec/web-api/index.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
-
-
     //### 可访问性|접근성|アクセシビリティ
     {
         text: "Web Content Accessibility Guidelines (WCAG) 2.2",
