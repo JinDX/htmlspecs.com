@@ -33,7 +33,7 @@ function fetchPage(pageUrl) {
             reject(new Error(err.message + ' for ' + pageUrl));
         });
         req.setTimeout(60000, () => {
-            req.abort();
+            req.destroy();
             reject(new Error('Timeout for ' + pageUrl));
         });
     });
