@@ -109,6 +109,7 @@ HTML 及相关 API，CSS 标准系列。
 - [Media Capabilities](https://htmlspecs.com/media-capabilities)（[Source](https://www.w3.org/TR/2025/WD-media-capabilities-20250825/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Image Capture](https://htmlspecs.com/image-capture)（[Source](https://www.w3.org/TR/2025/WD-image-capture-20250423/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Encrypted Media Extensions](https://htmlspecs.com/encrypted-media-2)（[Source](https://www.w3.org/TR/2025/WD-encrypted-media-2-20250821/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [WebXR Device API](https://htmlspecs.com/webxr)（[Source](https://www.w3.org/TR/2025/CRD-webxr-20250417/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 
 ### 开发者工具
 - [Console](https://htmlspecs.com/console)（[Source](https://console.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）

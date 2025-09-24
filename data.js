@@ -790,14 +790,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "WebXR Device API",
-    //     href: "https://htmlspecs.com/webxr",
-    //     src: "https://www.w3.org/TR/2025/CRD-webxr-20250417/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "WebXR Device API",
+        href: "https://htmlspecs.com/webxr",
+        src: "https://www.w3.org/TR/2025/CRD-webxr-20250417/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
 
     //### 开发者工具|개발자 도구|開発者ツール
     {
