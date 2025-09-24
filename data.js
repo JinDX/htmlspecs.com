@@ -120,8 +120,8 @@ const links = [
     // // WebAssembly 相关|WebAssembly 관련|WebAssembly 関連
     // {
     //     text: "WebAssembly Core Specification",
-    //     href: "https://htmlspecs.com/webassembly-core",
-    //     src: "https://webassembly.github.io/spec/core/",
+    //     href: "https://htmlspecs.com/wasm-core",
+    //     src: "https://webassembly.github.io/spec/core/bikeshed/",
     //     "last-modified": "-",
     //     lang: "cjk",
     //     state: "Draft"
