@@ -42,7 +42,7 @@ HTML 及相关 API，CSS 标准系列。
 - [File System](https://htmlspecs.com/fs)（[Source](https://fs.spec.whatwg.org) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [Cookie Store API](https://htmlspecs.com/cookiestore)（[Source](https://cookiestore.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [File and Directory Entries API](https://htmlspecs.com/entries-api)（[Source](https://wicg.github.io/entries-api/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
-- [Web Locks API](https://htmlspecs.com/web-locks)（[Source](https://www.w3.org/TR/2023/WD-web-locks-20230105/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Web Locks API](https://htmlspecs.com/web-locks)（[Source](https://www.w3.org/TR/2025/WD-web-locks-20250924/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 
 ### 设备和硬件访问
 - [Pointer Events](https://htmlspecs.com/pointerevents2)（[Source](https://www.w3.org/TR/2019/REC-pointerevents2-20190404/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）

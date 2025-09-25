@@ -285,7 +285,7 @@ const links = [
     {
         text: "Web Locks API",
         href: "https://htmlspecs.com/web-locks",
-        src: "https://www.w3.org/TR/2023/WD-web-locks-20230105/",
+        src: "https://www.w3.org/TR/2025/WD-web-locks-20250924/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
