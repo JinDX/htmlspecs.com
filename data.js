@@ -769,7 +769,7 @@ const links = [
         src: "https://www.w3.org/TR/2025/CRD-webxr-20250417/",
         "last-modified": "-",
         lang: "cjk",
-        state: "WD"
+        state: "CRD"
     },
 
     //### 开发者工具|개발자 도구|開発者ツール
