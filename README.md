@@ -29,7 +29,7 @@ HTML 及相关 API，CSS 标准系列。
 - [WebSockets](https://htmlspecs.com/websockets)（[Source](https://websockets.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [WebTransport](https://htmlspecs.com/webtransport)（[Source](https://www.w3.org/TR/2025/WD-webtransport-20250702/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Service Workers](https://htmlspecs.com/service-workers)（[Source](https://www.w3.org/TR/2025/CRD-service-workers-20250306/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
-- [Push API](https://htmlspecs.com/push-api)（[Source](https://www.w3.org/TR/2025/WD-push-api-20250910/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Push API](https://htmlspecs.com/push-api)（[Source](https://www.w3.org/TR/2025/WD-push-api-20250925/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [WebRTC](https://htmlspecs.com/webrtc)（[Source](https://www.w3.org/TR/2025/REC-webrtc-20250313/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Payment Request API](https://htmlspecs.com/payment-request)（[Source](https://www.w3.org/TR/2025/CRD-payment-request-20250815/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [Background Fetch](https://htmlspecs.com/background-fetch)（[Source](https://wicg.github.io/background-fetch/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
@@ -54,7 +54,7 @@ HTML 及相关 API，CSS 标准系列。
 - [Touch Events - Level 2](https://htmlspecs.com/touch-events)（[Source](https://www.w3.org/community/reports/touchevents/CG-FINAL-touch-events-20240704/) ![Community Group Final Report](https://img.shields.io/badge/CG--FINAL-ffcc00)）
 - [Contact Picker API](https://htmlspecs.com/contact-picker)（[Source](https://www.w3.org/TR/2024/WD-contact-picker-20240708/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Notifications API](https://htmlspecs.com/notifications)（[Source](https://notifications.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
-- [Badging API](https://htmlspecs.com/badging)（[Source](https://www.w3.org/TR/2025/WD-badging-20250922/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Badging API](https://htmlspecs.com/badging)（[Source](https://www.w3.org/TR/2025/WD-badging-20250925/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Virtual Keyboard](https://htmlspecs.com/virtual-keyboard)（[Source](https://www.w3.org/TR/2022/WD-virtual-keyboard-20220505/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Web Share API](https://htmlspecs.com/web-share)（[Source](https://www.w3.org/TR/2023/REC-web-share-20230530/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Web Audio API](https://htmlspecs.com/webaudio)（[Source](https://www.w3.org/TR/2024/WD-webaudio-1.1-20241105/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
@@ -103,7 +103,7 @@ HTML 及相关 API，CSS 标准系列。
 - [Picture-in-Picture](https://htmlspecs.com/picture-in-picture)（[Source](https://www.w3.org/TR/2025/WD-picture-in-picture-20250820/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Presentation API](https://htmlspecs.com/presentation-api)（[Source](https://www.w3.org/TR/2025/CRD-presentation-api-20250212/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [Scroll-driven Animations](https://htmlspecs.com/scroll-animations-1)（[Source](https://www.w3.org/TR/2023/WD-scroll-animations-1-20230606/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
-- [Media Capture and Streams](https://htmlspecs.com/mediacapture-streams)（[Source](https://www.w3.org/TR/2025/CRD-mediacapture-streams-20250911/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
+- [Media Capture and Streams](https://htmlspecs.com/mediacapture-streams)（[Source](https://www.w3.org/TR/2025/CRD-mediacapture-streams-20250925/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [WebCodecs](https://htmlspecs.com/webcodecs)（[Source](https://www.w3.org/TR/2025/WD-webcodecs-20250708/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Media Session](https://htmlspecs.com/mediasession)（[Source](https://www.w3.org/TR/2025/WD-mediasession-20250919/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Media Capabilities](https://htmlspecs.com/media-capabilities)（[Source](https://www.w3.org/TR/2025/WD-media-capabilities-20250825/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
