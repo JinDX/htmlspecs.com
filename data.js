@@ -718,7 +718,7 @@ const links = [
     {
         text: "Media Capture and Streams",
         href: "https://htmlspecs.com/mediacapture-streams",
-        src: "https://www.w3.org/TR/2025/CRD-mediacapture-streams-20250911/",
+        src: "https://www.w3.org/TR/2025/CRD-mediacapture-streams-20250925/",
         "last-modified": "-",
         lang: "cjk",
         state: "CRD"
