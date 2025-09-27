@@ -447,7 +447,7 @@ const links = [
     {
         text: "Permissions",
         href: "https://htmlspecs.com/permissions",
-        src: "https://www.w3.org/TR/2025/WD-permissions-20250624/",
+        src: "https://www.w3.org/TR/2025/WD-permissions-20250926/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
