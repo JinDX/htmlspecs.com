@@ -415,7 +415,7 @@ const links = [
     {
         text: "Pointer Lock 2.0",
         href: "https://htmlspecs.com/pointerlock",
-        src: "https://www.w3.org/TR/2024/WD-pointerlock-2-20240617/",
+        src: "https://www.w3.org/TR/2025/WD-pointerlock-2-20250929/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"

@@ -60,7 +60,7 @@ HTML 及相关 API，CSS 标准系列。
 - [Web Audio API](https://htmlspecs.com/webaudio)（[Source](https://www.w3.org/TR/2024/WD-webaudio-1.1-20241105/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Geolocation API](https://htmlspecs.com/geolocation)（[Source](https://www.w3.org/TR/2025/REC-geolocation-20250923/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Device Orientation and Motion](https://htmlspecs.com/orientation-event)（[Source](https://www.w3.org/TR/2025/CRD-orientation-event-20250212/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
-- [Pointer Lock 2.0](https://htmlspecs.com/pointerlock)（[Source](https://www.w3.org/TR/2024/WD-pointerlock-2-20240617/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Pointer Lock 2.0](https://htmlspecs.com/pointerlock)（[Source](https://www.w3.org/TR/2025/WD-pointerlock-2-20250929/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Clipboard API and events](https://htmlspecs.com/clipboard-apis)（[Source](https://www.w3.org/TR/2025/WD-clipboard-apis-20250516/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Input Events Level 1](https://htmlspecs.com/input-events-1)（[Source](https://www.w3.org/TR/2023/DISC-input-events-1-20230928/) ![Discontinued Draft](https://img.shields.io/badge/DISC-ffcc00)）
 - [Input Events Level 2](https://htmlspecs.com/input-events-2)（[Source](https://www.w3.org/TR/2025/WD-input-events-2-20250814/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
