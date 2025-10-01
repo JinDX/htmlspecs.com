@@ -1161,7 +1161,7 @@ const cssLinks = [
     {
         text: "CSS Images Module Level 4",
         href: "https://htmlspecs.com/css/css-images-4",
-        src: "https://www.w3.org/TR/2023/WD-css-images-4-20230217/",
+        src: "https://www.w3.org/TR/2025/WD-css-images-4-20250930/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
