@@ -1188,7 +1188,7 @@ const cssLinks = [
     //     src: "https://www.w3.org/TR/2023/CRD-css-images-3-20231218/",
     //     "last-modified": "-",
     //     lang: "cjk",
-    //     state: "CR"
+    //     state: "CRD"
     // },
     {
         text: "CSS Images Module Level 4",
