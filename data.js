@@ -1531,7 +1531,7 @@ const cssLinks = [
         state: "WD"
     },
     {
-        text: "CSS Paint API Level 1",
+        text: "CSS Painting API Level 1",
         href: "https://htmlspecs.com/css/css-paint-api-1",
         src: "https://www.w3.org/TR/2021/CRD-css-paint-api-1-20211216/",
         "last-modified": "-",

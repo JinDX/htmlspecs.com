@@ -234,7 +234,7 @@ HTML 及相关 API，CSS 标准系列。
 
 ### CSS Houdini APIs
 - [CSS Typed OM Level 1](https://htmlspecs.com/css/css-typed-om-1)（[Source](https://www.w3.org/TR/2024/WD-css-typed-om-1-20240321/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
-- [CSS Paint API Level 1](https://htmlspecs.com/css/css-paint-api-1)（[Source](https://www.w3.org/TR/2021/CRD-css-paint-api-1-20211216/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
+- [CSS Painting API Level 1](https://htmlspecs.com/css/css-paint-api-1)（[Source](https://www.w3.org/TR/2021/CRD-css-paint-api-1-20211216/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [CSS Layout API Level 1](https://htmlspecs.com/css/css-layout-api-1)（[Source](https://www.w3.org/TR/2018/WD-css-layout-api-1-20180412/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Properties and Values API Level 1](https://htmlspecs.com/css/css-properties-values-api-1)（[Source](https://www.w3.org/TR/2024/WD-css-properties-values-api-1-20240326/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 
