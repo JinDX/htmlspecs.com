@@ -844,14 +844,14 @@ const cssLinks = [
         lang: "cjk",
         state: "CRD"
     },
-    // {
-    //     text: "CSS Conditional Rules Module Level 3",
-    //     href: "https://htmlspecs.com/css/css-conditional-3",
-    //     src: "https://www.w3.org/TR/2024/CRD-css-conditional-3-20240815/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "CRD"
-    // },
+    {
+        text: "CSS Conditional Rules Module Level 3",
+        href: "https://htmlspecs.com/css/css-conditional-3",
+        src: "https://www.w3.org/TR/2024/CRD-css-conditional-3-20240815/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "CRD"
+    },
     {
         text: "CSS Conditional Rules Module Level 4",
         href: "https://htmlspecs.com/css/css-conditional-4",
