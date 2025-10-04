@@ -844,6 +844,14 @@ const cssLinks = [
         lang: "cjk",
         state: "CRD"
     },
+    // {
+    //     text: "CSS Conditional Rules Module Level 3",
+    //     href: "https://htmlspecs.com/css/css-conditional-3",
+    //     src: "https://www.w3.org/TR/2024/CRD-css-conditional-3-20240815/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "CRD"
+    // },
     {
         text: "CSS Conditional Rules Module Level 4",
         href: "https://htmlspecs.com/css/css-conditional-4",
@@ -936,6 +944,22 @@ const cssLinks = [
         lang: "cjk",
         state: "CRD"
     },
+    // {
+    //     text: "CSS Ruby Layout Module Level 1",
+    //     href: "https://htmlspecs.com/css/css-ruby-1",
+    //     src: "https://www.w3.org/TR/2022/WD-css-ruby-1-20221231/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
+    // {
+    //     text: "CSS Text Decoration Level 4",
+    //     href: "https://htmlspecs.com/css/css-text-decor-4",
+    //     src: "https://www.w3.org/TR/2022/WD-css-text-decor-4-20220504/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
 
     //### 媒体查询|미디어 쿼리|メディアクエリ
     {
@@ -1158,6 +1182,14 @@ const cssLinks = [
     },
 
     //### 图像|이미지|画像
+    // {
+    //     text: "CSS Images Module Level 3",
+    //     href: "https://htmlspecs.com/css/css-images-3",
+    //     src: "https://www.w3.org/TR/2023/CRD-css-images-3-20231218/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "CR"
+    // },
     {
         text: "CSS Images Module Level 4",
         href: "https://htmlspecs.com/css/css-images-4",
@@ -1504,6 +1536,14 @@ const cssLinks = [
         lang: "cjk",
         state: "CRD"
     },
+    // {
+    //     text: "CSS Values and Units Module Level 4",
+    //     href: "https://htmlspecs.com/css/css-values-4",
+    //     src: "https://www.w3.org/TR/2024/WD-css-values-4-20240312/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "CSS Logical Properties and Values Level 1",
         href: "https://htmlspecs.com/css/css-logical-1",
