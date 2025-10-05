@@ -1182,14 +1182,14 @@ const cssLinks = [
     },
 
     //### 图像|이미지|画像
-    // {
-    //     text: "CSS Images Module Level 3",
-    //     href: "https://htmlspecs.com/css/css-images-3",
-    //     src: "https://www.w3.org/TR/2023/CRD-css-images-3-20231218/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "CRD"
-    // },
+    {
+        text: "CSS Images Module Level 3",
+        href: "https://htmlspecs.com/css/css-images-3",
+        src: "https://www.w3.org/TR/2023/CRD-css-images-3-20231218/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "CRD"
+    },
     {
         text: "CSS Images Module Level 4",
         href: "https://htmlspecs.com/css/css-images-4",
