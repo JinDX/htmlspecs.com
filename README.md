@@ -233,6 +233,7 @@ HTML 及相关 API，CSS 标准系列。
 - [CSS Basic User Interface Module Level 4](https://htmlspecs.com/css/css-ui-4)（[Source](https://www.w3.org/TR/2021/WD-css-ui-4-20210316/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Syntax Module Level 3](https://htmlspecs.com/css/css-syntax-3)（[Source](https://www.w3.org/TR/2021/CRD-css-syntax-3-20211224/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [CSS Values and Units Module Level 3](https://htmlspecs.com/css/css-values-3)（[Source](https://www.w3.org/TR/2024/CRD-css-values-3-20240322/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
+- [CSS Values and Units Module Level 4](https://htmlspecs.com/css/css-values-4)（[Source](https://www.w3.org/TR/2024/WD-css-values-4-20240312/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Logical Properties and Values Level 1](https://htmlspecs.com/css/css-logical-1)（[Source](https://www.w3.org/TR/2018/WD-css-logical-1-20180827/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Mixins Module Level 1](https://htmlspecs.com/css/css-mixins-1)（[Source](https://www.w3.org/TR/2025/WD-css-mixins-1-20250515/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 
