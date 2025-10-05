@@ -140,8 +140,8 @@ HTML 及相关 API，CSS 标准系列。
 - [CSS Counter Styles Level 3](https://htmlspecs.com/css/css-counter-styles-3)（[Source](https://www.w3.org/TR/2021/CR-css-counter-styles-3-20210727/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
 - [CSS Lists and Counters Module Level 3](https://htmlspecs.com/css/css-lists-3)（[Source](https://www.w3.org/TR/2020/WD-css-lists-3-20201117/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Text Decoration Level 3](https://htmlspecs.com/css/css-text-decor-3)（[Source](https://www.w3.org/TR/2022/CRD-css-text-decor-3-20220505/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
-- [CSS Ruby Layout Module Level 1](https://htmlspecs.com/css/css-ruby-1)（[Source](https://www.w3.org/TR/2022/WD-css-ruby-1-20221231/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Text Decoration Level 4](https://htmlspecs.com/css/css-text-decor-4)（[Source](https://www.w3.org/TR/2022/WD-css-text-decor-4-20220504/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [CSS Ruby Layout Module Level 1](https://htmlspecs.com/css/css-ruby-1)（[Source](https://www.w3.org/TR/2022/WD-css-ruby-1-20221231/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 
 ### 媒体查询
 - [Media Queries Level 3](https://htmlspecs.com/css/mediaqueries-3)（[Source](https://www.w3.org/TR/2024/REC-mediaqueries-3-20240521/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
