@@ -1,11 +1,11 @@
-# 规范检查结果汇总
+# Specification Check Summary
 
-## 检查类别：标准规范 😊
-
-
-
-## 检查类别：CSS 相关规范 😊
+## Checking category: Standard Specifications 😊
 
 
 
-全部检查完成啦！😊
+## Checking category: CSS Related Specifications 😊
+
+
+
+All checks completed! 😊
