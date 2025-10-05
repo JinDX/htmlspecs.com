@@ -1536,14 +1536,14 @@ const cssLinks = [
         lang: "cjk",
         state: "CRD"
     },
-    // {
-    //     text: "CSS Values and Units Module Level 4",
-    //     href: "https://htmlspecs.com/css/css-values-4",
-    //     src: "https://www.w3.org/TR/2024/WD-css-values-4-20240312/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "CSS Values and Units Module Level 4",
+        href: "https://htmlspecs.com/css/css-values-4",
+        src: "https://www.w3.org/TR/2024/WD-css-values-4-20240312/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     // {
     //     text: "CSS Environment Variables Module Level 1",
     //     href: "https://htmlspecs.com/css/css-env-1",
