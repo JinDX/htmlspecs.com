@@ -86,7 +86,7 @@ function createLink(href, text, state) {
         box-sizing: border-box;
     `;
     var titleSpan = document.createElement('span');
-    titleSpan.textContent = text; // 只显示原始文本
+    titleSpan.textContent = text;
     titleSpan.style.cssText = `
         flex: 1 1 auto;
         min-width: 0;
@@ -267,7 +267,6 @@ loadDataScript(function () {
             #dropdownContent { width: 100%; left: 0; right: 0; }
         }
         table.def th { min-width: 5em; }
-        /* 移除原文字徽章样式，使用动态 badge 图片 */
     `;
     document.head.appendChild(style);
 
