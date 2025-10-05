@@ -952,14 +952,14 @@ const cssLinks = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "CSS Text Decoration Level 4",
-    //     href: "https://htmlspecs.com/css/css-text-decor-4",
-    //     src: "https://www.w3.org/TR/2022/WD-css-text-decor-4-20220504/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "CSS Text Decoration Level 4",
+        href: "https://htmlspecs.com/css/css-text-decor-4",
+        src: "https://www.w3.org/TR/2022/WD-css-text-decor-4-20220504/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
 
     //### 媒体查询|미디어 쿼리|メディアクエリ
     {
