@@ -1544,14 +1544,14 @@ const cssLinks = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "CSS Environment Variables Module Level 1",
-    //     href: "https://htmlspecs.com/css/css-env-1",
-    //     src: "https://www.w3.org/TR/2025/WD-css-env-1-20250923/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "CSS Environment Variables Module Level 1",
+        href: "https://htmlspecs.com/css/css-env-1",
+        src: "https://www.w3.org/TR/2025/WD-css-env-1-20250923/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     {
         text: "CSS Logical Properties and Values Level 1",
         href: "https://htmlspecs.com/css/css-logical-1",
