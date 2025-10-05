@@ -944,14 +944,14 @@ const cssLinks = [
         lang: "cjk",
         state: "CRD"
     },
-    // {
-    //     text: "CSS Ruby Layout Module Level 1",
-    //     href: "https://htmlspecs.com/css/css-ruby-1",
-    //     src: "https://www.w3.org/TR/2022/WD-css-ruby-1-20221231/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "CSS Ruby Layout Module Level 1",
+        href: "https://htmlspecs.com/css/css-ruby-1",
+        src: "https://www.w3.org/TR/2022/WD-css-ruby-1-20221231/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     // {
     //     text: "CSS Text Decoration Level 4",
     //     href: "https://htmlspecs.com/css/css-text-decor-4",
