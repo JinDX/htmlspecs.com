@@ -159,7 +159,7 @@ HTML 及相关 API，CSS 标准系列。
 - [CSS Inline Layout Module Level 3](https://htmlspecs.com/css/css-inline-3)（[Source](https://www.w3.org/TR/2024/WD-css-inline-3-20241218/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Multi-column Layout Module Level 1](https://htmlspecs.com/css/css-multicol-1)（[Source](https://www.w3.org/TR/2024/CR-css-multicol-1-20240516/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
 - [CSS Shapes Module Level 1](https://htmlspecs.com/css/css-shapes-1)（[Source](https://www.w3.org/TR/2025/CRD-css-shapes-1-20250612/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
-- [CSS Positioned Layout Module Level 3](https://htmlspecs.com/css/css-position-3)（[Source](https://www.w3.org/TR/2025/WD-css-position-3-20250311/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [CSS Positioned Layout Module Level 3](https://htmlspecs.com/css/css-position-3)（[Source](https://www.w3.org/TR/2025/WD-css-position-3-20251007/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Box Sizing Module Level 3](https://htmlspecs.com/css/css-sizing-3)（[Source](https://www.w3.org/TR/2021/WD-css-sizing-3-20211217/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Box Alignment Module Level 3](https://htmlspecs.com/css/css-align-3)（[Source](https://www.w3.org/TR/2025/WD-css-align-3-20250311/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Overflow Module Level 3](https://htmlspecs.com/css/css-overflow-3)（[Source](https://www.w3.org/TR/2025/WD-css-overflow-3-20251007/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
