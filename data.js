@@ -1095,7 +1095,7 @@ const cssLinks = [
     {
         text: "CSS Overflow Module Level 3",
         href: "https://htmlspecs.com/css/css-overflow-3",
-        src: "https://www.w3.org/TR/2023/WD-css-overflow-3-20230329/",
+        src: "https://www.w3.org/TR/2025/WD-css-overflow-3-20251007/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
