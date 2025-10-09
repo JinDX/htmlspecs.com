@@ -1077,6 +1077,14 @@ const cssLinks = [
         state: "WD"
     },
     {
+        text: "CSS Positioned Layout Module Level 4",
+        href: "https://htmlspecs.com/css/css-position-4",
+        src: "https://www.w3.org/TR/2025/WD-css-position-4-20251007/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
+    {
         text: "CSS Box Sizing Module Level 3",
         href: "https://htmlspecs.com/css/css-sizing-3",
         src: "https://www.w3.org/TR/2021/WD-css-sizing-3-20211217/",
