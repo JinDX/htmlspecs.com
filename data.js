@@ -92,6 +92,14 @@ const links = [
         lang: "cjk",
         state: "LS"
     },
+    // {
+    //     text: "W3C Design Principles",
+    //     href: "https://htmlspecs.com/design-principles",
+    //     src: "https://www.w3.org/TR/2025/NOTE-design-principles-20251007/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "NOTE"
+    // },
     {
         text: "Compression",
         href: "https://htmlspecs.com/compression",
@@ -126,6 +134,14 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
+    // {
+    //     text: "W3C Accessibility Guidelines (WCAG) 3.0",
+    //     href: "https://htmlspecs.com/wcag-3.0",
+    //     src: "https://www.w3.org/TR/2025/WD-wcag-3.0-20250904/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "Accessible Rich Internet Applications (WAI-ARIA) 1.2",
         href: "https://htmlspecs.com/wai-aria",
@@ -624,6 +640,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "Permissions Policy Level 1",
+    //     href: "https://htmlspecs.com/permissions-policy-1",
+    //     src: "https://www.w3.org/TR/2025/WD-permissions-policy-1-20251006/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "Secure Contexts",
         href: "https://htmlspecs.com/secure-contexts",
