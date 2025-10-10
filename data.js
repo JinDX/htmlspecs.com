@@ -92,14 +92,14 @@ const links = [
         lang: "cjk",
         state: "LS"
     },
-    // {
-    //     text: "W3C Design Principles",
-    //     href: "https://htmlspecs.com/design-principles",
-    //     src: "https://www.w3.org/TR/2025/NOTE-design-principles-20251007/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "NOTE"
-    // },
+    {
+        text: "W3C Design Principles",
+        href: "https://htmlspecs.com/design-principles",
+        src: "https://www.w3.org/TR/2025/NOTE-design-principles-20251007/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "NOTE"
+    },
     {
         text: "Compression",
         href: "https://htmlspecs.com/compression",
