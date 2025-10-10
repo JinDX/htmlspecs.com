@@ -93,7 +93,7 @@ const links = [
         state: "LS"
     },
     {
-        text: "W3C Design Principles",
+        text: "Web Platform Design Principles",
         href: "https://htmlspecs.com/design-principles",
         src: "https://www.w3.org/TR/2025/NOTE-design-principles-20251007/",
         "last-modified": "-",
