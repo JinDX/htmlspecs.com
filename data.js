@@ -640,14 +640,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "Permissions Policy Level 1",
-    //     href: "https://htmlspecs.com/permissions-policy-1",
-    //     src: "https://www.w3.org/TR/2025/WD-permissions-policy-1-20251006/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "Permissions Policy Level 1",
+        href: "https://htmlspecs.com/permissions-policy-1",
+        src: "https://www.w3.org/TR/2025/WD-permissions-policy-1-20251006/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     {
         text: "Secure Contexts",
         href: "https://htmlspecs.com/secure-contexts",
