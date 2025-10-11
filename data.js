@@ -680,14 +680,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "Federated Credential Management API (FedCM)",
-    //     href: "https://htmlspecs.com/fedcm",
-    //     src: "https://www.w3.org/TR/2024/WD-fedcm-1-20240820/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "Federated Credential Management API (FedCM)",
+        href: "https://htmlspecs.com/fedcm",
+        src: "https://www.w3.org/TR/2024/WD-fedcm-1-20240820/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
 
 
     //### 媒体和图形|미디어 및 그래픽|メディアとグラフィックス
