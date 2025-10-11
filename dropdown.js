@@ -280,10 +280,23 @@ loadDataScript(function () {
     const allRelevantLinks = [...relevantLinksFromLinks, ...relevantLinksFromCssLinks];
 
     function isCurrentUrlMatchingLink(href) {
+        const normalize = (urlString) => {
+            const url = new URL(urlString);
+            url.hostname = url.hostname.replace(/^(jp\.|ko\.)/, '');
+            const pathname = url.pathname.replace(/\/$/, '') || '/';
+            return {
+                protocol: url.protocol,
+                hostname: url.hostname,
+                pathname,
+            };
+        };
+
         try {
-            const currentHref = window.location.href.replace(/^(https?:\/\/)(jp\.|ko\.)?/, '$1');
-            const normalizedHref = href.replace(/^(https?:\/\/)(jp\.|ko\.)?/, '$1');
-            return currentHref.includes(normalizedHref);
+            const current = normalize(window.location.href);
+            const target = normalize(href);
+            return current.protocol === target.protocol &&
+                current.hostname === target.hostname &&
+                current.pathname === target.pathname;
         } catch (error) {
             console.error('Error accessing window.location.href:', error);
             return false;
