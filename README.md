@@ -97,6 +97,7 @@ HTML 及相关 API，CSS 标准系列。
 - [Referrer Policy](https://htmlspecs.com/referrer-policy)（[Source](https://www.w3.org/TR/2017/CR-referrer-policy-20170126/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
 - [Mixed Content](https://htmlspecs.com/mixed-content)（[Source](https://www.w3.org/TR/2023/CRD-mixed-content-20230223/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [Credential Management Level 1](https://htmlspecs.com/credential-management-1)（[Source](https://www.w3.org/TR/2024/WD-credential-management-1-20240813/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Federated Credential Management API (FedCM)](https://htmlspecs.com/fedcm)（[Source](https://www.w3.org/TR/2024/WD-fedcm-1-20240820/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 
 ### 媒体和图形
 - [WebGPU](https://htmlspecs.com/webgpu)（[Source](https://www.w3.org/TR/2025/CRD-webgpu-20251006/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
