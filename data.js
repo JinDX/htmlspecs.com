@@ -134,14 +134,14 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
-    // {
-    //     text: "W3C Accessibility Guidelines (WCAG) 3.0",
-    //     href: "https://htmlspecs.com/wcag-3.0",
-    //     src: "https://www.w3.org/TR/2025/WD-wcag-3.0-20250904/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "W3C Accessibility Guidelines (WCAG) 3.0",
+        href: "https://htmlspecs.com/wcag-3.0",
+        src: "https://www.w3.org/TR/2025/WD-wcag-3.0-20250904/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     {
         text: "Accessible Rich Internet Applications (WAI-ARIA) 1.2",
         href: "https://htmlspecs.com/wai-aria",
