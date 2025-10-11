@@ -142,10 +142,10 @@ loadDataScript(function () {
     var filteredLinks = links;
     var filteredCssLinks = cssLinks;
 
-    if (window.location.hostname === 'jp.htmlspecs.com' || window.location.pathname.startsWith('/jp')) {
+    if (lang === "jp") {
         filteredLinks = links.filter(link => link.lang.includes('j'));
         filteredCssLinks = cssLinks.filter(link => link.lang.includes('j'));
-    } else if (window.location.hostname === 'ko.htmlspecs.com' || window.location.pathname.startsWith('/ko')) {
+    } else if (lang === "ko") {
         filteredLinks = links.filter(link => link.lang.includes('k'));
         filteredCssLinks = cssLinks.filter(link => link.lang.includes('k'));
     }
