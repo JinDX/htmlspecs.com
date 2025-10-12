@@ -124,6 +124,14 @@ const links = [
         lang: "cjk",
         state: "LS"
     },
+    {
+        text: "Minimum Common Web Platform API",
+        href: "https://htmlspecs.com/min-common-api",
+        src: "https://min-common-api.proposal.wintertc.org/",
+        "last-modified": "Mon, 06 Oct 2025 17:35:48 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
 
     //### 可访问性|접근성|アクセシビリティ
     {
@@ -237,6 +245,14 @@ const links = [
         href: "https://htmlspecs.com/background-fetch",
         src: "https://wicg.github.io/background-fetch/",
         "last-modified": "Wed, 21 Apr 2021 08:58:39 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
+    {
+        text: "User-Agent Client Hints",
+        href: "https://htmlspecs.com/ua-client-hints",
+        src: "https://wicg.github.io/ua-client-hints/",
+        "last-modified": "Fri, 09 May 2025 23:49:01 GMT",
         lang: "cjk",
         state: "Draft"
     },
@@ -581,6 +597,22 @@ const links = [
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
+    },
+    {
+        text: "Deprecation Reporting",
+        href: "https://htmlspecs.com/deprecation-reporting",
+        src: "https://wicg.github.io/deprecation-reporting/",
+        "last-modified": "Mon, 28 Sep 2020 12:06:39 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
+    {
+        text: "Page Lifecycle",
+        href: "https://htmlspecs.com/page-lifecycle",
+        src: "https://wicg.github.io/page-lifecycle/",
+        "last-modified": "Thu, 09 Jun 2022 17:26:10 GMT",
+        lang: "cjk",
+        state: "Draft"
     },
     {
         text: "Server Timing",
