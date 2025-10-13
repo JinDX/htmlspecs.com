@@ -65,7 +65,7 @@ function rewriteHref(href) {
 
 function loadDataScript(callback) {
     var script = document.createElement('script');
-    script.src = '/data.js';
+    script.src = 'https://htmlspecs.com/data.js';
     script.onload = callback;
     document.head.appendChild(script);
 }
