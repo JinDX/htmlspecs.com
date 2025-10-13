@@ -866,6 +866,14 @@ const cssLinks = [
         lang: "cjk",
         state: "WD"
     },
+    {
+        text: "Understanding the CSS Specifications",
+        href: "https://htmlspecs.com/css/read",
+        src: "https://www.w3.org/Style/CSS/read",
+        "last-modified": "Wed, 01 Oct 2025 10:17:52 GMT",
+        lang: "cjk",
+        state: "Guide"
+    },
 
     //### 颜色|색상|色
     {
