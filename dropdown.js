@@ -34,7 +34,8 @@ const stateMap = {
     'CR': ['Candidate Recommendation', 'https://img.shields.io/badge/CR-cfd510'],
     'CG-FINAL': ['Community Group Final Report', 'https://img.shields.io/badge/CG--FINAL-ffcc00'],
     'DISC': ['Discontinued Draft', 'https://img.shields.io/badge/DISC-ffcc00'],
-    'NOTE': ['Note', 'https://img.shields.io/badge/NOTE-309c40']
+    'NOTE': ['Note', 'https://img.shields.io/badge/NOTE-309c40'],
+    'Guide': ['Guide', 'https://img.shields.io/badge/Guide-6c757d']
 };
 
 function getCurrentLang() {
@@ -64,7 +65,7 @@ function rewriteHref(href) {
 
 function loadDataScript(callback) {
     var script = document.createElement('script');
-    script.src = 'https://htmlspecs.com/data.js';
+    script.src = '/data.js';
     script.onload = callback;
     document.head.appendChild(script);
 }
@@ -74,6 +75,7 @@ function createLink(href, text, state) {
     a.href = rewriteHref(href);
     const stateLabel = state && stateMap[state] ? stateMap[state][0] : '';
     a.title = stateLabel ? `${text} (${stateLabel})` : text;
+    const displayText = state === "Guide" ? "How to Read" : text;
     a.style.cssText = `
         display: flex;
         align-items: center;
@@ -86,7 +88,7 @@ function createLink(href, text, state) {
         box-sizing: border-box;
     `;
     var titleSpan = document.createElement('span');
-    titleSpan.textContent = text;
+    titleSpan.textContent = displayText;
     titleSpan.style.cssText = `
         flex: 1 1 auto;
         min-width: 0;
@@ -95,7 +97,7 @@ function createLink(href, text, state) {
         white-space: nowrap;
     `;
     a.appendChild(titleSpan);
-    if (state && stateMap[state]) {
+    if (state && stateMap[state] && state !== "Guide") {
         const [label, badgeUrl] = stateMap[state];
         const img = document.createElement('img');
         img.src = badgeUrl;
@@ -218,8 +220,28 @@ loadDataScript(function () {
     `;
     document.body.appendChild(dropdownContent);
 
+    let lastLinkWrapper = null;
     filteredLinks.forEach(function (link) {
-        dropdownContent.appendChild(createLink(link.href, link.text, link.state));
+        var linkElement = createLink(link.href, link.text, link.state);
+
+        if (link.state === "Guide" && lastLinkWrapper) {
+            const previousLink = lastLinkWrapper.querySelector('a');
+            if (previousLink) {
+                previousLink.style.width = "auto";
+                previousLink.style.flex = "1 1 50%";
+            }
+            lastLinkWrapper.style.display = "flex";
+            lastLinkWrapper.style.gap = "10px";
+            linkElement.style.width = "auto";
+            linkElement.style.flex = "1 1 50%";
+            lastLinkWrapper.appendChild(linkElement);
+            return;
+        }
+
+        var itemWrapper = document.createElement("div");
+        itemWrapper.appendChild(linkElement);
+        dropdownContent.appendChild(itemWrapper);
+        lastLinkWrapper = itemWrapper;
 
         if (link.text === "ECMAScript" || link.text === "ECMA-262") {
             var cssTitle = createLink("#", t.cssRelated);
@@ -239,8 +261,29 @@ loadDataScript(function () {
             cssContent.style.display = "none";
             cssContent.style.padding = "0 15px";
 
+            let lastCssLinkWrapper = null;
+
             filteredCssLinks.forEach(function (link) {
-                cssContent.appendChild(createLink(link.href, link.text, link.state));
+                var cssLinkElement = createLink(link.href, link.text, link.state);
+
+                if (link.state === "Guide" && lastCssLinkWrapper) {
+                    const previousCssLink = lastCssLinkWrapper.querySelector('a');
+                    if (previousCssLink) {
+                        previousCssLink.style.width = "auto";
+                        previousCssLink.style.flex = "1 1 50%";
+                    }
+                    lastCssLinkWrapper.style.display = "flex";
+                    lastCssLinkWrapper.style.gap = "10px";
+                    cssLinkElement.style.width = "auto";
+                    cssLinkElement.style.flex = "1 1 50%";
+                    lastCssLinkWrapper.appendChild(cssLinkElement);
+                    return;
+                }
+
+                var cssItemWrapper = document.createElement("div");
+                cssItemWrapper.appendChild(cssLinkElement);
+                cssContent.appendChild(cssItemWrapper);
+                lastCssLinkWrapper = cssItemWrapper;
             });
 
             cssTitle.onclick = function (event) {

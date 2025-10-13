@@ -114,7 +114,8 @@ const stateMap = {
 };
 
 function linkToMd(link) {
-    const st = stateMap[link.state];
+    const displayText = link.state === 'Guide' ? 'How to Read' : link.text.trim();
+    const st = link.state === 'Guide' ? null : stateMap[link.state];
     const badge = st ? ` ![${st[0]}](${st[1]})` : '';
     let displayHref = link.href;
     const baseDomain = 'https://htmlspecs.com';
@@ -124,18 +125,34 @@ function linkToMd(link) {
     if (link.text === 'ECMAScript' && ecmaLocaleMap[langArg]) {
         displayHref = `https://ecma262.com/${ecmaLocaleMap[langArg]}`;
     }
-    return `- [${link.text.trim()}](${displayHref})（[Source](${link.src})${badge}）`;
+    return `- [${displayText}](${displayHref})（[Source](${link.src})${badge}）`;
 }
 
 function generateMd(classified, cssClassified) {
     const { title, desc } = parseHeader();
     let md = `# ${title}\n${desc}\n\n`;
+    function renderLinksInline(items) {
+        let lines = [];
+        let i = 0;
+        while (i < items.length) {
+            const l = items[i];
+            if (l.state === 'Guide' && i > 0) {
+                // 合并到上一条
+                lines[lines.length - 1] = lines[lines.length - 1].replace(/\n$/, '') + '，' + linkToMd(l) + '\n';
+                i++;
+            } else {
+                lines.push(linkToMd(l) + '\n');
+                i++;
+            }
+        }
+        return lines.join('');
+    }
     for (const cat of categories) {
         const items = classified[cat.id];
         if (items && items.length) {
             const displayName = cat.names[langIndex] || cat.names[0];
             md += `### ${displayName}\n`;
-            items.forEach(l => md += linkToMd(l) + '\n');
+            md += renderLinksInline(items);
             md += '\n';
         }
     }
@@ -148,7 +165,7 @@ function generateMd(classified, cssClassified) {
             } else {
                 md += `### ${displayName}\n`;
             }
-            items.forEach(l => md += linkToMd(l) + '\n');
+            md += renderLinksInline(items);
             md += '\n';
         }
     }

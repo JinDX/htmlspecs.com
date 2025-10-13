@@ -20,6 +20,14 @@ const links = [
         state: "Draft"
     },
     {
+        text: "How to Read the ECMAScript Specification",
+        href: "https://htmlspecs.com/es-howto/",
+        src: "https://timothygu.me/es-howto/",
+        "last-modified": "Sun, 05 Mar 2023 02:34:27 GMT",
+        lang: "cjk",
+        state: "Guide"
+    },
+    {
         text: "DOM",
         href: "https://htmlspecs.com/dom",
         src: "https://dom.spec.whatwg.org/",
