@@ -243,7 +243,7 @@ loadDataScript(function () {
         dropdownContent.appendChild(itemWrapper);
         lastLinkWrapper = itemWrapper;
 
-        if (link.text === "ECMAScript" || link.text === "ECMA-262") {
+        if (["ECMAScript", "ECMA-262", "ECMAScript® 2026 Language Specification"].includes(link.text)) {
             var cssTitle = createLink("#", t.cssRelated);
             cssTitle.style.cursor = "pointer";
             cssTitle.style.padding = "10px 15px";
