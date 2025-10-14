@@ -20,20 +20,20 @@ const links = [
         state: "Draft"
     },
     {
-        text: "ECMAScript® 2026 Internationalization API Specification",
-        href: "https://ecma262.com/",
-        src: "https://tc39.es/ecma402/",
-        "last-modified": "Mon, 13 Oct 2025 18:58:32 GMT",
-        lang: "cjk",
-        state: "Draft"
-    },
-    {
         text: "How to Read the ECMAScript Specification",
         href: "https://htmlspecs.com/es-howto/",
         src: "https://timothygu.me/es-howto/",
         "last-modified": "Sun, 05 Mar 2023 02:34:27 GMT",
         lang: "cjk",
         state: "Guide"
+    },
+    {
+        text: "ECMAScript® 2026 Internationalization API Specification",
+        href: "https://ecma262.com/",
+        src: "https://tc39.es/ecma402/",
+        "last-modified": "Mon, 13 Oct 2025 18:58:32 GMT",
+        lang: "cjk",
+        state: "Draft"
     },
     {
         text: "DOM",
