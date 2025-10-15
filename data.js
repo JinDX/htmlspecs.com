@@ -15,7 +15,7 @@ const links = [
         text: "ECMAScript® 2026 Language Specification",
         href: "https://ecma262.com/",
         src: "https://tc39.es/ecma262/",
-        "last-modified": "Tue, 07 Oct 2025 14:28:26 GMT",
+        "last-modified": "Wed, 15 Oct 2025 01:17:54 GMT",
         lang: "cjk",
         state: "Draft"
     },
@@ -144,7 +144,7 @@ const links = [
         text: "Minimum Common Web Platform API",
         href: "https://htmlspecs.com/min-common-api",
         src: "https://min-common-api.proposal.wintertc.org/",
-        "last-modified": "Mon, 06 Oct 2025 17:35:48 GMT",
+        "last-modified": "Tue, 14 Oct 2025 14:04:47 GMT",
         lang: "cjk",
         state: "Draft"
     },
@@ -750,7 +750,7 @@ const links = [
     {
         text: "WebGPU Shading Language",
         href: "https://htmlspecs.com/WGSL",
-        src: "https://www.w3.org/TR/2025/CRD-WGSL-20250926/",
+        src: "https://www.w3.org/TR/2025/CRD-WGSL-20251014/",
         "last-modified": "-",
         lang: "cjk",
         state: "CRD"
@@ -1103,10 +1103,10 @@ const cssLinks = [
     {
         text: "CSS Flexible Box Layout Module Level 1",
         href: "https://htmlspecs.com/css/css-flexbox-1",
-        src: "https://www.w3.org/TR/2018/CR-css-flexbox-1-20181119/",
+        src: "https://www.w3.org/TR/2025/CRD-css-flexbox-1-20251014/",
         "last-modified": "-",
         lang: "cjk",
-        state: "CR"
+        state: "CRD"
     },
     {
         text: "CSS Grid Layout Module Level 1",

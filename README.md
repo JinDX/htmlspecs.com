@@ -106,7 +106,7 @@ HTML 及相关 API，CSS 标准系列。
 
 ### 媒体和图形
 - [WebGPU](https://htmlspecs.com/webgpu)（[Source](https://www.w3.org/TR/2025/CRD-webgpu-20251014/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
-- [WebGPU Shading Language](https://htmlspecs.com/WGSL)（[Source](https://www.w3.org/TR/2025/CRD-WGSL-20250926/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
+- [WebGPU Shading Language](https://htmlspecs.com/WGSL)（[Source](https://www.w3.org/TR/2025/CRD-WGSL-20251014/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [Web Animations](https://htmlspecs.com/web-animations-1)（[Source](https://www.w3.org/TR/2023/WD-web-animations-1-20230605/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Scalable Vector Graphics (SVG) 2](https://htmlspecs.com/SVG2/)（[Source](https://www.w3.org/TR/2018/CR-SVG2-20181004/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
 - [Picture-in-Picture](https://htmlspecs.com/picture-in-picture)（[Source](https://www.w3.org/TR/2025/WD-picture-in-picture-20250820/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
@@ -161,7 +161,7 @@ HTML 及相关 API，CSS 标准系列。
 - [CSS Box Model Level 3](https://htmlspecs.com/css/css-box-3)（[Source](https://www.w3.org/TR/2024/REC-css-box-3-20240411/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [CSS Box Model Level 4](https://htmlspecs.com/css/css-box-4)（[Source](https://www.w3.org/TR/2024/WD-css-box-4-20240804/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Display Module Level 3](https://htmlspecs.com/css/css-display-3)（[Source](https://www.w3.org/TR/2023/CR-css-display-3-20230330/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
-- [CSS Flexible Box Layout Module Level 1](https://htmlspecs.com/css/css-flexbox-1)（[Source](https://www.w3.org/TR/2018/CR-css-flexbox-1-20181119/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
+- [CSS Flexible Box Layout Module Level 1](https://htmlspecs.com/css/css-flexbox-1)（[Source](https://www.w3.org/TR/2025/CRD-css-flexbox-1-20251014/) ![Candidate Recommendation](https://img.shields.io/badge/CRD-e2a669)）
 - [CSS Grid Layout Module Level 1](https://htmlspecs.com/css/css-grid-1)（[Source](https://www.w3.org/TR/2025/CRD-css-grid-1-20250326/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [CSS Grid Layout Module Level 2](https://htmlspecs.com/css/css-grid-2)（[Source](https://www.w3.org/TR/2025/CRD-css-grid-2-20250326/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [CSS Grid Layout Module Level 3](https://htmlspecs.com/css/css-grid-3)（[Source](https://www.w3.org/TR/2025/WD-css-grid-3-20250917/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
