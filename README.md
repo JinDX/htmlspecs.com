@@ -3,7 +3,7 @@ HTML 及相关 API，CSS 标准系列。
 
 ### 核心规范
 - [HTML](https://htmlspecs.com/)（[Source](https://html.spec.whatwg.org/multipage/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
-- [ECMAScript® 2026 Language Specification](https://ecma262.com/)（[Source](https://tc39.es/ecma262/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)），- [How to Read](https://htmlspecs.com/es-howto/)（[Source](https://timothygu.me/es-howto/)）
+- [ECMAScript® 2026 Language Specification](https://ecma262.com/c)（[Source](https://tc39.es/ecma262/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)），- [How to Read](https://htmlspecs.com/es-howto/)（[Source](https://timothygu.me/es-howto/)）
 - [ECMAScript® 2026 Internationalization API Specification](https://htmlspecs.com/ecma402/)（[Source](https://tc39.es/ecma402/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [DOM](https://htmlspecs.com/dom)（[Source](https://dom.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [URL](https://htmlspecs.com/url)（[Source](https://url.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
@@ -161,7 +161,7 @@ HTML 及相关 API，CSS 标准系列。
 - [CSS Box Model Level 3](https://htmlspecs.com/css/css-box-3)（[Source](https://www.w3.org/TR/2024/REC-css-box-3-20240411/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [CSS Box Model Level 4](https://htmlspecs.com/css/css-box-4)（[Source](https://www.w3.org/TR/2024/WD-css-box-4-20240804/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Display Module Level 3](https://htmlspecs.com/css/css-display-3)（[Source](https://www.w3.org/TR/2023/CR-css-display-3-20230330/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
-- [CSS Flexible Box Layout Module Level 1](https://htmlspecs.com/css/css-flexbox-1)（[Source](https://www.w3.org/TR/2025/CRD-css-flexbox-1-20251014/) ![Candidate Recommendation](https://img.shields.io/badge/CRD-e2a669)）
+- [CSS Flexible Box Layout Module Level 1](https://htmlspecs.com/css/css-flexbox-1)（[Source](https://www.w3.org/TR/2025/CRD-css-flexbox-1-20251014/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [CSS Grid Layout Module Level 1](https://htmlspecs.com/css/css-grid-1)（[Source](https://www.w3.org/TR/2025/CRD-css-grid-1-20250326/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [CSS Grid Layout Module Level 2](https://htmlspecs.com/css/css-grid-2)（[Source](https://www.w3.org/TR/2025/CRD-css-grid-2-20250326/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [CSS Grid Layout Module Level 3](https://htmlspecs.com/css/css-grid-3)（[Source](https://www.w3.org/TR/2025/WD-css-grid-3-20250917/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
