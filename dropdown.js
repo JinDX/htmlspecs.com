@@ -70,12 +70,20 @@ function loadDataScript(callback) {
     document.head.appendChild(script);
 }
 
+function decodeHTML(html) {
+    var textarea = document.createElement('textarea');
+    textarea.innerHTML = html;
+    return textarea.value;
+}
+
 function createLink(href, text, state) {
     var a = document.createElement("a");
+    var decodedText = decodeHTML(text || "");
+
     a.href = rewriteHref(href);
     const stateLabel = state && stateMap[state] ? stateMap[state][0] : '';
-    a.title = stateLabel ? `${text} (${stateLabel})` : text;
-    const displayText = state === "Guide" ? "How to Read" : text;
+    a.title = stateLabel ? `${decodedText} (${stateLabel})` : decodedText;
+    const displayText = state === "Guide" ? "How to Read" : decodedText;
     a.style.cssText = `
         display: flex;
         align-items: center;
@@ -96,6 +104,12 @@ function createLink(href, text, state) {
         text-overflow: ellipsis;
         white-space: nowrap;
     `;
+    if (state === "Guide") {
+        titleSpan.style.flex = "0 0 auto";
+        titleSpan.style.whiteSpace = "nowrap";
+        titleSpan.style.overflow = "visible";
+        titleSpan.style.textOverflow = "unset";
+    }
     a.appendChild(titleSpan);
     if (state && stateMap[state] && state !== "Guide") {
         const [label, badgeUrl] = stateMap[state];
@@ -228,12 +242,16 @@ loadDataScript(function () {
             const previousLink = lastLinkWrapper.querySelector('a');
             if (previousLink) {
                 previousLink.style.width = "auto";
-                previousLink.style.flex = "1 1 50%";
+                previousLink.style.flex = "1 1 calc(100% - 130px)";
+                previousLink.style.minWidth = "0";
             }
             lastLinkWrapper.style.display = "flex";
             lastLinkWrapper.style.gap = "10px";
+            lastLinkWrapper.style.flexWrap = "nowrap";
             linkElement.style.width = "auto";
-            linkElement.style.flex = "1 1 50%";
+            linkElement.style.flex = "0 0 120px";
+            linkElement.style.minWidth = "0";
+            linkElement.style.justifyContent = "center";
             lastLinkWrapper.appendChild(linkElement);
             return;
         }
@@ -270,12 +288,16 @@ loadDataScript(function () {
                     const previousCssLink = lastCssLinkWrapper.querySelector('a');
                     if (previousCssLink) {
                         previousCssLink.style.width = "auto";
-                        previousCssLink.style.flex = "1 1 50%";
+                        previousCssLink.style.flex = "1 1 calc(100% - 130px)";
+                        previousCssLink.style.minWidth = "0";
                     }
                     lastCssLinkWrapper.style.display = "flex";
                     lastCssLinkWrapper.style.gap = "10px";
+                    lastCssLinkWrapper.style.flexWrap = "nowrap";
                     cssLinkElement.style.width = "auto";
-                    cssLinkElement.style.flex = "1 1 50%";
+                    cssLinkElement.style.flex = "0 0 120px";
+                    cssLinkElement.style.minWidth = "0";
+                    cssLinkElement.style.justifyContent = "center";
                     lastCssLinkWrapper.appendChild(cssLinkElement);
                     return;
                 }
