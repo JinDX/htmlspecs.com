@@ -668,7 +668,7 @@ const links = [
         text: "HTML Sanitizer API",
         href: "https://htmlspecs.com/sanitizer-api",
         src: "https://wicg.github.io/sanitizer-api/",
-        "last-modified": "Mon, 06 Oct 2025 13:27:51 GMT",
+        "last-modified": "Wed, 15 Oct 2025 09:25:24 GMT",
         lang: "cjk",
         state: "Draft"
     },
