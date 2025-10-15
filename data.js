@@ -1103,10 +1103,10 @@ const cssLinks = [
     {
         text: "CSS Flexible Box Layout Module Level 1",
         href: "https://htmlspecs.com/css/css-flexbox-1",
-        src: "https://www.w3.org/TR/2018/CR-css-flexbox-1-20181119/",
+        src: "https://www.w3.org/TR/2025/CRD-css-flexbox-1-20251014/",
         "last-modified": "-",
         lang: "cjk",
-        state: "CR"
+        state: "CRD"
     },
     {
         text: "CSS Grid Layout Module Level 1",
