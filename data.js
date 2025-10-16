@@ -256,6 +256,14 @@ const links = [
         lang: "cjk",
         state: "CRD"
     },
+    // {
+    //     text: "Payment Handler API",
+    //     href: "https://htmlspecs.com/payment-handler",
+    //     src: "https://www.w3.org/TR/2025/WD-payment-handler-20250927/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "Background Fetch",
         href: "https://htmlspecs.com/background-fetch",
@@ -532,6 +540,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "Vibration API",
+    //     href: "https://htmlspecs.com/vibration",
+    //     src: "https://www.w3.org/TR/2025/CRD-vibration-20250212/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "CRD"
+    // },
 
     //### 性能和观察者|성능 및 옵저버|パフォーマンスとオブザーバ
     {
@@ -803,6 +819,14 @@ const links = [
         lang: "cjk",
         state: "CRD"
     },
+    // {
+    //     text: "Media Source Extensions",
+    //     href: "https://htmlspecs.com/media-source",
+    //     src: "https://www.w3.org/TR/2025/WD-media-source-2-20250821/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "WebCodecs",
         href: "https://htmlspecs.com/webcodecs",
@@ -1670,6 +1694,7 @@ const cssLinks = [
         text: "CSS Typed OM Level 1",
         href: "https://htmlspecs.com/css/css-typed-om-1",
         src: "https://www.w3.org/TR/2024/WD-css-typed-om-1-20240321/",
+       
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
