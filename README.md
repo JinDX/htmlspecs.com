@@ -115,6 +115,7 @@ HTML 及相关 API，CSS 标准系列。
 - [Presentation API](https://htmlspecs.com/presentation-api)（[Source](https://www.w3.org/TR/2025/CRD-presentation-api-20250212/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [Scroll-driven Animations](https://htmlspecs.com/scroll-animations-1)（[Source](https://www.w3.org/TR/2023/WD-scroll-animations-1-20230606/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Media Capture and Streams](https://htmlspecs.com/mediacapture-streams)（[Source](https://www.w3.org/TR/2025/CRD-mediacapture-streams-20251009/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
+- [Media Source Extensions](https://htmlspecs.com/media-source-2)（[Source](https://www.w3.org/TR/2025/WD-media-source-2-20250821/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [WebCodecs](https://htmlspecs.com/webcodecs)（[Source](https://www.w3.org/TR/2025/WD-webcodecs-20250708/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Media Session](https://htmlspecs.com/mediasession)（[Source](https://www.w3.org/TR/2025/WD-mediasession-20250919/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Media Capabilities](https://htmlspecs.com/media-capabilities)（[Source](https://www.w3.org/TR/2025/WD-media-capabilities-20250825/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
