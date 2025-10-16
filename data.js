@@ -819,14 +819,14 @@ const links = [
         lang: "cjk",
         state: "CRD"
     },
-    // {
-    //     text: "Media Source Extensions",
-    //     href: "https://htmlspecs.com/media-source",
-    //     src: "https://www.w3.org/TR/2025/WD-media-source-2-20250821/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "Media Source Extensions",
+        href: "https://htmlspecs.com/media-source-2",
+        src: "https://www.w3.org/TR/2025/WD-media-source-2-20250821/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     {
         text: "WebCodecs",
         href: "https://htmlspecs.com/webcodecs",
