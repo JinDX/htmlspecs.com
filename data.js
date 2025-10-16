@@ -256,14 +256,14 @@ const links = [
         lang: "cjk",
         state: "CRD"
     },
-    // {
-    //     text: "Payment Handler API",
-    //     href: "https://htmlspecs.com/payment-handler",
-    //     src: "https://www.w3.org/TR/2025/WD-payment-handler-20250927/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "Payment Handler API",
+        href: "https://htmlspecs.com/payment-handler",
+        src: "https://www.w3.org/TR/2025/WD-payment-handler-20250927/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     {
         text: "Background Fetch",
         href: "https://htmlspecs.com/background-fetch",
