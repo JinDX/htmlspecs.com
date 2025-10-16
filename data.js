@@ -540,14 +540,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "Vibration API",
-    //     href: "https://htmlspecs.com/vibration",
-    //     src: "https://www.w3.org/TR/2025/CRD-vibration-20250212/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "CRD"
-    // },
+    {
+        text: "Vibration API",
+        href: "https://htmlspecs.com/vibration",
+        src: "https://www.w3.org/TR/2025/CRD-vibration-20250212/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "CRD"
+    },
 
     //### 性能和观察者|성능 및 옵저버|パフォーマンスとオブザーバ
     {
