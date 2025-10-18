@@ -92,7 +92,7 @@ HTML 及相关 API，CSS 标准系列。
 - [Page Lifecycle](https://htmlspecs.com/page-lifecycle)（[Source](https://wicg.github.io/page-lifecycle/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Server Timing](https://htmlspecs.com/server-timing)（[Source](https://www.w3.org/TR/2023/WD-server-timing-20230411/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Paint Timing](https://htmlspecs.com/paint-timing)（[Source](https://www.w3.org/TR/2025/WD-paint-timing-20250915/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
-- [Event Timing API](https://htmlspecs.com/event-timing)（[Source](https://www.w3.org/TR/2025/WD-event-timing-20250526/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Event Timing API](https://htmlspecs.com/event-timing)（[Source](https://www.w3.org/TR/2025/WD-event-timing-20251017/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 
 ### 安全和认证
 - [Web Authentication Level 2](https://htmlspecs.com/webauthn-2)（[Source](https://www.w3.org/TR/2021/REC-webauthn-2-20210408/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
