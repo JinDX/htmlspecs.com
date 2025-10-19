@@ -373,6 +373,14 @@ const links = [
         state: "WD"
     },
     {
+        text: "Screen Wake Lock",
+        href: "https://htmlspecs.com/screen-wake-lock",
+        src: "https://www.w3.org/TR/2024/WD-screen-wake-lock-20241024/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
+    {
         text: "EyeDropper API",
         href: "https://htmlspecs.com/eyedropper-api",
         src: "https://wicg.github.io/eyedropper-api/",
