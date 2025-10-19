@@ -175,6 +175,14 @@ const links = [
         state: "REC"
     },
     {
+        text: "ARIA in HTML",
+        href: "https://htmlspecs.com/html-aria",
+        src: "https://www.w3.org/TR/2025/REC-html-aria-20250805/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "REC"
+    },
+    {
         text: "Accessible Name and Description Computation 1.1",
         href: "https://htmlspecs.com/accname-1.1",
         src: "https://www.w3.org/TR/2018/REC-accname-1.1-20181218/",
