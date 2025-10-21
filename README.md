@@ -93,7 +93,7 @@ HTML 及相关 API，CSS 标准系列。
 - [Deprecation Reporting](https://htmlspecs.com/deprecation-reporting)（[Source](https://wicg.github.io/deprecation-reporting/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Page Lifecycle](https://htmlspecs.com/page-lifecycle)（[Source](https://wicg.github.io/page-lifecycle/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Server Timing](https://htmlspecs.com/server-timing)（[Source](https://www.w3.org/TR/2023/WD-server-timing-20230411/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
-- [Paint Timing](https://htmlspecs.com/paint-timing)（[Source](https://www.w3.org/TR/2025/WD-paint-timing-20250915/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Paint Timing](https://htmlspecs.com/paint-timing)（[Source](https://www.w3.org/TR/2025/WD-paint-timing-20251020/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Event Timing API](https://htmlspecs.com/event-timing)（[Source](https://www.w3.org/TR/2025/WD-event-timing-20251017/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 
 ### 安全和认证
