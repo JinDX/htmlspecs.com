@@ -15,7 +15,7 @@ const links = [
         text: "ECMAScript® 2026 Language Specification",
         href: "https://ecma262.com/",
         src: "https://tc39.es/ecma262/",
-        "last-modified": "Thu, 16 Oct 2025 21:13:00 GMT",
+        "last-modified": "Mon, 20 Oct 2025 21:20:14 GMT",
         lang: "cjk",
         state: "Draft"
     },
@@ -111,7 +111,7 @@ const links = [
     {
         text: "Web Platform Design Principles",
         href: "https://htmlspecs.com/design-principles",
-        src: "https://www.w3.org/TR/2025/NOTE-design-principles-20251007/",
+        src: "https://www.w3.org/TR/2025/NOTE-design-principles-20251020/",
         "last-modified": "-",
         lang: "cjk",
         state: "NOTE"
