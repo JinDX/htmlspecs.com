@@ -1463,7 +1463,7 @@ For darkmode:
         </p>
         <h1 class="p-name no-ref" id="title">WebGPU 着色语言</h1>
         <p id="w3c-state"><a href="https://www.w3.org/standards/types/#CRD">W3C 候选推荐草案</a>,
-            <time class="dt-updated" datetime="2025-10-17">2025年10月17日</time>
+            <time class="dt-updated" datetime="2025-10-20">2025年10月20日</time>
         </p>
         <details open>
             <summary>关于本文档的更多信息</summary>
@@ -1471,14 +1471,14 @@ For darkmode:
                 <dl>
                     <dt>此版本:
                     <dd><a class="u-url"
-                            href="https://www.w3.org/TR/2025/CRD-WGSL-20251017/">https://www.w3.org/TR/2025/CRD-WGSL-20251017/</a>
+                            href="https://www.w3.org/TR/2025/CRD-WGSL-20251020/">https://www.w3.org/TR/2025/CRD-WGSL-20251020/</a>
                     <dt>最新发布版本:
                     <dd><a href="https://www.w3.org/TR/WGSL/">https://www.w3.org/TR/WGSL/</a>
                     <dt>编辑草案:
                     <dd><a href="https://gpuweb.github.io/gpuweb/wgsl/">https://gpuweb.github.io/gpuweb/wgsl/</a>
                     <dt>先前版本:
-                    <dd><a href="https://www.w3.org/TR/2025/CRD-WGSL-20251015/"
-                            rel="prev">https://www.w3.org/TR/2025/CRD-WGSL-20251015/</a>
+                    <dd><a href="https://www.w3.org/TR/2025/CRD-WGSL-20251017/"
+                            rel="prev">https://www.w3.org/TR/2025/CRD-WGSL-20251017/</a>
                     <dt>历史记录:
                     <dd><a class="u-url"
                             href="https://www.w3.org/standards/history/WGSL/">https://www.w3.org/standards/history/WGSL/</a>
@@ -14987,51 +14987,90 @@ sampler_comparison
             <p><span class="choice">|</span> <a data-link-type="dfn" href="#syntax-func_call_statement"
                     id="ref-for-syntax-func_call_statement①">func_call_statement</a></p>
         </div>
-        <p><dfn class="dfn-paneled" data-dfn-for="statement" data-dfn-type="dfn" data-noexport
-                id="statement-for">for</dfn> 语句形式为
-            <code>for (initializer; condition; update_part) { body }</code>，其本质是对具有相同<code>body</code>的<a
-                data-link-type="dfn" href="#statement-loop" id="ref-for-statement-loop③">loop</a>语句的语法糖。
-            此外：
+        <p>
+            <dfn class="dfn-paneled" data-dfn-for="statement" data-dfn-type="dfn" data-noexport
+                id="statement-for">for</dfn> 语句是 <a data-link-type="dfn" href="#compound-statement"
+                id="ref-for-compound-statement⑧">复合语句</a> 的语法糖，复合语句中包含一个 <a data-link-type="dfn" href="#statement-loop"
+                id="ref-for-statement-loop③">循环</a> 语句。
+            通常，<code>for</code> 语句的形式如下
         </p>
+        <blockquote>
+            <p><code>for (</code> <em>initializer</em> <code>;</code> <em>condition</em> <code>;</code>
+                <em>update_part</em> <code>) {</code> <em>body</em> <code>}</code>
+            </p>
+        </blockquote>
+        <p>当存在条件表达式时，<code>for</code> 语句会被转换为如下形式的循环：</p>
+        <blockquote>
+            { <br>
+                <em>initializer</em> ; <br>
+                loop { <br>
+                    if !(<em>condition</em>) { break; } <br>
+                    <em>body</em> <br>
+                    continuing { <em>update_part</em> } <br>
+                } <br>
+            }
+        </blockquote>
+
+        当条件表达式缺失时，<code>for</code> 语句会被转换为如下形式的循环：
+
+        <blockquote>
+            { <br>
+                <em>initializer</em> ; <br>
+                loop { <br>
+                    <em>body</em> <br>
+                    continuing { <em>update_part</em> } <br>
+                } <br>
+            }
+        </blockquote>
+        <p>另外：</p>
         <ul>
             <li data-md>
-                <p>如果<code>initializer</code>非空，则在第一次<a data-link-type="dfn" href="#iteration"
-                        id="ref-for-iteration①">迭代</a>前在一个额外的<a data-link-type="dfn" href="#scope"
-                        id="ref-for-scope③">作用域</a>中执行。
-                    初始化器中声明的作用域扩展到循环体结束。</p>
+                <p>如果 <code>initializer</code> 非空，则会在第一次 <a data-link-type="dfn" href="#iteration"
+                        id="ref-for-iteration①">迭代</a> 前，在额外的 <a data-link-type="dfn" href="#scope"
+                        id="ref-for-scope③">作用域</a> 中执行。
+                    初始化器中的声明，其作用域会一直延伸到循环体的末尾。</p>
             <li data-md>
                 <p><a data-link-type="dfn" href="#type-rule-preconditions"
-                        id="ref-for-type-rule-preconditions③">类型规则前置条件</a>：若条件非空，<a data-link-type="dfn"
-                        href="#shader-creation-error" id="ref-for-shader-creation-error①⓪⑧">必须</a>为<a
-                        data-link-type="dfn" href="#bool" id="ref-for-bool⑤">bool</a>类型表达式。
+                        id="ref-for-type-rule-preconditions③">类型规则前置条件</a>：如果条件非空，其值 <a data-link-type="dfn"
+                        href="#shader-creation-error" id="ref-for-shader-creation-error①⓪⑨">必须</a> 是 <a
+                        data-link-type="dfn" href="#bool" id="ref-for-bool⑤">bool</a> 类型的表达式。
                 </p>
                 <ul>
                     <li data-md>
-                        <p>如有条件，则每次执行循环体前立即判断。
-                            若条件为假，则执行<a href="#break-statement">§ 9.4.6 Break Statement</a>，循环结束。
-                            该判断每次循环迭代开始时执行。</p>
+                        <p>如果存在条件表达式，则会在每次执行 for 循环体前立即对其求值。
+                            如果条件为假，则会执行 <a href="#break-statement">§ 9.4.6 Break 语句</a>，结束循环的执行。
+                            该检查会在每次循环迭代开始时进行。
+                        </p>
                 </ul>
             <li data-md>
-                <p>如果<code>update_part</code>非空，则会作为<a data-link-type="dfn" href="#statement-continuing"
-                        id="ref-for-statement-continuing①">continuing</a>语句出现在循环体结尾。</p>
+                <p>如果 <code>update_part</code> 非空，则会在循环构造的末尾成为一个 <a data-link-type="dfn" href="#statement-continuing"
+                        id="ref-for-statement-continuing①">continuing</a> 语句。</p>
+            <li data-md>
+                <p>转换语法糖时，<a data-link-type="dfn" href="#behavioral-requirements"
+                        id="ref-for-behavioral-requirements①⑦">会</a> 重新命名 <code>body</code> 中声明的标识符，以确保
+                    <code>update_part</code> 中的所有标识符依然 <a data-link-type="dfn" href="#resolves"
+                        id="ref-for-resolves②②">解析</a> 到和转换前相同的声明。
+                </p>
         </ul>
-        <p>for 循环的<code>initializer</code>在循环体执行前只执行一次。
-            如果初始化器里有<a data-link-type="dfn" href="#declaration" id="ref-for-declaration①③">声明</a>，其<a
-                data-link-type="dfn" href="#identifier" id="ref-for-identifier②⑥">标识符</a><a data-link-type="dfn"
-                href="#in-scope" id="ref-for-in-scope①③">在作用域内</a>直到<code>body</code>结束。
-            与<code>body</code>里的声明不同，初始化器声明不会在每次迭代时重新初始化。
+        <p>
+            for 循环的 <code>initializer</code> 会在执行循环之前执行一次。
+            当 <a data-link-type="dfn" href="#declaration" id="ref-for-declaration①③">声明</a> 出现在初始化器中时，它的 <a
+                data-link-type="dfn" href="#identifier" id="ref-for-identifier②⑥">标识符</a> 会 <a data-link-type="dfn"
+                href="#in-scope" id="ref-for-in-scope①③">在作用域内</a> 直到 <code>body</code> 末尾。
+            与 <code>body</code> 中的声明不同，初始化器中的声明不会在每次迭代时被重新初始化。
         </p>
-        <p><code>condition</code>、<code>body</code>和<code>update_part</code>按顺序执行，构成一次循环<a data-link-type="dfn"
+        <p>
+            <code>condition</code>、<code>body</code> 和 <code>update_part</code> 会按此顺序执行，形成一次循环 <a data-link-type="dfn"
                 href="#iteration" id="ref-for-iteration②">迭代</a>。
-            <code>body</code>是<a data-link-type="dfn" href="#compound-statement"
-                id="ref-for-compound-statement⑧">复合语句</a>的特殊形式。
-            <code>body</code>中声明的标识符<a data-link-type="dfn" href="#in-scope"
-                id="ref-for-in-scope①④">在作用域内</a>，从下一个语句开始直到<code>body</code>结束。
-            声明每次到达时都会执行，每次新迭代都会新建变量或常量实例并重新初始化。
+            <code>body</code> 是 <a data-link-type="dfn" href="#compound-statement"
+                id="ref-for-compound-statement⑨">复合语句</a> 的一种特殊形式。
+            在 <code>body</code> 中声明的标识符 <a data-link-type="dfn" href="#in-scope"
+                id="ref-for-in-scope①④">在作用域内</a>，从下一个语句开始直到 <code>body</code> 结束。
+            该声明每次被执行时，都会创建一个新的变量或常量实例，并重新初始化。
         </p>
-        <div class="example wgsl function-scope no-marker" id="example-9a4b41da">
-            <a class="self-link" href="#example-9a4b41da"></a>
-            <div class="marker">示例：For 到 Loop 的转换：转换前</div>
+        <div class="example wgsl function-scope no-marker" id="example-02d65fbd">
+            <a class="self-link" href="#example-02d65fbd"></a>
+            <div class="marker">示例：for 到 loop 转换，带条件：转换前</div>
             <pre class="highlight"><c- a>var</c-> <c- n>a</c-><c- p>:</c-> i32 <c- o>=</c-> <c- mi>2</c-><c- p>;</c->
 <c- k>for</c-> <c- p>(</c-><c- a>var</c-> <c- n>i</c-><c- p>:</c-> i32 <c- o>=</c-> <c- mi>0</c-><c- p>;</c-> <c- n>i</c-> <c- o>&lt;</c-> <c- mi>4</c-><c- p>;</c-> <c- n>i</c-><c- o>++</c-><c- p>)</c-> <c- p>{</c->
   <c- k>if</c-> <c- n>a</c-> <c- o>==</c-> <c- mi>0</c-> <c- p>{</c->
@@ -15042,9 +15081,9 @@ sampler_comparison
 </pre>
         </div>
         <p>转换为：</p>
-        <div class="example wgsl function-scope no-marker" id="example-0f3415fb">
-            <a class="self-link" href="#example-0f3415fb"></a>
-            <div class="marker">示例：For 到 Loop 的转换：转换后</div>
+        <div class="example wgsl function-scope no-marker" id="example-ed5ddd93">
+            <a class="self-link" href="#example-ed5ddd93"></a>
+            <div class="marker">示例：for 到 loop 转换，带条件：转换后</div>
             <pre class="highlight"><c- a>var</c-> <c- n>a</c-><c- p>:</c-> i32 <c- o>=</c-> <c- mi>2</c-><c- p>;</c->
 <c- p>{</c-> <c- c1>// 为循环变量 i 引入新作用域</c->
   <c- a>var</c-> <c- n>i</c-><c- p>:</c-> i32 <c- o>=</c-> <c- mi>0</c-><c- p>;</c->
@@ -15065,11 +15104,48 @@ sampler_comparison
 <c- p>}</c->
 </pre>
         </div>
-        <p>如果<a data-link-type="dfn" href="#statement-for" id="ref-for-statement-for③">for</a>循环会执行无限多次<a
-                data-link-type="dfn" href="#iteration" id="ref-for-iteration③">迭代</a>，则会发生<a data-link-type="dfn"
-                href="#dynamic-error" id="ref-for-dynamic-error④">动态错误</a>。
-            这可能导致循环提前终止、其它非局部影响，甚至<a data-link-type="dfn" href="https://gpuweb.github.io/gpuweb/#lose-the-device"
-                id="ref-for-lose-the-device①">设备丢失</a>。
+        <div class="example wgsl function-scope no-marker" id="example-d2e2ecf8">
+            <a class="self-link" href="#example-d2e2ecf8"></a>
+            <div class="marker">示例：for 到 loop 转换，无条件：转换前</div>
+            <pre class="highlight"><c- a>var</c-> <c- n>a</c-><c- p>:</c-> i32 <c- o>=</c-> <c- mi>2</c-><c- p>;</c->
+<c- k>for</c-> <c- p>(</c-><c- a>var</c-> <c- n>i</c-><c- p>:</c-> i32 <c- o>=</c-> <c- mi>0</c-><c- p>;</c-> <c- p>;</c-> <c- n>i</c-><c- o>++</c-><c- p>)</c-> <c- p>{</c->
+  <c- k>if</c-> <c- n>a</c-> <c- o>==</c-> <c- mi>0</c-> <c- p>{</c->
+    <c- k>continue</c-><c- p>;</c->
+  <c- p>}</c->
+  <c- k>if</c-> <c- n>i</c-> <c- o>==</c-> <c- mi>4</c-> <c- p>{</c-> <c- k>break</c-><c- p>;</c-> <c- p>}</c->
+  <c- n>a</c-> <c- o>=</c-> <c- n>a</c-> <c- o>+</c-> <c- mi>2</c-><c- p>;</c->
+<c- p>}</c->
+</pre>
+        </div>
+        <p>转换为：</p>
+        <div class="example wgsl function-scope no-marker" id="example-82c3ff67">
+            <a class="self-link" href="#example-82c3ff67"></a>
+            <div class="marker">示例：for 到 loop 转换，无条件：转换后</div>
+            <pre class="highlight"><c- a>var</c-> <c- n>a</c-><c- p>:</c-> i32 <c- o>=</c-> <c- mi>2</c-><c- p>;</c->
+<c- p>{</c-> <c- c1>// 为循环变量 i 引入新作用域</c->
+  <c- a>var</c-> <c- n>i</c-><c- p>:</c-> i32 <c- o>=</c-> <c- mi>0</c-><c- p>;</c->
+  <c- k>loop</c-> <c- p>{</c->
+    <c- c1>// 注意：转换语法糖不会在这里引入 if 分支。</c->
+
+    <c- k>if</c-> <c- n>a</c-> <c- o>==</c-> <c- mi>0</c-> <c- p>{</c->
+      <c- k>continue</c-><c- p>;</c->
+    <c- p>}</c->
+    <c- k>if</c-> <c- n>i</c-> <c- o>==</c-> <c- mi>4</c-> <c- p>{</c-> <c- k>break</c-><c- p>;</c-> <c- p>}</c->
+    <c- n>a</c-> <c- o>=</c-> <c- n>a</c-> <c- o>+</c-> <c- mi>2</c-><c- p>;</c->
+
+    <c- k>continuing</c-> <c- p>{</c->
+      <c- n>i</c-><c- o>++</c-><c- p>;</c->
+    <c- p>}</c->
+  <c- p>}</c->
+<c- p>}</c->
+</pre>
+        </div>
+        <p>
+            如果 <a data-link-type="dfn" href="#statement-for" id="ref-for-statement-for③">for</a> 循环会执行无限次 <a
+                data-link-type="dfn" href="#iteration" id="ref-for-iteration③">迭代</a>，会发生 <a data-link-type="dfn"
+                href="#dynamic-error" id="ref-for-dynamic-error④">运行时错误</a>。
+            这可能导致循环提前终止、产生其他非局部影响，甚至 <a data-link-type="dfn" href="https://gpuweb.github.io/gpuweb/#lose-the-device"
+                id="ref-for-lose-the-device①">丢失设备</a>。
         </p>
         <h4 class="heading settled" data-level="9.4.5" id="while-statement"><span class="secno">9.4.5. </span><span
                 class="content">While 语句</span><a class="self-link" href="#while-statement"></a></h4>
@@ -15091,7 +15167,7 @@ sampler_comparison
             否则，执行本次迭代剩余部分。</p>
         <p><a data-link-type="dfn" href="#type-rule-preconditions"
                 id="ref-for-type-rule-preconditions④">类型规则前置条件</a>：条件<a data-link-type="dfn"
-                href="#shader-creation-error" id="ref-for-shader-creation-error①⓪⑨">必须</a>为<a data-link-type="dfn"
+                href="#shader-creation-error" id="ref-for-shader-creation-error①⓪⑨-">必须</a>为<a data-link-type="dfn"
                 href="#bool" id="ref-for-bool⑥">bool</a>类型。</p>
         <p>while 循环可视为<a data-link-type="dfn" href="#statement-loop" id="ref-for-statement-loop④">loop</a>或<a
                 data-link-type="dfn" href="#statement-for" id="ref-for-statement-for④">for</a>语句的语法糖。
@@ -15281,7 +15357,7 @@ sampler_comparison
         <p><dfn class="dfn-paneled" data-dfn-for="statement" data-dfn-type="dfn" data-noexport
                 id="statement-continuing">continuing</dfn> 语句指定每次循环<a data-link-type="dfn" href="#iteration"
                 id="ref-for-iteration⑦">迭代</a>结束时要执行的<a data-link-type="dfn" href="#compound-statement"
-                id="ref-for-compound-statement⑨">复合语句</a>。
+                id="ref-for-compound-statement①⓪">复合语句</a>。
             该结构是可选的。</p>
         <p>该复合语句<a data-link-type="dfn" href="#shader-creation-error"
                 id="ref-for-shader-creation-error①①⑥">不能</a>包含任意层级的<a data-link-type="dfn" href="#statement-return"
@@ -15321,7 +15397,7 @@ sampler_comparison
                 id="ref-for-fragment">fragment</a>着色器阶段。
         </p>
         <p>更准确地说，执行 <code>discard</code> 语句<a data-link-type="dfn" href="#behavioral-requirements"
-                id="ref-for-behavioral-requirements①⑦">将会</a>：</p>
+                id="ref-for-behavioral-requirements①⑧">将会</a>：</p>
         <ul>
             <li data-md>
                 <p>将当前调用转换为<a data-link-type="dfn" href="#helper-invocation" id="ref-for-helper-invocation①">辅助调用</a>，并
@@ -15331,7 +15407,7 @@ sampler_comparison
                         id="ref-for-gpurenderpipeline①">GPURenderPipeline</a>中被进一步处理。</p>
         </ul>
         <p>只有在 <code>discard</code> 语句之前执行的语句<a data-link-type="dfn" href="#behavioral-requirements"
-                id="ref-for-behavioral-requirements①⑧">会</a>产生可观察到的效果。
+                id="ref-for-behavioral-requirements①⑨">会</a>产生可观察到的效果。
         </p>
         <p class="note" role="note"><span class="marker">注意：</span> <code>discard</code> 语句可以被 fragment
             阶段的任意函数执行，其效果相同：该片元会被丢弃。
@@ -16419,14 +16495,14 @@ sampler_comparison
         <ul>
             <li data-md>
                 <p>如果<var>E</var>是一个标识符，<a data-link-type="dfn" href="#resolves"
-                        id="ref-for-resolves②②">解析</a>为变量，则根标识符为该变量。
+                        id="ref-for-resolves②③">解析</a>为变量，则根标识符为该变量。
                 </p>
             <li data-md>
                 <p>如果<var>E</var>是一个标识符，<a data-link-type="dfn" href="#resolves"
-                        id="ref-for-resolves②③">解析</a>为指针类型的形式参数，则根标识符为该形式参数。</p>
+                        id="ref-for-resolves②④">解析</a>为指针类型的形式参数，则根标识符为该形式参数。</p>
             <li data-md>
                 <p>如果<var>E</var>是一个标识符，<a data-link-type="dfn" href="#resolves"
-                        id="ref-for-resolves②④">解析</a>为带初始化器<var>E2</var>的<a data-link-type="dfn"
+                        id="ref-for-resolves②⑤">解析</a>为带初始化器<var>E2</var>的<a data-link-type="dfn"
                         href="#let-declaration" id="ref-for-let-declaration⑧">let 声明</a>，则根标识符为<var>E2</var>的根标识符。</p>
             <li data-md>
                 <p>如果<var>E</var>的形式为<code>(</code><var>E2</var><code>)</code>、<code>&amp;</code><var>E2</var>、<code>*</code><var>E2</var>或
@@ -16779,7 +16855,7 @@ sampler_comparison
                             id="ref-for-shader-creation-error①⑤⑧">必须</a>是<a data-link-type="dfn"
                             href="#const-expressions" id="ref-for-const-expressions⑤①">常量表达式</a>，
                         <a data-link-type="dfn" href="#resolves"
-                            id="ref-for-resolves②⑤">解析</a>为<code>0</code>或<code>1</code>的<a data-link-type="dfn"
+                            id="ref-for-resolves②⑥">解析</a>为<code>0</code>或<code>1</code>的<a data-link-type="dfn"
                             href="#i32" id="ref-for-i32②⑤">i32</a>或<a data-link-type="dfn" href="#u32"
                             id="ref-for-u32①①">u32</a>值。
 
@@ -17638,17 +17714,22 @@ sampler_comparison
                 id="statically-accessed">静态访问</dfn>：</p>
         <ul>
             <li data-md>
-                <p>在<a data-link-type="dfn" href="#functions-in-a-shader-stage"
-                        id="ref-for-functions-in-a-shader-stage②">着色器阶段的函数</a>声明中出现了解析为 <em>D</em> 的标识符。</p>
+                <p>有一个标识符 <a data-link-type="dfn" href="#resolves" id="ref-for-resolves②⑦">解析</a> 到 <em>D</em>，它出现在任意 <a
+                        data-link-type="dfn" href="#function-declaration" id="ref-for-function-declaration④">声明</a> 的 <a
+                        data-link-type="dfn" href="#functions-in-a-shader-stage"
+                        id="ref-for-functions-in-a-shader-stage②">着色器阶段中的函数</a>中。</p>
             <li data-md>
-                <p>用于为<a data-link-type="dfn" href="#statically-accessed"
-                        id="ref-for-statically-accessed⑦">静态访问</a>声明定义类型时，出现了解析为 <em>D</em> 的标识符。</p>
+                <p>有一个标识符 <a data-link-type="dfn" href="#resolves" id="ref-for-resolves②⑧">解析</a> 到 <em>D</em>，它用于定义某个<a
+                        data-link-type="dfn" href="#statically-accessed"
+                        id="ref-for-statically-accessed⑦">静态访问</a>声明的类型。</p>
             <li data-md>
-                <p>用于<a data-link-type="dfn" href="#statically-accessed"
-                        id="ref-for-statically-accessed⑧">静态访问</a>声明的初始化器中，出现了解析为 <em>D</em> 的标识符。</p>
+                <p>有一个标识符 <a data-link-type="dfn" href="#resolves" id="ref-for-resolves②⑨">解析</a> 到 <em>D</em>，它被用于某个<a
+                        data-link-type="dfn" href="#statically-accessed"
+                        id="ref-for-statically-accessed⑧">静态访问</a>声明的初始化器中。</p>
             <li data-md>
-                <p>用于<a data-link-type="dfn" href="#statically-accessed"
-                        id="ref-for-statically-accessed⑨">静态访问</a>声明使用的属性中，出现了解析为 <em>D</em> 的标识符。</p>
+                <p>有一个标识符 <a data-link-type="dfn" href="#resolves" id="ref-for-resolves③⓪">解析</a> 到 <em>D</em>，它被某个<a
+                        data-link-type="dfn" href="#statically-accessed"
+                        id="ref-for-statically-accessed⑨">静态访问</a>声明所用的属性使用。</p>
         </ul>
         <div class="note" role="note">
             <span class="marker">注意：</span>静态访问是递归定义的，需考虑以下情况：
@@ -18383,7 +18464,7 @@ sampler_comparison
 
                         <p>输出值 (<em>x</em>,<em>y</em>,<em>z</em>,<em>w</em>)
                             <a data-link-type="dfn" href="#behavioral-requirements"
-                                id="ref-for-behavioral-requirements①⑨">将</a>映射为 WebGPU <a data-link-type="dfn"
+                                id="ref-for-behavioral-requirements②⓪">将</a>映射为 WebGPU <a data-link-type="dfn"
                                 href="https://gpuweb.github.io/gpuweb/#ndc" id="ref-for-ndc">归一化设备坐标</a>中的
                             (<em>x</em>/<em>w</em>,
                             <em>y</em>/<em>w</em>, <em>z</em>/<em>w</em>)。
@@ -19042,7 +19123,7 @@ sampler_comparison
                 id="ref-for-attribute-location①①">location</a>分配的顶点输出插值属性是否一致。
             否则会产生<a data-link-type="dfn" href="#pipeline-creation-error"
                 id="ref-for-pipeline-creation-error②⑥">管线创建错误</a><a data-link-type="dfn" href="#behavioral-requirements"
-                id="ref-for-behavioral-requirements②⓪">。</a></p>
+                id="ref-for-behavioral-requirements②①">。</a></p>
         <h4 class="heading settled" data-level="13.3.2" id="resource-interface"><span class="secno">13.3.2. </span><span
                 class="content">资源接口</span><a class="self-link" href="#resource-interface"></a></h4>
         <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="resource">资源</dfn>是一个对象，用于访问某<a
@@ -19465,7 +19546,7 @@ sampler_comparison
             每个内存位置大小为 8 位。
             影响内存的操作会与一组一个或多个内存位置交互。
             对<a data-link-type="dfn" href="#composite" id="ref-for-composite⑥">复合类型</a>的内存操作<a data-link-type="dfn"
-                href="#behavioral-requirements" id="ref-for-behavioral-requirements②①">不会</a>访问填充内存位置。
+                href="#behavioral-requirements" id="ref-for-behavioral-requirements②②">不会</a>访问填充内存位置。
             因此，操作所访问的内存位置集合可能不是连续的。</p>
         <p>如果两组内存位置的交集非空，则称这两组内存位置<dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="overlap">重叠</dfn>。</p>
         <h3 class="heading settled" data-level="14.2" id="memory-access-mode"><span class="secno">14.2. </span><span
@@ -20178,7 +20259,7 @@ sampler_comparison
             = <var>c</var> × <a data-link-type="dfn" href="#alignof"
                 id="ref-for-alignof①①">AlignOf</a>(<var>T</var>)，<var>c</var>为非负整数。</p>
         <p>数据<a data-link-type="dfn" href="#behavioral-requirements"
-                id="ref-for-behavioral-requirements②②">在所有地址空间表现一致</a>。</p>
+                id="ref-for-behavioral-requirements②③">在所有地址空间表现一致</a>。</p>
         <p class="note" role="note"><span class="marker">注意：</span> <a data-link-type="dfn" href="#bool"
                 id="ref-for-bool①⑥">bool</a> 类型不是 <a data-link-type="dfn" href="#host-shareable"
                 id="ref-for-host-shareable①②">主机可共享</a>类型。
@@ -20746,7 +20827,7 @@ sampler_comparison
                         href="#uniformity-function-calls">§ 15.2.7 函数调用一致性规则</a>）</p>
         </ul>
         <p>为确保正确且可移植的行为，WGSL 实现<a data-link-type="dfn" href="#behavioral-requirements"
-                id="ref-for-behavioral-requirements②③">需</a>
+                id="ref-for-behavioral-requirements②④">需</a>
             执行静态<dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport
                 id="uniformity-analysis">一致性分析</dfn>，尝试证明每个集体操作都在<a data-link-type="dfn" href="#uniform-control-flow"
                 id="ref-for-uniform-control-flow③">一致控制流</a>中执行。
@@ -20756,7 +20837,7 @@ sampler_comparison
             在<a data-link-type="dfn" href="#uniform-control-flow"
                 id="ref-for-uniform-control-flow④">一致控制流</a>中执行时，将触发<dfn class="dfn-paneled" data-dfn-type="dfn"
                 data-noexport id="uniformity-failure">一致性失败</dfn>
-            <a data-link-type="dfn" href="#behavioral-requirements" id="ref-for-behavioral-requirements②④">。</a>
+            <a data-link-type="dfn" href="#behavioral-requirements" id="ref-for-behavioral-requirements②⑤">。</a>
         </p>
         <ul>
             <li data-md>
@@ -20852,7 +20933,7 @@ sampler_comparison
                 <li data-md>
                     <p>健全性：对于会破坏内置函数一致性要求的程序，<a data-link-type="dfn" href="#uniformity-failure"
                             id="ref-for-uniformity-failure">一致性失败</a><a data-link-type="dfn"
-                            href="#behavioral-requirements" id="ref-for-behavioral-requirements②⑤">将</a>被触发。</p>
+                            href="#behavioral-requirements" id="ref-for-behavioral-requirements②⑥">将</a>被触发。</p>
                 <li data-md>
                     <p>将一段代码重构为函数或内联函数，只要原本是合法的，就不会导致着色器非法。</p>
                 <li data-md>
@@ -21373,24 +21454,23 @@ sampler_comparison
                 <ul>
                     <li data-md>
                         <p>如果 <em>SE</em> 在<a data-link-type="dfn" href="#type-checking"
-                                id="ref-for-type-checking③">类型检查</a>期间调用了<a data-link-type="dfn" href="#load-rule"
-                                id="ref-for-load-rule①①">加载规则</a>，且<a data-link-type="dfn" href="#root-identifier"
-                                id="ref-for-root-identifier⑤">根标识符</a>
-                            是可变变量，则：</p>
+                                id="ref-for-type-checking③">类型检查</a>期间触发了 <a data-link-type="dfn" href="#load-rule"
+                                id="ref-for-load-rule①①">load 规则</a>，且<a data-link-type="dfn" href="#root-identifier"
+                                id="ref-for-root-identifier⑤">根标识符</a>是可变变量，则：</p>
                         <ul>
                             <li data-md>
-                                <p>在 <em>L</em> 之前新建一个 let 声明 <em>LSE</em>，以 <em>SE</em> 初始化。</p>
+                                <p>在 <em>L</em> 之前立即创建一个新的 let 声明 <em>LSE</em>，并用 <em>SE</em> 初始化。</p>
                             <li data-md>
-                                <p>用由 <em>LSE</em> 组成的<a href="#value-identifier-expr">值标识符表达式</a>替换 <em>L</em> 中的
-                                    <em>SE</em>。
-                                </p>
+                                <p>将 <em>L</em> 中的 <em>SE</em> 替换为由 <em>LSE</em> 组成的<a
+                                        href="#value-identifier-expr">值标识符表达式</a>。</p>
                         </ul>
                 </ul>
             <li data-md>
-                <p>记录 <em>L</em> 可能已被更新的初始化表达式。</p>
+                <p>记录 <em>L</em> （可能已更新）的初始化表达式。</p>
             <li data-md>
-                <p>将所有解析到 <em>L</em> 的<a data-link-type="dfn" href="#identifier" id="ref-for-identifier②⑧">标识符</a>
-                    替换为记录下来的初始化表达式（包裹在<a href="#parenthesized-expressions">括号表达式</a>中）。</p>
+                <p>将每个<a data-link-type="dfn" href="#identifier" id="ref-for-identifier②⑧">标识符</a>，其<a
+                        data-link-type="dfn" href="#resolves" id="ref-for-resolves③①">解析</a>到 <em>L</em>
+                    的，替换为记录下来的初始化表达式（包裹在<a href="#parenthesized-expressions">括号表达式</a>中）。</p>
         </ul>
         <p>这种消糖方式通过在每次使用时直接暴露指针的<a data-link-type="dfn" href="#root-identifier"
                 id="ref-for-root-identifier⑥">根标识符</a>，简化了后续的分析。</p>
@@ -21444,7 +21524,7 @@ sampler_comparison
                 data-link-type="dfn" href="#reference-type" id="ref-for-reference-type①③">引用类型</a>表达式，具体包括如下几种情况：</p>
         <ul>
             <li data-md>
-                <p>标识符 <em>x</em>，其<a data-link-type="dfn" href="#resolves" id="ref-for-resolves③①">解析</a>为一个变量，或</p>
+                <p>标识符 <em>x</em>，其<a data-link-type="dfn" href="#resolves" id="ref-for-resolves③②">解析</a>为一个变量，或</p>
             <li data-md>
                 <p><code>(</code><em>r</em><code>)</code>，其中 <em>r</em> 是一个<a data-link-type="dfn"
                         href="#full-reference" id="ref-for-full-reference">完整引用</a>，或</p>
@@ -21459,7 +21539,7 @@ sampler_comparison
                 <p><code>&amp;</code><em>r</em>，其中 <em>r</em> 是一个<a data-link-type="dfn" href="#full-reference"
                         id="ref-for-full-reference①">完整引用</a>，或</p>
             <li data-md>
-                <p>标识符 <em>p</em>，其<a data-link-type="dfn" href="#resolves" id="ref-for-resolves③②">解析</a>为一个已初始化为<a
+                <p>标识符 <em>p</em>，其<a data-link-type="dfn" href="#resolves" id="ref-for-resolves③③">解析</a>为一个已初始化为<a
                         data-link-type="dfn" href="#full-pointer" id="ref-for-full-pointer①">完整指针</a>的<a
                         data-link-type="dfn" href="#let-declaration" id="ref-for-let-declaration①⓪">let-声明</a>，或</p>
             <li data-md>
@@ -22397,7 +22477,7 @@ sampler_comparison
 
                     <td>
                 <tr>
-                    <td>标识符<a data-link-type="dfn" href="#resolves" id="ref-for-resolves③③">解析</a>为函数作用域变量 "x"，且该标识符作为<a
+                    <td>标识符<a data-link-type="dfn" href="#resolves" id="ref-for-resolves③④">解析</a>为函数作用域变量 "x"，且该标识符作为<a
                             data-link-type="dfn" href="#root-identifier" id="ref-for-root-identifier⑦">根标识符</a>出现在<a
                             data-link-type="dfn" href="#memory-view" id="ref-for-memory-view③③">内存视图</a>
                         表达式 <em>MVE</em> 中，并且在<a data-link-type="dfn" href="#type-checking"
@@ -22419,7 +22499,7 @@ sampler_comparison
                             （见 <a href="#func-var-value-analysis">§ 15.2.5 函数作用域变量值分析</a>）
                         </p>
                 <tr>
-                    <td>标识符<a data-link-type="dfn" href="#resolves" id="ref-for-resolves③④">解析</a>为函数作用域变量 "x"，且 "x"
+                    <td>标识符<a data-link-type="dfn" href="#resolves" id="ref-for-resolves③⑤">解析</a>为函数作用域变量 "x"，且 "x"
                         是降糖指针参数 <em>i</em>，且标识符作为<a data-link-type="dfn" href="#root-identifier"
                             id="ref-for-root-identifier⑧">根标识符</a>出现在<a data-link-type="dfn" href="#memory-view"
                             id="ref-for-memory-view③④">内存视图</a>
@@ -22434,7 +22514,7 @@ sampler_comparison
 
                     <td class>
                 <tr>
-                    <td>标识符<a data-link-type="dfn" href="#resolves" id="ref-for-resolves③⑤">解析</a>为函数作用域变量 "x"，且标识符作为<a
+                    <td>标识符<a data-link-type="dfn" href="#resolves" id="ref-for-resolves③⑥">解析</a>为函数作用域变量 "x"，且标识符作为<a
                             data-link-type="dfn" href="#root-identifier" id="ref-for-root-identifier⑨">根标识符</a>出现在<a
                             data-link-type="dfn" href="#memory-view" id="ref-for-memory-view③⑤">内存视图</a>
                         表达式 <em>MVE</em> 中，并且在<a data-link-type="dfn" href="#type-checking"
@@ -22447,7 +22527,7 @@ sampler_comparison
 
                     <td class>
                 <tr>
-                    <td>标识符<a data-link-type="dfn" href="#resolves" id="ref-for-resolves③⑥">解析</a>为<a
+                    <td>标识符<a data-link-type="dfn" href="#resolves" id="ref-for-resolves③⑦">解析</a>为<a
                             data-link-type="dfn" href="#const-declaration" id="ref-for-const-declaration⑨">常量声明</a>、<a
                             data-link-type="dfn" href="#override-declaration"
                             id="ref-for-override-declaration①⑧">override声明</a>、
@@ -22464,7 +22544,7 @@ sampler_comparison
                     <td class="nowrap"><em>Result</em> -> {<em>CF</em>, <em>X</em>}
 
                 <tr>
-                    <td>标识符<a data-link-type="dfn" href="#resolves" id="ref-for-resolves③⑦">解析</a>为<a
+                    <td>标识符<a data-link-type="dfn" href="#resolves" id="ref-for-resolves③⑧">解析</a>为<a
                             data-link-type="dfn" href="#formal-parameter"
                             id="ref-for-formal-parameter②①">形式参数</a>，且类型为<a data-link-type="dfn" href="#pointer-type"
                             id="ref-for-pointer-type①③">指针类型</a>，并位于<a data-link-type="dfn"
@@ -22487,7 +22567,7 @@ sampler_comparison
 
                     <td>
                 <tr>
-                    <td>标识符<a data-link-type="dfn" href="#resolves" id="ref-for-resolves③⑧">解析</a>为<a
+                    <td>标识符<a data-link-type="dfn" href="#resolves" id="ref-for-resolves③⑨">解析</a>为<a
                             data-link-type="dfn" href="#formal-parameter"
                             id="ref-for-formal-parameter②②">形式参数</a>，且类型为<a data-link-type="dfn" href="#pointer-type"
                             id="ref-for-pointer-type①④">指针类型</a>，并位于<a data-link-type="dfn"
@@ -22509,7 +22589,7 @@ sampler_comparison
 
                     <td>
                 <tr>
-                    <td>标识符<a data-link-type="dfn" href="#resolves" id="ref-for-resolves③⑨">解析</a>为处于除<a
+                    <td>标识符<a data-link-type="dfn" href="#resolves" id="ref-for-resolves④⓪">解析</a>为处于除<a
                             data-link-type="dfn" href="#address-spaces-function"
                             id="ref-for-address-spaces-function①⑨">function</a>外的<a data-link-type="dfn"
                             href="#address-spaces" id="ref-for-address-spaces②①">地址空间</a>的<a data-link-type="dfn"
@@ -22521,7 +22601,7 @@ sampler_comparison
 
                     <td>
                 <tr>
-                    <td>标识符<a data-link-type="dfn" href="#resolves" id="ref-for-resolves④⓪">解析</a>为均匀内置值 "x"
+                    <td>标识符<a data-link-type="dfn" href="#resolves" id="ref-for-resolves④①">解析</a>为均匀内置值 "x"
 
                     <td>
                     <td>
@@ -22529,7 +22609,7 @@ sampler_comparison
 
                     <td>
                 <tr>
-                    <td>标识符<a data-link-type="dfn" href="#resolves" id="ref-for-resolves④①">解析</a>为非均匀内置值 "x"
+                    <td>标识符<a data-link-type="dfn" href="#resolves" id="ref-for-resolves④②">解析</a>为非均匀内置值 "x"
 
                     <td>
                     <td>
@@ -22539,7 +22619,7 @@ sampler_comparison
 
                     <td>
                 <tr>
-                    <td>标识符<a data-link-type="dfn" href="#resolves" id="ref-for-resolves④②">解析</a>为只读模块作用域变量 "x"
+                    <td>标识符<a data-link-type="dfn" href="#resolves" id="ref-for-resolves④③">解析</a>为只读模块作用域变量 "x"
 
                     <td>
                     <td>
@@ -22547,7 +22627,7 @@ sampler_comparison
 
                     <td>
                 <tr>
-                    <td>标识符<a data-link-type="dfn" href="#resolves" id="ref-for-resolves④③">解析</a>为非只读模块作用域变量
+                    <td>标识符<a data-link-type="dfn" href="#resolves" id="ref-for-resolves④④">解析</a>为非只读模块作用域变量
                         "x"，且标识符作为<a data-link-type="dfn" href="#root-identifier"
                             id="ref-for-root-identifier①②">根标识符</a>出现在<a data-link-type="dfn" href="#memory-view"
                             id="ref-for-memory-view③⑧">内存视图</a>
@@ -22563,7 +22643,7 @@ sampler_comparison
 
                     <td>
                 <tr>
-                    <td>标识符<a data-link-type="dfn" href="#resolves" id="ref-for-resolves④④">解析</a>为非只读模块作用域变量
+                    <td>标识符<a data-link-type="dfn" href="#resolves" id="ref-for-resolves④⑤">解析</a>为非只读模块作用域变量
                         "x"，且标识符作为<a data-link-type="dfn" href="#root-identifier"
                             id="ref-for-root-identifier①③">根标识符</a>出现在<a data-link-type="dfn" href="#memory-view"
                             id="ref-for-memory-view③⑨">内存视图</a>
@@ -22660,7 +22740,7 @@ sampler_comparison
 
             <tbody>
                 <tr>
-                    <td>identifier <a data-link-type="dfn" href="#resolves" id="ref-for-resolves④⑤">解析</a>到函数作用域变量 "x"
+                    <td>identifier <a data-link-type="dfn" href="#resolves" id="ref-for-resolves④⑥">解析</a>到函数作用域变量 "x"
 
                     <td><em>Result</em>
 
@@ -22677,7 +22757,7 @@ sampler_comparison
                             （见<a href="#func-var-value-analysis">§ 15.2.5 函数作用域变量值分析</a>）
                         </p>
                 <tr>
-                    <td>identifier <a data-link-type="dfn" href="#resolves" id="ref-for-resolves④⑥">解析</a>到
+                    <td>identifier <a data-link-type="dfn" href="#resolves" id="ref-for-resolves④⑦">解析</a>到
                         <a data-link-type="dfn" href="#const-declaration" id="ref-for-const-declaration①⓪">const
                             声明</a>、<a data-link-type="dfn" href="#override-declaration"
                             id="ref-for-override-declaration①⑨">override 声明</a>、
@@ -22691,7 +22771,7 @@ sampler_comparison
 
                     <td>
                 <tr>
-                    <td>identifier <a data-link-type="dfn" href="#resolves" id="ref-for-resolves④⑦">解析</a>到模块级变量 "x"
+                    <td>identifier <a data-link-type="dfn" href="#resolves" id="ref-for-resolves④⑧">解析</a>到模块级变量 "x"
 
                     <td>
                     <td>
@@ -22846,7 +22926,7 @@ sampler_comparison
         <p>一致性分析的一个限制是，它不会独立跟踪<a data-link-type="dfn" href="#composite" id="ref-for-composite⑨">复合</a>值的<a
                 data-link-type="dfn" href="#components" id="ref-for-components⑤">各分量</a>。
             也就是说，任何一个分量值只要是非常量，<a data-link-type="dfn" href="#behavioral-requirements"
-                id="ref-for-behavioral-requirements②⑥">都会</a>导致分析将整个复合值视为非常量。
+                id="ref-for-behavioral-requirements②⑦">都会</a>导致分析将整个复合值视为非常量。
             下面的例子说明了这个问题，以及着色器作者可以采用的一种规避该限制的方法。
         </p>
         <div class="example wgsl no-marker" id="example-8c798208">
@@ -23090,7 +23170,7 @@ sampler_comparison
             <a href="https://www.w3.org/TR/webgpu/#rasterization">光栅化</a>生成。
             有时，可能没有足够的 RasterizationPoint 填满一个 quad，例如在图元边界处。
             当一个 quad 只有 1、2 或 3 个调用对应 RasterizationPoint 时，片元处理<a data-link-type="dfn" href="#behavioral-requirements"
-                id="ref-for-behavioral-requirements②⑦">将</a>为 quad 中每个未填充位置
+                id="ref-for-behavioral-requirements②⑧">将</a>为 quad 中每个未填充位置
             创建一个<dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="helper-invocation">辅助调用（helper
                 invocation）</dfn>。
         </p>
@@ -23098,22 +23178,23 @@ sampler_comparison
             因此，辅助调用受到如下限制：</p>
         <ul>
             <li data-md>
-                <p>不会在<a data-link-type="dfn" href="#address-spaces-storage"
-                        id="ref-for-address-spaces-storage②①">storage</a> 或 <a data-link-type="dfn"
-                        href="#address-spaces-handle" id="ref-for-address-spaces-handle⑦">handle</a> 地址空间执行<a
-                        data-link-type="dfn" href="#write-access" id="ref-for-write-access①④">写访问</a>（参见<a
-                        href="#memory-operation">§ 14.5.1 内存操作</a>）。</p>
+                <p>不会对 <a data-link-type="dfn" href="#write-access" id="ref-for-write-access①④">写入访问</a>（另见 <a
+                        href="#memory-operation">§ 14.5.1 内存操作</a>）<a data-link-type="dfn"
+                        href="#behavioral-requirements" id="ref-for-behavioral-requirements②⑨">执行</a>任何操作于 <a
+                        data-link-type="dfn" href="#address-spaces-storage" id="ref-for-address-spaces-storage②①">存储</a>
+                    或 <a data-link-type="dfn" href="#address-spaces-handle" id="ref-for-address-spaces-handle⑦">句柄</a>
+                    地址空间。</p>
             <li data-md>
-                <p><a href="#atomic-builtin-functions">原子内置函数</a><a data-link-type="dfn" href="#behavioral-requirements"
-                        id="ref-for-behavioral-requirements②⑨">将</a>
-                    返回<a data-link-type="dfn" href="#indeterminate-value" id="ref-for-indeterminate-value③">不确定</a>结果。
+                <p><a href="#atomic-builtin-functions">原子内建函数</a> <a data-link-type="dfn"
+                        href="#behavioral-requirements" id="ref-for-behavioral-requirements③⓪">会</a> 返回 <a
+                        data-link-type="dfn" href="#indeterminate-value" id="ref-for-indeterminate-value③">不确定</a> 的结果。
                 </p>
             <li data-md>
-                <p><a data-link-type="dfn" href="#entry-point" id="ref-for-entry-point①⑨">入口点</a>的<a
-                        data-link-type="dfn" href="#return-value" id="ref-for-return-value⑨">返回值</a><a
+                <p><a data-link-type="dfn" href="#entry-point" id="ref-for-entry-point①⑨">入口点</a> 的 <a
+                        data-link-type="dfn" href="#return-value" id="ref-for-return-value⑨">返回值</a> <a
                         data-link-type="dfn" href="#behavioral-requirements"
-                        id="ref-for-behavioral-requirements③⓪">不会</a>被<a data-link-type="dfn" href="#gpurenderpipeline"
-                        id="ref-for-gpurenderpipeline⑤">GPURenderPipeline</a>下游进一步处理。</p>
+                        id="ref-for-behavioral-requirements③①">不会</a> 在 <a data-link-type="dfn"
+                        href="#gpurenderpipeline" id="ref-for-gpurenderpipeline⑤">GPURenderPipeline</a> 下游被进一步处理。</p>
         </ul>
         <p>如果 quad 中所有调用都变为辅助调用（例如因为执行了<a data-link-type="dfn" href="#statement-discard"
                 id="ref-for-statement-discard①">discard</a>语句），quad 的执行可以终止；但这种终止不被认为产生<a data-link-type="dfn"
@@ -23557,7 +23638,7 @@ sampler_comparison
                 <ul>
                     <li data-md>
                         <p>WGSL 中的浮点运算<a data-link-type="dfn" href="#behavioral-requirements"
-                                id="ref-for-behavioral-requirements③①">会</a>根据 IEEE-754 规则产生<a data-link-type="dfn"
+                                id="ref-for-behavioral-requirements③②">会</a>根据 IEEE-754 规则产生<a data-link-type="dfn"
                                 href="#intermediate-result" id="ref-for-intermediate-result④">中间结果</a>，但 IEEE-754
                             要求的异常会根据表达式是
                             <a data-link-type="dfn" href="#const-expressions"
@@ -23585,56 +23666,50 @@ sampler_comparison
                         Math Assumption）</dfn>：</p>
                 <ul>
                     <li data-md>
-                        <p>在<a data-link-type="dfn" href="#shader-execution-start"
-                                id="ref-for-shader-execution-start②">着色器执行前</a>生成的<a data-link-type="dfn"
-                                href="#ieee754-overflow" id="ref-for-ieee754-overflow②">溢出</a>、无穷和 NaN
-                            <a data-link-type="dfn" href="#behavioral-requirements"
-                                id="ref-for-behavioral-requirements③②">会</a>导致错误。
-                        </p>
+                        <p><a data-link-type="dfn" href="#ieee754-overflow" id="ref-for-ieee754-overflow②">溢出</a>、无穷大和
+                            NaN 如果在 <a data-link-type="dfn" href="#shader-execution-start"
+                                id="ref-for-shader-execution-start②">着色器执行</a> 开始前生成，则 <a data-link-type="dfn"
+                                href="#behavioral-requirements" id="ref-for-behavioral-requirements③③">会</a> 产生错误。</p>
                         <ul>
                             <li data-md>
-                                <p>有限值上的<a data-link-type="dfn" href="#const-expressions"
-                                        id="ref-for-const-expressions⑥⓪">常量表达式</a>和<a data-link-type="dfn"
-                                        href="#override-expressions" id="ref-for-override-expressions③④">可覆写表达式</a>会按照
-                                    IEEE-754 规则，产生溢出、无穷和 NaN
-                                    作为<a data-link-type="dfn" href="#intermediate-result"
-                                        id="ref-for-intermediate-result⑥">中间结果</a>。
+                                <p><a data-link-type="dfn" href="#const-expressions"
+                                        id="ref-for-const-expressions⑥⓪">常量表达式</a> 和 <a data-link-type="dfn"
+                                        href="#override-expressions" id="ref-for-override-expressions③④">覆盖表达式</a> 对于有限值
+                                    <a data-link-type="dfn" href="#behavioral-requirements"
+                                        id="ref-for-behavioral-requirements③④">会</a> 按照 IEEE-754 规则生成溢出、无穷大和 NaN 作为 <a
+                                        data-link-type="dfn" href="#intermediate-result"
+                                        id="ref-for-intermediate-result⑥">中间结果</a> 值。
                                 </p>
                                 <ul>
                                     <li data-md>
-                                        <p class="note" role="note"><span
-                                                class="marker">注意：</span>该规则要求实现能在这些表达式类型下可靠检测溢出、无穷和 NaN，
-                                            以便一致地产生错误。</p>
+                                        <p class="note" role="note"><span class="marker">注意：</span>
+                                            此规则要求实现能够可靠地检测溢出、无穷大和 NaN 的情况，并符合这些表达式的精度限制，以便能够一致地生成错误。</p>
                                 </ul>
                             <li data-md>
-                                <p>若任一浮点类型的<a data-link-type="dfn" href="#const-expressions"
-                                        id="ref-for-const-expressions⑥①">常量表达式</a>溢出或算得 NaN 或无穷，则产生<a
+                                <p>如果任何浮点类型的 <a data-link-type="dfn" href="#const-expressions"
+                                        id="ref-for-const-expressions⑥①">常量表达式</a> 溢出或计算为 NaN 或无穷大，则会导致 <a
                                         data-link-type="dfn" href="#shader-creation-error"
-                                        id="ref-for-shader-creation-error②③⓪">着色器创建错误</a>。
-                                </p>
+                                        id="ref-for-shader-creation-error②③①">着色器创建错误</a>。</p>
                             <li data-md>
-                                <p>若任一浮点类型的<a data-link-type="dfn" href="#override-expressions"
-                                        id="ref-for-override-expressions③⑤">可覆写表达式</a>溢出或算得 NaN 或无穷，则产生<a
+                                <p>如果任何浮点类型的 <a data-link-type="dfn" href="#override-expressions"
+                                        id="ref-for-override-expressions③⑤">覆盖表达式</a> 溢出或计算为 NaN 或无穷大，则会导致 <a
                                         data-link-type="dfn" href="#pipeline-creation-error"
                                         id="ref-for-pipeline-creation-error②⑧">管线创建错误</a>。</p>
                         </ul>
                     <li data-md>
-                        <p>实现可以假定在<a data-link-type="dfn" href="#shader-execution-start"
-                                id="ref-for-shader-execution-start③">着色器执行</a>期间不存在溢出、无穷和 NaN。</p>
+                        <p>实现可以假定在 <a data-link-type="dfn" href="#shader-execution-start"
+                                id="ref-for-shader-execution-start③">着色器执行</a> 期间不存在溢出、无穷大和 NaN。</p>
                         <ul>
                             <li data-md>
-                                <p>在这样的实现中，若<a data-link-type="dfn" href="#runtime-expression"
-                                        id="ref-for-runtime-expression④">运行时表达式</a>的<a data-link-type="dfn"
-                                        href="#intermediate-result" id="ref-for-intermediate-result⑦">中间结果</a>溢出、
-                                    或结果为无穷或 NaN，则最终结果<a data-link-type="dfn" href="#behavioral-requirements"
-                                        id="ref-for-behavioral-requirements③④">会</a>
-                                    是该类型的<a data-link-type="dfn" href="#indeterminate-value"
-                                        id="ref-for-indeterminate-value⑦">不确定值</a>。
-                                </p>
+                                <p>在这种实现中，如果评估 <a data-link-type="dfn" href="#runtime-expression"
+                                        id="ref-for-runtime-expression④">运行时表达式</a> 的 <a data-link-type="dfn"
+                                        href="#intermediate-result" id="ref-for-intermediate-result⑦">中间结果</a>
+                                    溢出，或者产生无穷大或 NaN，则最终结果 <a data-link-type="dfn" href="#behavioral-requirements"
+                                        id="ref-for-behavioral-requirements③⑤">会</a> 是目标类型的 <a data-link-type="dfn"
+                                        href="#indeterminate-value" id="ref-for-indeterminate-value⑦">不确定值</a>。</p>
                             <li data-md>
-                                <p class="note" role="note"><span
-                                        class="marker">注意：</span>这意味着某些函数（如<code>min</code>和<code>max</code>）
-                                    可能由于对 NaN 和无穷的优化而不返回预期结果。</p>
+                                <p class="note" role="note"><span class="marker">注意：</span> 这意味着某些函数（例如 <code>min</code>
+                                    和 <code>max</code>）可能由于关于 NaN 和无穷大的优化而不会返回预期结果。</p>
                         </ul>
                 </ul>
             <li data-md>
@@ -23724,7 +23799,7 @@ sampler_comparison
                     <li data-md>
                         <p>若表达式为<a data-link-type="dfn" href="#const-expressions"
                                 id="ref-for-const-expressions⑥②">常量表达式</a>，则产生<a data-link-type="dfn"
-                                href="#shader-creation-error" id="ref-for-shader-creation-error②③①">着色器创建错误</a>。</p>
+                                href="#shader-creation-error" id="ref-for-shader-creation-error②③①-">着色器创建错误</a>。</p>
                     <li data-md>
                         <p>若表达式为<a data-link-type="dfn" href="#override-expressions"
                                 id="ref-for-override-expressions③⑥">可覆写表达式</a>，则产生<a data-link-type="dfn"
@@ -25159,7 +25234,7 @@ sampler_comparison
             <a data-link-type="dfn" href="#in-scope" id="ref-for-in-scope①⑥">作用域</a>内，并且该 <a data-link-type="dfn"
                 href="#identifier" id="ref-for-identifier③⓪">标识符</a>
             <a data-link-type="dfn" href="#shader-creation-error" id="ref-for-shader-creation-error②③⑥">不得</a> <a
-                data-link-type="dfn" href="#resolves" id="ref-for-resolves④⑧">解析</a>为其他声明。
+                data-link-type="dfn" href="#resolves" id="ref-for-resolves④⑨">解析</a>为其他声明。
         </p>
         <p class="note" role="note"><span class="marker">注意：</span>由 <a href="#frexp-builtin">frexp</a>、
             <a href="#modf-builtin">modf</a> 和 <a href="#atomic-rmw">atomicCompareExchangeWeak</a> 返回的结构体类型不能在 WGSL
@@ -30242,7 +30317,7 @@ array<c- o>&lt;</c->bool<c- p>,</c-> <c- mi>2</c-><c- o>></c-><c- p>(</c-><c- kc
                     <td>
                         数组纹理的 0 基索引。<br>
                         此值<a data-link-type="dfn" href="#behavioral-requirements"
-                            id="ref-for-behavioral-requirements③⑤">会</a>被限制在 <code>[0, textureNumLayers(t) - 1]</code>
+                            id="ref-for-behavioral-requirements③⑥">会</a>被限制在 <code>[0, textureNumLayers(t) - 1]</code>
                         范围内。
 
                 <tr>
@@ -30421,7 +30496,7 @@ array<c- o>&lt;</c->bool<c- p>,</c-> <c- mi>2</c-><c- o>></c-><c- p>(</c-><c- kc
                     <td>
                         0 基数组纹理索引。<br>
                         此值<a data-link-type="dfn" href="#behavioral-requirements"
-                            id="ref-for-behavioral-requirements③⑥">会</a>被限制在 <code>[0, textureNumLayers(t) - 1]</code>
+                            id="ref-for-behavioral-requirements③⑦">会</a>被限制在 <code>[0, textureNumLayers(t) - 1]</code>
                         范围。
 
                 <tr>
@@ -30987,7 +31062,7 @@ array<c- o>&lt;</c->bool<c- p>,</c-> <c- mi>2</c-><c- o>></c-><c- p>(</c-><c- kc
                     <td>
                         要采样的 0 基数组纹理索引。<br>
                         此值<a data-link-type="dfn" href="#behavioral-requirements"
-                            id="ref-for-behavioral-requirements③⑦">会</a>被限制在 <code>[0, textureNumLayers(t) - 1]</code>
+                            id="ref-for-behavioral-requirements③⑧">会</a>被限制在 <code>[0, textureNumLayers(t) - 1]</code>
                         范围内。
 
                 <tr>
@@ -31122,7 +31197,7 @@ array<c- o>&lt;</c->bool<c- p>,</c-> <c- mi>2</c-><c- o>></c-><c- p>(</c-><c- kc
                     <td>
                         要采样的 0 基数组纹理索引。<br>
                         此值<a data-link-type="dfn" href="#behavioral-requirements"
-                            id="ref-for-behavioral-requirements③⑧">会</a>被限制在 <code>[0, textureNumLayers(t) - 1]</code>
+                            id="ref-for-behavioral-requirements③⑨">会</a>被限制在 <code>[0, textureNumLayers(t) - 1]</code>
                         范围内。
 
                 <tr>
@@ -31130,7 +31205,7 @@ array<c- o>&lt;</c->bool<c- p>,</c-> <c- mi>2</c-><c- o>></c-><c- p>(</c-><c- kc
                     <td>
                         在采样前对 mip 级别应用的 bias 偏移。<br>
                         此值<a data-link-type="dfn" href="#behavioral-requirements"
-                            id="ref-for-behavioral-requirements③⑨">会</a>被限制在 <code>[-16.0, 15.99]</code> 范围内。
+                            id="ref-for-behavioral-requirements④⓪">会</a>被限制在 <code>[-16.0, 15.99]</code> 范围内。
 
                 <tr>
                     <td><code>offset</code>
@@ -31253,7 +31328,7 @@ array<c- o>&lt;</c->bool<c- p>,</c-> <c- mi>2</c-><c- o>></c-><c- p>(</c-><c- kc
                     <td>
                         要采样的 0 基数组纹理索引。<br>
                         此值<a data-link-type="dfn" href="#behavioral-requirements"
-                            id="ref-for-behavioral-requirements④⓪">会</a>被限制在 <code>[0, textureNumLayers(t) - 1]</code>
+                            id="ref-for-behavioral-requirements④①">会</a>被限制在 <code>[0, textureNumLayers(t) - 1]</code>
                         范围内。
 
                 <tr>
@@ -31379,7 +31454,7 @@ array<c- o>&lt;</c->bool<c- p>,</c-> <c- mi>2</c-><c- o>></c-><c- p>(</c-><c- kc
                     <td>
                         要采样的 0 基数组纹理索引。<br>
                         此值<a data-link-type="dfn" href="#behavioral-requirements"
-                            id="ref-for-behavioral-requirements④①">会</a>被限制在 <code>[0, textureNumLayers(t) - 1]</code>
+                            id="ref-for-behavioral-requirements④②">会</a>被限制在 <code>[0, textureNumLayers(t) - 1]</code>
                         范围内。
 
                 <tr>
@@ -31529,7 +31604,7 @@ array<c- o>&lt;</c->bool<c- p>,</c-> <c- mi>2</c-><c- o>></c-><c- p>(</c-><c- kc
                     <td>
                         要采样的 0 基数组纹理索引。<br>
                         此值<a data-link-type="dfn" href="#behavioral-requirements"
-                            id="ref-for-behavioral-requirements④②">会</a>被限制在 <code>[0, textureNumLayers(t) - 1]</code>
+                            id="ref-for-behavioral-requirements④③">会</a>被限制在 <code>[0, textureNumLayers(t) - 1]</code>
                         范围内。
 
                 <tr>
@@ -31743,7 +31818,7 @@ array<c- o>&lt;</c->bool<c- p>,</c-> <c- mi>2</c-><c- o>></c-><c- p>(</c-><c- kc
                     <td>
                         要采样的 0 基数组纹理索引。<br>
                         此值<a data-link-type="dfn" href="#behavioral-requirements"
-                            id="ref-for-behavioral-requirements④③">会</a>被限制在 <code>[0, textureNumLayers(t) - 1]</code>
+                            id="ref-for-behavioral-requirements④④">会</a>被限制在 <code>[0, textureNumLayers(t) - 1]</code>
                         范围内。
 
                 <tr>
@@ -31811,7 +31886,7 @@ array<c- o>&lt;</c->bool<c- p>,</c-> <c- mi>2</c-><c- o>></c-><c- p>(</c-><c- kc
                         用于采样的纹理坐标。
 
                         <p>在采样前，传入的坐标<a data-link-type="dfn" href="#behavioral-requirements"
-                                id="ref-for-behavioral-requirements④④">会</a>被夹紧到矩形</p>
+                                id="ref-for-behavioral-requirements④⑤">会</a>被夹紧到矩形</p>
                         <blockquote>
                             <p>[ <em>half_texel</em>, 1 - <em>half_texel</em> ]</p>
                         </blockquote>
@@ -31951,7 +32026,7 @@ array<c- o>&lt;</c->bool<c- p>,</c-> <c- mi>2</c-><c- o>></c-><c- p>(</c-><c- kc
                 <p><code>array_index</code> 超出 <code>[0, textureNumLayers(t))</code> 范围</p>
         </ul>
         <p>如果逻辑 texel 地址无效，该内置函数<a data-link-type="dfn" href="#behavioral-requirements"
-                id="ref-for-behavioral-requirements④⑤">不会</a>被执行。</p>
+                id="ref-for-behavioral-requirements④⑥">不会</a>被执行。</p>
         <h3 class="heading settled" data-level="17.8" id="atomic-builtin-functions"><span class="secno">17.8.
             </span><span class="content">原子内置函数</span><a class="self-link" href="#atomic-builtin-functions"></a></h3>
         <p>原子内置函数可用于读取/写入/读-修改-写原子对象。它们是<a href="#atomic-types">§ 6.2.8 原子类型</a>上唯一允许的操作。</p>
@@ -36441,7 +36516,7 @@ array<c- o>&lt;</c->bool<c- p>,</c-> <c- mi>2</c-><c- o>></c-><c- p>(</c-><c- kc
                 "b94a256c": { "dfnID": "b94a256c", "dfnText": "clip position", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-clip-position" }], "title": "13.3.1.1.9. position" }], "url": "https://gpuweb.github.io/gpuweb/#clip-position" },
                 "bb5c61d5": { "dfnID": "bb5c61d5", "dfnText": "GPUCompareFunction", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-enumdef-gpucomparefunction" }], "title": "6.5. Texture and Sampler Types" }], "url": "https://www.w3.org/TR/webgpu/#enumdef-gpucomparefunction" },
                 "behavior": { "dfnID": "behavior", "dfnText": "behavior", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-behavior" }, { "id": "ref-for-behavior\u2460" }, { "id": "ref-for-behavior\u2461" }, { "id": "ref-for-behavior\u2462" }, { "id": "ref-for-behavior\u2463" }, { "id": "ref-for-behavior\u2464" }, { "id": "ref-for-behavior\u2465" }, { "id": "ref-for-behavior\u2466" }, { "id": "ref-for-behavior\u2467" }, { "id": "ref-for-behavior\u2468" }], "title": "9.7.1. Rules" }, { "refs": [{ "id": "ref-for-behavior\u2460\u24ea" }, { "id": "ref-for-behavior\u2460\u2460" }], "title": "9.7.3. Examples" }], "url": "#behavior" },
-                "behavioral-requirements": { "dfnID": "behavioral-requirements", "dfnText": "Behavioral requirements", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-behavioral-requirements" }, { "id": "ref-for-behavioral-requirements\u2460" }, { "id": "ref-for-behavioral-requirements\u2461" }], "title": "2.2. Errors" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2462" }], "title": "2.3.1. Diagnostic Processing" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2463" }], "title": "2.4. Limits" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2464" }], "title": "3.9. Template Lists" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2465" }, { "id": "ref-for-behavioral-requirements\u2466" }], "title": "6.1. Type Checking" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2467" }], "title": "6.4.6. Out-of-Bounds Access" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2468" }], "title": "6.4.9. Comparison with References and Pointers in Other Languages" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2460\u24ea" }], "title": "6.5.5. Storage Texture Types" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2460\u2460" }, { "id": "ref-for-behavioral-requirements\u2460\u2461" }], "title": "7.3. var Declarations" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2460\u2462" }, { "id": "ref-for-behavioral-requirements\u2460\u2463" }], "title": "8.1.1. const Expressions" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2460\u2464" }, { "id": "ref-for-behavioral-requirements\u2460\u2465" }], "title": "8.1.2. override Expressions" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2460\u2466" }, { "id": "ref-for-behavioral-requirements\u2460\u2467" }], "title": "9.4.11. Discard Statement" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2460\u2468" }], "title": "13.3.1.1.9. position" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2461\u24ea" }], "title": "13.3.1.4. Interpolation" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2461\u2460" }], "title": "14.1. Memory Locations" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2461\u2461" }], "title": "14.4.4. Internal Layout of Values" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2461\u2462" }, { "id": "ref-for-behavioral-requirements\u2461\u2463" }], "title": "15.2. Uniformity" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2461\u2464" }], "title": "15.2.2. Uniformity Analysis Overview" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2461\u2465" }], "title": "15.2.10.3. Composite Value Analysis Limitations" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2461\u2466" }, { "id": "ref-for-behavioral-requirements\u2461\u2467" }, { "id": "ref-for-behavioral-requirements\u2461\u2468" }, { "id": "ref-for-behavioral-requirements\u2462\u24ea" }], "title": "15.4. Fragment Shaders and Helper Invocations" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2462\u2460" }, { "id": "ref-for-behavioral-requirements\u2462\u2461" }, { "id": "ref-for-behavioral-requirements\u2462\u2462" }, { "id": "ref-for-behavioral-requirements\u2462\u2463" }], "title": "15.7.2. Differences from IEEE-754" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2462\u2464" }], "title": "17.7.2. textureGather" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2462\u2465" }], "title": "17.7.3. textureGatherCompare" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2462\u2466" }], "title": "17.7.8. textureSample" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2462\u2467" }, { "id": "ref-for-behavioral-requirements\u2462\u2468" }], "title": "17.7.9. textureSampleBias" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2463\u24ea" }], "title": "17.7.10. textureSampleCompare" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2463\u2460" }], "title": "17.7.11. textureSampleCompareLevel" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2463\u2461" }], "title": "17.7.12. textureSampleGrad" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2463\u2462" }], "title": "17.7.13. textureSampleLevel" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2463\u2463" }], "title": "17.7.14. textureSampleBaseClampToEdge" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2463\u2464" }], "title": "17.7.15. textureStore" }], "url": "#behavioral-requirements" },
+                "behavioral-requirements": { "dfnID": "behavioral-requirements", "dfnText": "Behavioral requirements", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-behavioral-requirements" }, { "id": "ref-for-behavioral-requirements\u2460" }, { "id": "ref-for-behavioral-requirements\u2461" }], "title": "2.2. Errors" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2462" }], "title": "2.3.1. Diagnostic Processing" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2463" }], "title": "2.4. Limits" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2464" }], "title": "3.9. Template Lists" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2465" }, { "id": "ref-for-behavioral-requirements\u2466" }], "title": "6.1. Type Checking" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2467" }], "title": "6.4.6. Out-of-Bounds Access" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2468" }], "title": "6.4.9. Comparison with References and Pointers in Other Languages" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2460\u24ea" }], "title": "6.5.5. Storage Texture Types" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2460\u2460" }, { "id": "ref-for-behavioral-requirements\u2460\u2461" }], "title": "7.3. var Declarations" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2460\u2462" }, { "id": "ref-for-behavioral-requirements\u2460\u2463" }], "title": "8.1.1. const Expressions" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2460\u2464" }, { "id": "ref-for-behavioral-requirements\u2460\u2465" }], "title": "8.1.2. override Expressions" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2460\u2466" }], "title": "9.4.4. For Statement" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2460\u2467" }, { "id": "ref-for-behavioral-requirements\u2460\u2468" }], "title": "9.4.11. Discard Statement" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2461\u24ea" }], "title": "13.3.1.1.9. position" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2461\u2460" }], "title": "13.3.1.4. Interpolation" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2461\u2461" }], "title": "14.1. Memory Locations" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2461\u2462" }], "title": "14.4.4. Internal Layout of Values" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2461\u2463" }, { "id": "ref-for-behavioral-requirements\u2461\u2464" }], "title": "15.2. Uniformity" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2461\u2465" }], "title": "15.2.2. Uniformity Analysis Overview" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2461\u2466" }], "title": "15.2.10.3. Composite Value Analysis Limitations" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2461\u2467" }, { "id": "ref-for-behavioral-requirements\u2461\u2468" }, { "id": "ref-for-behavioral-requirements\u2462\u24ea" }, { "id": "ref-for-behavioral-requirements\u2462\u2460" }], "title": "15.4. Fragment Shaders and Helper Invocations" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2462\u2461" }, { "id": "ref-for-behavioral-requirements\u2462\u2462" }, { "id": "ref-for-behavioral-requirements\u2462\u2463" }, { "id": "ref-for-behavioral-requirements\u2462\u2464" }], "title": "15.7.2. Differences from IEEE-754" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2462\u2465" }], "title": "17.7.2. textureGather" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2462\u2466" }], "title": "17.7.3. textureGatherCompare" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2462\u2467" }], "title": "17.7.8. textureSample" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2462\u2468" }, { "id": "ref-for-behavioral-requirements\u2463\u24ea" }], "title": "17.7.9. textureSampleBias" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2463\u2460" }], "title": "17.7.10. textureSampleCompare" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2463\u2461" }], "title": "17.7.11. textureSampleCompareLevel" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2463\u2462" }], "title": "17.7.12. textureSampleGrad" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2463\u2463" }], "title": "17.7.13. textureSampleLevel" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2463\u2464" }], "title": "17.7.14. textureSampleBaseClampToEdge" }, { "refs": [{ "id": "ref-for-behavioral-requirements\u2463\u2465" }], "title": "17.7.15. textureStore" }], "url": "#behavioral-requirements" },
                 "blankspace": { "dfnID": "blankspace", "dfnText": "Blankspace", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-blankspace" }], "title": "3. Textual Structure" }, { "refs": [{ "id": "ref-for-blankspace\u2460" }], "title": "3.1. Parsing" }, { "refs": [{ "id": "ref-for-blankspace\u2461" }], "title": "3.2. Blankspace and Line Breaks" }, { "refs": [{ "id": "ref-for-blankspace\u2462" }, { "id": "ref-for-blankspace\u2463" }], "title": "3.9. Template Lists" }], "url": "#blankspace" },
                 "block-comment": { "dfnID": "block-comment", "dfnText": "block comment", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-block-comment" }], "title": "3.3. Comments" }], "url": "#block-comment" },
                 "bool": { "dfnID": "bool", "dfnText": "bool", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-bool" }, { "id": "ref-for-bool\u2460" }], "title": "6.1. Type Checking" }, { "refs": [{ "id": "ref-for-bool\u2461" }], "title": "6.2.5. Scalar Types" }, { "refs": [{ "id": "ref-for-bool\u2462" }], "title": "6.9. Predeclared Types and Type-Generators Summary" }, { "refs": [{ "id": "ref-for-bool\u2463" }], "title": "9.4.1. If Statement" }, { "refs": [{ "id": "ref-for-bool\u2464" }], "title": "9.4.4. For Statement" }, { "refs": [{ "id": "ref-for-bool\u2465" }], "title": "9.4.5. While Statement" }, { "refs": [{ "id": "ref-for-bool\u2466" }], "title": "9.4.7. Break-If Statement" }, { "refs": [{ "id": "ref-for-bool\u2467" }], "title": "10. Assertions" }, { "refs": [{ "id": "ref-for-bool\u2468" }, { "id": "ref-for-bool\u2460\u24ea" }, { "id": "ref-for-bool\u2460\u2460" }], "title": "13.2. Entry Point Declaration" }, { "refs": [{ "id": "ref-for-bool\u2460\u2461" }, { "id": "ref-for-bool\u2460\u2462" }, { "id": "ref-for-bool\u2460\u2463" }, { "id": "ref-for-bool\u2460\u2464" }], "title": "14.4.1. Alignment and Size" }, { "refs": [{ "id": "ref-for-bool\u2460\u2465" }, { "id": "ref-for-bool\u2460\u2466" }], "title": "14.4.4. Internal Layout of Values" }, { "refs": [{ "id": "ref-for-bool\u2460\u2467" }], "title": "14.4.5. Address Space Layout Constraints" }, { "refs": [{ "id": "ref-for-bool\u2460\u2468" }, { "id": "ref-for-bool\u2461\u24ea" }], "title": "17.1.2.2. bool" }, { "refs": [{ "id": "ref-for-bool\u2461\u2460" }], "title": "17.1.2.3. f16" }, { "refs": [{ "id": "ref-for-bool\u2461\u2461" }], "title": "17.1.2.4. f32" }, { "refs": [{ "id": "ref-for-bool\u2461\u2462" }], "title": "17.1.2.5. i32" }, { "refs": [{ "id": "ref-for-bool\u2461\u2463" }], "title": "17.1.2.16. u32" }], "url": "#bool" },
@@ -36498,7 +36573,7 @@ array<c- o>&lt;</c->bool<c- p>,</c-> <c- mi>2</c-><c- o>></c-><c- p>(</c-><c- kc
                 "components": { "dfnID": "components", "dfnText": "components", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-components" }], "title": "7.3. var Declarations" }, { "refs": [{ "id": "ref-for-components\u2460" }, { "id": "ref-for-components\u2461" }], "title": "8.5. Composite Value Decomposition Expressions" }, { "refs": [{ "id": "ref-for-components\u2462" }], "title": "15.2.5. Function-scope Variable Value Analysis" }, { "refs": [{ "id": "ref-for-components\u2463" }], "title": "15.2.8. Uniformity Rules for Expressions" }, { "refs": [{ "id": "ref-for-components\u2464" }], "title": "15.2.10.3. Composite Value Analysis Limitations" }], "url": "#components" },
                 "composite": { "dfnID": "composite", "dfnText": "composite", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-composite" }], "title": "1.1. Overview" }, { "refs": [{ "id": "ref-for-composite\u2460" }], "title": "2.4. Limits" }, { "refs": [{ "id": "ref-for-composite\u2461" }], "title": "6.2. Plain Types" }, { "refs": [{ "id": "ref-for-composite\u2462" }, { "id": "ref-for-composite\u2463" }], "title": "7.3. var Declarations" }, { "refs": [{ "id": "ref-for-composite\u2464" }], "title": "8.5. Composite Value Decomposition Expressions" }, { "refs": [{ "id": "ref-for-composite\u2465" }], "title": "14.1. Memory Locations" }, { "refs": [{ "id": "ref-for-composite\u2466" }], "title": "15.2.5. Function-scope Variable Value Analysis" }, { "refs": [{ "id": "ref-for-composite\u2467" }], "title": "15.2.8. Uniformity Rules for Expressions" }, { "refs": [{ "id": "ref-for-composite\u2468" }], "title": "15.2.10.3. Composite Value Analysis Limitations" }], "url": "#composite" },
                 "compound-assignment": { "dfnID": "compound-assignment", "dfnText": "compound assignment", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-compound-assignment" }], "title": "9.2.3. Compound Assignment" }, { "refs": [{ "id": "ref-for-compound-assignment\u2460" }, { "id": "ref-for-compound-assignment\u2461" }], "title": "14.5.1. Memory Operation" }], "url": "#compound-assignment" },
-                "compound-statement": { "dfnID": "compound-statement", "dfnText": "compound statement", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-compound-statement" }, { "id": "ref-for-compound-statement\u2460" }], "title": "2.3.3. Diagnostic Filtering" }, { "refs": [{ "id": "ref-for-compound-statement\u2461" }], "title": "9.4.1. If Statement" }, { "refs": [{ "id": "ref-for-compound-statement\u2462" }, { "id": "ref-for-compound-statement\u2463" }, { "id": "ref-for-compound-statement\u2464" }], "title": "9.4.2. Switch Statement" }, { "refs": [{ "id": "ref-for-compound-statement\u2465" }, { "id": "ref-for-compound-statement\u2466" }], "title": "9.4.3. Loop Statement" }, { "refs": [{ "id": "ref-for-compound-statement\u2467" }], "title": "9.4.4. For Statement" }, { "refs": [{ "id": "ref-for-compound-statement\u2468" }], "title": "9.4.9. Continuing Statement" }], "url": "#compound-statement" },
+                "compound-statement": { "dfnID": "compound-statement", "dfnText": "compound statement", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-compound-statement" }, { "id": "ref-for-compound-statement\u2460" }], "title": "2.3.3. Diagnostic Filtering" }, { "refs": [{ "id": "ref-for-compound-statement\u2461" }], "title": "9.4.1. If Statement" }, { "refs": [{ "id": "ref-for-compound-statement\u2462" }, { "id": "ref-for-compound-statement\u2463" }, { "id": "ref-for-compound-statement\u2464" }], "title": "9.4.2. Switch Statement" }, { "refs": [{ "id": "ref-for-compound-statement\u2465" }, { "id": "ref-for-compound-statement\u2466" }], "title": "9.4.3. Loop Statement" }, { "refs": [{ "id": "ref-for-compound-statement\u2467" }, { "id": "ref-for-compound-statement\u2468" }], "title": "9.4.4. For Statement" }, { "refs": [{ "id": "ref-for-compound-statement\u2460\u24ea" }], "title": "9.4.9. Continuing Statement" }], "url": "#compound-statement" },
                 "compute": { "dfnID": "compute", "dfnText": "compute", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-compute" }], "title": "12.11. location" }, { "refs": [{ "id": "ref-for-compute\u2460" }], "title": "13.2. Entry Point Declaration" }, { "refs": [{ "id": "ref-for-compute\u2461" }], "title": "13.3.1.2. User-defined Inputs and Outputs" }, { "refs": [{ "id": "ref-for-compute\u2462" }], "title": "17.11. Synchronization Built-in Functions" }, { "refs": [{ "id": "ref-for-compute\u2463" }], "title": "17.12. Subgroup Built-in Functions" }, { "refs": [{ "id": "ref-for-compute\u2464" }], "title": "17.13. Quad Operations" }], "url": "#compute" },
                 "compute-shader-grid": { "dfnID": "compute-shader-grid", "dfnText": "compute shader grid", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-compute-shader-grid" }], "title": "13.3.1.1.4. global_invocation_id" }, { "refs": [{ "id": "ref-for-compute-shader-grid\u2460" }], "title": "13.3.1.1.14. workgroup_id" }], "url": "#compute-shader-grid" },
                 "compute-shader-stage": { "dfnID": "compute-shader-stage", "dfnText": "compute shader stage", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-compute-shader-stage" }], "title": "1.1. Overview" }, { "refs": [{ "id": "ref-for-compute-shader-stage\u2460" }], "title": "7. Variable and Value Declarations" }, { "refs": [{ "id": "ref-for-compute-shader-stage\u2461" }], "title": "12.14. workgroup_size" }, { "refs": [{ "id": "ref-for-compute-shader-stage\u2462" }], "title": "12.15.3. compute" }, { "refs": [{ "id": "ref-for-compute-shader-stage\u2463" }], "title": "13.3.1.1.4. global_invocation_id" }, { "refs": [{ "id": "ref-for-compute-shader-stage\u2464" }], "title": "13.3.1.1.6. local_invocation_id" }, { "refs": [{ "id": "ref-for-compute-shader-stage\u2465" }], "title": "13.3.1.1.7. local_invocation_index" }, { "refs": [{ "id": "ref-for-compute-shader-stage\u2466" }], "title": "13.3.1.1.8. num_workgroups" }, { "refs": [{ "id": "ref-for-compute-shader-stage\u2467" }], "title": "13.3.1.1.14. workgroup_id" }, { "refs": [{ "id": "ref-for-compute-shader-stage\u2468" }], "title": "13.3.1.1.15. subgroup_invocation_id" }, { "refs": [{ "id": "ref-for-compute-shader-stage\u2460\u24ea" }], "title": "13.3.1.1.16. subgroup_size" }, { "refs": [{ "id": "ref-for-compute-shader-stage\u2460\u2460" }, { "id": "ref-for-compute-shader-stage\u2460\u2461" }], "title": "14.3. Address Spaces" }, { "refs": [{ "id": "ref-for-compute-shader-stage\u2460\u2462" }], "title": "15.2.1. Terminology and Concepts" }, { "refs": [{ "id": "ref-for-compute-shader-stage\u2460\u2463" }], "title": "15.2.8. Uniformity Rules for Expressions" }, { "refs": [{ "id": "ref-for-compute-shader-stage\u2460\u2464" }], "title": "15.3. Compute Shaders and Workgroups" }, { "refs": [{ "id": "ref-for-compute-shader-stage\u2460\u2465" }], "title": "15.5. Subgroups" }, { "refs": [{ "id": "ref-for-compute-shader-stage\u2460\u2466" }], "title": "15.6.1. Barriers" }, { "refs": [{ "id": "ref-for-compute-shader-stage\u2460\u2467" }], "title": "17.12. Subgroup Built-in Functions" }, { "refs": [{ "id": "ref-for-compute-shader-stage\u2460\u2468" }], "title": "17.13. Quad Operations" }], "url": "#compute-shader-stage" },
@@ -36832,7 +36907,7 @@ array<c- o>&lt;</c->bool<c- p>,</c-> <c- mi>2</c-><c- o>></c-><c- p>(</c-><c- kc
                 "requiredtobeuniformwarning": { "dfnID": "requiredtobeuniformwarning", "dfnText": "RequiredToBeUniform.warning", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-requiredtobeuniformwarning" }, { "id": "ref-for-requiredtobeuniformwarning\u2460" }, { "id": "ref-for-requiredtobeuniformwarning\u2461" }], "title": "15.2.3. Analyzing the Uniformity Requirements of a Function" }], "url": "#requiredtobeuniformwarning" },
                 "requires-directive": { "dfnID": "requires-directive", "dfnText": "requires-directive", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-requires-directive" }, { "id": "ref-for-requires-directive\u2460" }, { "id": "ref-for-requires-directive\u2461" }, { "id": "ref-for-requires-directive\u2462" }], "title": "4.1.2. Language Extensions" }], "url": "#requires-directive" },
                 "reserved-word": { "dfnID": "reserved-word", "dfnText": "reserved word", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-reserved-word" }], "title": "3.4. Tokens" }, { "refs": [{ "id": "ref-for-reserved-word\u2460" }], "title": "3.7. Identifiers" }, { "refs": [{ "id": "ref-for-reserved-word\u2461" }], "title": "3.8. Context-Dependent Names" }], "url": "#reserved-word" },
-                "resolves": { "dfnID": "resolves", "dfnText": "resolves", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-resolves" }], "title": "3.8. Context-Dependent Names" }, { "refs": [{ "id": "ref-for-resolves\u2460" }], "title": "4.1.1. Enable Extensions" }, { "refs": [{ "id": "ref-for-resolves\u2461" }], "title": "4.1.2. Language Extensions" }, { "refs": [{ "id": "ref-for-resolves\u2462" }, { "id": "ref-for-resolves\u2463" }], "title": "5. Declaration and Scope" }, { "refs": [{ "id": "ref-for-resolves\u2464" }], "title": "6.2.9. Array Types" }, { "refs": [{ "id": "ref-for-resolves\u2465" }], "title": "6.4.8. Forming Reference and Pointer Values" }, { "refs": [{ "id": "ref-for-resolves\u2466" }], "title": "7.2. Value Declarations" }, { "refs": [{ "id": "ref-for-resolves\u2467" }], "title": "7.3. var Declarations" }, { "refs": [{ "id": "ref-for-resolves\u2468" }], "title": "8.1.1. const Expressions" }, { "refs": [{ "id": "ref-for-resolves\u2460\u24ea" }, { "id": "ref-for-resolves\u2460\u2460" }], "title": "8.1.2. override Expressions" }, { "refs": [{ "id": "ref-for-resolves\u2460\u2461" }], "title": "8.11. Variable Identifier Expression" }, { "refs": [{ "id": "ref-for-resolves\u2460\u2462" }], "title": "8.12. Formal Parameter Expression" }, { "refs": [{ "id": "ref-for-resolves\u2460\u2463" }, { "id": "ref-for-resolves\u2460\u2464" }, { "id": "ref-for-resolves\u2460\u2465" }], "title": "8.15. Identifier Expressions for Value Declarations" }, { "refs": [{ "id": "ref-for-resolves\u2460\u2466" }], "title": "8.16. Enumeration Expressions" }, { "refs": [{ "id": "ref-for-resolves\u2460\u2467" }, { "id": "ref-for-resolves\u2460\u2468" }, { "id": "ref-for-resolves\u2461\u24ea" }, { "id": "ref-for-resolves\u2461\u2460" }], "title": "8.17. Type Expressions" }, { "refs": [{ "id": "ref-for-resolves\u2461\u2461" }, { "id": "ref-for-resolves\u2461\u2462" }, { "id": "ref-for-resolves\u2461\u2463" }], "title": "11.4.1.1. Root Identifier" }, { "refs": [{ "id": "ref-for-resolves\u2461\u2464" }], "title": "12.3. blend_src" }, { "refs": [{ "id": "ref-for-resolves\u2461\u2465" }, { "id": "ref-for-resolves\u2461\u2466" }, { "id": "ref-for-resolves\u2461\u2467" }, { "id": "ref-for-resolves\u2461\u2468" }], "title": "13.3. Shader Interface" }, { "refs": [{ "id": "ref-for-resolves\u2462\u24ea" }], "title": "15.2.4. Pointer Desugaring" }, { "refs": [{ "id": "ref-for-resolves\u2462\u2460" }, { "id": "ref-for-resolves\u2462\u2461" }], "title": "15.2.5. Function-scope Variable Value Analysis" }, { "refs": [{ "id": "ref-for-resolves\u2462\u2462" }, { "id": "ref-for-resolves\u2462\u2463" }, { "id": "ref-for-resolves\u2462\u2464" }, { "id": "ref-for-resolves\u2462\u2465" }, { "id": "ref-for-resolves\u2462\u2466" }, { "id": "ref-for-resolves\u2462\u2467" }, { "id": "ref-for-resolves\u2462\u2468" }, { "id": "ref-for-resolves\u2463\u24ea" }, { "id": "ref-for-resolves\u2463\u2460" }, { "id": "ref-for-resolves\u2463\u2461" }, { "id": "ref-for-resolves\u2463\u2462" }, { "id": "ref-for-resolves\u2463\u2463" }, { "id": "ref-for-resolves\u2463\u2464" }, { "id": "ref-for-resolves\u2463\u2465" }, { "id": "ref-for-resolves\u2463\u2466" }], "title": "15.2.8. Uniformity Rules for Expressions" }, { "refs": [{ "id": "ref-for-resolves\u2463\u2467" }], "title": "17.1. Constructor Built-in Functions" }], "url": "#resolves" },
+                "resolves": { "dfnID": "resolves", "dfnText": "resolves", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-resolves" }], "title": "3.8. Context-Dependent Names" }, { "refs": [{ "id": "ref-for-resolves\u2460" }], "title": "4.1.1. Enable Extensions" }, { "refs": [{ "id": "ref-for-resolves\u2461" }], "title": "4.1.2. Language Extensions" }, { "refs": [{ "id": "ref-for-resolves\u2462" }, { "id": "ref-for-resolves\u2463" }], "title": "5. Declaration and Scope" }, { "refs": [{ "id": "ref-for-resolves\u2464" }], "title": "6.2.9. Array Types" }, { "refs": [{ "id": "ref-for-resolves\u2465" }], "title": "6.4.8. Forming Reference and Pointer Values" }, { "refs": [{ "id": "ref-for-resolves\u2466" }], "title": "7.2. Value Declarations" }, { "refs": [{ "id": "ref-for-resolves\u2467" }], "title": "7.3. var Declarations" }, { "refs": [{ "id": "ref-for-resolves\u2468" }], "title": "8.1.1. const Expressions" }, { "refs": [{ "id": "ref-for-resolves\u2460\u24ea" }, { "id": "ref-for-resolves\u2460\u2460" }], "title": "8.1.2. override Expressions" }, { "refs": [{ "id": "ref-for-resolves\u2460\u2461" }], "title": "8.11. Variable Identifier Expression" }, { "refs": [{ "id": "ref-for-resolves\u2460\u2462" }], "title": "8.12. Formal Parameter Expression" }, { "refs": [{ "id": "ref-for-resolves\u2460\u2463" }, { "id": "ref-for-resolves\u2460\u2464" }, { "id": "ref-for-resolves\u2460\u2465" }], "title": "8.15. Identifier Expressions for Value Declarations" }, { "refs": [{ "id": "ref-for-resolves\u2460\u2466" }], "title": "8.16. Enumeration Expressions" }, { "refs": [{ "id": "ref-for-resolves\u2460\u2467" }, { "id": "ref-for-resolves\u2460\u2468" }, { "id": "ref-for-resolves\u2461\u24ea" }, { "id": "ref-for-resolves\u2461\u2460" }], "title": "8.17. Type Expressions" }, { "refs": [{ "id": "ref-for-resolves\u2461\u2461" }], "title": "9.4.4. For Statement" }, { "refs": [{ "id": "ref-for-resolves\u2461\u2462" }, { "id": "ref-for-resolves\u2461\u2463" }, { "id": "ref-for-resolves\u2461\u2464" }], "title": "11.4.1.1. Root Identifier" }, { "refs": [{ "id": "ref-for-resolves\u2461\u2465" }], "title": "12.3. blend_src" }, { "refs": [{ "id": "ref-for-resolves\u2461\u2466" }, { "id": "ref-for-resolves\u2461\u2467" }, { "id": "ref-for-resolves\u2461\u2468" }, { "id": "ref-for-resolves\u2462\u24ea" }], "title": "13.3. Shader Interface" }, { "refs": [{ "id": "ref-for-resolves\u2462\u2460" }], "title": "15.2.4. Pointer Desugaring" }, { "refs": [{ "id": "ref-for-resolves\u2462\u2461" }, { "id": "ref-for-resolves\u2462\u2462" }], "title": "15.2.5. Function-scope Variable Value Analysis" }, { "refs": [{ "id": "ref-for-resolves\u2462\u2463" }, { "id": "ref-for-resolves\u2462\u2464" }, { "id": "ref-for-resolves\u2462\u2465" }, { "id": "ref-for-resolves\u2462\u2466" }, { "id": "ref-for-resolves\u2462\u2467" }, { "id": "ref-for-resolves\u2462\u2468" }, { "id": "ref-for-resolves\u2463\u24ea" }, { "id": "ref-for-resolves\u2463\u2460" }, { "id": "ref-for-resolves\u2463\u2461" }, { "id": "ref-for-resolves\u2463\u2462" }, { "id": "ref-for-resolves\u2463\u2463" }, { "id": "ref-for-resolves\u2463\u2464" }, { "id": "ref-for-resolves\u2463\u2465" }, { "id": "ref-for-resolves\u2463\u2466" }, { "id": "ref-for-resolves\u2463\u2467" }], "title": "15.2.8. Uniformity Rules for Expressions" }, { "refs": [{ "id": "ref-for-resolves\u2463\u2468" }], "title": "17.1. Constructor Built-in Functions" }], "url": "#resolves" },
                 "resource": { "dfnID": "resource", "dfnText": "resource", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-resource" }, { "id": "ref-for-resource\u2460" }, { "id": "ref-for-resource\u2461" }], "title": "1.1. Overview" }, { "refs": [{ "id": "ref-for-resource\u2462" }], "title": "2.1. Shader Lifecycle" }, { "refs": [{ "id": "ref-for-resource\u2463" }], "title": "2.2. Errors" }, { "refs": [{ "id": "ref-for-resource\u2464" }, { "id": "ref-for-resource\u2465" }], "title": "7.3. var Declarations" }, { "refs": [{ "id": "ref-for-resource\u2466" }], "title": "12.2. binding" }, { "refs": [{ "id": "ref-for-resource\u2467" }], "title": "12.7. group" }, { "refs": [{ "id": "ref-for-resource\u2468" }], "title": "13.1. Shader Stages" }, { "refs": [{ "id": "ref-for-resource\u2460\u24ea" }], "title": "13.3. Shader Interface" }, { "refs": [{ "id": "ref-for-resource\u2460\u2460" }], "title": "14.5.2. Memory Model Reference" }], "url": "#resource" },
                 "resource-interface-of-a-shader": { "dfnID": "resource-interface-of-a-shader", "dfnText": "resource interface of a shader", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-resource-interface-of-a-shader" }], "title": "1.1. Overview" }, { "refs": [{ "id": "ref-for-resource-interface-of-a-shader\u2460" }], "title": "7.3. var Declarations" }, { "refs": [{ "id": "ref-for-resource-interface-of-a-shader\u2461" }], "title": "9.2.2. Phony Assignment" }], "url": "#resource-interface-of-a-shader" },
                 "result": { "dfnID": "result", "dfnText": "Result", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-result" }, { "id": "ref-for-result\u2460" }], "title": "15.2.6. Uniformity Rules for Statements" }, { "refs": [{ "id": "ref-for-result\u2461" }, { "id": "ref-for-result\u2462" }, { "id": "ref-for-result\u2463" }], "title": "15.2.7. Uniformity Rules for Function Calls" }, { "refs": [{ "id": "ref-for-result\u2464" }, { "id": "ref-for-result\u2465" }], "title": "15.2.8. Uniformity Rules for Expressions" }], "url": "#result" },
