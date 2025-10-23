@@ -1268,6 +1268,14 @@ const cssLinks = [
         lang: "cjk",
         state: "WD"
     },
+    {
+        text: "CSS Anchor Positioning Module Level 2",
+        href: "https://htmlspecs.com/css/css-anchor-position-2",
+        src: "https://www.w3.org/TR/2025/WD-css-anchor-position-2-20251021/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
 
     //### 导航|내비게이션|ナビゲーション
     {
