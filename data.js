@@ -381,6 +381,14 @@ const links = [
         state: "WD"
     },
     {
+        text: "Idle Detection API",
+        href: "https://htmlspecs.com/idle-detection",
+        src: "https://wicg.github.io/idle-detection/",
+        "last-modified": "Wed, 08 Jan 2025 02:06:24 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
+    {
         text: "EyeDropper API",
         href: "https://htmlspecs.com/eyedropper-api",
         src: "https://wicg.github.io/eyedropper-api/",
@@ -1718,7 +1726,7 @@ const cssLinks = [
         text: "CSS Typed OM Level 1",
         href: "https://htmlspecs.com/css/css-typed-om-1",
         src: "https://www.w3.org/TR/2024/WD-css-typed-om-1-20240321/",
-       
+
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
