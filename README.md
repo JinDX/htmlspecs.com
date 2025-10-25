@@ -110,7 +110,7 @@ HTML 及相关 API，CSS 标准系列。
 - [Federated Credential Management API (FedCM)](https://htmlspecs.com/fedcm)（[Source](https://www.w3.org/TR/2024/WD-fedcm-1-20240820/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 
 ### 媒体和图形
-- [WebGPU](https://htmlspecs.com/webgpu)（[Source](https://www.w3.org/TR/2025/CRD-webgpu-20251022/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
+- [WebGPU](https://htmlspecs.com/webgpu)（[Source](https://www.w3.org/TR/2025/CRD-webgpu-20251024/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [WebGPU Shading Language](https://htmlspecs.com/WGSL)（[Source](https://www.w3.org/TR/2025/CRD-WGSL-20251020/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [Web Animations](https://htmlspecs.com/web-animations-1)（[Source](https://www.w3.org/TR/2023/WD-web-animations-1-20230605/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Scalable Vector Graphics (SVG) 2](https://htmlspecs.com/SVG2/)（[Source](https://www.w3.org/TR/2018/CR-SVG2-20181004/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
