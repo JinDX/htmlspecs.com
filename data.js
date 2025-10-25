@@ -737,6 +737,14 @@ const links = [
         state: "WD"
     },
     {
+        text: "Global Privacy Control (GPC)",
+        href: "https://htmlspecs.com/gpc",
+        src: "https://www.w3.org/TR/2025/WD-gpc-20250916/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
+    {
         text: "Secure Contexts",
         href: "https://htmlspecs.com/secure-contexts",
         src: "https://www.w3.org/TR/2023/CRD-secure-contexts-20231110/",
