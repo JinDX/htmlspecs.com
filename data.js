@@ -907,6 +907,14 @@ const links = [
         lang: "cjk",
         state: "CRD"
     },
+    {
+        text: "Portable Network Graphics (PNG) 3",
+        href: "https://htmlspecs.com/png-3",
+        src: "https://www.w3.org/TR/2025/REC-png-3-20250624/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "REC"
+    },
 
     //### 开发者工具|개발자 도구|開発者ツール
     {
