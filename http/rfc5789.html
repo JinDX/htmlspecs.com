@@ -1,0 +1,832 @@
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html lang="zh-hans">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>RFC 5789 - HTTP 的 PATCH 方法</title>
+    <script>
+        function getMeta(rfcno, container) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "https://www.rfc-editor.org/rfc/rfc" + rfcno + ".json", true);
+            xhr.onload = function (e) {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        var data = JSON.parse(xhr.response);
+
+                        var cont = document.getElementById(container);
+                        // empty the container
+                        while (cont.firstChild) {
+                            cont.removeChild(myNode.firstChild);
+                        }
+
+                        var c = data.status;
+                        if (c) {
+                            var bld = newElementWithText("b", c);
+                            cont.appendChild(bld);
+                        } else {
+                            cont.appendChild(newElementWithText("i", "(document status unknown)"));
+                        }
+
+                        c = data.updated_by;
+                        if (c && c.length > 0 && c[0] !== null && c[0].length > 0) {
+                            cont.appendChild(newElement("br"));
+                            cont.appendChild(newText("Updated by: "));
+                            appendRfcLinks(cont, c);
+                        }
+
+                        c = data.obsoleted_by;
+                        if (c && c.length > 0 && c[0] !== null && c[0].length > 0) {
+                            cont.appendChild(newElement("br"));
+                            cont.appendChild(newText("Obsoleted by: "));
+                            appendRfcLinks(cont, c);
+                        }
+
+                        c = data.errata_url;
+                        if (c) {
+                            cont.appendChild(newElement("br"));
+                            var link = newElementWithText("a", "errata");
+                            link.setAttribute("href", c);
+                            var errata = newElementWithText("i", "This document has ");
+                            errata.appendChild(link);
+                            errata.appendChild(newText("."));
+                            cont.appendChild(errata);
+                        }
+
+                        cont.style.display = "block";
+                    } else {
+                        console.error(xhr.statusText);
+                    }
+                }
+            };
+            xhr.onerror = function (e) {
+                console.error(xhr.status + " " + xhr.statusText);
+            };
+            xhr.send(null);
+        }
+        function appendRfcLinks(parent, updates) {
+            var template = "https://www.rfc-editor.org/rfc/rfc{rfc}.html";
+            for (var i = 0; i < updates.length; i++) {
+                var rfc = updates[i].trim().toLowerCase();
+                if (rfc.substring(0, 3) == "rfc") {
+                    var no = parseInt(rfc.substring(3), 10);
+
+                    var link = newElement("a");
+                    link.setAttribute("href", template.replace("{rfc}", no));
+                    link.appendChild(newText(no));
+                    parent.appendChild(link);
+                } else {
+                    parent.appendChild(newText(rfc));
+                }
+                if (i != updates.length - 1) {
+                    parent.appendChild(newText(", "));
+                }
+            }
+        }
+
+        // DOM helpers
+        function newElement(name) {
+            return document.createElement(name);
+        }
+        function newElementWithText(name, txt) {
+            var e = document.createElement(name);
+            e.appendChild(newText(txt));
+            return e;
+        }
+        function newText(text) {
+            return document.createTextNode(text);
+        }
+    </script>
+    <script>
+        function anchorRewrite() {
+            map = {};
+            if (window.location.hash.length >= 1) {
+                var fragid = window.location.hash.substr(1);
+                if (fragid) {
+                    if (!document.getElementById(fragid)) {
+                        var prefix = "rfc.";
+                        var mapped = map[fragid];
+                        if (mapped) {
+                            window.location.hash = mapped;
+                        } else if (fragid.indexOf("section-") == 0) {
+                            window.location.hash = prefix + "section." + fragid.substring(8).replace("-", ".p.");
+                        } else if (fragid.indexOf("appendix-") == 0) {
+                            window.location.hash = prefix + "section." + fragid.substring(9).replace("-", ".p.");
+                        } else if (fragid.indexOf("s-") == 0) {
+                            var postfix = fragid.substring(2);
+                            if (postfix.startsWith("abstract")) {
+                                window.location.hash = prefix + postfix;
+                            } else if (postfix.startsWith("note-")) {
+                                window.location.hash = prefix + "note." + postfix.substring(5).replace("-", ".p.");
+                            } else {
+                                window.location.hash = prefix + "section." + postfix.replace("-", ".p.");
+                            }
+                        } else if (fragid.indexOf("p-") == 0) {
+                            var r = fragid.substring(2);
+                            var p = r.indexOf("-");
+                            if (p >= 0) {
+                                window.location.hash = prefix + "section." + r.substring(0, p) + ".p." + r.substring(p + 1);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        window.addEventListener('hashchange', anchorRewrite);
+        window.addEventListener('DOMContentLoaded', anchorRewrite);
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="RFC5789">
+    <meta property="og:description" content="PATCH Method for HTTP">
+    <meta property="og:url" content="https://httpwg.org/specs/rfc5789.html">
+    <meta property="og:site_name" content="IETF HTTP Working Group Specifications">
+    <meta property="og:image" content="https://httpwg.org/assets/favicon/apple-icon-180x180.png">
+    <link rel="stylesheet" type="text/css"
+        href="https://httpwg.org/assets/node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <style type="text/css">
+        body {
+            padding-top: 80px;
+            padding-bottom: 80px;
+            position: relative;
+        }
+
+        .table.header th,
+        .table.header td {
+            border-top: none;
+            padding: 0;
+        }
+
+        #sidebar {
+            margin-top: -10px;
+            height: 90%;
+            overflow-y: auto;
+            font-size: 90%;
+        }
+
+        #rfc\.meta {
+            width: 40%;
+            float: right
+        }
+
+        .toc ul {
+            list-style: none;
+        }
+
+        .filename {
+            color: rgb(119, 119, 119);
+            font-size: 23px;
+            font-weight: normal;
+            height: auto;
+            line-height: 23px;
+        }
+
+        dl {
+            margin-left: 1em;
+        }
+
+        dl.dl-horizontal {
+            margin-left: 0;
+        }
+
+        dl>dt {
+            float: left;
+            margin-right: 1em;
+        }
+
+        dl.nohang>dt {
+            float: none;
+        }
+
+        dl>dd {
+            margin-bottom: .5em;
+        }
+
+        dl.compact>dd {
+            margin-bottom: 0em;
+        }
+
+        dl>dd>dl {
+            margin-top: 0.5em;
+            margin-bottom: 0em;
+        }
+
+        ul.empty {
+            list-style-type: none;
+        }
+
+        ul.empty li {
+            margin-top: .5em;
+        }
+
+        td.reference {
+            padding-right: 1em;
+            vertical-align: top;
+        }
+
+        .feedback {
+            position: fixed;
+            bottom: 5px;
+            right: 5px;
+        }
+
+        .fbbutton {
+            margin-left: 5px;
+        }
+
+        h1 a,
+        h2 a,
+        h3 a,
+        h4 a,
+        h5 a,
+        h6 a {
+            color: rgb(51, 51, 51);
+        }
+
+        span.tt {
+            font: 11pt consolas, monospace;
+            font-size-adjust: none;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" href="https://httpwg.org/assets/site.css">
+    <link rel="Contents" href="#rfc.toc">
+    <link rel="Author" href="#rfc.authors">
+    <link rel="License" href="#rfc.copyrightnotice">
+    <link rel="Chapter" title="1 Introduction" href="#rfc.section.1">
+    <link rel="Chapter" title="2 The PATCH Method" href="#rfc.section.2">
+    <link rel="Chapter" title="3 Advertising Support in OPTIONS" href="#rfc.section.3">
+    <link rel="Chapter" title="4 IANA Considerations" href="#rfc.section.4">
+    <link rel="Chapter" title="5 Security Considerations" href="#rfc.section.5">
+    <link rel="Chapter" title="6 References" href="#rfc.section.6">
+    <link rel="Appendix" title="A Acknowledgements" href="#rfc.section.A">
+    <link rel="Alternate" title="Plain Text Version" href="http://www.ietf.org/rfc/rfc5789.txt">
+    <link rel="Help" title="RFC-Editor's Status Page" href="http://www.rfc-editor.org/info/rfc5789">
+    <meta name="viewport" content="initial-scale=1">
+    <meta name="generator"
+        content="https://github.com/mnot/RFCBootstrap XSLT vendor: Saxonica http://www.saxonica.com/">
+    <meta name="keywords" content="http, patch">
+    <link rel="schema.dcterms" href="http://purl.org/dc/terms/">
+    <meta name="dcterms.creator" content="Dusseault, L.M.">
+    <meta name="dcterms.creator" content="Snell, J.M.">
+    <meta name="dcterms.identifier" content="urn:ietf:rfc:5789">
+    <meta name="dcterms.issued" content="2010-03">
+    <meta name="dcterms.abstract"
+        content="Several applications extending the Hypertext Transfer Protocol (HTTP) require a feature to do partial resource modification. The existing HTTP PUT method only allows a complete replacement of a document. This proposal adds a new HTTP method, PATCH, to modify an existing HTTP resource.">
+    <meta name="dcterms.isPartOf" content="urn:issn:2070-1721">
+    <meta name="description"
+        content="Several applications extending the Hypertext Transfer Protocol (HTTP) require a feature to do partial resource modification. The existing HTTP PUT method only allows a complete replacement of a document. This proposal adds a new HTTP method, PATCH, to modify an existing HTTP resource.">
+</head>
+
+<body onload="getMeta(5789,'rfc.meta');">
+    <nav class="navbar navbar-dark bg-dark d-print-none navbar-expand-lg fixed-top ps-3 pe-3" role="navigation">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse"
+                aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <a class="navbar-brand" href="https://httpwg.org/"><img src="https://httpwg.org/assets/http.svg"
+                    height="23"></a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse">
+
+            <div class="navbar-nav me-auto">
+
+                <a class="nav-item ms-1 text-white" href="https://httpwg.org/specs/">📄 Documentation</a>
+
+                <div class="dropdown ms-4">
+                    <a href="#" class="nav-item dropdown-toggle text-white" data-bs-toggle="dropdown">Work in
+                        Progress</a>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-item"><a href="https://httpwg.org/http-extensions/">HTTP Extensions</a></li>
+                        <li class="dropdown-item"><a
+                                href="https://github.com/httpwg/admin/issues?q=is%3Aissue+is%3Aopen+label%3Aadoption">Future
+                                Work</a></li>
+                    </ul>
+                </div>
+
+                <div class="dropdown ms-4">
+                    <a href="#" class="nav-item dropdown-toggle text-white" data-bs-toggle="dropdown">Participate</a>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-item"><a href="https://httpwg.org/about/">About the HTTP Working Group</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li class="dropdown-item"><a href="https://httpwg.org/CONTRIBUTING.html">Contribution Policy</a>
+                        </li>
+                        <li class="dropdown-item"><a href="http://datatracker.ietf.org/wg/httpbis/charter/">WG
+                                Charter</a></li>
+                        <li class="dropdown-item"><a href="http://lists.w3.org/Archives/Public/ietf-http-wg/">Group
+                                Mailing List 📨</a></li>
+                        <li class="dropdown-item"><a href="https://httpwg.org/wg-materials/">Meeting Materials</a></li>
+                        <li class="dropdown-item"><a href="https://httpwg.org/admin/editors/">Document Editor
+                                Resources</a></li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </nav>
+    <div class="container" id="top">
+        <div class="row">
+            <div class="col-lg-4 order-last d-none d-lg-block" id="sidebar" role="navigation">
+                <div class="navbar">
+                    <div class="navbar-brand"><a href="#top"><strong>RFC </strong>5789</a></div><br clear="all">
+                    <div class="">
+                        <div class="toc ">
+                            <ul>
+                                <li><a href="#rfc.section.1">1.</a>&nbsp;&nbsp;&nbsp;<a href="#intro">介绍</a>
+                                </li>
+                                <li><a href="#rfc.section.2">2.</a>&nbsp;&nbsp;&nbsp;<a href="#patch">PATCH 方法</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.2.1">2.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#rfc.section.2.1">一个简单的 PATCH 示例</a></li>
+                                        <li><a href="#rfc.section.2.2">2.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#error.handling">错误处理</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.3">3.</a>&nbsp;&nbsp;&nbsp;<a href="#adv">在 OPTIONS 中宣告支持</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.3.1">3.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#accept-patch">Accept-Patch 报头</a></li>
+                                        <li><a href="#rfc.section.3.2">3.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#rfc.section.3.2">示例 OPTIONS 请求与响应</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.4">4.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.section.4">IANA
+                                        考量</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.4.1">4.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#rfc.section.4.1">Accept-Patch 响应报头</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.5">5.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.section.5">安全性考量</a>
+                                </li>
+                                <li><a href="#rfc.section.6">6.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.references">参考文献</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.6.1">6.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#rfc.references.1">规范性参考文献</a></li>
+                                        <li><a href="#rfc.section.6.2">6.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#rfc.references.2">信息性参考文献</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.A">Appendix A.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#rfc.section.A">致谢</a></li>
+                                <li><a href="#rfc.authors">作者地址</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8 order-first main" role="main">
+                <header>
+                    <table class="table table-condensed header" id="rfc.headerblock">
+                        <tbody>
+                            <tr>
+                                <td class="text-left">互联网工程任务组（IETF）</td>
+                                <td class="text-right">L. Dusseault</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left">请求评论 (Request for Comments): 5789</td>
+                                <td class="text-right">Linden Lab</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left">类别: 标准路线 (Standards Track)</td>
+                                <td class="text-right">J. Snell</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left">ISSN: 2070-1721</td>
+                                <td class="text-right">2010 年 3 月</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div id="rfc.title">
+                        <h1>HTTP 的 PATCH 方法</h1>
+                    </div>
+                </header>
+                <hr>
+                <h2 id="rfc.abstract"><a href="#rfc.abstract">摘要</a></h2>
+                <div class="lead">
+                    <div id="rfc.abstract.p.1">
+                        <p>若干扩展超文本传输协议（HTTP）的应用需要对资源进行部分修改的功能。现有的 HTTP PUT 方法仅允许对文档进行完整替换。本提案增加了一种新的 HTTP 方法
+                            PATCH，用于修改已有的 HTTP 资源。</p>
+                    </div>
+                </div>
+                <aside id="rfc.meta" class="alert alert-info"></aside>
+                <section id="rfc.status">
+                    <h2><a href="#rfc.status">本备忘录的状态</a></h2>
+                    <div id="rfc.boilerplate.1.p.1">
+                        <p>这是一个互联网标准路线（Standards Track）文档。</p>
+                    </div>
+                    <div id="rfc.boilerplate.1.p.2">
+                        <p>本文件是互联网工程任务组（IETF）的产物，代表 IETF 社区的共识。它已接受公开审查并获得互联网工程指导组（IESG）批准发表。有关互联网标准的更多信息，请参见 <a
+                                href="https://www.rfc-editor.org/rfc/rfc5741.html#section-2">RFC 5741 的第 2 节</a>。</p>
+                    </div>
+                    <div id="rfc.boilerplate.1.p.3">
+                        <p>有关本文件当前状态、任何勘误以及如何提供反馈的信息，可在 <a
+                                href="http://www.rfc-editor.org/info/rfc5789">http://www.rfc-editor.org/info/rfc5789</a>
+                            获得。</p>
+                    </div>
+                </section>
+                <section id="rfc.copyrightnotice">
+                    <h2><a href="#rfc.copyrightnotice">Copyright Notice</a></h2>
+                    <div id="rfc.boilerplate.2.p.1">
+                        <p>Copyright (c) 2010 IETF Trust and the persons identified as the document authors. All rights
+                            reserved.</p>
+                    </div>
+                    <div id="rfc.boilerplate.2.p.2">
+                        <p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF
+                            Documents (<a
+                                href="http://trustee.ietf.org/license-info">http://trustee.ietf.org/license-info</a>) in
+                            effect on the date of publication of this document. Please review these documents carefully,
+                            as they describe your rights and restrictions with respect to this document. Code Components
+                            extracted from this document must include Simplified BSD License text as described in
+                            Section 4.e of the Trust Legal Provisions and are provided without warranty as described in
+                            the Simplified BSD License.</p>
+                    </div>
+                </section>
+                <div class="toc d-lg-none">
+                    <ul>
+                        <li><a href="#rfc.section.1">1.</a>&nbsp;&nbsp;&nbsp;<a href="#intro">介绍</a></li>
+                        <li><a href="#rfc.section.2">2.</a>&nbsp;&nbsp;&nbsp;<a href="#patch">PATCH 方法</a>
+                            <ul>
+                                <li><a href="#rfc.section.2.1">2.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#rfc.section.2.1">一个简单的 PATCH 示例</a></li>
+                                <li><a href="#rfc.section.2.2">2.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#error.handling">错误处理</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#rfc.section.3">3.</a>&nbsp;&nbsp;&nbsp;<a href="#adv">在 OPTIONS 中宣告支持</a>
+                            <ul>
+                                <li><a href="#rfc.section.3.1">3.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#accept-patch">Accept-Patch 报头</a></li>
+                                <li><a href="#rfc.section.3.2">3.2.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.section.3.2">示例
+                                        OPTIONS 请求与响应</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#rfc.section.4">4.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.section.4">IANA 考量</a>
+                            <ul>
+                                <li><a href="#rfc.section.4.1">4.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#rfc.section.4.1">Accept-Patch 响应报头</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#rfc.section.5">5.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.section.5">安全性考量</a></li>
+                        <li><a href="#rfc.section.6">6.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.references">参考文献</a>
+                            <ul>
+                                <li><a href="#rfc.section.6.1">6.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#rfc.references.1">规范性参考文献</a></li>
+                                <li><a href="#rfc.section.6.2">6.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#rfc.references.2">信息性参考文献</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#rfc.section.A">Appendix A.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.section.A">致谢</a>
+                        </li>
+                        <li><a href="#rfc.authors">Authors' Addresses</a></li>
+                    </ul>
+                </div>
+                <section id="intro">
+                    <h2 id="rfc.section.1" class="np"><a href="#rfc.section.1">1.</a>&nbsp;<a href="#intro">介绍</a></h2>
+                    <div id="rfc.section.1.p.1">
+                        <p>This specification defines the new HTTP/1.1 <a href="#RFC2616"><cite
+                                    title="Hypertext Transfer Protocol -- HTTP/1.1">[RFC2616]</cite></a> method, PATCH,
+                            which is used to apply partial modifications to a resource.</p>
+                    </div>
+                    <div id="rfc.section.1.p.2">
+                        <p>需要一种新方法以改善互操作性并防止错误。PUT 方法已被定义为使用完整的新主体覆盖资源，不能重用于执行部分更改。否则，代理和缓存，甚至客户端和服务器，可能会对操作结果产生混淆。POST
+                            已被用于类似目的但没有广泛的互操作性（例如，没有标准方法来发现补丁格式支持）。PATCH 在早期的 HTTP 规范中有提及，但未被完整定义。</p>
+                    </div>
+                    <div id="rfc.section.1.p.3">
+                        <p>在本文档中，关键词 "MUST"、"MUST NOT"、"REQUIRED"、"SHALL"、"SHALL NOT"、"SHOULD"、"SHOULD
+                            NOT"、"RECOMMENDED"、"MAY" 和 "OPTIONAL" 的解释参见 <a href="#RFC2119"><cite
+                                    title="Key words for use in RFCs to Indicate Requirement Levels">[RFC2119]</cite></a>。
+                        </p>
+                    </div>
+                    <div id="rfc.section.1.p.4">
+                        <p>此外，本文档使用在 <a href="#RFC2616"><cite
+                                    title="Hypertext Transfer Protocol -- HTTP/1.1">[RFC2616]</cite></a> 第 2.1 节中定义的
+                            ABNF 语法。</p>
+                    </div>
+                </section>
+                <section id="patch">
+                    <h2 id="rfc.section.2"><a href="#rfc.section.2">2.</a>&nbsp;<a href="#patch">PATCH 方法</a></h2>
+                    <div id="rfc.section.2.p.1">
+                        <p>PATCH 方法请求将请求实体中描述的一组更改应用到由 Request-URI 标识的资源。这组更改以一种称为“补丁文档”的格式表示，并由一个媒体类型来标识。如果 Request-URI
+                            未指向现有资源，服务器可以根据补丁文档类型（即它是否可以逻辑上修改空资源）、权限等条件选择创建新资源。</p>
+                    </div>
+                    <div id="rfc.section.2.p.2">
+                        <p>PUT 与 PATCH 请求之间的差异体现在服务器处理封装实体以修改由 Request-URI 标识的资源的方式上。在 PUT
+                            请求中，封装实体被视为存储在源服务器上的资源的修改后版本，客户端请求将存储的版本替换。然 而对于
+                            PATCH，封装实体包含一组指令，描述应如何修改当前驻留在源服务器上的资源以生成新版本。PATCH 方法影响由 Request-URI
+                            标识的资源，并且它也可能对其他资源产生副作用；即应用 PATCH 可能会创建新资源或修改现有资源。</p>
+                    </div>
+                    <div id="rfc.section.2.p.3">
+                        <p>根据 <a href="#RFC2616"><cite
+                                    title="Hypertext Transfer Protocol -- HTTP/1.1">[RFC2616]</cite></a> 第 9.1
+                            节的定义，PATCH 既不是安全的，也不是幂等的。</p>
+                    </div>
+                    <div id="rfc.section.2.p.4">
+                        <p>PATCH 请求可以以某种方式发出使其成为幂等的，这也有助于防止在相近时间对同一资源的两个 PATCH 请求发生冲突而导致的不良后果。来自多个 PATCH 请求的冲突可能比 PUT
+                            冲突更危险，因为某些补丁格式需要从已知的基点运行，否则会破坏资源。使用此类补丁应用的客户端应使用条件请求，使得如果资源自客户端上次访问后已被更新，请求将失败。例如，客户端可以在
+                            PATCH 请求上使用 If-Match 报头中的强 ETag <a href="#RFC2616"><cite
+                                    title="Hypertext Transfer Protocol -- HTTP/1.1">[RFC2616]</cite></a>。</p>
+                    </div>
+                    <div id="rfc.section.2.p.5">
+                        <p>也存在某些补丁格式不需要从已知基点运行的情况（例如，将文本行追加到日志文件，或向数据库表追加不会冲突的行），在这些情况下客户端请求不需要采取相同的谨慎措施。</p>
+                    </div>
+                    <div id="rfc.section.2.p.6">
+                        <p>服务器 <strong>MUST</strong> 原子性地应用整组更改，并且在操作期间绝不提供（例如，对 GET 的响应中）部分修改的表示。如果整个补丁文档无法成功应用，则服务器
+                            <strong>MUST NOT</strong> 应用任何更改。什么构成成功的 PATCH 的判断可能因补丁文档和被修改的资源类型而异。例如，常见的 diff
+                            工具可以生成适用于目录层次中多个文件的补丁文档。原子性要求对所有直接受影响的文件都适用。有关状态码和可能的错误条件的详细信息，请参阅 “错误处理”，<a
+                                href="#error.handling" title="Error Handling">第 2.2 节</a>。
+                        </p>
+                    </div>
+                    <div id="rfc.section.2.p.7">
+                        <p>如果请求通过缓存转发，且 Request-URI 标识了一个或多个当前被缓存的实体，则这些条目应该被视为陈旧。只有当响应包含显式的新鲜度信息（例如 Expires 报头或
+                            "Cache-Control: max-age" 指令）并且包含与 Request-URI 匹配的 Content-Location 报头以指示 PATCH
+                            响应体是一个资源表示时，PATCH 的响应才是可缓存的。被缓存的 PATCH 响应只能用于响应随后的 GET 和 HEAD 请求；它 <strong>MUST NOT</strong>
+                            用于响应其他方法（特别是 PATCH）。</p>
+                    </div>
+                    <div id="rfc.section.2.p.8">
+                        <p>注意，请求中包含的实体首部只适用于所包含的补丁文档，并且 <strong>MUST NOT</strong> 应用于被修改的资源。因此，请求中可能存在 Content-Language
+                            报头，但它仅表示补丁文档具有某种语言（无更多含义）。服务器不应存储此类首部，除非作为跟踪信息，也不应以与 PUT 请求相同的方式使用这些首部值。因此，本文档未指定通过首部修改文档的
+                            Content-Type 或 Content-Language 值的方法，尽管可以通过补丁文档设计出一种机制来实现该目标。</p>
+                    </div>
+                    <div id="rfc.section.2.p.9">
+                        <p>不能保证资源可以用 PATCH 修改。此外，预期不同的补丁文档格式适用于不同类型的资源，并且没有单一格式适用于所有类型的资源。因此，未要求实现支持单一默认的补丁文档格式。服务器
+                            <strong>MUST</strong> 确保接收的补丁文档适用于由 Request-URI 标识的资源类型。
+                        </p>
+                    </div>
+                    <div id="rfc.section.2.p.10">
+                        <p>客户端需要在何时使用 PATCH 而不是 PUT 之间做出选择。例如，如果补丁文档的大小大于用于 PUT 的新资源数据的大小，则可能更适合使用 PUT 而不是 PATCH。与 POST
+                            的比较更为复杂，因为 POST 的使用方式多种多样，如果服务器选择，POST 可以包含类似 PUT 或 PATCH 的操作。如果操作不会以可预测的方式修改由 Request-URI
+                            标识的资源，则应考虑使用 POST 而不是 PATCH 或 PUT。</p>
+                    </div>
+                    <section id="n-a-simple-patch-example">
+                        <h3 id="rfc.section.2.1"><a href="#rfc.section.2.1">2.1.</a>&nbsp;<a
+                                href="#n-a-simple-patch-example">一个简单的 PATCH 示例</a></h3>
+                        <div id="rfc.figure.u.1">
+                            <div>
+                                <pre class="text2">
+PATCH /file.txt HTTP/1.1
+Host: www.example.com
+Content-Type: application/example
+If-Match: "e0023aa4e"
+Content-Length: 100
+
+[description of changes]
+</pre>
+                            </div>
+                        </div>
+                        <div id="rfc.section.2.1.p.1">
+                            <p>该示例演示了在现有资源上使用假设的补丁文档。</p>
+                        </div>
+                        <div id="rfc.figure.u.2">
+                            <p>对现有文本文件的成功 PATCH 响应：</p>
+                            <div>
+                                <pre class="text">
+HTTP/1.1 204 No Content
+Content-Location: /file.txt
+ETag: "e0023aa4f"
+</pre>
+                            </div>
+                        </div>
+                        <div id="rfc.section.2.1.p.2">
+                            <p>使用 204 响应码是因为响应不携带消息体（而 200 响应通常会有消息体）。注意也可以使用其他成功状态码。</p>
+                        </div>
+                        <div id="rfc.section.2.1.p.3">
+                            <p>此外，ETag 响应报头字段包含通过应用 PATCH 在 http://www.example.com/file.txt 上创建的实体的 ETag，如
+                                Content-Location 响应报头字段所示。</p>
+                        </div>
+                    </section>
+                    <section id="error.handling">
+                        <h3 id="rfc.section.2.2"><a href="#rfc.section.2.2">2.2.</a>&nbsp;<a
+                                href="#error.handling">错误处理</a></h3>
+                        <div id="rfc.section.2.2.p.1">
+                            <p>有若干已知情况会导致 PATCH 请求失败。</p>
+                        </div>
+                        <div id="rfc.section.2.2.p.2">
+                            <dl>
+                                <dt>格式错误的补丁文档：</dt>
+                                <dd>当服务器确定客户端提供的补丁文档格式不正确时，应返回 400 (Bad Request) 响应。格式错误的定义取决于所选的补丁文档格式。</dd>
+                                <dt>不支持的补丁文档：</dt>
+                                <dd>当客户端发送服务器不支持用于由 Request-URI 标识的资源的补丁文档格式时，可使用 415 (Unsupported Media Type)
+                                    响应来指定此情况。此类响应应包含如 <a href="#accept-patch" title="The Accept-Patch Header">第 3.1
+                                        节</a> 所述的 Accept-Patch 响应报头，以通知客户端服务器支持哪些补丁文档媒体类型。</dd>
+                                <dt>无法处理的请求：</dt>
+                                <dd>当服务器理解补丁文档且补丁文档的语法看起来有效，但服务器无法处理该请求时，可使用 422 (Unprocessable Entity) 响应（参见 <a
+                                        href="#RFC4918"><cite
+                                            title="HTTP Extensions for Web Distributed Authoring and Versioning (WebDAV)">[RFC4918]</cite></a>
+                                    第 11.2 节）。这可能包括尝试以会导致资源变为无效的方式修改资源；例如，对一个本应为 well-formed 的 XML 文档的修改导致其不再是
+                                    well-formed。还可能出现更具体的错误（例如“状态冲突”），这些错误也可以用该状态码指示，但更具体的错误通常对客户端更有帮助。</dd>
+                                <dt>资源未找到：</dt>
+                                <dd>当客户端试图将补丁文档应用到不存在的资源，但所选的补丁文档无法应用于不存在的资源时，可使用 404 (Not Found) 状态码。</dd>
+                                <dt>状态冲突：</dt>
+                                <dd>当由于资源的当前状态而无法应用请求时，可使用 409 (Conflict) 状态码。例如，如果客户端试图应用结构性修改但假定存在的结构不存在（在 XML
+                                    的情况下，补丁可能指定将元素 'foo' 更改为元素 'bar'，但元素 'foo' 可能并不存在）。</dd>
+                                <dt>修改冲突：</dt>
+                                <dd>当客户端使用 If-Match 或 If-Unmodified-Since 报头定义前置条件并且该前置条件失败时，返回 412 (Precondition
+                                    Failed) 错误对客户端最有用。然而，如果请求中没有前置条件，则该响应没有意义。在服务器检测到可能的修改冲突且请求中未定义前置条件的情况下，服务器可以返回 409
+                                    (Conflict) 响应。</dd>
+                                <dt>并发修改：</dt>
+                                <dd>某些 PATCH 的应用可能要求服务器按接收顺序处理请求。如果服务器在这些限制下运行，并且收到并发请求以修改同一资源，但无法对这些请求排队处理，服务器可以通过使用
+                                    409 (Conflict) 响应来指示该错误。</dd>
+                            </dl>
+                        </div>
+                        <div id="rfc.section.2.2.p.3">
+                            <p>注意 409 Conflict
+                                响应为客户端提供了相对一致的信息。根据应用和补丁格式的性质，客户端可能能够按原样重新发出请求（例如，向日志文件追加一行的指令），也可能需要检索资源内容以重新计算补丁，或者必须放弃操作。
+                            </p>
+                        </div>
+                        <div id="rfc.section.2.2.p.4">
+                            <p>在适当情况下，也可以使用其他 HTTP 状态码。</p>
+                        </div>
+                        <div id="rfc.section.2.2.p.5">
+                            <p>错误响应的实体主体应包含足够的信息以向客户端传达错误的性质。响应实体的 content-type 在实现之间可以不同。</p>
+                        </div>
+                    </section>
+                </section>
+                <section id="adv">
+                    <h2 id="rfc.section.3"><a href="#rfc.section.3">3.</a>&nbsp;<a href="#adv">在 OPTIONS 中宣告支持</a></h2>
+                    <div id="rfc.section.3.p.1">
+                        <p>服务器可以通过在 HTTP/1.1 定义的 "Allow" OPTIONS 响应报头的允许方法列表中添加 PATCH 来宣告其对 PATCH 方法的支持。即使 Accept-Patch
+                            报头缺失，PATCH 方法也可以出现在 "Allow" 报头中，在这种情况下不会宣告可用的补丁文档列表。</p>
+                    </div>
+                    <section id="accept-patch">
+                        <h3 id="rfc.section.3.1"><a href="#rfc.section.3.1">3.1.</a>&nbsp;<a
+                                href="#accept-patch">Accept-Patch 报头</a></h3>
+                        <div id="rfc.section.3.1.p.1">
+                            <p>本规范引入了一个新的响应报头 Accept-Patch，用于指定服务器接受的补丁文档格式。Accept-Patch 应出现在对任何支持 PATCH 方法的资源的 OPTIONS
+                                响应中。对任意方法的响应中出现 Accept-Patch 报头是一个隐含指示，表示对由 Request-URI 标识的资源允许使用
+                                PATCH。在该报头中出现特定补丁文档格式表示该特定格式被允许用于由 Request-URI 标识的资源。</p>
+                        </div>
+                        <div id="rfc.figure.u.3">
+                            <div>
+                                <pre class="inline">
+Accept-Patch = "Accept-Patch" ":" 1#media-type </pre>
+                            </div>
+                        </div>
+                        <div id="rfc.section.3.1.p.2">
+                            <p>Accept-Patch 报头指定了按 <a href="#RFC2616"><cite
+                                        title="Hypertext Transfer Protocol -- HTTP/1.1">[RFC2616]</cite></a> 第 3.7
+                                节定义的以逗号分隔的媒体类型列表（可带可选参数）。</p>
+                        </div>
+                        <div id="rfc.section.3.1.p.3" class="avoidbreakafter">
+                            <p>示例：</p>
+                        </div>
+                        <div id="rfc.section.3.1.p.4">
+                            <p>Accept-Patch: text/example;charset=utf-8</p>
+                        </div>
+                    </section>
+                    <section id="n-example-options-request-and-response">
+                        <h3 id="rfc.section.3.2"><a href="#rfc.section.3.2">3.2.</a>&nbsp;<a
+                                href="#n-example-options-request-and-response">示例 OPTIONS 请求与响应</a></h3>
+                        <div id="rfc.figure.u.4">
+                            <p>[request]</p>
+                            <div>
+                                <pre class="text2">
+OPTIONS /example/buddies.xml HTTP/1.1
+Host: www.example.com
+</pre>
+                            </div>
+                        </div>
+                        <div id="rfc.figure.u.5">
+                            <p>[response]</p>
+                            <div>
+                                <pre class="text">
+HTTP/1.1 200 OK
+Allow: GET, PUT, POST, OPTIONS, HEAD, DELETE, PATCH
+Accept-Patch: application/example, text/example
+</pre>
+                            </div>
+                        </div>
+                        <div id="rfc.section.3.2.p.1">
+                            <p>这些示例显示了一个通常支持 PATCH 的服务器，使用两个假设的补丁文档格式。</p>
+                        </div>
+                    </section>
+                </section>
+                <section id="n-iana-considerations">
+                    <h2 id="rfc.section.4"><a href="#rfc.section.4">4.</a>&nbsp;<a href="#n-iana-considerations">IANA
+                            考量</a></h2>
+                    <section id="n-the-accept-patch-response-header">
+                        <h3 id="rfc.section.4.1"><a href="#rfc.section.4.1">4.1.</a>&nbsp;<a
+                                href="#n-the-accept-patch-response-header">Accept-Patch 响应报头</a></h3>
+                        <div id="rfc.section.4.1.p.1">
+                            <p>Accept-Patch 响应报头已被添加到永久注册表（参见 <a href="#RFC3864"><cite
+                                        title="Registration Procedures for Message Header Fields">[RFC3864]</cite></a>）。
+                            </p>
+                        </div>
+                        <div id="rfc.section.4.1.p.2">
+                            <dl>
+                                <dt>Header field name:</dt>
+                                <dd>Accept-Patch</dd>
+                                <dt>Applicable Protocol:</dt>
+                                <dd>HTTP</dd>
+                                <dt>Author/Change controller:</dt>
+                                <dd>IETF</dd>
+                                <dt>Specification document:</dt>
+                                <dd>this specification</dd>
+                            </dl>
+                        </div>
+                    </section>
+                </section>
+                <section id="n-security-considerations">
+                    <h2 id="rfc.section.5"><a href="#rfc.section.5">5.</a>&nbsp;<a
+                            href="#n-security-considerations">安全性考量</a></h2>
+                    <div id="rfc.section.5.p.1">
+                        <p>PATCH 的安全性考量几乎与 PUT 的安全性考量相同（参见 <a href="#RFC2616"><cite
+                                    title="Hypertext Transfer Protocol -- HTTP/1.1">[RFC2616]</cite></a> 第 9.6
+                            节）。这些包括对请求进行授权（可能通过访问控制和/或认证）以及确保数据不会因传输错误或意外覆盖而损坏。用于 PUT 的任何机制也可用于 PATCH。下列注意事项尤其适用于 PATCH。
+                        </p>
+                    </div>
+                    <div id="rfc.section.5.p.2">
+                        <p>被补丁化的文档比整体替换的文档更容易被破坏，但可以通过使用诸如 ETag 和 If-Match 请求报头等条件请求机制来应对这一问题（如第 <a href="#patch"
+                                title="The PATCH Method">2 节</a> 所述）。如果 PATCH 请求失败，客户端可以发出 GET
+                            请求以查看资源的状态。在某些情况下，客户端可能能够检查资源的内容以确定是否可以重新发送 PATCH 请求，但在其他情况下，尝试将失败并且/或需要用户验证意图。如果底层传输通道在接收到
+                            PATCH 响应之前失败或发生超时，客户端可能必须发出 GET 请求以查看请求是否已被应用。客户端可能希望确保 GET 请求绕过缓存，使用 HTTP 规范中描述的机制（例如，参见 <a
+                                href="#RFC2616"><cite
+                                    title="Hypertext Transfer Protocol -- HTTP/1.1">[RFC2616]</cite></a> 第 13.1.6 节）。
+                        </p>
+                    </div>
+                    <div id="rfc.section.5.p.3">
+                        <p>有时 HTTP 中间件可能会通过检查 PUT/POST 请求的主体或 GET 响应来检测通过 HTTP 发送的病毒。PATCH
+                            方法使这种监测更为复杂，因为源文档或补丁文档本身可能都不是病毒，但结果可能是。这一安全性考量与字节范围下载、下载补丁文档、上传压缩文件等带来的问题并无实质差别。</p>
+                    </div>
+                    <div id="rfc.section.5.p.4">
+                        <p>单个补丁文档将具有其自身特定的安全性考量，这些考量可能取决于被补丁的资源类型而变化。例如，被补丁的二进制资源的考量将不同于被补丁的 XML
+                            文档。服务器必须采取足够的预防措施，确保恶意客户端不能通过使用 PATCH 耗尽服务器资源（例如 CPU、磁盘 I/O）。</p>
+                    </div>
+                </section>
+                <section id="rfc.references">
+                    <h2 id="rfc.section.6"><a href="#rfc.section.6">6.</a> 参考文献</h2>
+                    <section>
+                        <div id="rfc.references.1">
+                            <h3 id="rfc.section.6.1"><a href="#rfc.section.6.1">6.1.</a> 规范性参考文献</h3>
+                            <dl class="dl-horizontal">
+                                <dt id="RFC2119">[<a href="#RFC2119" class="smpl">RFC2119</a>]</dt>
+                                <dd><a href="mailto:sob@harvard.edu">Bradner, S.</a>, “<a
+                                        href="https://www.rfc-editor.org/rfc/rfc2119.html">Key words for use in RFCs to
+                                        Indicate Requirement Levels</a>”, <a
+                                        href="https://www.rfc-editor.org/info/bcp14">BCP 14</a>, RFC 2119, March 1997.
+                                </dd>
+                                <dt id="RFC2616">[<a href="#RFC2616" class="smpl">RFC2616</a>]</dt>
+                                <dd><a href="mailto:fielding@ics.uci.edu">Fielding, R.</a>, <a
+                                        href="mailto:jg@w3.org">Gettys, J.</a>, <a
+                                        href="mailto:mogul@wrl.dec.com">Mogul, J.</a>, <a
+                                        href="mailto:frystyk@w3.org">Frystyk, H.</a>, <a
+                                        href="mailto:masinter@parc.xerox.com">Masinter, L.</a>, <a
+                                        href="mailto:paulle@microsoft.com">Leach, P.</a>, and <a
+                                        href="mailto:timbl@w3.org">T. Berners-Lee</a>, “<a
+                                        href="https://www.rfc-editor.org/rfc/rfc2616.html">Hypertext Transfer Protocol
+                                        -- HTTP/1.1</a>”, RFC 2616, June 1999.</dd>
+                                <dt id="RFC3864">[<a href="#RFC3864" class="smpl">RFC3864</a>]</dt>
+                                <dd>Klyne, G., Nottingham, M., and J. Mogul, “<a
+                                        href="https://www.rfc-editor.org/rfc/rfc3864.html">Registration Procedures for
+                                        Message Header Fields</a>”, <a href="https://www.rfc-editor.org/info/bcp90">BCP
+                                        90</a>, RFC 3864, September 2004.</dd>
+                            </dl>
+                        </div>
+                    </section>
+                    <section>
+                        <div id="rfc.references.2">
+                            <h3 id="rfc.section.6.2"><a href="#rfc.section.6.2">6.2.</a> 信息性参考文献</h3>
+                            <dl class="dl-horizontal">
+                                <dt id="RFC4918">[<a href="#RFC4918" class="smpl">RFC4918</a>]</dt>
+                                <dd>Dusseault, L., “<a href="https://www.rfc-editor.org/rfc/rfc4918.html">HTTP
+                                        Extensions for Web Distributed Authoring and Versioning (WebDAV)</a>”, RFC 4918,
+                                    June 2007.</dd>
+                            </dl>
+                        </div>
+                    </section>
+                </section>
+                <section id="n-acknowledgements">
+                    <h2 id="rfc.section.A" class="np"><a href="#rfc.section.A">Appendix A.</a>&nbsp;<a
+                            href="#n-acknowledgements">致谢</a></h2>
+                    <div id="rfc.section.A.p.1">
+                        <p>PATCH 并非新概念，它首次出现在 Roy Fielding 和 Henrik Frystyk 撰写的 HTTP 1.1 草案中，也出现在 RFC 2068 的第 19.6.1.1
+                            节中。</p>
+                    </div>
+                    <div id="rfc.section.A.p.2">
+                        <p>感谢 Adam Roach、Chris Sharp、Julian Reschke、Geoff Clemm、Scott Lawrence、Jeffrey Mogul、Roy
+                            Fielding、Greg Stein、Jim Luther、Alex Rousskov、Jamie Lokier、Joe Hildebrand、Mark
+                            Nottingham、Michael Balloni、Cyrus Daboo、Brian Carpenter、John Klensin、Eliot Lear、SM，以及 Bernie
+                            Hoeneisen 对本文档的审阅和建议。特别是，Julian Reschke 多次审阅，提出了许多有用建议，并对本文档的发表起到了关键作用。</p>
+                    </div>
+                </section>
+                <section id="rfc.authors" class="avoidbreakinside">
+                    <h2><a href="#rfc.authors">作者地址</a></h2>
+                    <address><b>Lisa Dusseault</b><br>Linden Lab<br>945 Battery Street<br>San Francisco, CA
+                        94111<br>USA<br>Email: <a href="mailto:lisa.dusseault@gmail.com">lisa.dusseault@gmail.com</a>
+                    </address>
+                    <address><b>James M. Snell</b><br>Email: <a
+                            href="mailto:jasnell@gmail.com">jasnell@gmail.com</a><br>URI: <a
+                            href="http://www.snellspace.com">http://www.snellspace.com</a></address>
+                </section>
+            </div>
+        </div>
+    </div>
+    <script src="https://httpwg.org/assets/node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="https://httpwg.org/assets/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="/dropdown.js"></script>
+</body>
+
+</html>
