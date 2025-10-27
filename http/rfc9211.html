@@ -1,0 +1,983 @@
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html lang="zh-hans">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>RFC 9211 - Cache-Status HTTP 响应头字段</title>
+    <script>
+        function getMeta(rfcno, container) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "https://www.rfc-editor.org/rfc/rfc" + rfcno + ".json", true);
+            xhr.onload = function (e) {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        var data = JSON.parse(xhr.response);
+
+                        var cont = document.getElementById(container);
+                        // empty the container
+                        while (cont.firstChild) {
+                            cont.removeChild(myNode.firstChild);
+                        }
+
+                        var c = data.status;
+                        if (c) {
+                            var bld = newElementWithText("b", c);
+                            cont.appendChild(bld);
+                        } else {
+                            cont.appendChild(newElementWithText("i", "(document status unknown)"));
+                        }
+
+                        c = data.updated_by;
+                        if (c && c.length > 0 && c[0] !== null && c[0].length > 0) {
+                            cont.appendChild(newElement("br"));
+                            cont.appendChild(newText("Updated by: "));
+                            appendRfcLinks(cont, c);
+                        }
+
+                        c = data.obsoleted_by;
+                        if (c && c.length > 0 && c[0] !== null && c[0].length > 0) {
+                            cont.appendChild(newElement("br"));
+                            cont.appendChild(newText("Obsoleted by: "));
+                            appendRfcLinks(cont, c);
+                        }
+
+                        c = data.errata_url;
+                        if (c) {
+                            cont.appendChild(newElement("br"));
+                            var link = newElementWithText("a", "errata");
+                            link.setAttribute("href", c);
+                            var errata = newElementWithText("i", "This document has ");
+                            errata.appendChild(link);
+                            errata.appendChild(newText("."));
+                            cont.appendChild(errata);
+                        }
+
+                        cont.style.display = "block";
+                    } else {
+                        console.error(xhr.statusText);
+                    }
+                }
+            };
+            xhr.onerror = function (e) {
+                console.error(xhr.status + " " + xhr.statusText);
+            };
+            xhr.send(null);
+        }
+        function appendRfcLinks(parent, updates) {
+            var template = "https://www.rfc-editor.org/rfc/rfc{rfc}.html";
+            for (var i = 0; i < updates.length; i++) {
+                var rfc = updates[i].trim().toLowerCase();
+                if (rfc.substring(0, 3) == "rfc") {
+                    var no = parseInt(rfc.substring(3), 10);
+
+                    var link = newElement("a");
+                    link.setAttribute("href", template.replace("{rfc}", no));
+                    link.appendChild(newText(no));
+                    parent.appendChild(link);
+                } else {
+                    parent.appendChild(newText(rfc));
+                }
+                if (i != updates.length - 1) {
+                    parent.appendChild(newText(", "));
+                }
+            }
+        }
+
+        // DOM helpers
+        function newElement(name) {
+            return document.createElement(name);
+        }
+        function newElementWithText(name, txt) {
+            var e = document.createElement(name);
+            e.appendChild(newText(txt));
+            return e;
+        }
+        function newText(text) {
+            return document.createTextNode(text);
+        }
+    </script>
+    <script>
+        function anchorRewrite() {
+            map = {};
+            if (window.location.hash.length >= 1) {
+                var fragid = window.location.hash.substr(1);
+                if (fragid) {
+                    if (!document.getElementById(fragid)) {
+                        var prefix = "rfc.";
+                        var mapped = map[fragid];
+                        if (mapped) {
+                            window.location.hash = mapped;
+                        } else if (fragid.indexOf("section-") == 0) {
+                            window.location.hash = prefix + "section." + fragid.substring(8).replace("-", ".p.");
+                        } else if (fragid.indexOf("appendix-") == 0) {
+                            window.location.hash = prefix + "section." + fragid.substring(9).replace("-", ".p.");
+                        } else if (fragid.indexOf("s-") == 0) {
+                            var postfix = fragid.substring(2);
+                            if (postfix.startsWith("abstract")) {
+                                window.location.hash = prefix + postfix;
+                            } else if (postfix.startsWith("note-")) {
+                                window.location.hash = prefix + "note." + postfix.substring(5).replace("-", ".p.");
+                            } else {
+                                window.location.hash = prefix + "section." + postfix.replace("-", ".p.");
+                            }
+                        } else if (fragid.indexOf("p-") == 0) {
+                            var r = fragid.substring(2);
+                            var p = r.indexOf("-");
+                            if (p >= 0) {
+                                window.location.hash = prefix + "section." + r.substring(0, p) + ".p." + r.substring(p + 1);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        window.addEventListener('hashchange', anchorRewrite);
+        window.addEventListener('DOMContentLoaded', anchorRewrite);
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="RFC9211">
+    <meta property="og:description" content="The Cache-Status HTTP Response Header Field">
+    <meta property="og:url" content="https://httpwg.org/specs/rfc9211.html">
+    <meta property="og:site_name" content="IETF HTTP Working Group Specifications">
+    <meta property="og:image" content="https://httpwg.org/assets/favicon/apple-icon-180x180.png">
+    <link rel="stylesheet" type="text/css"
+        href="https://httpwg.org/assets/node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <style type="text/css">
+        body {
+            padding-top: 80px;
+            padding-bottom: 80px;
+            position: relative;
+        }
+
+        .table.header th,
+        .table.header td {
+            border-top: none;
+            padding: 0;
+        }
+
+        #sidebar {
+            margin-top: -10px;
+            height: 90%;
+            overflow-y: auto;
+            font-size: 90%;
+        }
+
+        #rfc\.meta {
+            width: 40%;
+            float: right
+        }
+
+        .toc ul {
+            list-style: none;
+        }
+
+        .filename {
+            color: rgb(119, 119, 119);
+            font-size: 23px;
+            font-weight: normal;
+            height: auto;
+            line-height: 23px;
+        }
+
+        dl {
+            margin-left: 1em;
+        }
+
+        dl.dl-horizontal {
+            margin-left: 0;
+        }
+
+        dl>dt {
+            float: left;
+            margin-right: 1em;
+        }
+
+        dl.nohang>dt {
+            float: none;
+        }
+
+        dl>dd {
+            margin-bottom: .5em;
+        }
+
+        dl.compact>dd {
+            margin-bottom: 0em;
+        }
+
+        dl>dd>dl {
+            margin-top: 0.5em;
+            margin-bottom: 0em;
+        }
+
+        ul.empty {
+            list-style-type: none;
+        }
+
+        ul.empty li {
+            margin-top: .5em;
+        }
+
+        td.reference {
+            padding-right: 1em;
+            vertical-align: top;
+        }
+
+        .feedback {
+            position: fixed;
+            bottom: 5px;
+            right: 5px;
+        }
+
+        .fbbutton {
+            margin-left: 5px;
+        }
+
+        h1 a,
+        h2 a,
+        h3 a,
+        h4 a,
+        h5 a,
+        h6 a {
+            color: rgb(51, 51, 51);
+        }
+
+        span.tt {
+            font: 11pt consolas, monospace;
+            font-size-adjust: none;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" href="https://httpwg.org/assets/site.css">
+    <link rel="Contents" href="#rfc.toc">
+    <link rel="Author" href="#rfc.authors">
+    <link rel="License" href="#rfc.copyrightnotice">
+    <link rel="Chapter" title="1 Introduction" href="#rfc.section.1">
+    <link rel="Chapter" title="2 The Cache-Status HTTP Response Header Field" href="#rfc.section.2">
+    <link rel="Chapter" title="3 Examples" href="#rfc.section.3">
+    <link rel="Chapter" title="4 Defining New Cache-Status Parameters" href="#rfc.section.4">
+    <link rel="Chapter" title="5 IANA Considerations" href="#rfc.section.5">
+    <link rel="Chapter" title="6 Security Considerations" href="#rfc.section.6">
+    <link rel="Chapter" title="7 References" href="#rfc.section.7">
+    <link href="https://datatracker.ietf.org/doc/draft-ietf-httpbis-cache-header-10" rel="prev">
+    <link href="https://dx.doi.org/10.17487/rfc9211" rel="alternate">
+    <link href="urn:issn:2070-1721" rel="alternate">
+    <link rel="Alternate" title="Plain Text Version" href="http://www.ietf.org/rfc/rfc9211.txt">
+    <link rel="Help" title="RFC-Editor's Status Page" href="https://www.rfc-editor.org/info/rfc9211">
+    <meta name="viewport" content="initial-scale=1">
+    <meta name="generator"
+        content="https://github.com/mnot/RFCBootstrap XSLT vendor: Saxonica http://www.saxonica.com/">
+    <meta name="keywords" content="http, cache, debugging, x-cache">
+    <link rel="schema.dcterms" href="http://purl.org/dc/terms/">
+    <meta name="dcterms.creator" content="Nottingham, M.">
+    <meta name="dcterms.identifier" content="urn:ietf:rfc:9211">
+    <meta name="dcterms.issued" content="2022-06">
+    <meta name="dcterms.abstract"
+        content="To aid debugging, HTTP caches often append header fields to a response, explaining how they handled the request in an ad hoc manner. This specification defines a standard mechanism to do so that is aligned with HTTP's caching model.">
+    <meta name="dcterms.isPartOf" content="urn:issn:2070-1721">
+    <meta name="description"
+        content="To aid debugging, HTTP caches often append header fields to a response, explaining how they handled the request in an ad hoc manner. This specification defines a standard mechanism to do so that is aligned with HTTP's caching model.">
+</head>
+
+<body onload="getMeta(9211,'rfc.meta');">
+    <nav class="navbar navbar-dark bg-dark d-print-none navbar-expand-lg fixed-top ps-3 pe-3" role="navigation">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse"
+                aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <a class="navbar-brand" href="https://httpwg.org/"><img src="https://httpwg.org/assets/http.svg"
+                    height="23"></a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse">
+
+            <div class="navbar-nav me-auto">
+
+                <a class="nav-item ms-1 text-white" href="https://httpwg.org/specs/">📄 Documentation</a>
+
+                <div class="dropdown ms-4">
+                    <a href="#" class="nav-item dropdown-toggle text-white" data-bs-toggle="dropdown">Work in
+                        Progress</a>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-item"><a href="https://httpwg.org/http-extensions/">HTTP Extensions</a></li>
+                        <li class="dropdown-item"><a
+                                href="https://github.com/httpwg/admin/issues?q=is%3Aissue+is%3Aopen+label%3Aadoption">Future
+                                Work</a></li>
+                    </ul>
+                </div>
+
+                <div class="dropdown ms-4">
+                    <a href="#" class="nav-item dropdown-toggle text-white" data-bs-toggle="dropdown">Participate</a>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-item"><a href="https://httpwg.org/about/">About the HTTP Working Group</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li class="dropdown-item"><a href="https://httpwg.org/CONTRIBUTING.html">Contribution Policy</a>
+                        </li>
+                        <li class="dropdown-item"><a href="http://datatracker.ietf.org/wg/httpbis/charter/">WG
+                                Charter</a></li>
+                        <li class="dropdown-item"><a href="http://lists.w3.org/Archives/Public/ietf-http-wg/">Group
+                                Mailing List 📨</a></li>
+                        <li class="dropdown-item"><a href="https://httpwg.org/wg-materials/">Meeting Materials</a></li>
+                        <li class="dropdown-item"><a href="https://httpwg.org/admin/editors/">Document Editor
+                                Resources</a></li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </nav>
+    <div class="container" id="top">
+        <div class="row">
+            <div class="col-lg-4 order-last d-none d-lg-block" id="sidebar" role="navigation">
+                <div class="navbar">
+                    <div class="navbar-brand"><a href="#top"><strong>RFC </strong>9211</a></div><br clear="all">
+                    <div class="">
+                        <div class="toc ">
+                            <ul>
+                                <li><a href="#rfc.section.1">1.</a>&nbsp;&nbsp;&nbsp;<a href="#introduction">引言</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.1.1">1.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#notational-conventions">符号约定</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.2">2.</a>&nbsp;&nbsp;&nbsp;<a href="#field">Cache-Status HTTP
+                                        响应头字段</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.2.1">2.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#the-hit-parameter">hit 参数</a></li>
+                                        <li><a href="#rfc.section.2.2">2.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#the-fwd-parameter">fwd 参数</a></li>
+                                        <li><a href="#rfc.section.2.3">2.3.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#the-fwd-status-parameter">fwd-status 参数</a></li>
+                                        <li><a href="#rfc.section.2.4">2.4.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#the-ttl-parameter">ttl 参数</a></li>
+                                        <li><a href="#rfc.section.2.5">2.5.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#the-stored-parameter">stored 参数</a></li>
+                                        <li><a href="#rfc.section.2.6">2.6.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#the-collapsed-parameter">collapsed 参数</a></li>
+                                        <li><a href="#rfc.section.2.7">2.7.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#the-key-parameter">key 参数</a></li>
+                                        <li><a href="#rfc.section.2.8">2.8.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#the-detail-parameter">detail 参数</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.3">3.</a>&nbsp;&nbsp;&nbsp;<a href="#examples">示例</a>
+                                </li>
+                                <li><a href="#rfc.section.4">4.</a>&nbsp;&nbsp;&nbsp;<a href="#register">定义新的
+                                        Cache-Status 参数</a></li>
+                                <li><a href="#rfc.section.5">5.</a>&nbsp;&nbsp;&nbsp;<a href="#iana-considerations">IANA
+                                        相关事项</a></li>
+                                <li><a href="#rfc.section.6">6.</a>&nbsp;&nbsp;&nbsp;<a href="#security">安全性注意事项</a>
+                                </li>
+                                <li><a href="#rfc.section.7">7.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.references">参考文献</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.7.1">7.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#rfc.references.2">规范性引用</a></li>
+                                        <li><a href="#rfc.section.7.2">7.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#rfc.references.3">补充性引用</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.authors">作者地址</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8 order-first main" role="main">
+                <header>
+                    <table class="table table-condensed header" id="rfc.headerblock">
+                        <tbody>
+                            <tr>
+                                <td class="text-left">互联网工程任务组 (IETF)</td>
+                                <td class="text-right">M. Nottingham</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left">请求评议：9211</td>
+                                <td class="text-right">Fastly</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left">类别：标准轨道</td>
+                                <td class="text-right">2022年6月</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left">ISSN: 2070-1721</td>
+                                <td class="text-right"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div id="rfc.title">
+                        <h1>Cache-Status HTTP 响应头字段</h1>
+                    </div>
+                </header>
+                <hr>
+                <h2 id="rfc.abstract"><a href="#rfc.abstract">摘要</a></h2>
+                <div class="lead">
+                    <div id="rfc.abstract.p.1">
+                        <p>为了帮助调试，HTTP 缓存通常会在响应中附加一些头字段，以说明它们如何以临时方式处理请求。本规范定义了一种与 HTTP 缓存模型一致的标准机制来实现此目的。</p>
+                    </div>
+                </div>
+                <aside id="rfc.meta" class="alert alert-info"></aside>
+                <section id="rfc.status">
+                    <h2><a href="#rfc.status">本备忘录的状态</a></h2>
+                    <div id="rfc.boilerplate.1.p.1">
+                        <p>这是一个互联网标准轨道文档。</p>
+                    </div>
+                    <div id="rfc.boilerplate.1.p.2">
+                        <p>本文件是互联网工程任务组（IETF）的成果，代表 IETF 社区的共识。它已获得公开评审，并由互联网工程指导小组（IESG）批准发布。关于互联网标准的更多信息请参见 <a
+                                href="https://www.rfc-editor.org/rfc/rfc7841.html#section-2">RFC 7841 第2节</a>。
+                        </p>
+                    </div>
+                    <div id="rfc.boilerplate.1.p.3">
+                        <p>关于本文档当前状态、勘误及如何反馈信息，可访问 <a
+                                href="https://www.rfc-editor.org/info/rfc9211">https://www.rfc-editor.org/info/rfc9211</a>
+                            获取。
+                        </p>
+                    </div>
+                </section>
+                <section id="rfc.copyrightnotice">
+                    <h2><a href="#rfc.copyrightnotice">Copyright Notice</a></h2>
+                    <div id="rfc.boilerplate.2.p.1">
+                        <p>Copyright (c) 2022 IETF Trust and the persons identified as the document authors. All rights
+                            reserved.</p>
+                    </div>
+                    <div id="rfc.boilerplate.2.p.2">
+                        <p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF
+                            Documents (<a
+                                href="https://trustee.ietf.org/license-info">https://trustee.ietf.org/license-info</a>)
+                            in effect on the date of publication of this document. Please review these documents
+                            carefully, as they describe your rights and restrictions with respect to this document. Code
+                            Components extracted from this document must include Revised BSD License text as described
+                            in Section 4.e of the Trust Legal Provisions and are provided without warranty as described
+                            in the Revised BSD License.</p>
+                    </div>
+                </section>
+                <div class="toc d-lg-none">
+                    <ul>
+                        <li><a href="#rfc.section.1">1.</a>&nbsp;&nbsp;&nbsp;<a href="#introduction">引言</a>
+                            <ul>
+                                <li><a href="#rfc.section.1.1">1.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#notational-conventions">符号约定</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#rfc.section.2">2.</a>&nbsp;&nbsp;&nbsp;<a href="#field">Cache-Status HTTP
+                                响应头字段</a>
+                            <ul>
+                                <li><a href="#rfc.section.2.1">2.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#the-hit-parameter">hit 参数</a></li>
+                                <li><a href="#rfc.section.2.2">2.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#the-fwd-parameter">fwd 参数</a></li>
+                                <li><a href="#rfc.section.2.3">2.3.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#the-fwd-status-parameter">fwd-status 参数</a></li>
+                                <li><a href="#rfc.section.2.4">2.4.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#the-ttl-parameter">ttl 参数</a></li>
+                                <li><a href="#rfc.section.2.5">2.5.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#the-stored-parameter">stored 参数</a></li>
+                                <li><a href="#rfc.section.2.6">2.6.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#the-collapsed-parameter">collapsed 参数</a></li>
+                                <li><a href="#rfc.section.2.7">2.7.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#the-key-parameter">key 参数</a></li>
+                                <li><a href="#rfc.section.2.8">2.8.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#the-detail-parameter">detail 参数</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#rfc.section.3">3.</a>&nbsp;&nbsp;&nbsp;<a href="#examples">示例</a></li>
+                        <li><a href="#rfc.section.4">4.</a>&nbsp;&nbsp;&nbsp;<a href="#register">定义新的 Cache-Status
+                                参数</a></li>
+                        <li><a href="#rfc.section.5">5.</a>&nbsp;&nbsp;&nbsp;<a href="#iana-considerations">IANA
+                                注意事项</a></li>
+                        <li><a href="#rfc.section.6">6.</a>&nbsp;&nbsp;&nbsp;<a href="#security">安全性注意事项</a></li>
+                        <li><a href="#rfc.section.7">7.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.references">参考文献</a>
+                            <ul>
+                                <li><a href="#rfc.section.7.1">7.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#rfc.references.2">规范性引用</a></li>
+                                <li><a href="#rfc.section.7.2">7.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#rfc.references.3">补充性引用</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#rfc.authors">作者地址</a></li>
+                    </ul>
+                </div>
+                <hr class="hidden-print">
+                <section id="introduction">
+                    <h2 id="rfc.section.1" class="np"><a href="#rfc.section.1">1.</a>&nbsp;<a
+                            href="#introduction">引言</a></h2>
+                    <div id="rfc.section.1.p.1">
+                        <p>为了便于调试（无论是人工还是自动化工具），HTTP 缓存经常在响应中追加头字段，以说明它们如何处理该请求。不幸的是，这些头字段的语义通常不明确，且不同实现之间在语义和语法上各不相同。
+                        </p>
+                    </div>
+                    <div id="rfc.section.1.p.2">
+                        <p>本规范为此目的定义了一个新的 HTTP 响应头字段 "Cache-Status"，并为其提供了标准化的语法与语义。</p>
+                    </div>
+                    <section id="notational-conventions">
+                        <h3 id="rfc.section.1.1"><a href="#rfc.section.1.1">1.1.</a>&nbsp;<a
+                                href="#notational-conventions">符号约定</a></h3>
+                        <div id="rfc.section.1.1.p.1">
+                            <p>文中关键词 "<em class="bcp14">MUST</em>"、"<em class="bcp14">MUST NOT</em>"、"<em
+                                    class="bcp14">REQUIRED</em>"、"<em class="bcp14">SHALL</em>"、"<em class="bcp14">SHALL
+                                    NOT</em>"、"<em class="bcp14">SHOULD</em>"、"<em class="bcp14">SHOULD NOT</em>"、"<em
+                                    class="bcp14">RECOMMENDED</em>"、"<em class="bcp14">NOT RECOMMENDED</em>"、"<em
+                                    class="bcp14">MAY</em>" 和 "<em class="bcp14">OPTIONAL</em>" 的解释应参照 <span
+                                    class="nobr">BCP 14</span> 中的说明，详见 <a href="#RFC2119"><cite
+                                        title="Key words for use in RFCs to Indicate Requirement Levels">[RFC2119]</cite></a>
+                                和 <a href="#RFC8174"><cite
+                                        title="Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words">[RFC8174]</cite></a>，仅在这些词以全大写形式出现时适用。
+                            </p>
+                        </div>
+                        <div id="rfc.section.1.1.p.2">
+                            <p>本文件使用 <a href="https://www.rfc-editor.org/rfc/rfc8941.html#section-3">Section 3</a>
+                                中的术语来指定语法与解析（来自 STRUCTURED-FIELDS）：List、String、Token、Integer 和 Boolean。</p>
+                        </div>
+                        <div id="rfc.section.1.1.p.3">
+                            <p>本文件还使用来自 <a href="#HTTP"><cite title="HTTP Semantics">[HTTP]</cite></a> 与 <a
+                                    href="#HTTP-CACHING"><cite title="HTTP Caching">[HTTP-CACHING]</cite></a> 的术语。</p>
+                        </div>
+                    </section>
+                </section>
+                <hr class="hidden-print">
+                <section id="field">
+                    <h2 id="rfc.section.2" class="np"><a href="#rfc.section.2">2.</a>&nbsp;<a href="#field">Cache-Status
+                            HTTP 响应头字段</a></h2>
+                    <div id="rfc.section.2.p.1">
+                        <p>Cache-Status HTTP 响应头字段用于指示缓存如何处理该响应及其对应的请求。该头字段的语法符合 <a href="#STRUCTURED-FIELDS"><cite
+                                    title="Structured Field Values for HTTP">[STRUCTURED-FIELDS]</cite></a> 的规定。</p>
+                    </div>
+                    <div id="rfc.section.2.p.2">
+                        <p>其值是一个
+                            List。列表的每个成员表示处理过该请求的一个缓存。第一个成员表示最接近源服务器的缓存，最后一个成员表示最接近用户的缓存（如果用户代理自身追加了值，则可能包括用户代理的缓存）。</p>
+                    </div>
+                    <div id="rfc.section.2.p.3">
+                        <p>缓存决定何时在响应中添加 Cache-Status 头字段。有些缓存可能会对所有响应添加该字段，而另一些仅在特定配置或请求包含激活调试模式的头字段时添加。有关相关安全注意事项，请参见
+                            <a href="#security" title="Security Considerations">第 6 节</a>。
+                        </p>
+                    </div>
+                    <div id="rfc.section.2.p.4">
+                        <p>中间件 <em class="bcp14">SHOULD NOT</em> 向其本地生成的响应追加 Cache-Status
+                            成员，即使该中间件包含缓存，也不应追加，除非该生成的响应是基于已存储响应（例如 304 (Not Modified) 和 206 (Partial Content)
+                            都基于已存储的响应）。例如，代理因请求格式错误生成 400 响应时不会添加 Cache-Status，因为该响应是代理生成的，而非源服务器生成的。</p>
+                    </div>
+                    <div id="rfc.section.2.p.5">
+                        <p>在向 Cache-Status 头字段添加值时，缓存 <em class="bcp14">SHOULD</em> 保留已存在的字段值，以便调试处理该请求的整个缓存链。</p>
+                    </div>
+                    <div id="rfc.section.2.p.6">
+                        <p>列表的每个成员都要标识插入该成员的缓存，该标识 <em class="bcp14">MUST</em> 是一个 String 或 Token。根据部署情况，这可以是产品或服务名称（例如
+                            "ExampleCache" 或 "Example CDN"）、主机名（"cache-3.example.com"）、IP 地址或生成的字符串。</p>
+                    </div>
+                    <div id="rfc.section.2.p.7">
+                        <p>列表的每个成员可以包含描述该缓存如何处理请求的参数。尽管这些参数为 <em class="bcp14">OPTIONAL</em>，但鼓励缓存尽可能提供更多信息。</p>
+                    </div>
+                    <div id="rfc.section.2.p.8">
+                        <p>本规范定义了以下参数。</p>
+                    </div>
+                    <section id="the-hit-parameter">
+                        <h3 id="rfc.section.2.1"><a href="#rfc.section.2.1">2.1.</a>&nbsp;<a
+                                href="#the-hit-parameter">hit 参数</a></h3>
+                        <div id="rfc.section.2.1.p.1">
+                            <p>"hit" 的值为 Boolean，当其为 true 时表示该请求由缓存满足；也就是说，请求未被转发，响应来自缓存。</p>
+                        </div>
+                        <div id="rfc.section.2.1.p.2">
+                            <p>如果响应最初由源站生成但被缓存修改（例如 304 或 206 状态码），只要没有向前转发（例如用于验证），仍然被视为 hit。</p>
+                        </div>
+                        <div id="rfc.section.2.1.p.3">
+                            <p>如果响应在缓存中但在使用前必须向前转发（例如因为已陈旧或为部分内容），则不被视为 hit。注意，当在未向前转发的情况下使用已陈旧的响应（例如源站不可用）时，可以将其视为 hit。
+                            </p>
+                        </div>
+                        <div id="rfc.section.2.1.p.4">
+                            <p>"hit" 与 "fwd" 互斥；每个列表成员上只应出现其中之一。</p>
+                        </div>
+                    </section>
+                    <section id="the-fwd-parameter">
+                        <h3 id="rfc.section.2.2"><a href="#rfc.section.2.2">2.2.</a>&nbsp;<a
+                                href="#the-fwd-parameter">fwd 参数</a></h3>
+                        <div id="rfc.section.2.2.p.1">
+                            <p>当存在 "fwd" 时，表示请求已被转发到源站；其值为一个 Token，用来说明转发的原因。</p>
+                        </div>
+                        <div id="rfc.section.2.2.p.2" class="avoidbreakafter">
+                            <p>下列参数值用于解释请求为何被转发，按从最具体到最不具体排序：</p>
+                        </div>
+                        <div id="rfc.section.2.2.p.3">
+                            <dl>
+                                <dt>bypass:</dt>
+                                <dd style="margin-left: 1.5em">缓存被配置为不处理此请求。</dd>
+                                <dt>method:</dt>
+                                <dd style="margin-left: 1.5em">请求方法的语义要求将请求转发。</dd>
+                                <dt>uri-miss:</dt>
+                                <dd style="margin-left: 1.5em">缓存中没有与请求 URI 匹配的任何响应。</dd>
+                                <dt>vary-miss:</dt>
+                                <dd style="margin-left: 1.5em">缓存中存在与请求 URI 匹配的响应，但无法基于本次请求的头字段和已存的 Vary 首部来选择合适的响应。
+                                </dd>
+                                <dt>miss:</dt>
+                                <dd style="margin-left: 1.5em">缓存中没有任何可以用于满足该请求的响应（供无法区分 uri-miss 与 vary-miss 的实现使用）。
+                                </dd>
+                                <dt>request:</dt>
+                                <dd style="margin-left: 1.5em">缓存能够为请求选择一个新鲜的响应，但请求的语义（例如 Cache-Control 请求指令）不允许使用它。
+                                </dd>
+                                <dt>stale:</dt>
+                                <dd style="margin-left: 1.5em">缓存能够为请求选择一个响应，但该响应已陈旧。</dd>
+                                <dt>partial:</dt>
+                                <dd style="margin-left: 1.5em">缓存能够选择部分响应，但并未包含请求的所有范围（或请求为完整响应）。</dd>
+                            </dl>
+                        </div>
+                        <div id="rfc.section.2.2.p.4">
+                            <p>应尽可能使用缓存已知的最具体原因（<em class="bcp14">SHOULD</em>）。另见 <a href="#HTTP-CACHING"><cite
+                                        title="HTTP Caching">[HTTP-CACHING]</cite></a>，以及 <a
+                                    href="https://www.rfc-editor.org/rfc/rfc9111.html#section-4">RFC 9111 第 4 节</a>。</p>
+                        </div>
+                    </section>
+                    <section id="the-fwd-status-parameter">
+                        <h3 id="rfc.section.2.3"><a href="#rfc.section.2.3">2.3.</a>&nbsp;<a
+                                href="#the-fwd-status-parameter">fwd-status 参数</a></h3>
+                        <div id="rfc.section.2.3.p.1">
+                            <p>"fwd-status" 的值为 Integer，表示下一跳服务器对转发请求返回的状态码（见 <a href="#HTTP"><cite
+                                        title="HTTP Semantics">[HTTP]</cite></a>，<a
+                                    href="https://www.rfc-editor.org/rfc/rfc9110.html#section-15">第 15 节</a>）。仅当存在 fwd
+                                时该参数才有意义。如果 fwd 存在但未提供 fwd-status，则默认使用响应中发送的状态码。</p>
+                        </div>
+                        <div id="rfc.section.2.3.p.2">
+                            <p>该参数有助于区分下一跳服务器对条件请求返回 304 (Not Modified) 或因范围请求返回 206 (Partial Content) 的情形。</p>
+                        </div>
+                    </section>
+                    <section id="the-ttl-parameter">
+                        <h3 id="rfc.section.2.4"><a href="#rfc.section.2.4">2.4.</a>&nbsp;<a
+                                href="#the-ttl-parameter">ttl 参数</a></h3>
+                        <div id="rfc.section.2.4.p.1">
+                            <p>"ttl" 的值为 Integer，表示缓存计算的响应剩余新鲜期（见 <a href="#HTTP-CACHING"><cite
+                                        title="HTTP Caching">[HTTP-CACHING]</cite></a>，<a
+                                    href="https://www.rfc-editor.org/rfc/rfc9111.html#section-4.2.1">第 4.2.1
+                                    节</a>），以秒为单位，并尽可能接近缓存发送响应头时测量。该值包含缓存通过启发式方法（见 <a href="#HTTP-CACHING"><cite
+                                        title="HTTP Caching">[HTTP-CACHING]</cite></a>，<a
+                                    href="https://www.rfc-editor.org/rfc/rfc9111.html#section-4.2.2">第 4.2.2
+                                    节</a>）、本地配置或其他因素分配的有效期。该值可以为负，以表示响应已陈旧。</p>
+                        </div>
+                    </section>
+                    <section id="the-stored-parameter">
+                        <h3 id="rfc.section.2.5"><a href="#rfc.section.2.5">2.5.</a>&nbsp;<a
+                                href="#the-stored-parameter">stored 参数</a></h3>
+                        <div id="rfc.section.2.5.p.1">
+                            <p>"stored" 的值为 Boolean，表示缓存是否已存储该响应（见 <a href="#HTTP-CACHING"><cite
+                                        title="HTTP Caching">[HTTP-CACHING]</cite></a>，<a
+                                    href="https://www.rfc-editor.org/rfc/rfc9111.html#section-3">第 3 节</a>）；值为 true
+                                表示已存储。仅当存在 fwd 时该参数才有意义。</p>
+                        </div>
+                    </section>
+                    <section id="the-collapsed-parameter">
+                        <h3 id="rfc.section.2.6"><a href="#rfc.section.2.6">2.6.</a>&nbsp;<a
+                                href="#the-collapsed-parameter">collapsed 参数</a></h3>
+                        <div id="rfc.section.2.6.p.1">
+                            <p>"collapsed" 的值为 Boolean，指示该请求是否与一个或多个其他转发请求合并（见 <a href="#HTTP-CACHING"><cite
+                                        title="HTTP Caching">[HTTP-CACHING]</cite></a>，<a
+                                    href="https://www.rfc-editor.org/rfc/rfc9111.html#section-4">第 4 节</a>）。若为
+                                true，表示响应已被成功复用；若为 false，表示必须发起新的请求。若该参数不存在，则表示请求未与其他请求合并。仅当存在 fwd 时该参数才有意义。</p>
+                        </div>
+                    </section>
+                    <section id="the-key-parameter">
+                        <h3 id="rfc.section.2.7"><a href="#rfc.section.2.7">2.7.</a>&nbsp;<a
+                                href="#the-key-parameter">key 参数</a></h3>
+                        <div id="rfc.section.2.7.p.1">
+                            <p>"key" 的值为 String，传达用于该响应的缓存键的表示（见 <a href="#HTTP-CACHING"><cite
+                                        title="HTTP Caching">[HTTP-CACHING]</cite></a>，<a
+                                    href="https://www.rfc-editor.org/rfc/rfc9111.html#section-2">第 2 节</a>）。注意该值可能与实现相关。
+                            </p>
+                        </div>
+                    </section>
+                    <section id="the-detail-parameter">
+                        <h3 id="rfc.section.2.8"><a href="#rfc.section.2.8">2.8.</a>&nbsp;<a
+                                href="#the-detail-parameter">detail 参数</a></h3>
+                        <div id="rfc.section.2.8.p.1">
+                            <p>"detail" 的值为 String 或 Token，允许实现传递其他参数未涵盖的补充信息，例如实现特定的状态或其他与缓存相关的度量。</p>
+                        </div>
+                        <div id="rfc.section.2.8.p.2" class="avoidbreakafter">
+                            <p>例如：</p>
+                        </div>
+                        <div id="rfc.section.2.8.p.3">
+                            <pre class="text">
+Cache-Status: ExampleCache; hit; detail=MEMORY
+</pre>
+                        </div>
+                        <div id="rfc.section.2.8.p.4">
+                            <p>detail 参数的语义始终特定于发送该参数的缓存；即使来自另一个缓存的 detail 参数具有相同的值，也可能并不具有相同含义。</p>
+                        </div>
+                        <div id="rfc.section.2.8.p.5">
+                            <p>该参数的设计有意受限。如果实现的开发者或运营者需要以可互操作的方式传递额外信息，建议注册扩展参数（见 <a href="#register"
+                                    title="Defining New Cache-Status Parameters">第 4 节</a>）或定义另一个头字段。</p>
+                        </div>
+                    </section>
+                </section>
+                <hr class="hidden-print">
+                <section id="examples">
+                    <h2 id="rfc.section.3" class="np"><a href="#rfc.section.3">3.</a>&nbsp;<a href="#examples">示例</a>
+                    </h2>
+                    <div id="rfc.section.3.p.1" class="avoidbreakafter">
+                        <p>下面是一个最小的缓存命中示例：</p>
+                    </div>
+                    <div id="rfc.section.3.p.2">
+                        <pre class="text">
+Cache-Status: ExampleCache; hit
+</pre>
+                    </div>
+                    <div id="rfc.section.3.p.3" class="avoidbreakafter">
+                        <p>不过，更礼貌的缓存会提供更多信息，例如：</p>
+                    </div>
+                    <div id="rfc.section.3.p.4">
+                        <pre class="text">
+Cache-Status: ExampleCache; hit; ttl=376
+</pre>
+                    </div>
+                    <div id="rfc.section.3.p.5" class="avoidbreakafter">
+                        <p>已陈旧的命中只是具有负的新鲜度，例如：</p>
+                    </div>
+                    <div id="rfc.section.3.p.6">
+                        <pre class="text">
+Cache-Status: ExampleCache; hit; ttl=-412
+</pre>
+                    </div>
+                    <div id="rfc.section.3.p.7" class="avoidbreakafter">
+                        <p>而下面是一个完全未命中的示例：</p>
+                    </div>
+                    <div id="rfc.section.3.p.8">
+                        <pre class="text">
+Cache-Status: ExampleCache; fwd=uri-miss
+</pre>
+                    </div>
+                    <div id="rfc.section.3.p.9" class="avoidbreakafter">
+                        <p>这是一个在后端服务器上成功验证的未命中示例：</p>
+                    </div>
+                    <div id="rfc.section.3.p.10">
+                        <pre class="text">
+Cache-Status: ExampleCache; fwd=stale; fwd-status=304
+</pre>
+                    </div>
+                    <div id="rfc.section.3.p.11" class="avoidbreakafter">
+                        <p>这是一个与其他请求合并（collapsed）的未命中示例：</p>
+                    </div>
+                    <div id="rfc.section.3.p.12">
+                        <pre class="text">
+Cache-Status: ExampleCache; fwd=uri-miss; collapsed
+</pre>
+                    </div>
+                    <div id="rfc.section.3.p.13" class="avoidbreakafter">
+                        <p>这是一个缓存尝试合并但未能合并的示例：</p>
+                    </div>
+                    <div id="rfc.section.3.p.14">
+                        <pre class="text">
+Cache-Status: ExampleCache; fwd=uri-miss; collapsed=?0
+</pre>
+                    </div>
+                    <div id="rfc.section.3.p.15" class="avoidbreakafter">
+                        <p>下面示例展示经过两层独立缓存的情况：最接近源的缓存对早先的请求以已存储的响应作出回应；第二层缓存存储了该响应并在后续请求中重用它以满足当前请求：</p>
+                    </div>
+                    <div id="rfc.section.3.p.16">
+                        <pre class="text">
+Cache-Status: OriginCache; hit; ttl=1100,
+              "CDN Company Here"; hit; ttl=545
+</pre>
+                    </div>
+                    <div id="rfc.section.3.p.17" class="avoidbreakafter">
+                        <p>下面示例展示三层缓存系统：最接近源的是反向代理（在此处响应来自缓存）；其次是网络中插入的正向代理（由于其缓存中没有与 URI
+                            匹配的响应，请求被转发，并与其他请求合并，随后存储了结果响应）；最接近用户的是浏览器缓存（其缓存中没有与请求 URI 匹配的响应）：</p>
+                    </div>
+                    <div id="rfc.section.3.p.18">
+                        <pre class="text">
+Cache-Status: ReverseProxyCache; hit
+Cache-Status: ForwardProxyCache; fwd=uri-miss; collapsed; stored
+Cache-Status: BrowserCache; fwd=uri-miss
+</pre>
+                    </div>
+                </section>
+                <hr class="hidden-print">
+                <section id="register">
+                    <h2 id="rfc.section.4" class="np"><a href="#rfc.section.4">4.</a>&nbsp;<a href="#register">定义新的
+                            Cache-Status 参数</a></h2>
+                    <div id="rfc.section.4.p.1">
+                        <p>可以通过在 "HTTP Cache-Status" 注册表中注册来定义新的 Cache-Status 参数。</p>
+                    </div>
+                    <div id="rfc.section.4.p.2">
+                        <p>注册请求由指定的专家审核并批准，依据 <a href="#RFC8126"><cite
+                                    title="Guidelines for Writing an IANA Considerations Section in RFCs">[RFC8126]</cite></a>，详见
+                            <a href="https://www.rfc-editor.org/rfc/rfc8126.html#section-4.5">第 4.5
+                                节</a>。推荐但不强制要求提交规范文档。
+                        </p>
+                    </div>
+                    <div id="rfc.section.4.p.3" class="avoidbreakafter">
+                        <p>专家在评估请求时应考虑下列因素：</p>
+                    </div>
+                    <div id="rfc.section.4.p.4">
+                        <ul>
+                            <li>社区反馈</li>
+                            <li>该值是否定义得足够明确</li>
+                            <li>优先采用通用参数，而非供应商、应用或部署特定的值。如果社区无法达成通用值的共识，则参数名称应相应地具体（例如以能够识别供应商、应用或部署的前缀命名）。</li>
+                        </ul>
+                    </div>
+                    <div id="rfc.section.4.p.5" class="avoidbreakafter">
+                        <p>注册请求应使用下列模板：</p>
+                    </div>
+                    <div id="rfc.section.4.p.6">
+                        <dl>
+                            <dt>Name:</dt>
+                            <dd style="margin-left: 1.5em">[Cache-Status 参数键的名称；参见 <a
+                                    href="https://www.rfc-editor.org/rfc/rfc8941.html#section-3.1.2">Section 3.1.2</a>
+                                中关于 <a href="#STRUCTURED-FIELDS"><cite
+                                        title="Structured Field Values for HTTP">[STRUCTURED-FIELDS]</cite></a> 的语法要求]
+                            </dd>
+                            <dt>Type:</dt>
+                            <dd style="margin-left: 1.5em">[参数值的 Structured Type；参见 <a
+                                    href="https://www.rfc-editor.org/rfc/rfc8941.html#section-3.1.2">Section 3.1.2</a>
+                                中关于 <a href="#STRUCTURED-FIELDS"><cite
+                                        title="Structured Field Values for HTTP">[STRUCTURED-FIELDS]</cite></a> 的说明]
+                            </dd>
+                            <dt>Description:</dt>
+                            <dd style="margin-left: 1.5em">[参数语义的描述]</dd>
+                            <dt>Reference:</dt>
+                            <dd style="margin-left: 1.5em">[若有，引用定义该参数的规范]</dd>
+                        </dl>
+                    </div>
+                    <div id="rfc.section.4.p.7">
+                        <p>有关将注册请求发送到何处的详细信息，请参见注册表 &lt;<a
+                                href="https://www.iana.org/assignments/http-cache-status">https://www.iana.org/assignments/http-cache-status</a>&gt;。
+                        </p>
+                    </div>
+                </section>
+                <hr class="hidden-print">
+                <section id="iana-considerations">
+                    <h2 id="rfc.section.5" class="np"><a href="#rfc.section.5">5.</a>&nbsp;<a
+                            href="#iana-considerations">IANA 注意事项</a></h2>
+                    <div id="rfc.section.5.p.1">
+                        <p>IANA 已创建 "HTTP Cache-Status" 注册表，地址为 &lt;<a
+                                href="https://www.iana.org/assignments/http-cache-status">https://www.iana.org/assignments/http-cache-status</a>&gt;，并将第
+                            <a href="#field" title="The Cache-Status HTTP Response Header Field">2 节</a>
+                            中定义的类型填入其中；其关联程序见 <a href="#register" title="Defining New Cache-Status Parameters">第 4
+                                节</a>。
+                        </p>
+                    </div>
+                    <div id="rfc.section.5.p.2" class="avoidbreakafter">
+                        <p>IANA 已在 <a href="#HTTP"><cite title="HTTP Semantics">[HTTP]</cite></a> 中定义的 "Hypertext
+                            Transfer Protocol (HTTP) Field Name Registry"（见 <a
+                                href="https://www.rfc-editor.org/rfc/rfc9110.html#section-18.4">第 18.4 节</a>）中添加了以下条目：
+                        </p>
+                    </div>
+                    <div id="rfc.section.5.p.3">
+                        <dl class="compact">
+                            <dt>Field name:</dt>
+                            <dd style="margin-left: 1.5em">Cache-Status</dd>
+                            <dt>Status:</dt>
+                            <dd style="margin-left: 1.5em">permanent</dd>
+                            <dt>Reference:</dt>
+                            <dd style="margin-left: 1.5em">RFC 9211</dd>
+                        </dl>
+                    </div>
+                </section>
+                <hr class="hidden-print">
+                <section id="security">
+                    <h2 id="rfc.section.6" class="np"><a href="#rfc.section.6">6.</a>&nbsp;<a
+                            href="#security">安全性注意事项</a></h2>
+                    <div id="rfc.section.6.p.1">
+                        <p>攻击者可以利用 Cache-Status 中的信息探测缓存（及其他组件）的行为，从而推断使用该缓存的活动。Cache-Status
+                            头字段本身可能并不会直接产生这些风险，但它可以帮助攻击者更容易地利用这些风险。</p>
+                    </div>
+                    <div id="rfc.section.6.p.2">
+                        <p>例如，知道缓存是否存储了某个响应可能帮助攻击者对敏感数据执行计时攻击。</p>
+                    </div>
+                    <div id="rfc.section.6.p.3">
+                        <p>此外，暴露缓存键（cache key）可能帮助攻击者了解对缓存键的修改，从而助长缓存投毒攻击。详情参见 <a href="#ENTANGLE"><cite
+                                    title="Web Cache Entanglement: Novel Pathways to Poisoning">[ENTANGLE]</cite></a>。
+                        </p>
+                    </div>
+                    <div id="rfc.section.6.p.4">
+                        <p>可以通过多种技术来缓解这些基础风险（例如使用加密与认证，避免在缓存键中包含攻击者可控的数据等），具体方法取决于风险的性质。注意，仅对键进行混淆并不能缓解此类风险。</p>
+                    </div>
+                    <div id="rfc.section.6.p.5">
+                        <p>为避免协助此类攻击，可以省略 Cache-Status 头字段，仅在客户端被授权接收时发送，或仅在客户端被授权时才发送包含敏感信息（例如 key 参数）的字段。</p>
+                    </div>
+                </section>
+                <section class="np">
+                    <div id="rfc.references">
+                        <h2 id="rfc.section.7"><a href="#rfc.section.7">7.</a> 参考文献</h2>
+                        <section>
+                            <div id="rfc.references.2">
+                                <h3 id="rfc.section.7.1"><a href="#rfc.section.7.1">7.1.</a> 规范性引用</h3>
+                                <dl class="dl-horizontal">
+                                    <dt id="HTTP">[<a href="#HTTP" class="smpl">HTTP</a>]</dt>
+                                    <dd>Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke, Ed., “<a
+                                            href="https://www.rfc-editor.org/rfc/rfc9110.html">HTTP Semantics</a>”, <a
+                                            href="https://www.rfc-editor.org/info/std97">STD 97</a>, RFC 9110, <a
+                                            href="https://dx.doi.org/10.17487/RFC9110">DOI 10.17487/RFC9110</a>, 2022 年
+                                        6 月，&lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc9110">https://www.rfc-editor.org/info/rfc9110</a>&gt;.
+                                    </dd>
+                                    <dt id="HTTP-CACHING">[<a href="#HTTP-CACHING" class="smpl">HTTP-CACHING</a>]</dt>
+                                    <dd>Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke, Ed., “<a
+                                            href="https://www.rfc-editor.org/rfc/rfc9111.html">HTTP Caching</a>”, <a
+                                            href="https://www.rfc-editor.org/info/std98">STD 98</a>, RFC 9111, <a
+                                            href="https://dx.doi.org/10.17487/RFC9111">DOI 10.17487/RFC9111</a>, 2022 年
+                                        6 月，&lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc9111">https://www.rfc-editor.org/info/rfc9111</a>&gt;.
+                                    </dd>
+                                    <dt id="RFC2119">[<a href="#RFC2119" class="smpl">RFC2119</a>]</dt>
+                                    <dd>Bradner, S., “<a href="https://www.rfc-editor.org/rfc/rfc2119.html">Key words
+                                            for use in RFCs to Indicate Requirement Levels</a>”, <a
+                                            href="https://www.rfc-editor.org/info/bcp14">BCP 14</a>, RFC 2119, <a
+                                            href="https://dx.doi.org/10.17487/RFC2119">DOI 10.17487/RFC2119</a>, 1997 年
+                                        3 月，&lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc2119">https://www.rfc-editor.org/info/rfc2119</a>&gt;.
+                                    </dd>
+                                    <dt id="RFC8126">[<a href="#RFC8126" class="smpl">RFC8126</a>]</dt>
+                                    <dd>Cotton, M., Leiba, B., and T. Narten, “<a
+                                            href="https://www.rfc-editor.org/rfc/rfc8126.html">Guidelines for Writing an
+                                            IANA Considerations Section in RFCs</a>”, <a
+                                            href="https://www.rfc-editor.org/info/bcp26">BCP 26</a>, RFC 8126, <a
+                                            href="https://dx.doi.org/10.17487/RFC8126">DOI 10.17487/RFC8126</a>, 2017 年
+                                        6 月，&lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc8126">https://www.rfc-editor.org/info/rfc8126</a>&gt;.
+                                    </dd>
+                                    <dt id="RFC8174">[<a href="#RFC8174" class="smpl">RFC8174</a>]</dt>
+                                    <dd>Leiba, B., “<a href="https://www.rfc-editor.org/rfc/rfc8174.html">Ambiguity of
+                                            Uppercase vs Lowercase in RFC 2119 Key Words</a>”, <a
+                                            href="https://www.rfc-editor.org/info/bcp14">BCP 14</a>, RFC 8174, <a
+                                            href="https://dx.doi.org/10.17487/RFC8174">DOI 10.17487/RFC8174</a>, 2017 年
+                                        5 月，&lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc8174">https://www.rfc-editor.org/info/rfc8174</a>&gt;.
+                                    </dd>
+                                    <dt id="STRUCTURED-FIELDS">[<a href="#STRUCTURED-FIELDS"
+                                            class="smpl">STRUCTURED-FIELDS</a>]</dt>
+                                    <dd>Nottingham, M. and P-H. Kamp, “<a
+                                            href="https://www.rfc-editor.org/rfc/rfc8941.html">Structured Field Values
+                                            for HTTP</a>”, RFC 8941, <a href="https://dx.doi.org/10.17487/RFC8941">DOI
+                                            10.17487/RFC8941</a>, 2021 年 2 月，&lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc8941">https://www.rfc-editor.org/info/rfc8941</a>&gt;.
+                                    </dd>
+                                </dl>
+                            </div>
+                        </section>
+                        <section>
+                            <div id="rfc.references.3">
+                                <h3 id="rfc.section.7.2"><a href="#rfc.section.7.2">7.2.</a> 补充性引用</h3>
+                                <dl class="dl-horizontal">
+                                    <dt id="ENTANGLE">[<a href="#ENTANGLE" class="smpl">ENTANGLE</a>]</dt>
+                                    <dd>Kettle, J., “<a
+                                            href="https://portswigger.net/research/web-cache-entanglement">Web Cache
+                                            Entanglement: Novel Pathways to Poisoning</a>”, 2020 年 9 月，&lt;<a
+                                            href="https://portswigger.net/research/web-cache-entanglement">https://portswigger.net/research/web-cache-entanglement</a>&gt;.
+                                    </dd>
+                                </dl>
+                            </div>
+                        </section>
+                    </div>
+                </section>
+                <hr class="hidden-print">
+                <section id="rfc.authors" class="np">
+                    <h2><a href="#rfc.authors">作者地址</a></h2>
+                    <address><b>Mark Nottingham</b><br>Fastly<br>Prahran<br>Australia<br>EMail: <a
+                            href="mailto:mnot@mnot.net">mnot@mnot.net</a><br>URI: <a
+                            href="https://www.mnot.net/">https://www.mnot.net/</a></address>
+                </section>
+            </div>
+        </div>
+    </div>
+    <script src="https://httpwg.org/assets/node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="https://httpwg.org/assets/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="/dropdown.js"></script>
+</body>
+
+</html>

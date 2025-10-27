@@ -1,0 +1,698 @@
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html lang="zh-hans">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>RFC 5861 - HTTP 缓存控制扩展：陈旧内容</title>
+    <script>
+        function getMeta(rfcno, container) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "https://www.rfc-editor.org/rfc/rfc" + rfcno + ".json", true);
+            xhr.onload = function (e) {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        var data = JSON.parse(xhr.response);
+
+                        var cont = document.getElementById(container);
+                        // empty the container
+                        while (cont.firstChild) {
+                            cont.removeChild(myNode.firstChild);
+                        }
+
+                        var c = data.status;
+                        if (c) {
+                            var bld = newElementWithText("b", c);
+                            cont.appendChild(bld);
+                        } else {
+                            cont.appendChild(newElementWithText("i", "(document status unknown)"));
+                        }
+
+                        c = data.updated_by;
+                        if (c && c.length > 0 && c[0] !== null && c[0].length > 0) {
+                            cont.appendChild(newElement("br"));
+                            cont.appendChild(newText("Updated by: "));
+                            appendRfcLinks(cont, c);
+                        }
+
+                        c = data.obsoleted_by;
+                        if (c && c.length > 0 && c[0] !== null && c[0].length > 0) {
+                            cont.appendChild(newElement("br"));
+                            cont.appendChild(newText("Obsoleted by: "));
+                            appendRfcLinks(cont, c);
+                        }
+
+                        c = data.errata_url;
+                        if (c) {
+                            cont.appendChild(newElement("br"));
+                            var link = newElementWithText("a", "errata");
+                            link.setAttribute("href", c);
+                            var errata = newElementWithText("i", "This document has ");
+                            errata.appendChild(link);
+                            errata.appendChild(newText("."));
+                            cont.appendChild(errata);
+                        }
+
+                        cont.style.display = "block";
+                    } else {
+                        console.error(xhr.statusText);
+                    }
+                }
+            };
+            xhr.onerror = function (e) {
+                console.error(xhr.status + " " + xhr.statusText);
+            };
+            xhr.send(null);
+        }
+        function appendRfcLinks(parent, updates) {
+            var template = "https://www.rfc-editor.org/rfc/rfc{rfc}.html";
+            for (var i = 0; i < updates.length; i++) {
+                var rfc = updates[i].trim().toLowerCase();
+                if (rfc.substring(0, 3) == "rfc") {
+                    var no = parseInt(rfc.substring(3), 10);
+
+                    var link = newElement("a");
+                    link.setAttribute("href", template.replace("{rfc}", no));
+                    link.appendChild(newText(no));
+                    parent.appendChild(link);
+                } else {
+                    parent.appendChild(newText(rfc));
+                }
+                if (i != updates.length - 1) {
+                    parent.appendChild(newText(", "));
+                }
+            }
+        }
+
+        // DOM helpers
+        function newElement(name) {
+            return document.createElement(name);
+        }
+        function newElementWithText(name, txt) {
+            var e = document.createElement(name);
+            e.appendChild(newText(txt));
+            return e;
+        }
+        function newText(text) {
+            return document.createTextNode(text);
+        }
+    </script>
+    <script>
+        function anchorRewrite() {
+            map = {};
+            if (window.location.hash.length >= 1) {
+                var fragid = window.location.hash.substr(1);
+                if (fragid) {
+                    if (!document.getElementById(fragid)) {
+                        var prefix = "rfc.";
+                        var mapped = map[fragid];
+                        if (mapped) {
+                            window.location.hash = mapped;
+                        } else if (fragid.indexOf("section-") == 0) {
+                            window.location.hash = prefix + "section." + fragid.substring(8).replace("-", ".p.");
+                        } else if (fragid.indexOf("appendix-") == 0) {
+                            window.location.hash = prefix + "section." + fragid.substring(9).replace("-", ".p.");
+                        } else if (fragid.indexOf("s-") == 0) {
+                            var postfix = fragid.substring(2);
+                            if (postfix.startsWith("abstract")) {
+                                window.location.hash = prefix + postfix;
+                            } else if (postfix.startsWith("note-")) {
+                                window.location.hash = prefix + "note." + postfix.substring(5).replace("-", ".p.");
+                            } else {
+                                window.location.hash = prefix + "section." + postfix.replace("-", ".p.");
+                            }
+                        } else if (fragid.indexOf("p-") == 0) {
+                            var r = fragid.substring(2);
+                            var p = r.indexOf("-");
+                            if (p >= 0) {
+                                window.location.hash = prefix + "section." + r.substring(0, p) + ".p." + r.substring(p + 1);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        window.addEventListener('hashchange', anchorRewrite);
+        window.addEventListener('DOMContentLoaded', anchorRewrite);
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="RFC5861">
+    <meta property="og:description" content="HTTP Cache-Control Extensions for Stale Content">
+    <meta property="og:url" content="https://httpwg.org/specs/rfc5861.html">
+    <meta property="og:site_name" content="IETF HTTP Working Group Specifications">
+    <meta property="og:image" content="https://httpwg.org/assets/favicon/apple-icon-180x180.png">
+    <link rel="stylesheet" type="text/css"
+        href="https://httpwg.org/assets/node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <style type="text/css">
+        body {
+            padding-top: 80px;
+            padding-bottom: 80px;
+            position: relative;
+        }
+
+        .table.header th,
+        .table.header td {
+            border-top: none;
+            padding: 0;
+        }
+
+        #sidebar {
+            margin-top: -10px;
+            height: 90%;
+            overflow-y: auto;
+            font-size: 90%;
+        }
+
+        #rfc\.meta {
+            width: 40%;
+            float: right
+        }
+
+        .toc ul {
+            list-style: none;
+        }
+
+        .filename {
+            color: rgb(119, 119, 119);
+            font-size: 23px;
+            font-weight: normal;
+            height: auto;
+            line-height: 23px;
+        }
+
+        dl {
+            margin-left: 1em;
+        }
+
+        dl.dl-horizontal {
+            margin-left: 0;
+        }
+
+        dl>dt {
+            float: left;
+            margin-right: 1em;
+        }
+
+        dl.nohang>dt {
+            float: none;
+        }
+
+        dl>dd {
+            margin-bottom: .5em;
+        }
+
+        dl.compact>dd {
+            margin-bottom: 0em;
+        }
+
+        dl>dd>dl {
+            margin-top: 0.5em;
+            margin-bottom: 0em;
+        }
+
+        ul.empty {
+            list-style-type: none;
+        }
+
+        ul.empty li {
+            margin-top: .5em;
+        }
+
+        td.reference {
+            padding-right: 1em;
+            vertical-align: top;
+        }
+
+        .feedback {
+            position: fixed;
+            bottom: 5px;
+            right: 5px;
+        }
+
+        .fbbutton {
+            margin-left: 5px;
+        }
+
+        h1 a,
+        h2 a,
+        h3 a,
+        h4 a,
+        h5 a,
+        h6 a {
+            color: rgb(51, 51, 51);
+        }
+
+        span.tt {
+            font: 11pt consolas, monospace;
+            font-size-adjust: none;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" href="https://httpwg.org/assets/site.css">
+    <link rel="Contents" href="#rfc.toc">
+    <link rel="Author" href="#rfc.authors">
+    <link rel="License" href="#rfc.copyrightnotice">
+    <link rel="Chapter" title="1 Introduction" href="#rfc.section.1">
+    <link rel="Chapter" title="2 Notational Conventions" href="#rfc.section.2">
+    <link rel="Chapter" title="3 The stale-while-revalidate Cache-Control Extension" href="#rfc.section.3">
+    <link rel="Chapter" title="4 The stale-if-error Cache-Control Extension" href="#rfc.section.4">
+    <link rel="Chapter" title="5 Security Considerations" href="#rfc.section.5">
+    <link rel="Chapter" title="6 IANA Considerations" href="#rfc.section.6">
+    <link rel="Chapter" title="7 Normative References" href="#rfc.section.7">
+    <link rel="Appendix" title="A Acknowledgements" href="#rfc.section.A">
+    <link rel="Alternate" title="Plain Text Version" href="http://www.ietf.org/rfc/rfc5861.txt">
+    <link rel="Help" title="RFC-Editor's Status Page" href="http://www.rfc-editor.org/info/rfc5861">
+    <meta name="viewport" content="initial-scale=1">
+    <meta name="generator"
+        content="https://github.com/mnot/RFCBootstrap XSLT vendor: Saxonica http://www.saxonica.com/">
+    <link rel="schema.dcterms" href="http://purl.org/dc/terms/">
+    <meta name="dcterms.creator" content="Nottingham, M.">
+    <meta name="dcterms.identifier" content="urn:ietf:rfc:5861">
+    <meta name="dcterms.issued" content="2010-05">
+    <meta name="dcterms.abstract"
+        content="This document defines two independent HTTP Cache-Control extensions that allow control over the use of stale responses by caches.">
+    <meta name="dcterms.isPartOf" content="urn:issn:2070-1721">
+    <meta name="description"
+        content="This document defines two independent HTTP Cache-Control extensions that allow control over the use of stale responses by caches.">
+</head>
+
+<body onload="getMeta(5861,'rfc.meta');">
+    <nav class="navbar navbar-dark bg-dark d-print-none navbar-expand-lg fixed-top ps-3 pe-3" role="navigation">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse"
+                aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <a class="navbar-brand" href="https://httpwg.org/"><img src="https://httpwg.org/assets/http.svg"
+                    height="23"></a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse">
+
+            <div class="navbar-nav me-auto">
+
+                <a class="nav-item ms-1 text-white" href="https://httpwg.org/specs/">📄 Documentation</a>
+
+                <div class="dropdown ms-4">
+                    <a href="#" class="nav-item dropdown-toggle text-white" data-bs-toggle="dropdown">Work in
+                        Progress</a>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-item"><a href="https://httpwg.org/http-extensions/">HTTP Extensions</a></li>
+                        <li class="dropdown-item"><a
+                                href="https://github.com/httpwg/admin/issues?q=is%3Aissue+is%3Aopen+label%3Aadoption">Future
+                                Work</a></li>
+                    </ul>
+                </div>
+
+                <div class="dropdown ms-4">
+                    <a href="#" class="nav-item dropdown-toggle text-white" data-bs-toggle="dropdown">Participate</a>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-item"><a href="https://httpwg.org/about/">About the HTTP Working Group</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li class="dropdown-item"><a href="https://httpwg.org/CONTRIBUTING.html">Contribution Policy</a>
+                        </li>
+                        <li class="dropdown-item"><a href="http://datatracker.ietf.org/wg/httpbis/charter/">WG
+                                Charter</a></li>
+                        <li class="dropdown-item"><a href="http://lists.w3.org/Archives/Public/ietf-http-wg/">Group
+                                Mailing List 📨</a></li>
+                        <li class="dropdown-item"><a href="https://httpwg.org/wg-materials/">Meeting Materials</a></li>
+                        <li class="dropdown-item"><a href="https://httpwg.org/admin/editors/">Document Editor
+                                Resources</a></li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </nav>
+    <div class="container" id="top">
+        <div class="row">
+            <div class="col-lg-4 order-last d-none d-lg-block" id="sidebar" role="navigation">
+                <div class="navbar">
+                    <div class="navbar-brand"><a href="#top"><strong>RFC </strong>5861</a></div><br clear="all">
+                    <div class="">
+                        <div class="toc ">
+                            <ul>
+                                <li><a href="#rfc.section.1">1.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.section.1">引言</a>
+                                </li>
+                                <li><a href="#rfc.section.2">2.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.section.2">符号约定</a>
+                                </li>
+                                <li><a href="#rfc.section.3">3.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#rfc.section.3">stale-while-revalidate 缓存控制扩展</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.3.1">3.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#rfc.section.3.1">示例</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.4">4.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#rfc.section.4">stale-if-error 缓存控制扩展</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.4.1">4.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#rfc.section.4.1">示例</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.5">5.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#rfc.section.5">安全性注意事项</a></li>
+                                <li><a href="#rfc.section.6">6.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.section.6">IANA
+                                        注意事项</a></li>
+                                <li><a href="#rfc.section.7">7.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.references">规范性引用</a>
+                                </li>
+                                <li><a href="#rfc.section.A">附录 A.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.section.A">致谢</a>
+                                </li>
+                                <li><a href="#rfc.authors">作者地址</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8 order-first main" role="main">
+                <header>
+                    <table class="table table-condensed header" id="rfc.headerblock">
+                        <tbody>
+                            <tr>
+                                <td class="text-left">互联网工程任务组 (IETF)</td>
+                                <td class="text-right">M. Nottingham</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left">请求评议：5861</td>
+                                <td class="text-right">雅虎公司</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left">类别：信息性</td>
+                                <td class="text-right">2010年5月</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left">ISSN: 2070-1721</td>
+                                <td class="text-right"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div id="rfc.title">
+                        <h1>HTTP 缓存控制扩展：陈旧内容</h1>
+                    </div>
+                </header>
+                <hr>
+                <h2 id="rfc.abstract"><a href="#rfc.abstract">摘要</a></h2>
+                <div class="lead">
+                    <div id="rfc.abstract.p.1">
+                        <p>本文档定义了两个独立的 HTTP Cache-Control 扩展，允许对缓存使用陈旧响应的行为进行控制。</p>
+                    </div>
+                </div>
+                <aside id="rfc.meta" class="alert alert-info"></aside>
+                <section id="rfc.status">
+                    <h2><a href="#rfc.status">本备忘录的状态</a></h2>
+                    <div id="rfc.boilerplate.1.p.1">
+                        <p>本文件不是互联网标准轨道规范；仅作为信息发布。</p>
+                    </div>
+                    <div id="rfc.boilerplate.1.p.2">
+                        <p>本文件是互联网工程任务组（IETF）的成果，代表 IETF 社区的共识。它已获得公开评审，并经互联网工程指导小组（IESG）批准发布。并非所有被 IESG
+                            批准的文件都能成为互联网标准的候选文件；详见 <a href="https://www.rfc-editor.org/rfc/rfc5741.html#section-2">RFC
+                                5741 第2节</a>。
+                        </p>
+                    </div>
+                    <div id="rfc.boilerplate.1.p.3">
+                        <p>关于本文档当前状态、勘误及如何反馈信息，可访问 <a
+                                href="http://www.rfc-editor.org/info/rfc5861">http://www.rfc-editor.org/info/rfc5861</a>
+                            获取。
+                        </p>
+                    </div>
+                </section>
+                <section id="rfc.copyrightnotice">
+                    <h2><a href="#rfc.copyrightnotice">Copyright Notice</a></h2>
+                    <div id="rfc.boilerplate.2.p.1">
+                        <p>Copyright (c) 2010 IETF Trust and the persons identified as the document authors. All rights
+                            reserved.</p>
+                    </div>
+                    <div id="rfc.boilerplate.2.p.2">
+                        <p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF
+                            Documents (<a
+                                href="http://trustee.ietf.org/license-info">http://trustee.ietf.org/license-info</a>) in
+                            effect on the date of publication of this document. Please review these documents carefully,
+                            as they describe your rights and restrictions with respect to this document. Code Components
+                            extracted from this document must include Simplified BSD License text as described in
+                            Section 4.e of the Trust Legal Provisions and are provided without warranty as described in
+                            the Simplified BSD License.</p>
+                    </div>
+                </section>
+                <div class="toc d-lg-none">
+                    <ul>
+                        <li><a href="#rfc.section.1">1.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.section.1">引言</a></li>
+                        <li><a href="#rfc.section.2">2.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.section.2">符号约定</a></li>
+                        <li><a href="#rfc.section.3">3.</a>&nbsp;&nbsp;&nbsp;<a
+                                href="#rfc.section.3">stale-while-revalidate 缓存控制扩展</a>
+                            <ul>
+                                <li><a href="#rfc.section.3.1">3.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#rfc.section.3.1">示例</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#rfc.section.4">4.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.section.4">stale-if-error
+                                缓存控制扩展</a>
+                            <ul>
+                                <li><a href="#rfc.section.4.1">4.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#rfc.section.4.1">示例</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#rfc.section.5">5.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.section.5">安全性注意事项</a></li>
+                        <li><a href="#rfc.section.6">6.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.section.6">IANA 注意事项</a></li>
+                        <li><a href="#rfc.section.7">7.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.references">规范性引用</a></li>
+                        <li><a href="#rfc.section.A">附录 A.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.section.A">致谢</a></li>
+                        <li><a href="#rfc.authors">作者地址</a></li>
+                    </ul>
+                </div>
+                <section id="n-introduction">
+                    <h2 id="rfc.section.1" class="np"><a href="#rfc.section.1">1.</a>&nbsp;<a
+                            href="#n-introduction">引言</a></h2>
+                    <div id="rfc.section.1.p.1">
+                        <p><a href="#RFC2616"><cite title="Hypertext Transfer Protocol -- HTTP/1.1">HTTP</cite></a>
+                            <cite title="Hypertext Transfer Protocol -- HTTP/1.1">[RFC2616]</cite>
+                            要求缓存“以所持有的最新响应……来响应请求，该响应应与请求相符”，但“在经过严格控制的情况下”允许返回陈旧响应。本文档定义了两个独立的 Cache-Control
+                            扩展，用于这种控制：stale-if-error 和 stale-while-revalidate。
+                        </p>
+                    </div>
+                    <div id="rfc.section.1.p.2">
+                        <p>stale-if-error HTTP Cache-Control 扩展允许当遇到错误（例如 500 内部服务器错误、网络分段或 DNS
+                            失败）时，缓存返回陈旧响应，而不是返回“硬”错误。这提升了可用性。</p>
+                    </div>
+                    <div id="rfc.section.1.p.3">
+                        <p>stale-while-revalidate HTTP Cache-Control
+                            扩展允许缓存后台重新验证的同时，立即返回陈旧响应，从而将客户端感知的延迟（无论是网络还是服务器端）隐藏起来。</p>
+                    </div>
+                </section>
+                <section id="n-notational-conventions">
+                    <h2 id="rfc.section.2"><a href="#rfc.section.2">2.</a>&nbsp;<a
+                            href="#n-notational-conventions">符号约定</a></h2>
+                    <div id="rfc.section.2.p.1">
+                        <p>本文件中的关键词 “MUST”（必须）、“MUST NOT”（禁止）、“REQUIRED”（需要）、“SHALL”（应）、“SHALL
+                            NOT”（不应）、“SHOULD”（建议）、“SHOULD NOT”（不建议）、“RECOMMENDED”（推荐）、“MAY”（可以）以及 “OPTIONAL”（可选）应按照 RFC
+                            2119 <a href="#RFC2119"><cite
+                                    title="Key words for use in RFCs to Indicate Requirement Levels">[RFC2119]</cite></a>
+                            中的说明进行解释。
+                        </p>
+                    </div>
+                    <div id="rfc.section.2.p.2">
+                        <p>本规范使用 RFC2616 <a href="#RFC2616"><cite
+                                    title="Hypertext Transfer Protocol -- HTTP/1.1">[RFC2616]</cite></a>
+                            的扩展巴科斯-诺尔范式，并引入了该规范中的 delta-seconds 规则。</p>
+                    </div>
+                </section>
+                <section id="n-the-stale-while-revalidate-cache-control-extension">
+                    <h2 id="rfc.section.3"><a href="#rfc.section.3">3.</a>&nbsp;<a
+                            href="#n-the-stale-while-revalidate-cache-control-extension">stale-while-revalidate
+                            缓存控制扩展</a></h2>
+                    <div id="rfc.section.3.p.1">
+                        <p>当该扩展出现在 HTTP 响应中时，表示缓存可以在响应过期后，继续在规定秒数内提供该响应的陈旧版本。</p>
+                    </div>
+                    <div id="rfc.figure.u.1">
+                        <div>
+                            <pre>
+  stale-while-revalidate = "stale-while-revalidate" "=" delta-seconds
+</pre>
+                        </div>
+                    </div>
+                    <div id="rfc.section.3.p.2">
+                        <p>如果由于此扩展的存在而提供了陈旧的缓存响应，缓存应在继续提供陈旧响应的同时尝试重新验证（即，不阻塞）。</p>
+                    </div>
+                    <div id="rfc.section.3.p.3">
+                        <p>注意，“陈旧”意味着响应将包含非零的 Age 首部和 warning 首部，符合 HTTP 的要求。</p>
+                    </div>
+                    <div id="rfc.section.3.p.4">
+                        <p>如果 delta-seconds 时间过去后缓存实体仍未被重新验证，除非有其他信息，否则不应继续以陈旧状态提供。</p>
+                    </div>
+                    <section id="n-example_1">
+                        <h3 id="rfc.section.3.1"><a href="#rfc.section.3.1">3.1.</a>&nbsp;<a href="#n-example_1">示例</a>
+                        </h3>
+                        <div id="rfc.section.3.1.p.1" class="avoidbreakafter">
+                            <p>包含如下内容的响应：</p>
+                        </div>
+                        <div id="rfc.figure.u.2">
+                            <div>
+                                <pre>
+  Cache-Control: max-age=600, stale-while-revalidate=30
+</pre>
+                            </div>
+                        </div>
+                        <div id="rfc.section.3.1.p.2">
+                            <p>表示内容在 600 秒内为新鲜，在异步验证期间还可继续以陈旧状态提供最多 30 秒。如果验证未果，或期间没有触发验证的流量，30 秒后
+                                stale-while-revalidate 功能将停止，缓存响应变为“真正的”陈旧（即，下次请求会阻塞并按常规处理）。</p>
+                        </div>
+                        <div id="rfc.section.3.1.p.3">
+                            <p>通常，服务器会将 max-age 和 stale-while-revalidate 的组合设置为可容忍的最长总新鲜期。例如，两者都设为 600
+                                时，服务器必须能够容忍响应最长被缓存服务 20 分钟。</p>
+                        </div>
+                        <div id="rfc.section.3.1.p.4">
+                            <p>由于异步验证只会在响应变为陈旧后且仍在 stale-while-revalidate
+                                窗口内时发生，因此该窗口的大小和期间请求的发生概率决定了所有请求无延迟服务的可能性。如果窗口过小或流量过少，则部分请求会落在窗口之外，需要等待服务器验证缓存响应。</p>
+                        </div>
+                    </section>
+                </section>
+                <section id="n-the-stale-if-error-cache-control-extension">
+                    <h2 id="rfc.section.4"><a href="#rfc.section.4">4.</a>&nbsp;<a
+                            href="#n-the-stale-if-error-cache-control-extension">stale-if-error 缓存控制扩展</a></h2>
+                    <div id="rfc.section.4.p.1">
+                        <p>stale-if-error 缓存控制扩展指示当遇到错误时，可以使用缓存的陈旧响应来满足请求，无需考虑其他新鲜度信息。</p>
+                    </div>
+                    <div id="rfc.figure.u.3">
+                        <div>
+                            <pre>
+  stale-if-error = "stale-if-error" "=" delta-seconds
+</pre>
+                        </div>
+                    </div>
+                    <div id="rfc.section.4.p.2">
+                        <p>作为请求的 Cache-Control 扩展使用时，其作用范围为该请求；作为响应的 Cache-Control 扩展使用时，其作用范围为与其对应的所有请求。</p>
+                    </div>
+                    <div id="rfc.section.4.p.3">
+                        <p>其值表明最大允许的陈旧时长；当缓存响应的陈旧时间超过该值时，除非有其他信息，不应再用该响应满足请求。</p>
+                    </div>
+                    <div id="rfc.section.4.p.4">
+                        <p>此处的“错误”指会导致返回 500、502、503 或 504 HTTP 响应状态码的任何情况。</p>
+                    </div>
+                    <div id="rfc.section.4.p.5">
+                        <p>注意，该指令不影响新鲜度；使用的陈旧缓存响应在发送时仍应被明确标记为陈旧（即，包含非零的 Age 首部和 warning 首部，符合 HTTP 要求）。</p>
+                    </div>
+                    <section id="n-example_2">
+                        <h3 id="rfc.section.4.1"><a href="#rfc.section.4.1">4.1.</a>&nbsp;<a href="#n-example_2">示例</a>
+                        </h3>
+                        <div id="rfc.section.4.1.p.1" class="avoidbreakafter">
+                            <p>包含如下内容的响应：</p>
+                        </div>
+                        <div id="rfc.figure.u.4">
+                            <div>
+                                <pre>
+  HTTP/1.1 200 OK
+  Cache-Control: max-age=600, stale-if-error=1200
+  Content-Type: text/plain
+  
+  success
+</pre>
+                            </div>
+                        </div>
+                        <div id="rfc.section.4.1.p.2">
+                            <p>表示内容在 600 秒内为新鲜，在变为陈旧后遇到错误时，还可再用 1200 秒。</p>
+                        </div>
+                        <div id="rfc.section.4.1.p.3" class="avoidbreakafter">
+                            <p>因此，若缓存在 900 秒后尝试验证并遇到如下响应：</p>
+                        </div>
+                        <div id="rfc.figure.u.5">
+                            <div>
+                                <pre>
+  HTTP/1.1 500 Internal Server Error
+  Content-Type: text/plain
+  
+  failure
+</pre>
+                            </div>
+                        </div>
+                        <div id="rfc.section.4.1.p.4" class="avoidbreakafter">
+                            <p>则可以返回之前的成功响应：</p>
+                        </div>
+                        <div id="rfc.figure.u.6">
+                            <div>
+                                <pre>
+  HTTP/1.1 200 OK
+  Cache-Control: max-age=600, stale-if-error=1200
+  Age: 900
+  Content-Type: text/plain
+  
+  succcess
+</pre>
+                            </div>
+                        </div>
+                        <div id="rfc.section.4.1.p.5">
+                            <p>当 age 超过 1800 秒（即陈旧 1200 秒后），缓存必须返回错误消息。</p>
+                        </div>
+                        <div id="rfc.figure.u.7">
+                            <div>
+                                <pre>
+  HTTP/1.1 500 Internal Server Error
+  Content-Type: text/plain
+  
+  failure
+</pre>
+                            </div>
+                        </div>
+                    </section>
+                </section>
+                <section id="n-security-considerations">
+                    <h2 id="rfc.section.5"><a href="#rfc.section.5">5.</a>&nbsp;<a
+                            href="#n-security-considerations">安全性注意事项</a></h2>
+                    <div id="rfc.section.5.p.1">
+                        <p>stale-while-revalidate
+                            扩展为源服务器提供了一种机制，可规定在特定条件下，缓存应提供陈旧内容，并期望后台重新验证缓存响应。建议此类验证应依赖于收到新的请求，以避免放大攻击（如部分预取和自动刷新机制中可能出现的）。缓存实现者应在决定哪些情况下生成非用户或客户端直接发起的请求时谨慎考虑。
+                        </p>
+                    </div>
+                    <div id="rfc.section.5.p.2">
+                        <p>stale-if-error 为源服务器和客户端提供了一种机制，可在特定条件下让缓存提供陈旧内容，其安全性不超出 RFC2616 的考虑范畴（RFC2616 也允许缓存提供陈旧内容）。
+                        </p>
+                    </div>
+                </section>
+                <section id="n-iana-considerations">
+                    <h2 id="rfc.section.6"><a href="#rfc.section.6">6.</a>&nbsp;<a href="#n-iana-considerations">IANA
+                            注意事项</a></h2>
+                    <div id="rfc.section.6.p.1">
+                        <p>本文档无须 IANA 采取任何操作。</p>
+                    </div>
+                </section>
+                <section>
+                    <div id="rfc.references">
+                        <h2 id="rfc.section.7"><a href="#rfc.section.7">7.</a> 规范性引用</h2>
+                        <dl class="dl-horizontal">
+                            <dt id="RFC2119">[<a href="#RFC2119" class="smpl">RFC2119</a>]</dt>
+                            <dd><a href="mailto:sob@harvard.edu">Bradner, S.</a>, “<a
+                                    href="https://www.rfc-editor.org/rfc/rfc2119.html">用于 RFC 中指示需求级别的关键词</a>”, <a
+                                    href="https://www.rfc-editor.org/info/bcp14">BCP 14</a>, RFC 2119, 1997年3月。</dd>
+                            <dt id="RFC2616">[<a href="#RFC2616" class="smpl">RFC2616</a>]</dt>
+                            <dd><a href="mailto:fielding@ics.uci.edu">Fielding, R.</a>, <a
+                                    href="mailto:jg@w3.org">Gettys, J.</a>, <a href="mailto:mogul@wrl.dec.com">Mogul,
+                                    J.</a>, <a href="mailto:frystyk@w3.org">Frystyk, H.</a>, <a
+                                    href="mailto:masinter@parc.xerox.com">Masinter, L.</a>, <a
+                                    href="mailto:paulle@microsoft.com">Leach, P.</a>, 和 <a href="mailto:timbl@w3.org">T.
+                                    Berners-Lee</a>, “<a href="https://www.rfc-editor.org/rfc/rfc2616.html">超文本传输协议 --
+                                    HTTP/1.1</a>”, RFC 2616, 1999年6月。</dd>
+                        </dl>
+                    </div>
+                </section>
+                <section id="n-acknowledgements">
+                    <h2 id="rfc.section.A" class="np"><a href="#rfc.section.A">附录 A.</a>&nbsp;<a
+                            href="#n-acknowledgements">致谢</a></h2>
+                    <div id="rfc.section.A.p.1">
+                        <p>感谢 Ben Drees、John Nienart、Henrik Nordstrom、Evan Torrie 和 Chris Westin 提出的建议。所有错误与疏漏由作者自行承担。
+                        </p>
+                    </div>
+                </section>
+                <section id="rfc.authors" class="avoidbreakinside">
+                    <h2><a href="#rfc.authors">作者地址</a></h2>
+                    <address><b>Mark Nottingham</b><br>雅虎公司<br>电子邮箱: <a
+                            href="mailto:mnot@yahoo-inc.com">mnot@yahoo-inc.com</a><br>网址: <a
+                            href="http://www.mnot.net/">http://www.mnot.net/</a></address>
+                </section>
+            </div>
+        </div>
+    </div>
+    <script src="https://httpwg.org/assets/node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="https://httpwg.org/assets/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="/dropdown.js"></script>
+</body>
+
+</html>
