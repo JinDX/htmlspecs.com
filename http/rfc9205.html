@@ -1,0 +1,2165 @@
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html lang="zh-hans">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>RFC 9205 - 使用 HTTP 构建协议</title>
+    <script>
+        function getMeta(rfcno, container) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "https://www.rfc-editor.org/rfc/rfc" + rfcno + ".json", true);
+            xhr.onload = function (e) {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        var data = JSON.parse(xhr.response);
+
+                        var cont = document.getElementById(container);
+                        // empty the container
+                        while (cont.firstChild) {
+                            cont.removeChild(myNode.firstChild);
+                        }
+
+                        var c = data.status;
+                        if (c) {
+                            var bld = newElementWithText("b", c);
+                            cont.appendChild(bld);
+                        } else {
+                            cont.appendChild(newElementWithText("i", "(document status unknown)"));
+                        }
+
+                        c = data.updated_by;
+                        if (c && c.length > 0 && c[0] !== null && c[0].length > 0) {
+                            cont.appendChild(newElement("br"));
+                            cont.appendChild(newText("Updated by: "));
+                            appendRfcLinks(cont, c);
+                        }
+
+                        c = data.obsoleted_by;
+                        if (c && c.length > 0 && c[0] !== null && c[0].length > 0) {
+                            cont.appendChild(newElement("br"));
+                            cont.appendChild(newText("Obsoleted by: "));
+                            appendRfcLinks(cont, c);
+                        }
+
+                        c = data.errata_url;
+                        if (c) {
+                            cont.appendChild(newElement("br"));
+                            var link = newElementWithText("a", "errata");
+                            link.setAttribute("href", c);
+                            var errata = newElementWithText("i", "This document has ");
+                            errata.appendChild(link);
+                            errata.appendChild(newText("."));
+                            cont.appendChild(errata);
+                        }
+
+                        cont.style.display = "block";
+                    } else {
+                        console.error(xhr.statusText);
+                    }
+                }
+            };
+            xhr.onerror = function (e) {
+                console.error(xhr.status + " " + xhr.statusText);
+            };
+            xhr.send(null);
+        }
+        function appendRfcLinks(parent, updates) {
+            var template = "https://www.rfc-editor.org/rfc/rfc{rfc}.html";
+            for (var i = 0; i < updates.length; i++) {
+                var rfc = updates[i].trim().toLowerCase();
+                if (rfc.substring(0, 3) == "rfc") {
+                    var no = parseInt(rfc.substring(3), 10);
+
+                    var link = newElement("a");
+                    link.setAttribute("href", template.replace("{rfc}", no));
+                    link.appendChild(newText(no));
+                    parent.appendChild(link);
+                } else {
+                    parent.appendChild(newText(rfc));
+                }
+                if (i != updates.length - 1) {
+                    parent.appendChild(newText(", "));
+                }
+            }
+        }
+
+        // DOM helpers
+        function newElement(name) {
+            return document.createElement(name);
+        }
+        function newElementWithText(name, txt) {
+            var e = document.createElement(name);
+            e.appendChild(newText(txt));
+            return e;
+        }
+        function newText(text) {
+            return document.createTextNode(text);
+        }
+    </script>
+    <script>
+        function anchorRewrite() {
+            map = {};
+            if (window.location.hash.length >= 1) {
+                var fragid = window.location.hash.substr(1);
+                if (fragid) {
+                    if (!document.getElementById(fragid)) {
+                        var prefix = "rfc.";
+                        var mapped = map[fragid];
+                        if (mapped) {
+                            window.location.hash = mapped;
+                        } else if (fragid.indexOf("section-") == 0) {
+                            window.location.hash = prefix + "section." + fragid.substring(8).replace("-", ".p.");
+                        } else if (fragid.indexOf("appendix-") == 0) {
+                            window.location.hash = prefix + "section." + fragid.substring(9).replace("-", ".p.");
+                        } else if (fragid.indexOf("s-") == 0) {
+                            var postfix = fragid.substring(2);
+                            if (postfix.startsWith("abstract")) {
+                                window.location.hash = prefix + postfix;
+                            } else if (postfix.startsWith("note-")) {
+                                window.location.hash = prefix + "note." + postfix.substring(5).replace("-", ".p.");
+                            } else {
+                                window.location.hash = prefix + "section." + postfix.replace("-", ".p.");
+                            }
+                        } else if (fragid.indexOf("p-") == 0) {
+                            var r = fragid.substring(2);
+                            var p = r.indexOf("-");
+                            if (p >= 0) {
+                                window.location.hash = prefix + "section." + r.substring(0, p) + ".p." + r.substring(p + 1);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        window.addEventListener('hashchange', anchorRewrite);
+        window.addEventListener('DOMContentLoaded', anchorRewrite);
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="RFC9205">
+    <meta property="og:description" content="Building Protocols with HTTP">
+    <meta property="og:url" content="https://httpwg.org/specs/rfc9205.html">
+    <meta property="og:site_name" content="IETF HTTP Working Group Specifications">
+    <meta property="og:image" content="https://httpwg.org/assets/favicon/apple-icon-180x180.png">
+    <link rel="stylesheet" type="text/css"
+        href="https://httpwg.org/assets/node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <style type="text/css">
+        body {
+            padding-top: 80px;
+            padding-bottom: 80px;
+            position: relative;
+        }
+
+        .table.header th,
+        .table.header td {
+            border-top: none;
+            padding: 0;
+        }
+
+        #sidebar {
+            margin-top: -10px;
+            height: 90%;
+            overflow-y: auto;
+            font-size: 90%;
+        }
+
+        #rfc\.meta {
+            width: 40%;
+            float: right
+        }
+
+        .toc ul {
+            list-style: none;
+        }
+
+        .filename {
+            color: rgb(119, 119, 119);
+            font-size: 23px;
+            font-weight: normal;
+            height: auto;
+            line-height: 23px;
+        }
+
+        dl {
+            margin-left: 1em;
+        }
+
+        dl.dl-horizontal {
+            margin-left: 0;
+        }
+
+        dl>dt {
+            float: left;
+            margin-right: 1em;
+        }
+
+        dl.nohang>dt {
+            float: none;
+        }
+
+        dl>dd {
+            margin-bottom: .5em;
+        }
+
+        dl.compact>dd {
+            margin-bottom: 0em;
+        }
+
+        dl>dd>dl {
+            margin-top: 0.5em;
+            margin-bottom: 0em;
+        }
+
+        ul.empty {
+            list-style-type: none;
+        }
+
+        ul.empty li {
+            margin-top: .5em;
+        }
+
+        td.reference {
+            padding-right: 1em;
+            vertical-align: top;
+        }
+
+        .feedback {
+            position: fixed;
+            bottom: 5px;
+            right: 5px;
+        }
+
+        .fbbutton {
+            margin-left: 5px;
+        }
+
+        h1 a,
+        h2 a,
+        h3 a,
+        h4 a,
+        h5 a,
+        h6 a {
+            color: rgb(51, 51, 51);
+        }
+
+        span.tt {
+            font: 11pt consolas, monospace;
+            font-size-adjust: none;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" href="https://httpwg.org/assets/site.css">
+    <link rel="Contents" href="#rfc.toc">
+    <link rel="Author" href="#rfc.authors">
+    <link rel="License" href="#rfc.copyrightnotice">
+    <link rel="Chapter" title="1 Introduction" href="#rfc.section.1">
+    <link rel="Chapter" title="2 Is HTTP Being Used?" href="#rfc.section.2">
+    <link rel="Chapter" title="3 What's Important About HTTP" href="#rfc.section.3">
+    <link rel="Chapter" title="4 Best Practices for Specifying the Use of HTTP" href="#rfc.section.4">
+    <link rel="Chapter" title="5 IANA Considerations" href="#rfc.section.5">
+    <link rel="Chapter" title="6 Security Considerations" href="#rfc.section.6">
+    <link rel="Chapter" title="7 References" href="#rfc.section.7">
+    <link rel="Appendix" title="A Changes from RFC 3205" href="#rfc.section.A">
+    <link href="https://datatracker.ietf.org/doc/draft-ietf-httpbis-bcp56bis-15" rel="prev">
+    <link href="https://dx.doi.org/10.17487/rfc9205" rel="alternate">
+    <link href="urn:issn:2070-1721" rel="alternate">
+    <link rel="Alternate" title="Plain Text Version" href="http://www.ietf.org/rfc/rfc9205.txt">
+    <link rel="Help" title="RFC-Editor's Status Page" href="https://www.rfc-editor.org/info/rfc9205">
+    <meta name="viewport" content="initial-scale=1">
+    <meta name="generator"
+        content="https://github.com/mnot/RFCBootstrap XSLT vendor: Saxonica http://www.saxonica.com/">
+    <meta name="keywords" content="HTTP API">
+    <link rel="schema.dcterms" href="http://purl.org/dc/terms/">
+    <meta name="dcterms.creator" content="Nottingham, M.">
+    <meta name="dcterms.identifier" content="urn:ietf:rfc:9205">
+    <meta name="dcterms.issued" content="2022-06">
+    <meta name="dct.replaces" content="urn:ietf:rfc:3205">
+    <meta name="dcterms.abstract"
+        content="Applications often use HTTP as a substrate to create HTTP-based APIs. This document specifies best practices for writing specifications that use HTTP to define new application protocols. It is written primarily to guide IETF efforts to define application protocols using HTTP for deployment on the Internet but might be applicable in other situations.This document obsoletes RFC 3205.">
+    <meta name="dcterms.isPartOf" content="urn:issn:2070-1721">
+    <meta name="description"
+        content="Applications often use HTTP as a substrate to create HTTP-based APIs. This document specifies best practices for writing specifications that use HTTP to define new application protocols. It is written primarily to guide IETF efforts to define application protocols using HTTP for deployment on the Internet but might be applicable in other situations.This document obsoletes RFC 3205.">
+</head>
+
+<body onload="getMeta(9205,'rfc.meta');">
+    <nav class="navbar navbar-dark bg-dark d-print-none navbar-expand-lg fixed-top ps-3 pe-3" role="navigation">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse"
+                aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <a class="navbar-brand" href="https://httpwg.org/"><img src="https://httpwg.org/assets/http.svg"
+                    height="23"></a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse">
+
+            <div class="navbar-nav me-auto">
+
+                <a class="nav-item ms-1 text-white" href="https://httpwg.org/specs/">📄 Documentation</a>
+
+                <div class="dropdown ms-4">
+                    <a href="#" class="nav-item dropdown-toggle text-white" data-bs-toggle="dropdown">Work in
+                        Progress</a>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-item"><a href="https://httpwg.org/http-extensions/">HTTP Extensions</a></li>
+                        <li class="dropdown-item"><a
+                                href="https://github.com/httpwg/admin/issues?q=is%3Aissue+is%3Aopen+label%3Aadoption">Future
+                                Work</a></li>
+                    </ul>
+                </div>
+
+                <div class="dropdown ms-4">
+                    <a href="#" class="nav-item dropdown-toggle text-white" data-bs-toggle="dropdown">Participate</a>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-item"><a href="https://httpwg.org/about/">About the HTTP Working Group</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li class="dropdown-item"><a href="https://httpwg.org/CONTRIBUTING.html">Contribution Policy</a>
+                        </li>
+                        <li class="dropdown-item"><a href="http://datatracker.ietf.org/wg/httpbis/charter/">WG
+                                Charter</a></li>
+                        <li class="dropdown-item"><a href="http://lists.w3.org/Archives/Public/ietf-http-wg/">Group
+                                Mailing List 📨</a></li>
+                        <li class="dropdown-item"><a href="https://httpwg.org/wg-materials/">Meeting Materials</a></li>
+                        <li class="dropdown-item"><a href="https://httpwg.org/admin/editors/">Document Editor
+                                Resources</a></li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </nav>
+    <div class="container" id="top">
+        <div class="row">
+            <div class="col-lg-4 order-last d-none d-lg-block" id="sidebar" role="navigation">
+                <div class="navbar">
+                    <div class="navbar-brand"><a href="#top"><strong>RFC </strong>9205</a></div><br clear="all">
+                    <div class="">
+                        <div class="toc ">
+                            <ul>
+                                <li><a href="#rfc.section.1">1.</a>&nbsp;&nbsp;&nbsp;<a href="#introduction">介绍</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.1.1">1.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#notational-conventions">符号约定</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.2">2.</a>&nbsp;&nbsp;&nbsp;<a href="#used">是否正在使用 HTTP？</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.2.1">2.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#non-http-protocols">非 HTTP 协议</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.3">3.</a>&nbsp;&nbsp;&nbsp;<a href="#overview">HTTP 的重要内容</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.3.1">3.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#generic-semantics">通用语义</a></li>
+                                        <li><a href="#rfc.section.3.2">3.2.</a>&nbsp;&nbsp;&nbsp;<a href="#links">链接</a>
+                                        </li>
+                                        <li><a href="#rfc.section.3.3">3.3.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#rich-functionality">丰富功能</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.4">4.</a>&nbsp;&nbsp;&nbsp;<a href="#bp">指定使用 HTTP 的最佳实践</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.4.1">4.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#specifying-the-use-of-http">指定 HTTP 的使用</a></li>
+                                        <li><a href="#rfc.section.4.2">4.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#resource">指定服务器行为</a></li>
+                                        <li><a href="#rfc.section.4.3">4.3.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#clients">指定客户端行为</a></li>
+                                        <li><a href="#rfc.section.4.4">4.4.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#specifying-urls">指定 URL</a>
+                                            <ul>
+                                                <li><a href="#rfc.section.4.4.1">4.4.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                        href="#discovering-an-applications-urls">发现应用程序的 URL</a></li>
+                                                <li><a href="#rfc.section.4.4.2">4.4.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                                        href="#scheme">考虑 URI 方案</a></li>
+                                                <li><a href="#rfc.section.4.4.3">4.4.3.</a>&nbsp;&nbsp;&nbsp;<a
+                                                        href="#choosing-transport-ports">选择传输端口</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li><a href="#rfc.section.4.5">4.5.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#using-http-methods">使用 HTTP 方法</a>
+                                            <ul>
+                                                <li><a href="#rfc.section.4.5.1">4.5.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                        href="#get">GET</a></li>
+                                                <li><a href="#rfc.section.4.5.2">4.5.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                                        href="#options">OPTIONS</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a href="#rfc.section.4.6">4.6.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#using-http-status-codes">使用 HTTP 状态码</a>
+                                            <ul>
+                                                <li><a href="#rfc.section.4.6.1">4.6.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                        href="#redirects">重定向</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a href="#rfc.section.4.7">4.7.</a>&nbsp;&nbsp;&nbsp;<a href="#headers">指定
+                                                HTTP 报头字段</a></li>
+                                        <li><a href="#rfc.section.4.8">4.8.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#content">定义消息内容</a></li>
+                                        <li><a href="#rfc.section.4.9">4.9.</a>&nbsp;&nbsp;&nbsp;<a href="#caching">利用
+                                                HTTP 缓存</a>
+                                            <ul>
+                                                <li><a href="#rfc.section.4.9.1">4.9.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                        href="#freshness">新鲜度</a></li>
+                                                <li><a href="#rfc.section.4.9.2">4.9.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                                        href="#stale-responses">过期响应</a></li>
+                                                <li><a href="#rfc.section.4.9.3">4.9.3.</a>&nbsp;&nbsp;&nbsp;<a
+                                                        href="#caching-app-semantics">缓存与应用语义</a></li>
+                                                <li><a href="#rfc.section.4.9.4">4.9.4.</a>&nbsp;&nbsp;&nbsp;<a
+                                                        href="#varying-content-based-upon-the-request">根据请求变化内容</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a href="#rfc.section.4.10">4.10.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#state">处理应用状态</a></li>
+                                        <li><a href="#rfc.section.4.11">4.11.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#multiplex">发起多个请求</a></li>
+                                        <li><a href="#rfc.section.4.12">4.12.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#client-auth">客户端认证</a></li>
+                                        <li><a href="#rfc.section.4.13">4.13.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#browser">与网页浏览共存</a></li>
+                                        <li><a href="#rfc.section.4.14">4.14.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#other-apps">维护应用边界</a></li>
+                                        <li><a href="#rfc.section.4.15">4.15.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#server-push">使用服务器推送</a></li>
+                                        <li><a href="#rfc.section.4.16">4.16.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#versioning">允许版本控制与演进</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.5">5.</a>&nbsp;&nbsp;&nbsp;<a href="#iana-considerations">IANA
+                                        考量</a></li>
+                                <li><a href="#rfc.section.6">6.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#security-considerations">安全性考量</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.6.1">6.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#privacy-considerations">隐私考量</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.7">7.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.references">参考文献</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.7.1">7.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#rfc.references.2">规范性参考文献</a></li>
+                                        <li><a href="#rfc.section.7.2">7.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#rfc.references.3">信息性参考文献</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.A">Appendix A.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#changes-from-rfc-3205">来自 RFC 3205 的更改</a></li>
+                                <li><a href="#rfc.authors">Author's Address</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8 order-first main" role="main">
+                <header>
+                    <table class="table table-condensed header" id="rfc.headerblock">
+                        <tbody>
+                            <tr>
+                                <td class="text-left">互联网工程任务组（IETF）</td>
+                                <td class="text-right">M. Nottingham</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left">Request for Comments: 9205</td>
+                                <td class="text-right">June 2022</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left">Obsoletes: <a href="#RFC3205">3205</a></td>
+                                <td class="text-right"></td>
+                            </tr>
+                            <tr>
+                                <td class="text-left">BCP: <a href="https://www.rfc-editor.org/info/bcp56">56</a></td>
+                                <td class="text-right"></td>
+                            </tr>
+                            <tr>
+                                <td class="text-left">Category: Best Current Practice</td>
+                                <td class="text-right"></td>
+                            </tr>
+                            <tr>
+                                <td class="text-left">ISSN: 2070-1721</td>
+                                <td class="text-right"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div id="rfc.title">
+                        <h1>使用 HTTP 构建协议</h1>
+                    </div>
+                </header>
+                <hr>
+                <h2 id="rfc.abstract"><a href="#rfc.abstract">摘要</a></h2>
+                <div class="lead">
+                    <div id="rfc.abstract.p.1">
+                        <p>应用程序经常使用 HTTP 作为基底来创建基于 HTTP 的 API。本文件规定了使用 HTTP 来定义新的应用层协议时编写规范的最佳实践。它主要用于指导 IETF 在互联网上部署使用
+                            HTTP 的应用协议的制定工作，但在其他情况下也可能适用。</p>
+                    </div>
+                    <div id="rfc.abstract.p.2">
+                        <p>本文件废弃 RFC 3205。</p>
+                    </div>
+                </div>
+                <aside id="rfc.meta" class="alert alert-info"></aside>
+                <section id="rfc.status">
+                    <h2><a href="#rfc.status">本文状态</a></h2>
+                    <div id="rfc.boilerplate.1.p.1">
+                        <p>本备忘录记录了一项互联网最佳当前实践。</p>
+                    </div>
+                    <div id="rfc.boilerplate.1.p.2">
+                        <p>本文件是互联网工程任务组（IETF）的成果，代表了 IETF 社区的共识。它已接受公开审查并获得互联网工程指导组（IESG）批准发表。有关 BCP 的更多信息，请参阅 <a
+                                href="https://www.rfc-editor.org/rfc/rfc7841.html#section-2">RFC 7841 的第 2 节</a>。</p>
+                    </div>
+                    <div id="rfc.boilerplate.1.p.3">
+                        <p>有关本文件当前状态、任何勘误以及如何提供反馈的信息可以在 <a
+                                href="https://www.rfc-editor.org/info/rfc9205">https://www.rfc-editor.org/info/rfc9205</a>
+                            获取。</p>
+                    </div>
+                </section>
+                <section id="rfc.copyrightnotice">
+                    <h2><a href="#rfc.copyrightnotice">Copyright Notice</a></h2>
+                    <div id="rfc.boilerplate.2.p.1">
+                        <p>Copyright (c) 2022 IETF Trust and the persons identified as the document authors. All rights
+                            reserved.</p>
+                    </div>
+                    <div id="rfc.boilerplate.2.p.2">
+                        <p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF
+                            Documents (<a
+                                href="https://trustee.ietf.org/license-info">https://trustee.ietf.org/license-info</a>)
+                            in effect on the date of publication of this document. Please review these documents
+                            carefully, as they describe your rights and restrictions with respect to this document. Code
+                            Components extracted from this document must include Revised BSD License text as described
+                            in Section 4.e of the Trust Legal Provisions and are provided without warranty as described
+                            in the Revised BSD License.</p>
+                    </div>
+                </section>
+                <div class="toc d-lg-none">
+                    <ul>
+                        <li><a href="#rfc.section.1">1.</a>&nbsp;&nbsp;&nbsp;<a href="#introduction">介绍</a>
+                            <ul>
+                                <li><a href="#rfc.section.1.1">1.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#notational-conventions">符号约定</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#rfc.section.2">2.</a>&nbsp;&nbsp;&nbsp;<a href="#used">是否正在使用 HTTP？</a>
+                            <ul>
+                                <li><a href="#rfc.section.2.1">2.1.</a>&nbsp;&nbsp;&nbsp;<a href="#non-http-protocols">非
+                                        HTTP 协议</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#rfc.section.3">3.</a>&nbsp;&nbsp;&nbsp;<a href="#overview">HTTP 的重要内容</a>
+                            <ul>
+                                <li><a href="#rfc.section.3.1">3.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#generic-semantics">通用语义</a></li>
+                                <li><a href="#rfc.section.3.2">3.2.</a>&nbsp;&nbsp;&nbsp;<a href="#links">链接</a></li>
+                                <li><a href="#rfc.section.3.3">3.3.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#rich-functionality">丰富的功能</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#rfc.section.4">4.</a>&nbsp;&nbsp;&nbsp;<a href="#bp">指定使用 HTTP 的最佳实践</a>
+                            <ul>
+                                <li><a href="#rfc.section.4.1">4.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#specifying-the-use-of-http">指定 HTTP 的使用</a></li>
+                                <li><a href="#rfc.section.4.2">4.2.</a>&nbsp;&nbsp;&nbsp;<a href="#resource">指定服务器行为</a>
+                                </li>
+                                <li><a href="#rfc.section.4.3">4.3.</a>&nbsp;&nbsp;&nbsp;<a href="#clients">指定客户端行为</a>
+                                </li>
+                                <li><a href="#rfc.section.4.4">4.4.</a>&nbsp;&nbsp;&nbsp;<a href="#specifying-urls">指定
+                                        URL</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.4.4.1">4.4.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#discovering-an-applications-urls">发现应用程序的 URL</a></li>
+                                        <li><a href="#rfc.section.4.4.2">4.4.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#scheme">考虑 URI 方案</a></li>
+                                        <li><a href="#rfc.section.4.4.3">4.4.3.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#choosing-transport-ports">选择传输端口</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.4.5">4.5.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#using-http-methods">使用 HTTP 方法</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.4.5.1">4.5.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#get">GET</a></li>
+                                        <li><a href="#rfc.section.4.5.2">4.5.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#options">OPTIONS</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.4.6">4.6.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#using-http-status-codes">使用 HTTP 状态码</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.4.6.1">4.6.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#redirects">重定向</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.4.7">4.7.</a>&nbsp;&nbsp;&nbsp;<a href="#headers">指定 HTTP
+                                        报头字段</a></li>
+                                <li><a href="#rfc.section.4.8">4.8.</a>&nbsp;&nbsp;&nbsp;<a href="#content">定义消息内容</a>
+                                </li>
+                                <li><a href="#rfc.section.4.9">4.9.</a>&nbsp;&nbsp;&nbsp;<a href="#caching">利用 HTTP
+                                        缓存</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.4.9.1">4.9.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#freshness">新鲜度</a></li>
+                                        <li><a href="#rfc.section.4.9.2">4.9.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#stale-responses">过期响应</a></li>
+                                        <li><a href="#rfc.section.4.9.3">4.9.3.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#caching-app-semantics">缓存与应用语义</a></li>
+                                        <li><a href="#rfc.section.4.9.4">4.9.4.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#varying-content-based-upon-the-request">根据请求变化内容</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.4.10">4.10.</a>&nbsp;&nbsp;&nbsp;<a href="#state">处理应用状态</a>
+                                </li>
+                                <li><a href="#rfc.section.4.11">4.11.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#multiplex">发起多个请求</a></li>
+                                <li><a href="#rfc.section.4.12">4.12.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#client-auth">客户端认证</a></li>
+                                <li><a href="#rfc.section.4.13">4.13.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#browser">与网页浏览共存</a></li>
+                                <li><a href="#rfc.section.4.14">4.14.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#other-apps">维护应用边界</a></li>
+                                <li><a href="#rfc.section.4.15">4.15.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#server-push">使用服务器推送</a></li>
+                                <li><a href="#rfc.section.4.16">4.16.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#versioning">允许版本控制与演进</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#rfc.section.5">5.</a>&nbsp;&nbsp;&nbsp;<a href="#iana-considerations">IANA 考量</a>
+                        </li>
+                        <li><a href="#rfc.section.6">6.</a>&nbsp;&nbsp;&nbsp;<a
+                                href="#security-considerations">安全性考量</a>
+                            <ul>
+                                <li><a href="#rfc.section.6.1">6.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#privacy-considerations">隐私考量</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#rfc.section.7">7.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.references">参考文献</a>
+                            <ul>
+                                <li><a href="#rfc.section.7.1">7.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#rfc.references.2">规范性参考文献</a></li>
+                                <li><a href="#rfc.section.7.2">7.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#rfc.references.3">信息性参考文献</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#rfc.section.A">Appendix A.</a>&nbsp;&nbsp;&nbsp;<a
+                                href="#changes-from-rfc-3205">来自 RFC 3205 的更改</a></li>
+                        <li><a href="#rfc.authors">Author's Address</a></li>
+                    </ul>
+                </div>
+                <hr class="hidden-print">
+                <section id="introduction">
+                    <h2 id="rfc.section.1" class="np"><a href="#rfc.section.1">1.</a>&nbsp;<a
+                            href="#introduction">介绍</a></h2>
+                    <div id="rfc.section.1.p.1" class="avoidbreakafter">
+                        <p>除网页浏览外的应用程序经常将 HTTP <a href="#HTTP"><cite title="HTTP Semantics">[HTTP]</cite></a>
+                            用作基底，这种做法有时被称为创建“基于 HTTP 的 API”、“REST API”或简称“HTTP API”。这样做的原因各不相同，包括：</p>
+                    </div>
+                    <div id="rfc.section.1.p.2">
+                        <ul>
+                            <li>实现者、规范制定者、管理员、开发者和用户的熟悉度；</li>
+                            <li>各种客户端、服务器和代理实现的可用性；</li>
+                            <li>易用性；</li>
+                            <li>网页浏览器的可用性；</li>
+                            <li>可复用的现有机制，如认证和加密；</li>
+                            <li>目标部署中存在 HTTP 服务器和客户端；以及</li>
+                            <li>其穿越防火墙的能力。</li>
+                        </ul>
+                    </div>
+                    <div id="rfc.section.1.p.3">
+                        <p>这些协议通常是即兴的，旨在仅由一台或少数服务器部署，并由有限的一组客户端使用。因此，围绕定义基于 HTTP 的 API 出现了一套偏向这些情况的实践和工具。</p>
+                    </div>
+                    <div id="rfc.section.1.p.4">
+                        <p>然而，当此类应用具有多个独立实现、在多个不协调的服务器上部署并被多样化的客户端使用时（正如标准化工作定义的 HTTP API 常见的情况），为有限部署而设计的工具和实践可能变得不适用。
+                        </p>
+                    </div>
+                    <div id="rfc.section.1.p.5">
+                        <p>这种不匹配主要是因为 API 的客户端和服务器会以不同速度实现和演进，导致需要不同特性和版本的部署共存。因此，为这些部署而设计的基于 HTTP 的 API
+                            的设计人员需要更仔细地考虑服务的可扩展性如何处理以及如何满足不同的部署需求。</p>
+                    </div>
+                    <div id="rfc.section.1.p.6" class="avoidbreakafter">
+                        <p>更一般地，使用 HTTP 的应用协议面临若干设计决策，包括：</p>
+                    </div>
+                    <div id="rfc.section.1.p.7">
+                        <ul>
+                            <li>是否应定义新的 URI 方案？使用新的端口？</li>
+                            <li>是否应使用标准的 HTTP 方法和状态码，或定义新的？</li>
+                            <li>如何最大限度地发挥使用 HTTP 的价值？</li>
+                            <li>如何与 HTTP 的其他使用共存——尤其是网页浏览？</li>
+                            <li>如何避免互操作性问题和“协议死胡同”？</li>
+                        </ul>
+                    </div>
+                    <div id="rfc.section.1.p.8">
+                        <p><a href="#used" title="Is HTTP Being Used?">第 2 节</a> 定义了本文件适用的情况，<a href="#overview"
+                                title="What's Important About HTTP">第 3 节</a> 概述了需要保留的重要 HTTP 属性，<a href="#bp"
+                                title="Best Practices for Specifying the Use of HTTP">第 4 节</a> 包含使用 HTTP 的应用规范的最佳实践。
+                        </p>
+                    </div>
+                    <div id="rfc.section.1.p.9">
+                        <p>本文主要用于指导 IETF 制定使用 HTTP 在互联网上部署的应用协议，但在其他情形下也可能适用。请注意，此处的要求不一定适用于通用的 HTTP 扩展开发。</p>
+                    </div>
+                    <div id="rfc.section.1.p.10">
+                        <p>本文件废弃了 <a href="#RFC3205"><cite
+                                    title="On the use of HTTP as a Substrate">[RFC3205]</cite></a>，以反映在此期间关于 HTTP
+                            的经验和发展。</p>
+                    </div>
+                    <section id="notational-conventions">
+                        <h3 id="rfc.section.1.1"><a href="#rfc.section.1.1">1.1.</a>&nbsp;<a
+                                href="#notational-conventions">符号约定</a></h3>
+                        <div id="rfc.section.1.1.p.1">
+                            <p>在本文档中，当且仅当以全部大写字母出现时，关键词 "<em class="bcp14">MUST</em>"、"<em class="bcp14">MUST
+                                    NOT</em>"、"<em class="bcp14">REQUIRED</em>"、"<em class="bcp14">SHALL</em>"、"<em
+                                    class="bcp14">SHALL NOT</em>"、"<em class="bcp14">SHOULD</em>"、"<em
+                                    class="bcp14">SHOULD NOT</em>"、"<em class="bcp14">RECOMMENDED</em>"、"<em
+                                    class="bcp14">NOT RECOMMENDED</em>"、"<em class="bcp14">MAY</em>" 和 "<em
+                                    class="bcp14">OPTIONAL</em>" 应按 <span class="nobr">BCP 14</span> <a
+                                    href="#RFC2119"><cite
+                                        title="Key words for use in RFCs to Indicate Requirement Levels">[RFC2119]</cite></a>
+                                和 <a href="#RFC8174"><cite
+                                        title="Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words">[RFC8174]</cite></a>
+                                中所述进行解释。</p>
+                        </div>
+                    </section>
+                </section>
+                <hr class="hidden-print">
+                <section id="used">
+                    <h2 id="rfc.section.2" class="np"><a href="#rfc.section.2">2.</a>&nbsp;<a href="#used">是否正在使用
+                            HTTP？</a></h2>
+                    <div id="rfc.section.2.p.1" class="avoidbreakafter">
+                        <p>不同的应用在使用 HTTP 时有不同的目标。本文件中的建议适用于满足下列条件之一的规范，这些规范定义了一个应用：</p>
+                    </div>
+                    <div id="rfc.section.2.p.2">
+                        <ul>
+                            <li>使用传输端口 80 或 443，或</li>
+                            <li>使用 URI 方案 "http" 或 "https"，或</li>
+                            <li>使用通用标识 HTTP 的 ALPN 协议 ID <a href="#RFC7301"><cite
+                                        title="Transport Layer Security (TLS) Application-Layer Protocol Negotiation Extension">[RFC7301]</cite></a>（例如
+                                "http/1.1"、"h2"、"h3"），或</li>
+                            <li>在为 HTTP 定义的 IANA 注册表中进行注册或总体修改。</li>
+                        </ul>
+                    </div>
+                    <div id="rfc.section.2.p.3">
+                        <p>此外，当规范使用 HTTP 时，HTTP 协议集的所有要求均有效（特别是 <a href="#HTTP"><cite
+                                    title="HTTP Semantics">[HTTP]</cite></a>，以及所使用的具体 HTTP 版本和任何正在使用的扩展）。</p>
+                    </div>
+                    <div id="rfc.section.2.p.4">
+                        <p>请注意，本文件旨在适用于应用，而不是通用的 HTTP 扩展。此外，虽然它面向 IETF 指定的应用，但鼓励其他标准组织遵守其要求。</p>
+                    </div>
+                    <section id="non-http-protocols">
+                        <h3 id="rfc.section.2.1"><a href="#rfc.section.2.1">2.1.</a>&nbsp;<a
+                                href="#non-http-protocols">非 HTTP 协议</a></h3>
+                        <div id="rfc.section.2.1.p.1">
+                            <p>一个应用可以在不满足上述使用条件的情况下依赖 HTTP。例如，某个应用可能希望避免重新定义消息格式的部分内容，但可能更改协议操作的其他方面，或者希望使用特定于应用的方法。</p>
+                        </div>
+                        <div id="rfc.section.2.1.p.2">
+                            <p>这样做允许在修改协议操作上有更多自由，但会失去第 <a href="#overview" title="What's Important About HTTP">3 节</a>
+                                中概述的部分好处，因为大多数 HTTP 实现不容易适应这些更改。其带来的思维认知上的优势也将丧失。</p>
+                        </div>
+                        <div id="rfc.section.2.1.p.3">
+                            <p>此类规范 <em class="bcp14">MUST NOT</em> 使用 HTTP 的 URI 方案、传输端口、ALPN 协议 ID 或 IANA
+                                注册表；相反，建议它们自行建立这些项。</p>
+                        </div>
+                    </section>
+                </section>
+                <hr class="hidden-print">
+                <section id="overview">
+                    <h2 id="rfc.section.3" class="np"><a href="#rfc.section.3">3.</a>&nbsp;<a href="#overview">HTTP
+                            的重要内容</a></h2>
+                    <div id="rfc.section.3.p.1">
+                        <p>本节考察在使用 HTTP 来定义应用协议时需要考虑的 HTTP 特性。</p>
+                    </div>
+                    <section id="generic-semantics">
+                        <h3 id="rfc.section.3.1"><a href="#rfc.section.3.1">3.1.</a>&nbsp;<a
+                                href="#generic-semantics">通用语义</a></h3>
+                        <div id="rfc.section.3.1.p.1">
+                            <p>HTTP 的价值很大程度上在于其通用语义——也就是说，HTTP
+                                定义的协议元素有可能适用于每个资源，并非特定于某一上下文。特定于应用的语义最好在消息内容和报头字段中表达，而不是在状态码或方法中（尽管状态码和方法确实具有与应用状态相关的通用语义）。
+                            </p>
+                        </div>
+                        <div id="rfc.section.3.1.p.2">
+                            <p>通用语义与应用特定语义的这种划分使得通用软件（例如 HTTP 服务器、中间件、客户端实现和缓存）能够处理 HTTP 消息，而无需理解所使用的具体应用。它还允许人们利用对 HTTP
+                                语义的理解，而无需对特定应用拥有专门知识。</p>
+                        </div>
+                        <div id="rfc.section.3.1.p.3">
+                            <p>因此，使用 HTTP 的应用 <em class="bcp14">MUST NOT</em>
+                                重新定义、细化或覆盖通用协议元素（例如方法、状态码或现有报头字段）的语义。相反，它们应将规范重点放在该应用特有的协议元素上——即它们的 HTTP 资源。</p>
+                        </div>
+                        <div id="rfc.section.3.1.p.4" class="avoidbreakafter">
+                            <p>在编写规范时，常常会试图精确规定 HTTP 应如何被实现、支持和使用。然而，这很容易导致对 HTTP 行为的非预期限定。例如，经常可以看到类似如下的规范语言：</p>
+                        </div>
+                        <div id="rfc.section.3.1.p.5">
+                            <blockquote>
+                                <div id="rfc.section.3.1.p.5.1">
+                                    <p>一个 POST 请求 MUST 导致 201 (Created) 响应。</p>
+                                </div>
+                            </blockquote>
+                        </div>
+                        <div id="rfc.section.3.1.p.6">
+                            <p>这在客户端中形成了一个期望，即响应将始终为 201
+                                (Created)，而实际上在真实部署中状态码可能因多种原因而不同；例如，可能存在需要认证的代理、服务器端错误或重定向。如果客户端没有预见这些情况，应用的部署将变得脆弱。
+                            </p>
+                        </div>
+                        <div id="rfc.section.3.1.p.7">
+                            <p>更多细节见 <a href="#resource" title="Specifying Server Behaviour">第 4.2 节</a>。</p>
+                        </div>
+                    </section>
+                    <section id="links">
+                        <h3 id="rfc.section.3.2"><a href="#rfc.section.3.2">3.2.</a>&nbsp;<a href="#links">链接</a>
+                        </h3>
+                        <div id="rfc.section.3.2.p.1">
+                            <p>另一个常见做法是假定 HTTP 服务器的命名空间（或其中的一部分）专属于某个应用程序使用。这实际上在该空间上覆盖了特殊的、应用特定的语义，并阻止其他应用使用它。</p>
+                        </div>
+                        <div id="rfc.section.3.2.p.2">
+                            <p>如 <a href="#BCP190"><cite title="URI Design and Ownership">[BCP190]</cite></a> 所述，这种在 URL
+                                空间的一部分上进行“占据”行为会篡夺服务器对自身资源的权限，可能导致部署问题，因此在标准中是不良实践。</p>
+                        </div>
+                        <div id="rfc.section.3.2.p.3">
+                            <p>与其静态地定义 URI 组件（如路径），更 <em class="bcp14">推荐</em> 使用 HTTP 的链接机制 <a
+                                    href="#WEB-LINKING"><cite title="Web Linking">[WEB-LINKING]</cite></a>
+                                来定义和使用链接，以便在部署时保持灵活性。</p>
+                        </div>
+                        <div id="rfc.section.3.2.p.4">
+                            <p>以这种方式使用运行时链接在许多方面都有额外的好处——尤其是当一个应用有多个实现和/或部署时（这在标准化的应用中很常见）。</p>
+                        </div>
+                        <div id="rfc.section.3.2.p.5">
+                            <p>例如，使用链接进行导航允许请求被路由到不同的服务器，而无需重定向的开销，从而很好地支持跨机器部署。</p>
+                        </div>
+                        <div id="rfc.section.3.2.p.6">
+                            <p>通过使用链接，还可以在同一服务器上“混合搭配”不同的应用。链接的使用也为可扩展性、版本控制和能力管理提供了自然机制，因为包含链接的文档也可以包含有关其目标的信息。</p>
+                        </div>
+                        <div id="rfc.section.3.2.p.7">
+                            <p>使用链接还提供了一种在 Web 上常见的缓存失效方式；当资源状态变化时，应用可以更改受影响的链接，以便始终获取最新副本。</p>
+                        </div>
+                        <div id="rfc.section.3.2.p.8">
+                            <p>更多细节见 <a href="#specifying-urls" title="Specifying URLs">第 4.4 节</a>。</p>
+                        </div>
+                    </section>
+                    <section id="rich-functionality">
+                        <h3 id="rfc.section.3.3"><a href="#rfc.section.3.3">3.3.</a>&nbsp;<a
+                                href="#rich-functionality">丰富的功能</a></h3>
+                        <div id="rfc.section.3.3.p.1" class="avoidbreakafter">
+                            <p>HTTP 为应用提供了许多功能，例如：</p>
+                        </div>
+                        <div id="rfc.section.3.3.p.2">
+                            <ul>
+                                <li>消息分帧</li>
+                                <li>复用（在 HTTP/2 <a href="#HTTP2"><cite title="HTTP/2">[HTTP/2]</cite></a> 和 HTTP/3 <a
+                                        href="#HTTP3"><cite title="HTTP/3">[HTTP/3]</cite></a> 中）</li>
+                                <li>与 TLS 的集成</li>
+                                <li>对中间件的支持（代理、网关、内容分发网络（CDN））</li>
+                                <li>客户端认证</li>
+                                <li>用于格式、语言和其他特性的内容协商</li>
+                                <li>用于服务器可扩展性、延迟与带宽减少以及可靠性的缓存</li>
+                                <li>访问控制的粒度（通过使用丰富的 URL 空间）</li>
+                                <li>部分内容请求以选择性获取响应的部分内容</li>
+                                <li>使用 Web 浏览器方便地与应用交互的能力</li>
+                            </ul>
+                        </div>
+                        <div id="rfc.section.3.3.p.3">
+                            <p>鼓励使用 HTTP
+                                的应用利用协议提供的各种功能，以便其用户能从这些功能中获得最大收益，并且应用可以在各种场景中部署。本文档并不强制使用具体特性，因为适当的设计权衡高度依赖具体情形。然而，遵循第
+                                <a href="#bp" title="Best Practices for Specifying the Use of HTTP">4 节</a>
+                                中的实践是一个良好的起点。
+                            </p>
+                        </div>
+                    </section>
+                </section>
+                <hr class="hidden-print">
+                <section id="bp">
+                    <h2 id="rfc.section.4" class="np"><a href="#rfc.section.4">4.</a>&nbsp;<a href="#bp">指定使用 HTTP
+                            的最佳实践</a></h2>
+                    <div id="rfc.section.4.p.1">
+                        <p>本节包含了规范应用程序使用 HTTP 的最佳实践，包括针对特定 HTTP 协议元素的实践。</p>
+                    </div>
+                    <section id="specifying-the-use-of-http">
+                        <h3 id="rfc.section.4.1"><a href="#rfc.section.4.1">4.1.</a>&nbsp;<a
+                                href="#specifying-the-use-of-http">指定 HTTP 的使用</a></h3>
+                        <div id="rfc.section.4.1.p.1">
+                            <p>规范应将 <a href="#HTTP"><cite title="HTTP Semantics">[HTTP]</cite></a> 作为 HTTP
+                                的主要参考；除非有特定原因（例如需要指出某个特性），否则无需引用 HTTP 套件中的所有规范。</p>
+                        </div>
+                        <div id="rfc.section.4.1.p.2">
+                            <p>由于 HTTP 是逐跳（hop-by-hop）协议，连接可能会被不由应用控制的实现处理；例如代理、CDN、防火墙等。在这些情况下要求使用特定的 HTTP
+                                版本会使得使用变得困难并损害互操作性。因此，不建议（<em class="bcp14">NOT RECOMMENDED</em>）在应用规范中指定必须使用的最低 HTTP
+                                版本。</p>
+                        </div>
+                        <div id="rfc.section.4.1.p.3">
+                            <p>不过，如果应用的部署能够从使用特定 HTTP 版本中获益（例如 HTTP/2 的复用），应当在规范中指出这一点。</p>
+                        </div>
+                        <div id="rfc.section.4.1.p.4">
+                            <p>为了保留协议演进的能力，使用 HTTP 的应用 <em class="bcp14">MUST NOT</em> 指定最大版本。</p>
+                        </div>
+                        <div id="rfc.section.4.1.p.5" class="avoidbreakafter">
+                            <p>在给出协议交互示例时，应用应记录完整的请求和响应消息头部分，最好采用 HTTP/1.1 格式 <a href="#HTTP11"><cite
+                                        title="HTTP/1.1">[HTTP/1.1]</cite></a>。例如：</p>
+                        </div>
+                        <div id="rfc.section.4.1.p.6">
+                            <pre class="text">
+GET /thing HTTP/1.1
+Host: example.com
+Accept: application/things+json
+User-Agent: Foo/1.0
+
+</pre>
+                        </div>
+                        <div id="rfc.section.4.1.p.7">
+                            <pre class="text">
+HTTP/1.1 200 OK
+Content-Type: application/things+json
+Content-Length: 500
+Server: Bar/2.2
+
+[content here]
+</pre>
+                        </div>
+                    </section>
+                    <section id="resource">
+                        <h3 id="rfc.section.4.2"><a href="#rfc.section.4.2">4.2.</a>&nbsp;<a
+                                href="#resource">指定服务器行为</a></h3>
+                        <div id="rfc.section.4.2.p.1" class="avoidbreakafter">
+                            <p>通过定义以下协议元素来指定应用的服务器端行为通常最为有效：</p>
+                        </div>
+                        <div id="rfc.section.4.2.p.2">
+                            <ul>
+                                <li>媒体类型 <a href="#RFC6838"><cite
+                                            title="Media Type Specifications and Registration Procedures">[RFC6838]</cite></a>，通常基于诸如
+                                    JSON <a href="#JSON"><cite
+                                            title="The JavaScript Object Notation (JSON) Data Interchange Format">[JSON]</cite></a>
+                                    的格式约定；</li>
+                                <li>HTTP 报头字段，按 <a href="#headers" title="Specifying HTTP Header Fields">第 4.7 节</a>
+                                    的说明；以及</li>
+                                <li>通过链接关系 <a href="#WEB-LINKING"><cite title="Web Linking">[WEB-LINKING]</cite></a>
+                                    指认的资源行为。</li>
+                            </ul>
+                        </div>
+                        <div id="rfc.section.4.2.p.3" class="avoidbreakafter">
+                            <p>应用可以通过组合这些协议元素来定义其操作，形成一组通过链接关系标识并实现特定行为的资源，包括：</p>
+                        </div>
+                        <div id="rfc.section.4.2.p.4">
+                            <ul>
+                                <li>使用 GET 以一种或多种由媒体类型标识的格式检索资源状态；</li>
+                                <li>使用 POST 或 PUT 创建或更新资源，并指定适当的请求内容格式；</li>
+                                <li>使用 POST 进行数据处理，并标识请求和响应的内容格式；以及</li>
+                                <li>使用 DELETE 删除资源。</li>
+                            </ul>
+                        </div>
+                        <div id="rfc.section.4.2.p.5" class="avoidbreakafter">
+                            <p>例如，某个应用可能会指定：</p>
+                        </div>
+                        <div id="rfc.section.4.2.p.6">
+                            <blockquote>
+                                <div id="rfc.section.4.2.p.6.1">
+                                    <p>使用 “example-widget” 链接关系类型链接的资源是 Widgets。Widget 的状态可以以
+                                        "application/example-widget+json" 格式获取，并且可以通过对相同链接使用 PUT 来更新。Widget 资源可以被删除。</p>
+                                </div>
+                                <div id="rfc.section.4.2.p.6.2">
+                                    <p>Widget 表示中的 Example-Count 响应报头字段指示发送方持有多少个 Widget。</p>
+                                </div>
+                                <div id="rfc.section.4.2.p.6.3">
+                                    <p>"application/example-widget+json" 格式是一种表示 Widget 状态的 JSON [RFC8259] 格式。它在 Link
+                                        报头字段值中带有 "example-other-info" 链接关系类型指示的链接，指向相关信息。</p>
+                                </div>
+                            </blockquote>
+                        </div>
+                        <div id="rfc.section.4.2.p.7">
+                            <p>应用还可以指定使用 URI 模板 <a href="#URI-TEMPLATE"><cite
+                                        title="URI Template">[URI-TEMPLATE]</cite></a>，以允许客户端基于运行时数据生成 URL。</p>
+                        </div>
+                    </section>
+                    <section id="clients">
+                        <h3 id="rfc.section.4.3"><a href="#rfc.section.4.3">4.3.</a>&nbsp;<a href="#clients">指定客户端行为</a>
+                        </h3>
+                        <div id="rfc.section.4.3.p.1">
+                            <p>应用对客户端行为的期望应与 Web 浏览器的期望紧密一致，以避免当浏览器被用于访问时出现互操作性问题。</p>
+                        </div>
+                        <div id="rfc.section.4.3.p.2">
+                            <p>一种方法是以 <a href="#FETCH"><cite title="Fetch - Living Standard">[FETCH]</cite></a>
+                                来定义，因为这是浏览器用于 HTTP 的抽象。</p>
+                        </div>
+                        <div id="rfc.section.4.3.p.3" class="avoidbreakafter">
+                            <p>某些客户端行为（例如自动重定向处理）和扩展（例如 Cookie）并非 HTTP 所要求，但已变得非常普遍。如果应用未明确指定它们的使用，可能会引起混淆和互操作性问题。特别地：
+                            </p>
+                        </div>
+                        <div id="rfc.section.4.3.p.4">
+                            <dl>
+                                <dt>重定向处理：</dt>
+                                <dd style="margin-left: 1.5em">应用需要指定期望如何处理重定向；参见 <a href="#redirects"
+                                        title="Redirection">第 4.6.1 节</a>。</dd>
+                                <dt>Cookie：</dt>
+                                <dd style="margin-left: 1.5em">若需使用 Cookie，使用 HTTP 的应用应明确引用 Cookie 规范 <a
+                                        href="#COOKIES"><cite
+                                            title="HTTP State Management Mechanism">[COOKIES]</cite></a>。</dd>
+                                <dt>证书：</dt>
+                                <dd style="margin-left: 1.5em">当使用 HTTPS 时，使用 HTTP 的应用应指定 TLS 证书按照 <a
+                                        href="https://www.rfc-editor.org/rfc/rfc9110.html#section-4.3.4">[HTTP] 第 4.3.4
+                                        节</a> 进行检查。</dd>
+                            </dl>
+                        </div>
+                        <div id="rfc.section.4.3.p.5">
+                            <p>使用 HTTP 的应用不应要求客户端静态支持通常通过协商获得的 HTTP 特性。例如，要求客户端支持某种内容编码而不是通过协商来确定（参见 <a
+                                    href="#HTTP"><cite
+                                        title="HTTP Semantics">[HTTP]</cite></a>）会导致原本符合规范的客户端无法与该应用互操作。不过，应用可以鼓励实现这些特性。
+                            </p>
+                        </div>
+                    </section>
+                    <section id="specifying-urls">
+                        <h3 id="rfc.section.4.4"><a href="#rfc.section.4.4">4.4.</a>&nbsp;<a href="#specifying-urls">指定
+                                URL</a></h3>
+                        <div id="rfc.section.4.4.p.1">
+                            <p>在 HTTP 中，客户端交互的资源由 URL 标识 <a href="#URL"><cite
+                                        title="Uniform Resource Identifier (URI): Generic Syntax">[URL]</cite></a>。正如 <a
+                                    href="#BCP190"><cite title="URI Design and Ownership">[BCP190]</cite></a> 所解释的，URL
+                                的部分组件由服务器的所有者（也称为“authority”）控制，以便为其部署提供灵活性。</p>
+                        </div>
+                        <div id="rfc.section.4.4.p.2">
+                            <p>这意味着在大多数情况下，使用 HTTP 的应用规范不会包含固定的应用 URL 或路径；虽然在单一部署的 API 规范中指定路径前缀（例如 "/app/v1"）是常见做法，但在
+                                IETF 规范中这样做是不合适的。</p>
+                        </div>
+                        <div id="rfc.section.4.4.p.3">
+                            <p>因此，规范作者需要某种机制来允许客户端发现某个应用的 URL。此外，他们需要指定应用应使用哪个 URL 方案以及是否使用专用端口或重用 HTTP 的端口。</p>
+                        </div>
+                        <section id="discovering-an-applications-urls">
+                            <h4 id="rfc.section.4.4.1"><a href="#rfc.section.4.4.1">4.4.1.</a>&nbsp;<a
+                                    href="#discovering-an-applications-urls">发现应用的 URL</a></h4>
+                            <div id="rfc.section.4.4.1.p.1">
+                                <p>通常，客户端会通过请求包含有关该特定部署信息的初始文档来开始与给定应用服务器的交互，该文档可能包含指向其他相关资源的链接。这样做可以确保部署尽可能灵活（可能跨多个服务器）、允许演进，并为应用提供机会根据客户端定制“发现文档”。
+                                </p>
+                            </div>
+                            <div id="rfc.section.4.4.1.p.2">
+                                <p>有几种常见模式用于发现该初始 URL。</p>
+                            </div>
+                            <div id="rfc.section.4.4.1.p.3">
+                                <p>最直接的 URL 发现机制是通过配置客户端（或以其它方式传达给客户端）一个完整的 URL。可以在配置文档中完成此操作，或通过其他发现机制传达。</p>
+                            </div>
+                            <div id="rfc.section.4.4.1.p.4">
+                                <p>但是，如果客户端只知道服务器的主机名和应用的标识，则需要有方法从这些信息推导出初始 URL。</p>
+                            </div>
+                            <div id="rfc.section.4.4.1.p.5" class="avoidbreakafter">
+                                <p>应用不能为其 URL 路径定义固定前缀；见 <a href="#BCP190"><cite
+                                            title="URI Design and Ownership">[BCP190]</cite></a>。相反，此类应用的规范可以采用以下策略之一：
+                                </p>
+                            </div>
+                            <div id="rfc.section.4.4.1.p.6">
+                                <ul>
+                                    <li>注册一个 well-known URI <a href="#WELL-KNOWN-URI"><cite
+                                                title="Well-Known Uniform Resource Identifiers (URIs)">[WELL-KNOWN-URI]</cite></a>
+                                        作为该应用的入口点。这样在每个潜在服务器上都会有一个固定路径，且不会与其他应用冲突。</li>
+                                    <li>允许服务器权威机构传达一个 URI 模板 <a href="#URI-TEMPLATE"><cite
+                                                title="URI Template">[URI-TEMPLATE]</cite></a> 或类似机制，用于生成入口点的
+                                        URL。例如，这可以在配置文档或其他工件中完成。</li>
+                                </ul>
+                            </div>
+                            <div id="rfc.section.4.4.1.p.7">
+                                <p>一旦发现文档被定位，它可以被获取并在允许的情况下缓存以备后用，并可用于通过完整 URI 或 URL 模板定位与应用相关的其他资源。</p>
+                            </div>
+                            <div id="rfc.section.4.4.1.p.8">
+                                <p>在某些情况下，应用可能不希望使用此类发现文档——例如，当通信非常短暂或出于延迟考虑而无法使用发现文档时。这些情况可以通过将应用的所有资源放在一个 well-known
+                                    位置来解决。</p>
+                            </div>
+                        </section>
+                        <section id="scheme">
+                            <h4 id="rfc.section.4.4.2"><a href="#rfc.section.4.4.2">4.4.2.</a>&nbsp;<a href="#scheme">考虑
+                                    URI 方案</a></h4>
+                            <div id="rfc.section.4.4.2.p.1">
+                                <p>使用 HTTP 的应用通常会采用 "http" 和/或 "https" URI 方案。为了提供认证、完整性和保密性，并减轻普遍性监控攻击，推荐使用 "https"（<em
+                                        class="bcp14">RECOMMENDED</em>）<a href="#RFC7258"><cite
+                                            title="Pervasive Monitoring Is an Attack">[RFC7258]</cite></a>。</p>
+                            </div>
+                            <div id="rfc.section.4.4.2.p.2" class="avoidbreakafter">
+                                <p>然而，也可以定义应用特定的方案。在为使用 HTTP 的应用定义 URI 方案时，需要考虑若干权衡和注意事项：</p>
+                            </div>
+                            <div id="rfc.section.4.4.2.p.3">
+                                <ul>
+                                    <li>未经修改的 Web 浏览器将不支持新的方案。尽管可以向浏览器注册新的 URI 方案（例如在 <a href="#HTML"><cite
+                                                title="HTML - Living Standard">[HTML]</cite></a> 中的
+                                        registerProtocolHandler()，以及一些专有方法），但这些机制并非所有浏览器都支持，且其能力各不相同。</li>
+                                    <li>现有的非浏览器客户端、中间件、服务器和相关软件将无法识别新的方案。例如，客户端库可能无法正确分发请求，缓存可能拒绝存储响应，代理可能无法转发请求。</li>
+                                    <li>由于 URL 经常出现在 HTTP 工件中并常被自动生成（例如在 Location 响应报头字段中），确保始终一致地使用新方案可能很困难。</li>
+                                    <li>由新方案标识的资源仍然可以使用 "http" 和/或 "https" URL 访问。这些 URL
+                                        可能“泄露”出来，带来安全和可操作性问题。例如，使用新方案以确保请求不会被发送到“普通”网站的做法很可能失败。</li>
+                                    <li>依赖 URL origin 的特性（例如 Web 的同源策略）会受到方案变更的影响 <a href="#RFC6454"><cite
+                                                title="The Web Origin Concept">[RFC6454]</cite></a>。</li>
+                                    <li>诸如 Cookie <a href="#COOKIES"><cite
+                                                title="HTTP State Management Mechanism">[COOKIES]</cite></a>、认证 <a
+                                            href="#HTTP"><cite title="HTTP Semantics">[HTTP]</cite></a>、缓存 <a
+                                            href="#HTTP-CACHING"><cite
+                                                title="HTTP Caching">[HTTP-CACHING]</cite></a>、HTTP 严格传输安全 (HSTS) <a
+                                            href="#RFC6797"><cite
+                                                title="HTTP Strict Transport Security (HSTS)">[RFC6797]</cite></a>
+                                        和跨源资源共享 (CORS) <a href="#FETCH"><cite
+                                                title="Fetch - Living Standard">[FETCH]</cite></a> 等 HTTP
+                                        特性可能是否正常工作取决于它们的定义与实现。通常这些特性是基于 URL 总是假定为 "http" 或 "https" 设计和实现的。</li>
+                                    <li>需要安全上下文的 Web 特性 <a href="#SECCTXT"><cite
+                                                title="Secure Contexts">[SECCTXT]</cite></a> 很可能将新方案视为不安全。</li>
+                                </ul>
+                            </div>
+                            <div id="rfc.section.4.4.2.p.4">
+                                <p>关于创建新 URI 方案的更多信息，请参阅 <a href="#RFC7595"><cite
+                                            title="Guidelines and Registration Procedures for URI Schemes">[RFC7595]</cite></a>。
+                                </p>
+                            </div>
+                        </section>
+                        <section id="choosing-transport-ports">
+                            <h4 id="rfc.section.4.4.3"><a href="#rfc.section.4.4.3">4.4.3.</a>&nbsp;<a
+                                    href="#choosing-transport-ports">选择传输端口</a></h4>
+                            <div id="rfc.section.4.4.3.p.1">
+                                <p>应用可以使用适用的默认端口（HTTP 为 80，HTTPS 为
+                                    443），也可以部署在其他端口上。这个决定可以在部署时做出，也可以在应用规范中鼓励（例如通过为该应用注册端口）。</p>
+                            </div>
+                            <div id="rfc.section.4.4.3.p.2">
+                                <p>如果使用非默认端口，需要在该资源的所有 URL 的 authority 中反映出来；改变默认端口的唯一机制是改变 URI 方案（参见 <a href="#scheme"
+                                        title="Considering URI Schemes">第 4.4.2 节</a>）。</p>
+                            </div>
+                            <div id="rfc.section.4.4.3.p.3">
+                                <p>使用非默认端口具有隐私影响（即该协议现在可以与其他流量区分开来），并且存在可操作性方面的顾虑（某些网络可能会阻断或以其他方式干预）。这些隐私影响（包括由于可区分性导致的影响）应在安全性考量中进行说明。
+                                </p>
+                            </div>
+                            <div id="rfc.section.4.4.3.p.4">
+                                <p>更多指导请参阅 <a href="#RFC7605"><cite
+                                            title="Recommendations on Using Assigned Transport Port Numbers">[RFC7605]</cite></a>。
+                                </p>
+                            </div>
+                        </section>
+                    </section>
+                    <section id="using-http-methods">
+                        <h3 id="rfc.section.4.5"><a href="#rfc.section.4.5">4.5.</a>&nbsp;<a
+                                href="#using-http-methods">使用 HTTP 方法</a></h3>
+                        <div id="rfc.section.4.5.p.1">
+                            <p>使用 HTTP 的应用 <em class="bcp14">MUST</em> 限制使用已注册的 HTTP 方法，如 GET、POST、PUT、DELETE 和 PATCH。
+                            </p>
+                        </div>
+                        <div id="rfc.section.4.5.p.2">
+                            <p>新的 HTTP 方法很少见；它们需要在 “HTTP 方法注册表” 中以 IETF 审查的方式注册（参见 <a href="#HTTP"><cite
+                                        title="HTTP Semantics">[HTTP]</cite></a>），并且需要是通用的。这意味着它们需要可能适用于所有资源，而不仅仅是某个应用的资源。
+                            </p>
+                        </div>
+                        <div id="rfc.section.4.5.p.3">
+                            <p>尽管历史上某些应用（例如 <a href="#RFC4791"><cite
+                                        title="Calendaring Extensions to WebDAV (CalDAV)">[RFC4791]</cite></a>）定义了特定于应用的方法，但
+                                <a href="#HTTP"><cite title="HTTP Semantics">[HTTP]</cite></a> 现在禁止这样做。
+                            </p>
+                        </div>
+                        <div id="rfc.section.4.5.p.4">
+                            <p>当作者认为需要新的方法时，鼓励他们尽早与 HTTP 社区接洽（例如在 &lt;<a
+                                    href="mailto:ietf-http-wg@w3.org">mailto:ietf-http-wg@w3.org</a>&gt; 邮件列表上），并将其作为独立的
+                                HTTP 扩展来记录，而不是作为应用规范的一部分。</p>
+                        </div>
+                        <section id="get">
+                            <h4 id="rfc.section.4.5.1"><a href="#rfc.section.4.5.1">4.5.1.</a>&nbsp;<a
+                                    href="#get">GET</a></h4>
+                            <div id="rfc.section.4.5.1.p.1">
+                                <p>GET 是最常见也最有用的 HTTP 方法；它的检索语义允许缓存和无副作用的链接操作，并支持使用 HTTP 的许多优势。</p>
+                            </div>
+                            <div id="rfc.section.4.5.1.p.2">
+                                <p>查询可以使用 GET 执行，通常利用 URL 的查询组件；这是来自网页浏览的熟悉模式，其结果可以被缓存，从而提高昂贵操作的效率。然而在某些情况下，由于 URI
+                                    语法的限制，GET 可能不适合表达查询；特别地，如果二进制数据是查询项的一部分，则需要对其进行编码以符合 URI 语法。</p>
+                            </div>
+                            <div id="rfc.section.4.5.1.p.3">
+                                <p>对于短查询这不是问题，但对于较大的查询项或需要保持高请求速率的情况，这可能成为问题。此外，一些 HTTP 实现限制其支持的 URL 大小，尽管现代 HTTP
+                                    软件的限制比以前宽松得多（通常远大于 8000 字节，这是 <a href="#HTTP"><cite
+                                            title="HTTP Semantics">[HTTP]</cite></a> 所要求的）。</p>
+                            </div>
+                            <div id="rfc.section.4.5.1.p.4">
+                                <p>在这些情况下，使用 POST 在请求主体中表达查询可能是一个选择；这样可以避免编码开销和实现中的 URL 长度限制。然而，这样做会失去 GET
+                                    的缓存和对查询结果进行链接的优势。因此，要求支持使用 POST 表达查询的应用应考虑同时允许两种方法。</p>
+                            </div>
+                            <div id="rfc.section.4.5.1.p.5">
+                                <p>对 GET 请求的处理不应改变应用的状态或产生客户端可能会认为重要的其他副作用，因为实现可能会重试失败的 HTTP GET 请求。此外，某些受保护在 TLS 早期数据的
+                                    GET 请求可能容易受到重放攻击（参见 <a href="#RFC8470"><cite
+                                            title="Using Early Data in HTTP">[RFC8470]</cite></a>）。注意，这不包括日志记录和类似功能；参见
+                                    <a href="#HTTP"><cite title="HTTP Semantics">[HTTP]</cite></a> 的相关说明（参见 <a
+                                        href="https://www.rfc-editor.org/rfc/rfc9110.html#section-9.2.1">第 9.2.1 节</a>）。
+                                </p>
+                            </div>
+                            <div id="rfc.section.4.5.1.p.6">
+                                <p>最后请注意，尽管通用的 HTTP 语法允许 GET 请求消息包含内容，其目的是使消息解析器通用；根据 <a href="#HTTP"><cite
+                                            title="HTTP Semantics">[HTTP]</cite></a>（参见 <a
+                                        href="https://www.rfc-editor.org/rfc/rfc9110.html#section-9.3.1">第 9.3.1
+                                        节</a>），GET 中的内容并不推荐、没有意义，并且会被通用 HTTP 软件（如中间件、缓存、服务器和客户端库）忽略或拒绝。</p>
+                            </div>
+                        </section>
+                        <section id="options">
+                            <h4 id="rfc.section.4.5.2"><a href="#rfc.section.4.5.2">4.5.2.</a>&nbsp;<a
+                                    href="#options">OPTIONS</a></h4>
+                            <div id="rfc.section.4.5.2.p.1">
+                                <p>OPTIONS 方法用于检索元数据，并在 WebDAV <a href="#RFC4918"><cite
+                                            title="HTTP Extensions for Web Distributed Authoring and Versioning (WebDAV)">[RFC4918]</cite></a>
+                                    与 CORS <a href="#FETCH"><cite title="Fetch - Living Standard">[FETCH]</cite></a>
+                                    中都有使用。由于基于 HTTP 的 API 常需检索关于资源的元数据，因此经常考虑使用它。</p>
+                            </div>
+                            <div id="rfc.section.4.5.2.p.2" class="avoidbreakafter">
+                                <p>然而，OPTIONS 存在显著限制：</p>
+                            </div>
+                            <div id="rfc.section.4.5.2.p.3">
+                                <ul>
+                                    <li>无法通过简单的 URL 链接到元数据，因为 OPTIONS 不是默认方法。</li>
+                                    <li>OPTIONS 响应不可缓存，因为 HTTP 缓存基于资源的表示（即 GET 和 HEAD）进行操作。如果单独缓存 OPTIONS 响应，则需要考虑其与
+                                        HTTP 缓存过期、二级键和其他机制的交互。</li>
+                                    <li>OPTIONS 是“聊天式”的——单独请求元数据会增加与应用交互所需的请求数量。</li>
+                                    <li>对 OPTIONS 的实现支持并非普遍；一些服务器在不做大量工作下不会公开响应 OPTIONS 请求的能力。</li>
+                                </ul>
+                            </div>
+                            <div id="rfc.section.4.5.2.p.4" class="avoidbreakafter">
+                                <p>以下替代方法之一可能更为合适：</p>
+                            </div>
+                            <div id="rfc.section.4.5.2.p.5">
+                                <ul>
+                                    <li>对于服务器范围的元数据，创建一个 well-known URI <a href="#WELL-KNOWN-URI"><cite
+                                                title="Well-Known Uniform Resource Identifiers (URIs)">[WELL-KNOWN-URI]</cite></a>，或在合适时使用已存在的（例如
+                                        host-meta <a href="#RFC6415"><cite
+                                                title="Web Host Metadata">[RFC6415]</cite></a>）。</li>
+                                    <li>对于特定资源的元数据，创建一个独立资源并使用 Link 响应报头字段或在响应内容中序列化的链接指向它。参见 <a
+                                            href="#WEB-LINKING"><cite title="Web Linking">[WEB-LINKING]</cite></a>。注意
+                                        Link 报头字段可用于 HEAD 响应，这在客户端希望在交互之前发现资源能力时很有用。</li>
+                                </ul>
+                            </div>
+                        </section>
+                    </section>
+                    <section id="using-http-status-codes">
+                        <h3 id="rfc.section.4.6"><a href="#rfc.section.4.6">4.6.</a>&nbsp;<a
+                                href="#using-http-status-codes">使用 HTTP 状态码</a></h3>
+                        <div id="rfc.section.4.6.p.1">
+                            <p>HTTP 状态码既为通用 HTTP 组件（如缓存、中间件和客户端）提供语义，也为应用本身提供语义。然而，应用在使用状态码时可能遇到若干陷阱。</p>
+                        </div>
+                        <div id="rfc.section.4.6.p.2">
+                            <p>首先，状态码常常由除应用本身以外的组件生成。例如，当遇到网络错误时；当存在强制门户、代理或内容分发网络；或当服务器过载或认为自己受到攻击时。甚至在某些错误情况下，通用客户端软件也会生成状态码。因此，如果应用将特定语义赋予某个状态码，客户端可能会因为该状态码是由通用组件而非应用本身生成而被误导。
+                            </p>
+                        </div>
+                        <div id="rfc.section.4.6.p.3">
+                            <p>此外，将应用错误与单个 HTTP 状态码一一映射通常会导致可用状态码空间被耗尽。这反过来会导致一些不良做法——包括创建新的应用特定状态码或在语义关系薄弱时仍使用现有状态码。
+                            </p>
+                        </div>
+                        <div id="rfc.section.4.6.p.4">
+                            <p>相反，使用 HTTP 的应用应将其错误映射到最适用的状态码，在存疑时慷慨地使用通用状态码（如 200、400 和
+                                500）。重要的是，不应为状态码与应用错误之间指定一对一关系，以避免前述的耗尽问题。</p>
+                        </div>
+                        <div id="rfc.section.4.6.p.5">
+                            <p>为区分映射到相同状态码的多种错误情况并避免前述的误归因问题，使用 HTTP 的应用应在响应的消息内容和/或报头字段中传达更细粒度的错误信息。<a
+                                    href="#PROBLEM-DETAILS"><cite
+                                        title="Problem Details for HTTP APIs">[PROBLEM-DETAILS]</cite></a> 提供了一种方法。</p>
+                        </div>
+                        <div id="rfc.section.4.6.p.6">
+                            <p>由于已注册的 HTTP 状态码集合可能会扩展，使用 HTTP 的应用应明确指出客户端应能够优雅地处理所有适用的状态码（即回退到给定状态码的一般 n00 语义；例如对 499
+                                不识别的客户端可以安全地将其作为 400（Bad Request）处理）。这比列出一长串潜在状态码更可取，因为这样的列表在可预见的未来不会是完整的。</p>
+                        </div>
+                        <div id="rfc.section.4.6.p.7">
+                            <p>使用 HTTP 的应用 <em class="bcp14">MUST NOT</em> 重新规定 HTTP 状态码的语义，即使只是复制它们的定义也不行。不建议（<em
+                                    class="bcp14">NOT RECOMMENDED</em>）要求使用特定的 reason phrase；reason phrase 在 HTTP
+                                中没有功能，且不保证被实现保留，并且在 HTTP/2 的消息格式中根本不携带。</p>
+                        </div>
+                        <div id="rfc.section.4.6.p.8">
+                            <p>应用 <em class="bcp14">MUST</em> 仅使用已注册的 HTTP 状态码。与方法类似，新的 HTTP 状态码很少见，并且（按 <a
+                                    href="#HTTP"><cite title="HTTP Semantics">[HTTP]</cite></a> 的要求）需要以 IETF
+                                审查方式注册。同样，HTTP 状态码是通用的；按 <a href="#HTTP"><cite title="HTTP Semantics">[HTTP]</cite></a>
+                                的要求，它们需要可能适用于所有资源，而不仅仅是某个应用的资源。</p>
+                        </div>
+                        <div id="rfc.section.4.6.p.9">
+                            <p>当作者认为需要新的状态码时，鼓励他们尽早与 HTTP 社区接洽（例如在 &lt;<a
+                                    href="mailto:ietf-http-wg@w3.org">mailto:ietf-http-wg@w3.org</a>&gt; 邮件列表上），并将其作为独立的
+                                HTTP 扩展来记录，而不是作为应用规范的一部分。</p>
+                        </div>
+                        <section id="redirects">
+                            <h4 id="rfc.section.4.6.1"><a href="#rfc.section.4.6.1">4.6.1.</a>&nbsp;<a
+                                    href="#redirects">重定向</a></h4>
+                            <div id="rfc.section.4.6.1.p.1">
+                                <p>3xx 系列状态码（详见 <a
+                                        href="https://www.rfc-editor.org/rfc/rfc9110.html#section-15.4">[HTTP] 第 15.4
+                                        节</a>）指示用户代理到另一个资源去满足请求。最常见的有 301、302、307 和 308，它们都使用 Location
+                                    响应报头字段指示客户端应重新发送请求的地址。</p>
+                            </div>
+                            <div id="rfc.section.4.6.1.p.2" class="avoidbreakafter">
+                                <p>该组状态码成员之间有两种不同：</p>
+                            </div>
+                            <div id="rfc.section.4.6.1.p.3">
+                                <ul>
+                                    <li>是否为永久或临时。永久重定向可用于更新客户端存储的链接（例如书签），而临时重定向则不可。注意这对 HTTP 缓存没有影响；两者是完全分离的。</li>
+                                    <li>是否允许将被重定向的请求方法从 POST 更改为 GET。Web 浏览器通常会对 301 和 302 将 POST 改为 GET；因此创建了 308 和
+                                        307，以允许在不改变方法的情况下重定向。</li>
+                                </ul>
+                            </div>
+                            <div id="rfc.section.4.6.1.p.4" class="avoidbreakafter">
+                                <p>下表总结了它们之间的关系：</p>
+                            </div>
+                            <div class="table table-condensed table-striped">
+                                <table class="v3 text-center">
+                                    <caption>Table 1</caption>
+                                    <thead>
+                                        <tr>
+                                            <th class="text-left" colspan="1" rowspan="1"><span class="nobr"> </span>
+                                            </th>
+                                            <th class="text-left" colspan="1" rowspan="1">永久</th>
+                                            <th class="text-left" colspan="1" rowspan="1">临时</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="text-left" colspan="1" rowspan="1">允许将请求方法从 POST 更改为 GET</td>
+                                            <td class="text-left" colspan="1" rowspan="1">301</td>
+                                            <td class="text-left" colspan="1" rowspan="1">302</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-left" colspan="1" rowspan="1">不允许更改请求方法</td>
+                                            <td class="text-left" colspan="1" rowspan="1">308</td>
+                                            <td class="text-left" colspan="1" rowspan="1">307</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div id="rfc.section.4.6.1.p.5">
+                                <p>303 (See Other) 状态码可用于告知客户端操作结果在另一个位置可通过 GET 获取。</p>
+                            </div>
+                            <div id="rfc.section.4.6.1.p.6">
+                                <p>如 <a href="#HTTP"><cite title="HTTP Semantics">[HTTP]</cite></a> 所述，用户代理被允许自动跟随带有
+                                    Location 响应报头字段的 3xx 重定向，即便它们不理解特定状态码的语义。然而，它们并非必须这样做；因此，如果使用 HTTP
+                                    的应用希望重定向被自动跟随，需要明确指定何种情况下这是必需的。</p>
+                            </div>
+                            <div id="rfc.section.4.6.1.p.7">
+                                <p>重定向可以被缓存（当存在适当的缓存指令时），但除此之外它们并非“粘性”的——即 URI 的重定向不会导致客户端假定相似的 URI（例如带不同查询参数的）也会被重定向。
+                                </p>
+                            </div>
+                            <div id="rfc.section.4.6.1.p.8">
+                                <p>建议使用 HTTP 的应用指定 301 和 302 响应会将随后的请求方法从 POST（但不包括其他方法）改为
+                                    GET，以便与浏览器兼容。通常，当执行重定向请求时，其报头字段会从原始请求复制过来。然而，它们也可能被各种机制修改；例如，当请求的源（有时也包括路径）改变时，发送的
+                                    Authorization（参见 <a href="#HTTP"><cite title="HTTP Semantics">[HTTP]</cite></a>，<a
+                                        href="https://www.rfc-editor.org/rfc/rfc9110.html#section-11">第 11 节</a>）和
+                                    Cookie（参见 <a href="#COOKIES"><cite
+                                            title="HTTP State Management Mechanism">[COOKIES]</cite></a>）报头字段会发生变化。使用
+                                    HTTP 的应用应指定其定义的任何请求报头字段在重定向时需要被修改或移除；然而，这种行为不能被依赖，因为通用客户端（如浏览器）不会了解这些要求。</p>
+                            </div>
+                        </section>
+                    </section>
+                    <section id="headers">
+                        <h3 id="rfc.section.4.7"><a href="#rfc.section.4.7">4.7.</a>&nbsp;<a href="#headers">指定 HTTP
+                                报头字段</a></h3>
+                        <div id="rfc.section.4.7.p.1" class="avoidbreakafter">
+                            <p>应用经常定义新的 HTTP 报头字段。通常，在以下几种情况下使用 HTTP 报头字段是合适的：</p>
+                        </div>
+                        <div id="rfc.section.4.7.p.2">
+                            <ul>
+                                <li>该字段对中间件有用（中间件通常希望避免解析消息内容）；和/或</li>
+                                <li>该字段对通用 HTTP 软件（例如客户端、服务器）有用；和/或</li>
+                                <li>无法在消息内容中包含其值（通常因为某种格式不允许）。</li>
+                            </ul>
+                        </div>
+                        <div id="rfc.section.4.7.p.3">
+                            <p>当上述条件不满足时，通常更好在其它地方传达应用特定信息——例如在消息内容或 URL 查询字符串中。</p>
+                        </div>
+                        <div id="rfc.section.4.7.p.4">
+                            <p>新的报头字段必须按照 <a href="https://www.rfc-editor.org/rfc/rfc9110.html#section-16.3">[HTTP] 第
+                                    16.3 节</a> 进行注册。</p>
+                        </div>
+                        <div id="rfc.section.4.7.p.5">
+                            <p>在铸造新报头字段时应考虑的指导见 <a
+                                    href="https://www.rfc-editor.org/rfc/rfc9110.html#section-16.3.2">[HTTP] 第 16.3.2
+                                    节</a>。<a href="#STRUCTURED-FIELDS"><cite
+                                        title="Structured Field Values for HTTP">[STRUCTURED-FIELDS]</cite></a>
+                                为新报头字段提供了通用结构，避免了许多解析和处理问题；建议（<em class="bcp14">RECOMMENDED</em>）新报头字段使用它。</p>
+                        </div>
+                        <div id="rfc.section.4.7.p.6">
+                            <p>建议（<em
+                                    class="bcp14">RECOMMENDED</em>）报头字段名保持简短（即使使用字段压缩也有开销），但要足够具体。特别是，如果报头字段特定于某个应用，可以用该应用的标识作为字段名的前缀，前缀与字段名之间用连字符分隔。
+                            </p>
+                        </div>
+                        <div id="rfc.section.4.7.p.7">
+                            <p>例如，如果 “example” 应用需要创建三个报头字段，它们可以命名为 "example-foo"、"example-bar" 和
+                                "example-baz"。注意主要动机是避免占用更通用的字段名，而不是为应用保留命名空间；相关考虑见 <a href="#RFC6648"><cite
+                                        title="Deprecating the &#34;X-&#34; Prefix and Similar Constructs in Application Protocols">[RFC6648]</cite></a>。
+                            </p>
+                        </div>
+                        <div id="rfc.section.4.7.p.8">
+                            <p>未经更新其注册或为其定义扩展（若允许），不得重新定义现有 HTTP 报头字段的语义。例如，使用 HTTP 的应用不能指定 Location 报头字段在某种语境下具有特殊含义。
+                            </p>
+                        </div>
+                        <div id="rfc.section.4.7.p.9">
+                            <p>有关报头字段与 HTTP 缓存之间的交互，请参见 <a href="#caching" title="Leveraging HTTP Caching">第 4.9
+                                    节</a>；特别是用于选择响应的请求报头字段（参见 <a
+                                    href="https://www.rfc-editor.org/rfc/rfc9111.html#section-4.1">[HTTP-CACHING] 第 4.1
+                                    节</a>）在缓存方面有影响，需要仔细考虑。</p>
+                        </div>
+                        <div id="rfc.section.4.7.p.10">
+                            <p>有关承载应用状态（例如 Cookie）的报头字段的注意事项，请参见 <a href="#state" title="Handling Application State">第
+                                    4.10 节</a>。</p>
+                        </div>
+                    </section>
+                    <section id="content">
+                        <h3 id="rfc.section.4.8"><a href="#rfc.section.4.8">4.8.</a>&nbsp;<a href="#content">定义消息内容</a>
+                        </h3>
+                        <div id="rfc.section.4.8.p.1">
+                            <p>消息内容的常见语法约定包括 JSON <a href="#JSON"><cite
+                                        title="The JavaScript Object Notation (JSON) Data Interchange Format">[JSON]</cite></a>、XML
+                                <a href="#XML"><cite
+                                        title="Extensible Markup Language (XML) 1.0 (Fifth Edition)">[XML]</cite></a> 和
+                                CBOR（Concise Binary Object Representation）<a href="#RFC8949"><cite
+                                        title="Concise Binary Object Representation (CBOR)">[RFC8949]</cite></a>。关于它们使用的最佳实践超出了本文档的范围。
+                            </p>
+                        </div>
+                        <div id="rfc.section.4.8.p.2">
+                            <p>应用应为其定义的每种格式注册不同的媒体类型；这使得能够明确识别并进行协商使用。详情见 <a href="#RFC6838"><cite
+                                        title="Media Type Specifications and Registration Procedures">[RFC6838]</cite></a>。
+                            </p>
+                        </div>
+                    </section>
+                    <section id="caching">
+                        <h3 id="rfc.section.4.9"><a href="#rfc.section.4.9">4.9.</a>&nbsp;<a href="#caching">利用 HTTP
+                                缓存</a></h3>
+                        <div id="rfc.section.4.9.p.1">
+                            <p>HTTP 缓存 <a href="#HTTP-CACHING"><cite title="HTTP Caching">[HTTP-CACHING]</cite></a> 是将
+                                HTTP 用于应用的主要好处之一；它提供了可扩展性、降低延迟并提高可靠性。此外，浏览器和其他客户端、网络中的正向和反向代理、内容分发网络以及服务器软件中都可以方便地使用
+                                HTTP 缓存。</p>
+                        </div>
+                        <div id="rfc.section.4.9.p.2">
+                            <p>即便某个使用 HTTP 的应用并非为利用缓存而设计，它也需要考虑当缓存被插入（无论是在网络、服务器、客户端或中间基础设施中）时这些缓存如何处理其响应，以保留正确的行为。</p>
+                        </div>
+                        <section id="freshness">
+                            <h4 id="rfc.section.4.9.1"><a href="#rfc.section.4.9.1">4.9.1.</a>&nbsp;<a
+                                    href="#freshness">新鲜度</a></h4>
+                            <div id="rfc.section.4.9.1.p.1">
+                                <p>即便是很短的缓存新鲜度寿命（参见 <a href="#HTTP-CACHING"><cite
+                                            title="HTTP Caching">[HTTP-CACHING]</cite></a>，以及 <a
+                                        href="https://www.rfc-editor.org/rfc/rfc9111.html#section-4.2">第 4.2 节</a>）——例如
+                                    5 秒——也能允许响应被重用以满足多个客户端和/或同一客户端多次相同请求。通常，如果安全可重用，考虑为响应分配一个新鲜度寿命。</p>
+                            </div>
+                            <div id="rfc.section.4.9.1.p.2">
+                                <p>指定新鲜度最常见的方法是使用 max-age 响应指令（参见 <a href="#HTTP-CACHING"><cite
+                                            title="HTTP Caching">[HTTP-CACHING]</cite></a>，以及 <a
+                                        href="https://www.rfc-editor.org/rfc/rfc9111.html#section-5.2.2.1">第 5.2.2.1
+                                        节</a>）。Expires 报头字段（参见 <a href="#HTTP-CACHING"><cite
+                                            title="HTTP Caching">[HTTP-CACHING]</cite></a>，以及 <a
+                                        href="https://www.rfc-editor.org/rfc/rfc9111.html#section-5.3">第 5.3
+                                        节</a>）也可使用，但并非必要；所有现代缓存实现都支持 Cache-Control 报头字段，并且以增量（delta）形式指定新鲜度通常更方便且不易出错。
+                                </p>
+                            </div>
+                            <div id="rfc.section.4.9.1.p.3">
+                                <p>通常不需要为大多数响应添加 public 响应指令（参见 <a href="#HTTP-CACHING"><cite
+                                            title="HTTP Caching">[HTTP-CACHING]</cite></a>，以及 <a
+                                        href="https://www.rfc-editor.org/rfc/rfc9111.html#section-5.2.2.9">第 5.2.2.9
+                                        节</a>）；它仅在希望存储经身份验证的响应或当缓存不理解状态码且没有显式新鲜度信息时才必要。</p>
+                            </div>
+                            <div id="rfc.section.4.9.1.p.4">
+                                <p>在某些情况下，缺乏显式缓存新鲜度指令的响应会被存储并使用启发式新鲜度寿命进行服务；参见 <a href="#HTTP-CACHING"><cite
+                                            title="HTTP Caching">[HTTP-CACHING]</cite></a>，以及 <a
+                                        href="https://www.rfc-editor.org/rfc/rfc9111.html#section-4.2.2">第 4.2.2
+                                        节</a>。由于该启发式不受应用控制，通常更可取的是设置显式新鲜度寿命或使响应显式不可缓存。</p>
+                            </div>
+                            <div id="rfc.section.4.9.1.p.5">
+                                <p>如果不希望某个响应被缓存，适当的缓存响应指令是 no-store。其他指令不是必需的，并且只有在响应可能被缓存的情况下才需要发送 no-store；见 <a
+                                        href="#HTTP-CACHING"><cite title="HTTP Caching">[HTTP-CACHING]</cite></a>（参见 <a
+                                        href="https://www.rfc-editor.org/rfc/rfc9111.html#section-3">第 3
+                                        节</a>）。请注意，no-cache 指令允许响应被存储，但在未经验证的情况下不可被缓存重用；尽管名字为 no-cache，但它并不防止缓存存储响应。</p>
+                            </div>
+                            <div id="rfc.section.4.9.1.p.6" class="avoidbreakafter">
+                                <p>例如，下面的响应不能被缓存存储或重用：</p>
+                            </div>
+                            <div id="rfc.section.4.9.1.p.7">
+                                <pre class="text">
+HTTP/1.1 200 OK
+Content-Type: application/example+xml
+Cache-Control: no-store
+
+[content]
+</pre>
+                            </div>
+                        </section>
+                        <section id="stale-responses">
+                            <h4 id="rfc.section.4.9.2"><a href="#rfc.section.4.9.2">4.9.2.</a>&nbsp;<a
+                                    href="#stale-responses">过期响应</a></h4>
+                            <div id="rfc.section.4.9.2.p.1">
+                                <p>作者应了解，当与源服务器断开连接时，过期响应（例如带有 Cache-Control: max-age=0 的响应）可以被缓存重用；这在处理网络问题时可能很有用。</p>
+                            </div>
+                            <div id="rfc.section.4.9.2.p.2">
+                                <p>如果对此类重用不适合某个响应，源服务器应发送 must-revalidate 缓存指令。参见 <a
+                                        href="https://www.rfc-editor.org/rfc/rfc9111.html#section-4.2.4">[HTTP-CACHING]
+                                        第 4.2.4 节</a>，以及 <a href="#RFC5861"><cite
+                                            title="HTTP Cache-Control Extensions for Stale Content">[RFC5861]</cite></a>，以获取关于过期内容的额外控制方法。
+                                </p>
+                            </div>
+                            <div id="rfc.section.4.9.2.p.3">
+                                <p>通过分配验证器可以刷新过期响应，从而为大型响应节省传输带宽和延迟；参见 <a
+                                        href="https://www.rfc-editor.org/rfc/rfc9110.html#section-13">[HTTP] 第 13 节</a>。
+                                </p>
+                            </div>
+                        </section>
+                        <section id="caching-app-semantics">
+                            <h4 id="rfc.section.4.9.3"><a href="#rfc.section.4.9.3">4.9.3.</a>&nbsp;<a
+                                    href="#caching-app-semantics">缓存与应用语义</a></h4>
+                            <div id="rfc.section.4.9.3.p.1">
+                                <p>当应用需要表达与新鲜度寿命不同的寿命时，应在响应内容或单独的报头字段中单独传达该信息。当发生这种情况时，需要仔细考虑 HTTP
+                                    缓存与该寿命之间的关系，因为只要响应被视为新鲜，它就会被使用。</p>
+                            </div>
+                            <div id="rfc.section.4.9.3.p.2">
+                                <p>特别地，应用作者需要考虑如何处理非从源服务器新近获得的响应；如果它们有类似有效期限的概念，则需要在计算时考虑响应的年龄（参见 <a
+                                        href="#HTTP-CACHING"><cite title="HTTP Caching">[HTTP-CACHING]</cite></a>，以及 <a
+                                        href="https://www.rfc-editor.org/rfc/rfc9111.html#section-4.2.3">第 4.2.3 节</a>）。
+                                </p>
+                            </div>
+                            <div id="rfc.section.4.9.3.p.3">
+                                <p>一种解决办法是明确指定在使用时响应必须是新鲜的。</p>
+                            </div>
+                        </section>
+                        <section id="varying-content-based-upon-the-request">
+                            <h4 id="rfc.section.4.9.4"><a href="#rfc.section.4.9.4">4.9.4.</a>&nbsp;<a
+                                    href="#varying-content-based-upon-the-request">基于请求变化内容</a></h4>
+                            <div id="rfc.section.4.9.4.p.1">
+                                <p>如果应用使用请求报头字段来改变响应的报头字段或内容，作者应指出这对缓存的影响；通常，这类资源需要要么使其响应不可缓存（例如使用 <a
+                                        href="#HTTP-CACHING"><cite title="HTTP Caching">[HTTP-CACHING]</cite></a> 中定义的
+                                    no-store 缓存指令，参见 <a
+                                        href="https://www.rfc-editor.org/rfc/rfc9111.html#section-5.2.2.5">第 5.2.2.5
+                                        节</a>），要么在该资源的所有响应上发送 Vary 响应报头字段（包括“默认”响应）。</p>
+                            </div>
+                            <div id="rfc.section.4.9.4.p.2" class="avoidbreakafter">
+                                <p>例如，下面的响应：</p>
+                            </div>
+                            <div id="rfc.section.4.9.4.p.3">
+                                <pre class="text">
+HTTP/1.1 200 OK
+Content-Type: application/example+xml
+Cache-Control: max-age=60
+ETag: "sa0f8wf20fs0f"
+Vary: Accept-Encoding
+
+[content]
+</pre>
+                            </div>
+                            <div id="rfc.section.4.9.4.p.4">
+                                <p>可以被私人和共享缓存存储 60 秒、可以使用 If-None-Match 重新验证，并且响应会根据 Accept-Encoding 请求报头字段而变化。</p>
+                            </div>
+                        </section>
+                    </section>
+                    <section id="state">
+                        <h3 id="rfc.section.4.10"><a href="#rfc.section.4.10">4.10.</a>&nbsp;<a href="#state">处理应用状态</a>
+                        </h3>
+                        <div id="rfc.section.4.10.p.1">
+                            <p>应用可以使用有状态的 Cookie <a href="#COOKIES"><cite
+                                        title="HTTP State Management Mechanism">[COOKIES]</cite></a>
+                                来识别客户端和/或存储客户端特定的数据以为请求提供上下文。</p>
+                        </div>
+                        <div id="rfc.section.4.10.p.2">
+                            <p>当使用 Cookie 时，重要的是仔细指定 Cookie
+                                的作用域和使用方式；如果应用暴露敏感数据或能力（例如通过作为环境权限），可能会发生攻击。缓解措施包括使用请求特定的令牌以确保客户端意图。</p>
+                        </div>
+                    </section>
+                    <section id="multiplex">
+                        <h3 id="rfc.section.4.11"><a href="#rfc.section.4.11">4.11.</a>&nbsp;<a
+                                href="#multiplex">发起多个请求</a></h3>
+                        <div id="rfc.section.4.11.p.1">
+                            <p>客户端经常需要发送多个请求来完成一项任务。</p>
+                        </div>
+                        <div id="rfc.section.4.11.p.2">
+                            <p>在 HTTP/1 中 <a href="#HTTP11"><cite
+                                        title="HTTP/1.1">[HTTP/1.1]</cite></a>，并行请求通常通过打开多个连接来支持。当使用过多并发连接时，应用性能可能受影响，因为连接的拥塞控制不会协调。此外，应用可能难以决定何时发起请求以及为给定请求使用哪个连接，这进一步影响性能。
+                            </p>
+                        </div>
+                        <div id="rfc.section.4.11.p.3">
+                            <p>HTTP/2 <a href="#HTTP2"><cite title="HTTP/2">[HTTP/2]</cite></a> 和 HTTP/3 <a
+                                    href="#HTTP3"><cite title="HTTP/3">[HTTP/3]</cite></a>
+                                为应用提供了复用，消除了使用多个连接的需要。然而，应用性能仍可能受到服务器选择响应优先级方式的显著影响。根据应用情况，最好由服务器决定响应的优先级，或由客户端向服务器提示其优先级（例如参见
+                                <a href="#HTTP-PRIORITY"><cite
+                                        title="Extensible Prioritization Scheme for HTTP">[HTTP-PRIORITY]</cite></a>）。
+                            </p>
+                        </div>
+                        <div id="rfc.section.4.11.p.4">
+                            <p>在所有 HTTP
+                                版本中，请求是独立发起的——不能依赖两个请求的相对顺序来保证它们的处理顺序。这是因为它们可能被中间件以复用协议发送、发送到不同的源服务器，或者服务器可能以不同的顺序执行处理。如果两个请求需要严格的顺序，确保结果的唯一可靠方法是在第一个请求的最终响应开始时再发出第二个请求。
+                            </p>
+                        </div>
+                        <div id="rfc.section.4.11.p.5">
+                            <p>应用 <em class="bcp14">MUST NOT</em> 假设单个传输连接上的独立请求之间存在关系；这样做会破坏 HTTP
+                                作为无状态协议的许多假设，并会导致互操作性、安全性、可操作性和演进方面的问题。</p>
+                        </div>
+                    </section>
+                    <section id="client-auth">
+                        <h3 id="rfc.section.4.12"><a href="#rfc.section.4.12">4.12.</a>&nbsp;<a
+                                href="#client-auth">客户端认证</a></h3>
+                        <div id="rfc.section.4.12.p.1">
+                            <p>应用可以使用 HTTP 认证（见 <a href="https://www.rfc-editor.org/rfc/rfc9110.html#section-11">[HTTP]
+                                    第 11 节</a>）来识别客户端。根据 <a href="#RFC7617"><cite
+                                        title="The 'Basic' HTTP Authentication Scheme">[RFC7617]</cite></a>，Basic
+                                认证方案不适合在通道不安全的情况下保护敏感或有价值的信息（例如必须使用 "https" 方案）。同样，<a href="#RFC7616"><cite
+                                        title="HTTP Digest Access Authentication">[RFC7616]</cite></a> 要求在安全通道上使用 Digest
+                                认证方案。</p>
+                        </div>
+                        <div id="rfc.section.4.12.p.2">
+                            <p>在 HTTPS 下，客户端也可以使用证书进行认证 <a href="#RFC8446"><cite
+                                        title="The Transport Layer Security (TLS) Protocol Version 1.3">[RFC8446]</cite></a>，但请注意此类认证本质上限定于底层传输连接。因此，客户端无法知道已认证的状态是否在准备响应时被使用（尽管
+                                Vary: * 和/或 private 缓存指令可以提供部分指示），并且获取明确未认证响应的唯一方式是打开新的连接。</p>
+                        </div>
+                        <div id="rfc.section.4.12.p.3">
+                            <p>当使用认证时，重要的是仔细指定认证的作用域和使用方式；如果应用暴露敏感数据或能力（例如作为环境权限，参见 <a
+                                    href="https://www.rfc-editor.org/rfc/rfc6454.html#section-8.3">[RFC6454] 第 8.3
+                                    节</a>），可能会发生利用。缓解措施包括使用请求特定的令牌以确保客户端意图。</p>
+                        </div>
+                    </section>
+                    <section id="browser">
+                        <h3 id="rfc.section.4.13"><a href="#rfc.section.4.13">4.13.</a>&nbsp;<a
+                                href="#browser">与网页浏览共存</a></h3>
+                        <div id="rfc.section.4.13.p.1">
+                            <p>即便应用并不打算被 Web 浏览器使用，其资源仍会对浏览器和其他 HTTP 客户端可用。这意味着所有使用 HTTP 的此类应用都需要考虑浏览器如何与其交互，尤其是安全方面。
+                            </p>
+                        </div>
+                        <div id="rfc.section.4.13.p.2">
+                            <p>例如，如果应用的状态可以通过 POST 请求更改，则可以很容易地被来自任意网站的 Web 浏览器诱导进行跨站请求伪造（CSRF）。</p>
+                        </div>
+                        <div id="rfc.section.4.13.p.3">
+                            <p>或者，如果攻击者控制了来自应用资源的返回内容的一部分（例如请求的一部分在响应中被反射，或响应包含攻击者可修改的外部信息），他们可以向浏览器注入代码并以原始站点的身份访问数据和能力——这称为跨站脚本（XSS）攻击。
+                            </p>
+                        </div>
+                        <div id="rfc.section.4.13.p.4">
+                            <p>这只是应用使用 HTTP 必须考虑问题类型的一小部分。通常，最佳做法是将应用视为 Web 应用并遵循其安全开发的最佳实践。</p>
+                        </div>
+                        <div id="rfc.section.4.13.p.5" class="avoidbreakafter">
+                            <p>完整列举此类实践超出了本文档的范围，但一些考虑包括：</p>
+                        </div>
+                        <div id="rfc.section.4.13.p.6">
+                            <ul>
+                                <li>在 Content-Type 报头字段中使用应用特定的媒体类型，并要求客户端在未使用时失败。</li>
+                                <li>使用 X-Content-Type-Options: nosniff <a href="#FETCH"><cite
+                                            title="Fetch - Living Standard">[FETCH]</cite></a>
+                                    以确保受攻击者控制的内容不能被浏览器强制解释为可执行内容。</li>
+                                <li>使用 Content-Security-Policy <a href="#CSP"><cite
+                                            title="Content Security Policy Level 3">[CSP]</cite></a> 来限制活动内容（即可执行脚本的内容，如
+                                    HTML <a href="#HTML"><cite title="HTML - Living Standard">[HTML]</cite></a> 和
+                                    PDF）的能力，从而缓解 XSS 攻击。</li>
+                                <li>使用 Referrer-Policy <a href="#REFERRER-POLICY"><cite
+                                            title="Referrer Policy">[REFERRER-POLICY]</cite></a> 防止 URL 中的敏感数据在 Referer
+                                    请求报头字段中泄露。</li>
+                                <li>在 Cookie 上使用 'HttpOnly' 标志以确保 Cookie 不被浏览器脚本语言暴露 <a href="#COOKIES"><cite
+                                            title="HTTP State Management Mechanism">[COOKIES]</cite></a>。</li>
+                                <li>避免对任何敏感信息（例如认证令牌、密码）使用压缩，因为浏览器提供的脚本环境允许攻击者反复探测压缩空间；如果攻击者能访问通信的网络路径，他们可以利用此能力恢复这些信息。
+                                </li>
+                            </ul>
+                        </div>
+                        <div id="rfc.section.4.13.p.7">
+                            <p>根据预期的部署方式，使用 HTTP 的应用规范可能会要求以特定方式使用这些机制，或仅在安全性考量中指出它们。</p>
+                        </div>
+                        <div id="rfc.section.4.13.p.8" class="avoidbreakafter">
+                            <p>一个不希望其内容被浏览器视为活动内容的应用的 HTTP 响应示例如下：</p>
+                        </div>
+                        <div id="rfc.section.4.13.p.9">
+                            <pre class="text">
+HTTP/1.1 200 OK
+Content-Type: application/example+json
+X-Content-Type-Options: nosniff
+Content-Security-Policy: default-src 'none'
+Cache-Control: max-age=3600
+Referrer-Policy: no-referrer
+
+[content]
+</pre>
+                        </div>
+                        <div id="rfc.section.4.13.p.10">
+                            <p>如果应用以与浏览器兼容为目标，客户端交互应以 <a href="#FETCH"><cite
+                                        title="Fetch - Living Standard">[FETCH]</cite></a> 为准，因为这是浏览器用于 HTTP
+                                的抽象；它强制实施了许多上述最佳实践。</p>
+                        </div>
+                    </section>
+                    <section id="other-apps">
+                        <h3 id="rfc.section.4.14"><a href="#rfc.section.4.14">4.14.</a>&nbsp;<a
+                                href="#other-apps">维护应用边界</a></h3>
+                        <div id="rfc.section.4.14.p.1">
+                            <p>由于许多 HTTP 能力是以 origin 为作用域的 <a href="#RFC6454"><cite
+                                        title="The Web Origin Concept">[RFC6454]</cite></a>，应用还需要考虑其部署如何与使用同一 origin
+                                服务器的其他应用（包括网页浏览）相互作用。</p>
+                        </div>
+                        <div id="rfc.section.4.14.p.2">
+                            <p>例如，如果使用 Cookie <a href="#COOKIES"><cite
+                                        title="HTTP State Management Mechanism">[COOKIES]</cite></a> 来承载应用状态，它们默认会随向该
+                                origin 的所有请求一起发送（除非按路径进行作用域限制），并且应用可能会收到来自该 origin 上其他应用的 Cookie。这会导致安全问题以及 Cookie 名称冲突。
+                            </p>
+                        </div>
+                        <div id="rfc.section.4.14.p.3">
+                            <p>一种解决方案是要求为应用使用专用主机名，从而获得唯一的 origin。然而，通常希望允许多个应用部署在单一主机名上；这样可以提供最大的部署灵活性并使它们能够“混合”部署（详情见
+                                <a href="#BCP190"><cite title="URI Design and Ownership">[BCP190]</cite></a>）。
+                            </p>
+                        </div>
+                        <div id="rfc.section.4.14.p.4">
+                            <p>因此，使用 HTTP 的应用应努力允许在同一 origin 上存在多个应用。具体而言，在规范 Cookie、HTTP 认证域（realm）或其他 origin 范围的 HTTP
+                                机制时，不应强制使用特定名称，而应允许部署进行配置。应考虑将它们作用域限定到 origin 的部分，使用它们各自规定的机制来实现。</p>
+                        </div>
+                        <div id="rfc.section.4.14.p.5">
+                            <p>现代 Web 浏览器限制来自一个 origin 的内容访问另一个 origin 的资源以避免泄露私人信息。因此，想要向浏览器暴露跨源数据的应用将需要实现 CORS 协议；参见
+                                <a href="#FETCH"><cite title="Fetch - Living Standard">[FETCH]</cite></a>。
+                            </p>
+                        </div>
+                    </section>
+                    <section id="server-push">
+                        <h3 id="rfc.section.4.15"><a href="#rfc.section.4.15">4.15.</a>&nbsp;<a
+                                href="#server-push">使用服务器推送</a></h3>
+                        <div id="rfc.section.4.15.p.1" class="avoidbreakafter">
+                            <p>HTTP/2 在 <a href="#HTTP2"><cite title="HTTP/2">[HTTP/2]</cite></a>
+                                中增加了服务器向客户端“推送”请求/响应对的能力（参见 <a
+                                    href="https://www.rfc-editor.org/rfc/rfc9113.html#section-8.4">第 8.4
+                                    节</a>）。尽管服务器推送看似与许多常见应用语义（例如“扇出”和发布/订阅）天然契合，但有一些注意事项：</p>
+                        </div>
+                        <div id="rfc.section.4.15.p.2">
+                            <ul>
+                                <li>服务器推送是逐跳的；即它不会被中间件自动转发。因此，它可能难以（或根本无法）与代理、反向代理和内容分发网络一起工作。</li>
+                                <li>如果使用不当，服务器推送可能对 HTTP 性能产生负面影响，尤其是在与客户端实际请求的资源发生竞争时。</li>
+                                <li>不同客户端对服务器推送的实现不同，尤其是在与 HTTP 缓存的交互方面，能力可能各异。</li>
+                                <li>一些实现中目前不存在服务器推送的 API，其他实现中也存在很大差异。特别是，目前没有浏览器 API 可用。</li>
+                                <li>HTTP/1.1 或 HTTP/1.0 不支持服务器推送。</li>
+                                <li>服务器推送并非 HTTP 的“核心”语义的一部分，因此未来协议版本可能不支持它。</li>
+                            </ul>
+                        </div>
+                        <div id="rfc.section.4.15.p.3">
+                            <p>希望优化客户端在完整响应到达之前可执行相关工作的应用（例如提前获取可能包含的链接）可能受益于使用 103 (Early Hints) 状态码；参见 <a
+                                    href="#RFC8297"><cite
+                                        title="An HTTP Status Code for Indicating Hints">[RFC8297]</cite></a>。</p>
+                        </div>
+                        <div id="rfc.section.4.15.p.4">
+                            <p>直接使用服务器推送的应用需要强制执行 <a href="#HTTP2"><cite title="HTTP/2">[HTTP/2]</cite></a> 中关于权威性的要求（参见
+                                <a href="https://www.rfc-editor.org/rfc/rfc9113.html#section-8.4">第 8.4
+                                    节</a>），以避免跨源推送攻击。
+                            </p>
+                        </div>
+                    </section>
+                    <section id="versioning">
+                        <h3 id="rfc.section.4.16"><a href="#rfc.section.4.16">4.16.</a>&nbsp;<a
+                                href="#versioning">允许版本控制与演进</a></h3>
+                        <div id="rfc.section.4.16.p.1">
+                            <p>在应用协议中引入新特性并更改现有特性通常是必要的。</p>
+                        </div>
+                        <div id="rfc.section.4.16.p.2" class="avoidbreakafter">
+                            <p>在 HTTP 中，可以使用如下机制进行不向后兼容的更改：</p>
+                        </div>
+                        <div id="rfc.section.4.16.p.3">
+                            <ul>
+                                <li>使用不同的链接关系类型 <a href="#WEB-LINKING"><cite
+                                            title="Web Linking">[WEB-LINKING]</cite></a> 来标识实现新功能的资源的 URL。</li>
+                                <li>使用不同的媒体类型 <a href="#RFC6838"><cite
+                                            title="Media Type Specifications and Registration Procedures">[RFC6838]</cite></a>
+                                    来标识启用新功能的格式。</li>
+                                <li>使用不同的 HTTP 报头字段在消息内容之外实现新功能。</li>
+                            </ul>
+                        </div>
+                    </section>
+                </section>
+                <hr class="hidden-print">
+                <section id="iana-considerations">
+                    <h2 id="rfc.section.5" class="np"><a href="#rfc.section.5">5.</a>&nbsp;<a
+                            href="#iana-considerations">IANA 考量</a></h2>
+                    <div id="rfc.section.5.p.1">
+                        <p>本文件不包含任何 IANA 操作。</p>
+                    </div>
+                </section>
+                <hr class="hidden-print">
+                <section id="security-considerations">
+                    <h2 id="rfc.section.6" class="np"><a href="#rfc.section.6">6.</a>&nbsp;<a
+                            href="#security-considerations">安全性考量</a></h2>
+                    <div id="rfc.section.6.p.1">
+                        <p>使用 HTTP 的应用程序需遵守 HTTP 本身及其所用扩展的安全性考量；其中常相关的有 <a href="#HTTP"><cite
+                                    title="HTTP Semantics">[HTTP]</cite></a>、<a href="#HTTP-CACHING"><cite
+                                    title="HTTP Caching">[HTTP-CACHING]</cite></a> 和 <a href="#WEB-LINKING"><cite
+                                    title="Web Linking">[WEB-LINKING]</cite></a>，以及其他规范。</p>
+                    </div>
+                    <div id="rfc.section.6.p.2">
+                        <p><a href="#scheme" title="Considering URI Schemes">第 4.4.2 节</a> 建议支持 "https" URL 并不鼓励使用
+                            "http" URL，以提供认证、完整性和保密性，并减轻普遍性监控攻击的风险。许多使用 HTTP 的应用通过持有者令牌（例如在会话 Cookie
+                            中）执行认证与授权。如果传输未加密，能窃听或篡改 HTTP 通信的攻击者通常可以提升权限来在资源上执行操作。</p>
+                    </div>
+                    <div id="rfc.section.6.p.3">
+                        <p><a href="#caching-app-semantics" title="Caching and Application Semantics">第 4.9.3 节</a> 强调了
+                            HTTP 缓存与应用特定的响应存储或其内部信息之间可能存在的不匹配风险。</p>
+                    </div>
+                    <div id="rfc.section.6.p.4">
+                        <p><a href="#state" title="Handling Application State">第 4.10 节</a> 讨论了在协议中使用有状态机制作为环境权限（ambient
+                            authority）所带来的影响，并提出了缓解办法。</p>
+                    </div>
+                    <div id="rfc.section.6.p.5">
+                        <p><a href="#browser" title="Coexisting with Web Browsing">第 4.13 节</a> 指出 Web 浏览器能力对使用 HTTP
+                            的应用可能产生的影响。</p>
+                    </div>
+                    <div id="rfc.section.6.p.6">
+                        <p><a href="#other-apps" title="Maintaining Application Boundaries">第 4.14 节</a>
+                            讨论了当应用与网站（及其他应用）在同一 origin 部署时可能出现的问题。</p>
+                    </div>
+                    <div id="rfc.section.6.p.7">
+                        <p><a href="#server-push" title="Using Server Push">第 4.15 节</a> 强调了在非规范方式使用 HTTP/2 服务器推送时的风险。
+                        </p>
+                    </div>
+                    <div id="rfc.section.6.p.8">
+                        <p>以需要修改实现的方式使用 HTTP 的应用（例如要求支持新的 URI 方案或非标准方法）有可能导致这些实现与其上游 HTTP
+                            实现“分叉”，从而可能无法从上游合并的修补和其他安全改进中获益。</p>
+                    </div>
+                    <section id="privacy-considerations">
+                        <h3 id="rfc.section.6.1"><a href="#rfc.section.6.1">6.1.</a>&nbsp;<a
+                                href="#privacy-considerations">隐私考量</a></h3>
+                        <div id="rfc.section.6.1.p.1">
+                            <p>HTTP 客户端可能会向服务器暴露各种信息。除了作为应用操作一部分明确发送的信息（例如姓名和其它用户输入的数据）以及“在线传输”的信息（这也是在 <a
+                                    href="#scheme" title="Considering URI Schemes">第 4.4.2 节</a> 中推荐使用 "https"
+                                的原因之一）之外，还可以通过不那么明显的方式收集其他信息——通常是通过将用户在一段时间内的活动关联起来。</p>
+                        </div>
+                        <div id="rfc.section.6.1.p.2">
+                            <p>这些包括会话信息、通过指纹识别进行的客户端跟踪以及代码执行等。</p>
+                        </div>
+                        <div id="rfc.section.6.1.p.3">
+                            <p>会话信息包括客户端的 IP 地址、TLS 会话票据、Cookie、存于客户端缓存的 ETag
+                                以及其他有状态机制。建议应用避免使用会话机制，除非不可避免或对操作是必需的；在必须使用时，需要记录这些风险。同时应鼓励实现提供清除此类状态的能力。</p>
+                        </div>
+                        <div id="rfc.section.6.1.p.4">
+                            <p>指纹识别利用客户端消息和行为的独特特征来关联不同的请求与连接。例如，User-Agent 请求报头字段传达了关于实现的具体信息；Accept-Language
+                                请求报头字段传达了用户的首选语言。组合多个此类标识可以用来唯一识别客户端，影响其对数据的控制。因此，建议应用规定客户端在请求中只发送其运行所需的信息。</p>
+                        </div>
+                        <div id="rfc.section.6.1.p.5">
+                            <p>最后，如果应用暴露了执行代码的能力，则需格外谨慎，因为任何观察其运行环境的能力都可以被用来指纹识别客户端并获取或操纵私人数据（包括会话信息）。例如，对高分辨率计时器的访问（即使是间接的）可以用来分析底层硬件，从而为系统创建唯一标识符。建议尽可能避免允许使用移动代码；当无法避免时，需要仔细审查由此产生的系统安全属性。
+                            </p>
+                        </div>
+                    </section>
+                </section>
+                <section class="np">
+                    <div id="rfc.references">
+                        <h2 id="rfc.section.7"><a href="#rfc.section.7">7.</a> 参考文献</h2>
+                        <section>
+                            <div id="rfc.references.2">
+                                <h3 id="rfc.section.7.1"><a href="#rfc.section.7.1">7.1.</a> 规范性参考文献</h3>
+                                <dl class="dl-horizontal">
+                                    <dt id="BCP190">[<a href="#BCP190" class="smpl">BCP190</a>]</dt>
+                                    <dd>Nottingham, M., “<a href="https://www.rfc-editor.org/rfc/rfc8820">URI Design and
+                                            Ownership</a>”, <a href="https://www.rfc-editor.org/info/bcp190">BCP
+                                            190</a>, RFC 8820, <a href="https://dx.doi.org/10.17487/RFC8820">DOI
+                                            10.17487/RFC8820</a>, June 2020, &lt;<a
+                                            href="https://www.rfc-editor.org/rfc/rfc8820">https://www.rfc-editor.org/rfc/rfc8820</a>&gt;.
+                                    </dd>
+                                    <dt id="HTTP">[<a href="#HTTP" class="smpl">HTTP</a>]</dt>
+                                    <dd>Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke, Ed., “<a
+                                            href="https://www.rfc-editor.org/rfc/rfc9110.html">HTTP Semantics</a>”, <a
+                                            href="https://www.rfc-editor.org/info/std97">STD 97</a>, RFC 9110, <a
+                                            href="https://dx.doi.org/10.17487/RFC9110">DOI 10.17487/RFC9110</a>, June
+                                        2022, &lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc9110">https://www.rfc-editor.org/info/rfc9110</a>&gt;.
+                                    </dd>
+                                    <dt id="HTTP-CACHING">[<a href="#HTTP-CACHING" class="smpl">HTTP-CACHING</a>]</dt>
+                                    <dd>Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke, Ed., “<a
+                                            href="https://www.rfc-editor.org/rfc/rfc9111.html">HTTP Caching</a>”, <a
+                                            href="https://www.rfc-editor.org/info/std98">STD 98</a>, RFC 9111, <a
+                                            href="https://dx.doi.org/10.17487/RFC9111">DOI 10.17487/RFC9111</a>, June
+                                        2022, &lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc9111">https://www.rfc-editor.org/info/rfc9111</a>&gt;.
+                                    </dd>
+                                    <dt id="RFC2119">[<a href="#RFC2119" class="smpl">RFC2119</a>]</dt>
+                                    <dd>Bradner, S., “<a href="https://www.rfc-editor.org/rfc/rfc2119.html">Key words
+                                            for use in RFCs to Indicate Requirement Levels</a>”, <a
+                                            href="https://www.rfc-editor.org/info/bcp14">BCP 14</a>, RFC 2119, <a
+                                            href="https://dx.doi.org/10.17487/RFC2119">DOI 10.17487/RFC2119</a>, March
+                                        1997, &lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc2119">https://www.rfc-editor.org/info/rfc2119</a>&gt;.
+                                    </dd>
+                                    <dt id="RFC6454">[<a href="#RFC6454" class="smpl">RFC6454</a>]</dt>
+                                    <dd>Barth, A., “<a href="https://www.rfc-editor.org/rfc/rfc6454.html">The Web Origin
+                                            Concept</a>”, RFC 6454, <a href="https://dx.doi.org/10.17487/RFC6454">DOI
+                                            10.17487/RFC6454</a>, December 2011, &lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc6454">https://www.rfc-editor.org/info/rfc6454</a>&gt;.
+                                    </dd>
+                                    <dt id="RFC6648">[<a href="#RFC6648" class="smpl">RFC6648</a>]</dt>
+                                    <dd>Saint-Andre, P., Crocker, D., and M. Nottingham, “<a
+                                            href="https://www.rfc-editor.org/rfc/rfc6648.html">Deprecating the "X-"
+                                            Prefix and Similar Constructs in Application Protocols</a>”, <a
+                                            href="https://www.rfc-editor.org/info/bcp178">BCP 178</a>, RFC 6648, <a
+                                            href="https://dx.doi.org/10.17487/RFC6648">DOI 10.17487/RFC6648</a>, June
+                                        2012, &lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc6648">https://www.rfc-editor.org/info/rfc6648</a>&gt;.
+                                    </dd>
+                                    <dt id="RFC6838">[<a href="#RFC6838" class="smpl">RFC6838</a>]</dt>
+                                    <dd>Freed, N., Klensin, J., and T. Hansen, “<a
+                                            href="https://www.rfc-editor.org/rfc/rfc6838.html">Media Type Specifications
+                                            and Registration Procedures</a>”, <a
+                                            href="https://www.rfc-editor.org/info/bcp13">BCP 13</a>, RFC 6838, <a
+                                            href="https://dx.doi.org/10.17487/RFC6838">DOI 10.17487/RFC6838</a>, January
+                                        2013, &lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc6838">https://www.rfc-editor.org/info/rfc6838</a>&gt;.
+                                    </dd>
+                                    <dt id="RFC8174">[<a href="#RFC8174" class="smpl">RFC8174</a>]</dt>
+                                    <dd>Leiba, B., “<a href="https://www.rfc-editor.org/rfc/rfc8174.html">Ambiguity of
+                                            Uppercase vs Lowercase in RFC 2119 Key Words</a>”, <a
+                                            href="https://www.rfc-editor.org/info/bcp14">BCP 14</a>, RFC 8174, <a
+                                            href="https://dx.doi.org/10.17487/RFC8174">DOI 10.17487/RFC8174</a>, May
+                                        2017, &lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc8174">https://www.rfc-editor.org/info/rfc8174</a>&gt;.
+                                    </dd>
+                                    <dt id="STRUCTURED-FIELDS">[<a href="#STRUCTURED-FIELDS"
+                                            class="smpl">STRUCTURED-FIELDS</a>]</dt>
+                                    <dd>Nottingham, M. and P-H. Kamp, “<a
+                                            href="https://www.rfc-editor.org/rfc/rfc8941.html">Structured Field Values
+                                            for HTTP</a>”, RFC 8941, <a href="https://dx.doi.org/10.17487/RFC8941">DOI
+                                            10.17487/RFC8941</a>, February 2021, &lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc8941">https://www.rfc-editor.org/info/rfc8941</a>&gt;.
+                                    </dd>
+                                    <dt id="URL">[<a href="#URL" class="smpl">URL</a>]</dt>
+                                    <dd>Berners-Lee, T., Fielding, R., and L. Masinter, “<a
+                                            href="https://www.rfc-editor.org/rfc/rfc3986.html">Uniform Resource
+                                            Identifier (URI): Generic Syntax</a>”, <a
+                                            href="https://www.rfc-editor.org/info/std66">STD 66</a>, RFC 3986, <a
+                                            href="https://dx.doi.org/10.17487/RFC3986">DOI 10.17487/RFC3986</a>, January
+                                        2005, &lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc3986">https://www.rfc-editor.org/info/rfc3986</a>&gt;.
+                                    </dd>
+                                    <dt id="WEB-LINKING">[<a href="#WEB-LINKING" class="smpl">WEB-LINKING</a>]</dt>
+                                    <dd>Nottingham, M., “<a href="https://www.rfc-editor.org/rfc/rfc8288.html">Web
+                                            Linking</a>”, RFC 8288, <a href="https://dx.doi.org/10.17487/RFC8288">DOI
+                                            10.17487/RFC8288</a>, October 2017, &lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc8288">https://www.rfc-editor.org/info/rfc8288</a>&gt;.
+                                    </dd>
+                                    <dt id="WELL-KNOWN-URI">[<a href="#WELL-KNOWN-URI" class="smpl">WELL-KNOWN-URI</a>]
+                                    </dt>
+                                    <dd>Nottingham, M., “<a
+                                            href="https://www.rfc-editor.org/rfc/rfc8615.html">Well-Known Uniform
+                                            Resource Identifiers (URIs)</a>”, RFC 8615, <a
+                                            href="https://dx.doi.org/10.17487/RFC8615">DOI 10.17487/RFC8615</a>, May
+                                        2019, &lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc8615">https://www.rfc-editor.org/info/rfc8615</a>&gt;.
+                                    </dd>
+                                </dl>
+                            </div>
+                        </section>
+                        <section>
+                            <div id="rfc.references.3">
+                                <h3 id="rfc.section.7.2"><a href="#rfc.section.7.2">7.2.</a> 信息性参考文献</h3>
+                                <dl class="dl-horizontal">
+                                    <dt id="COOKIES">[<a href="#COOKIES" class="smpl">COOKIES</a>]</dt>
+                                    <dd>Barth, A., “<a href="https://www.rfc-editor.org/rfc/rfc6265.html">HTTP State
+                                            Management Mechanism</a>”, RFC 6265, <a
+                                            href="https://dx.doi.org/10.17487/RFC6265">DOI 10.17487/RFC6265</a>, April
+                                        2011, &lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc6265">https://www.rfc-editor.org/info/rfc6265</a>&gt;.
+                                    </dd>
+                                    <dt id="CSP">[<a href="#CSP" class="smpl">CSP</a>]</dt>
+                                    <dd>West, M., “<a href="https://www.w3.org/TR/2021/WD-CSP3-20210629">Content
+                                            Security Policy Level 3</a>”, W3C Working Draft, June 2021, &lt;<a
+                                            href="https://www.w3.org/TR/2021/WD-CSP3-20210629">https://www.w3.org/TR/2021/WD-CSP3-20210629</a>&gt;.
+                                    </dd>
+                                    <dt id="FETCH">[<a href="#FETCH" class="smpl">FETCH</a>]</dt>
+                                    <dd>WHATWG, “<a href="https://fetch.spec.whatwg.org">Fetch - Living Standard</a>”,
+                                        &lt;<a
+                                            href="https://fetch.spec.whatwg.org">https://fetch.spec.whatwg.org</a>&gt;.
+                                    </dd>
+                                    <dt id="HTML">[<a href="#HTML" class="smpl">HTML</a>]</dt>
+                                    <dd>WHATWG, “<a href="https://html.spec.whatwg.org">HTML - Living Standard</a>”,
+                                        &lt;<a href="https://html.spec.whatwg.org">https://html.spec.whatwg.org</a>&gt;.
+                                    </dd>
+                                    <dt id="HTTP-PRIORITY">[<a href="#HTTP-PRIORITY" class="smpl">HTTP-PRIORITY</a>]
+                                    </dt>
+                                    <dd>一穂, 奥. and L. Pardue, “<a
+                                            href="https://www.rfc-editor.org/rfc/rfc9218.html">Extensible Prioritization
+                                            Scheme for HTTP</a>”, RFC 9218, <a
+                                            href="https://dx.doi.org/10.17487/RFC9218">DOI 10.17487/RFC9218</a>, June
+                                        2022, &lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc9218">https://www.rfc-editor.org/info/rfc9218</a>&gt;.
+                                    </dd>
+                                    <dt id="HTTP11">[<a href="#HTTP11" class="smpl">HTTP/1.1</a>]</dt>
+                                    <dd>Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke, Ed., “<a
+                                            href="https://www.rfc-editor.org/rfc/rfc9112.html">HTTP/1.1</a>”, <a
+                                            href="https://www.rfc-editor.org/info/std99">STD 99</a>, RFC 9112, <a
+                                            href="https://dx.doi.org/10.17487/RFC9112">DOI 10.17487/RFC9112</a>, June
+                                        2022, &lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc9112">https://www.rfc-editor.org/info/rfc9112</a>&gt;.
+                                    </dd>
+                                    <dt id="HTTP2">[<a href="#HTTP2" class="smpl">HTTP/2</a>]</dt>
+                                    <dd>Thomson, M., Ed. and C. Benfield, Ed., “<a
+                                            href="https://www.rfc-editor.org/rfc/rfc9113.html">HTTP/2</a>”, RFC 9113, <a
+                                            href="https://dx.doi.org/10.17487/RFC9113">DOI 10.17487/RFC9113</a>, June
+                                        2022, &lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc9113">https://www.rfc-editor.org/info/rfc9113</a>&gt;.
+                                    </dd>
+                                    <dt id="HTTP3">[<a href="#HTTP3" class="smpl">HTTP/3</a>]</dt>
+                                    <dd>Bishop, M., Ed., “<a
+                                            href="https://www.rfc-editor.org/rfc/rfc9114.html">HTTP/3</a>”, RFC 9114, <a
+                                            href="https://dx.doi.org/10.17487/RFC9114">DOI 10.17487/RFC9114</a>, June
+                                        2022, &lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc9114">https://www.rfc-editor.org/info/rfc9114</a>&gt;.
+                                    </dd>
+                                    <dt id="JSON">[<a href="#JSON" class="smpl">JSON</a>]</dt>
+                                    <dd>Bray, T., Ed., “<a href="https://www.rfc-editor.org/rfc/rfc8259.html">The
+                                            JavaScript Object Notation (JSON) Data Interchange Format</a>”, <a
+                                            href="https://www.rfc-editor.org/info/std90">STD 90</a>, RFC 8259, <a
+                                            href="https://dx.doi.org/10.17487/RFC8259">DOI 10.17487/RFC8259</a>,
+                                        December 2017, &lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc8259">https://www.rfc-editor.org/info/rfc8259</a>&gt;.
+                                    </dd>
+                                    <dt id="PROBLEM-DETAILS">[<a href="#PROBLEM-DETAILS"
+                                            class="smpl">PROBLEM-DETAILS</a>]</dt>
+                                    <dd>Nottingham, M. and E. Wilde, “<a
+                                            href="https://www.rfc-editor.org/rfc/rfc7807.html">Problem Details for HTTP
+                                            APIs</a>”, RFC 7807, <a href="https://dx.doi.org/10.17487/RFC7807">DOI
+                                            10.17487/RFC7807</a>, March 2016, &lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc7807">https://www.rfc-editor.org/info/rfc7807</a>&gt;.
+                                    </dd>
+                                    <dt id="REFERRER-POLICY">[<a href="#REFERRER-POLICY"
+                                            class="smpl">REFERRER-POLICY</a>]</dt>
+                                    <dd>Eisinger, J. and E. Stark, “<a
+                                            href="https://www.w3.org/TR/2017/CR-referrer-policy-20170126">Referrer
+                                            Policy</a>”, W3C Candidate Recommendation CR-referrer-policy-20170126,
+                                        January 2017, &lt;<a
+                                            href="https://www.w3.org/TR/2017/CR-referrer-policy-20170126">https://www.w3.org/TR/2017/CR-referrer-policy-20170126</a>&gt;.
+                                    </dd>
+                                    <dt id="RFC3205">[<a href="#RFC3205" class="smpl">RFC3205</a>]</dt>
+                                    <dd>Moore, K., “<a href="https://www.rfc-editor.org/rfc/rfc3205.html">On the use of
+                                            HTTP as a Substrate</a>”, <a
+                                            href="https://www.rfc-editor.org/info/bcp56">BCP 56</a>, RFC 3205, <a
+                                            href="https://dx.doi.org/10.17487/RFC3205">DOI 10.17487/RFC3205</a>,
+                                        February 2002, &lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc3205">https://www.rfc-editor.org/info/rfc3205</a>&gt;.
+                                    </dd>
+                                    <dt id="RFC4791">[<a href="#RFC4791" class="smpl">RFC4791</a>]</dt>
+                                    <dd>Daboo, C., Desruisseaux, B., and L. Dusseault, “<a
+                                            href="https://www.rfc-editor.org/rfc/rfc4791.html">Calendaring Extensions to
+                                            WebDAV (CalDAV)</a>”, RFC 4791, <a
+                                            href="https://dx.doi.org/10.17487/RFC4791">DOI 10.17487/RFC4791</a>, March
+                                        2007, &lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc4791">https://www.rfc-editor.org/info/rfc4791</a>&gt;.
+                                    </dd>
+                                    <dt id="RFC4918">[<a href="#RFC4918" class="smpl">RFC4918</a>]</dt>
+                                    <dd>Dusseault, L., Ed., “<a href="https://www.rfc-editor.org/rfc/rfc4918.html">HTTP
+                                            Extensions for Web Distributed Authoring and Versioning (WebDAV)</a>”, RFC
+                                        4918, <a href="https://dx.doi.org/10.17487/RFC4918">DOI 10.17487/RFC4918</a>,
+                                        June 2007, &lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc4918">https://www.rfc-editor.org/info/rfc4918</a>&gt;.
+                                    </dd>
+                                    <dt id="RFC5861">[<a href="#RFC5861" class="smpl">RFC5861</a>]</dt>
+                                    <dd>Nottingham, M., “<a href="https://www.rfc-editor.org/rfc/rfc5861.html">HTTP
+                                            Cache-Control Extensions for Stale Content</a>”, RFC 5861, <a
+                                            href="https://dx.doi.org/10.17487/RFC5861">DOI 10.17487/RFC5861</a>, May
+                                        2010, &lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc5861">https://www.rfc-editor.org/info/rfc5861</a>&gt;.
+                                    </dd>
+                                    <dt id="RFC6415">[<a href="#RFC6415" class="smpl">RFC6415</a>]</dt>
+                                    <dd>Hammer-Lahav, E., Ed. and B. Cook, “<a
+                                            href="https://www.rfc-editor.org/rfc/rfc6415.html">Web Host Metadata</a>”,
+                                        RFC 6415, <a href="https://dx.doi.org/10.17487/RFC6415">DOI
+                                            10.17487/RFC6415</a>, October 2011, &lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc6415">https://www.rfc-editor.org/info/rfc6415</a>&gt;.
+                                    </dd>
+                                    <dt id="RFC6797">[<a href="#RFC6797" class="smpl">RFC6797</a>]</dt>
+                                    <dd>Hodges, J., Jackson, C., and A. Barth, “<a
+                                            href="https://www.rfc-editor.org/rfc/rfc6797.html">HTTP Strict Transport
+                                            Security (HSTS)</a>”, RFC 6797, <a
+                                            href="https://dx.doi.org/10.17487/RFC6797">DOI 10.17487/RFC6797</a>,
+                                        November 2012, &lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc6797">https://www.rfc-editor.org/info/rfc6797</a>&gt;.
+                                    </dd>
+                                    <dt id="RFC7258">[<a href="#RFC7258" class="smpl">RFC7258</a>]</dt>
+                                    <dd>Farrell, S. and H. Tschofenig, “<a
+                                            href="https://www.rfc-editor.org/rfc/rfc7258.html">Pervasive Monitoring Is
+                                            an Attack</a>”, <a href="https://www.rfc-editor.org/info/bcp188">BCP
+                                            188</a>, RFC 7258, <a href="https://dx.doi.org/10.17487/RFC7258">DOI
+                                            10.17487/RFC7258</a>, May 2014, &lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc7258">https://www.rfc-editor.org/info/rfc7258</a>&gt;.
+                                    </dd>
+                                    <dt id="RFC7301">[<a href="#RFC7301" class="smpl">RFC7301</a>]</dt>
+                                    <dd>Friedl, S., Popov, A., Langley, A., and E. Stephan, “<a
+                                            href="https://www.rfc-editor.org/rfc/rfc7301.html">Transport Layer Security
+                                            (TLS) Application-Layer Protocol Negotiation Extension</a>”, RFC 7301, <a
+                                            href="https://dx.doi.org/10.17487/RFC7301">DOI 10.17487/RFC7301</a>, July
+                                        2014, &lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc7301">https://www.rfc-editor.org/info/rfc7301</a>&gt;.
+                                    </dd>
+                                    <dt id="RFC7595">[<a href="#RFC7595" class="smpl">RFC7595</a>]</dt>
+                                    <dd>Thaler, D., Ed., Hansen, T., and T. Hardie, “<a
+                                            href="https://www.rfc-editor.org/rfc/rfc7595.html">Guidelines and
+                                            Registration Procedures for URI Schemes</a>”, <a
+                                            href="https://www.rfc-editor.org/info/bcp35">BCP 35</a>, RFC 7595, <a
+                                            href="https://dx.doi.org/10.17487/RFC7595">DOI 10.17487/RFC7595</a>, June
+                                        2015, &lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc7595">https://www.rfc-editor.org/info/rfc7595</a>&gt;.
+                                    </dd>
+                                    <dt id="RFC7605">[<a href="#RFC7605" class="smpl">RFC7605</a>]</dt>
+                                    <dd>Touch, J., “<a
+                                            href="https://www.rfc-editor.org/rfc/rfc7605.html">Recommendations on Using
+                                            Assigned Transport Port Numbers</a>”, <a
+                                            href="https://www.rfc-editor.org/info/bcp165">BCP 165</a>, RFC 7605, <a
+                                            href="https://dx.doi.org/10.17487/RFC7605">DOI 10.17487/RFC7605</a>, August
+                                        2015, &lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc7605">https://www.rfc-editor.org/info/rfc7605</a>&gt;.
+                                    </dd>
+                                    <dt id="RFC7616">[<a href="#RFC7616" class="smpl">RFC7616</a>]</dt>
+                                    <dd>Shekh-Yusef, R., Ed., Ahrens, D., and S. Bremer, “<a
+                                            href="https://www.rfc-editor.org/rfc/rfc7616.html">HTTP Digest Access
+                                            Authentication</a>”, RFC 7616, <a
+                                            href="https://dx.doi.org/10.17487/RFC7616">DOI 10.17487/RFC7616</a>,
+                                        September 2015, &lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc7616">https://www.rfc-editor.org/info/rfc7616</a>&gt;.
+                                    </dd>
+                                    <dt id="RFC7617">[<a href="#RFC7617" class="smpl">RFC7617</a>]</dt>
+                                    <dd>Reschke, J., “<a href="https://www.rfc-editor.org/rfc/rfc7617.html">The 'Basic'
+                                            HTTP Authentication Scheme</a>”, RFC 7617, <a
+                                            href="https://dx.doi.org/10.17487/RFC7617">DOI 10.17487/RFC7617</a>,
+                                        September 2015, &lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc7617">https://www.rfc-editor.org/info/rfc7617</a>&gt;.
+                                    </dd>
+                                    <dt id="RFC8297">[<a href="#RFC8297" class="smpl">RFC8297</a>]</dt>
+                                    <dd>Oku, K., “<a href="https://www.rfc-editor.org/rfc/rfc8297.html">An HTTP Status
+                                            Code for Indicating Hints</a>”, RFC 8297, <a
+                                            href="https://dx.doi.org/10.17487/RFC8297">DOI 10.17487/RFC8297</a>,
+                                        December 2017, &lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc8297">https://www.rfc-editor.org/info/rfc8297</a>&gt;.
+                                    </dd>
+                                    <dt id="RFC8446">[<a href="#RFC8446" class="smpl">RFC8446</a>]</dt>
+                                    <dd>Rescorla, E., “<a href="https://www.rfc-editor.org/rfc/rfc8446.html">The
+                                            Transport Layer Security (TLS) Protocol Version 1.3</a>”, RFC 8446, <a
+                                            href="https://dx.doi.org/10.17487/RFC8446">DOI 10.17487/RFC8446</a>, August
+                                        2018, &lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc8446">https://www.rfc-editor.org/info/rfc8446</a>&gt;.
+                                    </dd>
+                                    <dt id="RFC8470">[<a href="#RFC8470" class="smpl">RFC8470</a>]</dt>
+                                    <dd>Thomson, M., Nottingham, M., and W. Tarreau, “<a
+                                            href="https://www.rfc-editor.org/rfc/rfc8470.html">Using Early Data in
+                                            HTTP</a>”, RFC 8470, <a href="https://dx.doi.org/10.17487/RFC8470">DOI
+                                            10.17487/RFC8470</a>, September 2018, &lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc8470">https://www.rfc-editor.org/info/rfc8470</a>&gt;.
+                                    </dd>
+                                    <dt id="RFC8949">[<a href="#RFC8949" class="smpl">RFC8949</a>]</dt>
+                                    <dd>Bormann, C. and P. Hoffman, “<a
+                                            href="https://www.rfc-editor.org/rfc/rfc8949.html">Concise Binary Object
+                                            Representation (CBOR)</a>”, <a
+                                            href="https://www.rfc-editor.org/info/std94">STD 94</a>, RFC 8949, <a
+                                            href="https://dx.doi.org/10.17487/RFC8949">DOI 10.17487/RFC8949</a>,
+                                        December 2020, &lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc8949">https://www.rfc-editor.org/info/rfc8949</a>&gt;.
+                                    </dd>
+                                    <dt id="SECCTXT">[<a href="#SECCTXT" class="smpl">SECCTXT</a>]</dt>
+                                    <dd>West, M., “<a
+                                            href="https://www.w3.org/TR/2021/CRD-secure-contexts-20210918">Secure
+                                            Contexts</a>”, W3C Candidate Recommendation, September 2021, &lt;<a
+                                            href="https://www.w3.org/TR/2021/CRD-secure-contexts-20210918">https://www.w3.org/TR/2021/CRD-secure-contexts-20210918</a>&gt;.
+                                    </dd>
+                                    <dt id="URI-TEMPLATE">[<a href="#URI-TEMPLATE" class="smpl">URI-TEMPLATE</a>]</dt>
+                                    <dd>Gregorio, J., Fielding, R., Hadley, M., Nottingham, M., and D. Orchard, “<a
+                                            href="https://www.rfc-editor.org/rfc/rfc6570.html">URI Template</a>”, RFC
+                                        6570, <a href="https://dx.doi.org/10.17487/RFC6570">DOI 10.17487/RFC6570</a>,
+                                        March 2012, &lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc6570">https://www.rfc-editor.org/info/rfc6570</a>&gt;.
+                                    </dd>
+                                    <dt id="XML">[<a href="#XML" class="smpl">XML</a>]</dt>
+                                    <dd>Bray, T., Paoli, J., Sperberg-McQueen, M., Maler, E., and F. Yergeau, “<a
+                                            href="https://www.w3.org/TR/2008/REC-xml-20081126">Extensible Markup
+                                            Language (XML) 1.0 (Fifth Edition)</a>”, W3C Recommendation
+                                        REC-xml-20081126, November 2008, &lt;<a
+                                            href="https://www.w3.org/TR/2008/REC-xml-20081126">https://www.w3.org/TR/2008/REC-xml-20081126</a>&gt;.
+                                    </dd>
+                                </dl>
+                            </div>
+                        </section>
+                    </div>
+                </section>
+                <hr class="hidden-print">
+                <section id="changes-from-rfc-3205">
+                    <h2 id="rfc.section.A" class="np"><a href="#rfc.section.A">Appendix A.</a>&nbsp;<a
+                            href="#changes-from-rfc-3205">来自 RFC 3205 的更改</a></h2>
+                    <div id="rfc.section.A.p.1">
+                        <p><a href="#RFC3205"><cite title="On the use of HTTP as a Substrate">[RFC3205]</cite></a>
+                            在 2000 年代早期总结了当时协议设计者面临的最佳当前实践。自那时起对 HTTP 的使用发生了显著变化；因此，本文件与之相比有实质性差异。相应地，更改过多，无法逐一列举。</p>
+                    </div>
+                </section>
+                <hr class="hidden-print">
+                <section id="rfc.authors" class="np">
+                    <h2><a href="#rfc.authors">作者地址</a></h2>
+                    <address><b>Mark Nottingham</b><br>Prahran<br>Australia<br>EMail: <a
+                            href="mailto:mnot@mnot.net">mnot@mnot.net</a><br>URI: <a
+                            href="https://www.mnot.net/">https://www.mnot.net/</a></address>
+                </section>
+            </div>
+        </div>
+    </div>
+    <script src="https://httpwg.org/assets/node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="https://httpwg.org/assets/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="/dropdown.js"></script>
+</body>
+
+</html>
