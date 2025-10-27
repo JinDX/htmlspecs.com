@@ -1,0 +1,2204 @@
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html lang="zh-hans">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>RFC 6265 - HTTP 状态管理机制</title>
+    <script>
+        function getMeta(rfcno, container) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "https://www.rfc-editor.org/rfc/rfc" + rfcno + ".json", true);
+            xhr.onload = function (e) {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        var data = JSON.parse(xhr.response);
+
+                        var cont = document.getElementById(container);
+                        // empty the container
+                        while (cont.firstChild) {
+                            cont.removeChild(myNode.firstChild);
+                        }
+
+                        var c = data.status;
+                        if (c) {
+                            var bld = newElementWithText("b", c);
+                            cont.appendChild(bld);
+                        } else {
+                            cont.appendChild(newElementWithText("i", "(document status unknown)"));
+                        }
+
+                        c = data.updated_by;
+                        if (c && c.length > 0 && c[0] !== null && c[0].length > 0) {
+                            cont.appendChild(newElement("br"));
+                            cont.appendChild(newText("Updated by: "));
+                            appendRfcLinks(cont, c);
+                        }
+
+                        c = data.obsoleted_by;
+                        if (c && c.length > 0 && c[0] !== null && c[0].length > 0) {
+                            cont.appendChild(newElement("br"));
+                            cont.appendChild(newText("Obsoleted by: "));
+                            appendRfcLinks(cont, c);
+                        }
+
+                        c = data.errata_url;
+                        if (c) {
+                            cont.appendChild(newElement("br"));
+                            var link = newElementWithText("a", "errata");
+                            link.setAttribute("href", c);
+                            var errata = newElementWithText("i", "This document has ");
+                            errata.appendChild(link);
+                            errata.appendChild(newText("."));
+                            cont.appendChild(errata);
+                        }
+
+                        cont.style.display = "block";
+                    } else {
+                        console.error(xhr.statusText);
+                    }
+                }
+            };
+            xhr.onerror = function (e) {
+                console.error(xhr.status + " " + xhr.statusText);
+            };
+            xhr.send(null);
+        }
+        function appendRfcLinks(parent, updates) {
+            var template = "https://www.rfc-editor.org/rfc/rfc{rfc}.html";
+            for (var i = 0; i < updates.length; i++) {
+                var rfc = updates[i].trim().toLowerCase();
+                if (rfc.substring(0, 3) == "rfc") {
+                    var no = parseInt(rfc.substring(3), 10);
+
+                    var link = newElement("a");
+                    link.setAttribute("href", template.replace("{rfc}", no));
+                    link.appendChild(newText(no));
+                    parent.appendChild(link);
+                } else {
+                    parent.appendChild(newText(rfc));
+                }
+                if (i != updates.length - 1) {
+                    parent.appendChild(newText(", "));
+                }
+            }
+        }
+
+        // DOM helpers
+        function newElement(name) {
+            return document.createElement(name);
+        }
+        function newElementWithText(name, txt) {
+            var e = document.createElement(name);
+            e.appendChild(newText(txt));
+            return e;
+        }
+        function newText(text) {
+            return document.createTextNode(text);
+        }
+    </script>
+    <script>
+        function anchorRewrite() {
+            map = {};
+            if (window.location.hash.length >= 1) {
+                var fragid = window.location.hash.substr(1);
+                if (fragid) {
+                    if (!document.getElementById(fragid)) {
+                        var prefix = "rfc.";
+                        var mapped = map[fragid];
+                        if (mapped) {
+                            window.location.hash = mapped;
+                        } else if (fragid.indexOf("section-") == 0) {
+                            window.location.hash = prefix + "section." + fragid.substring(8).replace("-", ".p.");
+                        } else if (fragid.indexOf("appendix-") == 0) {
+                            window.location.hash = prefix + "section." + fragid.substring(9).replace("-", ".p.");
+                        } else if (fragid.indexOf("s-") == 0) {
+                            var postfix = fragid.substring(2);
+                            if (postfix.startsWith("abstract")) {
+                                window.location.hash = prefix + postfix;
+                            } else if (postfix.startsWith("note-")) {
+                                window.location.hash = prefix + "note." + postfix.substring(5).replace("-", ".p.");
+                            } else {
+                                window.location.hash = prefix + "section." + postfix.replace("-", ".p.");
+                            }
+                        } else if (fragid.indexOf("p-") == 0) {
+                            var r = fragid.substring(2);
+                            var p = r.indexOf("-");
+                            if (p >= 0) {
+                                window.location.hash = prefix + "section." + r.substring(0, p) + ".p." + r.substring(p + 1);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        window.addEventListener('hashchange', anchorRewrite);
+        window.addEventListener('DOMContentLoaded', anchorRewrite);
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="RFC6265">
+    <meta property="og:description" content="HTTP State Management Mechanism">
+    <meta property="og:url" content="https://httpwg.org/specs/rfc6265.html">
+    <meta property="og:site_name" content="IETF HTTP Working Group Specifications">
+    <meta property="og:image" content="https://httpwg.org/assets/favicon/apple-icon-180x180.png">
+    <link rel="stylesheet" type="text/css"
+        href="https://httpwg.org/assets/node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <style type="text/css">
+        body {
+            padding-top: 80px;
+            padding-bottom: 80px;
+            position: relative;
+        }
+
+        .table.header th,
+        .table.header td {
+            border-top: none;
+            padding: 0;
+        }
+
+        #sidebar {
+            margin-top: -10px;
+            height: 90%;
+            overflow-y: auto;
+            font-size: 90%;
+        }
+
+        #rfc\.meta {
+            width: 40%;
+            float: right
+        }
+
+        .toc ul {
+            list-style: none;
+        }
+
+        .filename {
+            color: rgb(119, 119, 119);
+            font-size: 23px;
+            font-weight: normal;
+            height: auto;
+            line-height: 23px;
+        }
+
+        dl {
+            margin-left: 1em;
+        }
+
+        dl.dl-horizontal {
+            margin-left: 0;
+        }
+
+        dl>dt {
+            float: left;
+            margin-right: 1em;
+        }
+
+        dl.nohang>dt {
+            float: none;
+        }
+
+        dl>dd {
+            margin-bottom: .5em;
+        }
+
+        dl.compact>dd {
+            margin-bottom: 0em;
+        }
+
+        dl>dd>dl {
+            margin-top: 0.5em;
+            margin-bottom: 0em;
+        }
+
+        ul.empty {
+            list-style-type: none;
+        }
+
+        ul.empty li {
+            margin-top: .5em;
+        }
+
+        td.reference {
+            padding-right: 1em;
+            vertical-align: top;
+        }
+
+        .feedback {
+            position: fixed;
+            bottom: 5px;
+            right: 5px;
+        }
+
+        .fbbutton {
+            margin-left: 5px;
+        }
+
+        h1 a,
+        h2 a,
+        h3 a,
+        h4 a,
+        h5 a,
+        h6 a {
+            color: rgb(51, 51, 51);
+        }
+
+        span.tt {
+            font: 11pt consolas, monospace;
+            font-size-adjust: none;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" href="https://httpwg.org/assets/site.css">
+    <link rel="Contents" href="#rfc.toc">
+    <link rel="Author" href="#rfc.authors">
+    <link rel="License" href="#rfc.copyrightnotice">
+    <link rel="Chapter" title="1 Introduction" href="#rfc.section.1">
+    <link rel="Chapter" title="2 Conventions" href="#rfc.section.2">
+    <link rel="Chapter" title="3 Overview" href="#rfc.section.3">
+    <link rel="Chapter" title="4 Server Requirements" href="#rfc.section.4">
+    <link rel="Chapter" title="5 User Agent Requirements" href="#rfc.section.5">
+    <link rel="Chapter" title="6 Implementation Considerations" href="#rfc.section.6">
+    <link rel="Chapter" title="7 Privacy Considerations" href="#rfc.section.7">
+    <link rel="Chapter" title="8 Security Considerations" href="#rfc.section.8">
+    <link rel="Chapter" title="9 IANA Considerations" href="#rfc.section.9">
+    <link rel="Chapter" title="10 References" href="#rfc.section.10">
+    <link rel="Appendix" title="A Acknowledgements" href="#rfc.section.A">
+    <link rel="Alternate" title="Plain Text Version" href="http://www.ietf.org/rfc/rfc6265.txt">
+    <link rel="Help" title="RFC-Editor's Status Page" href="http://www.rfc-editor.org/info/rfc6265">
+    <meta name="viewport" content="initial-scale=1">
+    <meta name="generator"
+        content="https://github.com/mnot/RFCBootstrap XSLT vendor: Saxonica http://www.saxonica.com/">
+    <meta name="keywords" content="Cookie, Set-Cookie, Secure, HttpOnly">
+    <link rel="schema.dcterms" href="http://purl.org/dc/terms/">
+    <meta name="dcterms.creator" content="Barth, A.">
+    <meta name="dcterms.identifier" content="urn:ietf:rfc:6265">
+    <meta name="dcterms.issued" content="2011-04">
+    <meta name="dct.replaces" content="urn:ietf:rfc:2965">
+    <meta name="dcterms.abstract"
+        content="This document defines the HTTP Cookie and Set-Cookie header fields. These header fields can be used by HTTP servers to store state (called cookies) at HTTP user agents, letting the servers maintain a stateful session over the mostly stateless HTTP protocol. Although cookies have many historical infelicities that degrade their security and privacy, the Cookie and Set-Cookie header fields are widely used on the Internet. This document obsoletes RFC 2965.">
+    <meta name="dcterms.isPartOf" content="urn:issn:2070-1721">
+    <meta name="description"
+        content="This document defines the HTTP Cookie and Set-Cookie header fields. These header fields can be used by HTTP servers to store state (called cookies) at HTTP user agents, letting the servers maintain a stateful session over the mostly stateless HTTP protocol. Although cookies have many historical infelicities that degrade their security and privacy, the Cookie and Set-Cookie header fields are widely used on the Internet. This document obsoletes RFC 2965.">
+</head>
+
+<body onload="getMeta(6265,'rfc.meta');">
+    <nav class="navbar navbar-dark bg-dark d-print-none navbar-expand-lg fixed-top ps-3 pe-3" role="navigation">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse"
+                aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <a class="navbar-brand" href="https://httpwg.org/"><img src="https://httpwg.org/assets/http.svg"
+                    height="23"></a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse">
+
+            <div class="navbar-nav me-auto">
+
+                <a class="nav-item ms-1 text-white" href="https://httpwg.org/specs/">📄 Documentation</a>
+
+                <div class="dropdown ms-4">
+                    <a href="#" class="nav-item dropdown-toggle text-white" data-bs-toggle="dropdown">Work in
+                        Progress</a>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-item"><a href="https://httpwg.org/http-extensions/">HTTP Extensions</a></li>
+                        <li class="dropdown-item"><a
+                                href="https://github.com/httpwg/admin/issues?q=is%3Aissue+is%3Aopen+label%3Aadoption">Future
+                                Work</a></li>
+                    </ul>
+                </div>
+
+                <div class="dropdown ms-4">
+                    <a href="#" class="nav-item dropdown-toggle text-white" data-bs-toggle="dropdown">Participate</a>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-item"><a href="https://httpwg.org/about/">About the HTTP Working Group</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li class="dropdown-item"><a href="https://httpwg.org/CONTRIBUTING.html">Contribution Policy</a>
+                        </li>
+                        <li class="dropdown-item"><a href="http://datatracker.ietf.org/wg/httpbis/charter/">WG
+                                Charter</a></li>
+                        <li class="dropdown-item"><a href="http://lists.w3.org/Archives/Public/ietf-http-wg/">Group
+                                Mailing List 📨</a></li>
+                        <li class="dropdown-item"><a href="https://httpwg.org/wg-materials/">Meeting Materials</a></li>
+                        <li class="dropdown-item"><a href="https://httpwg.org/admin/editors/">Document Editor
+                                Resources</a></li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </nav>
+    <div class="container" id="top">
+        <div class="row">
+            <div class="col-lg-4 order-last d-none d-lg-block" id="sidebar" role="navigation">
+                <div class="navbar">
+                    <div class="navbar-brand"><a href="#top"><strong>RFC </strong>6265</a></div><br clear="all">
+                    <div class="">
+                        <div class="toc ">
+                            <ul>
+                                <li><a href="#rfc.section.1">1.</a>&nbsp;&nbsp;&nbsp;<a href="#intro">引言</a>
+                                </li>
+                                <li><a href="#rfc.section.2">2.</a>&nbsp;&nbsp;&nbsp;<a href="#conventions">约定</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.2.1">2.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#conformance-criteria">一致性准则</a></li>
+                                        <li><a href="#rfc.section.2.2">2.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#syntax-notation">语法表示法</a></li>
+                                        <li><a href="#rfc.section.2.3">2.3.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#terminology">术语</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.3">3.</a>&nbsp;&nbsp;&nbsp;<a href="#overview">概述</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.3.1">3.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#rfc.section.3.1">示例</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.4">4.</a>&nbsp;&nbsp;&nbsp;<a href="#sane-profile">服务器要求</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.4.1">4.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#sane-set-cookie">Set-Cookie</a>
+                                            <ul>
+                                                <li><a href="#rfc.section.4.1.1">4.1.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                        href="#sane-set-cookie-syntax">语法</a></li>
+                                                <li><a href="#rfc.section.4.1.2">4.1.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                                        href="#sane-set-cookie-semantics">语义（非规范性）</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li><a href="#rfc.section.4.2">4.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#sane-cookie">Cookie</a>
+                                            <ul>
+                                                <li><a href="#rfc.section.4.2.1">4.2.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                        href="#sane-cookie-syntax">语法</a></li>
+                                                <li><a href="#rfc.section.4.2.2">4.2.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                                        href="#sane-cookie-semantics">语义</a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.5">5.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#ua-requirements">用户代理要求</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.5.1">5.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#algorithms">子组件算法</a>
+                                            <ul>
+                                                <li><a href="#rfc.section.5.1.1">5.1.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                        href="#cookie-date">日期</a></li>
+                                                <li><a href="#rfc.section.5.1.2">5.1.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                                        href="#cookie-domain-canonicalize">规范化主机名</a>
+                                                </li>
+                                                <li><a href="#rfc.section.5.1.3">5.1.3.</a>&nbsp;&nbsp;&nbsp;<a
+                                                        href="#cookie-domain">域匹配</a></li>
+                                                <li><a href="#rfc.section.5.1.4">5.1.4.</a>&nbsp;&nbsp;&nbsp;<a
+                                                        href="#cookie-path">路径与路径匹配</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a href="#rfc.section.5.2">5.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#set-cookie">Set-Cookie 首部</a>
+                                            <ul>
+                                                <li><a href="#rfc.section.5.2.1">5.2.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                        href="#expires-attribute">Expires 属性</a></li>
+                                                <li><a href="#rfc.section.5.2.2">5.2.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                                        href="#max-age-attribute">Max-Age 属性</a></li>
+                                                <li><a href="#rfc.section.5.2.3">5.2.3.</a>&nbsp;&nbsp;&nbsp;<a
+                                                        href="#domain-attribute">Domain 属性</a></li>
+                                                <li><a href="#rfc.section.5.2.4">5.2.4.</a>&nbsp;&nbsp;&nbsp;<a
+                                                        href="#path-attribute">Path 属性</a></li>
+                                                <li><a href="#rfc.section.5.2.5">5.2.5.</a>&nbsp;&nbsp;&nbsp;<a
+                                                        href="#secure-attribute">Secure 属性</a></li>
+                                                <li><a href="#rfc.section.5.2.6">5.2.6.</a>&nbsp;&nbsp;&nbsp;<a
+                                                        href="#httponly-attribute">HttpOnly 属性</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a href="#rfc.section.5.3">5.3.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#storage-model">存储模型</a></li>
+                                        <li><a href="#rfc.section.5.4">5.4.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#cookie">Cookie 首部</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.6">6.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#implementation-considerations">实现注意事项</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.6.1">6.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#implementation-limits">限制</a></li>
+                                        <li><a href="#rfc.section.6.2">6.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#implementation-apis">应用编程接口</a></li>
+                                        <li><a href="#rfc.section.6.3">6.3.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#idna-migration">IDNA 依赖与迁移</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.7">7.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#privacy-considerations">隐私注意事项</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.7.1">7.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#third-party-cookies">第三方 Cookie</a></li>
+                                        <li><a href="#rfc.section.7.2">7.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#user-controls">用户控制</a></li>
+                                        <li><a href="#rfc.section.7.3">7.3.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#expiration-dates">过期日期</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.8">8.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#security-considerations">安全性注意事项</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.8.1">8.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#section-overview">概述</a></li>
+                                        <li><a href="#rfc.section.8.2">8.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#ambient-authority">环境权限</a></li>
+                                        <li><a href="#rfc.section.8.3">8.3.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#clear-text">明文传输</a></li>
+                                        <li><a href="#rfc.section.8.4">8.4.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#session-identifiers">会话标识符</a></li>
+                                        <li><a href="#rfc.section.8.5">8.5.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#weak-confidentiality">弱机密性</a></li>
+                                        <li><a href="#rfc.section.8.6">8.6.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#weak-integrity">弱完整性</a></li>
+                                        <li><a href="#rfc.section.8.7">8.7.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#reliance-on-dns">对 DNS 的依赖</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.9">9.</a>&nbsp;&nbsp;&nbsp;<a href="#iana-considerations">IANA
+                                        注意事项</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.9.1">9.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#rfc.section.9.1">Cookie</a></li>
+                                        <li><a href="#rfc.section.9.2">9.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#rfc.section.9.2">Set-Cookie</a></li>
+                                        <li><a href="#rfc.section.9.3">9.3.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#rfc.section.9.3">Cookie2</a></li>
+                                        <li><a href="#rfc.section.9.4">9.4.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#rfc.section.9.4">Set-Cookie2</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.10">10.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#rfc.references">参考文献</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.10.1">10.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#rfc.references.1">规范性引用</a></li>
+                                        <li><a href="#rfc.section.10.2">10.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#rfc.references.2">补充性引用</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.A">附录 A.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.section.A">致谢</a>
+                                </li>
+                                <li><a href="#rfc.authors">作者地址</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8 order-first main" role="main">
+                <header>
+                    <table class="table table-condensed header" id="rfc.headerblock">
+                        <tbody>
+                            <tr>
+                                <td class="text-left">互联网工程任务组 (IETF)</td>
+                                <td class="text-right">A. Barth</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left">请求评议：6265</td>
+                                <td class="text-right">U.C. Berkeley</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left">废止：<a href="#RFC2965">2965</a></td>
+                                <td class="text-right">2011年4月</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left">类别：标准轨道</td>
+                                <td class="text-right"></td>
+                            </tr>
+                            <tr>
+                                <td class="text-left">ISSN: 2070-1721</td>
+                                <td class="text-right"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div id="rfc.title">
+                        <h1>HTTP 状态管理机制</h1>
+                    </div>
+                </header>
+                <hr>
+                <h2 id="rfc.abstract"><a href="#rfc.abstract">摘要</a></h2>
+                <div class="lead">
+                    <div id="rfc.abstract.p.1">
+                        <p>本文档定义了 HTTP 的 Cookie 和 Set-Cookie 首部字段。HTTP 服务器可以使用这些首部字段在 HTTP 用户代理端存储状态（称为
+                            cookie），使服务器能够在主要无状态的 HTTP 协议上维持有状态的会话。尽管 cookies 在历史上存在许多降低其安全性和隐私性的不完美之处，但 Cookie 与
+                            Set-Cookie 首部在互联网上被广泛使用。本文档废止了 RFC 2965。</p>
+                    </div>
+                </div>
+                <aside id="rfc.meta" class="alert alert-info"></aside>
+                <section id="rfc.status">
+                    <h2><a href="#rfc.status">本备忘录的状态</a></h2>
+                    <div id="rfc.boilerplate.1.p.1">
+                        <p>这是一个互联网标准轨道文档。</p>
+                    </div>
+                    <div id="rfc.boilerplate.1.p.2">
+                        <p>本文件是互联网工程任务组（IETF）的成果，代表 IETF 社区的共识。它已获得公开评审，并由互联网工程指导小组（IESG）批准发布。关于互联网标准的更多信息请参见 <a
+                                href="https://www.rfc-editor.org/rfc/rfc5741.html#section-2">RFC 5741 第2节</a>。</p>
+                    </div>
+                    <div id="rfc.boilerplate.1.p.3">
+                        <p>关于本文档当前状态、勘误及如何提供反馈的信息，可从 <a
+                                href="http://www.rfc-editor.org/info/rfc6265">http://www.rfc-editor.org/info/rfc6265</a>
+                            获取。</p>
+                    </div>
+                </section>
+                <section id="rfc.copyrightnotice">
+                    <h2><a href="#rfc.copyrightnotice">Copyright Notice</a></h2>
+                    <div id="rfc.boilerplate.2.p.1">
+                        <p>Copyright (c) 2011 IETF Trust and the persons identified as the document authors. All rights
+                            reserved.</p>
+                    </div>
+                    <div id="rfc.boilerplate.2.p.2">
+                        <p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF
+                            Documents (<a
+                                href="http://trustee.ietf.org/license-info">http://trustee.ietf.org/license-info</a>) in
+                            effect on the date of publication of this document. Please review these documents carefully,
+                            as they describe your rights and restrictions with respect to this document. Code Components
+                            extracted from this document must include Simplified BSD License text as described in
+                            Section 4.e of the Trust Legal Provisions and are provided without warranty as described in
+                            the Simplified BSD License.</p>
+                    </div>
+                    <div id="rfc.boilerplate.2.p.3">
+                        <p>This document may contain material from IETF Documents or IETF Contributions published or
+                            made publicly available before November 10, 2008. The person(s) controlling the copyright in
+                            some of this material may not have granted the IETF Trust the right to allow modifications
+                            of such material outside the IETF Standards Process. Without obtaining an adequate license
+                            from the person(s) controlling the copyright in such materials, this document may not be
+                            modified outside the IETF Standards Process, and derivative works of it may not be created
+                            outside the IETF Standards Process, except to format it for publication as an RFC or to
+                            translate it into languages other than English.</p>
+                    </div>
+                </section>
+                <div class="toc d-lg-none">
+                    <ul>
+                        <li><a href="#rfc.section.1">1.</a>&nbsp;&nbsp;&nbsp;<a href="#intro">引言</a></li>
+                        <li><a href="#rfc.section.2">2.</a>&nbsp;&nbsp;&nbsp;<a href="#conventions">约定</a>
+                            <ul>
+                                <li><a href="#rfc.section.2.1">2.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#conformance-criteria">一致性准则</a></li>
+                                <li><a href="#rfc.section.2.2">2.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#syntax-notation">语法表示法</a></li>
+                                <li><a href="#rfc.section.2.3">2.3.</a>&nbsp;&nbsp;&nbsp;<a href="#terminology">术语</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li><a href="#rfc.section.3">3.</a>&nbsp;&nbsp;&nbsp;<a href="#overview">概述</a>
+                            <ul>
+                                <li><a href="#rfc.section.3.1">3.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#rfc.section.3.1">示例</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#rfc.section.4">4.</a>&nbsp;&nbsp;&nbsp;<a href="#sane-profile">服务器要求</a>
+                            <ul>
+                                <li><a href="#rfc.section.4.1">4.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#sane-set-cookie">Set-Cookie</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.4.1.1">4.1.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#sane-set-cookie-syntax">语法</a></li>
+                                        <li><a href="#rfc.section.4.1.2">4.1.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#sane-set-cookie-semantics">语义（非规范性）</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.4.2">4.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#sane-cookie">Cookie</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.4.2.1">4.2.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#sane-cookie-syntax">语法</a></li>
+                                        <li><a href="#rfc.section.4.2.2">4.2.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#sane-cookie-semantics">语义</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <li><a href="#rfc.section.5">5.</a>&nbsp;&nbsp;&nbsp;<a href="#ua-requirements">用户代理要求</a>
+                            <ul>
+                                <li><a href="#rfc.section.5.1">5.1.</a>&nbsp;&nbsp;&nbsp;<a href="#algorithms">子组件算法</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.5.1.1">5.1.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#cookie-date">日期</a></li>
+                                        <li><a href="#rfc.section.5.1.2">5.1.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#cookie-domain-canonicalize">规范化主机名</a></li>
+                                        <li><a href="#rfc.section.5.1.3">5.1.3.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#cookie-domain">域匹配</a></li>
+                                        <li><a href="#rfc.section.5.1.4">5.1.4.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#cookie-path">路径与路径匹配</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.5.2">5.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#set-cookie">Set-Cookie 首部</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.5.2.1">5.2.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#expires-attribute">Expires 属性</a></li>
+                                        <li><a href="#rfc.section.5.2.2">5.2.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#max-age-attribute">Max-Age 属性</a></li>
+                                        <li><a href="#rfc.section.5.2.3">5.2.3.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#domain-attribute">Domain 属性</a></li>
+                                        <li><a href="#rfc.section.5.2.4">5.2.4.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#path-attribute">Path 属性</a></li>
+                                        <li><a href="#rfc.section.5.2.5">5.2.5.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#secure-attribute">Secure 属性</a></li>
+                                        <li><a href="#rfc.section.5.2.6">5.2.6.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#httponly-attribute">HttpOnly 属性</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.5.3">5.3.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#storage-model">存储模型</a></li>
+                                <li><a href="#rfc.section.5.4">5.4.</a>&nbsp;&nbsp;&nbsp;<a href="#cookie">Cookie 首部</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li><a href="#rfc.section.6">6.</a>&nbsp;&nbsp;&nbsp;<a
+                                href="#implementation-considerations">实现注意事项</a>
+                            <ul>
+                                <li><a href="#rfc.section.6.1">6.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#implementation-limits">限制</a></li>
+                                <li><a href="#rfc.section.6.2">6.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#implementation-apis">应用编程接口</a></li>
+                                <li><a href="#rfc.section.6.3">6.3.</a>&nbsp;&nbsp;&nbsp;<a href="#idna-migration">IDNA
+                                        依赖与迁移</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#rfc.section.7">7.</a>&nbsp;&nbsp;&nbsp;<a
+                                href="#privacy-considerations">隐私注意事项</a>
+                            <ul>
+                                <li><a href="#rfc.section.7.1">7.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#third-party-cookies">第三方 Cookie</a></li>
+                                <li><a href="#rfc.section.7.2">7.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#user-controls">用户控制</a></li>
+                                <li><a href="#rfc.section.7.3">7.3.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#expiration-dates">过期日期</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#rfc.section.8">8.</a>&nbsp;&nbsp;&nbsp;<a
+                                href="#security-considerations">安全性注意事项</a>
+                            <ul>
+                                <li><a href="#rfc.section.8.1">8.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#section-overview">概述</a></li>
+                                <li><a href="#rfc.section.8.2">8.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#ambient-authority">环境权限</a></li>
+                                <li><a href="#rfc.section.8.3">8.3.</a>&nbsp;&nbsp;&nbsp;<a href="#clear-text">明文传输</a>
+                                </li>
+                                <li><a href="#rfc.section.8.4">8.4.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#session-identifiers">会话标识符</a></li>
+                                <li><a href="#rfc.section.8.5">8.5.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#weak-confidentiality">弱机密性</a></li>
+                                <li><a href="#rfc.section.8.6">8.6.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#weak-integrity">弱完整性</a></li>
+                                <li><a href="#rfc.section.8.7">8.7.</a>&nbsp;&nbsp;&nbsp;<a href="#reliance-on-dns">对
+                                        DNS 的依赖</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#rfc.section.9">9.</a>&nbsp;&nbsp;&nbsp;<a href="#iana-considerations">IANA
+                                注意事项</a>
+                            <ul>
+                                <li><a href="#rfc.section.9.1">9.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#rfc.section.9.1">Cookie</a></li>
+                                <li><a href="#rfc.section.9.2">9.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#rfc.section.9.2">Set-Cookie</a></li>
+                                <li><a href="#rfc.section.9.3">9.3.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#rfc.section.9.3">Cookie2</a></li>
+                                <li><a href="#rfc.section.9.4">9.4.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#rfc.section.9.4">Set-Cookie2</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#rfc.section.10">10.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.references">参考文献</a>
+                            <ul>
+                                <li><a href="#rfc.section.10.1">10.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#rfc.references.1">规范性引用</a></li>
+                                <li><a href="#rfc.section.10.2">10.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#rfc.references.2">补充性引用</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#rfc.section.A">Appendix A.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.section.A">致谢</a>
+                        </li>
+                        <li><a href="#rfc.authors">作者地址</a></li>
+                    </ul>
+                </div>
+                <section id="intro">
+                    <h2 id="rfc.section.1" class="np"><a href="#rfc.section.1">1.</a>&nbsp;<a href="#intro">引言</a></h2>
+                    <div id="rfc.section.1.p.1">
+                        <p>本文档定义了 HTTP 的 Cookie 和 Set-Cookie 首部字段。使用 Set-Cookie 首部字段，HTTP 服务器可以向用户代理传送名称/值对及相关元数据（称为
+                            cookie）。当用户代理随后向服务器发出请求时，用户代理会使用这些元数据和其他信息来决定是否在 Cookie 首部中返回这些名称/值对。</p>
+                    </div>
+                    <div id="rfc.section.1.p.2">
+                        <p>尽管表面上很简单，cookie 具有许多复杂性。例如，服务器在发送 cookie 给用户代理时指示每个 cookie 的作用域。该作用域指明用户代理在多长时间内应返回该
+                            cookie、应将 cookie 返回给哪些服务器，以及该 cookie 适用于哪些 URI 方案。</p>
+                    </div>
+                    <div id="rfc.section.1.p.3">
+                        <p>出于历史原因，cookie 存在若干降低其安全性和隐私性的缺陷。例如，服务器可以指示某个 cookie 仅用于“secure”（安全）连接，但 Secure
+                            属性并不能在存在主动网络攻击者时提供完整性保护。同样，某个主机的 cookie 会在该主机的所有端口间共享，尽管 Web
+                            浏览器通常采用的“同源策略”会将通过不同端口检索的内容隔离开来。</p>
+                    </div>
+                    <div id="rfc.section.1.p.4">
+                        <p>本规范面向两个受众：cookie 生成服务器的开发者和 cookie 消费用户代理的开发者。</p>
+                    </div>
+                    <div id="rfc.section.1.p.5">
+                        <p>为了最大程度地与用户代理互操作，服务器在生成 cookie 时 <em class="bcp14">应当</em> 限制自身使用 <a href="#sane-profile"
+                                title="Server Requirements">第 4 节</a> 中定义的良性配置文件。</p>
+                    </div>
+                    <div id="rfc.section.1.p.6">
+                        <p>用户代理 <em class="bcp14">必须</em> 实现 <a href="#ua-requirements"
+                                title="User Agent Requirements">第 5 节</a> 中定义的较宽松的处理规则，以便与不遵从第 4
+                            节所述良性配置文件的现有服务器最大程度地互操作。</p>
+                    </div>
+                    <div id="rfc.section.1.p.7">
+                        <p>本文档规定了这些首部在互联网上实际使用时的语法和语义。特别地，本文件并未创建超出当前使用范围的新语法或语义。第 <a href="#sane-profile"
+                                title="Server Requirements">4 节</a> 中提供的生成 cookie 的建议代表当前服务器行为的首选子集，即便第 <a
+                                href="#ua-requirements" title="User Agent Requirements">5 节</a> 中的更宽松的 cookie
+                            处理算法也并不建议采用现在存在的所有语法和语义变体。对于某些现有软件在显著方面与建议协议不同的情况，本文档包含注释以解释差异。</p>
+                    </div>
+                    <div id="rfc.section.1.p.8">
+                        <p>在本文档发布之前，至少存在三种关于 cookie 的描述：所谓的“网景 cookie 规范” <a href="#Netscape"><cite
+                                    title="Persistent Client State -- HTTP Cookies">[Netscape]</cite></a>、RFC 2109 <a
+                                href="#RFC2109"><cite title="HTTP State Management Mechanism">[RFC2109]</cite></a> 和
+                            RFC 2965 <a href="#RFC2965"><cite
+                                    title="HTTP State Management Mechanism">[RFC2965]</cite></a>。然而，这些文档均未描述 Cookie 和
+                            Set-Cookie 首部在互联网上的实际使用情况（历史背景见 <a href="#Kri2001"><cite
+                                    title="HTTP Cookies: Standards, Privacy, and Politics">[Kri2001]</cite></a>）。关于此前
+                            IETF 对 HTTP 状态管理机制的规范，本文档请求执行以下操作：</p>
+                        <ol>
+                            <li>将 <a href="#RFC2109"><cite title="HTTP State Management Mechanism">[RFC2109]</cite></a>
+                                的状态改为 Historic（它已被 <a href="#RFC2965"><cite
+                                        title="HTTP State Management Mechanism">[RFC2965]</cite></a> 弃用）。</li>
+                            <li>将 <a href="#RFC2965"><cite title="HTTP State Management Mechanism">[RFC2965]</cite></a>
+                                的状态改为 Historic。</li>
+                            <li>指出 <a href="#RFC2965"><cite title="HTTP State Management Mechanism">[RFC2965]</cite></a>
+                                已被本文档弃用。</li>
+                        </ol>
+                        <p>特别是，在将 RFC 2965 标记为 Historic 并以本文档将其弃用后，本文件弃用了 Cookie2 和 Set-Cookie2 首部字段的使用。</p>
+                    </div>
+                </section>
+                <section id="conventions">
+                    <h2 id="rfc.section.2"><a href="#rfc.section.2">2.</a>&nbsp;<a href="#conventions">约定</a>
+                    </h2>
+                    <section id="conformance-criteria">
+                        <h3 id="rfc.section.2.1"><a href="#rfc.section.2.1">2.1.</a>&nbsp;<a
+                                href="#conformance-criteria">一致性准则</a></h3>
+                        <div id="rfc.section.2.1.p.1">
+                            <p>本文档中的关键词 "MUST"、"MUST NOT"、"REQUIRED"、"SHALL"、"SHALL NOT"、"SHOULD"、"SHOULD
+                                NOT"、"RECOMMENDED"、"MAY" 和 "OPTIONAL" 应按照 <a href="#RFC2119"><cite
+                                        title="Key words for use in RFCs to Indicate Requirement Levels">[RFC2119]</cite></a>
+                                的定义进行解释。</p>
+                        </div>
+                        <div id="rfc.section.2.1.p.2">
+                            <p>以算法形式表述的强制性要求（例如 "剥离任何前导空格字符" 或 "返回 false 并中止这些步骤"）在引入该算法时使用的关键词（如 "MUST"、"SHOULD"、"MAY"
+                                等）具有相应的含义。</p>
+                        </div>
+                        <div id="rfc.section.2.1.p.3">
+                            <p>以算法或具体步骤表述的一致性要求可以通过任何方式实现，只要最终结果等效。尤其是，规范中定义的算法旨在便于理解，而非关注性能。</p>
+                        </div>
+                    </section>
+                    <section id="syntax-notation">
+                        <h3 id="rfc.section.2.2"><a href="#rfc.section.2.2">2.2.</a>&nbsp;<a
+                                href="#syntax-notation">语法表示法</a></h3>
+                        <div id="rfc.section.2.2.p.1">
+                            <p>本规范使用 <a href="#RFC5234"><cite
+                                        title="Augmented BNF for Syntax Specifications: ABNF">[RFC5234]</cite></a>
+                                的扩展巴科斯-诺尔范式（ABNF）表示法。</p>
+                        </div>
+                        <div id="rfc.section.2.2.p.2">
+                            <p>下列核心规则按引用包含自 <a href="#RFC5234"><cite
+                                        title="Augmented BNF for Syntax Specifications: ABNF">[RFC5234]</cite></a> 的附录
+                                B.1：ALPHA（字母）、CR（回车）、CRLF（CR LF）、CTL（控制字符）、DIGIT（十进制 0-9）、DQUOTE（双引号）、HEXDIG（十六进制
+                                0-9/A-F/a-f）、LF（换行）、NUL（空字节）、OCTET（除 NUL 外的任意 8 位字节序列）、SP（空格）、HTAB（水平制表）、CHAR（任意 <a
+                                    href="#USASCII"><cite
+                                        title="Coded Character Set -- 7-bit American Standard Code for Information Interchange">[USASCII]</cite></a>
+                                字符）、VCHAR（任意可见 <a href="#USASCII"><cite
+                                        title="Coded Character Set -- 7-bit American Standard Code for Information Interchange">[USASCII]</cite></a>
+                                字符）和 WSP（空白字符）。</p>
+                        </div>
+                        <div id="rfc.section.2.2.p.3">
+                            <p>规则 OWS（可选空白）用于表示零个或多个线性空白字符 <em class="bcp14">可以</em> 出现的位置：</p><span
+                                id="rfc.figure.u.1"><span>
+                                    <pre class="inline">OWS            = *( [ obs-fold ] WSP )
+                 ; "optional" whitespace
+obs-fold       = CRLF
+          </pre>
+                                </span></span>
+                            <p>OWS <em class="bcp14">建议</em> 要么不产生，要么仅作为单个 SP 字符产生。</p>
+                        </div>
+                    </section>
+                    <section id="terminology">
+                        <h3 id="rfc.section.2.3"><a href="#rfc.section.2.3">2.3.</a>&nbsp;<a href="#terminology">术语</a>
+                        </h3>
+                        <div id="rfc.section.2.3.p.1">
+                            <p>术语 user agent、client、server、proxy 和 origin server 的含义与 HTTP/1.1 规范中的含义相同（<a
+                                    href="#RFC2616"><cite
+                                        title="Hypertext Transfer Protocol -- HTTP/1.1">[RFC2616]</cite></a>，<a
+                                    href="https://www.rfc-editor.org/rfc/rfc2616.html#section-1.3">第 1.3 节</a>）。</p>
+                        </div>
+                        <div id="rfc.section.2.3.p.2">
+                            <p>request-host 是用户代理所知的主机名，即用户代理向其发送 HTTP 请求或从其接收 HTTP 响应的主机名（即，用户代理发送相应 HTTP 请求的主机名）。</p>
+                        </div>
+                        <div id="rfc.section.2.3.p.3">
+                            <p>术语 request-uri 的定义见 <a
+                                    href="https://www.rfc-editor.org/rfc/rfc2616.html#section-5.1.2">RFC2616 第 5.1.2
+                                    节</a>。</p>
+                        </div>
+                        <div id="rfc.section.2.3.p.4">
+                            <p>当且仅当两序列在 <a href="#RFC4790"><cite
+                                        title="Internet Application Protocol Collation Registry">[RFC4790]</cite></a>
+                                中定义的 i;ascii-casemap 排序下等效时，称这两序列在不区分大小写的情况下匹配。</p>
+                        </div>
+                        <div id="rfc.section.2.3.p.5">
+                            <p>术语 string 意味着一序列非 NUL 八位字节。</p>
+                        </div>
+                    </section>
+                </section>
+                <section id="overview">
+                    <h2 id="rfc.section.3"><a href="#rfc.section.3">3.</a>&nbsp;<a href="#overview">概述</a></h2>
+                    <div id="rfc.section.3.p.1">
+                        <p>本节概述了源服务器如何向用户代理发送状态信息，以及用户代理如何将该状态信息返回给源服务器。</p>
+                    </div>
+                    <div id="rfc.section.3.p.2">
+                        <p>为了存储状态，源服务器在 HTTP 响应中包含 Set-Cookie 首部。在随后发送的请求中，用户代理会向源服务器返回 Cookie 请求首部。Cookie 首部包含用户代理先前在
+                            Set-Cookie 首部中接收的 cookies。源服务器可以选择忽略 Cookie 首部，或将其内容用于应用定义的目的。</p>
+                    </div>
+                    <div id="rfc.section.3.p.3">
+                        <p>源服务器 <em class="bcp14">可以</em> 在任何响应中发送 Set-Cookie 响应首部。用户代理 <em class="bcp14">可以</em> 忽略包含在
+                            100 级响应中的 Set-Cookie 首部，但 <em class="bcp14">必须</em> 处理包含在其他响应（包括 400 和 500 级响应）中的 Set-Cookie
+                            首部。源服务器可以在单个响应中包含多个 Set-Cookie 首部字段。Cookie 或 Set-Cookie 首部的存在并不妨碍 HTTP 缓存存储和重用响应。</p>
+                    </div>
+                    <div id="rfc.section.3.p.4">
+                        <p>源服务器 <em class="bcp14">不应</em> 将多个 Set-Cookie 首部合并为单个首部。通常的 HTTP 首部折叠机制（即 <a
+                                href="#RFC2616"><cite
+                                    title="Hypertext Transfer Protocol -- HTTP/1.1">[RFC2616]</cite></a> 中定义的）可能会改变
+                            Set-Cookie 首部的语义，因为 %x2C (",") 字符在 Set-Cookie 中的使用与这种折叠冲突。</p>
+                    </div>
+                    <section id="n-examples">
+                        <h3 id="rfc.section.3.1"><a href="#rfc.section.3.1">3.1.</a>&nbsp;<a href="#n-examples">示例</a>
+                        </h3>
+                        <div id="rfc.section.3.1.p.1">
+                            <p>使用 Set-Cookie 首部，服务器可以在 HTTP 响应中向用户代理发送一段短字符串，用户代理将在未来处于 cookie 作用域内的 HTTP
+                                请求中返回该字符串。例如，服务器可以发送一个名为 SID 的“会话标识符”，其值为 31d4d96e407aad42。用户代理随后在后续请求中返回该会话标识符。</p>
+                        </div>
+                        <div id="rfc.figure.u.2">
+                            <p>== Server -&gt; User Agent ==</p>
+                            <div>
+                                <pre class="text">Set-Cookie: SID=31d4d96e407aad42
+          </pre>
+                            </div>
+                        </div>
+                        <div id="rfc.figure.u.3">
+                            <p>== User Agent -&gt; Server ==</p>
+                            <div>
+                                <pre class="text">Cookie: SID=31d4d96e407aad42
+          </pre>
+                            </div>
+                        </div>
+                        <div id="rfc.section.3.1.p.2">
+                            <p>服务器可以使用 Path 和 Domain 属性更改 cookie 的默认作用域。例如，服务器可以指示用户代理将 cookie 返回给 example.com
+                                的每个路径和每个子域。</p>
+                        </div>
+                        <div id="rfc.figure.u.4">
+                            <p>== Server -&gt; User Agent ==</p>
+                            <div>
+                                <pre class="text">Set-Cookie: SID=31d4d96e407aad42; Path=/; Domain=example.com
+          </pre>
+                            </div>
+                        </div>
+                        <div id="rfc.figure.u.5">
+                            <p>== User Agent -&gt; Server ==</p>
+                            <div>
+                                <pre class="text">Cookie: SID=31d4d96e407aad42
+          </pre>
+                            </div>
+                        </div>
+                        <div id="rfc.section.3.1.p.3">
+                            <p>如下一例所示，服务器可以在用户代理处存储多个 cookie。例如，服务器可以通过返回两个 Set-Cookie
+                                首部字段，分别存储会话标识符和用户的首选语言。注意，服务器对更敏感的会话标识符使用了 Secure 和 HttpOnly 属性以提供额外的安全保护（见 <a
+                                    href="#sane-set-cookie-semantics" title="Semantics (Non-Normative)">第 4.1.2 节</a>）。
+                            </p>
+                        </div>
+                        <div id="rfc.figure.u.6">
+                            <p>== Server -&gt; User Agent ==</p>
+                            <div>
+                                <pre class="text">Set-Cookie: SID=31d4d96e407aad42; Path=/; Secure; HttpOnly
+Set-Cookie: lang=en-US; Path=/; Domain=example.com
+          </pre>
+                            </div>
+                        </div>
+                        <div id="rfc.figure.u.7">
+                            <p>== User Agent -&gt; Server ==</p>
+                            <div>
+                                <pre class="text">Cookie: SID=31d4d96e407aad42; lang=en-US
+          </pre>
+                            </div>
+                        </div>
+                        <div id="rfc.section.3.1.p.4">
+                            <p>注意上面的 Cookie 首部包含两个 cookie，一个名为 SID，另一个名为 lang。如果服务器希望用户代理在多个“会话”（例如用户代理重启）之间保留
+                                cookie，服务器可以在 Expires 属性中指定过期日期。注意，如果用户代理的 cookie 存储超过配额或用户手动删除了服务器的
+                                cookie，用户代理可能会在过期日期之前删除该 cookie。</p>
+                        </div>
+                        <div id="rfc.figure.u.8">
+                            <p>== Server -&gt; User Agent ==</p>
+                            <div>
+                                <pre class="text">Set-Cookie: lang=en-US; Expires=Wed, 09 Jun 2021 10:18:14 GMT
+          </pre>
+                            </div>
+                        </div>
+                        <div id="rfc.figure.u.9">
+                            <p>== User Agent -&gt; Server ==</p>
+                            <div>
+                                <pre class="text">Cookie: SID=31d4d96e407aad42; lang=en-US
+          </pre>
+                            </div>
+                        </div>
+                        <div id="rfc.section.3.1.p.5">
+                            <p>最后，要删除 cookie，服务器返回一个 Expires 在过去的 Set-Cookie 首部。只有当 Set-Cookie 首部中的 Path 和 Domain 属性与创建
+                                cookie 时使用的值相匹配时，服务器才能成功删除该 cookie。</p>
+                        </div>
+                        <div id="rfc.figure.u.10">
+                            <p>== Server -&gt; User Agent ==</p>
+                            <div>
+                                <pre class="text">Set-Cookie: lang=; Expires=Sun, 06 Nov 1994 08:49:37 GMT
+          </pre>
+                            </div>
+                        </div>
+                        <div id="rfc.figure.u.11">
+                            <p>== User Agent -&gt; Server ==</p>
+                            <div>
+                                <pre class="text">Cookie: SID=31d4d96e407aad42
+          </pre>
+                            </div>
+                        </div>
+                    </section>
+                </section>
+                <section id="sane-profile">
+                    <h2 id="rfc.section.4"><a href="#rfc.section.4">4.</a>&nbsp;<a href="#sane-profile">Server
+                            Requirements</a></h2>
+                    <div id="rfc.section.4.p.1">
+                        <p>本节描述了 Cookie 与 Set-Cookie 首部的良性配置文件的语法与语义。</p>
+                    </div>
+                    <section id="sane-set-cookie">
+                        <h3 id="rfc.section.4.1"><a href="#rfc.section.4.1">4.1.</a>&nbsp;<a
+                                href="#sane-set-cookie">Set-Cookie</a></h3>
+                        <div id="rfc.section.4.1.p.1">
+                            <p>Set-Cookie HTTP 响应首部用于将 cookies 从服务器发送到用户代理。</p>
+                        </div>
+                        <section id="sane-set-cookie-syntax">
+                            <h4 id="rfc.section.4.1.1"><a href="#rfc.section.4.1.1">4.1.1.</a>&nbsp;<a
+                                    href="#sane-set-cookie-syntax">Syntax</a></h4>
+                            <div id="rfc.section.4.1.1.p.1" class="avoidbreakafter">
+                                <p>非正式地说，Set-Cookie 响应首部包含首部名 "Set-Cookie"，后跟 ":" 与一个 cookie。每个 cookie 以一个
+                                    name-value-pair 开始，后面跟零个或多个 attribute-value 对。服务器 <em class="bcp14">SHOULD NOT</em>
+                                    发送不符合下列文法的 Set-Cookie 首部：</p>
+                            </div>
+                            <div id="rfc.figure.u.12">
+                                <div>
+                                    <pre class="inline">set-cookie-header = "Set-Cookie:" SP set-cookie-string
+set-cookie-string = cookie-pair *( ";" SP cookie-av )
+cookie-pair       = cookie-name "=" cookie-value
+cookie-name       = token
+cookie-value      = *cookie-octet / ( DQUOTE *cookie-octet DQUOTE )
+cookie-octet      = %x21 / %x23-2B / %x2D-3A / %x3C-5B / %x5D-7E
+                      ; US-ASCII characters excluding CTLs,
+                      ; whitespace DQUOTE, comma, semicolon,
+                      ; and backslash
+token             = &lt;token, defined in <a href="#RFC2616"><cite title="Hypertext Transfer Protocol -- HTTP/1.1">[RFC2616]</cite></a>, <a href="https://www.rfc-editor.org/rfc/rfc2616.html#section-2.2">Section 2.2</a>&gt;
+
+cookie-av         = expires-av / max-age-av / domain-av /
+                    path-av / secure-av / httponly-av /
+                    extension-av
+expires-av        = "Expires=" sane-cookie-date
+sane-cookie-date  = &lt;rfc1123-date, defined in <a href="#RFC2616"><cite title="Hypertext Transfer Protocol -- HTTP/1.1">[RFC2616]</cite></a>, <a href="https://www.rfc-editor.org/rfc/rfc2616.html#section-3.3.1">Section 3.3.1</a>&gt;
+max-age-av        = "Max-Age=" non-zero-digit *DIGIT
+                      ; In practice, both expires-av and max-age-av
+                      ; are limited to dates representable by the
+                      ; user agent.
+non-zero-digit    = %x31-39
+                      ; digits 1 through 9
+domain-av         = "Domain=" domain-value
+domain-value      = &lt;subdomain&gt;
+                      ; defined in <a href="#RFC1034"><cite title="Domain names - concepts and facilities">[RFC1034]</cite></a>, <a href="https://www.rfc-editor.org/rfc/rfc1034.html#section-3.5">Section 3.5</a>, as
+                      ; enhanced by <a href="#RFC1123"><cite title="Requirements for Internet Hosts - Application and Support">[RFC1123]</cite></a>, <a href="https://www.rfc-editor.org/rfc/rfc1123.html#section-2.1">Section 2.1</a>
+path-av           = "Path=" path-value
+path-value        = &lt;any CHAR except CTLs or ";"&gt;
+secure-av         = "Secure"
+httponly-av       = "HttpOnly"
+extension-av      = &lt;any CHAR except CTLs or ";"&gt;
+            </pre>
+                                </div>
+                            </div>
+                            <div id="rfc.section.4.1.1.p.2">
+                                <p>注意，上述某些语法术语引用了使用与本文档不同语法表示法的文档（本文档使用来自 <a href="#RFC5234"><cite
+                                            title="Augmented BNF for Syntax Specifications: ABNF">[RFC5234]</cite></a> 的
+                                    ABNF）。</p>
+                            </div>
+                            <div id="rfc.section.4.1.1.p.3">
+                                <p>cookie-value 的语义不在本文档中定义。</p>
+                            </div>
+                            <div id="rfc.section.4.1.1.p.4">
+                                <p>为最大化与用户代理的兼容性，希望在 cookie-value 中存储任意数据的服务器 <em class="bcp14">SHOULD</em>
+                                    对这些数据进行编码，例如使用 Base64 <a href="#RFC4648"><cite
+                                            title="The Base16, Base32, and Base64 Data Encodings">[RFC4648]</cite></a>。
+                                </p>
+                            </div>
+                            <div id="rfc.section.4.1.1.p.5">
+                                <p>由 cookie-av 产生的 set-cookie-string 的部分称为属性。为最大化与用户代理的兼容性，服务器 <em class="bcp14">SHOULD
+                                        NOT</em> 在同一 set-cookie-string 中产生两个具有相同名称的属性。（见 <a href="#storage-model"
+                                        title="Storage Model">第 5.3 节</a>，说明用户代理如何处理此情况。）</p>
+                            </div>
+                            <div id="rfc.section.4.1.1.p.6">
+                                <p>服务器 <em class="bcp14">SHOULD NOT</em> 在同一响应中包含多个具有相同 cookie-name 的 Set-Cookie 首部字段。（见
+                                    <a href="#set-cookie" title="The Set-Cookie Header">第 5.2 节</a>，说明用户代理如何处理此情况。）
+                                </p>
+                            </div>
+                            <div id="rfc.section.4.1.1.p.7">
+                                <p>如果服务器并发地向用户代理发送多个包含 Set-Cookie 首部的响应（例如，通过多个 socket
+                                    与用户代理通信时），这些响应会产生“竞态条件”，可能导致不可预测的行为。</p>
+                            </div>
+                            <div id="rfc.section.4.1.1.p.8">
+                                <p>注：一些现有用户代理对两位数年份的解释存在差异。为避免兼容性问题，服务器 <em class="bcp14">SHOULD</em> 使用 rfc1123-date
+                                    格式，该格式要求使用四位数年份。</p>
+                            </div>
+                            <div id="rfc.section.4.1.1.p.9">
+                                <p>注：某些用户代理以 32 位 UNIX time_t 值存储与处理 cookie 中的日期。某些系统上支持 time_t
+                                    处理的库中存在的实现错误可能导致这些用户代理错误地处理 2038 年之后的日期。</p>
+                            </div>
+                        </section>
+                        <section id="sane-set-cookie-semantics">
+                            <h4 id="rfc.section.4.1.2"><a href="#rfc.section.4.1.2">4.1.2.</a>&nbsp;<a
+                                    href="#sane-set-cookie-semantics">Semantics (Non-Normative)</a></h4>
+                            <div id="rfc.section.4.1.2.p.1">
+                                <p>本节描述 Set-Cookie 首部的简化语义。这些语义足够用于理解服务器对 cookies 的最常见用法。完整语义见 <a
+                                        href="#ua-requirements" title="User Agent Requirements">第 5 节</a>。</p>
+                            </div>
+                            <div id="rfc.section.4.1.2.p.2">
+                                <p>当用户代理收到 Set-Cookie 首部时，用户代理将 cookie 与其属性一起存储。随后，当用户代理发出 HTTP 请求时，用户代理会在 Cookie
+                                    首部中包含适用且未过期的 cookies。</p>
+                            </div>
+                            <div id="rfc.section.4.1.2.p.3">
+                                <p>如果用户代理收到的新 cookie 与其已存储的某个 cookie 具有相同的 cookie-name、domain-value 与 path-value，则现有
+                                    cookie 将被逐出并被新 cookie 替换。注意，服务器可以通过发送一个 Expires 属性值为过去时间的新 cookie 来删除 cookie。</p>
+                            </div>
+                            <div id="rfc.section.4.1.2.p.4">
+                                <p>除非 cookie 的属性另有指示，否则 cookie 仅返回给 origin
+                                    server（例如，不会自动返回给任意子域），并且它将在当前会话结束时过期（由用户代理定义）。用户代理会忽略无法识别的 cookie 属性（但不会忽略整个
+                                    cookie）。</p>
+                            </div>
+                            <section id="sane-expires">
+                                <h5 id="rfc.section.4.1.2.1"><a href="#rfc.section.4.1.2.1">4.1.2.1.</a>&nbsp;<a
+                                        href="#sane-expires">The Expires Attribute</a></h5>
+                                <div id="rfc.section.4.1.2.1.p.1">
+                                    <p>Expires 属性表示 cookie 的最大生命周期，表示 cookie 过期的日期与时间。用户代理不必保留 cookie
+                                        直到指定日期到来；实际上，用户代理经常因内存压力或隐私原因而逐出 cookie。</p>
+                                </div>
+                            </section>
+                            <section id="sane-max-age">
+                                <h5 id="rfc.section.4.1.2.2"><a href="#rfc.section.4.1.2.2">4.1.2.2.</a>&nbsp;<a
+                                        href="#sane-max-age">The Max-Age Attribute</a></h5>
+                                <div id="rfc.section.4.1.2.2.p.1">
+                                    <p>Max-Age 属性表示 cookie 的最大生命周期，以 cookie 过期前的秒数表示。用户代理不必保留 cookie
+                                        达到该时长；实际上，用户代理经常因内存压力或隐私原因而逐出 cookie。</p>
+                                    <ul class="empty">
+                                        <li>注：一些现有用户代理不支持 Max-Age 属性。不支持该属性的用户代理会忽略它。</li>
+                                    </ul>
+                                </div>
+                                <div id="rfc.section.4.1.2.2.p.2">
+                                    <p>如果 cookie 同时具有 Max-Age 与 Expires 属性，则 Max-Age 优先并控制 cookie 的过期时间。如果既没有 Max-Age
+                                        也没有 Expires 属性，用户代理将保留 cookie 直到“当前会话结束”（由用户代理定义）。</p>
+                                </div>
+                            </section>
+                            <section id="sane-domain">
+                                <h5 id="rfc.section.4.1.2.3"><a href="#rfc.section.4.1.2.3">4.1.2.3.</a>&nbsp;<a
+                                        href="#sane-domain">The Domain Attribute</a></h5>
+                                <div id="rfc.section.4.1.2.3.p.1">
+                                    <p>Domain 属性指定将向其发送该 cookie 的主机。例如，如果 Domain 属性的值为 "example.com"，用户代理在向
+                                        example.com、www.example.com 与 www.corp.example.com 发出请求时会在 Cookie 首部中包含该
+                                        cookie。（注意，若存在前导 %x2E ("." ) 字符，则忽略该前导字符，尽管该字符并不被允许；但若存在尾随 %x2E ("." )
+                                        字符，则会导致用户代理忽略该属性。）如果服务器省略 Domain 属性，用户代理仅会将 cookie 返回给 origin server。</p>
+                                    <ul class="empty">
+                                        <li>警告：一些现有用户代理将缺失的 Domain 属性当作 Domain 属性存在且值为当前主机名来处理。例如，当 example.com 返回一个不带
+                                            Domain 属性的 Set-Cookie 首部时，这些用户代理会错误地也把该 cookie 发送给 www.example.com。</li>
+                                    </ul>
+                                </div>
+                                <div id="rfc.section.4.1.2.3.p.2">
+                                    <p>用户代理会拒绝那些其 Domain 属性未指定包含 origin server 的作用域的 cookie。例如，用户代理会接受来自 foo.example.com
+                                        的 Domain 属性为 "example.com" 或 "foo.example.com" 的 cookie，但不会接受 Domain 属性为
+                                        "bar.example.com" 或 "baz.foo.example.com" 的 cookie。</p>
+                                </div>
+                                <div id="rfc.section.4.1.2.3.p.3">
+                                    <p>注：出于安全原因，许多用户代理被配置为拒绝对应于“公共后缀”的 Domain 属性。例如，一些用户代理会拒绝 "com" 或 "co.uk" 的 Domain
+                                        属性。（详见 <a href="#storage-model" title="Storage Model">第 5.3 节</a>。）</p>
+                                </div>
+                            </section>
+                            <section id="sane-path">
+                                <h5 id="rfc.section.4.1.2.4"><a href="#rfc.section.4.1.2.4">4.1.2.4.</a>&nbsp;<a
+                                        href="#sane-path">The Path Attribute</a></h5>
+                                <div id="rfc.section.4.1.2.4.p.1">
+                                    <p>每个 cookie 的作用域受 Path 属性控制的一组路径限制。如果服务器省略 Path 属性，用户代理将使用 request-uri 的 path
+                                        组件的“目录”作为默认值。（更多细节见 <a href="#cookie-path" title="Paths and Path-Match">第 5.1.4
+                                            节</a>。）</p>
+                                </div>
+                                <div id="rfc.section.4.1.2.4.p.2">
+                                    <p>只有当 request-uri 的路径与 cookie 的 Path 属性匹配（或是其子目录）时，用户代理才会在 HTTP 请求中包含该 cookie，其中
+                                        %x2F ("/") 字符被解释为目录分隔符。</p>
+                                </div>
+                                <div id="rfc.section.4.1.2.4.p.3">
+                                    <p>尽管 Path 属性看似有助于在给定主机内隔离不同路径之间的 cookie，但不能将其作为安全手段依赖（见 <a
+                                            href="#security-considerations" title="Security Considerations">第 8 节</a>）。
+                                    </p>
+                                </div>
+                            </section>
+                            <section id="sane-secure">
+                                <h5 id="rfc.section.4.1.2.5"><a href="#rfc.section.4.1.2.5">4.1.2.5.</a>&nbsp;<a
+                                        href="#sane-secure">The Secure Attribute</a></h5>
+                                <div id="rfc.section.4.1.2.5.p.1">
+                                    <p>Secure 属性将 cookie 的作用域限制为“安全”通道（由用户代理定义“安全”）。当 cookie 具有 Secure
+                                        属性时，用户代理仅在请求通过安全通道传输时（通常为基于传输层安全的 HTTP，如 TLS）才在 HTTP 请求中包含该 cookie。</p>
+                                </div>
+                                <div id="rfc.section.4.1.2.5.p.2">
+                                    <p>尽管 Secure 属性看似可用于保护 cookie 免受主动网络攻击者，但 Secure 属性仅保护 cookie
+                                        的机密性。主动网络攻击者可以通过不安全通道覆盖 Secure cookies，从而破坏其完整性（更多细节见 <a href="#weak-integrity"
+                                            title="Weak Integrity">第 8.6 节</a>）。</p>
+                                </div>
+                            </section>
+                            <section id="sane-httponly">
+                                <h5 id="rfc.section.4.1.2.6"><a href="#rfc.section.4.1.2.6">4.1.2.6.</a>&nbsp;<a
+                                        href="#sane-httponly">The HttpOnly Attribute</a></h5>
+                                <div id="rfc.section.4.1.2.6.p.1">
+                                    <p>HttpOnly 属性将 cookie 的作用域限制为 HTTP 请求。具体而言，该属性指示用户代理在通过“非 HTTP”API（例如向脚本暴露 cookie
+                                        的浏览器 API）提供对 cookies 的访问时省略该 cookie。</p>
+                                </div>
+                                <div id="rfc.section.4.1.2.6.p.2">
+                                    <p>注意 HttpOnly 属性与 Secure 属性是独立的：cookie 可以同时具有 HttpOnly 与 Secure 属性。</p>
+                                </div>
+                            </section>
+                        </section>
+                    </section>
+                    <section id="sane-cookie">
+                        <h3 id="rfc.section.4.2"><a href="#rfc.section.4.2">4.2.</a>&nbsp;<a
+                                href="#sane-cookie">Cookie</a></h3>
+                        <section id="sane-cookie-syntax">
+                            <h4 id="rfc.section.4.2.1"><a href="#rfc.section.4.2.1">4.2.1.</a>&nbsp;<a
+                                    href="#sane-cookie-syntax">Syntax</a></h4>
+                            <div id="rfc.section.4.2.1.p.1" class="avoidbreakafter">
+                                <p>用户代理在 Cookie 首部中向 origin server 发送已存储的 cookies。如果服务器遵从 <a href="#sane-set-cookie"
+                                        title="Set-Cookie">第 4.1 节</a> 的要求（并且用户代理遵从 <a href="#ua-requirements"
+                                        title="User Agent Requirements">第 5 节</a> 的要求），则用户代理将发送符合下列文法的 Cookie 首部：</p>
+                            </div>
+                            <div id="rfc.figure.u.13">
+                                <div>
+                                    <pre class="inline">cookie-header = "Cookie:" OWS cookie-string OWS
+cookie-string = cookie-pair *( ";" SP cookie-pair )
+            </pre>
+                                </div>
+                            </div>
+                        </section>
+                        <section id="sane-cookie-semantics">
+                            <h4 id="rfc.section.4.2.2"><a href="#rfc.section.4.2.2">4.2.2.</a>&nbsp;<a
+                                    href="#sane-cookie-semantics">Semantics</a></h4>
+                            <div id="rfc.section.4.2.2.p.1">
+                                <p>每个 cookie-pair 代表用户代理存储的一个 cookie。cookie-pair 包含用户代理在 Set-Cookie 首部中接收的 cookie-name 与
+                                    cookie-value。</p>
+                            </div>
+                            <div id="rfc.section.4.2.2.p.2">
+                                <p>注意 cookie 属性不会被返回。具体来说，仅从 Cookie 首部本身，服务器无法确定 cookie 的过期时间、cookie 有效的主机、cookie
+                                    有效的路径，或该 cookie 是否是用 Secure 或 HttpOnly 属性设置的。</p>
+                            </div>
+                            <div id="rfc.section.4.2.2.p.3">
+                                <p>Cookie 首部中各个 cookie 的语义不在本文档中定义。服务器应为这些 cookies 赋予应用特定的语义。</p>
+                            </div>
+                            <div id="rfc.section.4.2.2.p.4">
+                                <p>尽管 cookies 在 Cookie 首部中是线性序列化的，服务器 <em class="bcp14">SHOULD NOT</em> 依赖序列化顺序。特别地，如果
+                                    Cookie 首部包含两个同名 cookie（例如先前以不同的 Path 或 Domain 属性设置），服务器 <em class="bcp14">SHOULD
+                                        NOT</em> 依赖这些 cookie 在首部中出现的顺序。</p>
+                            </div>
+                        </section>
+                    </section>
+                </section>
+                <section id="ua-requirements">
+                    <h2 id="rfc.section.5"><a href="#rfc.section.5">5.</a>&nbsp;<a href="#ua-requirements">User Agent
+                            Requirements</a></h2>
+                    <div id="rfc.section.5.p.1">
+                        <p>本节详尽规定了 Cookie 与 Set-Cookie 首部，以便精确实现这些要求的用户代理能够与现有服务器互操作（即便这些服务器不遵从第 <a href="#sane-profile"
+                                title="Server Requirements">4 节</a> 中描述的良性配置文件）。</p>
+                    </div>
+                    <div id="rfc.section.5.p.2">
+                        <p>用户代理可以强制比此处更严格的限制（例如出于提高安全性的目的）；然而实验表明，这种严格性会降低用户代理与现有服务器互操作的可能性。</p>
+                    </div>
+                    <section id="algorithms">
+                        <h3 id="rfc.section.5.1"><a href="#rfc.section.5.1">5.1.</a>&nbsp;<a
+                                href="#algorithms">Subcomponent Algorithms</a></h3>
+                        <div id="rfc.section.5.1.p.1">
+                            <p>本节定义了一些用户代理用于处理 Cookie 与 Set-Cookie 首部特定子组件的算法。</p>
+                        </div>
+                        <section id="cookie-date">
+                            <h4 id="rfc.section.5.1.1"><a href="#rfc.section.5.1.1">5.1.1.</a>&nbsp;<a
+                                    href="#cookie-date">Dates</a></h4>
+                            <div id="rfc.section.5.1.1.p.1">
+                                <p>用户代理 <em class="bcp14">MUST</em> 使用等效于下列算法的算法来解析 cookie-date。注意作为该算法一部分定义的各布尔标志（例如
+                                    found-time、found-day-of-month、found-month、found-year）最初均为“未设置”。</p>
+                                <ol>
+                                    <li>使用下列文法，将 cookie-date 分割为 date-tokens。 <span id="rfc.figure.u.14"><span>
+                                                <pre class="inline">cookie-date     = *delimiter date-token-list *delimiter
+date-token-list = date-token *( 1*delimiter date-token )
+date-token      = 1*non-delimiter
+
+delimiter       = %x09 / %x20-2F / %x3B-40 / %x5B-60 / %x7B-7E
+non-delimiter   = %x00-08 / %x0A-1F / DIGIT / ":" / ALPHA / %x7F-FF
+non-digit       = %x00-2F / %x3A-FF
+
+day-of-month    = 1*2DIGIT ( non-digit *OCTET )
+month           = ( "jan" / "feb" / "mar" / "apr" /
+                    "may" / "jun" / "jul" / "aug" /
+                    "sep" / "oct" / "nov" / "dec" ) *OCTET
+year            = 2*4DIGIT ( non-digit *OCTET )
+time            = hms-time ( non-digit *OCTET )
+hms-time        = time-field ":" time-field ":" time-field
+time-field      = 1*2DIGIT
+              </pre>
+                                            </span></span> </li>
+                                    <li>按 date-tokens 在 cookie-date 中出现的顺序依次处理每个 date-token： <ol>
+                                            <li>如果 found-time 标志未设置且 token 匹配 time 产生式，则设置 found-time 标志，并将
+                                                hour-value、minute-value 与 second-value 分别设为 date-token
+                                                中数字表示的数值。跳过剩余子步骤并继续下一 date-token。</li>
+                                            <li>如果 found-day-of-month 标志未设置且 date-token 匹配 day-of-month 产生式，则设置
+                                                found-day-of-month 标志并将 day-of-month-value 设为 date-token
+                                                表示的数值。跳过剩余子步骤并继续下一 date-token。</li>
+                                            <li>如果 found-month 标志未设置且 date-token 匹配 month 产生式，则设置 found-month 标志并将
+                                                month-value 设为 date-token 表示的月份。跳过剩余子步骤并继续下一 date-token。</li>
+                                            <li>如果 found-year 标志未设置且 date-token 匹配 year 产生式，则设置 found-year 标志并将
+                                                year-value 设为 date-token 表示的数值。跳过剩余子步骤并继续下一 date-token。</li>
+                                        </ol>
+                                    </li>
+                                    <li>如果 year-value 大于等于 70 且小于等于 99，则将 year-value 加上 1900。</li>
+                                    <li>如果 year-value 大于等于 0 且小于等于 69，则将 year-value 加上 2000。 <ol>
+                                            <li>注：一些现有用户代理对两位数年份的解释不同。</li>
+                                        </ol>
+                                    </li>
+                                    <li>如果满足下列任一条件，则中止这些步骤并解析 cookie-date 失败： <ul>
+                                            <li>found-day-of-month、found-month、found-year 或 found-time 中至少有一项未设置，</li>
+                                            <li>day-of-month-value 小于 1 或大于 31，</li>
+                                            <li>year-value 小于 1601，</li>
+                                            <li>hour-value 大于 23，</li>
+                                            <li>minute-value 大于 59，或</li>
+                                            <li>second-value 大于 59。</li>
+                                        </ul>（注意：本语法无法表示闰秒。）</li>
+                                    <li>令 parsed-cookie-date 为其日、月、年、时、分、秒（均为 UTC）分别等于
+                                        day-of-month-value、month-value、year-value、hour-value、minute-value 与 second-value
+                                        的日期。如果不存在这样的日期，则中止这些步骤并解析失败。</li>
+                                    <li>将 parsed-cookie-date 作为此算法的结果返回。</li>
+                                </ol>
+                            </div>
+                        </section>
+                        <section id="cookie-domain-canonicalize">
+                            <h4 id="rfc.section.5.1.2"><a href="#rfc.section.5.1.2">5.1.2.</a>&nbsp;<a
+                                    href="#cookie-domain-canonicalize">Canonicalized Host Names</a></h4>
+                            <div id="rfc.section.5.1.2.p.1">
+                                <p>规范化主机名由以下算法生成：</p>
+                                <ol>
+                                    <li>将主机名转换为一系列独立的域名标签。</li>
+                                    <li>将每个非 Non-Reserved LDH (NR-LDH) 标签转换为 A-label（参见 <a
+                                            href="https://www.rfc-editor.org/rfc/rfc5890.html#section-2.3.2.1">RFC5890 第
+                                            2.3.2.1 节</a>）或转换为“punycode 标签”（即 <a
+                                            href="https://www.rfc-editor.org/rfc/rfc3490.html#section-4">RFC3490 第 4
+                                            节</a> 中 ToASCII 转换的结果），视情况而定（参见本规范的 <a href="#idna-migration"
+                                            title="IDNA Dependency and Migration">第 6.3 节</a>）。</li>
+                                    <li>用 %x2E (".") 字符连接产生的标签。</li>
+                                </ol>
+                            </div>
+                        </section>
+                        <section id="cookie-domain">
+                            <h4 id="rfc.section.5.1.3"><a href="#rfc.section.5.1.3">5.1.3.</a>&nbsp;<a
+                                    href="#cookie-domain">Domain Matching</a></h4>
+                            <div id="rfc.section.5.1.3.p.1">
+                                <p>当满足下列至少一项条件时，字符串 domain-matches 给定的域字符串：</p>
+                                <ul>
+                                    <li>域字符串与该字符串相同。（注意此时域字符串与该字符串均已规范化为小写。）</li>
+                                    <li>同时满足下列条件： <ul>
+                                            <li>域字符串是该字符串的后缀。</li>
+                                            <li>不包含在域字符串内的该字符串的最后一个字符是 %x2E (".")。</li>
+                                            <li>该字符串是主机名（即不是 IP 地址）。</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </section>
+                        <section id="cookie-path">
+                            <h4 id="rfc.section.5.1.4"><a href="#rfc.section.5.1.4">5.1.4.</a>&nbsp;<a
+                                    href="#cookie-path">Paths and Path-Match</a></h4>
+                            <div id="rfc.section.5.1.4.p.1">
+                                <p>用户代理 <em class="bcp14">MUST</em> 使用等效于下列算法来计算 cookie 的 default-path：</p>
+                                <ol>
+                                    <li>令 uri-path 为 request-uri 的路径部分（如果存在，否则为空）。例如，如果 request-uri 仅包含路径（以及可选的查询字符串），则
+                                        uri-path 为该路径（不含 %x3F ("?") 字符或查询字符串）；如果 request-uri 包含完整的 absoluteURI，则
+                                        uri-path 为该 URI 的路径组件。</li>
+                                    <li>如果 uri-path 为空或其首字符不是 %x2F ("/")，输出 %x2F ("/") 并跳过其余步骤。</li>
+                                    <li>如果 uri-path 中包含不超过一个 %x2F ("/") 字符，输出 %x2F ("/") 并跳过剩余步骤。</li>
+                                    <li>输出 uri-path 的字符，从第一个字符开始直到但不包括最右侧的 %x2F ("/")。</li>
+                                </ol>
+                            </div>
+                            <div id="rfc.section.5.1.4.p.2">
+                                <p>当且仅当满足下列至少一项条件时，请求路径 request-path 与给定的 cookie-path path-match：</p>
+                                <ul>
+                                    <li>cookie-path 与 request-path 相同。</li>
+                                    <li>cookie-path 是 request-path 的前缀，且 cookie-path 的最后一个字符是 %x2F ("/")。</li>
+                                    <li>cookie-path 是 request-path 的前缀，且不包含在 cookie-path 内的 request-path 的第一个字符是 %x2F
+                                        ("/")。</li>
+                                </ul>
+                            </div>
+                        </section>
+                    </section>
+                    <section id="set-cookie">
+                        <h3 id="rfc.section.5.2"><a href="#rfc.section.5.2">5.2.</a>&nbsp;<a href="#set-cookie">The
+                                Set-Cookie Header</a></h3>
+                        <div id="rfc.section.5.2.p.1">
+                            <p>当用户代理在 HTTP 响应中接收到 Set-Cookie 首部字段时，用户代理 <em class="bcp14">MAY</em> 完全忽略该 Set-Cookie
+                                首部。例如，用户代理可能希望阻止“第三方”请求的响应设置 cookies（见 <a href="#third-party-cookies"
+                                    title="Third-Party Cookies">第 7.1 节</a>）。</p>
+                        </div>
+                        <div id="rfc.section.5.2.p.2">
+                            <p>如果用户代理不完全忽略 Set-Cookie 首部字段，用户代理 <em class="bcp14">MUST</em> 将 Set-Cookie 首部字段的
+                                field-value 解析为 set-cookie-string（定义见下文）。</p>
+                        </div>
+                        <div id="rfc.section.5.2.p.3">
+                            <p>注：下述算法比 <a href="#sane-set-cookie" title="Set-Cookie">第 4.1 节</a> 中的文法更宽松。例如，该算法会剥离
+                                cookie 名称和值的前导与尾随空白（但保留内部空白），而 <a href="#sane-set-cookie" title="Set-Cookie">第 4.1 节</a>
+                                的文法禁止这些位置出现空白。用户代理使用本算法以与不遵从第 <a href="#sane-profile" title="Server Requirements">4
+                                    节</a> 建议的服务器互操作。</p>
+                        </div>
+                        <div id="rfc.section.5.2.p.4">
+                            <p>用户代理 <em class="bcp14">MUST</em> 使用等效于下列算法的算法来解析 "set-cookie-string"：</p>
+                            <ol>
+                                <li>如果 set-cookie-string 包含 %x3B (";") 字符： <ul class="empty">
+                                        <li>name-value-pair 字符串由第一个 %x3B (";") 之前（但不包括该字符）的字符组成，未解析的属性由
+                                            set-cookie-string 的其余部分组成（包括该 %x3B (";")）。</li>
+                                    </ul> 否则： <ul class="empty">
+                                        <li>name-value-pair 字符串由 set-cookie-string 中的所有字符组成，未解析的属性为空字符串。</li>
+                                    </ul>
+                                </li>
+                                <li>如果 name-value-pair 字符串不包含 %x3D ("=") 字符，则完全忽略该 set-cookie-string。</li>
+                                <li>（可能为空的）name 字符串由第一个 %x3D ("=") 字符之前的字符组成；（可能为空的）value 字符串由第一个 %x3D ("=") 字符之后的字符组成。
+                                </li>
+                                <li>从 name 字符串与 value 字符串中移除任何前导或尾随 WSP 字符。</li>
+                                <li>如果 name 字符串为空，则完全忽略该 set-cookie-string。</li>
+                                <li>cookie-name 为 name 字符串，cookie-value 为 value 字符串。</li>
+                            </ol>
+                        </div>
+                        <div id="rfc.section.5.2.p.5">
+                            <p>用户代理 <em class="bcp14">MUST</em> 使用等效于下列算法的算法来解析 unparsed-attributes：</p>
+                            <ol>
+                                <li>如果 unparsed-attributes 字符串为空，则跳过以下步骤。</li>
+                                <li>丢弃 unparsed-attributes 的第一个字符（该字符将为 %x3B (";")）。</li>
+                                <li>如果剩余的 unparsed-attributes 包含 %x3B (";") 字符： <ul class="empty">
+                                        <li>消费 unparsed-attributes 中直到但不包括第一个 %x3B (";") 的字符。</li>
+                                    </ul> 否则： <ul class="empty">
+                                        <li>消费 unparsed-attributes 的剩余部分。</li>
+                                    </ul> 将本步骤中消费的字符称为 cookie-av 字符串。</li>
+                                <li>如果 cookie-av 字符串包含 %x3D ("=") 字符： <ul class="empty">
+                                        <li>（可能为空的）attribute-name 字符串由第一个 %x3D ("=") 之前的字符组成，（可能为空的）attribute-value
+                                            字符串由第一个 %x3D ("=") 之后的字符组成。</li>
+                                    </ul> 否则： <ul class="empty">
+                                        <li>attribute-name 字符串为整个 cookie-av 字符串，attribute-value 字符串为空。</li>
+                                    </ul>
+                                </li>
+                                <li>从 attribute-name 与 attribute-value 字符串中移除任何前导或尾随 WSP 字符。</li>
+                                <li>根据下述子节中的要求处理 attribute-name 與 attribute-value。（注意，无法识别的属性名将被忽略。）</li>
+                                <li>返回到本算法的第 1 步。</li>
+                            </ol>
+                        </div>
+                        <div id="rfc.section.5.2.p.6">
+                            <p>当用户代理完成解析 set-cookie-string 时，称用户代理从 request-uri“接收了一个 cookie”，其名称为 cookie-name，值为
+                                cookie-value，属性为 cookie-attribute-list。（见 <a href="#storage-model"
+                                    title="Storage Model">第 5.3 节</a>，了解接收 cookie 触发的额外要求。）</p>
+                        </div>
+                        <section id="expires-attribute">
+                            <h4 id="rfc.section.5.2.1"><a href="#rfc.section.5.2.1">5.2.1.</a>&nbsp;<a
+                                    href="#expires-attribute">The Expires Attribute</a></h4>
+                            <div id="rfc.section.5.2.1.p.1">
+                                <p>如果 attribute-name 与字符串 "Expires" 在不区分大小写的情况下匹配，用户代理 <em class="bcp14">MUST</em>
+                                    按如下方式处理该 cookie-av。</p>
+                            </div>
+                            <div id="rfc.section.5.2.1.p.2">
+                                <p>令 expiry-time 为将 attribute-value 解析为 cookie-date 的结果（见 <a href="#cookie-date"
+                                        title="Dates">第 5.1.1 节</a>）。</p>
+                            </div>
+                            <div id="rfc.section.5.2.1.p.3">
+                                <p>如果 attribute-value 无法解析为 cookie-date，则忽略该 cookie-av。</p>
+                            </div>
+                            <div id="rfc.section.5.2.1.p.4">
+                                <p>如果 expiry-time 晚于用户代理能表示的最后日期，用户代理 <em class="bcp14">MAY</em> 用最后可表示的日期替代
+                                    expiry-time。</p>
+                            </div>
+                            <div id="rfc.section.5.2.1.p.5">
+                                <p>如果 expiry-time 早于用户代理能表示的最早日期，用户代理 <em class="bcp14">MAY</em> 用最早可表示的日期替代
+                                    expiry-time。</p>
+                            </div>
+                            <div id="rfc.section.5.2.1.p.6">
+                                <p>在 cookie-attribute-list 中追加一个属性，其 attribute-name 为 Expires，attribute-value 为
+                                    expiry-time。</p>
+                            </div>
+                        </section>
+                        <section id="max-age-attribute">
+                            <h4 id="rfc.section.5.2.2"><a href="#rfc.section.5.2.2">5.2.2.</a>&nbsp;<a
+                                    href="#max-age-attribute">The Max-Age Attribute</a></h4>
+                            <div id="rfc.section.5.2.2.p.1">
+                                <p>如果 attribute-name 与字符串 "Max-Age" 在不区分大小写的情况下匹配，用户代理 <em class="bcp14">MUST</em>
+                                    按如下方式处理该 cookie-av。</p>
+                            </div>
+                            <div id="rfc.section.5.2.2.p.2">
+                                <p>如果 attribute-value 的首字符不是 DIGIT 或 "-"，则忽略该 cookie-av。</p>
+                            </div>
+                            <div id="rfc.section.5.2.2.p.3">
+                                <p>如果 attribute-value 的其余部分包含非 DIGIT 字符，则忽略该 cookie-av。</p>
+                            </div>
+                            <div id="rfc.section.5.2.2.p.4">
+                                <p>令 delta-seconds 为将 attribute-value 转换为整数的值。</p>
+                            </div>
+                            <div id="rfc.section.5.2.2.p.5">
+                                <p>如果 delta-seconds 小于或等于零（0），则令 expiry-time 为最早可表示的日期时间。否则，令 expiry-time 为当前日期时间加上
+                                    delta-seconds 秒。</p>
+                            </div>
+                            <div id="rfc.section.5.2.2.p.6">
+                                <p>在 cookie-attribute-list 中追加一个属性，其 attribute-name 为 Max-Age，attribute-value 为
+                                    expiry-time。</p>
+                            </div>
+                        </section>
+                        <section id="domain-attribute">
+                            <h4 id="rfc.section.5.2.3"><a href="#rfc.section.5.2.3">5.2.3.</a>&nbsp;<a
+                                    href="#domain-attribute">The Domain Attribute</a></h4>
+                            <div id="rfc.section.5.2.3.p.1">
+                                <p>如果 attribute-name 与字符串 "Domain" 在不区分大小写的情况下匹配，用户代理 <em class="bcp14">MUST</em>
+                                    按如下方式处理该 cookie-av。</p>
+                            </div>
+                            <div id="rfc.section.5.2.3.p.2">
+                                <p>如果 attribute-value 为空，行为未定义。然而，用户代理 <em class="bcp14">SHOULD</em> 完全忽略该 cookie-av。
+                                </p>
+                            </div>
+                            <div id="rfc.section.5.2.3.p.3">
+                                <p>如果 attribute-value 字符串的第一个字符是 %x2E ("." )：</p>
+                                <ul class="empty">
+                                    <li>令 cookie-domain 为去除前导 %x2E ("." ) 字符的 attribute-value。</li>
+                                </ul>
+                                <p>否则：</p>
+                                <ul class="empty">
+                                    <li>令 cookie-domain 为整个 attribute-value。</li>
+                                </ul>
+                            </div>
+                            <div id="rfc.section.5.2.3.p.4">
+                                <p>将 cookie-domain 转换为小写。</p>
+                            </div>
+                            <div id="rfc.section.5.2.3.p.5">
+                                <p>在 cookie-attribute-list 中追加一个属性，其 attribute-name 为 Domain，attribute-value 为
+                                    cookie-domain。</p>
+                            </div>
+                        </section>
+                        <section id="path-attribute">
+                            <h4 id="rfc.section.5.2.4"><a href="#rfc.section.5.2.4">5.2.4.</a>&nbsp;<a
+                                    href="#path-attribute">The Path Attribute</a></h4>
+                            <div id="rfc.section.5.2.4.p.1">
+                                <p>如果 attribute-name 与字符串 "Path" 在不区分大小写的情况下匹配，用户代理 <em class="bcp14">MUST</em> 按如下方式处理该
+                                    cookie-av。</p>
+                            </div>
+                            <div id="rfc.section.5.2.4.p.2">
+                                <p>如果 attribute-value 为空或 attribute-value 的首字符不是 %x2F ("/")：</p>
+                                <ul class="empty">
+                                    <li>令 cookie-path 为 default-path。</li>
+                                </ul>
+                                <p>否则：</p>
+                                <ul class="empty">
+                                    <li>令 cookie-path 为 attribute-value。</li>
+                                </ul>
+                            </div>
+                            <div id="rfc.section.5.2.4.p.3">
+                                <p>在 cookie-attribute-list 中追加一个属性，其 attribute-name 为 Path，attribute-value 为
+                                    cookie-path。</p>
+                            </div>
+                        </section>
+                        <section id="secure-attribute">
+                            <h4 id="rfc.section.5.2.5"><a href="#rfc.section.5.2.5">5.2.5.</a>&nbsp;<a
+                                    href="#secure-attribute">The Secure Attribute</a></h4>
+                            <div id="rfc.section.5.2.5.p.1">
+                                <p>如果 attribute-name 与字符串 "Secure" 在不区分大小写的情况下匹配，用户代理 <em class="bcp14">MUST</em> 在
+                                    cookie-attribute-list 中追加一个 attribute-name 为 Secure 且 attribute-value 为空的属性。</p>
+                            </div>
+                        </section>
+                        <section id="httponly-attribute">
+                            <h4 id="rfc.section.5.2.6"><a href="#rfc.section.5.2.6">5.2.6.</a>&nbsp;<a
+                                    href="#httponly-attribute">The HttpOnly Attribute</a></h4>
+                            <div id="rfc.section.5.2.6.p.1">
+                                <p>如果 attribute-name 与字符串 "HttpOnly" 在不区分大小写的情况下匹配，用户代理 <em class="bcp14">MUST</em> 在
+                                    cookie-attribute-list 中追加一个 attribute-name 为 HttpOnly 且 attribute-value 为空的属性。</p>
+                            </div>
+                        </section>
+                    </section>
+                    <section id="storage-model">
+                        <h3 id="rfc.section.5.3"><a href="#rfc.section.5.3">5.3.</a>&nbsp;<a
+                                href="#storage-model">Storage Model</a></h3>
+                        <div id="rfc.section.5.3.p.1">
+                            <p>用户代理为每个 cookie
+                                存储以下字段：name、value、expiry-time、domain、path、creation-time、last-access-time、persistent-flag、host-only-flag、secure-only-flag
+                                与 http-only-flag。</p>
+                        </div>
+                        <div id="rfc.section.5.3.p.2">
+                            <p>当用户代理从 request-uri 接收了一个名称为 cookie-name、值为 cookie-value、属性为 cookie-attribute-list 的
+                                cookie 时，用户代理 <em class="bcp14">MUST</em> 按如下方式处理该 cookie：</p>
+                            <ol>
+                                <li>用户代理 <em class="bcp14">MAY</em> 完全忽略接收到的 cookie。例如，用户代理可能希望阻止从“第三方”响应接收
+                                    cookie，或可能不希望存储超过某个大小的 cookie。</li>
+                                <li>创建一个新 cookie，名称为 cookie-name，值为 cookie-value。将 creation-time 与 last-access-time
+                                    设为当前日期时间。</li>
+                                <li>如果 cookie-attribute-list 包含 attribute-name 为 "Max-Age" 的属性： <ul class="empty">
+                                        <li>将 cookie 的 persistent-flag 设为 true。</li>
+                                        <li>将 cookie 的 expiry-time 设为 cookie-attribute-list 中最后一个 attribute-name 为
+                                            "Max-Age" 的属性的 attribute-value。</li>
+                                    </ul> 否则，如果 cookie-attribute-list 包含 attribute-name 为 "Expires" 的属性（且不包含 "Max-Age"）：
+                                    <ul class="empty">
+                                        <li>将 cookie 的 persistent-flag 设为 true。</li>
+                                        <li>将 cookie 的 expiry-time 设为 cookie-attribute-list 中最后一个 attribute-name 为
+                                            "Expires" 的属性的 attribute-value。</li>
+                                    </ul> 否则： <ul class="empty">
+                                        <li>将 cookie 的 persistent-flag 设为 false。</li>
+                                        <li>将 cookie 的 expiry-time 设为最新可表示的日期。</li>
+                                    </ul>
+                                </li>
+                                <li>如果 cookie-attribute-list 包含 attribute-name 为 "Domain" 的属性： <ul class="empty">
+                                        <li>令 domain-attribute 为 cookie-attribute-list 中最后一个 attribute-name 为 "Domain"
+                                            的属性的 attribute-value。</li>
+                                    </ul> 否则： <ul class="empty">
+                                        <li>令 domain-attribute 为空字符串。</li>
+                                    </ul>
+                                </li>
+                                <li>如果用户代理被配置为拒绝“公共后缀”且 domain-attribute 是公共后缀： <ul class="empty">
+                                        <li>如果 domain-attribute 与规范化的 request-host 相同： <ul class="empty">
+                                                <li>令 domain-attribute 为空字符串。</li>
+                                            </ul> 否则： <ul class="empty">
+                                                <li>完全忽略该 cookie 并中止这些步骤。</li>
+                                            </ul>
+                                        </li>
+                                        <li>注：公共后缀是由公共注册机构控制的域，例如 "com"、"co.uk" 与 "pvt.k12.wy.us"。此步骤对于防止 attacker.com
+                                            通过设置 Domain 属性为 "com" 来破坏 example.com 的完整性是必要的。公共后缀集合随时间变化；如果可行，用户代理 <em
+                                                class="bcp14">SHOULD</em> 使用最新的公共后缀列表，例如 Mozilla 项目维护的 &lt;<a
+                                                href="http://publicsuffix.org/">http://publicsuffix.org/</a>&gt;。</li>
+                                    </ul>
+                                </li>
+                                <li>如果 domain-attribute 非空： <ul class="empty">
+                                        <li>如果 规范化的 request-host 不与 domain-attribute domain-match： <ul class="empty">
+                                                <li>完全忽略该 cookie 并中止这些步骤。</li>
+                                            </ul> 否则： <ul class="empty">
+                                                <li>将 cookie 的 host-only-flag 设为 false。</li>
+                                                <li>将 cookie 的 domain 设为 domain-attribute。</li>
+                                            </ul>
+                                        </li>
+                                    </ul> 否则： <ul class="empty">
+                                        <li>将 cookie 的 host-only-flag 设为 true。</li>
+                                        <li>将 cookie 的 domain 设为 规范化的 request-host。</li>
+                                    </ul>
+                                </li>
+                                <li>如果 cookie-attribute-list 包含 attribute-name 为 "Path" 的属性，则将 cookie 的 path 设为
+                                    cookie-attribute-list 中最后一个 attribute-name 为 "Path" 的属性的 attribute-value。否则，将 cookie
+                                    的 path 设为 request-uri 的 default-path。</li>
+                                <li>如果 cookie-attribute-list 包含 attribute-name 为 "Secure"，则将 cookie 的 secure-only-flag
+                                    设为 true。否则将其设为 false。</li>
+                                <li>如果 cookie-attribute-list 包含 attribute-name 为 "HttpOnly"，则将 cookie 的 http-only-flag
+                                    设为 true。否则将其设为 false。</li>
+                                <li>如果 cookie 是从“非 HTTP”API 接收的，且 cookie 的 http-only-flag 被设置，则中止这些步骤并完全忽略该 cookie。</li>
+                                <li>如果 cookie 存储中存在与新创建 cookie 具有相同 name、domain 与 path 的 cookie： <ol>
+                                        <li>令 old-cookie 为存储中与新创建 cookie 具有相同 name、domain 与 path 的现存
+                                            cookie。（注意此算法保持不变性，即至多存在一个此类 cookie。）</li>
+                                        <li>如果新创建的 cookie 是从“非 HTTP”API 接收的且 old-cookie 的 http-only-flag
+                                            被设置，则中止这些步骤并完全忽略新创建的 cookie。</li>
+                                        <li>将新创建 cookie 的 creation-time 更新为 old-cookie 的 creation-time。</li>
+                                        <li>从 cookie 存储中移除 old-cookie。</li>
+                                    </ol>
+                                </li>
+                                <li>将新创建的 cookie 插入 cookie 存储。</li>
+                            </ol>
+                        </div>
+                        <div id="rfc.section.5.3.p.3">
+                            <p>如果 cookie 的过期日期在过去，则该 cookie 被视为“已过期”。</p>
+                        </div>
+                        <div id="rfc.section.5.3.p.4">
+                            <p>如果 cookie 存储中存在过期 cookie，用户代理 <em class="bcp14">MUST</em> 驱逐所有过期 cookie。</p>
+                        </div>
+                        <div id="rfc.section.5.3.p.5">
+                            <p>在任意时刻，如果共享相同 domain 字段的 cookie 数量超过实现定义的上限（例如 50 个 cookie），用户代理 <em
+                                    class="bcp14">MAY</em>“移除过多的 cookie”。</p>
+                        </div>
+                        <div id="rfc.section.5.3.p.6">
+                            <p>在任意时刻，如果 cookie 存储超过某个预定上限（例如 3000 个 cookie），用户代理 <em class="bcp14">MAY</em>“移除过多的
+                                cookie”。</p>
+                        </div>
+                        <div id="rfc.section.5.3.p.7">
+                            <p>当用户代理从 cookie 存储中移除过多的 cookie 时，用户代理 <em class="bcp14">MUST</em> 按以下优先顺序驱逐 cookie：</p>
+                            <ol>
+                                <li>已过期的 cookie。</li>
+                                <li>与超过预定数量其他 cookies 共享 domain 字段的 cookies。</li>
+                                <li>所有 cookies。</li>
+                            </ol>
+                        </div>
+                        <div id="rfc.section.5.3.p.8">
+                            <p>如果两个 cookie 具有相同的移除优先级，用户代理 <em class="bcp14">MUST</em> 先驱逐 last-access 时间最早的 cookie。</p>
+                        </div>
+                        <div id="rfc.section.5.3.p.9">
+                            <p>当“当前会话结束”（由用户代理定义）时，用户代理 <em class="bcp14">MUST</em> 从 cookie 存储中移除所有 persistent-flag 为
+                                false 的 cookies。</p>
+                        </div>
+                    </section>
+                    <section id="cookie">
+                        <h3 id="rfc.section.5.4"><a href="#rfc.section.5.4">5.4.</a>&nbsp;<a href="#cookie">The Cookie
+                                Header</a></h3>
+                        <div id="rfc.section.5.4.p.1">
+                            <p>用户代理在 Cookie HTTP 请求首部中包含已存储的 cookies。</p>
+                        </div>
+                        <div id="rfc.section.5.4.p.2">
+                            <p>当用户代理生成 HTTP 请求时，用户代理 <em class="bcp14">MUST NOT</em> 附加多于一个 Cookie 首部字段。</p>
+                        </div>
+                        <div id="rfc.section.5.4.p.3">
+                            <p>用户代理 <em class="bcp14">MAY</em> 完全省略 Cookie 首部。例如，用户代理可能希望在“第三方”请求中阻止发送 cookies（见 <a
+                                    href="#third-party-cookies" title="Third-Party Cookies">第 7.1 节</a>）。</p>
+                        </div>
+                        <div id="rfc.section.5.4.p.4">
+                            <p>如果用户代理确实在 HTTP 请求中附加了 Cookie 首部字段，用户代理 <em class="bcp14">MUST</em> 将
+                                cookie-string（下文定义）作为该首部字段的值发送。</p>
+                        </div>
+                        <div id="rfc.section.5.4.p.5">
+                            <p>用户代理 <em class="bcp14">MUST</em> 使用等效于下列算法的算法，根据 cookie 存储与 request-uri 计算出
+                                "cookie-string"：</p>
+                            <ol>
+                                <li>令 cookie-list 为 cookie 存储中满足下列所有要求的 cookie 集合： <ul>
+                                        <li>满足下列任一条件： <ul class="empty">
+                                                <li>cookie 的 host-only-flag 为 true 且 规范化的 request-host 与 cookie 的 domain
+                                                    相同。</li>
+                                            </ul> 或： <ul class="empty">
+                                                <li>cookie 的 host-only-flag 为 false 且 规范化的 request-host 与 cookie 的
+                                                    domain domain-match。</li>
+                                            </ul>
+                                        </li>
+                                        <li>request-uri 的路径与 cookie 的 path path-match。</li>
+                                        <li>如果 cookie 的 secure-only-flag 为 true，则 request-uri 的 scheme
+                                            必须表示“安全”协议（由用户代理定义）。 <ul class="empty">
+                                                <li>注：本文档未定义“安全”协议的概念。通常用户代理认为使用传输层安全的协议（如 SSL 或
+                                                    TLS）的协议是安全的。例如，大多数用户代理认为 "https" 表示安全协议。</li>
+                                            </ul>
+                                        </li>
+                                        <li>如果 cookie 的 http-only-flag 为 true，则在为“非 HTTP”API 生成 cookie-string 时应排除此
+                                            cookie。</li>
+                                    </ul>
+                                </li>
+                                <li>用户代理 <em class="bcp14">SHOULD</em> 按下列顺序对 cookie-list 进行排序： <ul>
+                                        <li>路径更长的 cookie 列在路径更短的 cookie 之前。</li>
+                                        <li>在具有相同长度 path 字段的 cookies 中， creation-time 更早的 cookie 列在 creation-time 更晚的
+                                            cookie 之前。</li>
+                                    </ul> 注：并非所有用户代理都按此顺序对 cookie-list 进行排序，但该顺序反映了本文档撰写时的常见做法，历史上也存在依赖该顺序（错误地）的服务器。
+                                </li>
+                                <li>将 cookie-list 中每个 cookie 的 last-access-time 更新为当前日期时间。</li>
+                                <li>按顺序处理 cookie-list 中的每个 cookie，将 cookie-list 序列化为 cookie-string： <ol>
+                                        <li>输出 cookie 的 name、%x3D ("=") 字符与 cookie 的 value。</li>
+                                        <li>如果 cookie-list 中仍有未处理的 cookie，则输出字符 %x3B 与 %x20 ("; ")。</li>
+                                    </ol>
+                                </li>
+                            </ol>
+                            <p>注：尽管名称为 cookie-string，但它实际上是八位字节序列而非字符序列。若要将
+                                cookie-string（或其组成部分）转换为字符序列（例如呈现给用户），用户代理或许希望尝试使用 UTF-8 字符编码 <a href="#RFC3629"><cite
+                                        title="UTF-8, a transformation format of ISO 10646">[RFC3629]</cite></a>
+                                来解码该八位字节序列。但该解码可能失败，因为并非所有八位字节序列都是有效的 UTF-8。</p>
+                        </div>
+                    </section>
+                </section>
+                <section id="implementation-considerations">
+                    <h2 id="rfc.section.6"><a href="#rfc.section.6">6.</a>&nbsp;<a
+                            href="#implementation-considerations">实现注意事项</a></h2>
+                    <section id="implementation-limits">
+                        <h3 id="rfc.section.6.1"><a href="#rfc.section.6.1">6.1.</a>&nbsp;<a
+                                href="#implementation-limits">限制</a></h3>
+                        <div id="rfc.section.6.1.p.1">
+                            <p>实际的用户代理实现对于它们能存储的 cookie 的数量和大小存在限制。一般用途的用户代理 <em class="bcp14">应当</em> 提供以下最低能力：</p>
+                            <ul>
+                                <li>每个 cookie 至少 4096 字节（按 cookie 的 name、value 与 attributes 长度之和计算）。</li>
+                                <li>每个域名至少 50 个 cookie。</li>
+                                <li>总计至少 3000 个 cookie。</li>
+                            </ul>
+                        </div>
+                        <div id="rfc.section.6.1.p.2">
+                            <p>服务器 <em class="bcp14">应当</em> 尽量使用更少且更小的 cookie，以避免达到这些实现限制，并减少由于在每个请求中包含 Cookie
+                                首部而产生的网络带宽消耗。</p>
+                        </div>
+                        <div id="rfc.section.6.1.p.3">
+                            <p>服务器 <em class="bcp14">应当</em> 在用户代理未能在 Cookie 首部中返回一个或多个 cookie
+                                时能够优雅降级，因为用户可能会随时根据用户的指令逐出任意 cookie。</p>
+                        </div>
+                    </section>
+                    <section id="implementation-apis">
+                        <h3 id="rfc.section.6.2"><a href="#rfc.section.6.2">6.2.</a>&nbsp;<a
+                                href="#implementation-apis">应用编程接口</a></h3>
+                        <div id="rfc.section.6.2.p.1">
+                            <p>Cookie 与 Set-Cookie 首部使用如此晦涩语法的一个原因是，许多平台（无论服务器端还是用户代理端）都为 cookie
+                                提供基于字符串的应用编程接口（API），要求应用层程序员生成和解析 Cookie 与 Set-Cookie 首部使用的语法。许多程序员在这方面做得不正确，导致互操作性问题。
+                            </p>
+                        </div>
+                        <div id="rfc.section.6.2.p.2">
+                            <p>与其提供基于字符串的 cookie API，平台更适合提供语义更强的 API。本文档不建议具体的 API 设计，但接受抽象的“Date”对象而不是序列化的日期字符串有明显好处。
+                            </p>
+                        </div>
+                    </section>
+                    <section id="idna-migration">
+                        <h3 id="rfc.section.6.3"><a href="#rfc.section.6.3">6.3.</a>&nbsp;<a href="#idna-migration">IDNA
+                                依赖与迁移</a></h3>
+                        <div id="rfc.section.6.3.p.1">
+                            <p>IDNA2008 <a href="#RFC5890"><cite
+                                        title="Internationalized Domain Names for Applications (IDNA): Definitions and Document Framework">[RFC5890]</cite></a>
+                                已取代 IDNA2003 <a href="#RFC3490"><cite
+                                        title="Internationalizing Domain Names in Applications (IDNA)">[RFC3490]</cite></a>。
+                                然而，两者规范之间存在差异，因此对以其中一种规范注册的域名标签的处理（例如转换）可能会有所不同。在一段过渡期内，基于 IDNA2003 的域名标签仍将存在于互联网上。用户代理
+                                <em class="bcp14">应当</em> 实现 IDNA2008 <a href="#RFC5890"><cite
+                                        title="Internationalized Domain Names for Applications (IDNA): Definitions and Document Framework">[RFC5890]</cite></a>
+                                ，并且 <em class="bcp14">可以</em> 实现 <a href="#UTS46"><cite
+                                        title="Unicode IDNA Compatibility Processing">[UTS46]</cite></a> 或 <a
+                                    href="#RFC5895"><cite
+                                        title="Mapping Characters for Internationalized Domain Names in Applications (IDNA) 2008">[RFC5895]</cite></a>
+                                来促进它们的 IDNA 过渡。如果用户代理没有实现 IDNA2008，则该用户代理 <em class="bcp14">必须</em> 实现 IDNA2003 <a
+                                    href="#RFC3490"><cite
+                                        title="Internationalizing Domain Names in Applications (IDNA)">[RFC3490]</cite></a>。
+                            </p>
+                        </div>
+                    </section>
+                </section>
+                <section id="privacy-considerations">
+                    <h2 id="rfc.section.7"><a href="#rfc.section.7">7.</a>&nbsp;<a
+                            href="#privacy-considerations">隐私注意事项</a></h2>
+                    <div id="rfc.section.7.p.1">
+                        <p>Cookies 常因允许服务器跟踪用户而受到批评。例如，一些“网页分析”公司使用 cookie 来识别用户何时返回某个网站或访问另一个网站。尽管 cookie 并不是服务器跨 HTTP
+                            请求跟踪用户的唯一机制，但 cookie 便于跟踪，因为它们在用户代理会话之间是持久的，并且可以在主机之间共享。</p>
+                    </div>
+                    <section id="third-party-cookies">
+                        <h3 id="rfc.section.7.1"><a href="#rfc.section.7.1">7.1.</a>&nbsp;<a
+                                href="#third-party-cookies">第三方 Cookie</a></h3>
+                        <div id="rfc.section.7.1.p.1">
+                            <p>尤其令人担忧的是所谓的“第三方” cookie。在呈现 HTML
+                                文档时，用户代理经常会请求来自其他服务器的资源（例如广告网络）。即使用户从未直接访问该第三方服务器，这些第三方服务器也可以使用 cookie
+                                来跟踪用户。例如，如果用户访问了包含第三方内容的网站，之后又访问包含相同第三方内容的另一个网站，则该第三方可以在两者之间跟踪该用户。</p>
+                        </div>
+                        <div id="rfc.section.7.1.p.2">
+                            <p>一些用户代理会限制第三方 cookie 的行为。例如，有些用户代理会拒绝在第三方请求中发送 Cookie 首部；另一些则拒绝处理对第三方请求的响应中的 Set-Cookie
+                                首部。用户代理在第三方 cookie 策略上差异很大。本文档允许用户代理在第三方 cookie
+                                策略上有很大的试验空间，以平衡用户的隐私与兼容性需求。然而，本文档并不支持任何特定的第三方 cookie 策略。</p>
+                        </div>
+                        <div id="rfc.section.7.1.p.3">
+                            <p>如果服务器尝试绕过限制来跟踪用户，第三方 cookie 阻止策略通常在实现其隐私目标方面效果有限。特别地，两个协作的服务器往往可以在不使用 cookie
+                                的情况下通过将识别信息注入动态 URL 来跟踪用户。</p>
+                        </div>
+                    </section>
+                    <section id="user-controls">
+                        <h3 id="rfc.section.7.2"><a href="#rfc.section.7.2">7.2.</a>&nbsp;<a
+                                href="#user-controls">用户控制</a></h3>
+                        <div id="rfc.section.7.2.p.1">
+                            <p>用户代理 <em class="bcp14">应当</em> 为用户提供管理 cookie 存储的机制。例如，用户代理可允许用户删除在指定时间段内接收的所有
+                                cookie，或删除与特定域相关的所有 cookie。此外，许多用户代理包含可供用户检查其 cookie 存储的用户界面元素。</p>
+                        </div>
+                        <div id="rfc.section.7.2.p.2">
+                            <p>用户代理 <em class="bcp14">应当</em> 为用户提供禁用 cookie 的机制。当 cookie 被禁用时，用户代理 <em
+                                    class="bcp14">必须不</em> 在出站 HTTP 请求中包含 Cookie 首部，并且用户代理 <em class="bcp14">必须不</em>
+                                处理入站 HTTP 响应中的 Set-Cookie 首部。</p>
+                        </div>
+                        <div id="rfc.section.7.2.p.3">
+                            <p>一些用户代理提供阻止跨会话持久存储 cookie 的选项。当这样配置时，用户代理 <em class="bcp14">必须</em> 将所有接收的 cookie 视为其
+                                persistent-flag 被设置为 false。某些流行的用户代理通过“私密浏览”模式暴露此功能 <a href="#Aggarwal2010"><cite
+                                        title="An Analysis of Private Browsing Modes in Modern Browsers">[Aggarwal2010]</cite></a>。
+                            </p>
+                        </div>
+                        <div id="rfc.section.7.2.p.4">
+                            <p>一些用户代理允许用户批准对 cookie 存储的单次写入。在许多常见使用场景中，这些控制会产生大量提示。然而，一些注重隐私的用户仍然觉得这些控制有用。</p>
+                        </div>
+                    </section>
+                    <section id="expiration-dates">
+                        <h3 id="rfc.section.7.3"><a href="#rfc.section.7.3">7.3.</a>&nbsp;<a
+                                href="#expiration-dates">过期日期</a></h3>
+                        <div id="rfc.section.7.3.p.1">
+                            <p>尽管服务器可以将 cookie 的过期日期设置为非常遥远的将来，但大多数用户代理并不会真正保留 cookie 数十年。服务器 <em class="bcp14">应当</em>
+                                通过根据 cookie 的用途选择合理的过期期来促进用户隐私，而不是任意选择很长的过期期。例如，一个典型的会话标识符将合理地设置为两周后过期。</p>
+                        </div>
+                    </section>
+                </section>
+                <section id="security-considerations">
+                    <h2 id="rfc.section.8"><a href="#rfc.section.8">8.</a>&nbsp;<a
+                            href="#security-considerations">安全性注意事项</a></h2>
+                    <section id="section-overview">
+                        <h3 id="rfc.section.8.1"><a href="#rfc.section.8.1">8.1.</a>&nbsp;<a
+                                href="#section-overview">概述</a></h3>
+                        <div id="rfc.section.8.1.p.1">
+                            <p>Cookies 存在若干安全陷阱。本节概述其中一些较突出的议题。</p>
+                        </div>
+                        <div id="rfc.section.8.1.p.2">
+                            <p>特别地，cookies 鼓励开发者依赖环境权限（ambient authority）进行认证，从而常常容易受到诸如跨站请求伪造（cross-site request
+                                forgery）等攻击的影响 <a href="#CSRF"><cite
+                                        title="Robust Defenses for Cross-Site Request Forgery">[CSRF]</cite></a>。此外，在
+                                cookie 中存储会话标识符时，开发者常常会产生会话固定（session fixation）漏洞。</p>
+                        </div>
+                        <div id="rfc.section.8.1.p.3">
+                            <p>传输层加密（如 HTTPS）不足以防止网络攻击者获取或篡改受害者的 cookies，因为 cookie
+                                协议本身存在各种漏洞（参见下文的“弱机密性”与“弱完整性”部分）。此外，默认情况下，即使与 HTTPS 配合使用，cookies 也不能为网络攻击者提供机密性或完整性保护。
+                            </p>
+                        </div>
+                    </section>
+                    <section id="ambient-authority">
+                        <h3 id="rfc.section.8.2"><a href="#rfc.section.8.2">8.2.</a>&nbsp;<a
+                                href="#ambient-authority">环境权限</a></h3>
+                        <div id="rfc.section.8.2.p.1">
+                            <p>使用 cookies 进行用户认证的服务器可能会遭受安全漏洞，因为某些用户代理允许远端方从用户代理发起 HTTP 请求（例如，通过 HTTP 重定向或 HTML
+                                表单）。在发起这些请求时，用户代理会附带 cookies，即使远端方不知道这些 cookie 的内容，这可能会让远端方在毫不知情的服务器上行使权限。</p>
+                        </div>
+                        <div id="rfc.section.8.2.p.2">
+                            <p>虽然此安全问题有若干不同名称（如跨站请求伪造、confused deputy），问题的根源在于 cookies 属于一种环境权限。cookies 鼓励服务器操作者将指定（以
+                                URL 形式）与授权（以 cookie 形式）分离。因此，用户代理可能会为攻击者指定的资源提供授权，这可能导致服务器或其客户端将攻击者指定的操作视为用户已授权的操作。</p>
+                        </div>
+                        <div id="rfc.section.8.2.p.3">
+                            <p>服务器操作者可能希望考虑通过将指定与授权纠缠（entangle）来替代使用 cookies 进行授权的做法，即将 URL 视为 capability。与其将秘密存储在
+                                cookies 中，这种方法将秘密存储在 URL 中，要求远端实体提供该秘密本身。尽管该方法并非万灵药，但在审慎应用下可以带来更健壮的安全性。</p>
+                        </div>
+                    </section>
+                    <section id="clear-text">
+                        <h3 id="rfc.section.8.3"><a href="#rfc.section.8.3">8.3.</a>&nbsp;<a href="#clear-text">明文传输</a>
+                        </h3>
+                        <div id="rfc.section.8.3.p.1">
+                            <p>除非通过安全通道（例如 TLS）发送，否则 Cookie 与 Set-Cookie 首部中的信息以明文传输。</p>
+                            <ol>
+                                <li>这些首部中传递的所有敏感信息都将暴露给窃听者。</li>
+                                <li>恶意中间人可能在任一方向篡改这些首部，结果不可预测。</li>
+                                <li>恶意客户端可能在发送前篡改 Cookie 首部，结果不可预测。</li>
+                            </ol>
+                        </div>
+                        <div id="rfc.section.8.3.p.2">
+                            <p>服务器 <em class="bcp14">应当</em> 在将 cookie 传输给用户代理时对 cookie
+                                内容进行加密和签名（使用服务器希望的任意格式），即使在通过安全通道发送时也是如此。然而，加密与签名 cookie 内容并不能阻止攻击者将 cookie
+                                从一个用户代理移植到另一个用户代理，也不能阻止攻击者在稍后重放该 cookie。</p>
+                        </div>
+                        <div id="rfc.section.8.3.p.3">
+                            <p>除了对每个 cookie 的内容进行加密与签名之外，需要更高安全级别的服务器 <em class="bcp14">应当</em> 仅在安全通道上使用 Cookie 与
+                                Set-Cookie 首部。在通过安全通道使用 cookies 时，服务器 <em class="bcp14">应当</em> 为每个 cookie 设置 Secure
+                                属性（见 <a href="#sane-secure" title="The Secure Attribute">第 4.1.2.5 节</a>）。如果服务器未设置
+                                Secure 属性，那么安全通道提供的保护在很大程度上将变得无效。</p>
+                        </div>
+                        <div id="rfc.section.8.3.p.4">
+                            <p>例如，考虑一个在 cookie 中存储会话标识符并通常通过 HTTPS 访问的 webmail 服务器。如果服务器没有为其 cookie 设置 Secure
+                                属性，活动的网络攻击者可以拦截用户代理发出的任意出站 HTTP 请求并将该请求重定向到 webmail 服务器的 HTTP 地址。即便 webmail 服务器不监听 HTTP
+                                连接，用户代理在该请求中仍会包含 cookie。活动的网络攻击者可以拦截这些 cookie，在服务器上重放它们，从而可能查看用户的电子邮件内容。如果相反服务器为其 cookie
+                                设置了 Secure 属性，则用户代理不会在明文请求中包含这些 cookie。</p>
+                        </div>
+                    </section>
+                    <section id="session-identifiers">
+                        <h3 id="rfc.section.8.4"><a href="#rfc.section.8.4">8.4.</a>&nbsp;<a
+                                href="#session-identifiers">会话标识符</a></h3>
+                        <div id="rfc.section.8.4.p.1">
+                            <p>服务器通常将 nonce（或“会话标识符”）存储在 cookie 中，而不是直接在 cookie 中存储会话信息（以避免被攻击者暴露或重放）。当服务器收到带有 nonce 的
+                                HTTP 请求时，服务器可以使用该 nonce 作为键来查找与 cookie 关联的状态信息。</p>
+                        </div>
+                        <div id="rfc.section.8.4.p.2">
+                            <p>使用会话标识符 cookie 在攻击者获知 cookie 内容时能够限制攻击者造成的损害，因为 nonce 仅用于与服务器交互（与可能本身敏感的非 nonce cookie
+                                内容不同）。此外，使用单个 nonce 可以防止攻击者“拼接”两次与服务器交互中的 cookie 内容，从而避免导致服务器异常行为。</p>
+                        </div>
+                        <div id="rfc.section.8.4.p.3">
+                            <p>使用会话标识符并非没有风险。例如，服务器 <em class="bcp14">应当</em>
+                                注意避免“会话固定”漏洞。会话固定攻击通常包含三个步骤。首先，攻击者将其用户代理的会话标识符移植到受害者的用户代理。其次，受害者使用该会话标识符与服务器交互，可能将用户的凭证或机密信息赋予该会话标识符。第三，攻击者使用该会话标识符直接与服务器交互，可能获得用户的权限或机密信息。
+                            </p>
+                        </div>
+                    </section>
+                    <section id="weak-confidentiality">
+                        <h3 id="rfc.section.8.5"><a href="#rfc.section.8.5">8.5.</a>&nbsp;<a
+                                href="#weak-confidentiality">弱机密性</a></h3>
+                        <div id="rfc.section.8.5.p.1">
+                            <p>Cookies 不提供按端口隔离。如果某个端口上的服务可读取某个 cookie，则同一主机上另一个端口上的服务也可读取该 cookie；如果某个端口上的服务可写该
+                                cookie，则另一个端口上的服务也可写该 cookie。因此，服务器 <em class="bcp14">不应</em> 在同一主机的不同端口上运行相互不信任的服务并使用
+                                cookies 存储安全敏感信息。</p>
+                        </div>
+                        <div id="rfc.section.8.5.p.2">
+                            <p>Cookies 不按 scheme 提供隔离。尽管 cookies 最常与 http 与 https scheme 一起使用，但给定主机的 cookies 也可能对其他
+                                scheme（如 ftp 与 gopher）可用。尽管这种按 scheme 缺乏隔离在允许访问 cookies 的非 HTTP API（例如 HTML 的
+                                document.cookie API）中最为明显，但按 scheme 缺乏隔离实际上也存在于处理 cookie 的要求中（例如，考虑通过 HTTP 检索带有 gopher
+                                scheme 的 URI）。</p>
+                        </div>
+                        <div id="rfc.section.8.5.p.3">
+                            <p>Cookies 不总是按路径提供隔离。尽管网络层协议不会将为一个路径存储的 cookie 发送到另一个路径，但一些用户代理通过非 HTTP API（如 HTML 的
+                                document.cookie）暴露 cookies。由于某些用户代理（例如 Web 浏览器）并不隔离从不同路径接收的资源，一个从某路径检索的资源可能能够访问为另一路径存储的
+                                cookies。</p>
+                        </div>
+                    </section>
+                    <section id="weak-integrity">
+                        <h3 id="rfc.section.8.6"><a href="#rfc.section.8.6">8.6.</a>&nbsp;<a
+                                href="#weak-integrity">弱完整性</a></h3>
+                        <div id="rfc.section.8.6.p.1">
+                            <p>Cookies 无法为兄弟域（及其子域）提供完整性保证。例如，考虑 foo.example.com 与 bar.example.com。foo.example.com
+                                服务器可以设置 Domain 属性为 "example.com" 的 cookie（可能覆盖 bar.example.com 之前设置的 "example.com"
+                                cookie），并且用户代理会在对 bar.example.com 的 HTTP 请求中包含该 cookie。在最坏情况下，bar.example.com 将无法区分该
+                                cookie 与它自己设置的 cookie。foo.example.com 服务器可能利用此能力对 bar.example.com 发动攻击。</p>
+                        </div>
+                        <div id="rfc.section.8.6.p.2">
+                            <p>尽管 Set-Cookie 首部支持 Path 属性，但 Path 属性并不提供任何完整性保护，因为用户代理会接受 Set-Cookie 首部中任意的 Path 属性。例如，对
+                                http://example.com/foo/bar 的响应可以设置 Path 属性为 "/qux" 的 cookie。因此，服务器 <em
+                                    class="bcp14">不应</em> 在同一主机的不同路径上运行相互不信任的服务并使用 cookies 存储安全敏感信息。</p>
+                        </div>
+                        <div id="rfc.section.8.6.p.3">
+                            <p>活动的网络攻击者也可以通过伪造来自 http://example.com/ 的响应并注入 Set-Cookie 首部，从而向发送到 https://example.com/ 的
+                                Cookie 首部注入 cookies。example.com 的 HTTPS 服务器将无法将这些 cookie 与其自己在 HTTPS 响应中设置的 cookie
+                                区分开。活动的网络攻击者可能利用此能力即使在 example.com 完全使用 HTTPS 的情况下也对其发起攻击。</p>
+                        </div>
+                        <div id="rfc.section.8.6.p.4">
+                            <p>服务器可以通过对 cookie 内容进行加密和签名来部分缓解这些攻击。然而，使用加密并不能完全缓解问题，因为攻击者可以在用户的会话中重放他或她从真实 example.com
+                                服务器处获得的 cookie，导致不可预测的结果。</p>
+                        </div>
+                        <div id="rfc.section.8.6.p.5">
+                            <p>最后，攻击者可能通过存储大量 cookie 强制用户代理删除 cookie。一旦用户代理达到其存储限制，用户代理将被迫驱逐一些 cookie。服务器 <em
+                                    class="bcp14">不应</em> 依赖用户代理保留 cookies。</p>
+                        </div>
+                    </section>
+                    <section id="reliance-on-dns">
+                        <h3 id="rfc.section.8.7"><a href="#rfc.section.8.7">8.7.</a>&nbsp;<a href="#reliance-on-dns">对
+                                DNS 的依赖</a></h3>
+                        <div id="rfc.section.8.7.p.1">
+                            <p>Cookies 对域名系统（DNS）的安全性有依赖。如果 DNS 部分或全部被攻破，cookie 协议可能无法为应用提供所需的安全属性。</p>
+                        </div>
+                    </section>
+                </section>
+                <section id="iana-considerations">
+                    <h2 id="rfc.section.9"><a href="#rfc.section.9">9.</a>&nbsp;<a href="#iana-considerations">IANA
+                            注意事项</a></h2>
+                    <div id="rfc.section.9.p.1">
+                        <p>永久消息首部字段注册表（参见 <a href="#RFC3864"><cite
+                                    title="Registration Procedures for Message Header Fields">[RFC3864]</cite></a>）已根据下列注册信息进行了更新。
+                        </p>
+                    </div>
+                    <section id="n-cookie">
+                        <h3 id="rfc.section.9.1"><a href="#rfc.section.9.1">9.1.</a>&nbsp;<a href="#n-cookie">Cookie</a>
+                        </h3>
+                        <div id="rfc.section.9.1.p.1">
+                            <p>首部字段名：Cookie</p>
+                        </div>
+                        <div id="rfc.section.9.1.p.2">
+                            <p>适用协议：http</p>
+                        </div>
+                        <div id="rfc.section.9.1.p.3">
+                            <p>状态：标准</p>
+                        </div>
+                        <div id="rfc.section.9.1.p.4">
+                            <p>作者/变更控制者：IETF</p>
+                        </div>
+                        <div id="rfc.section.9.1.p.5">
+                            <p>规范文档：本规范（<a href="#cookie" title="The Cookie Header">第 5.4 节</a>）</p>
+                        </div>
+                    </section>
+                    <section id="n-set-cookie">
+                        <h3 id="rfc.section.9.2"><a href="#rfc.section.9.2">9.2.</a>&nbsp;<a
+                                href="#n-set-cookie">Set-Cookie</a></h3>
+                        <div id="rfc.section.9.2.p.1">
+                            <p>首部字段名：Set-Cookie</p>
+                        </div>
+                        <div id="rfc.section.9.2.p.2">
+                            <p>适用协议：http</p>
+                        </div>
+                        <div id="rfc.section.9.2.p.3">
+                            <p>状态：标准</p>
+                        </div>
+                        <div id="rfc.section.9.2.p.4">
+                            <p>作者/变更控制者：IETF</p>
+                        </div>
+                        <div id="rfc.section.9.2.p.5">
+                            <p>规范文档：本规范（<a href="#set-cookie" title="The Set-Cookie Header">第 5.2 节</a>）</p>
+                        </div>
+                    </section>
+                    <section id="n-cookie2">
+                        <h3 id="rfc.section.9.3"><a href="#rfc.section.9.3">9.3.</a>&nbsp;<a
+                                href="#n-cookie2">Cookie2</a></h3>
+                        <div id="rfc.section.9.3.p.1">
+                            <p>首部字段名：Cookie2</p>
+                        </div>
+                        <div id="rfc.section.9.3.p.2">
+                            <p>适用协议：http</p>
+                        </div>
+                        <div id="rfc.section.9.3.p.3">
+                            <p>状态：已废弃</p>
+                        </div>
+                        <div id="rfc.section.9.3.p.4">
+                            <p>作者/变更控制者：IETF</p>
+                        </div>
+                        <div id="rfc.section.9.3.p.5" class="avoidbreakafter">
+                            <p>规范文档：<a href="#RFC2965"><cite
+                                        title="HTTP State Management Mechanism">[RFC2965]</cite></a></p>
+                        </div>
+                    </section>
+                    <section id="n-set-cookie2">
+                        <h3 id="rfc.section.9.4"><a href="#rfc.section.9.4">9.4.</a>&nbsp;<a
+                                href="#n-set-cookie2">Set-Cookie2</a></h3>
+                        <div id="rfc.section.9.4.p.1">
+                            <p>首部字段名：Set-Cookie2</p>
+                        </div>
+                        <div id="rfc.section.9.4.p.2">
+                            <p>适用协议：http</p>
+                        </div>
+                        <div id="rfc.section.9.4.p.3">
+                            <p>状态：已废弃</p>
+                        </div>
+                        <div id="rfc.section.9.4.p.4">
+                            <p>作者/变更控制者：IETF</p>
+                        </div>
+                        <div id="rfc.section.9.4.p.5" class="avoidbreakafter">
+                            <p>规范文档：<a href="#RFC2965"><cite
+                                        title="HTTP State Management Mechanism">[RFC2965]</cite></a></p>
+                        </div>
+                    </section>
+                </section>
+                <section id="rfc.references">
+                    <h2 id="rfc.section.10"><a href="#rfc.section.10">10.</a> 参考文献</h2>
+                    <section>
+                        <div id="rfc.references.1">
+                            <h3 id="rfc.section.10.1"><a href="#rfc.section.10.1">10.1.</a> 规范性引用</h3>
+                            <dl class="dl-horizontal">
+                                <dt id="RFC1034">[<a href="#RFC1034" class="smpl">RFC1034</a>]</dt>
+                                <dd>Mockapetris, P., “<a href="https://www.rfc-editor.org/rfc/rfc1034.html">Domain names
+                                        - concepts and facilities</a>”, <a
+                                        href="https://www.rfc-editor.org/info/std13">STD 13</a>, RFC 1034, November
+                                    1987.</dd>
+                                <dt id="RFC1123">[<a href="#RFC1123" class="smpl">RFC1123</a>]</dt>
+                                <dd><a href="mailto:Braden@ISI.EDU">Braden, R.</a>, “<a
+                                        href="https://www.rfc-editor.org/rfc/rfc1123.html">Requirements for Internet
+                                        Hosts - Application and Support</a>”, <a
+                                        href="https://www.rfc-editor.org/info/std3">STD 3</a>, RFC 1123, October 1989.
+                                </dd>
+                                <dt id="RFC2119">[<a href="#RFC2119" class="smpl">RFC2119</a>]</dt>
+                                <dd><a href="mailto:sob@harvard.edu">Bradner, S.</a>, “<a
+                                        href="https://www.rfc-editor.org/rfc/rfc2119.html">Key words for use in RFCs to
+                                        Indicate Requirement Levels</a>”, <a
+                                        href="https://www.rfc-editor.org/info/bcp14">BCP 14</a>, RFC 2119, March 1997.
+                                </dd>
+                                <dt id="RFC2616">[<a href="#RFC2616" class="smpl">RFC2616</a>]</dt>
+                                <dd><a href="mailto:fielding@ics.uci.edu">Fielding, R.</a>, <a
+                                        href="mailto:jg@w3.org">Gettys, J.</a>, <a
+                                        href="mailto:mogul@wrl.dec.com">Mogul, J.</a>, <a
+                                        href="mailto:frystyk@w3.org">Frystyk, H.</a>, <a
+                                        href="mailto:masinter@parc.xerox.com">Masinter, L.</a>, <a
+                                        href="mailto:paulle@microsoft.com">Leach, P.</a>, and <a
+                                        href="mailto:timbl@w3.org">T. Berners-Lee</a>, “<a
+                                        href="https://www.rfc-editor.org/rfc/rfc2616.html">Hypertext Transfer Protocol
+                                        -- HTTP/1.1</a>”, RFC 2616, June 1999.</dd>
+                                <dt id="RFC3490">[<a href="#RFC3490" class="smpl">RFC3490</a>]</dt>
+                                <dd>Faltstrom, P., Hoffman, P., and A. Costello, “<a
+                                        href="https://www.rfc-editor.org/rfc/rfc3490.html">Internationalizing Domain
+                                        Names in Applications (IDNA)</a>”, RFC 3490, March 2003.<br>See <a
+                                        href="#idna-migration" title="IDNA Dependency and Migration">第 6.3 节</a> for
+                                    an explanation why the normative reference to an obsoleted specification is needed.
+                                </dd>
+                                <dt id="RFC4790">[<a href="#RFC4790" class="smpl">RFC4790</a>]</dt>
+                                <dd>Newman, C., Duerst, M., and A. Gulbrandsen, “<a
+                                        href="https://www.rfc-editor.org/rfc/rfc4790.html">Internet Application Protocol
+                                        Collation Registry</a>”, RFC 4790, March 2007.</dd>
+                                <dt id="RFC5234">[<a href="#RFC5234" class="smpl">RFC5234</a>]</dt>
+                                <dd><a href="mailto:dcrocker@bbiw.net">Crocker, D., Ed.</a> and <a
+                                        href="mailto:paul.overell@thus.net">P. Overell</a>, “<a
+                                        href="https://www.rfc-editor.org/rfc/rfc5234.html">Augmented BNF for Syntax
+                                        Specifications: ABNF</a>”, <a href="https://www.rfc-editor.org/info/std68">STD
+                                        68</a>, RFC 5234, January 2008.</dd>
+                                <dt id="RFC5890">[<a href="#RFC5890" class="smpl">RFC5890</a>]</dt>
+                                <dd>Klensin, J., “<a
+                                        href="https://www.rfc-editor.org/rfc/rfc5890.html">Internationalized Domain
+                                        Names for Applications (IDNA): Definitions and Document Framework</a>”, RFC
+                                    5890, August 2010.</dd>
+                                <dt id="USASCII">[<a href="#USASCII" class="smpl">USASCII</a>]</dt>
+                                <dd>American National Standards Institute, “Coded Character Set -- 7-bit American
+                                    Standard Code for Information Interchange”, ANSI X3.4, 1986.</dd>
+                            </dl>
+                        </div>
+                    </section>
+                    <section>
+                        <div id="rfc.references.2">
+                            <h3 id="rfc.section.10.2"><a href="#rfc.section.10.2">10.2.</a> 补充性引用</h3>
+                            <dl class="dl-horizontal">
+                                <dt id="RFC2109">[<a href="#RFC2109" class="smpl">RFC2109</a>]</dt>
+                                <dd><a href="mailto:dmk@bell-labs.com">Kristol, D.</a> and <a
+                                        href="mailto:montulli@netscape.com">L. Montulli</a>, “<a
+                                        href="https://www.rfc-editor.org/rfc/rfc2109.html">HTTP State Management
+                                        Mechanism</a>”, RFC 2109, February 1997.</dd>
+                                <dt id="RFC2965">[<a href="#RFC2965" class="smpl">RFC2965</a>]</dt>
+                                <dd><a href="mailto:dmk@bell-labs.com">Kristol, D.</a> and <a
+                                        href="mailto:lou@montulli.org">L. Montulli</a>, “<a
+                                        href="https://www.rfc-editor.org/rfc/rfc2965.html">HTTP State Management
+                                        Mechanism</a>”, RFC 2965, October 2000.</dd>
+                                <dt id="RFC2818">[<a href="#RFC2818" class="smpl">RFC2818</a>]</dt>
+                                <dd>Rescorla, E., “<a href="https://www.rfc-editor.org/rfc/rfc2818.html">HTTP Over
+                                        TLS</a>”, RFC 2818, May 2000.</dd>
+                                <dt id="Netscape">[<a href="#Netscape" class="smpl">Netscape</a>]</dt>
+                                <dd>Netscape Communications Corp., “<a
+                                        href="http://web.archive.org/web/20020803110822/http://wp.netscape.com/newsref/std/cookie_spec.html">Persistent
+                                        Client State -- HTTP Cookies</a>”, 1999, &lt;<a
+                                        href="http://web.archive.org/web/20020803110822/http://wp.netscape.com/newsref/std/cookie_spec.html">http://web.archive.org/web/20020803110822/http://wp.netscape.com/newsref/std/cookie_spec.html</a>&gt;.
+                                </dd>
+                                <dt id="Kri2001">[<a href="#Kri2001" class="smpl">Kri2001</a>]</dt>
+                                <dd>Kristol, D., “<a href="http://arxiv.org/abs/cs.SE/0105018">HTTP Cookies: Standards,
+                                        Privacy, and Politics</a>”, ACM Transactions on Internet Technology Vol. 1, #2,
+                                    November 2001, &lt;<a
+                                        href="http://arxiv.org/abs/cs.SE/0105018">http://arxiv.org/abs/cs.SE/0105018</a>&gt;.
+                                </dd>
+                                <dt id="RFC3629">[<a href="#RFC3629" class="smpl">RFC3629</a>]</dt>
+                                <dd>Yergeau, F., “<a href="https://www.rfc-editor.org/rfc/rfc3629.html">UTF-8, a
+                                        transformation format of ISO 10646</a>”, <a
+                                        href="https://www.rfc-editor.org/info/std63">STD 63</a>, RFC 3629, November
+                                    2003.</dd>
+                                <dt id="RFC4648">[<a href="#RFC4648" class="smpl">RFC4648</a>]</dt>
+                                <dd>Josefsson, S., “<a href="https://www.rfc-editor.org/rfc/rfc4648.html">The Base16,
+                                        Base32, and Base64 Data Encodings</a>”, RFC 4648, October 2006.</dd>
+                                <dt id="RFC3864">[<a href="#RFC3864" class="smpl">RFC3864</a>]</dt>
+                                <dd>Klyne, G., Nottingham, M., and J. Mogul, “<a
+                                        href="https://www.rfc-editor.org/rfc/rfc3864.html">Registration Procedures for
+                                        Message Header Fields</a>”, <a href="https://www.rfc-editor.org/info/bcp90">BCP
+                                        90</a>, RFC 3864, September 2004.</dd>
+                                <dt id="RFC5895">[<a href="#RFC5895" class="smpl">RFC5895</a>]</dt>
+                                <dd>Resnick, P. and P. Hoffman, “<a
+                                        href="https://www.rfc-editor.org/rfc/rfc5895.html">Mapping Characters for
+                                        Internationalized Domain Names in Applications (IDNA) 2008</a>”, RFC 5895,
+                                    September 2010.</dd>
+                                <dt id="UTS46">[<a href="#UTS46" class="smpl">UTS46</a>]</dt>
+                                <dd>Davis, M. and M. Suignard, “<a href="http://unicode.org/reports/tr46/">Unicode IDNA
+                                        Compatibility Processing</a>”, Unicode Technical Standards # 46, 2010, &lt;<a
+                                        href="http://unicode.org/reports/tr46/">http://unicode.org/reports/tr46/</a>&gt;.
+                                </dd>
+                                <dt id="CSRF">[<a href="#CSRF" class="smpl">CSRF</a>]</dt>
+                                <dd>Barth, A., Jackson, C., and J. Mitchell, “<a
+                                        href="http://portal.acm.org/citation.cfm?id=1455770.1455782">Robust Defenses for
+                                        Cross-Site Request Forgery</a>”, 2008, &lt;<a
+                                        href="http://portal.acm.org/citation.cfm?id=1455770.1455782">http://portal.acm.org/citation.cfm?id=1455770.1455782</a>&gt;.
+                                </dd>
+                                <dt id="Aggarwal2010">[<a href="#Aggarwal2010" class="smpl">Aggarwal2010</a>]</dt>
+                                <dd>Aggarwal, G., Burzstein, E., Jackson, C., and D. Boneh, “<a
+                                        href="http://www.usenix.org/events/sec10/tech/full_papers/Aggarwal.pdf">An
+                                        Analysis of Private Browsing Modes in Modern Browsers</a>”, 2010, &lt;<a
+                                        href="http://www.usenix.org/events/sec10/tech/full_papers/Aggarwal.pdf">http://www.usenix.org/events/sec10/tech/full_papers/Aggarwal.pdf</a>&gt;.
+                                </dd>
+                            </dl>
+                        </div>
+                    </section>
+                </section>
+                <section id="n-acknowledgements">
+                    <h2 id="rfc.section.A" class="np"><a href="#rfc.section.A">Appendix A.</a>&nbsp;<a
+                            href="#n-acknowledgements">致谢</a></h2>
+                    <div id="rfc.section.A.p.1">
+                        <p>本文大量借鉴了 RFC 2109 <a href="#RFC2109"><cite
+                                    title="HTTP State Management Mechanism">[RFC2109]</cite></a>。我们感谢 David M. Kristol 与
+                            Lou Montulli 为规范 cookie 所付出的努力。尤其感谢 David M. Kristol 在引导 IETF 过程方面提供的宝贵建议。我们还要感谢 Thomas
+                            Broyer、Tyler Close、Alissa Cooper、Bil Corry、corvid、Lisa Dusseault、Roy T. Fielding、Blake
+                            Frantz、Anne van Kesteren、Eran Hammer-Lahav、Jeff Hodges、Bjoern Hoehrmann、Achim Hoffmann、Georg
+                            Koppen、Dean McNamee、Alexey Melnikov、Mark Miller、Mark Pauley、Yngve N. Pettersen、Julian
+                            Reschke、Peter Saint-Andre、Mark Seaborn、Maciej Stachowiak、Daniel Stenberg、Tatsuhiro
+                            Tsujikawa、David Wagner、Dan Winship 和 Dan Witte 对本文档提供的宝贵反馈。</p>
+                    </div>
+                </section>
+                <section id="rfc.authors" class="avoidbreakinside">
+                    <h2><a href="#rfc.authors">作者地址</a></h2>
+                    <address><b>Adam Barth</b><br>
+                        University of California, Berkeley
+                        <br>Email: <a href="mailto:abarth@eecs.berkeley.edu">abarth@eecs.berkeley.edu</a><br>URI: <a
+                            href="http://www.adambarth.com/">http://www.adambarth.com/</a>
+                    </address>
+                </section>
+            </div>
+        </div>
+    </div>
+    <script src="https://httpwg.org/assets/node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="https://httpwg.org/assets/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="/dropdown.js"></script>
+</body>
+
+</html>

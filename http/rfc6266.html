@@ -1,0 +1,1120 @@
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html lang="zh-hans">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>RFC 6266 - 在 超文本&nbsp;传输&nbsp;协议&nbsp;(HTTP) 中 使用 Content-Disposition&nbsp;首部&nbsp;字段</title>
+    <script>
+        function getMeta(rfcno, container) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "https://www.rfc-editor.org/rfc/rfc" + rfcno + ".json", true);
+            xhr.onload = function (e) {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        var data = JSON.parse(xhr.response);
+
+                        var cont = document.getElementById(container);
+                        // empty the container
+                        while (cont.firstChild) {
+                            cont.removeChild(myNode.firstChild);
+                        }
+
+                        var c = data.status;
+                        if (c) {
+                            var bld = newElementWithText("b", c);
+                            cont.appendChild(bld);
+                        } else {
+                            cont.appendChild(newElementWithText("i", "(document status unknown)"));
+                        }
+
+                        c = data.updated_by;
+                        if (c && c.length > 0 && c[0] !== null && c[0].length > 0) {
+                            cont.appendChild(newElement("br"));
+                            cont.appendChild(newText("Updated by: "));
+                            appendRfcLinks(cont, c);
+                        }
+
+                        c = data.obsoleted_by;
+                        if (c && c.length > 0 && c[0] !== null && c[0].length > 0) {
+                            cont.appendChild(newElement("br"));
+                            cont.appendChild(newText("Obsoleted by: "));
+                            appendRfcLinks(cont, c);
+                        }
+
+                        c = data.errata_url;
+                        if (c) {
+                            cont.appendChild(newElement("br"));
+                            var link = newElementWithText("a", "errata");
+                            link.setAttribute("href", c);
+                            var errata = newElementWithText("i", "This document has ");
+                            errata.appendChild(link);
+                            errata.appendChild(newText("."));
+                            cont.appendChild(errata);
+                        }
+
+                        cont.style.display = "block";
+                    } else {
+                        console.error(xhr.statusText);
+                    }
+                }
+            };
+            xhr.onerror = function (e) {
+                console.error(xhr.status + " " + xhr.statusText);
+            };
+            xhr.send(null);
+        }
+        function appendRfcLinks(parent, updates) {
+            var template = "https://www.rfc-editor.org/rfc/rfc{rfc}.html";
+            for (var i = 0; i < updates.length; i++) {
+                var rfc = updates[i].trim().toLowerCase();
+                if (rfc.substring(0, 3) == "rfc") {
+                    var no = parseInt(rfc.substring(3), 10);
+
+                    var link = newElement("a");
+                    link.setAttribute("href", template.replace("{rfc}", no));
+                    link.appendChild(newText(no));
+                    parent.appendChild(link);
+                } else {
+                    parent.appendChild(newText(rfc));
+                }
+                if (i != updates.length - 1) {
+                    parent.appendChild(newText(", "));
+                }
+            }
+        }
+
+        // DOM helpers
+        function newElement(name) {
+            return document.createElement(name);
+        }
+        function newElementWithText(name, txt) {
+            var e = document.createElement(name);
+            e.appendChild(newText(txt));
+            return e;
+        }
+        function newText(text) {
+            return document.createTextNode(text);
+        }
+    </script>
+    <script>
+        function anchorRewrite() {
+            map = {};
+            if (window.location.hash.length >= 1) {
+                var fragid = window.location.hash.substr(1);
+                if (fragid) {
+                    if (!document.getElementById(fragid)) {
+                        var prefix = "rfc.";
+                        var mapped = map[fragid];
+                        if (mapped) {
+                            window.location.hash = mapped;
+                        } else if (fragid.indexOf("section-") == 0) {
+                            window.location.hash = prefix + "section." + fragid.substring(8).replace("-", ".p.");
+                        } else if (fragid.indexOf("appendix-") == 0) {
+                            window.location.hash = prefix + "section." + fragid.substring(9).replace("-", ".p.");
+                        } else if (fragid.indexOf("s-") == 0) {
+                            var postfix = fragid.substring(2);
+                            if (postfix.startsWith("abstract")) {
+                                window.location.hash = prefix + postfix;
+                            } else if (postfix.startsWith("note-")) {
+                                window.location.hash = prefix + "note." + postfix.substring(5).replace("-", ".p.");
+                            } else {
+                                window.location.hash = prefix + "section." + postfix.replace("-", ".p.");
+                            }
+                        } else if (fragid.indexOf("p-") == 0) {
+                            var r = fragid.substring(2);
+                            var p = r.indexOf("-");
+                            if (p >= 0) {
+                                window.location.hash = prefix + "section." + r.substring(0, p) + ".p." + r.substring(p + 1);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        window.addEventListener('hashchange', anchorRewrite);
+        window.addEventListener('DOMContentLoaded', anchorRewrite);
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="RFC6266">
+    <meta property="og:description"
+        content="Use of the Content-Disposition&nbsp;Header&nbsp;Field in the Hypertext&nbsp;Transfer&nbsp;Protocol&nbsp;(HTTP)">
+    <meta property="og:url" content="https://httpwg.org/specs/rfc6266.html">
+    <meta property="og:site_name" content="IETF HTTP Working Group Specifications">
+    <meta property="og:image" content="https://httpwg.org/assets/favicon/apple-icon-180x180.png">
+    <link rel="stylesheet" type="text/css"
+        href="https://httpwg.org/assets/node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <style type="text/css">
+        body {
+            padding-top: 80px;
+            padding-bottom: 80px;
+            position: relative;
+        }
+
+        .table.header th,
+        .table.header td {
+            border-top: none;
+            padding: 0;
+        }
+
+        #sidebar {
+            margin-top: -10px;
+            height: 90%;
+            overflow-y: auto;
+            font-size: 90%;
+        }
+
+        #rfc\.meta {
+            width: 40%;
+            float: right
+        }
+
+        .toc ul {
+            list-style: none;
+        }
+
+        .filename {
+            color: rgb(119, 119, 119);
+            font-size: 23px;
+            font-weight: normal;
+            height: auto;
+            line-height: 23px;
+        }
+
+        dl {
+            margin-left: 1em;
+        }
+
+        dl.dl-horizontal {
+            margin-left: 0;
+        }
+
+        dl>dt {
+            float: left;
+            margin-right: 1em;
+        }
+
+        dl.nohang>dt {
+            float: none;
+        }
+
+        dl>dd {
+            margin-bottom: .5em;
+        }
+
+        dl.compact>dd {
+            margin-bottom: 0em;
+        }
+
+        dl>dd>dl {
+            margin-top: 0.5em;
+            margin-bottom: 0em;
+        }
+
+        ul.empty {
+            list-style-type: none;
+        }
+
+        ul.empty li {
+            margin-top: .5em;
+        }
+
+        td.reference {
+            padding-right: 1em;
+            vertical-align: top;
+        }
+
+        .feedback {
+            position: fixed;
+            bottom: 5px;
+            right: 5px;
+        }
+
+        .fbbutton {
+            margin-left: 5px;
+        }
+
+        h1 a,
+        h2 a,
+        h3 a,
+        h4 a,
+        h5 a,
+        h6 a {
+            color: rgb(51, 51, 51);
+        }
+
+        span.tt {
+            font: 11pt consolas, monospace;
+            font-size-adjust: none;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" href="https://httpwg.org/assets/site.css">
+    <link rel="Contents" href="#rfc.toc">
+    <link rel="Author" href="#rfc.authors">
+    <link rel="License" href="#rfc.copyrightnotice">
+    <link rel="Chapter" title="1 Introduction" href="#rfc.section.1">
+    <link rel="Chapter" title="2 Notational Conventions" href="#rfc.section.2">
+    <link rel="Chapter" title="3 Conformance and Error Handling" href="#rfc.section.3">
+    <link rel="Chapter" title="4 Header Field Definition" href="#rfc.section.4">
+    <link rel="Chapter" title="5 Examples" href="#rfc.section.5">
+    <link rel="Chapter" title="6 Internationalization Considerations" href="#rfc.section.6">
+    <link rel="Chapter" title="7 Security Considerations" href="#rfc.section.7">
+    <link rel="Chapter" title="8 IANA Considerations" href="#rfc.section.8">
+    <link rel="Chapter" title="9 Acknowledgements" href="#rfc.section.9">
+    <link rel="Chapter" title="10 References" href="#rfc.section.10">
+    <link rel="Appendix" title="A Changes from the RFC 2616 Definition" href="#rfc.section.A">
+    <link rel="Appendix" title="B Differences Compared to RFC 2183" href="#rfc.section.B">
+    <link rel="Appendix" title="C Alternative Approaches to Internationalization" href="#rfc.section.C">
+    <link rel="Appendix" title="D Advice on Generating Content-Disposition Header Fields" href="#rfc.section.D">
+    <link rel="Alternate" title="Plain Text Version" href="http://www.ietf.org/rfc/rfc6266.txt">
+    <link rel="Help" title="RFC-Editor's Status Page" href="http://www.rfc-editor.org/info/rfc6266">
+    <meta name="viewport" content="initial-scale=1">
+    <meta name="generator"
+        content="https://github.com/mnot/RFCBootstrap XSLT vendor: Saxonica http://www.saxonica.com/">
+    <meta name="keywords"
+        content="HTTP, Hypertext Transfer Protocol, Content-Disposition, filename, attachment, inline">
+    <link rel="schema.dcterms" href="http://purl.org/dc/terms/">
+    <meta name="dcterms.creator" content="Reschke, J. F.">
+    <meta name="dcterms.identifier" content="urn:ietf:rfc:6266">
+    <meta name="dcterms.issued" content="2011-06">
+    <meta name="dcterms.abstract"
+        content="RFC 2616 defines the Content-Disposition response header field, but points out that it is not part of the HTTP/1.1 Standard. This specification takes over the definition and registration of Content-Disposition, as used in HTTP, and clarifies internationalization aspects.">
+    <meta name="dcterms.isPartOf" content="urn:issn:2070-1721">
+    <meta name="description"
+        content="RFC 2616 defines the Content-Disposition response header field, but points out that it is not part of the HTTP/1.1 Standard. This specification takes over the definition and registration of Content-Disposition, as used in HTTP, and clarifies internationalization aspects.">
+</head>
+
+<body onload="getMeta(6266,'rfc.meta');">
+    <nav class="navbar navbar-dark bg-dark d-print-none navbar-expand-lg fixed-top ps-3 pe-3" role="navigation">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse"
+                aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <a class="navbar-brand" href="https://httpwg.org/"><img src="https://httpwg.org/assets/http.svg"
+                    height="23"></a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse">
+
+            <div class="navbar-nav me-auto">
+
+                <a class="nav-item ms-1 text-white" href="https://httpwg.org/specs/">📄 Documentation</a>
+
+                <div class="dropdown ms-4">
+                    <a href="#" class="nav-item dropdown-toggle text-white" data-bs-toggle="dropdown">Work in
+                        Progress</a>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-item"><a href="https://httpwg.org/http-extensions/">HTTP Extensions</a></li>
+                        <li class="dropdown-item"><a
+                                href="https://github.com/httpwg/admin/issues?q=is%3Aissue+is%3Aopen+label%3Aadoption">Future
+                                Work</a></li>
+                    </ul>
+                </div>
+
+                <div class="dropdown ms-4">
+                    <a href="#" class="nav-item dropdown-toggle text-white" data-bs-toggle="dropdown">Participate</a>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-item"><a href="https://httpwg.org/about/">About the HTTP Working Group</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li class="dropdown-item"><a href="https://httpwg.org/CONTRIBUTING.html">Contribution Policy</a>
+                        </li>
+                        <li class="dropdown-item"><a href="http://datatracker.ietf.org/wg/httpbis/charter/">WG
+                                Charter</a></li>
+                        <li class="dropdown-item"><a href="http://lists.w3.org/Archives/Public/ietf-http-wg/">Group
+                                Mailing List 📨</a></li>
+                        <li class="dropdown-item"><a href="https://httpwg.org/wg-materials/">Meeting Materials</a></li>
+                        <li class="dropdown-item"><a href="https://httpwg.org/admin/editors/">Document Editor
+                                Resources</a></li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </nav>
+    <div class="container" id="top">
+        <div class="row">
+            <div class="col-lg-4 order-last d-none d-lg-block" id="sidebar" role="navigation">
+                <div class="navbar">
+                    <div class="navbar-brand"><a href="#top"><strong>RFC </strong>6266</a></div><br clear="all">
+                    <div class="">
+                        <div class="toc ">
+                            <ul>
+                                <li><a href="#rfc.section.1">1.</a>&nbsp;&nbsp;&nbsp;<a href="#introduction">引言</a></li>
+                                <li><a href="#rfc.section.2">2.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#notational.conventions">符号约定</a></li>
+                                <li><a href="#rfc.section.3">3.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#conformance.and.error.handling">合规性与错误处理</a></li>
+                                <li><a href="#rfc.section.4">4.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#header.field.definition">首部字段定义</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.4.1">4.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#rfc.section.4.1">语法</a></li>
+                                        <li><a href="#rfc.section.4.2">4.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#disposition.type">处置类型</a></li>
+                                        <li><a href="#rfc.section.4.3">4.3.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#disposition.parameter.filename">处置参数：'Filename'</a></li>
+                                        <li><a href="#rfc.section.4.4">4.4.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#disposition.parameter.extensions">处置参数：扩展</a></li>
+                                        <li><a href="#rfc.section.4.5">4.5.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#extensibility">可扩展性</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.5">5.</a>&nbsp;&nbsp;&nbsp;<a href="#examples">示例</a>
+                                </li>
+                                <li><a href="#rfc.section.6">6.</a>&nbsp;&nbsp;&nbsp;<a href="#i18n">国际化注意事项</a></li>
+                                <li><a href="#rfc.section.7">7.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#security.considerations">安全性注意事项</a></li>
+                                <li><a href="#rfc.section.8">8.</a>&nbsp;&nbsp;&nbsp;<a href="#iana.considerations">IANA
+                                        注意事项</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.8.1">8.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#registry">处置值和参数登记表</a></li>
+                                        <li><a href="#rfc.section.8.2">8.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#header.field.registration">首部字段注册</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.9">9.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.section.9">致谢</a>
+                                </li>
+                                <li><a href="#rfc.section.10">10.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#rfc.references">参考文献</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.10.1">10.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#rfc.references.1">规范性引用</a></li>
+                                        <li><a href="#rfc.section.10.2">10.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#rfc.references.2">补充性引用</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.A">Appendix A.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#changes.from.rfc2616">相对于 RFC 2616 的更改</a></li>
+                                <li><a href="#rfc.section.B">Appendix B.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#diffs.compared.to.rfc2183">与 RFC 2183 的差异</a></li>
+                                <li><a href="#rfc.section.C">Appendix C.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#alternatives">国际化的替代方法</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.C.1">C.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#alternatives.rfc2047">RFC 2047 编码</a></li>
+                                        <li><a href="#rfc.section.C.2">C.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#alternatives.percent">百分号编码</a></li>
+                                        <li><a href="#rfc.section.C.3">C.3.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#alternatives.sniff">编码嗅探</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.D">Appendix D.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#advice.generating">关于生成 Content-Disposition 首部字段的建议</a></li>
+                                <li><a href="#rfc.authors">作者地址</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8 order-first main" role="main">
+                <header>
+                    <table class="table table-condensed header" id="rfc.headerblock">
+                        <tbody>
+                            <tr>
+                                <td class="text-left">Internet Engineering Task Force (IETF)</td>
+                                <td class="text-right">J. Reschke</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left">Request for Comments: 6266</td>
+                                <td class="text-right">greenbytes</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left">Updates: <a href="#RFC2616">2616</a></td>
+                                <td class="text-right">2011年6月</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left">Category: Standards Track</td>
+                                <td class="text-right"></td>
+                            </tr>
+                            <tr>
+                                <td class="text-left">ISSN: 2070-1721</td>
+                                <td class="text-right"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div id="rfc.title">
+                        <h1>在 <span class="nobr">超文本传输协议 (HTTP)</span> 中 使用 <span class="nobr">Content-Disposition
+                                首部字段</span></h1>
+                    </div>
+                </header>
+                <hr>
+                <h2 id="rfc.abstract"><a href="#rfc.abstract">摘要</a></h2>
+                <div class="lead">
+                    <div id="rfc.abstract.p.1">
+                        <p>RFC 2616 定义了 Content-Disposition 响应首部字段，但指出该字段并非 HTTP/1.1 标准的一部分。本规范接手在 HTTP 中使用的
+                            Content-Disposition 的定义和注册，并澄清其国际化方面的问题。</p>
+                    </div>
+                </div>
+                <aside id="rfc.meta" class="alert alert-info"></aside>
+                <section id="rfc.status">
+                    <h2><a href="#rfc.status">本备忘录的状态</a></h2>
+                    <div id="rfc.boilerplate.1.p.1">
+                        <p>这是一个互联网标准轨道文档。</p>
+                    </div>
+                    <div id="rfc.boilerplate.1.p.2">
+                        <p>本文件是互联网工程任务组（IETF）的成果，代表 IETF 社区的共识。它已获得公开评审，并由互联网工程指导小组（IESG）批准发布。有关互联网标准的更多信息，请参阅 <a
+                                href="https://www.rfc-editor.org/rfc/rfc5741.html#section-2">RFC 5741 第2节</a>。</p>
+                    </div>
+                    <div id="rfc.boilerplate.1.p.3">
+                        <p>关于本文档当前状态、任何勘误以及如何反馈意见的信息，可在 <a
+                                href="http://www.rfc-editor.org/info/rfc6266">http://www.rfc-editor.org/info/rfc6266</a>
+                            获取。</p>
+                    </div>
+                </section>
+                <section id="rfc.copyrightnotice">
+                    <h2><a href="#rfc.copyrightnotice">Copyright Notice</a></h2>
+                    <div id="rfc.boilerplate.2.p.1">
+                        <p>Copyright (c) 2011 IETF Trust and the persons identified as the document authors. All rights
+                            reserved.</p>
+                    </div>
+                    <div id="rfc.boilerplate.2.p.2">
+                        <p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF
+                            Documents (<a
+                                href="http://trustee.ietf.org/license-info">http://trustee.ietf.org/license-info</a>) in
+                            effect on the date of publication of this document. Please review these documents carefully,
+                            as they describe your rights and restrictions with respect to this document. Code Components
+                            extracted from this document must include Simplified BSD License text as described in
+                            Section 4.e of the Trust Legal Provisions and are provided without warranty as described in
+                            the Simplified BSD License.</p>
+                    </div>
+                </section>
+                <div class="toc d-lg-none">
+                    <ul>
+                        <li><a href="#rfc.section.1">1.</a>&nbsp;&nbsp;&nbsp;<a href="#introduction">引言</a>
+                        </li>
+                        <li><a href="#rfc.section.2">2.</a>&nbsp;&nbsp;&nbsp;<a href="#notational.conventions">符号约定</a>
+                        </li>
+                        <li><a href="#rfc.section.3">3.</a>&nbsp;&nbsp;&nbsp;<a
+                                href="#conformance.and.error.handling">合规性与错误处理</a></li>
+                        <li><a href="#rfc.section.4">4.</a>&nbsp;&nbsp;&nbsp;<a
+                                href="#header.field.definition">首部字段定义</a>
+                            <ul>
+                                <li><a href="#rfc.section.4.1">4.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#rfc.section.4.1">语法</a></li>
+                                <li><a href="#rfc.section.4.2">4.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#disposition.type">处置类型</a></li>
+                                <li><a href="#rfc.section.4.3">4.3.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#disposition.parameter.filename">处置参数：“Filename”</a>
+                                </li>
+                                <li><a href="#rfc.section.4.4">4.4.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#disposition.parameter.extensions">处置参数：扩展</a>
+                                </li>
+                                <li><a href="#rfc.section.4.5">4.5.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#extensibility">可扩展性</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#rfc.section.5">5.</a>&nbsp;&nbsp;&nbsp;<a href="#examples">示例</a></li>
+                        <li><a href="#rfc.section.6">6.</a>&nbsp;&nbsp;&nbsp;<a href="#i18n">国际化注意事项</a></li>
+                        <li><a href="#rfc.section.7">7.</a>&nbsp;&nbsp;&nbsp;<a
+                                href="#security.considerations">安全性注意事项</a></li>
+                        <li><a href="#rfc.section.8">8.</a>&nbsp;&nbsp;&nbsp;<a href="#iana.considerations">IANA
+                                注意事项</a>
+                            <ul>
+                                <li><a href="#rfc.section.8.1">8.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#registry">处置值与参数登记表</a></li>
+                                <li><a href="#rfc.section.8.2">8.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#header.field.registration">首部字段注册</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#rfc.section.9">9.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.section.9">致谢</a></li>
+                        <li><a href="#rfc.section.10">10.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.references">参考文献</a>
+                            <ul>
+                                <li><a href="#rfc.section.10.1">10.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#rfc.references.1">规范性引用</a></li>
+                                <li><a href="#rfc.section.10.2">10.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#rfc.references.2">补充性引用</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#rfc.section.A">Appendix A.</a>&nbsp;&nbsp;&nbsp;<a
+                                href="#changes.from.rfc2616">相对于 RFC 2616 的变更</a></li>
+                        <li><a href="#rfc.section.B">Appendix B.</a>&nbsp;&nbsp;&nbsp;<a
+                                href="#diffs.compared.to.rfc2183">与 RFC 2183 的差异</a></li>
+                        <li><a href="#rfc.section.C">Appendix C.</a>&nbsp;&nbsp;&nbsp;<a
+                                href="#alternatives">国际化的替代方法</a>
+                            <ul>
+                                <li><a href="#rfc.section.C.1">C.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#alternatives.rfc2047">RFC 2047 编码</a></li>
+                                <li><a href="#rfc.section.C.2">C.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#alternatives.percent">百分号编码</a></li>
+                                <li><a href="#rfc.section.C.3">C.3.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#alternatives.sniff">编码嗅探</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#rfc.section.D">Appendix D.</a>&nbsp;&nbsp;&nbsp;<a href="#advice.generating">关于生成
+                                Content-Disposition 首部字段的建议</a>
+                        </li>
+                        <li><a href="#rfc.authors">作者地址</a></li>
+                    </ul>
+                </div>
+                <section id="introduction">
+                    <h2 id="rfc.section.1" class="np"><a href="#rfc.section.1">1.</a>&nbsp;<a
+                            href="#introduction">引言</a></h2>
+                    <div id="rfc.section.1.p.1" class="avoidbreakafter">
+                        <p>RFC 2616 定义了 Content-Disposition 响应首部字段（<a
+                                href="https://www.rfc-editor.org/rfc/rfc2616.html#section-19.5.1">RFC2616 第 19.5.1
+                                节</a>），
+                            但指出该字段并非 HTTP/1.1 标准的一部分（<a href="https://www.rfc-editor.org/rfc/rfc2616.html#section-15.5"
+                                id="rfc.xref.RFC2616.2">RFC2616 第 15.5 节</a>）：
+                        </p>
+                    </div>
+                    <div id="rfc.section.1.p.2">
+                        <blockquote cite="http://tools.ietf.org/html/rfc2616#section-15.5">
+                            <div id="rfc.section.1.p.2.1">
+                                <p>Content-Disposition 并非 HTTP 标准的一部分，但由于它被广泛实现，我们在此记录其用法和对实现者的风险说明。</p>
+                            </div>
+                        </blockquote>
+                    </div>
+                    <div id="rfc.section.1.p.3">
+                        <p>本规范接手在 HTTP 中使用的 Content-Disposition 的定义与注册。基于与现有用户代理（UA）进行的互操作性测试，本规范对邮件多用途扩展（MIME）变体（<a
+                                href="#RFC2183" id="rfc.xref.RFC2183.1"><cite
+                                    title="Communicating Presentation Information in Internet Messages: The Content-Disposition Header Field">[RFC2183]</cite></a>）中定义的特性做出了完整的配置文件定义，并澄清了国际化方面的问题。
+                        </p>
+                    </div>
+                    <div id="rfc.section.1.p.4">
+                        <aside>
+                            <div id="rfc.section.1.p.4.1">
+                                <p><b>注意：</b> 本文件不适用于出现在通过 HTTP 传输的有效负载体中（例如使用媒体类型 "multipart/form-data" 时）的
+                                    Content-Disposition 首部字段（参见 <a href="#RFC2388" id="rfc.xref.RFC2388.1"><cite
+                                            title="Returning Values from Forms: multipart/form-data">[RFC2388]</cite></a>）。
+                                </p>
+                            </div>
+                        </aside>
+                    </div>
+                </section>
+                <section id="notational.conventions">
+                    <h2 id="rfc.section.2"><a href="#rfc.section.2">2.</a>&nbsp;<a
+                            href="#notational.conventions">符号约定</a></h2>
+                    <div id="rfc.section.2.p.1">
+                        <p>文中关键词 "MUST"、"MUST NOT"、"REQUIRED"、"SHALL"、"SHALL NOT"、"SHOULD"、"SHOULD NOT"、
+                            "RECOMMENDED"、"MAY" 和 "OPTIONAL" 应按 <a href="#RFC2119" id="rfc.xref.RFC2119.1"><cite
+                                    title="Key words for use in RFCs to Indicate Requirement Levels">[RFC2119]</cite></a>
+                            中的定义来解释。</p>
+                    </div>
+                    <div id="rfc.section.2.p.2">
+                        <p>本规范使用增强巴科斯-诺尔范式（ABNF）表示法，定义见 <a
+                                href="https://www.rfc-editor.org/rfc/rfc2616.html#section-2.1">RFC2616 第 2.1
+                                节</a>，并包括其关于隐含线性空白（LWS）的规则。</p>
+                    </div>
+                </section>
+                <section id="conformance.and.error.handling">
+                    <h2 id="rfc.section.3"><a href="#rfc.section.3">3.</a>&nbsp;<a
+                            href="#conformance.and.error.handling">合规性与错误处理</a></h2>
+                    <div id="rfc.section.3.p.1">
+                        <p>本规范为 Content-Disposition 首部字段的发送者（通常为 HTTP 源服务器）和接收者（通常为 HTTP
+                            用户代理）定义了合规性标准。若实现遵从其角色相关的所有要求，则视为合规。</p>
+                    </div>
+                    <div id="rfc.section.3.p.2">
+                        <p>本规范还使用 ABNF 与文字性要求（见 <a href="#header.field.definition"
+                                id="rfc.xref.header.field.definition.1" title="Header Field Definition">第 4 节</a>）
+                            定义某些形式的首部字段值为无效，但并未规定对这些无效字段值的特殊处理方式。</p>
+                    </div>
+                    <div id="rfc.section.3.p.3">
+                        <p>发送者 <em class="bcp14">不得</em> 生成无效的 Content-Disposition 首部字段。</p>
+                    </div>
+                    <div id="rfc.section.3.p.4">
+                        <p>接收者 <em class="bcp14">可以</em> 采取措施从无效首部字段中恢复出可用的字段值，但 <em class="bcp14">不应</em>
+                            直接拒绝该消息（除非这是明确期望的行为，例如实现为验证器）。因此，对无效字段的默认处理是忽略它们。</p>
+                    </div>
+                </section>
+                <section id="header.field.definition">
+                    <h2 id="rfc.section.4"><a href="#rfc.section.4">4.</a>&nbsp;<a
+                            href="#header.field.definition">首部字段定义</a></h2>
+                    <div id="rfc.section.4.p.1">
+                        <p>Content-Disposition 响应首部字段用于传达关于如何处理响应有效负载的附加信息，也可用于附加元数据，例如在本地保存响应有效负载时应使用的文件名。</p>
+                    </div>
+                    <section id="n-grammar">
+                        <h3 id="rfc.section.4.1"><a href="#rfc.section.4.1">4.1.</a>&nbsp;<a href="#n-grammar">语法</a>
+                        </h3>
+                        <div id="rfc.figure.u.1">
+                            <div>
+                                <pre class="inline">  content-disposition = "Content-Disposition" ":"
+                         disposition-type *( ";" disposition-parm )
+
+  disposition-type    = "inline" | "attachment" | disp-ext-type
+                      ; case-insensitive
+  disp-ext-type       = token
+
+  disposition-parm    = filename-parm | disp-ext-parm
+
+  filename-parm       = "filename" "=" value
+                      | "filename*" "=" ext-value
+  
+  disp-ext-parm       = token "=" value
+                      | ext-token "=" ext-value
+  ext-token           = &lt;the characters in token, followed by "*"&gt;
+</pre>
+                            </div>
+                        </div>
+                        <div id="rfc.figure.u.2">
+                            <p>下列条目在 <a href="#RFC2616" id="rfc.xref.RFC2616.4"><cite
+                                        title="Hypertext Transfer Protocol -- HTTP/1.1">[RFC2616]</cite></a> 中定义：</p>
+                            <div>
+                                <pre class="inline">  token         = &lt;token, defined in <a href="#RFC2616" id="rfc.xref.RFC2616.5"><cite title="Hypertext Transfer Protocol -- HTTP/1.1">[RFC2616]</cite></a>, <a href="https://www.rfc-editor.org/rfc/rfc2616.html#section-2.2">Section 2.2</a>&gt;
+  quoted-string = &lt;quoted-string, defined in <a href="#RFC2616" id="rfc.xref.RFC2616.6"><cite title="Hypertext Transfer Protocol -- HTTP/1.1">[RFC2616]</cite></a>, <a href="https://www.rfc-editor.org/rfc/rfc2616.html#section-2.2">Section 2.2</a>&gt;
+  value         = &lt;value, defined in <a href="#RFC2616" id="rfc.xref.RFC2616.7"><cite title="Hypertext Transfer Protocol -- HTTP/1.1">[RFC2616]</cite></a>, <a href="https://www.rfc-editor.org/rfc/rfc2616.html#section-3.6">Section 3.6</a>&gt;
+                ; token | quoted-string
+              
+</pre>
+                            </div>
+                        </div>
+                        <div id="rfc.figure.u.3">
+                            <p>下列条目在 <a href="#RFC5987" id="rfc.xref.RFC5987.1"><cite
+                                        title="Character Set and Language Encoding for Hypertext Transfer Protocol (HTTP) Header Field Parameters">[RFC5987]</cite></a>
+                                中定义：</p>
+                            <div>
+                                <pre class="inline">  ext-value   = &lt;ext-value, defined in <a href="#RFC5987" id="rfc.xref.RFC5987.2"><cite title="Character Set and Language Encoding for Hypertext Transfer Protocol (HTTP) Header Field Parameters">[RFC5987]</cite></a>, <a href="https://www.rfc-editor.org/rfc/rfc5987.html#section-3.2">Section 3.2</a>&gt;
+</pre>
+                            </div>
+                        </div>
+                        <div id="rfc.section.4.1.p.1">
+                            <p>若 Content-Disposition 首部字段值中出现同一参数名的多个实例，则该字段值为无效。</p>
+                        </div>
+                        <div id="rfc.section.4.1.p.2">
+                            <p>注意，由于隐含线性空白的规则（参见 <a
+                                    href="https://www.rfc-editor.org/rfc/rfc2616.html#section-2.1">RFC2616 第 2.1
+                                    节</a>），在单词（token 或 quoted-string）与分隔字符之间可以出现可选的空白。</p>
+                        </div>
+                        <div id="rfc.section.4.1.p.3">
+                            <p>此外，注意 ext-value 的格式允许指定自然语言（例如 "en"）；但对于文件名而言，这种语言标记作用有限，接收者很可能会忽略它。</p>
+                        </div>
+                    </section>
+                    <section id="disposition.type">
+                        <h3 id="rfc.section.4.2"><a href="#rfc.section.4.2">4.2.</a>&nbsp;<a
+                                href="#disposition.type">处置类型</a></h3>
+                        <div id="rfc.section.4.2.p.1">
+                            <p>如果处置类型与 "attachment" 匹配（不区分大小写），表示接收者应提示用户将响应保存到本地，而不是按响应的媒体类型进行正常处理。</p>
+                        </div>
+                        <div id="rfc.section.4.2.p.2">
+                            <p>相反，如果匹配 "inline"（不区分大小写），则表示默认处理。因此，处置类型 "inline" 仅在配合额外参数（例如文件名）时有用（见下文）。</p>
+                        </div>
+                        <div id="rfc.section.4.2.p.3">
+                            <p>未知或未处理的处置类型 <em class="bcp14">应当</em> 由接收者以与 "attachment" 相同的方式处理（另见 <a href="#RFC2183"
+                                    id="rfc.xref.RFC2183.2"><cite
+                                        title="Communicating Presentation Information in Internet Messages: The Content-Disposition Header Field">[RFC2183]</cite></a>，<a
+                                    href="https://www.rfc-editor.org/rfc/rfc2183.html#section-2.8">第 2.8 节</a>）。</p>
+                        </div>
+                    </section>
+                    <section id="disposition.parameter.filename">
+                        <h3 id="rfc.section.4.3"><a href="#rfc.section.4.3">4.3.</a>&nbsp;<a
+                                href="#disposition.parameter.filename">处置参数：“Filename”</a></h3>
+                        <div id="rfc.section.4.3.p.1">
+                            <p>参数 "filename" 与 "filename*"（匹配时不区分大小写）提供了用于构造保存消息有效负载时文件名的信息。</p>
+                        </div>
+                        <div id="rfc.section.4.3.p.2">
+                            <p>依据处置类型，这些信息可能会立即使用（比如对 "attachment" 处置类型触发的“另存为...”交互中），也可能在稍后使用（例如用户决定保存当前正在显示页面的内容时）。
+                            </p>
+                        </div>
+                        <div id="rfc.section.4.3.p.3">
+                            <p>"filename" 与 "filename*" 的差别在于 "filename*" 使用 <a href="#RFC5987"
+                                    id="rfc.xref.RFC5987.3"><cite
+                                        title="Character Set and Language Encoding for Hypertext Transfer Protocol (HTTP) Header Field Parameters">[RFC5987]</cite></a>
+                                中定义的编码，允许使用 ISO-8859-1 字符集之外的字符（参见 <a href="#ISO-8859-1"
+                                    id="rfc.xref.ISO-8859-1.1"><cite
+                                        title="Information technology -- 8-bit single-byte coded graphic character sets -- Part 1: Latin alphabet No. 1">[ISO-8859-1]</cite></a>）。
+                            </p>
+                        </div>
+                        <div id="rfc.section.4.3.p.4">
+                            <p>许多早于本规范的用户代理实现不了解 "filename*" 参数。因此，当同一首部字段值中同时存在 "filename" 与 "filename*" 时，接收者 <em
+                                    class="bcp14">应当</em> 选择 "filename*" 并忽略 "filename"。这样，发送方可以同时发送更具表达力的 "filename*"
+                                参数，并将 "filename" 参数作为针对旧接收者的回退（参见 <a href="#examples" title="Examples">第 5 节</a> 中的示例）。
+                            </p>
+                        </div>
+                        <div id="rfc.section.4.3.p.5">
+                            <p>接收者应将指定的文件名仅视为建议，因此在提取所需信息时必须非常小心。具体而言：</p>
+                            <ul>
+                                <li>
+                                    <div>
+                                        <p>接收者 <em class="bcp14">不得</em> 将文件写入其并非明确有权限写入的位置。举例来说，不应允许覆盖诸如 "/etc/passwd"
+                                            等系统重要位置。为避免该问题，一种策略是永远不要信任 filename
+                                            参数中的文件夹信息，例如仅保留最后一个路径段并只考虑实际的文件名（“路径段”为由路径分隔符 "\" 与 "/" 分隔的字段值的组成部分）。</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div>
+                                        <p>许多平台不使用互联网媒体类型（参见 <a href="#RFC2046" id="rfc.xref.RFC2046.1"><cite
+                                                    title="Multipurpose Internet Mail Extensions (MIME) Part Two: Media Types">[RFC2046]</cite></a>）在文件系统中保存类型信息，而是依赖文件名扩展名。信任服务器提供的文件扩展名可能在以后打开已保存文件时引入权限提升（例如
+                                            ".exe"）。因此，使用文件扩展名来确定媒体类型的接收者 <em class="bcp14">必须</em>
+                                            确保所用的扩展名是安全的，并尽量与接收到的有效载荷的媒体类型相匹配。</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div>
+                                        <p>接收者 <em class="bcp14">应当</em> 去除或替换那些已知会在用户界面和文件名中引起混淆的字符序列，例如控制字符以及首尾空白字符。
+                                        </p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div>
+                                        <p>接收者还需注意在文件系统或 shell 命令中具有特殊含义的名称，比如 "." 与 ".."、"~"、"|" 以及设备名等。接收者 <em
+                                                class="bcp14">应当</em> 忽略或替换这些名称。</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div id="rfc.section.4.3.p.6">
+                            <aside>
+                                <div id="rfc.section.4.3.p.6.1">
+                                    <p><b>注意：</b> 许多用户代理在使用 quoted-string 形式时无法正确处理转义字符 "\"。此外，一些用户代理错误地尝试对“百分号”转义（见 <a
+                                            href="#alternatives.percent" title="Percent Encoding">附录
+                                            C.2</a>）做反转义，因此可能会误解包含百分号后跟两个十六进制数字的文件名。</p>
+                                </div>
+                            </aside>
+                        </div>
+                    </section>
+                    <section id="disposition.parameter.extensions">
+                        <h3 id="rfc.section.4.4"><a href="#rfc.section.4.4">4.4.</a>&nbsp;<a
+                                href="#disposition.parameter.extensions">处置参数：扩展</a></h3>
+                        <div id="rfc.section.4.4.p.1">
+                            <p>为了支持未来扩展，接收者 <em class="bcp14">应当</em> 忽略无法识别的参数（另见 <a href="#RFC2183"
+                                    id="rfc.xref.RFC2183.3"><cite
+                                        title="Communicating Presentation Information in Internet Messages: The Content-Disposition Header Field">[RFC2183]</cite></a>，<a
+                                    href="https://www.rfc-editor.org/rfc/rfc2183.html#section-2.8">第 2.8 节</a>）。</p>
+                        </div>
+                    </section>
+                    <section id="extensibility">
+                        <h3 id="rfc.section.4.5"><a href="#rfc.section.4.5">4.5.</a>&nbsp;<a
+                                href="#extensibility">可扩展性</a></h3>
+                        <div id="rfc.section.4.5.p.1">
+                            <p>注意 <a href="https://www.rfc-editor.org/rfc/rfc2183.html#section-9">RFC2183 第 9 节</a>
+                                定义了处置类型与处置参数的 IANA 注册表。此注册表由使用 Content-Disposition 的不同协议（例如 MIME 与 HTTP）共享。因此，并非所有已注册的值在
+                                HTTP 的上下文中都有意义。</p>
+                        </div>
+                    </section>
+                </section>
+                <section id="examples">
+                    <h2 id="rfc.section.5"><a href="#rfc.section.5">5.</a>&nbsp;<a href="#examples">示例</a></h2>
+                    <div id="rfc.figure.u.4">
+                        <p>指示用户代理显示“另存为”对话框，文件名为 "example.html":</p>
+                        <div>
+                            <pre class="text">Content-Disposition: Attachment; filename=example.html
+</pre>
+                        </div>
+                    </div>
+                    <div id="rfc.figure.u.5">
+                        <p>指示用户代理行为如同不存在 Content-Disposition 首部字段，但记住文件名 "an example.html" 以便后续保存操作：</p>
+                        <div>
+                            <pre class="text">Content-Disposition: INLINE; FILENAME= "an example.html"
+</pre>
+                        </div>
+                        <p>注：此处使用 quoted-string 形式以便包含空格字符。</p>
+                    </div>
+                    <div id="rfc.figure.u.6">
+                        <p>指示用户代理显示“另存为”对话框，文件名包含 Unicode 字符 U+20AC（欧元符号）：</p>
+                        <div>
+                            <pre class="text">Content-Disposition: attachment; 
+                     filename*= UTF-8''<b>%e2%82%ac</b>%20rates
+</pre>
+                        </div>
+                        <p>此处使用 <a href="#RFC5987" id="rfc.xref.RFC5987.4"><cite
+                                    title="Character Set and Language Encoding for Hypertext Transfer Protocol (HTTP) Header Field Parameters">[RFC5987]</cite></a>
+                            中定义的编码来对非 ISO-8859-1 字符进行编码。</p>
+                    </div>
+                    <div id="rfc.figure.u.7">
+                        <p>下面的示例与上例相同，但为不支持 <span class="nobr">RFC 5987</span> 的用户代理增加了 "filename" 参数以提高兼容性：</p>
+                        <div>
+                            <pre class="text">Content-Disposition: attachment;
+                     filename="EURO rates";
+                     filename*=utf-8''<b>%e2%82%ac</b>%20rates
+</pre>
+                        </div>
+                        <p>注：那些不支持 RFC 5987 编码的用户代理在 "filename" 之后出现 "filename*" 时会忽略 "filename*"。</p>
+                    </div>
+                </section>
+                <section id="i18n">
+                    <h2 id="rfc.section.6"><a href="#rfc.section.6">6.</a>&nbsp;<a href="#i18n">国际化注意事项</a></h2>
+                    <div id="rfc.section.6.p.1">
+                        <p>"filename*" 参数（参见 <a href="#disposition.parameter.filename"
+                                title="Disposition Parameter: 'Filename'">第 4.3 节</a>）使用 <a href="#RFC5987"
+                                id="rfc.xref.RFC5987.5"><cite
+                                    title="Character Set and Language Encoding for Hypertext Transfer Protocol (HTTP) Header Field Parameters">[RFC5987]</cite></a>
+                            中定义的编码，
+                            允许服务器传输 ISO-8859-1 字符集之外的字符，并可可选地指定所使用的语言。</p>
+                    </div>
+                    <div id="rfc.section.6.p.2">
+                        <p>未来的参数也可能需要国际化支持，在这种情况下可以使用相同的编码。</p>
+                    </div>
+                </section>
+                <section id="security.considerations">
+                    <h2 id="rfc.section.7"><a href="#rfc.section.7">7.</a>&nbsp;<a
+                            href="#security.considerations">安全性注意事项</a></h2>
+                    <div id="rfc.section.7.p.1">
+                        <p>使用服务器提供的信息来构造本地文件名会引入许多风险。这些风险在 <a href="#disposition.parameter.filename"
+                                title="Disposition Parameter: 'Filename'">第 4.3 节</a> 中进行了总结。</p>
+                    </div>
+                    <div id="rfc.section.7.p.2">
+                        <p>此外，实施者应注意适用于 HTTP 的安全性注意事项（参见 <a
+                                href="https://www.rfc-editor.org/rfc/rfc2616.html#section-15">RFC2616 第 15 节</a>），以及在 <a
+                                href="#RFC5987" id="rfc.xref.RFC5987.6"><cite
+                                    title="Character Set and Language Encoding for Hypertext Transfer Protocol (HTTP) Header Field Parameters">[RFC5987]</cite></a>
+                            中定义的参数编码（参见 <a href="https://www.rfc-editor.org/rfc/rfc5987.html#section-5"
+                                id="rfc.xref.RFC5987.7">第 5 节</a>）。</p>
+                    </div>
+                </section>
+                <section id="iana.considerations">
+                    <h2 id="rfc.section.8"><a href="#rfc.section.8">8.</a>&nbsp;<a href="#iana.considerations">IANA
+                            注意事项</a></h2>
+                    <section id="registry">
+                        <h3 id="rfc.section.8.1"><a href="#rfc.section.8.1">8.1.</a>&nbsp;<a
+                                href="#registry">处置值与参数登记表</a></h3>
+                        <div id="rfc.section.8.1.p.1">
+                            <p>本规范并未对 <a href="https://www.rfc-editor.org/rfc/rfc2183.html#section-9">RFC2183 第 9 节</a>
+                                中定义的处置值与参数的注册程序做出任何更改。</p>
+                        </div>
+                    </section>
+                    <section id="header.field.registration">
+                        <h3 id="rfc.section.8.2"><a href="#rfc.section.8.2">8.2.</a>&nbsp;<a
+                                href="#header.field.registration">首部字段注册</a></h3>
+                        <div id="rfc.section.8.2.p.1">
+                            <p>本文件更新了永久 HTTP 首部字段注册表中 Content-Disposition 首部字段的定义（参见 <a href="#RFC3864"
+                                    id="rfc.xref.RFC3864.1"><cite
+                                        title="Registration Procedures for Message Header Fields">[RFC3864]</cite></a>）。
+                            </p>
+                        </div>
+                        <div id="rfc.section.8.2.p.2">
+                            <dl>
+                                <dt>首部字段名：</dt>
+                                <dd>Content-Disposition</dd>
+                                <dt>适用协议：</dt>
+                                <dd>http</dd>
+                                <dt>状态：</dt>
+                                <dd>standard</dd>
+                                <dt>作者/变更控制者：</dt>
+                                <dd>IETF</dd>
+                                <dt>规范文档：</dt>
+                                <dd>本规范（<a href="#header.field.definition" id="rfc.xref.header.field.definition.2"
+                                        title="Header Field Definition">第 4 节</a>）</dd>
+                                <dt>相关信息：</dt>
+                                <dd>无</dd>
+                            </dl>
+                        </div>
+                    </section>
+                </section>
+                <section id="n-acknowledgements">
+                    <h2 id="rfc.section.9"><a href="#rfc.section.9">9.</a>&nbsp;<a href="#n-acknowledgements">致谢</a>
+                    </h2>
+                    <div id="rfc.section.9.p.1">
+                        <p>感谢 Adam Barth、Rolf Eike Beer、Stewart Bryant、Bjoern Hoehrmann、Alfred Hoenes、Roar
+                            Lauritzsen、Alexey Melnikov、Henrik Nordstrom 和 Mark Nottingham 提供的宝贵反馈。</p>
+                    </div>
+                </section>
+                <section id="rfc.references">
+                    <h2 id="rfc.section.10"><a href="#rfc.section.10">10.</a> 参考文献</h2>
+                    <section>
+                        <div id="rfc.references.1">
+                            <h3 id="rfc.section.10.1"><a href="#rfc.section.10.1">10.1.</a> 规范性引用</h3>
+                            <dl class="dl-horizontal">
+                                <dt id="ISO-8859-1">[<a href="#ISO-8859-1" class="smpl">ISO-8859-1</a>]</dt>
+                                <dd>国际标准化组织， “Information technology -- 8-bit single-byte coded graphic character sets
+                                    -- Part 1: Latin alphabet No. 1”，ISO/IEC 8859-1:1998，1998 年。</dd>
+                                <dt id="RFC2119">[<a href="#RFC2119" class="smpl">RFC2119</a>]</dt>
+                                <dd><a href="mailto:sob@harvard.edu">Bradner, S.</a>，“<a
+                                        href="https://www.rfc-editor.org/rfc/rfc2119.html">Key words for use in RFCs to
+                                        Indicate Requirement Levels</a>”，<a
+                                        href="https://www.rfc-editor.org/info/bcp14">BCP 14</a>，RFC 2119，1997 年 3 月。
+                                </dd>
+                                <dt id="RFC2616">[<a href="#RFC2616" class="smpl">RFC2616</a>]</dt>
+                                <dd><a href="mailto:fielding@ics.uci.edu">Fielding, R.</a> 等，“<a
+                                        href="https://www.rfc-editor.org/rfc/rfc2616.html">Hypertext Transfer Protocol
+                                        -- HTTP/1.1</a>”，RFC 2616，1999 年 6 月。</dd>
+                                <dt id="RFC5987">[<a href="#RFC5987" class="smpl">RFC5987</a>]</dt>
+                                <dd><a href="mailto:julian.reschke@greenbytes.de">Reschke, J.</a>，“<a
+                                        href="https://www.rfc-editor.org/rfc/rfc5987.html">Character Set and Language
+                                        Encoding for Hypertext Transfer Protocol (HTTP) Header Field Parameters</a>”，RFC
+                                    5987，2010 年 8 月。</dd>
+                            </dl>
+                        </div>
+                    </section>
+                    <section>
+                        <div id="rfc.references.2">
+                            <h3 id="rfc.section.10.2"><a href="#rfc.section.10.2">10.2.</a> 补充性引用</h3>
+                            <dl class="dl-horizontal">
+                                <dt id="RFC2046">[<a href="#RFC2046" class="smpl">RFC2046</a>]</dt>
+                                <dd><a href="mailto:ned@innosoft.com">Freed, N.</a> 和 <a href="mailto:nsb@nsb.fv.com">N.
+                                        Borenstein</a>，“<a
+                                        href="https://www.rfc-editor.org/rfc/rfc2046.html">Multipurpose Internet Mail
+                                        Extensions (MIME) Part Two: Media Types</a>”，RFC 2046，1996 年 11 月。</dd>
+                                <dt id="RFC2047">[<a href="#RFC2047" class="smpl">RFC2047</a>]</dt>
+                                <dd><a href="mailto:moore@cs.utk.edu">Moore, K.</a>，“<a
+                                        href="https://www.rfc-editor.org/rfc/rfc2047.html">MIME (Multipurpose Internet
+                                        Mail Extensions) Part Three: Message Header Extensions for Non-ASCII
+                                        Text</a>”，RFC 2047，1996 年 11 月。</dd>
+                                <dt id="RFC2183">[<a href="#RFC2183" class="smpl">RFC2183</a>]</dt>
+                                <dd><a href="mailto:rens@century.com">Troost, R.</a> 等，“<a
+                                        href="https://www.rfc-editor.org/rfc/rfc2183.html">Communicating Presentation
+                                        Information in Internet Messages: The Content-Disposition Header Field</a>”，RFC
+                                    2183，1997 年 8 月。</dd>
+                                <dt id="RFC2231">[<a href="#RFC2231" class="smpl">RFC2231</a>]</dt>
+                                <dd><a href="mailto:ned.freed@innosoft.com">Freed, N.</a> 和 <a
+                                        href="mailto:moore@cs.utk.edu">K. Moore</a>，“<a
+                                        href="https://www.rfc-editor.org/rfc/rfc2231.html">MIME Parameter Value and
+                                        Encoded Word Extensions: Character Sets, Languages, and Continuations</a>”，RFC
+                                    2231，1997 年 11 月。</dd>
+                                <dt id="RFC2388">[<a href="#RFC2388" class="smpl">RFC2388</a>]</dt>
+                                <dd><a href="mailto:masinter@parc.xerox.com">Masinter, L.</a>，“<a
+                                        href="https://www.rfc-editor.org/rfc/rfc2388.html">Returning Values from Forms:
+                                        multipart/form-data</a>”，RFC 2388，1998 年 8 月。</dd>
+                                <dt id="RFC3864">[<a href="#RFC3864" class="smpl">RFC3864</a>]</dt>
+                                <dd><a href="mailto:GK-IETF@ninebynine.org">Klyne, G.</a> 等，“<a
+                                        href="https://www.rfc-editor.org/rfc/rfc3864.html">Registration Procedures for
+                                        Message Header Fields</a>”，RFC 3864，2004 年 9 月。</dd>
+                                <dt id="RFC3986">[<a href="#RFC3986" class="smpl">RFC3986</a>]</dt>
+                                <dd><a href="mailto:timbl@w3.org">Berners-Lee, T.</a> 等，“<a
+                                        href="https://www.rfc-editor.org/rfc/rfc3986.html">Uniform Resource Identifier
+                                        (URI): Generic Syntax</a>”，RFC 3986，2005 年 1 月。</dd>
+                                <dt id="US-ASCII">[<a href="#US-ASCII" class="smpl">US-ASCII</a>]</dt>
+                                <dd>美国国家标准协会， “Coded Character Set -- 7-bit American Standard Code for Information
+                                    Interchange”，ANSI X3.4，1986 年。</dd>
+                            </dl>
+                        </div>
+                    </section>
+                </section>
+                <section id="changes.from.rfc2616">
+                    <h2 id="rfc.section.A" class="np"><a href="#rfc.section.A">Appendix A.</a>&nbsp;<a
+                            href="#changes.from.rfc2616">相对于 RFC 2616 的变更</a></h2>
+                    <div id="rfc.section.A.p.1">
+                        <p>与 <a href="https://www.rfc-editor.org/rfc/rfc2616.html#section-19.5.1">RFC2616 第 19.5.1 节</a>
+                            相比，反映实际实现的下列规范性变更已被引入：</p>
+                        <ul>
+                            <li>根据 RFC 2616，处置类型 "attachment" 仅适用于类型为 "application/octet-stream"
+                                的内容。已移除此限制，因为接收者实际上并不检查内容类型，而且该限制会阻碍正确声明媒体类型。</li>
+                            <li>RFC 2616 仅允许 quoted-string 形式作为 filename 参数的语法。这是一个例外性的参数语法，也不反映实际使用情况。</li>
+                            <li>处置类型 "inline" 的定义（参见 <a href="#RFC2183" id="rfc.xref.RFC2183.6"><cite
+                                        title="Communicating Presentation Information in Internet Messages: The Content-Disposition Header Field">[RFC2183]</cite></a>，<a
+                                    href="https://www.rfc-editor.org/rfc/rfc2183.html#section-2.1">第 2.1
+                                    节</a>）已被重新加入并给出其处理建议。</li>
+                            <li>本规范要求支持在 <a href="#RFC5987" id="rfc.xref.RFC5987.8"><cite
+                                        title="Character Set and Language Encoding for Hypertext Transfer Protocol (HTTP) Header Field Parameters">[RFC5987]</cite></a>
+                                中定义的扩展参数编码。</li>
+                        </ul>
+                    </div>
+                </section>
+                <section id="diffs.compared.to.rfc2183">
+                    <h2 id="rfc.section.B"><a href="#rfc.section.B">Appendix B.</a>&nbsp;<a
+                            href="#diffs.compared.to.rfc2183">与 RFC 2183 的差异</a></h2>
+                    <div id="rfc.section.B.p.1">
+                        <p><a href="https://www.rfc-editor.org/rfc/rfc2183.html#section-2">RFC2183 第 2 节</a>
+                            定义了若干额外的处置参数："creation-date"、"modification-date"、"quoted-date-time" 和
+                            "size"。大多数用户代理并未实现这些参数，因此在本规范中将其省略。</p>
+                    </div>
+                </section>
+                <section id="alternatives">
+                    <h2 id="rfc.section.C"><a href="#rfc.section.C">Appendix C.</a>&nbsp;<a
+                            href="#alternatives">国际化的替代方法</a></h2>
+                    <div id="rfc.section.C.p.1">
+                        <p>默认情况下，HTTP 首部字段参数不能携带 ISO-8859-1（参见 <a href="#ISO-8859-1" id="rfc.xref.ISO-8859-1.2"><cite
+                                    title="Information technology -- 8-bit single-byte coded graphic character sets -- Part 1: Latin alphabet No. 1">[ISO-8859-1]</cite></a>）之外的字符编码（参见
+                            <a href="#RFC2616" id="rfc.xref.RFC2616.11"><cite
+                                    title="Hypertext Transfer Protocol -- HTTP/1.1">[RFC2616]</cite></a>，第 2.2 节）。对于
+                            "filename" 参数，这当然是不可接受的限制。
+                        </p>
+                    </div>
+                    <div id="rfc.section.C.p.2">
+                        <p>不幸的是，用户代理实现者尚未想出可互操作的方案，尽管 IETF 标准轨道指定了一个解决方案（参见 <a href="#RFC2231"
+                                id="rfc.xref.RFC2231.1"><cite
+                                    title="MIME Parameter Value and Encoded Word Extensions: Character Sets, Languages, and Continuations">[RFC2231]</cite></a>，
+                            并在 <a href="#RFC5987" id="rfc.xref.RFC5987.9"><cite
+                                    title="Character Set and Language Encoding for Hypertext Transfer Protocol (HTTP) Header Field Parameters">[RFC5987]</cite></a>
+                            中针对 HTTP 进行了澄清与配置）。</p>
+                    </div>
+                    <div id="rfc.section.C.p.3">
+                        <p>为完整起见，下文描述了已尝试的各种方法，并解释为何它们不如本规范中采用的 <span class="nobr">RFC 5987</span> 编码。</p>
+                    </div>
+                    <section id="alternatives.rfc2047">
+                        <h3 id="rfc.section.C.1"><a href="#rfc.section.C.1">C.1.</a>&nbsp;<a
+                                href="#alternatives.rfc2047">RFC 2047 编码</a></h3>
+                        <div id="rfc.section.C.1.p.1" class="avoidbreakafter">
+                            <p>RFC 2047 定义了用于首部字段的编码机制，但该编码不应被用于首部字段的参数 — 详见 <a
+                                    href="https://www.rfc-editor.org/rfc/rfc2047.html#section-5">RFC2047 第 5 节</a>：</p>
+                        </div>
+                        <div id="rfc.section.C.1.p.2">
+                            <blockquote cite="http://tools.ietf.org/html/rfc2047#section-5">
+                                <div id="rfc.section.C.1.p.2.1">
+                                    <p>一个 'encoded-word' 不得出现在 'quoted-string' 中。</p>
+                                </div>
+                                <div id="rfc.section.C.1.p.2.2">
+                                    <p>...</p>
+                                </div>
+                                <div id="rfc.section.C.1.p.2.3">
+                                    <p>'encoded-word' 不得用于 MIME Content-Type 或 Content-Disposition
+                                        字段的参数，或用于任何结构化字段体，除非出现在 'comment' 或 'phrase' 中。</p>
+                                </div>
+                            </blockquote>
+                        </div>
+                        <div id="rfc.section.C.1.p.3">
+                            <p>在实践中，有些用户代理实现了该编码，有些没有（会将编码字符串暴露给用户），还有些会被其所混淆。</p>
+                        </div>
+                    </section>
+                    <section id="alternatives.percent">
+                        <h3 id="rfc.section.C.2"><a href="#rfc.section.C.2">C.2.</a>&nbsp;<a
+                                href="#alternatives.percent">百分号编码</a></h3>
+                        <div id="rfc.section.C.2.p.1">
+                            <p>一些用户代理接受百分号编码（参见 <a href="#RFC3986" id="rfc.xref.RFC3986.1"><cite
+                                        title="Uniform Resource Identifier (URI): Generic Syntax">[RFC3986]</cite></a>，第
+                                2.1 节）的字符序列。用于解码的字符编码取决于多种因素，包括引用页面的编码、用户代理的区域设置、其配置以及参数的实际值。</p>
+                        </div>
+                        <div id="rfc.section.C.2.p.2">
+                            <p>在实践中，这种方法难以使用，因为那些不支持它的用户代理会向用户显示已转义的字符序列；而那些实现了它的用户代理，期待采用何种字符编码也难以预测。</p>
+                        </div>
+                    </section>
+                    <section id="alternatives.sniff">
+                        <h3 id="rfc.section.C.3"><a href="#rfc.section.C.3">C.3.</a>&nbsp;<a
+                                href="#alternatives.sniff">编码嗅探</a></h3>
+                        <div id="rfc.section.C.3.p.1">
+                            <p>一些用户代理会检查值（对于 quoted-string 形式默认为 ISO-8859-1），并在看起来更可能正确时切换到 UTF-8 进行解释。</p>
+                        </div>
+                        <div id="rfc.section.C.3.p.2">
+                            <p>与上述方法一样，这种做法不可互操作，且也存在误解实际值的风险。</p>
+                        </div>
+                    </section>
+                </section>
+                <section id="advice.generating">
+                    <h2 id="rfc.section.D"><a href="#rfc.section.D">Appendix D.</a>&nbsp;<a
+                            href="#advice.generating">关于生成 Content-Disposition 首部字段的建议</a></h2>
+                    <div id="rfc.section.D.p.1" class="avoidbreakafter">
+                        <p>为与现有和未来的用户代理成功互操作，Content-Disposition 首部字段的发送方建议采取下列做法：</p>
+                    </div>
+                    <div id="rfc.section.D.p.2">
+                        <ul>
+                            <li>当 US-ASCII（参见 <a href="#US-ASCII" id="rfc.xref.US-ASCII.1"><cite
+                                        title="Coded Character Set -- 7-bit American Standard Code for Information Interchange">[US-ASCII]</cite></a>）
+                                足以表达所需文件名时，包含 "filename" 参数。</li>
+                            <li>仅当文件名不包含不允许的字符（例如空格）时使用 token 形式的 filename 参数；在此类情况下，应使用 quoted-string 形式。</li>
+                            <li>避免在 filename 参数中包含由百分号紧跟两个十六进制字符构成的序列（例如 %A9），因为一些现有实现将其视为转义字符，而另一些则直接原样传递。</li>
+                            <li>避免在 filename 参数的 quoted-string 形式中包含 "\" 字符，因为一些用户代理未实现转义，且 "\" 可能被视为非法的路径字符。</li>
+                            <li>尽量避免在 filename 参数中使用非 ASCII 字符。尽管大多数现有实现会将其解码为 <span
+                                    class="nobr">ISO-8859-1</span>，但有些实现会应用启发式方法检测 UTF-8，从而可能在某些名称上失败。</li>
+                            <li>当所需文件名无法通过 "filename" 形式忠实表达时，应包含 "filename*" 参数。请注意，旧的用户代理不会处理此参数，而是回退使用 "filename"
+                                参数的内容。</li>
+                            <li>在发送 "filename*" 参数时，如可能也应生成一个 "filename" 参数作为不支持 "filename*" 形式的用户代理的回退。这可以通过用 US-ASCII
+                                序列替代字符来实现（例如将 Unicode 代码点 U+00E4 替换为 "ae"）。注意在某些语言环境下这可能不可行。</li>
+                            <li>当包含作为回退的 "filename" 参数时（如上所述），由于某些现有实现的解析问题，"filename" 应首先出现。</li>
+                            <li>当存在 "filename*" 参数时，优先使用 UTF-8 作为其编码，因为至少有一种现有实现仅实现该编码。</li>
+                        </ul>
+                    </div>
+                    <div id="rfc.section.D.p.3">
+                        <p>注意：这些建议基于编写时的用户代理行为，可能会被替代。发布本文档时，&lt;<a
+                                href="http://purl.org/NET/http/content-disposition-tests">http://purl.org/NET/http/content-disposition-tests</a>&gt;
+                            提供了各种实现当前支持程度的概览。</p>
+                    </div>
+                </section>
+                <section id="rfc.authors" class="avoidbreakinside">
+                    <h2><a href="#rfc.authors">作者地址</a></h2>
+                    <address><b>Julian F. Reschke</b><br>greenbytes GmbH<br>Hafenweg 16<br>Muenster, NW
+                        48155<br>Germany<br>Email: <a
+                            href="mailto:julian.reschke@greenbytes.de">julian.reschke@greenbytes.de</a><br>URI: <a
+                            href="http://greenbytes.de/tech/webdav/">http://greenbytes.de/tech/webdav/</a></address>
+                </section>
+            </div>
+        </div>
+    </div>
+    <script src="https://httpwg.org/assets/node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="https://httpwg.org/assets/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="/dropdown.js"></script>
+</body>
+
+</html>
