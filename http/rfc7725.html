@@ -1,0 +1,667 @@
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html lang="zh-hans">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>RFC 7725 - 报告法律障碍的 HTTP 状态码</title>
+    <script>
+        function getMeta(rfcno, container) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "https://www.rfc-editor.org/rfc/rfc" + rfcno + ".json", true);
+            xhr.onload = function (e) {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        var data = JSON.parse(xhr.response);
+
+                        var cont = document.getElementById(container);
+                        // empty the container
+                        while (cont.firstChild) {
+                            cont.removeChild(myNode.firstChild);
+                        }
+
+                        var c = data.status;
+                        if (c) {
+                            var bld = newElementWithText("b", c);
+                            cont.appendChild(bld);
+                        } else {
+                            cont.appendChild(newElementWithText("i", "(document status unknown)"));
+                        }
+
+                        c = data.updated_by;
+                        if (c && c.length > 0 && c[0] !== null && c[0].length > 0) {
+                            cont.appendChild(newElement("br"));
+                            cont.appendChild(newText("Updated by: "));
+                            appendRfcLinks(cont, c);
+                        }
+
+                        c = data.obsoleted_by;
+                        if (c && c.length > 0 && c[0] !== null && c[0].length > 0) {
+                            cont.appendChild(newElement("br"));
+                            cont.appendChild(newText("Obsoleted by: "));
+                            appendRfcLinks(cont, c);
+                        }
+
+                        c = data.errata_url;
+                        if (c) {
+                            cont.appendChild(newElement("br"));
+                            var link = newElementWithText("a", "errata");
+                            link.setAttribute("href", c);
+                            var errata = newElementWithText("i", "This document has ");
+                            errata.appendChild(link);
+                            errata.appendChild(newText("."));
+                            cont.appendChild(errata);
+                        }
+
+                        cont.style.display = "block";
+                    } else {
+                        console.error(xhr.statusText);
+                    }
+                }
+            };
+            xhr.onerror = function (e) {
+                console.error(xhr.status + " " + xhr.statusText);
+            };
+            xhr.send(null);
+        }
+        function appendRfcLinks(parent, updates) {
+            var template = "https://www.rfc-editor.org/rfc/rfc{rfc}.html";
+            for (var i = 0; i < updates.length; i++) {
+                var rfc = updates[i].trim().toLowerCase();
+                if (rfc.substring(0, 3) == "rfc") {
+                    var no = parseInt(rfc.substring(3), 10);
+
+                    var link = newElement("a");
+                    link.setAttribute("href", template.replace("{rfc}", no));
+                    link.appendChild(newText(no));
+                    parent.appendChild(link);
+                } else {
+                    parent.appendChild(newText(rfc));
+                }
+                if (i != updates.length - 1) {
+                    parent.appendChild(newText(", "));
+                }
+            }
+        }
+
+        // DOM helpers
+        function newElement(name) {
+            return document.createElement(name);
+        }
+        function newElementWithText(name, txt) {
+            var e = document.createElement(name);
+            e.appendChild(newText(txt));
+            return e;
+        }
+        function newText(text) {
+            return document.createTextNode(text);
+        }
+    </script>
+    <script>
+        function anchorRewrite() {
+            map = {};
+            if (window.location.hash.length >= 1) {
+                var fragid = window.location.hash.substr(1);
+                if (fragid) {
+                    if (!document.getElementById(fragid)) {
+                        var prefix = "rfc.";
+                        var mapped = map[fragid];
+                        if (mapped) {
+                            window.location.hash = mapped;
+                        } else if (fragid.indexOf("section-") == 0) {
+                            window.location.hash = prefix + "section." + fragid.substring(8).replace("-", ".p.");
+                        } else if (fragid.indexOf("appendix-") == 0) {
+                            window.location.hash = prefix + "section." + fragid.substring(9).replace("-", ".p.");
+                        } else if (fragid.indexOf("s-") == 0) {
+                            var postfix = fragid.substring(2);
+                            if (postfix.startsWith("abstract")) {
+                                window.location.hash = prefix + postfix;
+                            } else if (postfix.startsWith("note-")) {
+                                window.location.hash = prefix + "note." + postfix.substring(5).replace("-", ".p.");
+                            } else {
+                                window.location.hash = prefix + "section." + postfix.replace("-", ".p.");
+                            }
+                        } else if (fragid.indexOf("p-") == 0) {
+                            var r = fragid.substring(2);
+                            var p = r.indexOf("-");
+                            if (p >= 0) {
+                                window.location.hash = prefix + "section." + r.substring(0, p) + ".p." + r.substring(p + 1);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        window.addEventListener('hashchange', anchorRewrite);
+        window.addEventListener('DOMContentLoaded', anchorRewrite);
+    </script>
+    <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="RFC7725">
+    <meta property="og:description" content="An HTTP Status Code to Report Legal Obstacles">
+    <meta property="og:url" content="https://httpwg.org/specs/rfc7725.html">
+    <meta property="og:site_name" content="IETF HTTP Working Group Specifications">
+    <meta property="og:image" content="https://httpwg.org/assets/favicon/apple-icon-180x180.png">
+    <link rel="stylesheet" type="text/css"
+        href="https://httpwg.org/assets/node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <style type="text/css">
+        body {
+            padding-top: 80px;
+            padding-bottom: 80px;
+            position: relative;
+        }
+
+        .table.header th,
+        .table.header td {
+            border-top: none;
+            padding: 0;
+        }
+
+        #sidebar {
+            margin-top: -10px;
+            height: 90%;
+            overflow-y: auto;
+            font-size: 90%;
+        }
+
+        #rfc\.meta {
+            width: 40%;
+            float: right
+        }
+
+        .toc ul {
+            list-style: none;
+        }
+
+        .filename {
+            color: rgb(119, 119, 119);
+            font-size: 23px;
+            font-weight: normal;
+            height: auto;
+            line-height: 23px;
+        }
+
+        dl {
+            margin-left: 1em;
+        }
+
+        dl.dl-horizontal {
+            margin-left: 0;
+        }
+
+        dl>dt {
+            float: left;
+            margin-right: 1em;
+        }
+
+        dl.nohang>dt {
+            float: none;
+        }
+
+        dl>dd {
+            margin-bottom: .5em;
+        }
+
+        dl.compact>dd {
+            margin-bottom: 0em;
+        }
+
+        dl>dd>dl {
+            margin-top: 0.5em;
+            margin-bottom: 0em;
+        }
+
+        ul.empty {
+            list-style-type: none;
+        }
+
+        ul.empty li {
+            margin-top: .5em;
+        }
+
+        td.reference {
+            padding-right: 1em;
+            vertical-align: top;
+        }
+
+        .feedback {
+            position: fixed;
+            bottom: 5px;
+            right: 5px;
+        }
+
+        .fbbutton {
+            margin-left: 5px;
+        }
+
+        h1 a,
+        h2 a,
+        h3 a,
+        h4 a,
+        h5 a,
+        h6 a {
+            color: rgb(51, 51, 51);
+        }
+
+        span.tt {
+            font: 11pt consolas, monospace;
+            font-size-adjust: none;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" href="https://httpwg.org/assets/site.css">
+    <link rel="Contents" href="#rfc.toc">
+    <link rel="Author" href="#rfc.authors">
+    <link rel="License" href="#rfc.copyrightnotice">
+    <link rel="Chapter" title="1 Introduction" href="#rfc.section.1">
+    <link rel="Chapter" title="2 Requirements" href="#rfc.section.2">
+    <link rel="Chapter" title="3 451 Unavailable For Legal Reasons" href="#rfc.section.3">
+    <link rel="Chapter" title="4 Identifying Blocking Entities" href="#rfc.section.4">
+    <link rel="Chapter" title="5 Security Considerations" href="#rfc.section.5">
+    <link rel="Chapter" title="6 IANA Considerations" href="#rfc.section.6">
+    <link rel="Chapter" title="7 References" href="#rfc.section.7">
+    <link rel="Appendix" title="A Acknowledgements" href="#rfc.section.A">
+    <link rel="Alternate" title="Plain Text Version" href="http://www.ietf.org/rfc/rfc7725.txt">
+    <link rel="Help" title="RFC-Editor's Status Page" href="http://www.rfc-editor.org/info/rfc7725">
+    <meta name="viewport" content="initial-scale=1">
+    <meta name="generator"
+        content="https://github.com/mnot/RFCBootstrap XSLT vendor: Saxonica http://www.saxonica.com/">
+    <meta name="keywords" content="HTTP">
+    <link rel="schema.dcterms" href="http://purl.org/dc/terms/">
+    <meta name="dcterms.creator" content="Bray, T.">
+    <meta name="dcterms.identifier" content="urn:ietf:rfc:7725">
+    <meta name="dcterms.issued" content="2016-02">
+    <meta name="dcterms.abstract"
+        content="This document specifies a Hypertext Transfer Protocol (HTTP) status code for use when resource access is denied as a consequence of legal demands.">
+    <meta name="dcterms.isPartOf" content="urn:issn:2070-1721">
+    <meta name="description"
+        content="This document specifies a Hypertext Transfer Protocol (HTTP) status code for use when resource access is denied as a consequence of legal demands.">
+</head>
+
+<body onload="getMeta(7725,'rfc.meta');">
+    <nav class="navbar navbar-dark bg-dark d-print-none navbar-expand-lg fixed-top ps-3 pe-3" role="navigation">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse"
+                aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <a class="navbar-brand" href="https://httpwg.org/"><img src="https://httpwg.org/assets/http.svg"
+                    height="23"></a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse">
+
+            <div class="navbar-nav me-auto">
+
+                <a class="nav-item ms-1 text-white" href="https://httpwg.org/specs/">📄 Documentation</a>
+
+                <div class="dropdown ms-4">
+                    <a href="#" class="nav-item dropdown-toggle text-white" data-bs-toggle="dropdown">Work in
+                        Progress</a>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-item"><a href="https://httpwg.org/http-extensions/">HTTP Extensions</a></li>
+                        <li class="dropdown-item"><a
+                                href="https://github.com/httpwg/admin/issues?q=is%3Aissue+is%3Aopen+label%3Aadoption">Future
+                                Work</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="dropdown ms-4">
+                    <a href="#" class="nav-item dropdown-toggle text-white" data-bs-toggle="dropdown">Participate</a>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-item"><a href="https://httpwg.org/about/">About the HTTP Working Group</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li class="dropdown-item"><a href="https://httpwg.org/CONTRIBUTING.html">Contribution Policy</a>
+                        </li>
+                        <li class="dropdown-item"><a href="http://datatracker.ietf.org/wg/httpbis/charter/">WG
+                                Charter</a></li>
+                        <li class="dropdown-item"><a href="http://lists.w3.org/Archives/Public/ietf-http-wg/">Group
+                                Mailing List
+                                📨</a></li>
+                        <li class="dropdown-item"><a href="https://httpwg.org/wg-materials/">Meeting Materials</a></li>
+                        <li class="dropdown-item"><a href="https://httpwg.org/admin/editors/">Document Editor
+                                Resources</a></li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </nav>
+    <div class="container" id="top">
+        <div class="row">
+            <div class="col-lg-4 order-last d-none d-lg-block" id="sidebar" role="navigation">
+                <div class="navbar">
+                    <div class="navbar-brand"><a href="#top"><strong>RFC </strong>7725</a></div><br clear="all">
+                    <div class="">
+                        <div class="toc ">
+                            <ul>
+                                <li><a href="#rfc.section.1">1.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.section.1">引言</a>
+                                </li>
+                                <li><a href="#rfc.section.2">2.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.section.2">需求</a>
+                                </li>
+                                <li><a href="#rfc.section.3">3.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.section.3">451
+                                        因法律原因不可用</a></li>
+                                <li><a href="#rfc.section.4">4.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.section.4">识别阻断实体</a>
+                                </li>
+                                <li><a href="#rfc.section.5">5.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.section.5">安全性
+                                        考虑</a></li>
+                                <li><a href="#rfc.section.6">6.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.section.6">IANA
+                                        注意事项</a>
+                                </li>
+                                <li><a href="#rfc.section.7">7.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.references">参考文献</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.7.1">7.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#rfc.references.1">规范性参考文献</a></li>
+                                        <li><a href="#rfc.section.7.2">7.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#rfc.references.2">说明性参考文献</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.A">Appendix A.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#rfc.section.A">致谢</a></li>
+                                <li><a href="#rfc.authors">作者地址</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8 order-first main" role="main">
+                <header>
+                    <table class="table table-condensed header" id="rfc.headerblock">
+                        <tbody>
+                            <tr>
+                                <td class="text-left">互联网工程任务组 (IETF)</td>
+                                <td class="text-right">T. Bray</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left">请求评论: 7725</td>
+                                <td class="text-right">Textuality</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left">类别: Standards Track</td>
+                                <td class="text-right">2016年2月</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left">ISSN: 2070-1721</td>
+                                <td class="text-right"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div id="rfc.title">
+                        <h1>用于报告法律障碍的 HTTP 状态码</h1>
+                    </div>
+                </header>
+                <hr>
+                <h2 id="rfc.abstract"><a href="#rfc.abstract">摘要</a></h2>
+                <div class="lead">
+                    <div id="rfc.abstract.p.1">
+                        <p>本文档指定了一个超文本传输协议 (HTTP) 状态码，用于在因法律要求而被拒绝访问资源时使用。</p>
+                    </div>
+                </div>
+                <aside id="rfc.meta" class="alert alert-info"></aside>
+                <section id="rfc.status">
+                    <h2><a href="#rfc.status">本备忘录的状态</a></h2>
+                    <div id="rfc.boilerplate.1.p.1">
+                        <p>这是互联网标准轨道的文档。</p>
+                    </div>
+                    <div id="rfc.boilerplate.1.p.2">
+                        <p>本文档是互联网工程任务组 (IETF) 的产物。它代表了 IETF 社区的共识。该文档已接受公众审阅并已获互联网工程指导小组 (IESG) 批准发布。有关互联网标准的更多信息，请参见
+                            <a href="https://www.rfc-editor.org/rfc/rfc5741.html#section-2">RFC 5741 的第 2 节</a>。
+                        </p>
+                    </div>
+                    <div id="rfc.boilerplate.1.p.3">
+                        <p>有关本文档当前状态、任何勘误以及如何提供反馈的信息，可在 <a
+                                href="http://www.rfc-editor.org/info/rfc7725">http://www.rfc-editor.org/info/rfc7725</a>
+                            获取。</p>
+                    </div>
+                </section>
+                <section id="rfc.copyrightnotice">
+                    <h2><a href="#rfc.copyrightnotice">Copyright Notice</a></h2>
+                    <div id="rfc.boilerplate.2.p.1">
+                        <p>Copyright (c) 2016 IETF Trust and the persons identified as the document authors. All rights
+                            reserved.
+                        </p>
+                    </div>
+                    <div id="rfc.boilerplate.2.p.2">
+                        <p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF
+                            Documents (<a
+                                href="http://trustee.ietf.org/license-info">http://trustee.ietf.org/license-info</a>) in
+                            effect on the
+                            date of publication of this document. Please review these documents carefully, as they
+                            describe your
+                            rights and restrictions with respect to this document. Code Components extracted from this
+                            document must
+                            include Simplified BSD License text as described in Section 4.e of the Trust Legal
+                            Provisions and are
+                            provided without warranty as described in the Simplified BSD License.</p>
+                    </div>
+                </section>
+                <div class="toc d-lg-none">
+                    <ul>
+                        <li><a href="#rfc.section.1">1.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.section.1">引言</a>
+                        </li>
+                        <li><a href="#rfc.section.2">2.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.section.2">需求</a>
+                        </li>
+                        <li><a href="#rfc.section.3">3.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.section.3">451 因法律原因不可用</a>
+                        </li>
+                        <li><a href="#rfc.section.4">4.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.section.4">识别阻断实体</a></li>
+                        <li><a href="#rfc.section.5">5.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.section.5">安全性考虑</a>
+                        </li>
+                        <li><a href="#rfc.section.6">6.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.section.6">IANA 注意事项</a></li>
+                        <li><a href="#rfc.section.7">7.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.references">参考文献</a>
+                            <ul>
+                                <li><a href="#rfc.section.7.1">7.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#rfc.references.1">规范性参考文献</a></li>
+                                <li><a href="#rfc.section.7.2">7.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#rfc.references.2">说明性参考文献</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#rfc.section.A">Appendix A.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.section.A">致谢</a>
+                        </li>
+                        <li><a href="#rfc.authors">作者地址</a></li>
+                    </ul>
+                </div>
+                <section id="n-introduction">
+                    <h2 id="rfc.section.1" class="np"><a href="#rfc.section.1">1.</a>&nbsp;<a
+                            href="#n-introduction">引言</a></h2>
+                    <div id="rfc.section.1.p.1">
+                        <p>本文档指定了一个超文本传输协议 (HTTP) 状态码，用于在服务器运营者收到法律要求以拒绝对某个资源或包含所请求资源的一组资源的访问时使用。</p>
+                    </div>
+                    <div id="rfc.section.1.p.2">
+                        <p>当法律或公共政策问题影响服务器运行时，此状态码可用于提供透明性。这种透明性可能对这些运营者以及终端用户均有益处。</p>
+                    </div>
+                    <div id="rfc.section.1.p.3">
+                        <p><a href="#RFC4924"><cite title="Reflections on Internet Transparency">[RFC4924]</cite></a>
+                            讨论了阻碍互联网透明运行的各种力量；这些显然包括为限制对内容的访问而进行的法律干预。正如该文档所指出的，以及如 <a
+                                href="https://www.rfc-editor.org/rfc/rfc4084.html#section-4">第 4 节</a> 在 <a
+                                href="#RFC4084"><cite
+                                    title="Terminology for Describing Internet Connectivity">[RFC4084]</cite></a>
+                            中所述，这类限制应当被明确指出。</p>
+                    </div>
+                </section>
+                <section id="n-requirements">
+                    <h2 id="rfc.section.2"><a href="#rfc.section.2">2.</a>&nbsp;<a href="#n-requirements">需求</a></h2>
+                    <div id="rfc.section.2.p.1">
+                        <p>本文档中关键字 "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT",
+                            "RECOMMENDED", "MAY", 和 "OPTIONAL" 应按 <a href="#RFC2119"><cite
+                                    title="Key words for use in RFCs to Indicate Requirement Levels">[RFC2119]</cite></a>
+                            的描述来解释。</p>
+                    </div>
+                </section>
+                <section id="n-451-unavailable-for-legal-reasons">
+                    <h2 id="rfc.section.3"><a href="#rfc.section.3">3.</a>&nbsp;<a
+                            href="#n-451-unavailable-for-legal-reasons">451 因法律原因不可用</a></h2>
+                    <div id="rfc.section.3.p.1">
+                        <p>该状态码表示服务器因法律要求而拒绝对该资源的访问。</p>
+                    </div>
+                    <div id="rfc.section.3.p.2">
+                        <p>相关服务器可能并非源服务器。此类法律要求通常最直接影响 ISP 和搜索引擎的运营。</p>
+                    </div>
+                    <div id="rfc.section.3.p.3" class="avoidbreakafter">
+                        <p>使用该状态码的响应在响应主体中 <em class="bcp14">SHOULD</em>
+                            包含对法律要求细节的说明：提出要求的当事方、适用的法律或法规，以及其适用于哪些人员类别和资源类别。例如：</p>
+                    </div>
+                    <div id="rfc.figure.u.1">
+                        <div>
+                            <pre class="text">HTTP/1.1 451 Unavailable For Legal Reasons
+Link: &lt;https://spqr.example.org/legislatione&gt;; rel="blocked-by"
+Content-Type: text/html
+
+<code class="prettyprint">&lt;html&gt;
+ &lt;head&gt;&lt;title&gt;因法律原因不可用&lt;/title&gt;&lt;/head&gt;
+ &lt;body&gt;
+  &lt;h1&gt;因法律原因不可用&lt;/h1&gt;
+  &lt;p&gt;此请求由于 Lex Julia Majestatis 的规定，可能无法在罗马行省犹太地区获得服务，因其禁止访问被认为由人民阵线 (People's Front of Judea) 运营的服务器上托管的资源。&lt;/p&gt;
+ &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+                        </div>
+                    </div>
+                    <div id="rfc.section.3.p.4">
+                        <p>使用 451 状态码并不意味着请求中命名的资源存在或不存在。也就是说，即便法律要求被移除，对该资源的请求也可能不成功。</p>
+                    </div>
+                    <div id="rfc.section.3.p.5">
+                        <p>请注意，在许多情况下，客户端仍可通过使用技术对抗手段（例如 VPN 或 Tor 网络）访问被拒绝的资源。</p>
+                    </div>
+                    <div id="rfc.section.3.p.6">
+                        <p>默认情况下，451 响应是可缓存的，即除非方法定义或显式缓存控制另有说明；参见 <a href="#RFC7234"><cite
+                                    title="Hypertext Transfer Protocol (HTTP/1.1): Caching">[RFC7234]</cite></a>。</p>
+                    </div>
+                </section>
+                <section id="n-identifying-blocking-entities">
+                    <h2 id="rfc.section.4"><a href="#rfc.section.4">4.</a>&nbsp;<a
+                            href="#n-identifying-blocking-entities">识别阻断实体</a></h2>
+                    <div id="rfc.section.4.p.1">
+                        <p>如上所述，当尝试访问某资源返回 451 状态时，阻断访问的实体可能是也可能不是源服务器。资源访问路径中有多种实体可能选择拒绝访问——例如 ISP、缓存提供者和 DNS 服务器。</p>
+                    </div>
+                    <div id="rfc.section.4.p.2">
+                        <p>当发生法律封堵时，能够识别实际实施封堵的实体是有用的。</p>
+                    </div>
+                    <div id="rfc.section.4.p.3">
+                        <p>当某实体阻止对资源的访问并返回 451 状态时，它 <em class="bcp14">SHOULD</em> 包含一个 "Link" HTTP 首部字段 <a
+                                href="#RFC5988"><cite title="Web Linking">[RFC5988]</cite></a>，其值为标识其自身的 URI 引用 <a
+                                href="#RFC3986"><cite
+                                    title="Uniform Resource Identifier (URI): Generic Syntax">[RFC3986]</cite></a>。当用于此目的时，"Link"
+                            首部字段 <em class="bcp14">MUST</em> 具有一个其值为 "blocked-by" 的 "rel" 参数。</p>
+                    </div>
+                    <div id="rfc.section.4.p.4">
+                        <p>其意图是该首部用于识别实际实施封锁的实体，而不是任何其他下达封锁命令的实体。关于管理和策略问题的讨论应放在上文提到的可供人类阅读的响应主体中。</p>
+                    </div>
+                </section>
+                <section id="n-security-considerations">
+                    <h2 id="rfc.section.5"><a href="#rfc.section.5">5.</a>&nbsp;<a
+                            href="#n-security-considerations">安全性考虑</a></h2>
+                    <div id="rfc.section.5.p.1">
+                        <p>客户端不能完全依赖 451 状态码的使用。某些法律当局可能希望避免透明，不仅要求限制对某些资源的访问，而且还避免披露已提出该要求。</p>
+                    </div>
+                </section>
+                <section id="n-iana-considerations">
+                    <h2 id="rfc.section.6"><a href="#rfc.section.6">6.</a>&nbsp;<a href="#n-iana-considerations">IANA
+                            注意事项</a></h2>
+                    <div id="rfc.section.6.p.1" class="avoidbreakafter">
+                        <p>HTTP 状态码注册表已更新，新增如下条目：</p>
+                    </div>
+                    <div id="rfc.section.6.p.2">
+                        <ul>
+                            <li>Code: 451</li>
+                            <li>Description: 因法律原因不可用</li>
+                            <li>Specification: RFC 7725</li>
+                        </ul>
+                    </div>
+                    <div id="rfc.section.6.p.3" class="avoidbreakafter">
+                        <p>链接关系类型注册表已更新，新增如下条目：</p>
+                    </div>
+                    <div id="rfc.section.6.p.4">
+                        <ul>
+                            <li>Relation Name: blocked-by</li>
+                            <li>Description: 标识在收到法律要求后阻止访问资源的实体。</li>
+                            <li>Reference: RFC 7725</li>
+                        </ul>
+                    </div>
+                </section>
+                <section id="rfc.references">
+                    <h2 id="rfc.section.7"><a href="#rfc.section.7">7.</a> 参考文献</h2>
+                    <section>
+                        <div id="rfc.references.1">
+                            <h3 id="rfc.section.7.1"><a href="#rfc.section.7.1">7.1.</a> 规范性参考文献</h3>
+                            <dl class="dl-horizontal">
+                                <dt id="RFC2119">[<a href="#RFC2119" class="smpl">RFC2119</a>]</dt>
+                                <dd>Bradner, S., “<a href="https://www.rfc-editor.org/rfc/rfc2119.html">在 RFC
+                                        中表示需求等级的关键字</a>”, <a href="https://www.rfc-editor.org/info/bcp14">BCP 14</a>,
+                                    RFC 2119, <a href="https://dx.doi.org/10.17487/RFC2119">DOI 10.17487/RFC2119</a>,
+                                    1997 年 3 月, &lt;<a
+                                        href="https://www.rfc-editor.org/info/rfc2119">https://www.rfc-editor.org/info/rfc2119</a>&gt;.
+                                </dd>
+                                <dt id="RFC3986">[<a href="#RFC3986" class="smpl">RFC3986</a>]</dt>
+                                <dd>Berners-Lee, T., Fielding, R., and L. Masinter, “<a
+                                        href="https://www.rfc-editor.org/rfc/rfc3986.html">统一资源标识符 (URI)：通用语法</a>”, <a
+                                        href="https://www.rfc-editor.org/info/std66">STD 66</a>, RFC 3986, <a
+                                        href="https://dx.doi.org/10.17487/RFC3986">DOI 10.17487/RFC3986</a>, 2005 年 1 月,
+                                    &lt;<a
+                                        href="https://www.rfc-editor.org/info/rfc3986">https://www.rfc-editor.org/info/rfc3986</a>&gt;.
+                                </dd>
+                                <dt id="RFC5988">[<a href="#RFC5988" class="smpl">RFC5988</a>]</dt>
+                                <dd>Nottingham, M., “<a href="https://www.rfc-editor.org/rfc/rfc5988.html">Web
+                                        Linking（网页链接）</a>”, RFC 5988, <a href="https://dx.doi.org/10.17487/RFC5988">DOI
+                                        10.17487/RFC5988</a>, 2010 年 10 月, &lt;<a
+                                        href="https://www.rfc-editor.org/info/rfc5988">https://www.rfc-editor.org/info/rfc5988</a>&gt;.
+                                </dd>
+                                <dt id="RFC7234">[<a href="#RFC7234" class="smpl">RFC7234</a>]</dt>
+                                <dd>Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke, Ed., “<a
+                                        href="https://www.rfc-editor.org/rfc/rfc7234.html">超文本传输协议 (HTTP/1.1)：缓存</a>”,
+                                    RFC 7234, <a href="https://dx.doi.org/10.17487/RFC7234">DOI 10.17487/RFC7234</a>,
+                                    2014 年 6 月, &lt;<a
+                                        href="https://www.rfc-editor.org/info/rfc7234">https://www.rfc-editor.org/info/rfc7234</a>&gt;.
+                                </dd>
+                            </dl>
+                        </div>
+                    </section>
+                    <section>
+                        <div id="rfc.references.2">
+                            <h3 id="rfc.section.7.2"><a href="#rfc.section.7.2">7.2.</a> 说明性参考文献</h3>
+                            <dl class="dl-horizontal">
+                                <dt id="RFC4084">[<a href="#RFC4084" class="smpl">RFC4084</a>]</dt>
+                                <dd>Klensin, J., “<a
+                                        href="https://www.rfc-editor.org/rfc/rfc4084.html">描述互联网连接性的术语</a>”, <a
+                                        href="https://www.rfc-editor.org/info/bcp104">BCP 104</a>, RFC 4084, <a
+                                        href="https://dx.doi.org/10.17487/RFC4084">DOI 10.17487/RFC4084</a>, 2005 年 5 月,
+                                    &lt;<a
+                                        href="https://www.rfc-editor.org/info/rfc4084">https://www.rfc-editor.org/info/rfc4084</a>&gt;.
+                                </dd>
+                                <dt id="RFC4924">[<a href="#RFC4924" class="smpl">RFC4924</a>]</dt>
+                                <dd>Aboba, B., Ed. and E. Davies, “<a
+                                        href="https://www.rfc-editor.org/rfc/rfc4924.html">关于互联网透明度的反思</a>”, RFC 4924,
+                                    <a href="https://dx.doi.org/10.17487/RFC4924">DOI 10.17487/RFC4924</a>, 2007 年 7 月,
+                                    &lt;<a
+                                        href="https://www.rfc-editor.org/info/rfc4924">https://www.rfc-editor.org/info/rfc4924</a>&gt;.
+                                </dd>
+                            </dl>
+                        </div>
+                    </section>
+                </section>
+                <section id="n-acknowledgements">
+                    <h2 id="rfc.section.A" class="np"><a href="#rfc.section.A">Appendix A.</a>&nbsp;<a
+                            href="#n-acknowledgements">致谢</a></h2>
+                    <div id="rfc.section.A.p.1">
+                        <p>感谢 Terence Eden 提出现有的 403 状态码并不适合该情形，并建议创建一个新的状态码。</p>
+                    </div>
+                    <div id="rfc.section.A.p.2">
+                        <p>亦感谢 Ray Bradbury。</p>
+                    </div>
+                </section>
+                <section id="rfc.authors" class="avoidbreakinside">
+                    <h2><a href="#rfc.authors">作者地址</a></h2>
+                    <address><b>Tim Bray</b><br>Textuality<br>电子邮件: <a
+                            href="mailto:tbray@textuality.com">tbray@textuality.com</a><br>URI: <a
+                            href="http://www.tbray.org/ongoing/">http://www.tbray.org/ongoing/</a></address>
+                </section>
+            </div>
+        </div>
+    </div>
+    <script src="https://httpwg.org/assets/node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="https://httpwg.org/assets/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="/dropdown.js"></script>
+</body>
+
+</html>

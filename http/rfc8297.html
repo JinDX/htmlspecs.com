@@ -1,0 +1,711 @@
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html lang="zh-hans">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>RFC 8297 - 用于指示提示的 HTTP 状态码</title>
+    <script>
+        function getMeta(rfcno, container) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "https://www.rfc-editor.org/rfc/rfc" + rfcno + ".json", true);
+            xhr.onload = function (e) {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        var data = JSON.parse(xhr.response);
+
+                        var cont = document.getElementById(container);
+                        // empty the container
+                        while (cont.firstChild) {
+                            cont.removeChild(myNode.firstChild);
+                        }
+
+                        var c = data.status;
+                        if (c) {
+                            var bld = newElementWithText("b", c);
+                            cont.appendChild(bld);
+                        } else {
+                            cont.appendChild(newElementWithText("i", "(document status unknown)"));
+                        }
+
+                        c = data.updated_by;
+                        if (c && c.length > 0 && c[0] !== null && c[0].length > 0) {
+                            cont.appendChild(newElement("br"));
+                            cont.appendChild(newText("Updated by: "));
+                            appendRfcLinks(cont, c);
+                        }
+
+                        c = data.obsoleted_by;
+                        if (c && c.length > 0 && c[0] !== null && c[0].length > 0) {
+                            cont.appendChild(newElement("br"));
+                            cont.appendChild(newText("Obsoleted by: "));
+                            appendRfcLinks(cont, c);
+                        }
+
+                        c = data.errata_url;
+                        if (c) {
+                            cont.appendChild(newElement("br"));
+                            var link = newElementWithText("a", "errata");
+                            link.setAttribute("href", c);
+                            var errata = newElementWithText("i", "This document has ");
+                            errata.appendChild(link);
+                            errata.appendChild(newText("."));
+                            cont.appendChild(errata);
+                        }
+
+                        cont.style.display = "block";
+                    } else {
+                        console.error(xhr.statusText);
+                    }
+                }
+            };
+            xhr.onerror = function (e) {
+                console.error(xhr.status + " " + xhr.statusText);
+            };
+            xhr.send(null);
+        }
+        function appendRfcLinks(parent, updates) {
+            var template = "https://www.rfc-editor.org/rfc/rfc{rfc}.html";
+            for (var i = 0; i < updates.length; i++) {
+                var rfc = updates[i].trim().toLowerCase();
+                if (rfc.substring(0, 3) == "rfc") {
+                    var no = parseInt(rfc.substring(3), 10);
+
+                    var link = newElement("a");
+                    link.setAttribute("href", template.replace("{rfc}", no));
+                    link.appendChild(newText(no));
+                    parent.appendChild(link);
+                } else {
+                    parent.appendChild(newText(rfc));
+                }
+                if (i != updates.length - 1) {
+                    parent.appendChild(newText(", "));
+                }
+            }
+        }
+
+        // DOM helpers
+        function newElement(name) {
+            return document.createElement(name);
+        }
+        function newElementWithText(name, txt) {
+            var e = document.createElement(name);
+            e.appendChild(newText(txt));
+            return e;
+        }
+        function newText(text) {
+            return document.createTextNode(text);
+        }
+    </script>
+    <script>
+        function anchorRewrite() {
+            map = {};
+            if (window.location.hash.length >= 1) {
+                var fragid = window.location.hash.substr(1);
+                if (fragid) {
+                    if (!document.getElementById(fragid)) {
+                        var prefix = "rfc.";
+                        var mapped = map[fragid];
+                        if (mapped) {
+                            window.location.hash = mapped;
+                        } else if (fragid.indexOf("section-") == 0) {
+                            window.location.hash = prefix + "section." + fragid.substring(8).replace("-", ".p.");
+                        } else if (fragid.indexOf("appendix-") == 0) {
+                            window.location.hash = prefix + "section." + fragid.substring(9).replace("-", ".p.");
+                        } else if (fragid.indexOf("s-") == 0) {
+                            var postfix = fragid.substring(2);
+                            if (postfix.startsWith("abstract")) {
+                                window.location.hash = prefix + postfix;
+                            } else if (postfix.startsWith("note-")) {
+                                window.location.hash = prefix + "note." + postfix.substring(5).replace("-", ".p.");
+                            } else {
+                                window.location.hash = prefix + "section." + postfix.replace("-", ".p.");
+                            }
+                        } else if (fragid.indexOf("p-") == 0) {
+                            var r = fragid.substring(2);
+                            var p = r.indexOf("-");
+                            if (p >= 0) {
+                                window.location.hash = prefix + "section." + r.substring(0, p) + ".p." + r.substring(p + 1);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        window.addEventListener('hashchange', anchorRewrite);
+        window.addEventListener('DOMContentLoaded', anchorRewrite);
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="RFC8297">
+    <meta property="og:description" content="An HTTP Status Code for Indicating Hints">
+    <meta property="og:url" content="https://httpwg.org/specs/rfc8297.html">
+    <meta property="og:site_name" content="IETF HTTP Working Group Specifications">
+    <meta property="og:image" content="https://httpwg.org/assets/favicon/apple-icon-180x180.png">
+    <link rel="stylesheet" type="text/css"
+        href="https://httpwg.org/assets/node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <style type="text/css">
+        body {
+            padding-top: 80px;
+            padding-bottom: 80px;
+            position: relative;
+        }
+
+        .table.header th,
+        .table.header td {
+            border-top: none;
+            padding: 0;
+        }
+
+        #sidebar {
+            margin-top: -10px;
+            height: 90%;
+            overflow-y: auto;
+            font-size: 90%;
+        }
+
+        #rfc\.meta {
+            width: 40%;
+            float: right
+        }
+
+        .toc ul {
+            list-style: none;
+        }
+
+        .filename {
+            color: rgb(119, 119, 119);
+            font-size: 23px;
+            font-weight: normal;
+            height: auto;
+            line-height: 23px;
+        }
+
+        dl {
+            margin-left: 1em;
+        }
+
+        dl.dl-horizontal {
+            margin-left: 0;
+        }
+
+        dl>dt {
+            float: left;
+            margin-right: 1em;
+        }
+
+        dl.nohang>dt {
+            float: none;
+        }
+
+        dl>dd {
+            margin-bottom: .5em;
+        }
+
+        dl.compact>dd {
+            margin-bottom: 0em;
+        }
+
+        dl>dd>dl {
+            margin-top: 0.5em;
+            margin-bottom: 0em;
+        }
+
+        ul.empty {
+            list-style-type: none;
+        }
+
+        ul.empty li {
+            margin-top: .5em;
+        }
+
+        td.reference {
+            padding-right: 1em;
+            vertical-align: top;
+        }
+
+        .feedback {
+            position: fixed;
+            bottom: 5px;
+            right: 5px;
+        }
+
+        .fbbutton {
+            margin-left: 5px;
+        }
+
+        h1 a,
+        h2 a,
+        h3 a,
+        h4 a,
+        h5 a,
+        h6 a {
+            color: rgb(51, 51, 51);
+        }
+
+        span.tt {
+            font: 11pt consolas, monospace;
+            font-size-adjust: none;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" href="https://httpwg.org/assets/site.css">
+    <link rel="Contents" href="#rfc.toc">
+    <link rel="Author" href="#rfc.authors">
+    <link rel="License" href="#rfc.copyrightnotice">
+    <link rel="Chapter" title="1 Introduction" href="#rfc.section.1">
+    <link rel="Chapter" title="2 HTTP Status Code 103: Early Hints" href="#rfc.section.2">
+    <link rel="Chapter" title="3 Security Considerations" href="#rfc.section.3">
+    <link rel="Chapter" title="4 IANA Considerations" href="#rfc.section.4">
+    <link rel="Chapter" title="5 References" href="#rfc.section.5">
+    <link rel="Appendix" title="A Acknowledgements" href="#rfc.section.A">
+    <link rel="Alternate" title="Plain Text Version" href="http://www.ietf.org/rfc/rfc8297.txt">
+    <link rel="Help" title="RFC-Editor's Status Page" href="https://www.rfc-editor.org/info/rfc8297">
+    <meta name="viewport" content="initial-scale=1">
+    <meta name="generator"
+        content="https://github.com/mnot/RFCBootstrap XSLT vendor: Saxonica http://www.saxonica.com/">
+    <meta name="keywords" content="push, preload">
+    <link rel="schema.dcterms" href="http://purl.org/dc/terms/">
+    <meta name="dcterms.creator" content="Oku, K.">
+    <meta name="dcterms.identifier" content="urn:ietf:rfc:8297">
+    <meta name="dcterms.issued" content="2017-12">
+    <meta name="dcterms.abstract"
+        content="This memo introduces an informational HTTP status code that can be used to convey hints that help a client make preparations for processing the final response.">
+    <meta name="dcterms.isPartOf" content="urn:issn:2070-1721">
+    <meta name="description"
+        content="This memo introduces an informational HTTP status code that can be used to convey hints that help a client make preparations for processing the final response.">
+</head>
+
+<body onload="getMeta(8297,'rfc.meta');">
+    <nav class="navbar navbar-dark bg-dark d-print-none navbar-expand-lg fixed-top ps-3 pe-3" role="navigation">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse"
+                aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <a class="navbar-brand" href="https://httpwg.org/"><img src="https://httpwg.org/assets/http.svg"
+                    height="23"></a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse">
+
+            <div class="navbar-nav me-auto">
+
+                <a class="nav-item ms-1 text-white" href="https://httpwg.org/specs/">📄 Documentation</a>
+
+                <div class="dropdown ms-4">
+                    <a href="#" class="nav-item dropdown-toggle text-white" data-bs-toggle="dropdown">Work in
+                        Progress</a>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-item"><a href="https://httpwg.org/http-extensions/">HTTP Extensions</a></li>
+                        <li class="dropdown-item"><a
+                                href="https://github.com/httpwg/admin/issues?q=is%3Aissue+is%3Aopen+label%3Aadoption">Future
+                                Work</a></li>
+                    </ul>
+                </div>
+
+                <div class="dropdown ms-4">
+                    <a href="#" class="nav-item dropdown-toggle text-white" data-bs-toggle="dropdown">Participate</a>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-item"><a href="https://httpwg.org/about/">About the HTTP Working Group</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li class="dropdown-item"><a href="https://httpwg.org/CONTRIBUTING.html">Contribution Policy</a>
+                        </li>
+                        <li class="dropdown-item"><a href="http://datatracker.ietf.org/wg/httpbis/charter/">WG
+                                Charter</a></li>
+                        <li class="dropdown-item"><a href="http://lists.w3.org/Archives/Public/ietf-http-wg/">Group
+                                Mailing List 📨</a></li>
+                        <li class="dropdown-item"><a href="https://httpwg.org/wg-materials/">Meeting Materials</a></li>
+                        <li class="dropdown-item"><a href="https://httpwg.org/admin/editors/">Document Editor
+                                Resources</a></li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </nav>
+    <div class="container" id="top">
+        <div class="row">
+            <div class="col-lg-4 order-last d-none d-lg-block" id="sidebar" role="navigation">
+                <div class="navbar">
+                    <div class="navbar-brand"><a href="#top"><strong>RFC </strong>8297</a></div><br clear="all">
+                    <div class="">
+                        <div class="toc ">
+                            <ul>
+                                <li><a href="#rfc.section.1">1.</a>&nbsp;&nbsp;&nbsp;<a href="#introduction">引言</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.1.1">1.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#notational-conventions">记号约定</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.2">2.</a>&nbsp;&nbsp;&nbsp;<a href="#early-hints">HTTP 状态码
+                                        103：早期提示</a></li>
+                                <li><a href="#rfc.section.3">3.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#security-considerations">安全性考虑</a></li>
+                                <li><a href="#rfc.section.4">4.</a>&nbsp;&nbsp;&nbsp;<a href="#iana-considerations">IANA
+                                        注意事项</a></li>
+                                <li><a href="#rfc.section.5">5.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.references">参考文献</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.5.1">5.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#rfc.references.1">规范性参考文献</a></li>
+                                        <li><a href="#rfc.section.5.2">5.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#rfc.references.2">说明性参考文献</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.A">Appendix A.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#acknowledgements">致谢</a></li>
+                                <li><a href="#rfc.authors">作者地址</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8 order-first main" role="main">
+                <header>
+                    <table class="table table-condensed header" id="rfc.headerblock">
+                        <tbody>
+                            <tr>
+                                <td class="text-left">互联网工程任务组 (IETF)</td>
+                                <td class="text-right">K. Oku</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left">请求评论: 8297</td>
+                                <td class="text-right">Fastly</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left">类别: 实验性</td>
+                                <td class="text-right">2017年12月</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left">ISSN: 2070-1721</td>
+                                <td class="text-right"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div id="rfc.title">
+                        <h1>用于指示提示的 HTTP 状态码</h1>
+                    </div>
+                </header>
+                <hr>
+                <h2 id="rfc.abstract"><a href="#rfc.abstract">摘要</a></h2>
+                <div class="lead">
+                    <div id="rfc.abstract.p.1">
+                        <p>本备忘录引入了一个信息性 HTTP 状态码，可用于传达有助于客户端为处理最终响应做准备的提示。</p>
+                    </div>
+                </div>
+                <aside id="rfc.meta" class="alert alert-info"></aside>
+                <section id="rfc.status">
+                    <h2><a href="#rfc.status">本备忘录的状态</a></h2>
+                    <div id="rfc.boilerplate.1.p.1">
+                        <p>本文档不是互联网标准轨道的规范；其发布用于审查、实验性实现和评估。</p>
+                    </div>
+                    <div id="rfc.boilerplate.1.p.2">
+                        <p>本文档为互联网社区定义了一种实验性协议。本文档是互联网工程任务组 (IETF) 的产物。它代表了 IETF 社区的共识。该文档已接受公众审阅并已获互联网工程指导小组 (IESG)
+                            批准发布。并非所有经 IESG 批准的文档都适合成为任何级别的互联网标准；参见 <a
+                                href="https://www.rfc-editor.org/rfc/rfc7841.html#section-2">RFC 7841 的第 2 节</a>。</p>
+                    </div>
+                    <div id="rfc.boilerplate.1.p.3">
+                        <p>有关本文档当前状态、任何勘误以及如何提供反馈的信息，可在 <a
+                                href="https://www.rfc-editor.org/info/rfc8297">https://www.rfc-editor.org/info/rfc8297</a>
+                            获取。</p>
+                    </div>
+                </section>
+                <section id="rfc.copyrightnotice">
+                    <h2><a href="#rfc.copyrightnotice">Copyright Notice</a></h2>
+                    <div id="rfc.boilerplate.2.p.1">
+                        <p>Copyright (c) 2017 IETF Trust and the persons identified as the document authors. All rights
+                            reserved.</p>
+                    </div>
+                    <div id="rfc.boilerplate.2.p.2">
+                        <p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF
+                            Documents (<a
+                                href="https://trustee.ietf.org/license-info">https://trustee.ietf.org/license-info</a>)
+                            in effect on the date of publication of this document. Please review these documents
+                            carefully, as they describe your rights and restrictions with respect to this document. Code
+                            Components extracted from this document must include Simplified BSD License text as
+                            described in Section 4.e of the Trust Legal Provisions and are provided without warranty as
+                            described in the Simplified BSD License.</p>
+                    </div>
+                </section>
+                <div class="toc d-lg-none">
+                    <ul>
+                        <li><a href="#rfc.section.1">1.</a>&nbsp;&nbsp;&nbsp;<a href="#introduction">引言</a>
+                            <ul>
+                                <li><a href="#rfc.section.1.1">1.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#notational-conventions">记号约定</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#rfc.section.2">2.</a>&nbsp;&nbsp;&nbsp;<a href="#early-hints">HTTP 状态码
+                                103：早期提示</a></li>
+                        <li><a href="#rfc.section.3">3.</a>&nbsp;&nbsp;&nbsp;<a href="#security-considerations">安全性
+                                考虑</a></li>
+                        <li><a href="#rfc.section.4">4.</a>&nbsp;&nbsp;&nbsp;<a href="#iana-considerations">IANA
+                                注意事项</a></li>
+                        <li><a href="#rfc.section.5">5.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.references">参考文献</a>
+                            <ul>
+                                <li><a href="#rfc.section.5.1">5.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#rfc.references.1">规范性参考文献</a></li>
+                                <li><a href="#rfc.section.5.2">5.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#rfc.references.2">说明性参考文献</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#rfc.section.A">Appendix A.</a>&nbsp;&nbsp;&nbsp;<a href="#acknowledgements">致谢</a>
+                        </li>
+                        <li><a href="#rfc.authors">作者地址</a></li>
+                    </ul>
+                </div>
+                <section id="introduction">
+                    <h2 id="rfc.section.1" class="np"><a href="#rfc.section.1">1.</a>&nbsp;<a
+                            href="#introduction">引言</a></h2>
+                    <div id="rfc.section.1.p.1">
+                        <p>HTTP 响应经常包含在使用之前需要提前获取的外部资源链接，例如，网页浏览器渲染 HTML 时。尽早向客户端提供这些链接有助于减少用户感知到的延迟。</p>
+                    </div>
+                    <div id="rfc.section.1.p.2">
+                        <p>“preload” <a href="#Preload"><cite title="Preload">[Preload]</cite></a> 链接关系可以在 HTTP 响应的 Link
+                            首部字段中传达此类链接。然而，源服务器并不总是能够在收到请求后立即生成最终响应的首部块。例如，源服务器可能会将请求委派给运行在远端位置的上游 HTTP
+                            服务器，或者状态码可能依赖于数据库查询的结果。</p>
+                    </div>
+                    <div id="rfc.section.1.p.3">
+                        <p>这里的困境在于，即便源服务器最好能在收到请求后尽快发送某些首部字段，但在最终 HTTP 响应的状态码和完整首部字段确定之前，它无法这样做。</p>
+                    </div>
+                    <div id="rfc.section.1.p.4">
+                        <p>HTTP/2 <a href="#RFC7540"><cite
+                                    title="Hypertext Transfer Protocol Version 2 (HTTP/2)">[RFC7540]</cite></a>
+                            的服务器推送可以加速资源的传递，但仅限于服务器拥有权威的那些资源。服务器推送的另一个限制是，无论客户端是否已缓存响应，响应都会被传输。与服务器推送在最坏情况下相比额外花费一次往返时间不同，及时传递
+                            Link 首部字段更灵活，并且可能消耗更少的带宽。</p>
+                    </div>
+                    <div id="rfc.section.1.p.5">
+                        <p>本备忘录定义了一个用于发送信息性响应的状态码（<a href="#RFC7231"><cite
+                                    title="Hypertext Transfer Protocol (HTTP/1.1): Semantics and Content">[RFC7231]</cite></a>，
+                            <a href="https://www.rfc-editor.org/rfc/rfc7231.html#section-6.2">第 6.2
+                                节</a>），该响应包含很可能会出现在最终响应中的首部字段。服务器可以发送包含部分首部字段的信息性响应，帮助客户端开始为处理最终响应做准备，然后再运行耗时操作以生成最终响应。信息性响应也可被源服务器用于在具有缓存功能的中间设备上触发
+                            HTTP/2 的服务器推送。
+                        </p>
+                    </div>
+                    <section id="notational-conventions">
+                        <h3 id="rfc.section.1.1"><a href="#rfc.section.1.1">1.1.</a>&nbsp;<a
+                                href="#notational-conventions">记号约定</a></h3>
+                        <div id="rfc.section.1.1.p.1">
+                            <p>本文档中关键字 "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD
+                                NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", 和 "OPTIONAL" 应当按 <span class="nobr">BCP
+                                    14</span> <a href="#RFC2119"><cite
+                                        title="Key words for use in RFCs to Indicate Requirement Levels">[RFC2119]</cite></a>
+                                <a href="#RFC8174"><cite
+                                        title="Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words">[RFC8174]</cite></a>
+                                的描述来解释——仅当这些词以全大写形式出现时，才按上述含义解释，如本文所示。
+                            </p>
+                        </div>
+                    </section>
+                </section>
+                <section id="early-hints">
+                    <h2 id="rfc.section.2"><a href="#rfc.section.2">2.</a>&nbsp;<a href="#early-hints">HTTP 状态码
+                            103：早期提示</a></h2>
+                    <div id="rfc.section.2.p.1">
+                        <p>103（Early Hints）信息性状态码向客户端指示，服务器很可能在最终响应中包含信息性响应中出现的那些首部字段。</p>
+                    </div>
+                    <div id="rfc.section.2.p.2">
+                        <p>通常，服务器会在最终响应中包含在 103（Early Hints）响应中发送的首部字段。然而，可能存在不希望这样做的情况，例如服务器在发送最终响应之前发现 103
+                            响应中的首部字段不正确。</p>
+                    </div>
+                    <div id="rfc.section.2.p.3">
+                        <p>客户端可以在等待最终响应时对 103（Early Hints）响应中包含的首部字段进行推测性评估。例如，客户端可能识别出 Link 首部字段值中包含 rel="preload"
+                            的情况并开始获取目标资源。然而，这些首部字段仅为对客户端的提示；它们不会替代最终响应中的首部字段。</p>
+                    </div>
+                    <div id="rfc.section.2.p.4">
+                        <p>除了性能优化之外，对 103（Early Hints）响应首部字段的此类评估 <strong>不得</strong> 影响最终响应的处理方式。客户端
+                            <strong>不得</strong> 将 103（Early Hints）响应的首部字段解释为适用于信息性响应本身（例如，作为关于 103 响应的元数据）。
+                        </p>
+                    </div>
+                    <div id="rfc.section.2.p.5">
+                        <p>服务器可使用 103（Early Hints）响应仅指示预期在最终响应中出现的部分首部字段。客户端 <strong>不应</strong> 将 103
+                            响应中某一首部字段的缺失解释为该首部字段不太可能出现在最终响应中的猜测。</p>
+                    </div>
+                    <div id="rfc.section.2.p.6">
+                        <p>下面的示例说明了涉及 103（Early Hints）响应的典型消息交换。</p>
+                    </div>
+                    <div id="rfc.section.2.p.7" class="avoidbreakafter">
+                        <p>客户端请求：</p>
+                    </div>
+                    <div id="rfc.figure.u.1">
+                        <div>
+                            <pre class="text">
+  GET / HTTP/1.1
+  Host: example.com
+
+</pre>
+                        </div>
+                    </div>
+                    <div id="rfc.section.2.p.8" class="avoidbreakafter">
+                        <p>服务器响应：</p>
+                    </div>
+                    <div id="rfc.figure.u.2">
+                        <div>
+                            <pre class="text">
+  HTTP/1.1 103 Early Hints
+  Link: &lt;/style.css&gt;; rel=preload; as=style
+  Link: &lt;/script.js&gt;; rel=preload; as=script
+
+  HTTP/1.1 200 OK
+  Date: Fri, 26 May 2017 10:02:11 GMT
+  Content-Length: 1234
+  Content-Type: text/html; charset=utf-8
+  Link: &lt;/style.css&gt;; rel=preload; as=style
+  Link: &lt;/script.js&gt;; rel=preload; as=script
+
+  &lt;!doctype html&gt;
+  [... 响应正文的其余部分在示例中省略 ...]
+</pre>
+                        </div>
+                    </div>
+                    <div id="rfc.section.2.p.9">
+                        <p>与任何信息性响应一样，服务器在发送最终响应之前可能发出多个 103（Early Hints）响应。例如，当缓存中介基于过期缓存响应的首部字段生成 103（Early
+                            Hints）响应，然后在对原点服务器的重新验证请求中转发来自原点服务器的 103（Early Hints）响应和最终响应时，就可能发生这种情况。</p>
+                    </div>
+                    <div id="rfc.section.2.p.10">
+                        <p>服务器可以在请求处理过程中随着新信息的可用而发出多个带有附加首部字段的 103（Early
+                            Hints）响应。它无需重复已经发送过的字段，但也可以选择包含它们。客户端在预期最终响应中可能包含的首部字段列表时，可以考虑从多个 103 响应中收到的任意组合的首部字段。</p>
+                    </div>
+                    <div id="rfc.section.2.p.11">
+                        <p>下面的示例说明了服务器可能发出的一个响应序列。在该示例中，服务器使用两个 103（Early Hints）响应通知客户端，它很可能在最终响应中发送三个 Link
+                            首部字段。最终响应中包含了三者中的两个首部字段，另一个首部字段被替换为包含不同值的另一个 Link 首部字段。</p>
+                    </div>
+                    <div id="rfc.figure.u.3">
+                        <div>
+                            <pre class="text">
+  HTTP/1.1 103 Early Hints
+  Link: &lt;/main.css&gt;; rel=preload; as=style
+
+  HTTP/1.1 103 Early Hints
+  Link: &lt;/style.css&gt;; rel=preload; as=style
+  Link: &lt;/script.js&gt;; rel=preload; as=script
+
+  HTTP/1.1 200 OK
+  Date: Fri, 26 May 2017 10:02:11 GMT
+  Content-Length: 1234
+  Content-Type: text/html; charset=utf-8
+  Link: &lt;/main.css&gt;; rel=preload; as=style
+  Link: &lt;/newstyle.css&gt;; rel=preload; as=style
+  Link: &lt;/script.js&gt;; rel=preload; as=script
+
+  &lt;!doctype html&gt;
+  [... 响应正文的其余部分在示例中省略 ...]
+</pre>
+                        </div>
+                    </div>
+                </section>
+                <section id="security-considerations">
+                    <h2 id="rfc.section.3"><a href="#rfc.section.3">3.</a>&nbsp;<a
+                            href="#security-considerations">安全性考虑</a></h2>
+                    <div id="rfc.section.3.p.1">
+                        <p>一些客户端可能在处理 103（Early Hints）响应时出现问题，因为信息性响应在回复不包含 Expect 首部字段的请求时很少使用（<a href="#RFC7231"><cite
+                                    title="Hypertext Transfer Protocol (HTTP/1.1): Semantics and Content">[RFC7231]</cite></a>，
+                            <a href="https://www.rfc-editor.org/rfc/rfc7231.html#section-5.1.1">第 5.1.1 节</a>）。
+                        </p>
+                    </div>
+                    <div id="rfc.section.3.p.2">
+                        <p>特别是，一个错误地将信息性响应当作最终响应处理的 HTTP/1.1
+                            客户端，很可能会将随后在同一连接上发送的所有响应都视为该最终响应的一部分。这种行为在客户端将对不同原点的请求复用到同一个持久连接上时，可能构成跨源信息泄露漏洞。</p>
+                    </div>
+                    <div id="rfc.section.3.p.3">
+                        <p>因此，服务器在 HTTP/1.1 上可能会避免发送 103（Early Hints）响应，除非已知客户端能正确处理信息性响应。</p>
+                    </div>
+                    <div id="rfc.section.3.p.4">
+                        <p>HTTP/2 客户端由于响应首部字段的处理不影响响应主体结束的确定，较不可能遭受错误帧处理的问题。</p>
+                    </div>
+                </section>
+                <section id="iana-considerations">
+                    <h2 id="rfc.section.4"><a href="#rfc.section.4">4.</a>&nbsp;<a href="#iana-considerations">IANA
+                            注意事项</a></h2>
+                    <div id="rfc.section.4.p.1" class="avoidbreakafter">
+                        <p>以下条目已在 “HTTP Status Codes” 注册表中注册：</p>
+                    </div>
+                    <div id="rfc.section.4.p.2">
+                        <ul>
+                            <li>Code: 103</li>
+                            <li>Description: Early Hints</li>
+                            <li>Specification: RFC 8297 (this document)</li>
+                        </ul>
+                    </div>
+                </section>
+                <section id="rfc.references">
+                    <h2 id="rfc.section.5"><a href="#rfc.section.5">5.</a> 参考文献</h2>
+                    <section>
+                        <div id="rfc.references.1">
+                            <h3 id="rfc.section.5.1"><a href="#rfc.section.5.1">5.1.</a> 规范性参考文献</h3>
+                            <dl class="dl-horizontal">
+                                <dt id="RFC2119">[<a href="#RFC2119" class="smpl">RFC2119</a>]</dt>
+                                <dd>Bradner, S., “<a href="https://www.rfc-editor.org/rfc/rfc2119.html">在 RFC
+                                        中表示需求等级的关键字</a>”, <a href="https://www.rfc-editor.org/info/bcp14">BCP 14</a>,
+                                    RFC 2119, <a href="https://dx.doi.org/10.17487/RFC2119">DOI 10.17487/RFC2119</a>,
+                                    March 1997,
+                                    &lt;<a
+                                        href="https://www.rfc-editor.org/info/rfc2119">https://www.rfc-editor.org/info/rfc2119</a>&gt;.
+                                </dd>
+                                <dt id="RFC7231">[<a href="#RFC7231" class="smpl">RFC7231</a>]</dt>
+                                <dd>Fielding, R., Ed. and J. Reschke, Ed., “<a
+                                        href="https://www.rfc-editor.org/rfc/rfc7231.html">超文本传输协议
+                                        (HTTP/1.1)：语义与内容</a>”, RFC 7231, <a
+                                        href="https://dx.doi.org/10.17487/RFC7231">DOI 10.17487/RFC7231</a>, June 2014,
+                                    &lt;<a
+                                        href="https://www.rfc-editor.org/info/rfc7231">https://www.rfc-editor.org/info/rfc7231</a>&gt;.
+                                </dd>
+                                <dt id="RFC7540">[<a href="#RFC7540" class="smpl">RFC7540</a>]</dt>
+                                <dd>Belshe, M., Peon, R., and M. Thomson, Ed., “<a
+                                        href="https://www.rfc-editor.org/rfc/rfc7540.html">超文本传输协议 版本 2 (HTTP/2)</a>”,
+                                    RFC 7540, <a href="https://dx.doi.org/10.17487/RFC7540">DOI 10.17487/RFC7540</a>,
+                                    May 2015,
+                                    &lt;<a
+                                        href="https://www.rfc-editor.org/info/rfc7540">https://www.rfc-editor.org/info/rfc7540</a>&gt;.
+                                </dd>
+                                <dt id="RFC8174">[<a href="#RFC8174" class="smpl">RFC8174</a>]</dt>
+                                <dd>Leiba, B., “<a href="https://www.rfc-editor.org/rfc/rfc8174.html">RFC 2119
+                                        中大写与小写关键字的歧义</a>”, <a href="https://www.rfc-editor.org/info/bcp14">BCP 14</a>,
+                                    RFC 8174, <a href="https://dx.doi.org/10.17487/RFC8174">DOI 10.17487/RFC8174</a>,
+                                    May 2017,
+                                    &lt;<a
+                                        href="https://www.rfc-editor.org/info/rfc8174">https://www.rfc-editor.org/info/rfc8174</a>&gt;.
+                                </dd>
+                            </dl>
+                        </div>
+                    </section>
+                    <section>
+                        <div id="rfc.references.2">
+                            <h3 id="rfc.section.5.2"><a href="#rfc.section.5.2">5.2.</a> 说明性参考文献</h3>
+                            <dl class="dl-horizontal">
+                                <dt id="Preload">[<a href="#Preload" class="smpl">Preload</a>]</dt>
+                                <dd>Grigorik, I., Ed. and Y. Weiss, Ed., “<a
+                                        href="https://www.w3.org/TR/preload/">Preload</a>”, W3C 候选推荐, October 2017,
+                                    &lt;<a href="https://www.w3.org/TR/preload/">https://www.w3.org/TR/preload/</a>&gt;.
+                                </dd>
+                            </dl>
+                        </div>
+                    </section>
+                </section>
+                <section id="acknowledgements">
+                    <h2 id="rfc.section.A" class="np"><a href="#rfc.section.A">Appendix A.</a>&nbsp;<a
+                            href="#acknowledgements">致谢</a></h2>
+                    <div id="rfc.section.A.p.1">
+                        <p>感谢 Tatsuhiro Tsujikawa 提出使用信息性响应发送 Link 首部字段的想法。</p>
+                    </div>
+                    <div id="rfc.section.A.p.2">
+                        <p>Mark Nottingham 和 Willy Tarreau 在澄清该状态码语义方面提供了大量帮助。</p>
+                    </div>
+                    <div id="rfc.section.A.p.3">
+                        <p>作者在起草本文档的早期阶段的工作，曾在其受雇于 DeNA 有限公司期间得到支持。</p>
+                    </div>
+                </section>
+                <section id="rfc.authors" class="avoidbreakinside">
+                    <h2><a href="#rfc.authors">作者地址</a></h2>
+                    <address><b>Kazuho Oku</b><br>Fastly<br>EMail: <a
+                            href="mailto:kazuhooku@gmail.com">kazuhooku@gmail.com</a></address>
+                </section>
+            </div>
+        </div>
+    </div>
+    <script src="https://httpwg.org/assets/node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="https://httpwg.org/assets/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="/dropdown.js"></script>
+</body>
+
+</html>
