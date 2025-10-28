@@ -86,6 +86,23 @@ cssBlockLines.forEach(line => {
     }
 });
 
+// { 新增 } 解析 httpLinks 的分类元信息并收集每个分类下的 text 列表
+let httpCategories = extractCategories(dataJsContent.match(/const\s+httpLinks\s*=\s*\[[\s\S]*?];/)?.[0] || '');
+
+let currentHttpIdx = -1;
+const httpBlockLines = (dataJsContent.match(/const\s+httpLinks\s*=\s*\[[\s\S]*?];/)?.[0] || '').split('\n');
+httpBlockLines.forEach(line => {
+    const catMatch = line.match(/\/\/\s*#+\s*(.+)/);
+    if (catMatch) {
+        const firstSeg = catMatch[1].trim().split('|')[0].trim();
+        currentHttpIdx = httpCategories.findIndex(c => c.id === firstSeg);
+    }
+    const linkMatch = line.match(/text:\s*['"]([^'"]+)['"]/);
+    if (linkMatch && currentHttpIdx >= 0) {
+        httpCategories[currentHttpIdx].match.push(linkMatch[1].trim());
+    }
+});
+
 function classifyLinks(list, cats) {
     const result = {};
     cats.forEach(c => result[c.id] = []);
@@ -110,7 +127,9 @@ const stateMap = {
     'CR': ['Candidate Recommendation', 'https://img.shields.io/badge/CR-cfd510'],
     'CG-FINAL': ['Community Group Final Report', 'https://img.shields.io/badge/CG--FINAL-ffcc00'],
     'DISC': ['Discontinued Draft', 'https://img.shields.io/badge/DISC-ffcc00'],
-    'NOTE': ['Note', 'https://img.shields.io/badge/NOTE-309c40']
+    'NOTE': ['Note', 'https://img.shields.io/badge/NOTE-309c40'],
+    'RFC': ['RFC', 'https://img.shields.io/badge/RFC-0057B8'],
+    'Guide': ['Guide', 'https://img.shields.io/badge/Guide-6c757d']
 };
 
 function linkToMd(link) {
@@ -128,7 +147,7 @@ function linkToMd(link) {
     return `- [${displayText}](${displayHref})（[Source](${link.src})${badge}）`;
 }
 
-function generateMd(classified, cssClassified) {
+function generateMd(classified, cssClassified /*, ...existing params...*/ , httpClassified) {
     const { title, desc } = parseHeader();
     let md = `# ${title}\n${desc}\n\n`;
     function renderLinksInline(items) {
@@ -169,13 +188,34 @@ function generateMd(classified, cssClassified) {
             md += '\n';
         }
     }
+
+    // { 新增 } 在 CSS 区块之后渲染 HTTP 区块（若分类名为 "HTTP" 则使用 H2）
+    for (const cat of httpCategories) {
+        const items = httpClassified[cat.id];
+        if (items && items.length) {
+            const displayName = cat.names[langIndex] || cat.names[0];
+            if (displayName === 'HTTP') {
+                md += `## ${displayName}\n`;
+            } else {
+                md += `### ${displayName}\n`;
+            }
+            md += renderLinksInline(items);
+            md += '\n';
+        }
+    }
+
     return md;
 }
 
 const classified = classifyLinks(links, categories);
 const cssSpecs = cssLinks.filter(o => o && typeof o === 'object');
 const cssClassified = classifyLinks(cssSpecs, cssCategories);
-const mdContent = generateMd(classified, cssClassified);
+
+// { 新增 } 解析并分类 httpLinks，同时传入生成函数
+const httpSpecs = extractArray('httpLinks').filter(l => !l.lang || l.lang.includes(langArg));
+const httpClassified = classifyLinks(httpSpecs, httpCategories);
+
+const mdContent = generateMd(classified, cssClassified, httpClassified);
 
 const outFile = langArg === 'c' ? 'README.md' : `README.${langArg}.md`;
 fs.writeFileSync(path.join(__dirname, outFile), mdContent, 'utf8');

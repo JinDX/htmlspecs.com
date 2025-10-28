@@ -509,6 +509,22 @@ const links = [
         state: "WD"
     },
     {
+        text: "Input Events Level 1",
+        href: "https://htmlspecs.com/input-events-1",
+        src: "https://www.w3.org/TR/2023/DISC-input-events-1-20230928/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "DISC"
+    },
+    {
+        text: "Input Events Level 2",
+        href: "https://htmlspecs.com/input-events-2",
+        src: "https://www.w3.org/TR/2025/WD-input-events-2-20250814/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
+    {
         text: "Permissions",
         href: "https://htmlspecs.com/permissions",
         src: "https://www.w3.org/TR/2025/WD-permissions-20251006/",
@@ -1768,7 +1784,7 @@ const httpLinks = [
         state: ""
     },
 
-    //### Core Specifications
+    //### 核心规范|핵심 명세|コア仕様
     {
         text: "HTTP Semantics (RFC 9110)",
         href: "https://htmlspecs.com/http/rfc9110.html",
@@ -1842,7 +1858,7 @@ const httpLinks = [
         state: "RFC"
     },
 
-    //### Methods
+    //### 方法|메서드|メソッド
     {
         text: "PATCH Method for HTTP",
         href: "https://htmlspecs.com/http/rfc5789.html",
@@ -1852,7 +1868,7 @@ const httpLinks = [
         state: "RFC"
     },
 
-    //### Status Codes
+    //### 状态码|상태 코드|状态码
     {
         text: "Additional HTTP Status Codes",
         href: "https://htmlspecs.com/http/rfc6585.html",
@@ -1878,7 +1894,7 @@ const httpLinks = [
         state: "RFC"
     },
 
-    //### Caching Extensions
+    //### 缓存扩展|캐싱 확장|キャッシュ拡張
     {
         text: "HTTP Cache-Control Extensions for Stale Content",
         href: "https://htmlspecs.com/http/rfc5861.html",
@@ -1912,7 +1928,7 @@ const httpLinks = [
         state: "RFC"
     },
 
-    //### Content-Related Extensions
+    //### 内容相关扩展|콘텐츠 관련 확장|コンテンツ関連の拡張
     {
         text: "HTTP State Management Mechanism",
         href: "https://htmlspecs.com/http/rfc6265.html",
@@ -1962,7 +1978,7 @@ const httpLinks = [
         state: "RFC"
     },
 
-    //### Connection and Intermediary Extensions
+    //### 连接与中介扩展|연결 및 중개자 확장|接続および中継拡張
     {
         text: "The ALPN HTTP Header Field",
         href: "https://htmlspecs.com/http/rfc7639.html",
@@ -2044,7 +2060,7 @@ const httpLinks = [
         state: "RFC"
     },
 
-    //### Security-Related Extensions
+    //### 安全相关扩展|보안 관련 확장|セキュリティ関連の拡張
     {
         text: "HTTP Digest Access Authentication",
         href: "https://htmlspecs.com/http/rfc7616.html",
