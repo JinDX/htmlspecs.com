@@ -1,0 +1,1080 @@
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html lang="zh-hans">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>RFC 7617 - 'Basic' HTTP 认证方案</title>
+    <script>
+        function getMeta(rfcno, container) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "https://www.rfc-editor.org/rfc/rfc" + rfcno + ".json", true);
+            xhr.onload = function (e) {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        var data = JSON.parse(xhr.response);
+
+                        var cont = document.getElementById(container);
+                        // empty the container
+                        while (cont.firstChild) {
+                            cont.removeChild(myNode.firstChild);
+                        }
+
+                        var c = data.status;
+                        if (c) {
+                            var bld = newElementWithText("b", c);
+                            cont.appendChild(bld);
+                        } else {
+                            cont.appendChild(newElementWithText("i", "(document status unknown)"));
+                        }
+
+                        c = data.updated_by;
+                        if (c && c.length > 0 && c[0] !== null && c[0].length > 0) {
+                            cont.appendChild(newElement("br"));
+                            cont.appendChild(newText("Updated by: "));
+                            appendRfcLinks(cont, c);
+                        }
+
+                        c = data.obsoleted_by;
+                        if (c && c.length > 0 && c[0] !== null && c[0].length > 0) {
+                            cont.appendChild(newElement("br"));
+                            cont.appendChild(newText("Obsoleted by: "));
+                            appendRfcLinks(cont, c);
+                        }
+
+                        c = data.errata_url;
+                        if (c) {
+                            cont.appendChild(newElement("br"));
+                            var link = newElementWithText("a", "errata");
+                            link.setAttribute("href", c);
+                            var errata = newElementWithText("i", "This document has ");
+                            errata.appendChild(link);
+                            errata.appendChild(newText("."));
+                            cont.appendChild(errata);
+                        }
+
+                        cont.style.display = "block";
+                    } else {
+                        console.error(xhr.statusText);
+                    }
+                }
+            };
+            xhr.onerror = function (e) {
+                console.error(xhr.status + " " + xhr.statusText);
+            };
+            xhr.send(null);
+        }
+        function appendRfcLinks(parent, updates) {
+            var template = "https://www.rfc-editor.org/rfc/rfc{rfc}.html";
+            for (var i = 0; i < updates.length; i++) {
+                var rfc = updates[i].trim().toLowerCase();
+                if (rfc.substring(0, 3) == "rfc") {
+                    var no = parseInt(rfc.substring(3), 10);
+
+                    var link = newElement("a");
+                    link.setAttribute("href", template.replace("{rfc}", no));
+                    link.appendChild(newText(no));
+                    parent.appendChild(link);
+                } else {
+                    parent.appendChild(newText(rfc));
+                }
+                if (i != updates.length - 1) {
+                    parent.appendChild(newText(", "));
+                }
+            }
+        }
+
+        // DOM helpers
+        function newElement(name) {
+            return document.createElement(name);
+        }
+        function newElementWithText(name, txt) {
+            var e = document.createElement(name);
+            e.appendChild(newText(txt));
+            return e;
+        }
+        function newText(text) {
+            return document.createTextNode(text);
+        }
+    </script>
+    <script>
+        function anchorRewrite() {
+            map = {};
+            if (window.location.hash.length >= 1) {
+                var fragid = window.location.hash.substr(1);
+                if (fragid) {
+                    if (!document.getElementById(fragid)) {
+                        var prefix = "rfc.";
+                        var mapped = map[fragid];
+                        if (mapped) {
+                            window.location.hash = mapped;
+                        } else if (fragid.indexOf("section-") == 0) {
+                            window.location.hash = prefix + "section." + fragid.substring(8).replace("-", ".p.");
+                        } else if (fragid.indexOf("appendix-") == 0) {
+                            window.location.hash = prefix + "section." + fragid.substring(9).replace("-", ".p.");
+                        } else if (fragid.indexOf("s-") == 0) {
+                            var postfix = fragid.substring(2);
+                            if (postfix.startsWith("abstract")) {
+                                window.location.hash = prefix + postfix;
+                            } else if (postfix.startsWith("note-")) {
+                                window.location.hash = prefix + "note." + postfix.substring(5).replace("-", ".p.");
+                            } else {
+                                window.location.hash = prefix + "section." + postfix.replace("-", ".p.");
+                            }
+                        } else if (fragid.indexOf("p-") == 0) {
+                            var r = fragid.substring(2);
+                            var p = r.indexOf("-");
+                            if (p >= 0) {
+                                window.location.hash = prefix + "section." + r.substring(0, p) + ".p." + r.substring(p + 1);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        window.addEventListener('hashchange', anchorRewrite);
+        window.addEventListener('DOMContentLoaded', anchorRewrite);
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="RFC7617">
+    <meta property="og:description" content="The 'Basic' HTTP Authentication Scheme">
+    <meta property="og:url" content="https://httpwg.org/specs/rfc7617.html">
+    <meta property="og:site_name" content="IETF HTTP Working Group Specifications">
+    <meta property="og:image" content="https://httpwg.org/assets/favicon/apple-icon-180x180.png">
+    <link rel="stylesheet" type="text/css"
+        href="https://httpwg.org/assets/node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <style type="text/css">
+        body {
+            padding-top: 80px;
+            padding-bottom: 80px;
+            position: relative;
+        }
+
+        .table.header th,
+        .table.header td {
+            border-top: none;
+            padding: 0;
+        }
+
+        #sidebar {
+            margin-top: -10px;
+            height: 90%;
+            overflow-y: auto;
+            font-size: 90%;
+        }
+
+        #rfc\.meta {
+            width: 40%;
+            float: right
+        }
+
+        .toc ul {
+            list-style: none;
+        }
+
+        .filename {
+            color: rgb(119, 119, 119);
+            font-size: 23px;
+            font-weight: normal;
+            height: auto;
+            line-height: 23px;
+        }
+
+        dl {
+            margin-left: 1em;
+        }
+
+        dl.dl-horizontal {
+            margin-left: 0;
+        }
+
+        dl>dt {
+            float: left;
+            margin-right: 1em;
+        }
+
+        dl.nohang>dt {
+            float: none;
+        }
+
+        dl>dd {
+            margin-bottom: .5em;
+        }
+
+        dl.compact>dd {
+            margin-bottom: 0em;
+        }
+
+        dl>dd>dl {
+            margin-top: 0.5em;
+            margin-bottom: 0em;
+        }
+
+        ul.empty {
+            list-style-type: none;
+        }
+
+        ul.empty li {
+            margin-top: .5em;
+        }
+
+        td.reference {
+            padding-right: 1em;
+            vertical-align: top;
+        }
+
+        .feedback {
+            position: fixed;
+            bottom: 5px;
+            right: 5px;
+        }
+
+        .fbbutton {
+            margin-left: 5px;
+        }
+
+        h1 a,
+        h2 a,
+        h3 a,
+        h4 a,
+        h5 a,
+        h6 a {
+            color: rgb(51, 51, 51);
+        }
+
+        span.tt {
+            font: 11pt consolas, monospace;
+            font-size-adjust: none;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" href="https://httpwg.org/assets/site.css">
+    <link rel="Contents" href="#rfc.toc">
+    <link rel="Author" href="#rfc.authors">
+    <link rel="License" href="#rfc.copyrightnotice">
+    <link rel="Chapter" title="1 Introduction" href="#rfc.section.1">
+    <link rel="Chapter" title="2 The 'Basic' Authentication Scheme" href="#rfc.section.2">
+    <link rel="Chapter" title="3 Internationalization Considerations" href="#rfc.section.3">
+    <link rel="Chapter" title="4 Security Considerations" href="#rfc.section.4">
+    <link rel="Chapter" title="5 IANA Considerations" href="#rfc.section.5">
+    <link rel="Chapter" title="6 References" href="#rfc.section.6">
+    <link rel="Appendix" title="A Changes from RFC 2617" href="#rfc.section.A">
+    <link rel="Appendix" title="B Deployment Considerations for the 'charset' Parameter" href="#rfc.section.B">
+    <link rel="Appendix" title="Acknowledgements" href="#rfc.section.unnumbered-1">
+    <link rel="Alternate" title="Plain Text Version" href="http://www.ietf.org/rfc/rfc7617.txt">
+    <link rel="Help" title="RFC-Editor's Status Page" href="http://www.rfc-editor.org/info/rfc7617">
+    <meta name="viewport" content="initial-scale=1">
+    <meta name="generator"
+        content="https://github.com/mnot/RFCBootstrap XSLT vendor: Saxonica http://www.saxonica.com/">
+    <meta name="keywords" content="HTTP, authentication scheme, basic authentication scheme">
+    <link rel="schema.dcterms" href="http://purl.org/dc/terms/">
+    <meta name="dcterms.creator" content="Reschke, J. F.">
+    <meta name="dcterms.identifier" content="urn:ietf:rfc:7617">
+    <meta name="dcterms.issued" content="2015-09">
+    <meta name="dct.replaces" content="urn:ietf:rfc:2617">
+    <meta name="dcterms.abstract"
+        content="This document defines the 'Basic' Hypertext Transfer Protocol (HTTP) authentication scheme, which transmits credentials as user-id/password pairs, encoded using Base64.">
+    <meta name="dcterms.isPartOf" content="urn:issn:2070-1721">
+    <meta name="description"
+        content="This document defines the 'Basic' Hypertext Transfer Protocol (HTTP) authentication scheme, which transmits credentials as user-id/password pairs, encoded using Base64.">
+</head>
+
+<body onload="getMeta(7617,'rfc.meta');">
+    <nav class="navbar navbar-dark bg-dark d-print-none navbar-expand-lg fixed-top ps-3 pe-3" role="navigation">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse"
+                aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <a class="navbar-brand" href="https://httpwg.org/"><img src="https://httpwg.org/assets/http.svg"
+                    height="23"></a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse">
+
+            <div class="navbar-nav me-auto">
+
+                <a class="nav-item ms-1 text-white" href="https://httpwg.org/specs/">📄 Documentation</a>
+
+                <div class="dropdown ms-4">
+                    <a href="#" class="nav-item dropdown-toggle text-white" data-bs-toggle="dropdown">Work in
+                        Progress</a>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-item"><a href="https://httpwg.org/http-extensions/">HTTP Extensions</a></li>
+                        <li class="dropdown-item"><a
+                                href="https://github.com/httpwg/admin/issues?q=is%3Aissue+is%3Aopen+label%3Aadoption">Future
+                                Work</a></li>
+                    </ul>
+                </div>
+
+                <div class="dropdown ms-4">
+                    <a href="#" class="nav-item dropdown-toggle text-white" data-bs-toggle="dropdown">Participate</a>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-item"><a href="https://httpwg.org/about/">About the HTTP Working Group</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li class="dropdown-item"><a href="https://httpwg.org/CONTRIBUTING.html">Contribution Policy</a>
+                        </li>
+                        <li class="dropdown-item"><a href="http://datatracker.ietf.org/wg/httpbis/charter/">WG
+                                Charter</a></li>
+                        <li class="dropdown-item"><a href="http://lists.w3.org/Archives/Public/ietf-http-wg/">Group
+                                Mailing List 📨</a></li>
+                        <li class="dropdown-item"><a href="https://httpwg.org/wg-materials/">Meeting Materials</a></li>
+                        <li class="dropdown-item"><a href="https://httpwg.org/admin/editors/">Document Editor
+                                Resources</a></li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </nav>
+    <div class="container" id="top">
+        <div class="row">
+            <div class="col-lg-4 order-last d-none d-lg-block" id="sidebar" role="navigation">
+                <div class="navbar">
+                    <div class="navbar-brand"><a href="#top"><strong>RFC </strong>7617</a></div><br clear="all">
+                    <div class="">
+                        <div class="toc ">
+                            <ul>
+                                <li><a href="#rfc.section.1">1.</a>&nbsp;&nbsp;&nbsp;<a href="#introduction">引言</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.1.1">1.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#terminology.and.notation">术语与记法</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.2">2.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#basic.authentication.scheme">“Basic” 认证方案</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.2.1">2.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#charset">“charset” 认证参数</a></li>
+                                        <li><a href="#rfc.section.2.2">2.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#reusing.credentials">凭据重用</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.3">3.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#internationalization.considerations">国际化注意事项</a></li>
+                                <li><a href="#rfc.section.4">4.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#security.considerations">安全性考虑</a></li>
+                                <li><a href="#rfc.section.5">5.</a>&nbsp;&nbsp;&nbsp;<a href="#iana.considerations">IANA
+                                        注意事项</a></li>
+                                <li><a href="#rfc.section.6">6.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.references">参考文献</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.6.1">6.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#rfc.references.1">规范性参考文献</a></li>
+                                        <li><a href="#rfc.section.6.2">6.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#rfc.references.2">补充参考文献</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.A">Appendix A.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#rfc.section.A">来自 RFC 2617 的变更</a></li>
+                                <li><a href="#rfc.section.B">Appendix B.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#rfc.section.B">“charset” 参数的部署注意事项</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.B.1">B.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#rfc.section.B.1">用户代理</a></li>
+                                        <li><a href="#rfc.section.B.2">B.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#rfc.section.B.2">服务器</a></li>
+                                        <li><a href="#rfc.section.B.3">B.3.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#rfc.section.B.3">为何不直接将默认编码切换为 UTF-8？</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.unnumbered-1">致谢</a></li>
+                                <li><a href="#rfc.authors">作者地址</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8 order-first main" role="main">
+                <header>
+                    <table class="table table-condensed header" id="rfc.headerblock">
+                        <tbody>
+                            <tr>
+                                <td class="text-left">互联网工程任务组 (IETF)</td>
+                                <td class="text-right">J. Reschke</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left">请求注释： 7617</td>
+                                <td class="text-right">greenbytes</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left">取代： <a href="#RFC2617">2617</a></td>
+                                <td class="text-right">2015 年 9 月</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left">类别：标准轨道</td>
+                                <td class="text-right"></td>
+                            </tr>
+                            <tr>
+                                <td class="text-left">ISSN: 2070-1721</td>
+                                <td class="text-right"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div id="rfc.title">
+                        <h1>“Basic” HTTP 认证方案</h1>
+                    </div>
+                </header>
+                <hr>
+                <h2 id="rfc.abstract"><a href="#rfc.abstract">摘要</a></h2>
+                <div class="lead">
+                    <div id="rfc.abstract.p.1">
+                        <p>本文档定义了“Basic”超文本传输协议 (HTTP) 认证方案，该方案以 user-id/password pairs 的形式传输凭据，并使用 Base64 进行编码。</p>
+                    </div>
+                </div>
+                <aside id="rfc.meta" class="alert alert-info"></aside>
+                <section id="rfc.status">
+                    <h2><a href="#rfc.status">本备忘录的状态</a></h2>
+                    <div id="rfc.boilerplate.1.p.1">
+                        <p>这是一个互联网标准轨道文档。</p>
+                    </div>
+                    <div id="rfc.boilerplate.1.p.2">
+                        <p>本文档是互联网工程任务组 (IETF) 的产物。它代表了 IETF 社区的共识。它已接受公开审查并已获互联网工程指导小组 (IESG) 批准发布。有关互联网标准的更多信息，请参阅 <a
+                                href="https://www.rfc-editor.org/rfc/rfc5741.html#section-2">RFC 5741 第2节</a>。
+                        </p>
+                    </div>
+                    <div id="rfc.boilerplate.1.p.3">
+                        <p>有关本文档的当前状态、任何勘误以及如何提供反馈的信息，可在 <a
+                                href="http://www.rfc-editor.org/info/rfc7617">http://www.rfc-editor.org/info/rfc7617</a>
+                            查询。
+                        </p>
+                    </div>
+                </section>
+                <section id="rfc.copyrightnotice">
+                    <h2><a href="#rfc.copyrightnotice">Copyright Notice</a></h2>
+                    <div id="rfc.boilerplate.2.p.1">
+                        <p>Copyright (c) 2015 IETF Trust and the persons identified as the document authors. All rights
+                            reserved.</p>
+                    </div>
+                    <div id="rfc.boilerplate.2.p.2">
+                        <p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF
+                            Documents (<a
+                                href="http://trustee.ietf.org/license-info">http://trustee.ietf.org/license-info</a>) in
+                            effect on the date of publication of this document. Please review these documents carefully,
+                            as they describe your rights and restrictions with respect to this document. Code Components
+                            extracted from this document must include Simplified BSD License text as described in
+                            Section 4.e of the Trust Legal Provisions and are provided without warranty as described in
+                            the Simplified BSD License.</p>
+                    </div>
+                    <div id="rfc.boilerplate.2.p.3">
+                        <p>This document may contain material from IETF Documents or IETF Contributions published or
+                            made publicly available before November 10, 2008. The person(s) controlling the copyright in
+                            some of this material may not have granted the IETF Trust the right to allow modifications
+                            of such material outside the IETF Standards Process. Without obtaining an adequate license
+                            from the person(s) controlling the copyright in such materials, this document may not be
+                            modified outside the IETF Standards Process, and derivative works of it may not be created
+                            outside the IETF Standards Process, except to format it for publication as an RFC or to
+                            translate it into languages other than English.</p>
+                    </div>
+                </section>
+                <div class="toc d-lg-none">
+                    <ul>
+                        <li><a href="#rfc.section.1">1.</a>&nbsp;&nbsp;&nbsp;<a href="#introduction">引言</a>
+                            <ul>
+                                <li><a href="#rfc.section.1.1">1.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#terminology.and.notation">术语与记法</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#rfc.section.2">2.</a>&nbsp;&nbsp;&nbsp;<a
+                                href="#basic.authentication.scheme">“Basic” 认证方案</a>
+                            <ul>
+                                <li><a href="#rfc.section.2.1">2.1.</a>&nbsp;&nbsp;&nbsp;<a href="#charset">“charset”
+                                        认证参数</a></li>
+                                <li><a href="#rfc.section.2.2">2.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#reusing.credentials">凭据重用</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#rfc.section.3">3.</a>&nbsp;&nbsp;&nbsp;<a
+                                href="#internationalization.considerations">国际化注意事项</a></li>
+                        <li><a href="#rfc.section.4">4.</a>&nbsp;&nbsp;&nbsp;<a
+                                href="#security.considerations">安全性考虑</a></li>
+                        <li><a href="#rfc.section.5">5.</a>&nbsp;&nbsp;&nbsp;<a href="#iana.considerations">IANA
+                                注意事项</a></li>
+                        <li><a href="#rfc.section.6">6.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.references">参考文献</a>
+                            <ul>
+                                <li><a href="#rfc.section.6.1">6.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#rfc.references.1">规范性参考文献</a></li>
+                                <li><a href="#rfc.section.6.2">6.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#rfc.references.2">补充参考文献</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#rfc.section.A">Appendix A.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.section.A">来自 RFC
+                                2617 的变更</a></li>
+                        <li><a href="#rfc.section.B">Appendix B.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.section.B">“charset”
+                                参数的部署注意事项</a>
+                            <ul>
+                                <li><a href="#rfc.section.B.1">B.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#rfc.section.B.1">用户代理</a></li>
+                                <li><a href="#rfc.section.B.2">B.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#rfc.section.B.2">服务器</a></li>
+                                <li><a href="#rfc.section.B.3">B.3.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#rfc.section.B.3">为何不直接将默认编码切换为 UTF-8？</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#rfc.section.unnumbered-1">致谢</a></li>
+                        <li><a href="#rfc.authors">作者地址</a></li>
+                    </ul>
+                </div>
+                <section id="introduction">
+                    <h2 id="rfc.section.1" class="np"><a href="#rfc.section.1">1.</a>&nbsp;<a
+                            href="#introduction">引言</a></h2>
+                    <div id="rfc.section.1.p.1">
+                        <p>本文档定义了“Basic”超文本传输协议 (HTTP) 认证方案，该方案以 user-id/password 对的形式传输凭据，并使用 Base64 进行编码（HTTP 认证方案的定义见
+                            <a href="#RFC7235"><cite
+                                    title="Hypertext Transfer Protocol (HTTP/1.1): Authentication">[RFC7235]</cite></a>）。
+                        </p>
+                    </div>
+                    <div id="rfc.section.1.p.2">
+                        <p>除非与某种外部的安全系统（例如 TLS（传输层安全，<a href="#RFC5246"><cite
+                                    title="The Transport Layer Security (TLS) Protocol Version 1.2">[RFC5246]</cite></a>）结合使用，否则该方案不被认为是安全的用户认证方法，因为
+                            user-id 和 password 在网络上传输时以明文形式存在于编码前的数据中。</p>
+                    </div>
+                    <div id="rfc.section.1.p.3">
+                        <p>“Basic” 方案先前在 <a href="https://www.rfc-editor.org/rfc/rfc2617.html#section-2">RFC 2617 第 2
+                                节</a> 中定义。本文更新了该定义，并通过引入 'charset' 认证参数（<a href="#charset"
+                                title="The 'charset' auth-param">第 2.1 节</a>）来处理国际化问题。</p>
+                    </div>
+                    <div id="rfc.section.1.p.4">
+                        <p>其它更新 RFC 2617 的文档包括 "Hypertext Transfer Protocol (HTTP/1.1): Authentication"（<a
+                                href="#RFC7235"><cite
+                                    title="Hypertext Transfer Protocol (HTTP/1.1): Authentication">[RFC7235]</cite></a>，定义了认证框架）、"HTTP
+                            Digest Access Authentication"（<a href="#RFC7616"><cite
+                                    title="HTTP Digest Access Authentication">[RFC7616]</cite></a>，更新了 “Digest”
+                            认证方案的定义）以及 "HTTP Authentication-Info and Proxy-Authentication-Info Response Header
+                            Fields"（<a href="#RFC7615"><cite
+                                    title="HTTP Authentication-Info and Proxy-Authentication-Info Response Header Fields">[RFC7615]</cite></a>）。这四份文件合并起来废弃了
+                            RFC 2617。</p>
+                    </div>
+                    <section id="terminology.and.notation">
+                        <h3 id="rfc.section.1.1"><a href="#rfc.section.1.1">1.1.</a>&nbsp;<a
+                                href="#terminology.and.notation">术语与记法</a></h3>
+                        <div id="rfc.section.1.1.p.1">
+                            <p>本文档中关键字 "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD
+                                NOT", "RECOMMENDED", "MAY", 和 "OPTIONAL" 应按 <a href="#RFC2119"><cite
+                                        title="Key words for use in RFCs to Indicate Requirement Levels">[RFC2119]</cite></a>
+                                的定义来解释。</p>
+                        </div>
+                        <div id="rfc.section.1.1.p.2">
+                            <p>术语 "<dfn>protection space</dfn>" 和 "<dfn>realm</dfn>" 在 <a
+                                    href="https://www.rfc-editor.org/rfc/rfc7235.html#section-2.2">RFC 7235 第 2.2 节</a>
+                                中有定义。</p>
+                        </div>
+                        <div id="rfc.section.1.1.p.3">
+                            <p>术语 "<dfn>(character) repertoire</dfn>" 和 "<dfn>character encoding scheme</dfn>" 在 <a
+                                    href="https://www.rfc-editor.org/rfc/rfc6365.html#section-2">RFC 6365 第 2 节</a>
+                                中有定义。</p>
+                        </div>
+                    </section>
+                </section>
+                <section id="basic.authentication.scheme">
+                    <h2 id="rfc.section.2"><a href="#rfc.section.2">2.</a>&nbsp;<a
+                            href="#basic.authentication.scheme">“Basic” 认证方案</a></h2>
+                    <div id="rfc.section.2.p.1">
+                        <p>Basic 认证方案基于这样的模型：客户端需要为每个保护空间（"realm"）使用 user-id 和 password 对自身进行认证。realm
+                            的值是一个自由格式的字符串，只能与该服务器上的其他 realm 做相等性比较。只有当服务器能够为应用于所请求资源的保护空间验证 user-id 和 password
+                            时，服务器才会处理该请求。</p>
+                    </div>
+                    <div id="rfc.section.2.p.2">
+                        <p>Basic 认证方案采用认证框架（Authentication Framework），其细节如下。</p>
+                    </div>
+                    <div id="rfc.section.2.p.3">
+                        <p>在挑战中： </p>
+                        <ul>
+                            <li>方案名称为 "Basic"。</li>
+                            <li>认证参数 'realm' 是 <em class="bcp14">REQUIRED</em>（参见 <a href="#RFC7235"><cite
+                                        title="Hypertext Transfer Protocol (HTTP/1.1): Authentication">[RFC7235]</cite></a>，<a
+                                    href="https://www.rfc-editor.org/rfc/rfc7235.html#section-2.2">第 2.2 节</a>）。</li>
+                            <li>认证参数 'charset' 是 <em class="bcp14">OPTIONAL</em>（见 <a href="#charset"
+                                    title="The 'charset' auth-param">第 2.1 节</a>）。</li>
+                            <li>未定义其他认证参数 — 未知参数接收方 <em class="bcp14">MUST</em> 忽略，新参数只能通过修订本规范来定义。</li>
+                        </ul>
+                    </div>
+                    <div id="rfc.section.2.p.4">
+                        <p>另见 <a href="https://www.rfc-editor.org/rfc/rfc7235.html#section-4.1">RFC 7235 第 4.1
+                                节</a>，其中讨论了正确解析挑战的复杂性。</p>
+                    </div>
+                    <div id="rfc.section.2.p.5">
+                        <p>请注意，scheme 和参数名称的比较均不区分大小写。</p>
+                    </div>
+                    <div id="rfc.section.2.p.6">
+                        <p>对于凭据，使用了 <a href="https://www.rfc-editor.org/rfc/rfc7235.html#section-2.1">RFC 7235 第 2.1
+                                节</a> 中定义的 "token68" 语法。其值按下文基于 user-id 和 password 的方式计算。</p>
+                    </div>
+                    <div id="rfc.section.2.p.7">
+                        <p>当接收到针对保护空间内某个 URI 的请求但缺少凭据时，服务器可以使用 401 (Unauthorized) 状态码（参见 <a href="#RFC7235"><cite
+                                    title="Hypertext Transfer Protocol (HTTP/1.1): Authentication">[RFC7235]</cite></a>，<a
+                                href="https://www.rfc-editor.org/rfc/rfc7235.html#section-3.1">第 3.1 节</a>）和
+                            WWW-Authenticate 头字段（参见 <a href="#RFC7235"><cite
+                                    title="Hypertext Transfer Protocol (HTTP/1.1): Authentication">[RFC7235]</cite></a>，<a
+                                href="https://www.rfc-editor.org/rfc/rfc7235.html#section-4.1">第 4.1 节</a>）来响应。</p>
+                    </div>
+                    <div id="rfc.figure.u.1">
+                        <p>例如：</p>
+                        <div>
+                            <pre class="text2">HTTP/1.1 401 Unauthorized
+Date: Mon, 04 Feb 2014 16:50:53 GMT
+WWW-Authenticate: Basic realm="WallyWorld"
+
+</pre>
+                        </div>
+                        <p>其中 "WallyWorld" 是服务器为标识该保护空间而分配的字符串。</p>
+                    </div>
+                    <div id="rfc.section.2.p.8">
+                        <p>代理可以使用类似的挑战来响应，但使用 407 (Proxy Authentication Required) 状态码（参见 <a href="#RFC7235"><cite
+                                    title="Hypertext Transfer Protocol (HTTP/1.1): Authentication">[RFC7235]</cite></a>，<a
+                                href="https://www.rfc-editor.org/rfc/rfc7235.html#section-3.2">第 3.2 节</a>）和
+                            Proxy-Authenticate 头字段（参见 <a href="#RFC7235"><cite
+                                    title="Hypertext Transfer Protocol (HTTP/1.1): Authentication">[RFC7235]</cite></a>，<a
+                                href="https://www.rfc-editor.org/rfc/rfc7235.html#section-4.3">第 4.3 节</a>）。</p>
+                    </div>
+                    <div id="rfc.section.2.p.9">
+                        <p>为获得授权，客户端应当：</p>
+                        <ol>
+                            <li>从用户处获取 user-id 和 password，</li>
+                            <li>通过将 user-id、一个单冒号 (":") 字符以及 password 连接起来来构造 user-pass，</li>
+                            <li>将 user-pass 编码为一个八位字节序列（关于字符编码方案的讨论见下文），</li>
+                            <li>并通过 Base64（参见 <a href="#RFC4648"><cite
+                                        title="The Base16, Base32, and Base64 Data Encodings">[RFC4648]</cite></a>，<a
+                                    href="https://www.rfc-editor.org/rfc/rfc4648.html#section-4">第 4
+                                    节</a>）将该八位字节序列编码为一系列 US-ASCII 字符（参见 <a href="#RFC0020"><cite
+                                        title="ASCII format for network interchange">[RFC0020]</cite></a>）。</li>
+                        </ol>
+                    </div>
+                    <div id="rfc.section.2.p.10">
+                        <p>原先对该认证方案的定义未明确指定用于将 user-pass 转换为八位字节序列的字符编码方案。实际上，大多数实现选择了区域相关的编码（例如 ISO-8859-1）或
+                            UTF-8。为保持向后兼容性，本规范继续把默认编码保持未定义，只要其与 US-ASCII 兼容（将任何 US-ASCII 字符映射为与该 US-ASCII 字符码相同的单字节）。
+                        </p>
+                    </div>
+                    <div id="rfc.section.2.p.11">
+                        <p>user-id 和 password <em class="bcp14">MUST NOT</em> 包含任何控制字符（参见 <a
+                                href="https://www.rfc-editor.org/rfc/rfc5234.html#appendix-B.1">RFC 5234 附录 B.1</a> 中的
+                            "CTL"）。</p>
+                    </div>
+                    <div id="rfc.section.2.p.12">
+                        <p>此外，包含冒号字符的 user-id 是无效的，因为 user-pass 字符串中的第一个冒号将 user-id 和 password 分隔开；第一个冒号之后的文本属于
+                            password。包含冒号的 user-id 无法在 user-pass 字符串中编码。</p>
+                    </div>
+                    <div id="rfc.section.2.p.13">
+                        <p>注意，许多用户代理在生成 user-pass 字符串时并不检查用户提供的 user-id 是否包含冒号；接收方在这种情况下会将用户名输入的一部分当作密码的一部分来处理。</p>
+                    </div>
+                    <div id="rfc.figure.u.2">
+                        <p>如果用户代理希望发送 user-id "Aladdin" 和 password "open sesame"，它将使用如下头字段：</p>
+                        <div>
+                            <pre class="text">Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==
+</pre>
+                        </div>
+                    </div>
+                    <section id="charset">
+                        <h3 id="rfc.section.2.1"><a href="#rfc.section.2.1">2.1.</a>&nbsp;<a href="#charset">“charset”
+                                认证参数</a></h3>
+                        <div id="rfc.section.2.1.p.1">
+                            <p>在挑战中，服务器可以使用 'charset' 认证参数来指示它期望用户代理在生成 "user-pass"（一个八位字节序列）时使用的字符编码方案。该信息仅供参考。</p>
+                        </div>
+                        <div id="rfc.section.2.1.p.2">
+                            <p>唯一允许的值为 "UTF-8"；匹配时不区分大小写（参见 <a href="#RFC2978"><cite
+                                        title="IANA Charset Registration Procedures">[RFC2978]</cite></a>，<a
+                                    href="https://www.rfc-editor.org/rfc/rfc2978.html#section-2.3">第 2.3
+                                    节</a>）。它表示服务器期望将字符数据先转换为 Unicode 规范化形式 C（"NFC"；参见 <a
+                                    href="https://www.rfc-editor.org/rfc/rfc5198.html#section-3">RFC5198 第 3 节</a>），然后使用
+                                UTF-8 字符编码方案（参见 <a href="#RFC3629"><cite
+                                        title="UTF-8, a transformation format of ISO 10646">[RFC3629]</cite></a>）将其编码为八位字节。
+                            </p>
+                        </div>
+                        <div id="rfc.section.2.1.p.3">
+                            <p>对于 user-id，接收方 <em class="bcp14">MUST</em> 支持 <a
+                                    href="https://www.rfc-editor.org/rfc/rfc7613.html#section-3.3"><cite
+                                        title="Preparation, Enforcement, and Comparison of Internationalized Strings Representing Usernames and Passwords">[RFC7613]</cite></a>
+                                中定义的 "UsernameCasePreserved" 配置文件所定义的所有字符，但不得包含冒号 (":") 字符。</p>
+                        </div>
+                        <div id="rfc.section.2.1.p.4">
+                            <p>对于 password，接收方 <em class="bcp14">MUST</em> 支持 <a
+                                    href="https://www.rfc-editor.org/rfc/rfc7613.html#section-4.2"><cite
+                                        title="Preparation, Enforcement, and Comparison of Internationalized Strings Representing Usernames and Passwords">[RFC7613]</cite></a>
+                                中定义的 "OpaqueString" 配置文件所定义的所有字符。</p>
+                        </div>
+                        <div id="rfc.section.2.1.p.5">
+                            <p>其它值为将来使用保留。</p>
+                        </div>
+                        <div id="rfc.section.2.1.p.6">
+                            <aside>
+                                <div id="rfc.section.2.1.p.6.1">
+                                    <p><b>注：</b> 'charset' 仅在挑战中定义，因为 Basic 认证使用单个令牌作为凭据（'token68' 语法）；因此凭据语法不可扩展。</p>
+                                </div>
+                            </aside>
+                        </div>
+                        <div id="rfc.section.2.1.p.7">
+                            <aside>
+                                <div id="rfc.section.2.1.p.7.1">
+                                    <p><b>注：</b> 出于与 <a
+                                            href="https://www.rfc-editor.org/rfc/rfc2831.html#section-2.1.1"><cite
+                                                title="Using Digest Authentication as a SASL Mechanism">[RFC2831]</cite></a>
+                                        一致性的考虑，采用了名称 'charset'。更合适的名称可能是 'accept-charset'，因为它表示的是服务器的期望，而不是它所出现的消息本身。
+                                    </p>
+                                </div>
+                            </aside>
+                        </div>
+                        <div id="rfc.figure.u.3">
+                            <p>下面的示例中，服务器在 "foo" realm 中使用 Basic 进行认证，并偏好 UTF-8 字符编码：</p>
+                            <div>
+                                <pre class="text">WWW-Authenticate: Basic realm="foo", charset="UTF-8"
+</pre>
+                            </div>
+                            <p>注意参数值可以是 token 或带引号字符串；在此示例中，服务器选择使用带引号的表示法。</p>
+                        </div>
+                        <div id="rfc.section.2.1.p.8" class="avoidbreakafter">
+                            <p>用户的名称为 "test"，密码是字符串 "123" 后跟 Unicode 字符 U+00A3（英镑符号）。使用 UTF-8 编码后，user-pass 变为：</p>
+                        </div>
+                        <div id="rfc.figure.u.4">
+                            <div>
+                                <pre class="text">'t' 'e' 's' 't' ':' '1' '2' '3' pound
+74  65  73  74  3A  31  32  33  C2  A3  
+</pre>
+                            </div>
+                        </div>
+                        <div id="rfc.section.2.1.p.9" class="avoidbreakafter">
+                            <p>将该八位字节序列以 Base64 编码（参见 <a href="#RFC4648"><cite
+                                        title="The Base16, Base32, and Base64 Data Encodings">[RFC4648]</cite></a>）后得到：
+                            </p>
+                        </div>
+                        <div id="rfc.figure.u.5">
+                            <div>
+                                <pre class="text">dGVzdDoxMjPCow==
+</pre>
+                            </div>
+                        </div>
+                        <div id="rfc.section.2.1.p.10" class="avoidbreakafter">
+                            <p>因此，Authorization 头字段为：</p>
+                        </div>
+                        <div id="rfc.figure.u.6">
+                            <div>
+                                <pre class="text">Authorization: Basic dGVzdDoxMjPCow==
+</pre>
+                            </div>
+                        </div>
+                        <div id="rfc.section.2.1.p.11" class="avoidbreakafter">
+                            <p>或者，用于代理认证：</p>
+                        </div>
+                        <div id="rfc.figure.u.7">
+                            <div>
+                                <pre class="text">Proxy-Authorization: Basic dGVzdDoxMjPCow==
+</pre>
+                            </div>
+                        </div>
+                    </section>
+                    <section id="reusing.credentials">
+                        <h3 id="rfc.section.2.2"><a href="#rfc.section.2.2">2.2.</a>&nbsp;<a
+                                href="#reusing.credentials">凭据重用</a></h3>
+                        <div id="rfc.section.2.2.p.1">
+                            <p>给定一个已认证请求的绝对 URI（参见 <a href="#RFC3986"><cite
+                                        title="Uniform Resource Identifier (URI): Generic Syntax">[RFC3986]</cite></a>，<a
+                                    href="https://www.rfc-editor.org/rfc/rfc3986.html#section-4.3">第 4.3 节</a>），该请求的
+                                <dfn>认证范围</dfn> 通过移除路径组件（"hier_part"；见 <a href="#RFC3986"><cite
+                                        title="Uniform Resource Identifier (URI): Generic Syntax">[RFC3986]</cite></a>，<a
+                                    href="https://www.rfc-editor.org/rfc/rfc3986.html#section-3">第 3 节</a>）中最后一个斜杠 ("/")
+                                字符之后的所有字符来获得。客户端 <em class="bcp14">SHOULD</em> 假定具有该认证范围前缀匹配的 URI 的资源也位于由该已认证请求的 realm
+                                值所指定的保护空间内。
+                            </p>
+                        </div>
+                        <div id="rfc.section.2.2.p.2">
+                            <p>客户端 <em class="bcp14">MAY</em> 在对该空间内资源的请求中预先发送相应的 Authorization
+                                头字段，而无需再次收到服务器的挑战。同样，当客户端向代理发送请求时，它 <em class="bcp14">MAY</em> 在 Proxy-Authorization
+                                头字段中重用 user-id 和 password，而无需再次收到代理服务器的挑战。</p>
+                        </div>
+                        <div id="rfc.figure.u.8">
+                            <p>例如，针对如下已认证请求：</p>
+                            <div>
+                                <pre class="text">http://example.com/docs/index.html
+</pre>
+                            </div>
+                        </div>
+                        <div id="rfc.figure.u.9">
+                            <p>下面的 URI 请求可以使用已知的凭据：</p>
+                            <div>
+                                <pre class="text">http://example.com/docs/
+http://example.com/docs/test.doc
+http://example.com/docs/?page=1
+</pre>
+                            </div>
+                        </div>
+                        <div id="rfc.figure.u.10">
+                            <p>而下列 URI</p>
+                            <div>
+                                <pre class="text">http://example.com/other/
+https://example.com/docs/
+</pre>
+                            </div>
+                            <p>将被视为不在该认证范围内。</p>
+                        </div>
+                        <div id="rfc.section.2.2.p.3">
+                            <p>注意，URI 可以属于多个认证范围（例如 "http://example.com/" 与
+                                "http://example.com/docs/"）。本规范并未定义应当优先处理哪一个范围。</p>
+                        </div>
+                    </section>
+                </section>
+                <section id="internationalization.considerations">
+                    <h2 id="rfc.section.3"><a href="#rfc.section.3">3.</a>&nbsp;<a
+                            href="#internationalization.considerations">国际化注意事项</a></h2>
+                    <div id="rfc.section.3.p.1">
+                        <p>包含 US-ASCII 字符集以外字符的 user-id 或 password 将导致互操作性问题，除非通信双方就使用哪种字符编码方案达成一致。服务器可以使用新的 'charset'
+                            参数（见 <a href="#charset" title="The 'charset' auth-param">第 2.1 节</a>）来指示对 "UTF-8"
+                            的偏好，从而增加客户端转换为该编码的概率。</p>
+                    </div>
+                    <div id="rfc.section.3.p.2">
+                        <p>'realm' 参数携带的数据可以被视为文本；然而，<a href="#RFC7235"><cite
+                                    title="Hypertext Transfer Protocol (HTTP/1.1): Authentication">[RFC7235]</cite></a>
+                            并未定义可靠传输非 US-ASCII 字符的方法。这是一个已知问题，需要在该规范的修订中加以解决。</p>
+                    </div>
+                </section>
+                <section id="security.considerations">
+                    <h2 id="rfc.section.4"><a href="#rfc.section.4">4.</a>&nbsp;<a
+                            href="#security.considerations">安全性考虑</a></h2>
+                    <div id="rfc.section.4.p.1">
+                        <p>Basic 认证方案并不是一种安全的用户认证方法，也不会以任何方式保护被传输的实体——这些实体在物理网络上传输时以明文形式存在（在 Base64 解码前的八位字节序列）。HTTP
+                            并不阻止对 Basic 认证进行增强（例如使用一次性密码的方案）。</p>
+                    </div>
+                    <div id="rfc.section.4.p.2">
+                        <p>Basic 认证的最严重缺陷在于它导致用户密码在物理网络上以明文形式传输（在 Base64 解码前）。许多其它认证方案可以解决此问题。</p>
+                    </div>
+                    <div id="rfc.section.4.p.3">
+                        <p>由于 Basic 认证涉及密码的明文传输，除非配合诸如 HTTPS（参见 <a href="#RFC2818"><cite
+                                    title="HTTP Over TLS">[RFC2818]</cite></a>）等增强，否则不应将其用于保护敏感或有价值的信息。</p>
+                    </div>
+                    <div id="rfc.section.4.p.4">
+                        <p>Basic 认证的一个常见用途是用于识别——要求用户提供 user-id 和 password
+                            以便收集准确的使用统计数据等。当以此方式使用时，可能会误认为如果受保护文档的非法访问不是主要问题，则使用该方法没有危险。只有当服务器向用户发放 user-id 和 password
+                            且特别是不允许用户自行选择密码时，这种观点才基本成立。危险在于天真的用户常常为了避免管理多个密码而重复使用单一密码。</p>
+                    </div>
+                    <div id="rfc.section.4.p.5">
+                        <p>如果服务器允许用户自行选择密码，那么威胁不仅是对服务器上文档的未授权访问，还可能是对用户用同一密码保护的其他系统资源的未授权访问。此外，如果服务器的密码数据库泄露，许多密码可能是用户在其他站点使用的密码。系统的所有者或管理者因此可能把所有用户暴露于其他站点的未授权访问风险中，这既有安全也有隐私方面的影响（见
+                            <a href="#RFC6973"><cite
+                                    title="Privacy Considerations for Internet Protocols">[RFC6973]</cite></a>）。如果相同的
+                            user-id/password 组合也用于访问例如电子邮件或健康门户等账户，个人信息可能会被泄露。
+                        </p>
+                    </div>
+                    <div id="rfc.section.4.p.6">
+                        <p>Basic 认证还易受伪造服务器的欺骗攻击。如果用户被误导以为自己正在连接到包含受 Basic
+                            认证保护信息的主机，而实际上连接的是恶意服务器或网关，那么攻击者可以请求密码、保存以备后用并伪装成错误返回。服务器实现者应当防范此类伪造；尤其是能够接管现有连接上消息框架的软件组件需要谨慎使用或根本不使用（例如：RFC
+                            3875 第 5 节中描述的 NPH 脚本）。</p>
+                    </div>
+                    <div id="rfc.section.4.p.7">
+                        <p>实现 Basic
+                            认证的服务器和代理需要以某种形式存储用户密码以便认证请求。这些密码应以即使泄露也不易被恢复的方式存储。特别是当允许用户设置自己的密码时，这一点尤为重要，因为用户往往选择弱密码并在不同认证域间重复使用。尽管本文无法详尽讨论良好的密码哈希技术，服务器运营者应尽力在密码数据泄露时将对用户的风险降到最低。例如，服务器应避免以明文或未加盐的摘要形式存储用户密码。关于现代密码哈希技术的更多讨论，请参见
+                            "Password Hashing Competition"（&lt;<a
+                                href="https://password-hashing.net">https://password-hashing.net</a>&gt;）。</p>
+                    </div>
+                    <div id="rfc.section.4.p.8">
+                        <p>使用 UTF-8 字符编码方案和规范化带来了额外的安全考虑；详见 <a
+                                href="https://www.rfc-editor.org/rfc/rfc3629.html#section-10">RFC3629 第 10 节</a> 和 <a
+                                href="https://www.rfc-editor.org/rfc/rfc5198.html#section-6">RFC5198 第 6 节</a>。</p>
+                    </div>
+                </section>
+                <section id="iana.considerations">
+                    <h2 id="rfc.section.5"><a href="#rfc.section.5">5.</a>&nbsp;<a href="#iana.considerations">IANA
+                            注意事项</a></h2>
+                    <div id="rfc.section.5.p.1">
+                        <p>IANA 维护 “Hypertext Transfer Protocol (HTTP) Authentication Scheme Registry”（见 <a
+                                href="#RFC7235"><cite
+                                    title="Hypertext Transfer Protocol (HTTP/1.1): Authentication">[RFC7235]</cite></a>）于
+                            &lt;<a
+                                href="http://www.iana.org/assignments/http-authschemes">http://www.iana.org/assignments/http-authschemes</a>&gt;。
+                        </p>
+                    </div>
+                    <div id="rfc.section.5.p.2">
+                        <p>“Basic” 认证方案的条目已更新以引用本规范。</p>
+                    </div>
+                </section>
+                <section id="rfc.references">
+                    <h2 id="rfc.section.6"><a href="#rfc.section.6">6.</a> 参考文献</h2>
+                    <section>
+                        <div id="rfc.references.1">
+                            <h3 id="rfc.section.6.1"><a href="#rfc.section.6.1">6.1.</a> 规范性参考文献</h3>
+                            <dl class="dl-horizontal">
+                                <dt id="RFC0020">[<a href="#RFC0020" class="smpl">RFC0020</a>]</dt>
+                                <dd>Cerf, V., “<a href="https://www.rfc-editor.org/rfc/rfc20.html">ASCII format for
+                                        network interchange</a>”, <a href="https://www.rfc-editor.org/info/std80">STD
+                                        80</a>, RFC 20, <a href="https://dx.doi.org/10.17487/RFC0020">DOI
+                                        10.17487/RFC0020</a>, October 1969, &lt;<a
+                                        href="http://www.rfc-editor.org/info/rfc20">http://www.rfc-editor.org/info/rfc20</a>&gt;.
+                                </dd>
+                                <dt id="RFC2119">[<a href="#RFC2119" class="smpl">RFC2119</a>]</dt>
+                                <dd>Bradner, S., “<a href="https://www.rfc-editor.org/rfc/rfc2119.html">Key words for
+                                        use in RFCs to Indicate Requirement Levels</a>”, <a
+                                        href="https://www.rfc-editor.org/info/bcp14">BCP 14</a>, RFC 2119, <a
+                                        href="https://dx.doi.org/10.17487/RFC2119">DOI 10.17487/RFC2119</a>, March 1997,
+                                    &lt;<a
+                                        href="http://www.rfc-editor.org/info/rfc2119">http://www.rfc-editor.org/info/rfc2119</a>&gt;.
+                                </dd>
+                                <dt id="RFC2978">[<a href="#RFC2978" class="smpl">RFC2978</a>]</dt>
+                                <dd>Freed, N. and J. Postel, “<a href="https://www.rfc-editor.org/rfc/rfc2978.html">IANA
+                                        Charset Registration Procedures</a>”, <a
+                                        href="https://www.rfc-editor.org/info/bcp19">BCP 19</a>, RFC 2978, <a
+                                        href="https://dx.doi.org/10.17487/RFC2978">DOI 10.17487/RFC2978</a>, October
+                                    2000, &lt;<a
+                                        href="http://www.rfc-editor.org/info/rfc2978">http://www.rfc-editor.org/info/rfc2978</a>&gt;.
+                                </dd>
+                                <dt id="RFC3629">[<a href="#RFC3629" class="smpl">RFC3629</a>]</dt>
+                                <dd><a href="mailto:fyergeau@alis.com">Yergeau, F.</a>, “<a
+                                        href="https://www.rfc-editor.org/rfc/rfc3629.html">UTF-8, a transformation
+                                        format of ISO 10646</a>”, <a href="https://www.rfc-editor.org/info/std63">STD
+                                        63</a>, RFC 3629, <a href="https://dx.doi.org/10.17487/RFC3629">DOI
+                                        10.17487/RFC3629</a>, November 2003, &lt;<a
+                                        href="http://www.rfc-editor.org/info/rfc3629">http://www.rfc-editor.org/info/rfc3629</a>&gt;.
+                                </dd>
+                                <dt id="RFC3986">[<a href="#RFC3986" class="smpl">RFC3986</a>]</dt>
+                                <dd>Berners-Lee, T., Fielding, R., and L. Masinter, “<a
+                                        href="https://www.rfc-editor.org/rfc/rfc3986.html">Uniform Resource Identifier
+                                        (URI): Generic Syntax</a>”, <a href="https://www.rfc-editor.org/info/std66">STD
+                                        66</a>, RFC 3986, <a href="https://dx.doi.org/10.17487/RFC3986">DOI
+                                        10.17487/RFC3986</a>, January 2005, &lt;<a
+                                        href="http://www.rfc-editor.org/info/rfc3986">http://www.rfc-editor.org/info/rfc3986</a>&gt;.
+                                </dd>
+                                <dt id="RFC4648">[<a href="#RFC4648" class="smpl">RFC4648</a>]</dt>
+                                <dd>Josefsson, S., “<a href="https://www.rfc-editor.org/rfc/rfc4648.html">The Base16,
+                                        Base32, and Base64 Data Encodings</a>”, RFC 4648, <a
+                                        href="https://dx.doi.org/10.17487/RFC4648">DOI 10.17487/RFC4648</a>, October
+                                    2006, &lt;<a
+                                        href="http://www.rfc-editor.org/info/rfc4648">http://www.rfc-editor.org/info/rfc4648</a>&gt;.
+                                </dd>
+                                <dt id="RFC5198">[<a href="#RFC5198" class="smpl">RFC5198</a>]</dt>
+                                <dd>Klensin, J. and M. Padlipsky, “<a
+                                        href="https://www.rfc-editor.org/rfc/rfc5198.html">Unicode Format for Network
+                                        Interchange</a>”, RFC 5198, <a href="https://dx.doi.org/10.17487/RFC5198">DOI
+                                        10.17487/RFC5198</a>, March 2008, &lt;<a
+                                        href="http://www.rfc-editor.org/info/rfc5198">http://www.rfc-editor.org/info/rfc5198</a>&gt;.
+                                </dd>
+                                <dt id="RFC5234">[<a href="#RFC5234" class="smpl">RFC5234</a>]</dt>
+                                <dd><a href="mailto:dcrocker@bbiw.net">Crocker, D., Ed.</a> and <a
+                                        href="mailto:paul.overell@thus.net">P. Overell</a>, “<a
+                                        href="https://www.rfc-editor.org/rfc/rfc5234.html">Augmented BNF for Syntax
+                                        Specifications: ABNF</a>”, <a href="https://www.rfc-editor.org/info/std68">STD
+                                        68</a>, RFC 5234, <a href="https://dx.doi.org/10.17487/RFC5234">DOI
+                                        10.17487/RFC5234</a>, January 2008, &lt;<a
+                                        href="http://www.rfc-editor.org/info/rfc5234">http://www.rfc-editor.org/info/rfc5234</a>&gt;.
+                                </dd>
+                                <dt id="RFC6365">[<a href="#RFC6365" class="smpl">RFC6365</a>]</dt>
+                                <dd>Hoffman, P. and J. Klensin, “<a
+                                        href="https://www.rfc-editor.org/rfc/rfc6365.html">Terminology Used in
+                                        Internationalization in the IETF</a>”, <a
+                                        href="https://www.rfc-editor.org/info/bcp166">BCP 166</a>, RFC 6365, <a
+                                        href="https://dx.doi.org/10.17487/RFC6365">DOI 10.17487/RFC6365</a>, September
+                                    2011, &lt;<a
+                                        href="http://www.rfc-editor.org/info/rfc6365">http://www.rfc-editor.org/info/rfc6365</a>&gt;.
+                                </dd>
+                                <dt id="RFC7235">[<a href="#RFC7235" class="smpl">RFC7235</a>]</dt>
+                                <dd>Fielding, R., Ed. and J. Reschke, Ed., “<a
+                                        href="https://www.rfc-editor.org/rfc/rfc7235.html">Hypertext Transfer Protocol
+                                        (HTTP/1.1): Authentication</a>”, RFC 7235, <a
+                                        href="https://dx.doi.org/10.17487/RFC7235">DOI 10.17487/RFC7235</a>, June 2014,
+                                    &lt;<a
+                                        href="http://www.rfc-editor.org/info/rfc7235">http://www.rfc-editor.org/info/rfc7235</a>&gt;.
+                                </dd>
+                                <dt id="RFC7613">[<a href="#RFC7613" class="smpl">RFC7613</a>]</dt>
+                                <dd>Saint-Andre, P. and A. Melnikov, “<a
+                                        href="https://www.rfc-editor.org/rfc/rfc7613.html">Preparation, Enforcement, and
+                                        Comparison of Internationalized Strings Representing Usernames and
+                                        Passwords</a>”, RFC 7613, <a href="https://dx.doi.org/10.17487/RFC7613">DOI
+                                        10.17487/RFC7613</a>, August 2015, &lt;<a
+                                        href="http://www.rfc-editor.org/info/rfc7613">http://www.rfc-editor.org/info/rfc7613</a>&gt;.
+                                </dd>
+                            </dl>
+                        </div>
+                    </section>
+                </section>
+                <section id="n-changes-from-rfc-2617">
+                    <h2 id="rfc.section.A" class="np"><a href="#rfc.section.A">Appendix A.</a>&nbsp;<a
+                            href="#n-changes-from-rfc-2617">来自 RFC 2617 的变更</a></h2>
+                    <div id="rfc.section.A.p.1">
+                        <p>方案定义已重写，以与较新的规范（如 <a href="#RFC7235"><cite
+                                    title="Hypertext Transfer Protocol (HTTP/1.1): Authentication">[RFC7235]</cite></a>）保持一致。
+                        </p>
+                    </div>
+                    <div id="rfc.section.A.p.2">
+                        <p>新增了 'charset' 认证参数。该参数仅供参考，因此现有实现无需更改，除非希望利用此前不可用的附加信息。</p>
+                    </div>
+                </section>
+                <section id="n-deployment-considerations-for-the-_charset_-parameter">
+                    <h2 id="rfc.section.B"><a href="#rfc.section.B">Appendix B.</a>&nbsp;<a
+                            href="#n-deployment-considerations-for-the-_charset_-parameter">“charset” 参数的部署注意事项</a></h2>
+                    <section id="n-user-agents">
+                        <h3 id="rfc.section.B.1"><a href="#rfc.section.B.1">B.1.</a>&nbsp;<a
+                                href="#n-user-agents">用户代理</a></h3>
+                        <div id="rfc.section.B.1.p.1">
+                            <p>未实现 'charset' 的用户代理将按以前的方式继续工作，忽略该新参数。</p>
+                        </div>
+                        <div id="rfc.section.B.1.p.2">
+                            <p>已默认使用 UTF-8 编码的用户代理按定义实现了 'charset'。</p>
+                        </div>
+                        <div id="rfc.section.B.1.p.3">
+                            <p>其它用户代理可以保留其默认行为，并在看到新参数时切换到 UTF-8。</p>
+                        </div>
+                    </section>
+                    <section id="n-servers">
+                        <h3 id="rfc.section.B.2"><a href="#rfc.section.B.2">B.2.</a>&nbsp;<a href="#n-servers">服务器</a>
+                        </h3>
+                        <div id="rfc.section.B.2.p.1">
+                            <p>不支持凭据中非 US-ASCII 字符的服务器不需要为支持 'charset' 做任何更改。</p>
+                        </div>
+                        <div id="rfc.section.B.2.p.2">
+                            <p>需要支持非 US-ASCII 字符但不能使用 UTF-8 的服务器不会受到影响；它们将继续像以前一样工作（好或坏）。</p>
+                        </div>
+                        <div id="rfc.section.B.2.p.3">
+                            <p>最后，需要支持非 US-ASCII 字符且能使用 UTF-8 的服务器可以通过在认证挑战中指定 'charset' 参数来选择加入。理解 'charset'
+                                参数的客户端将开始使用 UTF-8，而其它客户端将继续使用其默认编码、发送损坏的凭据或根本不发送凭据。在并非所有客户端都升级以支持 UTF-8
+                                之前，服务器很可能在请求中同时看到 UTF-8 与“遗留”编码。当以 UTF-8 处理失败（由于无法解码为 UTF-8 或 user-id/password
+                                不匹配）时，服务器可能会尝试回退到先前支持的遗留编码以兼容这些旧客户端。注意隐式重试需要谨慎，例如某些子系统可能会检测到重复的登录失败并将其视为潜在的凭据猜测攻击。</p>
+                        </div>
+                    </section>
+                    <section>
+                        <h3 id="rfc.section.B.3"><a href="#rfc.section.B.3">B.3.</a>&nbsp;为何不直接将默认编码切换为 UTF-8？</h3>
+                        <div id="rfc.section.B.3.p.1">
+                            <p>目前仍有一些站点默认使用本地字符编码方案，例如 ISO-8859-1，并期望用户代理使用该编码。如果用户代理切换到不同的编码（例如 UTF-8），这些站点上的认证将停止工作。
+                            </p>
+                        </div>
+                        <div id="rfc.section.B.3.p.2">
+                            <p>注意某些站点可能会检查 User-Agent 头字段（参见 <a href="#RFC7231"><cite
+                                        title="Hypertext Transfer Protocol (HTTP/1.1): Semantics and Content">[RFC7231]</cite></a>，<a
+                                    href="https://www.rfc-editor.org/rfc/rfc7231.html#section-5.5.3">第 5.5.3
+                                    节</a>）以决定期望客户端使用哪种字符编码方案。因此，它们可能对某些用户代理支持
+                                UTF-8，但对其它用户代理默认使用其它编码。属于后者的用户代理在大多数这些服务器升级为始终使用 UTF-8 之前不得不继续沿用现有做法。</p>
+                        </div>
+                    </section>
+                </section>
+                <section id="n-acknowledgements">
+                    <h2 id="rfc.section.unnumbered-1"><a href="#n-acknowledgements">致谢</a></h2>
+                    <div id="rfc.section.unnumbered-1.p.1">
+                        <p>本规范接管了先前在 RFC 2617 中定义的 “Basic” HTTP 认证方案的定义。我们感谢 John Franks、Phillip M. Hallam-Baker、Jeffery
+                            L. Hostetler、Scott D. Lawrence、Paul J. Leach、Ari Luotonen 和 Lawrence C. Stewart
+                            在该规范上的工作，本文大量借用了他们的文本。更多致谢见 <a
+                                href="https://www.rfc-editor.org/rfc/rfc2617.html#section-6">RFC 2617 第 6 节</a>。</p>
+                    </div>
+                    <div id="rfc.section.unnumbered-1.p.2">
+                        <p>关于用于 user-pass 的字符编码方案的国际化问题早在 2000 年就作为 Mozilla 的 bug 报告提出（见 &lt;<a
+                                href="https://bugzilla.mozilla.org/show_bug.cgi?id=41489">https://bugzilla.mozilla.org/show_bug.cgi?id=41489</a>&gt;，以及最近的
+                            &lt;<a
+                                href="https://bugzilla.mozilla.org/show_bug.cgi?id=656213">https://bugzilla.mozilla.org/show_bug.cgi?id=656213</a>&gt;）。提出使用新
+                            auth-param 来解决该问题的想法归功于 Andrew Clover。</p>
+                    </div>
+                    <div id="rfc.section.unnumbered-1.p.3">
+                        <p>我们也感谢 HTTPAUTH 工作组成员及其它审阅者，尤其是 Stephen Farrell、Roy Fielding、Daniel Kahn Gillmor、Tony
+                            Hansen、Bjoern Hoehrmann、Kari Hurtta、Amos Jeffries、Benjamin Kaduk、Michael Koeller、Eric
+                            Lawrence、Barry Leiba、James Manger、Alexey Melnikov、Kathleen Moriarty、Juergen
+                            Schoenwaelder、Yaron Sheffer、Meral Shirazipour、Michael Sweet、和 Martin Thomson 对本修订版的反馈。</p>
+                    </div>
+                </section>
+                <section id="rfc.authors" class="avoidbreakinside">
+                    <h2><a href="#rfc.authors">作者地址</a></h2>
+                    <address><b>Julian F. Reschke</b><br>greenbytes GmbH<br>Hafenweg 16<br>Muenster, NW
+                        48155<br>Germany<br>Email: <a
+                            href="mailto:julian.reschke@greenbytes.de">julian.reschke@greenbytes.de</a><br>URI: <a
+                            href="http://greenbytes.de/tech/webdav/">http://greenbytes.de/tech/webdav/</a></address>
+                </section>
+            </div>
+        </div>
+    </div>
+    <script src="https://httpwg.org/assets/node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="https://httpwg.org/assets/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="https://htmlspecs.com/dropdown.js"></script>
+</body>
+
+</html>

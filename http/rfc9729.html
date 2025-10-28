@@ -1,0 +1,1370 @@
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html lang="zh-hans">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>RFC 9729 - 隐蔽的 HTTP 认证方案</title>
+    <script>
+        function getMeta(rfcno, container) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "https://www.rfc-editor.org/rfc/rfc" + rfcno + ".json", true);
+            xhr.onload = function (e) {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        var data = JSON.parse(xhr.response);
+
+                        var cont = document.getElementById(container);
+                        // empty the container
+                        while (cont.firstChild) {
+                            cont.removeChild(myNode.firstChild);
+                        }
+
+                        var c = data.status;
+                        if (c) {
+                            var bld = newElementWithText("b", c);
+                            cont.appendChild(bld);
+                        } else {
+                            cont.appendChild(newElementWithText("i", "(document status unknown)"));
+                        }
+
+                        c = data.updated_by;
+                        if (c && c.length > 0 && c[0] !== null && c[0].length > 0) {
+                            cont.appendChild(newElement("br"));
+                            cont.appendChild(newText("Updated by: "));
+                            appendRfcLinks(cont, c);
+                        }
+
+                        c = data.obsoleted_by;
+                        if (c && c.length > 0 && c[0] !== null && c[0].length > 0) {
+                            cont.appendChild(newElement("br"));
+                            cont.appendChild(newText("Obsoleted by: "));
+                            appendRfcLinks(cont, c);
+                        }
+
+                        c = data.errata_url;
+                        if (c) {
+                            cont.appendChild(newElement("br"));
+                            var link = newElementWithText("a", "errata");
+                            link.setAttribute("href", c);
+                            var errata = newElementWithText("i", "This document has ");
+                            errata.appendChild(link);
+                            errata.appendChild(newText("."));
+                            cont.appendChild(errata);
+                        }
+
+                        cont.style.display = "block";
+                    } else {
+                        console.error(xhr.statusText);
+                    }
+                }
+            };
+            xhr.onerror = function (e) {
+                console.error(xhr.status + " " + xhr.statusText);
+            };
+            xhr.send(null);
+        }
+        function appendRfcLinks(parent, updates) {
+            var template = "https://www.rfc-editor.org/rfc/rfc{rfc}.html";
+            for (var i = 0; i < updates.length; i++) {
+                var rfc = updates[i].trim().toLowerCase();
+                if (rfc.substring(0, 3) == "rfc") {
+                    var no = parseInt(rfc.substring(3), 10);
+
+                    var link = newElement("a");
+                    link.setAttribute("href", template.replace("{rfc}", no));
+                    link.appendChild(newText(no));
+                    parent.appendChild(link);
+                } else {
+                    parent.appendChild(newText(rfc));
+                }
+                if (i != updates.length - 1) {
+                    parent.appendChild(newText(", "));
+                }
+            }
+        }
+
+        // DOM helpers
+        function newElement(name) {
+            return document.createElement(name);
+        }
+        function newElementWithText(name, txt) {
+            var e = document.createElement(name);
+            e.appendChild(newText(txt));
+            return e;
+        }
+        function newText(text) {
+            return document.createTextNode(text);
+        }
+    </script>
+    <script>
+        function anchorRewrite() {
+            map = {};
+            if (window.location.hash.length >= 1) {
+                var fragid = window.location.hash.substr(1);
+                if (fragid) {
+                    if (!document.getElementById(fragid)) {
+                        var prefix = "rfc.";
+                        var mapped = map[fragid];
+                        if (mapped) {
+                            window.location.hash = mapped;
+                        } else if (fragid.indexOf("section-") == 0) {
+                            window.location.hash = prefix + "section." + fragid.substring(8).replace("-", ".p.");
+                        } else if (fragid.indexOf("appendix-") == 0) {
+                            window.location.hash = prefix + "section." + fragid.substring(9).replace("-", ".p.");
+                        } else if (fragid.indexOf("s-") == 0) {
+                            var postfix = fragid.substring(2);
+                            if (postfix.startsWith("abstract")) {
+                                window.location.hash = prefix + postfix;
+                            } else if (postfix.startsWith("note-")) {
+                                window.location.hash = prefix + "note." + postfix.substring(5).replace("-", ".p.");
+                            } else {
+                                window.location.hash = prefix + "section." + postfix.replace("-", ".p.");
+                            }
+                        } else if (fragid.indexOf("p-") == 0) {
+                            var r = fragid.substring(2);
+                            var p = r.indexOf("-");
+                            if (p >= 0) {
+                                window.location.hash = prefix + "section." + r.substring(0, p) + ".p." + r.substring(p + 1);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        window.addEventListener('hashchange', anchorRewrite);
+        window.addEventListener('DOMContentLoaded', anchorRewrite);
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="RFC9729">
+    <meta property="og:description" content="The Concealed HTTP Authentication Scheme">
+    <meta property="og:url" content="https://httpwg.org/specs/rfc9729.html">
+    <meta property="og:site_name" content="IETF HTTP Working Group Specifications">
+    <meta property="og:image" content="https://httpwg.org/assets/favicon/apple-icon-180x180.png">
+    <link rel="stylesheet" type="text/css"
+        href="https://httpwg.org/assets/node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <style type="text/css">
+        body {
+            padding-top: 80px;
+            padding-bottom: 80px;
+            position: relative;
+        }
+
+        .table.header th,
+        .table.header td {
+            border-top: none;
+            padding: 0;
+        }
+
+        #sidebar {
+            margin-top: -10px;
+            height: 90%;
+            overflow-y: auto;
+            font-size: 90%;
+        }
+
+        #rfc\.meta {
+            width: 40%;
+            float: right
+        }
+
+        .toc ul {
+            list-style: none;
+        }
+
+        .filename {
+            color: rgb(119, 119, 119);
+            font-size: 23px;
+            font-weight: normal;
+            height: auto;
+            line-height: 23px;
+        }
+
+        dl {
+            margin-left: 1em;
+        }
+
+        dl.dl-horizontal {
+            margin-left: 0;
+        }
+
+        dl>dt {
+            float: left;
+            margin-right: 1em;
+        }
+
+        dl.nohang>dt {
+            float: none;
+        }
+
+        dl>dd {
+            margin-bottom: .5em;
+        }
+
+        dl.compact>dd {
+            margin-bottom: 0em;
+        }
+
+        dl>dd>dl {
+            margin-top: 0.5em;
+            margin-bottom: 0em;
+        }
+
+        ul.empty {
+            list-style-type: none;
+        }
+
+        ul.empty li {
+            margin-top: .5em;
+        }
+
+        td.reference {
+            padding-right: 1em;
+            vertical-align: top;
+        }
+
+        .feedback {
+            position: fixed;
+            bottom: 5px;
+            right: 5px;
+        }
+
+        .fbbutton {
+            margin-left: 5px;
+        }
+
+        h1 a,
+        h2 a,
+        h3 a,
+        h4 a,
+        h5 a,
+        h6 a {
+            color: rgb(51, 51, 51);
+        }
+
+        span.tt {
+            font: 11pt consolas, monospace;
+            font-size-adjust: none;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" href="https://httpwg.org/assets/site.css">
+    <link rel="Contents" href="#rfc.toc">
+    <link rel="Author" href="#rfc.authors">
+    <link rel="License" href="#rfc.copyrightnotice">
+    <link rel="Chapter" title="1 Introduction" href="#rfc.section.1">
+    <link rel="Chapter" title="2 The Concealed HTTP Authentication Scheme" href="#rfc.section.2">
+    <link rel="Chapter" title="3 Client Handling" href="#rfc.section.3">
+    <link rel="Chapter" title="4 Authentication Parameters" href="#rfc.section.4">
+    <link rel="Chapter" title="5 Example" href="#rfc.section.5">
+    <link rel="Chapter" title="6 Server Handling" href="#rfc.section.6">
+    <link rel="Chapter" title="7 Requirements on TLS Usage" href="#rfc.section.7">
+    <link rel="Chapter" title="8 Security Considerations" href="#rfc.section.8">
+    <link rel="Chapter" title="9 IANA Considerations" href="#rfc.section.9">
+    <link rel="Chapter" title="10 References" href="#rfc.section.10">
+    <link rel="Appendix" title="Acknowledgments" href="#rfc.section.unnumbered-4">
+    <link href="https://datatracker.ietf.org/doc/draft-ietf-httpbis-unprompted-auth-12" rel="prev">
+    <link href="https://dx.doi.org/10.17487/rfc9729" rel="alternate">
+    <link href="urn:issn:2070-1721" rel="alternate">
+    <link rel="Alternate" title="Plain Text Version" href="http://www.ietf.org/rfc/rfc9729.txt">
+    <link rel="Help" title="RFC-Editor's Status Page" href="https://www.rfc-editor.org/info/rfc9729">
+    <meta name="viewport" content="initial-scale=1">
+    <meta name="generator"
+        content="https://github.com/mnot/RFCBootstrap XSLT vendor: Saxonica http://www.saxonica.com/">
+    <meta name="keywords" content="secure, tunnels, masque, http-ng">
+    <link rel="schema.dcterms" href="http://purl.org/dc/terms/">
+    <meta name="dcterms.creator" content="Schinazi, D.">
+    <meta name="dcterms.creator" content="Oliver, D.">
+    <meta name="dcterms.creator" content="Hoyland, J.">
+    <meta name="dcterms.identifier" content="urn:ietf:rfc:9729">
+    <meta name="dcterms.issued" content="2025-02">
+    <meta name="dcterms.abstract"
+        content="Most HTTP authentication schemes are probeable in the sense that it is possible for an unauthenticated client to probe whether an origin serves resources that require authentication. It is possible for an origin to hide the fact that it requires authentication by not generating Unauthorized status codes; however, that only works with non-cryptographic authentication schemes: cryptographic signatures require a fresh nonce to be signed. Prior to this document, there was no existing way for the origin to share such a nonce without exposing the fact that it serves resources that require authentication. This document defines a new non-probeable cryptographic authentication scheme.">
+    <meta name="dcterms.isPartOf" content="urn:issn:2070-1721">
+    <meta name="description"
+        content="Most HTTP authentication schemes are probeable in the sense that it is possible for an unauthenticated client to probe whether an origin serves resources that require authentication. It is possible for an origin to hide the fact that it requires authentication by not generating Unauthorized status codes; however, that only works with non-cryptographic authentication schemes: cryptographic signatures require a fresh nonce to be signed. Prior to this document, there was no existing way for the origin to share such a nonce without exposing the fact that it serves resources that require authentication. This document defines a new non-probeable cryptographic authentication scheme.">
+</head>
+
+<body onload="getMeta(9729,'rfc.meta');">
+    <nav class="navbar navbar-dark bg-dark d-print-none navbar-expand-lg fixed-top ps-3 pe-3" role="navigation">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse"
+                aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <a class="navbar-brand" href="https://httpwg.org/"><img src="https://httpwg.org/assets/http.svg"
+                    height="23"></a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse">
+
+            <div class="navbar-nav me-auto">
+
+                <a class="nav-item ms-1 text-white" href="https://httpwg.org/specs/">📄 Documentation</a>
+
+                <div class="dropdown ms-4">
+                    <a href="#" class="nav-item dropdown-toggle text-white" data-bs-toggle="dropdown">Work in
+                        Progress</a>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-item"><a href="https://httpwg.org/http-extensions/">HTTP Extensions</a></li>
+                        <li class="dropdown-item"><a
+                                href="https://github.com/httpwg/admin/issues?q=is%3Aissue+is%3Aopen+label%3Aadoption">Future
+                                Work</a></li>
+                    </ul>
+                </div>
+
+                <div class="dropdown ms-4">
+                    <a href="#" class="nav-item dropdown-toggle text-white" data-bs-toggle="dropdown">Participate</a>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-item"><a href="https://httpwg.org/about/">About the HTTP Working Group</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li class="dropdown-item"><a href="https://httpwg.org/CONTRIBUTING.html">Contribution Policy</a>
+                        </li>
+                        <li class="dropdown-item"><a href="http://datatracker.ietf.org/wg/httpbis/charter/">WG
+                                Charter</a></li>
+                        <li class="dropdown-item"><a href="http://lists.w3.org/Archives/Public/ietf-http-wg/">Group
+                                Mailing List 📨</a></li>
+                        <li class="dropdown-item"><a href="https://httpwg.org/wg-materials/">Meeting Materials</a></li>
+                        <li class="dropdown-item"><a href="https://httpwg.org/admin/editors/">Document Editor
+                                Resources</a></li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </nav>
+    <div class="container" id="top">
+        <div class="row">
+            <div class="col-lg-4 order-last d-none d-lg-block" id="sidebar" role="navigation">
+                <div class="navbar">
+                    <div class="navbar-brand"><a href="#top"><strong>RFC </strong>9729</a></div><br clear="all">
+                    <div class="">
+                        <div class="toc ">
+                            <ul>
+                                <li><a href="#rfc.section.1">1.</a>&nbsp;&nbsp;&nbsp;<a href="#introduction">介绍</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.1.1">1.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#conventions">约定与定义</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.2">2.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#the-concealed-http-authentication-scheme">隐蔽的 HTTP 认证方案</a></li>
+                                <li><a href="#rfc.section.3">3.</a>&nbsp;&nbsp;&nbsp;<a href="#client">客户端处理</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.3.1">3.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#context">密钥导出器上下文</a>
+                                            <ul>
+                                                <li><a href="#rfc.section.3.1.1">3.1.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                        href="#public-key-encoding">公钥编码</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a href="#rfc.section.3.2">3.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#output">密钥导出器输出</a></li>
+                                        <li><a href="#rfc.section.3.3">3.3.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#computation">签名计算</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.4">4.</a>&nbsp;&nbsp;&nbsp;<a href="#auth-params">认证参数</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.4.1">4.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#parameter-k">参数 k</a></li>
+                                        <li><a href="#rfc.section.4.2">4.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#parameter-a">参数 a</a></li>
+                                        <li><a href="#rfc.section.4.3">4.3.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#parameter-p">参数 p</a></li>
+                                        <li><a href="#rfc.section.4.4">4.4.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#parameter-s">参数 s</a></li>
+                                        <li><a href="#rfc.section.4.5">4.5.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#parameter-v">参数 v</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.5">5.</a>&nbsp;&nbsp;&nbsp;<a href="#example">示例</a></li>
+                                <li><a href="#rfc.section.6">6.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#server-handling">服务器处理</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.6.1">6.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#frontend-handling">前端处理</a></li>
+                                        <li><a href="#rfc.section.6.2">6.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#communication-between-frontend-and-backend">前端与后端之间的通信</a></li>
+                                        <li><a href="#rfc.section.6.3">6.3.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#backend">后端处理</a></li>
+                                        <li><a href="#rfc.section.6.4">6.4.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#non-probeable-server-handling">不可探测的服务器处理</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.7">7.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#requirements-on-tls-usage">关于 TLS 使用的要求</a></li>
+                                <li><a href="#rfc.section.8">8.</a>&nbsp;&nbsp;&nbsp;<a href="#security">安全注意事项</a></li>
+                                <li><a href="#rfc.section.9">9.</a>&nbsp;&nbsp;&nbsp;<a href="#iana">IANA 注意事项</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.9.1">9.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#iana-schemes">HTTP 认证方案注册表</a></li>
+                                        <li><a href="#rfc.section.9.2">9.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#iana-exporter-label">TLS 密钥材料导出器标签</a></li>
+                                        <li><a href="#rfc.section.9.3">9.3.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#http-field-name">HTTP 字段名</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.10">10.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#rfc.references">参考文献</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.10.1">10.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#rfc.references.2">规范性参考文献</a></li>
+                                        <li><a href="#rfc.section.10.2">10.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#rfc.references.3">信息性参考文献</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#acknowledgments">致谢</a></li>
+                                <li><a href="#rfc.authors">作者联系信息</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8 order-first main" role="main">
+                <header>
+                    <table class="table table-condensed header" id="rfc.headerblock">
+                        <tbody>
+                            <tr>
+                                <td class="text-left">互联网工程任务组 (IETF)</td>
+                                <td class="text-right">D. Schinazi</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left">请求评注: 9729</td>
+                                <td class="text-right">Google LLC</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left">类别: 标准轨道</td>
+                                <td class="text-right">D. Oliver</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left">ISSN: 2070-1721</td>
+                                <td class="text-right">Guardian Project</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left"></td>
+                                <td class="text-right">J. Hoyland</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left"></td>
+                                <td class="text-right">Cloudflare Inc.</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left"></td>
+                                <td class="text-right">2025 年 2 月</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div id="rfc.title">
+                        <h1>隐蔽的 HTTP 认证方案</h1>
+                    </div>
+                </header>
+                <hr>
+                <h2 id="rfc.abstract"><a href="#rfc.abstract">摘要</a></h2>
+                <div class="lead">
+                    <div id="rfc.abstract.p.1">
+                        <p>大多数 HTTP 认证方案是可探测的，即未认证的客户端可以探测某个源是否提供需要认证的资源。源可以通过不产生 Unauthorized
+                            状态码来隐藏其需要认证的事实；然而，这种做法仅对非加密的认证方案有效：加密签名需要签署一个新的
+                            nonce。在本文件之前，没有方法能够在不暴露其提供需要认证资源这一事实的情况下与客户端共享此类 nonce。本文件定义了一种新的不可探测的加密认证方案。</p>
+                    </div>
+                </div>
+                <aside id="rfc.meta" class="alert alert-info"></aside>
+                <section id="rfc.status">
+                    <h2><a href="#rfc.status">本文备忘录的状态</a></h2>
+                    <div id="rfc.boilerplate.1.p.1">
+                        <p>这是一个 Internet 标准轨道文档。</p>
+                    </div>
+                    <div id="rfc.boilerplate.1.p.2">
+                        <p>本文档是互联网工程任务组 (IETF) 的产物。它代表了 IETF 社区的共识。它已公开审查并已被互联网工程指导小组 (IESG) 批准发表。有关互联网标准的更多信息，请参阅 <a
+                                href="https://www.rfc-editor.org/rfc/rfc7841.html#section-2">RFC 7841 第 2 节</a>。</p>
+                    </div>
+                    <div id="rfc.boilerplate.1.p.3">
+                        <p>有关本文档当前状态、任何勘误以及如何对其提供反馈的信息，请访问 <a
+                                href="https://www.rfc-editor.org/info/rfc9729">https://www.rfc-editor.org/info/rfc9729</a>。
+                        </p>
+                    </div>
+                </section>
+                <section id="rfc.copyrightnotice">
+                    <h2><a href="#rfc.copyrightnotice">Copyright Notice</a></h2>
+                    <div id="rfc.boilerplate.2.p.1">
+                        <p>Copyright (c) 2025 IETF Trust and the persons identified as the document authors. All rights
+                            reserved.</p>
+                    </div>
+                    <div id="rfc.boilerplate.2.p.2">
+                        <p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF
+                            Documents (<a
+                                href="https://trustee.ietf.org/license-info">https://trustee.ietf.org/license-info</a>)
+                            in effect on the date of publication of this document. Please review these documents
+                            carefully, as they describe your rights and restrictions with respect to this document. Code
+                            Components extracted from this document must include Revised BSD License text as described
+                            in Section 4.e of the Trust Legal Provisions and are provided without warranty as described
+                            in the Revised BSD License.</p>
+                    </div>
+                </section>
+                <div class="toc d-lg-none">
+                    <ul>
+                        <li><a href="#rfc.section.1">1.</a>&nbsp;&nbsp;&nbsp;<a href="#introduction">介绍</a>
+                            <ul>
+                                <li><a href="#rfc.section.1.1">1.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#conventions">约定与定义</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#rfc.section.2">2.</a>&nbsp;&nbsp;&nbsp;<a
+                                href="#the-concealed-http-authentication-scheme">隐蔽的 HTTP 认证方案</a></li>
+                        <li><a href="#rfc.section.3">3.</a>&nbsp;&nbsp;&nbsp;<a href="#client">客户端处理</a>
+                            <ul>
+                                <li><a href="#rfc.section.3.1">3.1.</a>&nbsp;&nbsp;&nbsp;<a href="#context">密钥导出器上下文</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.3.1.1">3.1.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#public-key-encoding">公钥编码</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.3.2">3.2.</a>&nbsp;&nbsp;&nbsp;<a href="#output">密钥导出器输出</a>
+                                </li>
+                                <li><a href="#rfc.section.3.3">3.3.</a>&nbsp;&nbsp;&nbsp;<a href="#computation">签名计算</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li><a href="#rfc.section.4">4.</a>&nbsp;&nbsp;&nbsp;<a href="#auth-params">认证参数</a>
+                            <ul>
+                                <li><a href="#rfc.section.4.1">4.1.</a>&nbsp;&nbsp;&nbsp;<a href="#parameter-k">参数 k</a>
+                                </li>
+                                <li><a href="#rfc.section.4.2">4.2.</a>&nbsp;&nbsp;&nbsp;<a href="#parameter-a">参数 a</a>
+                                </li>
+                                <li><a href="#rfc.section.4.3">4.3.</a>&nbsp;&nbsp;&nbsp;<a href="#parameter-p">参数 p</a>
+                                </li>
+                                <li><a href="#rfc.section.4.4">4.4.</a>&nbsp;&nbsp;&nbsp;<a href="#parameter-s">参数 s</a>
+                                </li>
+                                <li><a href="#rfc.section.4.5">4.5.</a>&nbsp;&nbsp;&nbsp;<a href="#parameter-v">参数 v</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li><a href="#rfc.section.5">5.</a>&nbsp;&nbsp;&nbsp;<a href="#example">示例</a></li>
+                        <li><a href="#rfc.section.6">6.</a>&nbsp;&nbsp;&nbsp;<a href="#server-handling">服务器处理</a>
+                            <ul>
+                                <li><a href="#rfc.section.6.1">6.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#frontend-handling">前端处理</a></li>
+                                <li><a href="#rfc.section.6.2">6.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#communication-between-frontend-and-backend">前端与后端之间的通信</a></li>
+                                <li><a href="#rfc.section.6.3">6.3.</a>&nbsp;&nbsp;&nbsp;<a href="#backend">后端处理</a>
+                                </li>
+                                <li><a href="#rfc.section.6.4">6.4.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#non-probeable-server-handling">不可探测的服务器处理</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#rfc.section.7">7.</a>&nbsp;&nbsp;&nbsp;<a href="#requirements-on-tls-usage">关于 TLS
+                                使用的要求</a></li>
+                        <li><a href="#rfc.section.8">8.</a>&nbsp;&nbsp;&nbsp;<a href="#security">安全注意事项</a></li>
+                        <li><a href="#rfc.section.9">9.</a>&nbsp;&nbsp;&nbsp;<a href="#iana">IANA 注意事项</a>
+                            <ul>
+                                <li><a href="#rfc.section.9.1">9.1.</a>&nbsp;&nbsp;&nbsp;<a href="#iana-schemes">HTTP
+                                        认证方案注册表</a></li>
+                                <li><a href="#rfc.section.9.2">9.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#iana-exporter-label">TLS 密钥材料导出器标签</a></li>
+                                <li><a href="#rfc.section.9.3">9.3.</a>&nbsp;&nbsp;&nbsp;<a href="#http-field-name">HTTP
+                                        字段名</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#rfc.section.10">10.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.references">参考文献</a>
+                            <ul>
+                                <li><a href="#rfc.section.10.1">10.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#rfc.references.2">规范性参考文献</a></li>
+                                <li><a href="#rfc.section.10.2">10.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#rfc.references.3">信息性参考文献</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#acknowledgments">致谢</a></li>
+                        <li><a href="#rfc.authors">作者联系信息</a></li>
+                    </ul>
+                </div>
+                <hr class="hidden-print">
+                <section id="introduction">
+                    <h2 id="rfc.section.1" class="np"><a href="#rfc.section.1">1.</a>&nbsp;<a
+                            href="#introduction">介绍</a></h2>
+                    <div id="rfc.section.1.p.1">
+                        <p>HTTP 认证方案（参见 <a href="https://www.rfc-editor.org/rfc/rfc9110.html#section-11">RFC 9110 第 11
+                                节</a>）允许源对部分资源仅限经认证的请求访问。尽管这些方案通常涉及源向客户端发出挑战以要求其提供认证信息，但客户端也可以在未被提示时主动发送此类信息。在源希望仅向“知情者”提供服务或功能而不给其他人任何存在提示的场景中，这种做法尤其有用。此类设计依赖于一种外部定义的密钥分发机制。例如，公司可能通过其网站使用员工凭据直接为远程员工提供公司服务，或为特定员工提供有限的特殊功能，同时使发现（或探测）这些功能变得困难。另一个例子是，定义不那么严格的社区成员可能会使用更短期的密钥以获取地理或能力特定的资源访问，而这些密钥由其用户基数大于可支持资源的实体按时间或地理位置对密钥的可用性进行计量发行。
+                        </p>
+                    </div>
+                    <div id="rfc.section.1.p.2">
+                        <p>尽管已经存在基于数字签名的 HTTP 认证方案（例如 <a href="#RFC7486"><cite
+                                    title="HTTP Origin-Bound Authentication (HOBA)">[HOBA]</cite></a>），它们依赖于源显式向客户端发送一个新鲜的挑战以确保签名输入是新的。这使得源在向未认证客户端发送挑战时是可探测的。本文档定义了一种新的基于签名且不可探测的认证方案。
+                        </p>
+                    </div>
+                    <section id="conventions">
+                        <h3 id="rfc.section.1.1"><a href="#rfc.section.1.1">1.1.</a>&nbsp;<a
+                                href="#conventions">约定与定义</a></h3>
+                        <div id="rfc.section.1.1.p.1">
+                            <p>文中关键字 "<em class="bcp14">MUST</em>", "<em class="bcp14">MUST NOT</em>", "<em
+                                    class="bcp14">REQUIRED</em>", "<em class="bcp14">SHALL</em>", "<em
+                                    class="bcp14">SHALL NOT</em>", "<em class="bcp14">SHOULD</em>", "<em
+                                    class="bcp14">SHOULD NOT</em>", "<em class="bcp14">RECOMMENDED</em>", "<em
+                                    class="bcp14">NOT RECOMMENDED</em>", "<em class="bcp14">MAY</em>", 和 "<em
+                                    class="bcp14">OPTIONAL</em>" 的解释，应按 BCP 14（参见 <a href="#RFC2119"><cite
+                                        title="Key words for use in RFCs to Indicate Requirement Levels">[RFC2119]</cite></a>
+                                与 <a href="#RFC8174"><cite
+                                        title="Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words">[RFC8174]</cite></a>）中所述，仅在这些词以大写形式出现时按此解释。
+                            </p>
+                        </div>
+                        <div id="rfc.section.1.1.p.2">
+                            <p>本文档使用 <a href="https://www.rfc-editor.org/rfc/rfc9000.html#section-1.3">RFC 9000 第 1.3
+                                    节</a> 中的表示法（QUIC 的相关记法）。</p>
+                        </div>
+                        <div id="rfc.section.1.1.p.3">
+                            <p>本文档中的若干示例包含可能被折叠的长行，折叠方式参见 <a href="#RFC8792"><cite
+                                        title="Handling Long Lines in Content of Internet-Drafts and RFCs">[RFC8792]</cite></a>。
+                            </p>
+                        </div>
+                    </section>
+                </section>
+                <hr class="hidden-print">
+                <section id="the-concealed-http-authentication-scheme">
+                    <h2 id="rfc.section.2" class="np"><a href="#rfc.section.2">2.</a>&nbsp;<a
+                            href="#the-concealed-http-authentication-scheme">隐蔽的 HTTP 认证方案</a></h2>
+                    <div id="rfc.section.2.p.1">
+                        <p>本文档定义了“Concealed” HTTP 认证方案。它使用非对称加密。客户端持有一个 key ID 及一对公/私钥，源服务器维护已授权 key ID 到相关公钥的映射。</p>
+                    </div>
+                    <div id="rfc.section.2.p.2">
+                        <p>客户端使用 TLS 密钥材料导出器生成要签名的数据（参见 <a href="#client" title="Client Handling">第 3 节</a>），然后使用
+                            Authorization（或 Proxy-Authorization）头字段发送签名（参见 <a
+                                href="https://www.rfc-editor.org/rfc/rfc9110.html#section-11">RFC 9110 第 11
+                                节</a>）。签名及其它信息通过认证参数进行交换（参见 <a href="#auth-params" title="Authentication Parameters">第 4
+                                节</a>）。服务器收到这些参数后，可以检查签名是否针对其已知密钥数据库中的某条目验证通过。随后服务器可根据验证结果决定如何响应客户端，例如限制对某些资源的访问。</p>
+                    </div>
+                </section>
+                <hr class="hidden-print">
+                <section id="client">
+                    <h2 id="rfc.section.3" class="np"><a href="#rfc.section.3">3.</a>&nbsp;<a href="#client">客户端处理</a>
+                    </h2>
+                    <div id="rfc.section.3.p.1" class="avoidbreakafter">
+                        <p>当客户端希望在请求中使用 Concealed HTTP 认证方案时，<em class="bcp14">SHALL</em> 使用 TLS 密钥材料导出器并按下述参数计算认证证明：
+                        </p>
+                    </div>
+                    <div id="rfc.section.3.p.2">
+                        <ul>
+                            <li>
+                                <div>
+                                    <p>label 设置为 "EXPORTER-HTTP-Concealed-Authentication"。</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div>
+                                    <p>context 设置为 <a href="#context" title="Key Exporter Context">第 3.1 节</a> 中描述的结构。
+                                    </p>
+                                </div>
+                            </li>
+                            <li>
+                                <div>
+                                    <p>exporter output 长度设置为 48 字节（参见 <a href="#output" title="Key Exporter Output">第
+                                            3.2 节</a>）。</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div id="rfc.section.3.p.3">
+                        <p>注意，TLS 1.3 的密钥材料导出器定义见 <a href="https://www.rfc-editor.org/rfc/rfc8446.html#section-7.5">RFC
+                                8446 第 7.5 节</a>，而 TLS 1.2 的导出器定义见 <a href="#RFC5705"><cite
+                                    title="Keying Material Exporters for Transport Layer Security (TLS)">[KEY-EXPORT]</cite></a>。
+                        </p>
+                    </div>
+                    <section id="context">
+                        <h3 id="rfc.section.3.1"><a href="#rfc.section.3.1">3.1.</a>&nbsp;<a
+                                href="#context">密钥导出器上下文</a></h3>
+                        <div id="rfc.section.3.1.p.1" class="avoidbreakafter">
+                            <p>TLS 密钥导出器上下文在 <a href="#fig-context" title="Key Exporter Context Format">图 1</a> 中描述，使用来自
+                                <a href="https://www.rfc-editor.org/rfc/rfc9000.html#section-1.3">RFC 9000 第 1.3 节</a>
+                                的记法：
+                            </p>
+                        </div>
+                        <div id="fig-context"></div>
+                        <div id="rfc.figure.1">
+                            <div>
+                                <pre>
+  Signature Algorithm (16),
+  Key ID Length (i),
+  Key ID (..),
+  Public Key Length (i),
+  Public Key (..),
+  Scheme Length (i),
+  Scheme (..),
+  Host Length (i),
+  Host (..),
+  Port (16),
+  Realm Length (i),
+  Realm (..),
+</pre>
+                            </div>
+                        </div>
+                        <p class="figure">图 1：密钥导出器上下文格式</p>
+                        <div id="rfc.section.3.1.p.2" class="avoidbreakafter">
+                            <p>密钥导出器上下文包含下列字段：</p>
+                        </div>
+                        <div id="rfc.section.3.1.p.3">
+                            <dl>
+                                <dt>Signature Algorithm:</dt>
+                                <dd style="margin-left: 1.5em">
+                                    <div>在 <span class="tt">s</span> 参数中发送的签名方案（参见 <a href="#parameter-s"
+                                            title="The s Parameter">第 4.4 节</a>）。</div>
+                                </dd>
+                                <dt>Key ID:</dt>
+                                <dd style="margin-left: 1.5em">
+                                    <div>在 <span class="tt">k</span> 参数中发送的 key ID（参见 <a href="#parameter-k"
+                                            title="The k Parameter">第 4.1 节</a>）。</div>
+                                </dd>
+                                <dt>Public Key:</dt>
+                                <dd style="margin-left: 1.5em">
+                                    <div>服务器用于验证客户端提供签名的公钥。其编码在 <a href="#public-key-encoding"
+                                            title="Public Key Encoding">第 3.1.1 节</a> 中描述。</div>
+                                </dd>
+                                <dt>Scheme:</dt>
+                                <dd style="margin-left: 1.5em">
+                                    <div>请求使用的 scheme，按 URI 的 scheme 部分的格式编码（参见 <a
+                                            href="https://www.rfc-editor.org/rfc/rfc3986.html#section-3.1">RFC 3986 第
+                                            3.1 节</a>）。</div>
+                                </dd>
+                                <dt>Host:</dt>
+                                <dd style="margin-left: 1.5em">
+                                    <div>请求的 host，按 URI 的 host 部分的格式编码（参见 <a
+                                            href="https://www.rfc-editor.org/rfc/rfc3986.html#section-3.2.2">RFC 3986 第
+                                            3.2.2 节</a>）。</div>
+                                </dd>
+                                <dt>Port:</dt>
+                                <dd style="margin-left: 1.5em">
+                                    <div>请求的端口，按网络字节序编码的端口号。注意端口要么包含在 URI 中，要么为所用 scheme 的默认端口（参见 <a
+                                            href="https://www.rfc-editor.org/rfc/rfc3986.html#section-3.2.3">RFC 3986 第
+                                            3.2.3 节</a>）。</div>
+                                </dd>
+                                <dt>Realm:</dt>
+                                <dd style="margin-left: 1.5em">
+                                    <div>在 realm 认证参数中发送的认证 realm（参见 <a
+                                            href="https://www.rfc-editor.org/rfc/rfc9110.html#section-11.5">RFC 9110 第
+                                            11.5 节</a>）。如果未出现 realm 认证参数，则本字段<em
+                                            class="bcp14">SHALL</em>为空。本文档不定义源向客户端传达 realm 的方式。如果客户端未配置特定 realm，则<em
+                                            class="bcp14">SHALL</em>使用空 realm 且<em class="bcp14">SHALL NOT</em>发送 realm
+                                        认证参数。</div>
+                                </dd>
+                            </dl>
+                        </div>
+                        <div id="rfc.section.3.1.p.4">
+                            <p>Signature Algorithm 与 Port 字段按无符号 16 位整数的网络字节序编码。Key ID、Public Key、Scheme、Host 与 Realm
+                                字段为带长度前缀的字符串；它们前面有一个表示字节长度的 Length 字段。该长度字段使用 <a
+                                    href="https://www.rfc-editor.org/rfc/rfc9000.html#section-16">RFC 9000 第 16 节</a>
+                                中的可变长度整数编码，并且<em class="bcp14">MUST</em>使用最少字节数进行编码。</p>
+                        </div>
+                        <section id="public-key-encoding">
+                            <h4 id="rfc.section.3.1.1"><a href="#rfc.section.3.1.1">3.1.1.</a>&nbsp;<a
+                                    href="#public-key-encoding">公钥编码</a></h4>
+                            <div id="rfc.section.3.1.1.p.1" class="avoidbreakafter">
+                                <p>TLS 密钥导出器上下文的 "Public Key" 字段（见上文）与 <span class="tt">a</span> 参数（见 <a
+                                        href="#parameter-a" title="The a Parameter">第 4.2
+                                        节</a>）承载相同的公钥。公钥的编码由所用签名算法决定，如下所示：</p>
+                            </div>
+                            <div id="rfc.section.3.1.1.p.2">
+                                <dl>
+                                    <dt>RSASSA-PSS 算法：</dt>
+                                    <dd style="margin-left: 1.5em">
+                                        <div>公钥为 RSAPublicKey 结构（参见 <a href="#RFC8017"><cite
+                                                    title="PKCS #1: RSA Cryptography Specifications Version 2.2">[PKCS1]</cite></a>），以
+                                            DER（参见 <a href="#X.690"><cite title="X.690">[X.690]</cite></a>）编码。非 DER 的
+                                            BER 编码<em class="bcp14">MUST</em>被拒绝。</div>
+                                    </dd>
+                                    <dt>ECDSA 算法：</dt>
+                                    <dd style="margin-left: 1.5em">
+                                        <div>公钥为 UncompressedPointRepresentation 结构，按 <a
+                                                href="https://www.rfc-editor.org/rfc/rfc8446.html#section-4.2.8.2">RFC
+                                                8446 第 4.2.8.2 节</a> 定义，使用 SignatureScheme 指定的曲线。</div>
+                                    </dd>
+                                    <dt>EdDSA 算法：</dt>
+                                    <dd style="margin-left: 1.5em">
+                                        <div>公钥为在 <a href="#RFC8032"><cite title="EdDSA">[EdDSA]</cite></a> 中定义的字节串编码。
+                                        </div>
+                                    </dd>
+                                </dl>
+                            </div>
+                            <div id="rfc.section.3.1.1.p.3">
+                                <p>本文档未为其它算法定义公钥编码。若某个 SignatureScheme 要与 Concealed 认证方案配合使用，则其公钥编码需在相应文档中定义。</p>
+                            </div>
+                        </section>
+                    </section>
+                    <section id="output">
+                        <h3 id="rfc.section.3.2"><a href="#rfc.section.3.2">3.2.</a>&nbsp;<a href="#output">密钥导出器输出</a>
+                        </h3>
+                        <div id="rfc.section.3.2.p.1" class="avoidbreakafter">
+                            <p>密钥导出器输出为 48 字节。其前 32 字节为签名输入的一部分，随后 16 字节随签名一同发送，供接收方确认导出器生成了正确的值。此结构见 <a
+                                    href="#fig-output" title="Key Exporter Output Format">图 2</a>，使用来自 <a
+                                    href="https://www.rfc-editor.org/rfc/rfc9000.html#section-1.3">RFC 9000 第 1.3 节</a>
+                                的记法：</p>
+                        </div>
+                        <div id="fig-output"></div>
+                        <div id="rfc.figure.2">
+                            <div>
+                                <pre>
+  Signature Input (256),
+  Verification (128),
+</pre>
+                            </div>
+                        </div>
+                        <p class="figure">图 2：密钥导出器输出格式</p>
+                        <div id="rfc.section.3.2.p.2" class="avoidbreakafter">
+                            <p>密钥导出器输出包含下列字段：</p>
+                        </div>
+                        <div id="rfc.section.3.2.p.3">
+                            <dl>
+                                <dt>Signature Input:</dt>
+                                <dd style="margin-left: 1.5em">
+                                    <div>这是使用客户端选定的非对称私钥进行签名的数据的一部分（参见 <a href="#computation"
+                                            title="Signature Computation">第 3.3 节</a>）。</div>
+                                </dd>
+                                <dt>Verification:</dt>
+                                <dd style="margin-left: 1.5em">
+                                    <div>该 verification 字段通过 <span class="tt">v</span> 参数传输给服务器（参见 <a
+                                            href="#parameter-v" title="The v Parameter">第 4.5 节</a>）。</div>
+                                </dd>
+                            </dl>
+                        </div>
+                    </section>
+                    <section id="computation">
+                        <h3 id="rfc.section.3.3"><a href="#rfc.section.3.3">3.3.</a>&nbsp;<a
+                                href="#computation">签名计算</a></h3>
+                        <div id="rfc.section.3.3.p.1" class="avoidbreakafter">
+                            <p>从密钥导出器输出提取出 Signature Input（参见 <a href="#output" title="Key Exporter Output">第 3.2
+                                    节</a>）后，应在其前缀固定数据再进行签名。签名覆盖的数据为下列各项的串联：</p>
+                        </div>
+                        <div id="rfc.section.3.3.p.2">
+                            <ul>
+                                <li>
+                                    <div>
+                                        <p>由八位元 32 (0x20) 重复 64 次组成的字符串</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div>
+                                        <p>上下文字符串 "HTTP Concealed Authentication"</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div>
+                                        <p>作为分隔符的单个 0 字节</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div>
+                                        <p>从密钥导出器输出中提取的 Signature Input（参见 <a href="#output"
+                                                title="Key Exporter Output">第 3.2 节</a>）</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div id="rfc.section.3.3.p.3" class="avoidbreakafter">
+                            <p>例如，如果 Signature Input 的 32 字节都为 01，则签名覆盖的内容（以十六进制格式）将为：</p>
+                        </div>
+                        <div id="fig-sig-example"></div>
+                        <div id="rfc.figure.3">
+                            <div>
+                                <pre>
+2020202020202020202020202020202020202020202020202020202020202020
+2020202020202020202020202020202020202020202020202020202020202020
+48545450205369676E61747572652041757468656E7469636174696F6E
+00
+0101010101010101010101010101010101010101010101010101010101010101
+</pre>
+                            </div>
+                        </div>
+                        <p class="figure">图 3：签名覆盖示例内容</p>
+                        <div id="rfc.section.3.3.p.4">
+                            <p>该静态前缀的目的是减轻若认证非对称密钥被意外跨协议重复使用可能引发的问题（尽管这是被禁止的，参见 <a href="#security"
+                                    title="Security Considerations">第 8 节</a>）。此构造类似于 TLS 1.3 CertificateVerify 消息（参见 <a
+                                    href="https://www.rfc-editor.org/rfc/rfc8446.html#section-4.4.3">RFC 8446 第 4.4.3
+                                    节</a>）。</p>
+                        </div>
+                        <div id="rfc.section.3.3.p.5">
+                            <p>生成的签名随后通过 <span class="tt">p</span> 参数发送到服务器（参见 <a href="#parameter-p"
+                                    title="The p Parameter">第 4.3 节</a>）。</p>
+                        </div>
+                    </section>
+                </section>
+                <hr class="hidden-print">
+                <section id="auth-params">
+                    <h2 id="rfc.section.4" class="np"><a href="#rfc.section.4">4.</a>&nbsp;<a
+                            href="#auth-params">认证参数</a></h2>
+                    <div id="rfc.section.4.p.1">
+                        <p>本规范定义以下认证参数。</p>
+                    </div>
+                    <div id="rfc.section.4.p.2">
+                        <p>下列所有字节序列均使用 base64url 编码（参见 <a
+                                href="https://www.rfc-editor.org/rfc/rfc4648.html#section-5">RFC 4648 第 5
+                                节</a>），不加引号且不填充。换言之，这些字节序列认证参数的值<em class="bcp14">MUST NOT</em>包含除 ASCII
+                            字母、数字、短横和下划线之外的任何字符。</p>
+                    </div>
+                    <div id="rfc.section.4.p.3">
+                        <p>下述整数以不带负号且不带前导零的方式编码。换言之，该整数认证参数的值<em class="bcp14">MUST NOT</em>包含除数字之外的字符，且除非完整值为 "0"，否则<em
+                                class="bcp14">MUST NOT</em>以零开头。</p>
+                    </div>
+                    <div id="rfc.section.4.p.4" class="avoidbreakafter">
+                        <p>使用 <a href="#RFC5234"><cite
+                                    title="Augmented BNF for Syntax Specifications: ABNF">[ABNF]</cite></a> 的语法：</p>
+                    </div>
+                    <div id="fig-param"></div>
+                    <div id="rfc.figure.4">
+                        <div>
+                            <pre class="inline">
+concealed-byte-sequence-param-value = *( ALPHA / DIGIT / "-" / "_" )
+concealed-integer-param-value =  %x31-39 1*4( DIGIT ) / "0"
+</pre>
+                        </div>
+                    </div>
+                    <p class="figure">图 4：认证参数值的 ABNF</p>
+                    <section id="parameter-k">
+                        <h3 id="rfc.section.4.1"><a href="#rfc.section.4.1">4.1.</a>&nbsp;<a href="#parameter-k">参数
+                                k</a></h3>
+                        <div id="rfc.section.4.1.p.1">
+                            <p><em class="bcp14">REQUIRED</em> 的 "k"（key
+                                ID）参数为标识客户端希望用于认证的密钥的字节序列。后端使用该值在服务器端的已知密钥数据库中定位条目（参见 <a href="#backend"
+                                    title="Backend Handling">第 6.3 节</a>）。</p>
+                        </div>
+                    </section>
+                    <section id="parameter-a">
+                        <h3 id="rfc.section.4.2"><a href="#rfc.section.4.2">4.2.</a>&nbsp;<a href="#parameter-a">参数
+                                a</a></h3>
+                        <div id="rfc.section.4.2.p.1">
+                            <p><em class="bcp14">REQUIRED</em> 的 "a"（公钥）参数为字节序列，指定服务器用以验证客户端所提供签名的公钥。这样可以避免密钥混淆问题（参见 <a
+                                    href="#SEEMS-LEGIT"><cite
+                                        title="Seems Legit: Automated Analysis of Subtle Attacks on Protocols That Use Signatures">[SEEMS-LEGIT]</cite></a>）。公钥的编码在
+                                <a href="#public-key-encoding" title="Public Key Encoding">第 3.1.1 节</a> 中描述。
+                            </p>
+                        </div>
+                    </section>
+                    <section id="parameter-p">
+                        <h3 id="rfc.section.4.3"><a href="#rfc.section.4.3">4.3.</a>&nbsp;<a href="#parameter-p">参数
+                                p</a></h3>
+                        <div id="rfc.section.4.3.p.1">
+                            <p><em class="bcp14">REQUIRED</em> 的 "p"（proof）参数为字节序列，指定客户端用以证明其持有与其 key ID 匹配凭证的证明。</p>
+                        </div>
+                    </section>
+                    <section id="parameter-s">
+                        <h3 id="rfc.section.4.4"><a href="#rfc.section.4.4">4.4.</a>&nbsp;<a href="#parameter-s">参数
+                                s</a></h3>
+                        <div id="rfc.section.4.4.p.1">
+                            <p><em class="bcp14">REQUIRED</em> 的 "s"（signature scheme）参数为整数，指定用于计算在 <span
+                                    class="tt">p</span> 参数中传输的证明的签名方案。其值为介于 0 到 65535（含）之间的整数，来自 IANA 维护的 "TLS
+                                SignatureScheme" 注册表。</p>
+                        </div>
+                    </section>
+                    <section id="parameter-v">
+                        <h3 id="rfc.section.4.5"><a href="#rfc.section.4.5">4.5.</a>&nbsp;<a href="#parameter-v">参数
+                                v</a></h3>
+                        <div id="rfc.section.4.5.p.1">
+                            <p><em class="bcp14">REQUIRED</em> 的 "v"（verification）参数为字节序列，指定客户端提供以证明其持有密钥导出器输出的
+                                verification 值（参见 <a href="#output" title="Key Exporter Output">第 3.2
+                                    节</a>）。这样可以避免某些签名方案下某些密钥能够对多个输入生成有效签名的问题（参见 <a href="#SEEMS-LEGIT"><cite
+                                        title="Seems Legit: Automated Analysis of Subtle Attacks on Protocols That Use Signatures">[SEEMS-LEGIT]</cite></a>）。
+                            </p>
+                        </div>
+                    </section>
+                </section>
+                <hr class="hidden-print">
+                <section id="example">
+                    <h2 id="rfc.section.5" class="np"><a href="#rfc.section.5">5.</a>&nbsp;<a href="#example">示例</a>
+                    </h2>
+                    <div id="rfc.section.5.p.1" class="avoidbreakafter">
+                        <p>例如，使用 key ID "basement" 且签名算法为 Ed25519 <a href="#RFC8410"><cite
+                                    title="Algorithm Identifiers for Ed25519, Ed448, X25519, and X448 for Use in the Internet X.509 Public Key Infrastructure">[ED25519]</cite></a>
+                            的客户端可能产生如下头字段：</p>
+                    </div>
+                    <div id="fig-hdr-example"></div>
+                    <div id="rfc.figure.5">
+                        <div>
+                            <pre class="text">
+注意: '\' 行折叠按 RFC 8792
+
+Authorization: Concealed \
+  k=YmFzZW1lbnQ, \
+  a=VGhpcyBpcyBh-HB1YmxpYyBrZXkgaW4gdXNl_GhlcmU, \
+  s=2055, \
+  v=dmVyaWZpY2F0aW9u_zE2Qg, \
+  p=QzpcV2luZG93c_xTeXN0ZW0zMlxkcml2ZXJz-ENyb3dkU\
+    3RyaWtlXEMtMDAwMDAwMDAyOTEtMD-wMC0w_DAwLnN5cw
+</pre>
+                        </div>
+                    </div>
+                    <p class="figure">图 5：示例头字段</p>
+                </section>
+                <hr class="hidden-print">
+                <section id="server-handling">
+                    <h2 id="rfc.section.6" class="np"><a href="#rfc.section.6">6.</a>&nbsp;<a
+                            href="#server-handling">服务器处理</a></h2>
+                    <div id="rfc.section.6.p.1" class="avoidbreakafter">
+                        <p>在本节中，我们将服务器角色细分为两类：</p>
+                    </div>
+                    <div id="rfc.section.6.p.2">
+                        <ul>
+                            <li>
+                                <div>
+                                    <p>“frontend” 在终止客户端创建的 TLS 或 QUIC 连接的 HTTP 服务器中运行。</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div>
+                                    <p>“backend” 在能够访问已接受的 key 标识符与公钥数据库的 HTTP 服务器中运行。</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div id="rfc.section.6.p.3">
+                        <p>在大多数部署中，我们预计 frontend 与 backend 角色会在单个 HTTP 源服务器中实现（如 <a
+                                href="https://www.rfc-editor.org/rfc/rfc9110.html#section-3.6">第 3.6 节</a>
+                            所定义）。然而，这些角色也可以拆分，使 frontend 成为 HTTP 网关（如 <a
+                                href="https://www.rfc-editor.org/rfc/rfc9110.html#section-3.7">第 3.7 节</a> 所定义），而
+                            backend 则为 HTTP 源服务器。</p>
+                    </div>
+                    <section id="frontend-handling">
+                        <h3 id="rfc.section.6.1"><a href="#rfc.section.6.1">6.1.</a>&nbsp;<a
+                                href="#frontend-handling">Frontend 处理</a></h3>
+                        <div id="rfc.section.6.1.p.1">
+                            <p>如果配置 frontend 去检查 Concealed HTTP 认证方案，它将解析 Authorization（或
+                                Proxy-Authorization）头字段。如果认证方案被设置为 "Concealed"，frontend <em class="bcp14">MUST</em>
+                                验证所有必需的认证参数均存在且可按 <a href="#auth-params" title="Authentication Parameters">第 4 节</a>
+                                中定义的方式正确解析。如果任何参数缺失或解析失败，frontend <em class="bcp14">MUST</em> 忽略整个 Authorization（或
+                                Proxy-Authorization）头字段。</p>
+                        </div>
+                        <div id="rfc.section.6.1.p.2">
+                            <p>然后 frontend 使用这些认证参数中的数据计算密钥导出器输出（见 <a href="#output" title="Key Exporter Output">第 3.2
+                                    节</a>）。frontend 随后将该头字段与密钥导出器输出共享给 backend。</p>
+                        </div>
+                    </section>
+                    <section id="communication-between-frontend-and-backend">
+                        <h3 id="rfc.section.6.2"><a href="#rfc.section.6.2">6.2.</a>&nbsp;<a
+                                href="#communication-between-frontend-and-backend">前端与后端之间的通信</a></h3>
+                        <div id="rfc.section.6.2.p.1">
+                            <p>如果 frontend 与 backend 角色在同一台机器上实现，则可以通过简单的函数调用来处理该情况。</p>
+                        </div>
+                        <div id="rfc.section.6.2.p.2" class="avoidbreakafter">
+                            <p>如果这些角色分布在两个独立的 HTTP 服务器之间，则 backend 无法直接访问客户端与 frontend 之间 TLS 连接的 TLS 密钥材料导出器，因此
+                                frontend 需要显式地将其发送给 backend。本文档为此定义了 "Concealed-Auth-Export" 请求头字段。Concealed-Auth-Export
+                                头字段的值是一个 Structured Field Byte Sequence（参见 <a
+                                    href="https://www.rfc-editor.org/rfc/rfc9651.html#section-3.3.5">第 3.3.5 节</a>），其中包含
+                                48 字节的密钥导出器输出（见 <a href="#output" title="Key Exporter Output">第 3.2 节</a>），且不包含任何参数。注意
+                                Structured Field Byte Sequences 使用非 URL 安全变体的 base64 进行编码。例如：</p>
+                        </div>
+                        <div id="fig-int-hdr-example"></div>
+                        <div id="rfc.figure.6">
+                            <div>
+                                <pre class="text">
+注意: '\' 行折叠按 RFC 8792
+
+Concealed-Auth-Export: :VGhpc+BleGFtcGxlIFRMU/BleHBvcn\
+  Rlc+BvdXRwdXQ/aXMgNDggYnl0ZXMgI/+h:
+</pre>
+                            </div>
+                        </div>
+                        <p class="figure">图 6：示例 Concealed-Auth-Export 头字段</p>
+                        <div id="rfc.section.6.2.p.3">
+                            <p>frontend <em class="bcp14">SHALL</em> 将 HTTP 请求转发给 backend，包含原始未修改的 Authorization（或
+                                Proxy-Authorization）头字段以及新添加的 Concealed-Auth-Export 头字段。</p>
+                        </div>
+                        <div id="rfc.section.6.2.p.4">
+                            <p>注意，由于该机制的安全性依赖于密钥导出器输出的正确性，backend 需要信任 frontend 如实发送该值。该信任关系很常见，因为 frontend 已经需要访问 TLS
+                                证书私钥以响应请求。解析 Concealed-Auth-Export 头字段的 HTTP 服务器 <em class="bcp14">MUST</em>
+                                忽略它，除非它们已确认信任发送者。类似地，发送 Concealed-Auth-Export 头字段的 frontend <em class="bcp14">MUST</em>
+                                确保不转发从客户端接收到的任何 Concealed-Auth-Export 头字段。</p>
+                        </div>
+                    </section>
+                    <section id="backend">
+                        <h3 id="rfc.section.6.3"><a href="#rfc.section.6.3">6.3.</a>&nbsp;<a href="#backend">Backend
+                                处理</a></h3>
+                        <div id="rfc.section.6.3.p.1" class="avoidbreakafter">
+                            <p>一旦 backend 收到 Authorization（或 Proxy-Authorization）头字段和密钥导出器输出，它会在其公钥数据库中查找该 key
+                                ID。backend <em class="bcp14">SHALL</em> 然后执行下列检查：</p>
+                        </div>
+                        <div id="rfc.section.6.3.p.2">
+                            <ul>
+                                <li>
+                                    <div>
+                                        <p>验证所有必需的认证参数均存在且可按 <a href="#auth-params" title="Authentication Parameters">第
+                                                4 节</a> 定义的方式正确解析</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div>
+                                        <p>确保 key ID 存在于 backend 的数据库中并映射到相应的公钥</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div>
+                                        <p>验证数据库中的公钥与 Authorization（或 Proxy-Authorization）头字段中的公钥相等</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div>
+                                        <p>验证 Authorization（或 Proxy-Authorization）头字段中的 verification 字段与从密钥导出器输出中提取的
+                                            verification 匹配</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div>
+                                        <p>按 <a href="#computation" title="Signature Computation">第 3.3 节</a> 定义验证加密签名
+                                        </p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div id="rfc.section.6.3.p.3">
+                            <p>如果所有这些检查都通过，backend 可认为该请求已正确认证并据此回复（backend 也可以将请求转发给另一个 HTTP 服务器）。</p>
+                        </div>
+                        <div id="rfc.section.6.3.p.4">
+                            <p>如果上述任何检查失败，backend <em class="bcp14">MUST</em> 将其视为 Authorization（或
+                                Proxy-Authorization）头字段缺失的情况。</p>
+                        </div>
+                    </section>
+                    <section id="non-probeable-server-handling">
+                        <h3 id="rfc.section.6.4"><a href="#rfc.section.6.4">6.4.</a>&nbsp;<a
+                                href="#non-probeable-server-handling">不可探测的服务器处理</a></h3>
+                        <div id="rfc.section.6.4.p.1">
+                            <p>希望引入不可被探测资源的服务器需要确保不会向未认证的客户端透露关于这些资源的任何信息。具体而言，此类服务器 <em class="bcp14">MUST</em>
+                                在认证失败时返回与资源不存在时完全相同的响应。例如，这可能意味着使用 HTTP 状态码 404（未找到）而非 401（未授权）。</p>
+                        </div>
+                        <div id="rfc.section.6.4.p.2">
+                            <p>上述认证检查可能需要一些时间来计算，攻击者可以通过比较对已知不存在资源的请求与对可能需要认证的资源的请求的时序差异来探测该机制的使用。服务器可以通过对某些不存在的资源稍作延迟响应来缓解这种可观测性，从而使认证验证的时序不可观测。该延迟需谨慎考虑，以免延迟本身暴露出该源正在使用该机制。
+                            </p>
+                        </div>
+                        <div id="rfc.section.6.4.p.3">
+                            <p>不可探测资源还需要对未认证用户不可发现。例如，如果服务器操作员希望通过对未认证用户假装资源不存在来隐藏某个认证资源，那么操作员需要确保没有未认证页面包含指向该资源的链接，并且没有其它带外方式使未认证用户发现该资源。
+                            </p>
+                        </div>
+                    </section>
+                </section>
+                <hr class="hidden-print">
+                <section id="requirements-on-tls-usage">
+                    <h2 id="rfc.section.7" class="np"><a href="#rfc.section.7">7.</a>&nbsp;<a
+                            href="#requirements-on-tls-usage">关于 TLS 使用的要求</a></h2>
+                    <div id="rfc.section.7.p.1">
+                        <p>该认证方案仅定义用于带有 TLS 的 HTTP <a href="#RFC8446"><cite
+                                    title="The Transport Layer Security (TLS) Protocol Version 1.3">[TLS]</cite></a>
+                            的使用场景。这包括典型用于 HTTP/2 <a href="#RFC9113"><cite title="HTTP/2">[HTTP/2]</cite></a> 的任意通过 TLS 的
+                            HTTP，或在传输协议使用 TLS 作为其认证与密钥交换机制的 HTTP/3 <a href="#RFC9114"><cite
+                                    title="HTTP/3">[HTTP/3]</cite></a> 的用法（参见 <a href="#RFC9001"><cite
+                                    title="Using TLS to Secure QUIC">[QUIC-TLS]</cite></a>）。</p>
+                    </div>
+                    <div id="rfc.section.7.p.2" class="avoidbreakafter">
+                        <p>由于 TLS 密钥材料导出器仅在其唯一绑定到 TLS 会话时才对认证是安全的（参见 <a href="#RFC7627"><cite
+                                    title="Transport Layer Security (TLS) Session Hash and Extended Master Secret Extension">[RFC7627]</cite></a>），Concealed
+                            认证方案要求满足下列任一属性：</p>
+                    </div>
+                    <div id="rfc.section.7.p.3">
+                        <ul>
+                            <li>
+                                <div>
+                                    <p>所用 TLS 版本 >= 1.3 <a href="#RFC8446"><cite
+                                                title="The Transport Layer Security (TLS) Protocol Version 1.3">[TLS]</cite></a>。
+                                    </p>
+                                </div>
+                            </li>
+                            <li>
+                                <div>
+                                    <p>所用 TLS 版本为 1.2，且已协商了扩展主密钥（extended master secret）扩展 <a href="#RFC7627"><cite
+                                                title="Transport Layer Security (TLS) Session Hash and Extended Master Secret Extension">[RFC7627]</cite></a>。
+                                    </p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div id="rfc.section.7.p.4">
+                        <p>客户端 <em class="bcp14">MUST NOT</em> 在不满足上述任一属性的连接上使用 Concealed HTTP
+                            认证方案。如果服务器在既不满足上述条件的连接上收到使用该认证方案的请求，服务器 <em class="bcp14">MUST</em> 将该请求视为未包含认证的请求。</p>
+                    </div>
+                </section>
+                <hr class="hidden-print">
+                <section id="security">
+                    <h2 id="rfc.section.8" class="np"><a href="#rfc.section.8">8.</a>&nbsp;<a
+                            href="#security">安全注意事项</a></h2>
+                    <div id="rfc.section.8.p.1">
+                        <p>Concealed HTTP 认证方案允许客户端在保证新鲜性的同时向源服务器进行认证，而无需服务器向客户端传输
+                            nonce。这使得服务器可以在不透露其对某些资源支持或期望认证的情况下接受已认证的客户端。它也允许在不因明文 TLS Client Hello
+                            扩展而向观察者泄露认证存在的情况下进行认证。</p>
+                    </div>
+                    <div id="rfc.section.8.p.2">
+                        <p>由于上述新鲜性由 TLS 密钥导出器提供，其新鲜程度可能与底层 TLS 连接一样旧。服务器可以通过强制客户端使用诸如 GOAWAY 帧（参见 <a
+                                href="https://www.rfc-editor.org/rfc/rfc9114.html#section-5.2">第 5.2
+                                节</a>）等机制来创建新连接，以要求更好的新鲜性。</p>
+                    </div>
+                    <div id="rfc.section.8.p.3">
+                        <p>本文档描述的认证证明并未绑定到单个 HTTP 请求；如果在同一连接上对多个请求使用该密钥进行认证证明，则这些证明将全部相同。这便于在传输时更好地压缩，但意味着将不同安全上下文复用到单个
+                            HTTP 连接的客户端实现需要确保这些上下文不能互相读取对方的头字段。否则，一个上下文可能会重放另一个上下文的 Authorization
+                            头字段。现代浏览器满足此约束。如果攻击者入侵浏览器并能访问另一个上下文的内存，攻击者也可能获取相应密钥，因此将认证绑定到请求在实践中并不会带来太大益处。</p>
+                    </div>
+                    <div id="rfc.section.8.p.4">
+                        <p>用于 Concealed HTTP 认证方案的认证非对称密钥 <em class="bcp14">MUST NOT</em>
+                            在其它协议中重用。尽管我们试图通过在被签名数据前添加静态前缀来缓解该问题（见 <a href="#computation"
+                                title="Signature Computation">第 3.3 节</a>），但重用密钥可能会削弱认证的安全保证。</p>
+                    </div>
+                    <div id="rfc.section.8.p.5">
+                        <p>提供该方案的源可以将使用相同密钥的请求关联在一起。但如果所用密钥是针对各自使用该方案的独立源专门生成的，则请求在跨源之间不可关联。</p>
+                    </div>
+                </section>
+                <hr class="hidden-print">
+                <section id="iana">
+                    <h2 id="rfc.section.9" class="np"><a href="#rfc.section.9">9.</a>&nbsp;<a href="#iana">IANA 注意事项</a>
+                    </h2>
+                    <section id="iana-schemes">
+                        <h3 id="rfc.section.9.1"><a href="#rfc.section.9.1">9.1.</a>&nbsp;<a href="#iana-schemes">HTTP
+                                认证方案注册表</a></h3>
+                        <div id="rfc.section.9.1.p.1" class="avoidbreakafter">
+                            <p>IANA 已在 &lt;<a
+                                    href="https://www.iana.org/assignments/http-authschemes">https://www.iana.org/assignments/http-authschemes</a>&gt;
+                                维护的“HTTP Authentication Schemes”注册表中登记了如下条目：</p>
+                        </div>
+                        <div id="rfc.section.9.1.p.2">
+                            <dl class="compact">
+                                <dt>Authentication Scheme Name:</dt>
+                                <dd style="margin-left: 1.5em">Concealed</dd>
+                                <dt>Reference:</dt>
+                                <dd style="margin-left: 1.5em">RFC 9729</dd>
+                                <dt>Notes:</dt>
+                                <dd style="margin-left: 1.5em">无</dd>
+                            </dl>
+                        </div>
+                    </section>
+                    <section id="iana-exporter-label">
+                        <h3 id="rfc.section.9.2"><a href="#rfc.section.9.2">9.2.</a>&nbsp;<a
+                                href="#iana-exporter-label">TLS 密钥导出器标签</a></h3>
+                        <div id="rfc.section.9.2.p.1" class="avoidbreakafter">
+                            <p>IANA 已在 &lt;<a
+                                    href="https://www.iana.org/assignments/tls-parameters">https://www.iana.org/assignments/tls-parameters</a>&gt;
+                                维护的 “TLS Exporter Labels” 注册表中登记了如下条目：</p>
+                        </div>
+                        <div id="rfc.section.9.2.p.2">
+                            <dl class="compact">
+                                <dt>Value:</dt>
+                                <dd style="margin-left: 1.5em">EXPORTER-HTTP-Concealed-Authentication</dd>
+                                <dt>DTLS-OK:</dt>
+                                <dd style="margin-left: 1.5em">N</dd>
+                                <dt>Recommended:</dt>
+                                <dd style="margin-left: 1.5em">Y</dd>
+                                <dt>Reference:</dt>
+                                <dd style="margin-left: 1.5em">RFC 9729</dd>
+                            </dl>
+                        </div>
+                    </section>
+                    <section id="http-field-name">
+                        <h3 id="rfc.section.9.3"><a href="#rfc.section.9.3">9.3.</a>&nbsp;<a
+                                href="#http-field-name">HTTP 字段名</a></h3>
+                        <div id="rfc.section.9.3.p.1" class="avoidbreakafter">
+                            <p>IANA 已在 &lt;<a
+                                    href="https://www.iana.org/assignments/http-fields">https://www.iana.org/assignments/http-fields</a>&gt;
+                                维护的“Hypertext Transfer Protocol (HTTP) Field Name Registry”中登记了如下条目：</p>
+                        </div>
+                        <div id="rfc.section.9.3.p.2">
+                            <dl class="compact">
+                                <dt>Field Name:</dt>
+                                <dd style="margin-left: 1.5em">Concealed-Auth-Export</dd>
+                                <dt>Status:</dt>
+                                <dd style="margin-left: 1.5em">permanent</dd>
+                                <dt>Structured Type:</dt>
+                                <dd style="margin-left: 1.5em">Item</dd>
+                                <dt>Reference:</dt>
+                                <dd style="margin-left: 1.5em">RFC 9729</dd>
+                                <dt>Comments:</dt>
+                                <dd style="margin-left: 1.5em">无</dd>
+                            </dl>
+                        </div>
+                    </section>
+                </section>
+                <section id="sec-combined-references" class="np">
+                    <div id="rfc.references">
+                        <h2 id="rfc.section.10"><a href="#rfc.section.10">10.</a> 参考文献</h2>
+                        <section id="sec-normative-references">
+                            <div id="rfc.references.2">
+                                <h3 id="rfc.section.10.1"><a href="#rfc.section.10.1">10.1.</a> 规范性参考文献</h3>
+                                <dl class="dl-horizontal">
+                                    <dt id="RFC5234">[<a href="#RFC5234" class="smpl">ABNF</a>]</dt>
+                                    <dd>……</dd>
+                                    <dt id="RFC4648">[<a href="#RFC4648" class="smpl">BASE64</a>]</dt>
+                                    <dd>……</dd>
+                                    <dt id="RFC8032">[<a href="#RFC8032" class="smpl">EdDSA</a>]</dt>
+                                    <dd>……</dd>
+                                    <dt id="RFC9110">[<a href="#RFC9110" class="smpl">HTTP</a>]</dt>
+                                    <dd>……</dd>
+                                    <dt id="RFC5705">[<a href="#RFC5705" class="smpl">KEY-EXPORT</a>]</dt>
+                                    <dd>……</dd>
+                                    <dt id="RFC8017">[<a href="#RFC8017" class="smpl">PKCS1</a>]</dt>
+                                    <dd>……</dd>
+                                    <dt id="RFC9000">[<a href="#RFC9000" class="smpl">QUIC</a>]</dt>
+                                    <dd>……</dd>
+                                    <dt id="RFC2119">[<a href="#RFC2119" class="smpl">RFC2119</a>]</dt>
+                                    <dd>……</dd>
+                                    <dt id="RFC7627">[<a href="#RFC7627" class="smpl">RFC7627</a>]</dt>
+                                    <dd>……</dd>
+                                    <dt id="RFC8174">[<a href="#RFC8174" class="smpl">RFC8174</a>]</dt>
+                                    <dd>……</dd>
+                                    <dt id="RFC8792">[<a href="#RFC8792" class="smpl">RFC8792</a>]</dt>
+                                    <dd>……</dd>
+                                    <dt id="RFC9651">[<a href="#RFC9651" class="smpl">STRUCTURED-FIELDS</a>]</dt>
+                                    <dd>……</dd>
+                                    <dt id="RFC8446">[<a href="#RFC8446" class="smpl">TLS</a>]</dt>
+                                    <dd>……</dd>
+                                    <dt id="RFC3986">[<a href="#RFC3986" class="smpl">URI</a>]</dt>
+                                    <dd>……</dd>
+                                    <dt id="X.690">[<a href="#X.690" class="smpl">X.690</a>]</dt>
+                                    <dd>……</dd>
+                                </dl>
+                            </div>
+                        </section>
+                        <section id="sec-informative-references">
+                            <div id="rfc.references.3">
+                                <h3 id="rfc.section.10.2"><a href="#rfc.section.10.2">10.2.</a> 信息性参考文献</h3>
+                                <dl class="dl-horizontal">
+                                    <dt id="RFC8410">[<a href="#RFC8410" class="smpl">ED25519</a>]</dt>
+                                    <dd>……</dd>
+                                    <dt id="RFC7486">[<a href="#RFC7486" class="smpl">HOBA</a>]</dt>
+                                    <dd>……</dd>
+                                    <dt id="RFC9113">[<a href="#RFC9113" class="smpl">HTTP/2</a>]</dt>
+                                    <dd>……</dd>
+                                    <dt id="RFC9114">[<a href="#RFC9114" class="smpl">HTTP/3</a>]</dt>
+                                    <dd>……</dd>
+                                    <dt id="I-D.schinazi-masque">[<a href="#I-D.schinazi-masque"
+                                            class="smpl">MASQUE-ORIGINAL</a>]</dt>
+                                    <dd>……</dd>
+                                    <dt id="RFC9001">[<a href="#RFC9001" class="smpl">QUIC-TLS</a>]</dt>
+                                    <dd>……</dd>
+                                    <dt id="SEEMS-LEGIT">[<a href="#SEEMS-LEGIT" class="smpl">SEEMS-LEGIT</a>]</dt>
+                                    <dd>……</dd>
+                                </dl>
+                            </div>
+                        </section>
+                    </div>
+                </section>
+                <hr class="hidden-print">
+                <section id="acknowledgments">
+                    <h2 id="rfc.section.unnumbered-4" class="np"><a href="#acknowledgments">致谢</a></h2>
+                    <div id="rfc.section.unnumbered-4.p.1">
+                        <p>作者感谢 IETF 社区的众多成员，本文件是许多走廊讨论的结晶。尤其感谢 David Benjamin、Reese Enghardt、Nick Harper、Dennis
+                            Jackson、Ilari Liusvaara、François Michel、Lucas Pardue、Justin Richer、Ben Schwartz、Martin
+                            Thomson 与 Chris A. Wood 的审阅与贡献。本文档中描述的机制最初是 MASQUE 的第一版的一部分 <a
+                                href="#I-D.schinazi-masque"><cite
+                                    title="The MASQUE Protocol">[MASQUE-ORIGINAL]</cite></a>。</p>
+                    </div>
+                </section>
+                <hr class="hidden-print">
+                <section id="rfc.authors" class="np">
+                    <h2><a href="#rfc.authors">作者联系信息</a></h2>
+                    <address><b>David Schinazi</b><br>Google LLC<br>1600 Amphitheatre Parkway<br>Mountain View, CA
+                        94043<br>United States of America<br>EMail: <a
+                            href="mailto:dschinazi.ietf@gmail.com">dschinazi.ietf@gmail.com</a></address>
+                    <address><b>David M. Oliver</b><br>Guardian Project<br>EMail: <a
+                            href="mailto:david@guardianproject.info">david@guardianproject.info</a><br>URI: <a
+                            href="https://guardianproject.info">https://guardianproject.info</a></address>
+                    <address><b>Jonathan Hoyland</b><br>Cloudflare Inc.<br>EMail: <a
+                            href="mailto:jonathan.hoyland@gmail.com">jonathan.hoyland@gmail.com</a></address>
+                </section>
+            </div>
+        </div>
+    </div>
+    <script src="https://httpwg.org/assets/node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="https://httpwg.org/assets/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="https://htmlspecs.com/dropdown.js"></script>
+</body>
+
+</html>

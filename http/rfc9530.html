@@ -1,0 +1,2700 @@
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html lang="zh-hans">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>RFC 9530 - 摘要字段</title>
+    <script>
+        function getMeta(rfcno, container) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "https://www.rfc-editor.org/rfc/rfc" + rfcno + ".json", true);
+            xhr.onload = function (e) {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        var data = JSON.parse(xhr.response);
+
+                        var cont = document.getElementById(container);
+                        // empty the container
+                        while (cont.firstChild) {
+                            cont.removeChild(myNode.firstChild);
+                        }
+
+                        var c = data.status;
+                        if (c) {
+                            var bld = newElementWithText("b", c);
+                            cont.appendChild(bld);
+                        } else {
+                            cont.appendChild(newElementWithText("i", "(document status unknown)"));
+                        }
+
+                        c = data.updated_by;
+                        if (c && c.length > 0 && c[0] !== null && c[0].length > 0) {
+                            cont.appendChild(newElement("br"));
+                            cont.appendChild(newText("Updated by: "));
+                            appendRfcLinks(cont, c);
+                        }
+
+                        c = data.obsoleted_by;
+                        if (c && c.length > 0 && c[0] !== null && c[0].length > 0) {
+                            cont.appendChild(newElement("br"));
+                            cont.appendChild(newText("Obsoleted by: "));
+                            appendRfcLinks(cont, c);
+                        }
+
+                        c = data.errata_url;
+                        if (c) {
+                            cont.appendChild(newElement("br"));
+                            var link = newElementWithText("a", "errata");
+                            link.setAttribute("href", c);
+                            var errata = newElementWithText("i", "This document has ");
+                            errata.appendChild(link);
+                            errata.appendChild(newText("."));
+                            cont.appendChild(errata);
+                        }
+
+                        cont.style.display = "block";
+                    } else {
+                        console.error(xhr.statusText);
+                    }
+                }
+            };
+            xhr.onerror = function (e) {
+                console.error(xhr.status + " " + xhr.statusText);
+            };
+            xhr.send(null);
+        }
+        function appendRfcLinks(parent, updates) {
+            var template = "https://www.rfc-editor.org/rfc/rfc{rfc}.html";
+            for (var i = 0; i < updates.length; i++) {
+                var rfc = updates[i].trim().toLowerCase();
+                if (rfc.substring(0, 3) == "rfc") {
+                    var no = parseInt(rfc.substring(3), 10);
+
+                    var link = newElement("a");
+                    link.setAttribute("href", template.replace("{rfc}", no));
+                    link.appendChild(newText(no));
+                    parent.appendChild(link);
+                } else {
+                    parent.appendChild(newText(rfc));
+                }
+                if (i != updates.length - 1) {
+                    parent.appendChild(newText(", "));
+                }
+            }
+        }
+
+        // DOM helpers
+        function newElement(name) {
+            return document.createElement(name);
+        }
+        function newElementWithText(name, txt) {
+            var e = document.createElement(name);
+            e.appendChild(newText(txt));
+            return e;
+        }
+        function newText(text) {
+            return document.createTextNode(text);
+        }
+    </script>
+    <script>
+        function anchorRewrite() {
+            map = {};
+            if (window.location.hash.length >= 1) {
+                var fragid = window.location.hash.substr(1);
+                if (fragid) {
+                    if (!document.getElementById(fragid)) {
+                        var prefix = "rfc.";
+                        var mapped = map[fragid];
+                        if (mapped) {
+                            window.location.hash = mapped;
+                        } else if (fragid.indexOf("section-") == 0) {
+                            window.location.hash = prefix + "section." + fragid.substring(8).replace("-", ".p.");
+                        } else if (fragid.indexOf("appendix-") == 0) {
+                            window.location.hash = prefix + "section." + fragid.substring(9).replace("-", ".p.");
+                        } else if (fragid.indexOf("s-") == 0) {
+                            var postfix = fragid.substring(2);
+                            if (postfix.startsWith("abstract")) {
+                                window.location.hash = prefix + postfix;
+                            } else if (postfix.startsWith("note-")) {
+                                window.location.hash = prefix + "note." + postfix.substring(5).replace("-", ".p.");
+                            } else {
+                                window.location.hash = prefix + "section." + postfix.replace("-", ".p.");
+                            }
+                        } else if (fragid.indexOf("p-") == 0) {
+                            var r = fragid.substring(2);
+                            var p = r.indexOf("-");
+                            if (p >= 0) {
+                                window.location.hash = prefix + "section." + r.substring(0, p) + ".p." + r.substring(p + 1);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        window.addEventListener('hashchange', anchorRewrite);
+        window.addEventListener('DOMContentLoaded', anchorRewrite);
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="RFC9530">
+    <meta property="og:description" content="Digest Fields">
+    <meta property="og:url" content="https://httpwg.org/specs/rfc9530.html">
+    <meta property="og:site_name" content="IETF HTTP Working Group Specifications">
+    <meta property="og:image" content="https://httpwg.org/assets/favicon/apple-icon-180x180.png">
+    <link rel="stylesheet" type="text/css"
+        href="https://httpwg.org/assets/node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <style type="text/css">
+        body {
+            padding-top: 80px;
+            padding-bottom: 80px;
+            position: relative;
+        }
+
+        .table.header th,
+        .table.header td {
+            border-top: none;
+            padding: 0;
+        }
+
+        #sidebar {
+            margin-top: -10px;
+            height: 90%;
+            overflow-y: auto;
+            font-size: 90%;
+        }
+
+        #rfc\.meta {
+            width: 40%;
+            float: right
+        }
+
+        .toc ul {
+            list-style: none;
+        }
+
+        .filename {
+            color: rgb(119, 119, 119);
+            font-size: 23px;
+            font-weight: normal;
+            height: auto;
+            line-height: 23px;
+        }
+
+        dl {
+            margin-left: 1em;
+        }
+
+        dl.dl-horizontal {
+            margin-left: 0;
+        }
+
+        dl>dt {
+            float: left;
+            margin-right: 1em;
+        }
+
+        dl.nohang>dt {
+            float: none;
+        }
+
+        dl>dd {
+            margin-bottom: .5em;
+        }
+
+        dl.compact>dd {
+            margin-bottom: 0em;
+        }
+
+        dl>dd>dl {
+            margin-top: 0.5em;
+            margin-bottom: 0em;
+        }
+
+        ul.empty {
+            list-style-type: none;
+        }
+
+        ul.empty li {
+            margin-top: .5em;
+        }
+
+        td.reference {
+            padding-right: 1em;
+            vertical-align: top;
+        }
+
+        .feedback {
+            position: fixed;
+            bottom: 5px;
+            right: 5px;
+        }
+
+        .fbbutton {
+            margin-left: 5px;
+        }
+
+        h1 a,
+        h2 a,
+        h3 a,
+        h4 a,
+        h5 a,
+        h6 a {
+            color: rgb(51, 51, 51);
+        }
+
+        span.tt {
+            font: 11pt consolas, monospace;
+            font-size-adjust: none;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" href="https://httpwg.org/assets/site.css">
+    <link rel="Contents" href="#rfc.toc">
+    <link rel="Author" href="#rfc.authors">
+    <link rel="License" href="#rfc.copyrightnotice">
+    <link rel="Chapter" title="1 Introduction" href="#rfc.section.1">
+    <link rel="Chapter" title="2 The Content-Digest Field" href="#rfc.section.2">
+    <link rel="Chapter" title="3 The Repr-Digest Field" href="#rfc.section.3">
+    <link rel="Chapter" title="4 Integrity Preference Fields" href="#rfc.section.4">
+    <link rel="Chapter" title="5 Hash Algorithm Considerations and Registration" href="#rfc.section.5">
+    <link rel="Chapter" title="6 Security Considerations" href="#rfc.section.6">
+    <link rel="Chapter" title="7 IANA Considerations" href="#rfc.section.7">
+    <link rel="Chapter" title="8 References" href="#rfc.section.8">
+    <link rel="Appendix" title="A Resource Representation and Representation Data" href="#rfc.section.A">
+    <link rel="Appendix" title="B Examples of Unsolicited Digest" href="#rfc.section.B">
+    <link rel="Appendix" title="C Examples of Want-Repr-Digest Solicited Digest" href="#rfc.section.C">
+    <link rel="Appendix" title="D Sample Digest Values" href="#rfc.section.D">
+    <link rel="Appendix" title="E Migrating from RFC 3230" href="#rfc.section.E">
+    <link rel="Appendix" title="Acknowledgements" href="#rfc.section.unnumbered-4">
+    <link href="https://datatracker.ietf.org/doc/draft-ietf-httpbis-digest-headers-13" rel="prev">
+    <link href="https://dx.doi.org/10.17487/rfc9530" rel="alternate">
+    <link href="urn:issn:2070-1721" rel="alternate">
+    <link rel="Alternate" title="Plain Text Version" href="http://www.ietf.org/rfc/rfc9530.txt">
+    <link rel="Help" title="RFC-Editor's Status Page" href="https://www.rfc-editor.org/info/rfc9530">
+    <meta name="viewport" content="initial-scale=1">
+    <meta name="generator"
+        content="https://github.com/mnot/RFCBootstrap XSLT vendor: Saxonica http://www.saxonica.com/">
+    <meta name="keywords" content="Digest">
+    <link rel="schema.dcterms" href="http://purl.org/dc/terms/">
+    <meta name="dcterms.creator" content="Polli, R.">
+    <meta name="dcterms.creator" content="Pardue, L.">
+    <meta name="dcterms.identifier" content="urn:ietf:rfc:9530">
+    <meta name="dcterms.issued" content="2024-02">
+    <meta name="dct.replaces" content="urn:ietf:rfc:3230">
+    <meta name="dcterms.abstract"
+        content="This document defines HTTP fields that support integrity digests. The Content-Digest field can be used for the integrity of HTTP message content. The Repr-Digest field can be used for the integrity of HTTP representations. Want-Content-Digest and Want-Repr-Digest can be used to indicate a sender's interest and preferences for receiving the respective Integrity fields.This document obsoletes RFC 3230 and the Digest and Want-Digest HTTP fields.">
+    <meta name="dcterms.isPartOf" content="urn:issn:2070-1721">
+    <meta name="description"
+        content="This document defines HTTP fields that support integrity digests. The Content-Digest field can be used for the integrity of HTTP message content. The Repr-Digest field can be used for the integrity of HTTP representations. Want-Content-Digest and Want-Repr-Digest can be used to indicate a sender's interest and preferences for receiving the respective Integrity fields.This document obsoletes RFC 3230 and the Digest and Want-Digest HTTP fields.">
+</head>
+
+<body onload="getMeta(9530,'rfc.meta');">
+    <nav class="navbar navbar-dark bg-dark d-print-none navbar-expand-lg fixed-top ps-3 pe-3" role="navigation">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse"
+                aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <a class="navbar-brand" href="https://httpwg.org/"><img src="https://httpwg.org/assets/http.svg"
+                    height="23"></a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse">
+
+            <div class="navbar-nav me-auto">
+
+                <a class="nav-item ms-1 text-white" href="https://httpwg.org/specs/">📄 Documentation</a>
+
+                <div class="dropdown ms-4">
+                    <a href="#" class="nav-item dropdown-toggle text-white" data-bs-toggle="dropdown">Work in
+                        Progress</a>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-item"><a href="https://httpwg.org/http-extensions/">HTTP Extensions</a></li>
+                        <li class="dropdown-item"><a
+                                href="https://github.com/httpwg/admin/issues?q=is%3Aissue+is%3Aopen+label%3Aadoption">Future
+                                Work</a></li>
+                    </ul>
+                </div>
+
+                <div class="dropdown ms-4">
+                    <a href="#" class="nav-item dropdown-toggle text-white" data-bs-toggle="dropdown">Participate</a>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-item"><a href="https://httpwg.org/about/">About the HTTP Working Group</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li class="dropdown-item"><a href="https://httpwg.org/CONTRIBUTING.html">Contribution Policy</a>
+                        </li>
+                        <li class="dropdown-item"><a href="http://datatracker.ietf.org/wg/httpbis/charter/">WG
+                                Charter</a></li>
+                        <li class="dropdown-item"><a href="http://lists.w3.org/Archives/Public/ietf-http-wg/">Group
+                                Mailing List 📨</a></li>
+                        <li class="dropdown-item"><a href="https://httpwg.org/wg-materials/">Meeting Materials</a></li>
+                        <li class="dropdown-item"><a href="https://httpwg.org/admin/editors/">Document Editor
+                                Resources</a></li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </nav>
+    <div class="container" id="top">
+        <div class="row">
+            <div class="col-lg-4 order-last d-none d-lg-block" id="sidebar" role="navigation">
+                <div class="navbar">
+                    <div class="navbar-brand"><a href="#top"><strong>RFC </strong>9530</a></div><br clear="all">
+                    <div class="">
+                        <div class="toc ">
+                            <ul>
+                                <li><a href="#rfc.section.1">1.</a>&nbsp;&nbsp;&nbsp;<a href="#introduction">介绍</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.1.1">1.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#document-structure">文档结构</a></li>
+                                        <li><a href="#rfc.section.1.2">1.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#concept-overview">概念概述</a></li>
+                                        <li><a href="#rfc.section.1.3">1.3.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#obsolete-3230">废弃 RFC 3230</a></li>
+                                        <li><a href="#rfc.section.1.4">1.4.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#notational-conventions">符号约定</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.2">2.</a>&nbsp;&nbsp;&nbsp;<a href="#content-digest">The <span
+                                            class="tt">Content-Digest</span> Field</a></li>
+                                <li><a href="#rfc.section.3">3.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#representation-digest">The <span class="tt">Repr-Digest</span> Field</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.3.1">3.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#state-changing-requests">Using <span
+                                                    class="tt">Repr-Digest</span> in State-Changing Requests</a></li>
+                                        <li><a href="#rfc.section.3.2">3.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#digest-and-content-location"><span class="tt">Repr-Digest</span>
+                                                and Content-Location in Responses</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.4">4.</a>&nbsp;&nbsp;&nbsp;<a href="#want-fields">完整性偏好字段</a>
+                                </li>
+                                <li><a href="#rfc.section.5">5.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#algorithms">哈希算法的考虑与注册</a></li>
+                                <li><a href="#rfc.section.6">6.</a>&nbsp;&nbsp;&nbsp;<a href="#security">安全注意事项</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.6.1">6.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#sec-limitations">HTTP 消息并未完全受保护</a></li>
+                                        <li><a href="#rfc.section.6.2">6.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#end-to-end-integrity">端到端完整性</a></li>
+                                        <li><a href="#rfc.section.6.3">6.3.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#usage-in-signatures">在签名中的使用</a></li>
+                                        <li><a href="#rfc.section.6.4">6.4.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#usage-in-trailer-fields">在尾部字段中的使用</a></li>
+                                        <li><a href="#rfc.section.6.5">6.5.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#variations-within-content-encoding">内容编码内的变化</a></li>
+                                        <li><a href="#rfc.section.6.6">6.6.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#sec-agility">算法灵活性</a></li>
+                                        <li><a href="#rfc.section.6.7">6.7.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#sec-exhaustion">资源耗尽</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.7">7.</a>&nbsp;&nbsp;&nbsp;<a href="#iana-considerations">IANA
+                                        注意事项</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.7.1">7.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#http-field-name-registration">HTTP 字段名注册</a>
+                                        </li>
+                                        <li><a href="#rfc.section.7.2">7.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#establish-hash-algorithm-registry">创建 HTTP 摘要字段哈希算法注册表</a></li>
+                                        <li><a href="#rfc.section.7.3">7.3.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#deprecate-the-hypertext-transfer-protocol-http-digest-algorithm-values-registry">弃用
+                                                Hypertext Transfer Protocol (HTTP) Digest Algorithm Values 注册表</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.8">8.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.references">参考文献</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.8.1">8.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#rfc.references.2">规范性参考文献</a></li>
+                                        <li><a href="#rfc.section.8.2">8.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#rfc.references.3">信息性参考文献</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.A">附录 A.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#resource-representation">资源表示与表示数据</a></li>
+                                <li><a href="#rfc.section.B">附录 B.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#examples-unsolicited">未经请求的 <span class="tt">Digest</span> 示例</a>
+                                    <ul>
+                                        <li><a href="#rfc.section.B.1">B.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#example-full-representation">服务器返回完整表示数据</a></li>
+                                        <li><a href="#rfc.section.B.2">B.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#server-returns-no-representation-data">服务器不返回表示数据</a></li>
+                                        <li><a href="#rfc.section.B.3">B.3.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#server-returns-partial-representation-data">服务器返回部分表示数据</a></li>
+                                        <li><a href="#rfc.section.B.4">B.4.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#client-and-server-provide-full-representation-data">客户端与服务器提供完整表示数据</a>
+                                        </li>
+                                        <li><a href="#rfc.section.B.5">B.5.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#client-provides-full-representation-data-server-provides-no-representation-data">客户端提供完整表示数据且服务器不提供表示数据</a>
+                                        </li>
+                                        <li><a href="#rfc.section.B.6">B.6.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#client-and-server-provide-full-representation-data-1">客户端与服务器提供完整表示数据</a>
+                                        </li>
+                                        <li><a href="#rfc.section.B.7">B.7.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#post-not-request-uri">POST 响应未引用请求 URI</a></li>
+                                        <li><a href="#rfc.section.B.8">B.8.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#post-referencing-status">POST 响应描述请求状态</a></li>
+                                        <li><a href="#rfc.section.B.9">B.9.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#digest-with-patch"><span class="tt">Digest</span> 与 PATCH</a>
+                                        </li>
+                                        <li><a href="#rfc.section.B.10">B.10.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#error-responses">错误响应</a></li>
+                                        <li><a href="#rfc.section.B.11">B.11.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#use-with-trailer-fields-and-transfer-coding">与尾部字段和传输编码一起使用</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.C">附录 C.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#examples-solicited">示例：<span class="tt">Want-Repr-Digest</span> 请求的 <span
+                                            class="tt">Digest</span></a>
+                                    <ul>
+                                        <li><a href="#rfc.section.C.1">C.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#server-selects-clients-least-preferred-algorithm">服务器选择客户端最不偏好的算法</a>
+                                        </li>
+                                        <li><a href="#rfc.section.C.2">C.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#ex-server-selects-unsupported-algorithm">服务器选择客户端不支持的算法</a></li>
+                                        <li><a href="#rfc.section.C.3">C.3.</a>&nbsp;&nbsp;&nbsp;<a
+                                                href="#server-does-not-support-client-algorithm-and-returns-an-error">服务器不支持客户端算法并返回错误</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li><a href="#rfc.section.D">附录 D.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#sample-digest-values">示例 <span class="tt">Digest</span> 值</a>
+                                </li>
+                                <li><a href="#rfc.section.E">附录 E.</a>&nbsp;&nbsp;&nbsp;<a href="#migrating">从 RFC 3230
+                                        迁移</a></li>
+                                <li><a href="#acknowledgements">致谢</a></li>
+                                <li><a href="#rfc.authors">作者联系信息</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8 order-first main" role="main">
+                <header>
+                    <table class="table table-condensed header" id="rfc.headerblock">
+                        <tbody>
+                            <tr>
+                                <td class="text-left">Internet Engineering Task Force (IETF)</td>
+                                <td class="text-right">R. Polli</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left">Request for Comments: 9530</td>
+                                <td class="text-right">Team Digitale, Italian Government</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left">Obsoletes: <a href="#RFC3230">3230</a></td>
+                                <td class="text-right">L. Pardue</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left">Category: Standards Track</td>
+                                <td class="text-right">Cloudflare</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left">ISSN: 2070-1721</td>
+                                <td class="text-right">February 2024</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div id="rfc.title">
+                        <h1>Digest Fields</h1>
+                    </div>
+                </header>
+                <hr>
+                <h2 id="rfc.abstract"><a href="#rfc.abstract">摘要</a></h2>
+                <div class="lead">
+                    <div id="rfc.abstract.p.1">
+                        <p>本文档定义了支持完整性摘要的 HTTP 字段。<span class="tt">Content-Digest</span> 字段可用于 HTTP 消息内容的完整性。<span
+                                class="tt">Repr-Digest</span> 字段可用于 HTTP 表示的完整性。<span
+                                class="tt">Want-Content-Digest</span> 与 <span class="tt">Want-Repr-Digest</span>
+                            可用于指示发送方对接收相应完整性字段的兴趣与偏好。</p>
+                    </div>
+                    <div id="rfc.abstract.p.2">
+                        <p>本文档废弃了 RFC 3230 以及 <span class="tt">Digest</span> 与 <span class="tt">Want-Digest</span> HTTP
+                            字段。</p>
+                    </div>
+                </div>
+                <aside id="rfc.meta" class="alert alert-info"></aside>
+                <section id="rfc.status">
+                    <h2><a href="#rfc.status">本文备忘录的状态</a></h2>
+                    <div id="rfc.boilerplate.1.p.1">
+                        <p>这是一个 Internet 标准轨道文档。</p>
+                    </div>
+                    <div id="rfc.boilerplate.1.p.2">
+                        <p>本文档是互联网工程任务组 (IETF) 的产物。它代表了 IETF 社区的共识。它已公开审查并已被互联网工程指导小组 (IESG) 批准发表。有关互联网标准的更多信息，请参阅 <a
+                                href="https://www.rfc-editor.org/rfc/rfc7841.html#section-2">RFC 7841 第 2 节</a>。</p>
+                    </div>
+                    <div id="rfc.boilerplate.1.p.3">
+                        <p>有关本文档当前状态、任何勘误以及如何对其提供反馈的信息，请访问 <a
+                                href="https://www.rfc-editor.org/info/rfc9530">https://www.rfc-editor.org/info/rfc9530</a>。
+                        </p>
+                    </div>
+                </section>
+                <section id="rfc.copyrightnotice">
+                    <h2><a href="#rfc.copyrightnotice">Copyright Notice</a></h2>
+                    <div id="rfc.boilerplate.2.p.1">
+                        <p>Copyright (c) 2024 IETF Trust and the persons identified as the document authors. All rights
+                            reserved.</p>
+                    </div>
+                    <div id="rfc.boilerplate.2.p.2">
+                        <p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF
+                            Documents (<a
+                                href="https://trustee.ietf.org/license-info">https://trustee.ietf.org/license-info</a>)
+                            in effect on the date of publication of this document. Please review these documents
+                            carefully, as they describe your rights and restrictions with respect to this document. Code
+                            Components extracted from this document must include Revised BSD License text as described
+                            in Section 4.e of the Trust Legal Provisions and are provided without warranty as described
+                            in the Revised BSD License.</p>
+                    </div>
+                </section>
+                <div class="toc d-lg-none">
+                    <ul>
+                        <li><a href="#rfc.section.1">1.</a>&nbsp;&nbsp;&nbsp;<a href="#introduction">介绍</a>
+                            <ul>
+                                <li><a href="#rfc.section.1.1">1.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#document-structure">文档结构</a></li>
+                                <li><a href="#rfc.section.1.2">1.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#concept-overview">概念概述</a></li>
+                                <li><a href="#rfc.section.1.3">1.3.</a>&nbsp;&nbsp;&nbsp;<a href="#obsolete-3230">废弃 RFC
+                                        3230</a></li>
+                                <li><a href="#rfc.section.1.4">1.4.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#notational-conventions">表示法约定</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#rfc.section.2">2.</a>&nbsp;&nbsp;&nbsp;<a href="#content-digest"> <span
+                                    class="tt">Content-Digest</span> 字段</a></li>
+                        <li><a href="#rfc.section.3">3.</a>&nbsp;&nbsp;&nbsp;<a href="#representation-digest"> <span
+                                    class="tt">Repr-Digest</span> 字段</a>
+                            <ul>
+                                <li><a href="#rfc.section.3.1">3.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#state-changing-requests">在有状态变更请求中使用 <span
+                                            class="tt">Repr-Digest</span></a></li>
+                                <li><a href="#rfc.section.3.2">3.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#digest-and-content-location"><span class="tt">Repr-Digest</span> 与响应中的
+                                        Content-Location</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#rfc.section.4">4.</a>&nbsp;&nbsp;&nbsp;<a href="#want-fields">完整性偏好字段</a></li>
+                        <li><a href="#rfc.section.5">5.</a>&nbsp;&nbsp;&nbsp;<a href="#algorithms">哈希算法的考虑与注册</a></li>
+                        <li><a href="#rfc.section.6">6.</a>&nbsp;&nbsp;&nbsp;<a href="#security">安全注意事项</a>
+                            <ul>
+                                <li><a href="#rfc.section.6.1">6.1.</a>&nbsp;&nbsp;&nbsp;<a href="#sec-limitations">HTTP
+                                        消息并未得到完全保护</a></li>
+                                <li><a href="#rfc.section.6.2">6.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#end-to-end-integrity">端到端完整性</a></li>
+                                <li><a href="#rfc.section.6.3">6.3.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#usage-in-signatures">在签名中的使用</a></li>
+                                <li><a href="#rfc.section.6.4">6.4.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#usage-in-trailer-fields">在尾部字段中的使用</a></li>
+                                <li><a href="#rfc.section.6.5">6.5.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#variations-within-content-encoding">内容编码内的变化</a></li>
+                                <li><a href="#rfc.section.6.6">6.6.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#sec-agility">算法灵活性</a></li>
+                                <li><a href="#rfc.section.6.7">6.7.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#sec-exhaustion">资源耗尽</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#rfc.section.7">7.</a>&nbsp;&nbsp;&nbsp;<a href="#iana-considerations">IANA
+                                注意事项</a>
+                            <ul>
+                                <li><a href="#rfc.section.7.1">7.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#http-field-name-registration">HTTP 字段名注册</a></li>
+                                <li><a href="#rfc.section.7.2">7.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#establish-hash-algorithm-registry">创建 “Hash Algorithms for HTTP Digest
+                                        Fields” 注册表</a></li>
+                                <li><a href="#rfc.section.7.3">7.3.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#deprecate-the-hypertext-transfer-protocol-http-digest-algorithm-values-registry">弃用
+                                        “Hypertext Transfer Protocol (HTTP) Digest Algorithm Values” 注册表</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#rfc.section.8">8.</a>&nbsp;&nbsp;&nbsp;<a href="#rfc.references">参考文献</a>
+                            <ul>
+                                <li><a href="#rfc.section.8.1">8.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#rfc.references.2">规范性参考文献</a></li>
+                                <li><a href="#rfc.section.8.2">8.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#rfc.references.3">信息性参考文献</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#rfc.section.A">附录 A.</a>&nbsp;&nbsp;&nbsp;<a
+                                href="#resource-representation">资源表示与表示数据</a></li>
+                        <li><a href="#rfc.section.B">附录 B.</a>&nbsp;&nbsp;&nbsp;<a href="#examples-unsolicited">未经请求的
+                                <span class="tt">Digest</span> 示例</a>
+                            <ul>
+                                <li><a href="#rfc.section.B.1">B.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#example-full-representation">服务器返回完整表示数据</a>
+                                </li>
+                                <li><a href="#rfc.section.B.2">B.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#server-returns-no-representation-data">服务器不返回表示数据</a></li>
+                                <li><a href="#rfc.section.B.3">B.3.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#server-returns-partial-representation-data">服务器返回部分表示数据</a></li>
+                                <li><a href="#rfc.section.B.4">B.4.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#client-and-server-provide-full-representation-data">客户端与服务器提供完整表示数据</a>
+                                </li>
+                                <li><a href="#rfc.section.B.5">B.5.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#client-provides-full-representation-data-server-provides-no-representation-data">客户端提供完整表示数据且服务器不提供表示数据</a>
+                                </li>
+                                <li><a href="#rfc.section.B.6">B.6.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#client-and-server-provide-full-representation-data-1">客户端与服务器提供完整表示数据</a>
+                                </li>
+                                <li><a href="#rfc.section.B.7">B.7.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#post-not-request-uri">POST 响应未引用请求 URI</a></li>
+                                <li><a href="#rfc.section.B.8">B.8.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#post-referencing-status">POST 响应描述请求状态</a></li>
+                                <li><a href="#rfc.section.B.9">B.9.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#digest-with-patch"><span class="tt">Digest</span> 与 PATCH</a></li>
+                                <li><a href="#rfc.section.B.10">B.10.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#error-responses">错误响应</a></li>
+                                <li><a href="#rfc.section.B.11">B.11.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#use-with-trailer-fields-and-transfer-coding">与尾部字段和传输编码一起使用</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#rfc.section.C">附录 C.</a>&nbsp;&nbsp;&nbsp;<a href="#examples-solicited">示例：<span
+                                    class="tt">Want-Repr-Digest</span> 请求的 <span class="tt">Digest</span></a>
+                            <ul>
+                                <li><a href="#rfc.section.C.1">C.1.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#server-selects-clients-least-preferred-algorithm">服务器选择客户端最不偏好的算法</a>
+                                </li>
+                                <li><a href="#rfc.section.C.2">C.2.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#ex-server-selects-unsupported-algorithm">服务器选择客户端不支持的算法</a></li>
+                                <li><a href="#rfc.section.C.3">C.3.</a>&nbsp;&nbsp;&nbsp;<a
+                                        href="#server-does-not-support-client-algorithm-and-returns-an-error">服务器不支持客户端算法并返回错误</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li><a href="#rfc.section.D">附录 D.</a>&nbsp;&nbsp;&nbsp;<a href="#sample-digest-values">示例 <span
+                                    class="tt">Digest</span> 值</a></li>
+                        <li><a href="#rfc.section.E">附录 E.</a>&nbsp;&nbsp;&nbsp;<a href="#migrating">从 RFC 3230 迁移</a>
+                        </li>
+                        <li><a href="#acknowledgements">致谢</a></li>
+                        <li><a href="#rfc.authors">作者联系信息</a></li>
+                    </ul>
+                </div>
+                <hr class="hidden-print">
+                <section id="introduction">
+                    <h2 id="rfc.section.1" class="np"><a href="#rfc.section.1">1.</a>&nbsp;<a
+                            href="#introduction">介绍</a></h2>
+                    <div id="rfc.section.1.p.1">
+                        <p>HTTP 并未定义保护内容或表示数据完整性的手段。当 HTTP 消息在端点之间传输时，诸如 TCP 校验和或 TLS 记录 <a href="#RFC8446"><cite
+                                    title="The Transport Layer Security (TLS) Protocol Version 1.3">[TLS]</cite></a>
+                            等下层特性或属性可以提供某种完整性保护。然而，面向传输的完整性对应用层是不透明的，并且仅覆盖单个连接的范围，因此其实用性有限。HTTP
+                            消息经常通过一系列独立连接传输；在连接之间，存在数据损坏的可能性。HTTP 完整性机制可以为端点或使用 HTTP
+                            的应用提供检测数据损坏的手段，并据此决定如何处理。例如，可用于跨系统边界辅助故障检测与诊断的用例。</p>
+                    </div>
+                    <div id="rfc.section.1.p.2">
+                        <p>本文档为 HTTP 定义了两种摘要完整性机制。第一种是内容完整性，作用于传输的内容（参见 <a
+                                href="https://www.rfc-editor.org/rfc/rfc9110.html#section-6.4">[HTTP] 第 6.4
+                                节</a>）。第二种是表示数据完整性，作用于表示数据（参见 <a
+                                href="https://www.rfc-editor.org/rfc/rfc9110.html#section-8.1">[HTTP] 第 8.1
+                                节</a>）。这支持例如验证从多个请求或连接检索并重建的资源的完整性等高级用例。</p>
+                    </div>
+                    <div id="rfc.section.1.p.3">
+                        <p>本文档废弃了 <a href="#RFC3230"><cite title="Instance Digests in HTTP">[RFC3230]</cite></a>，因此也废弃了
+                            <span class="tt">Digest</span> 与 <span class="tt">Want-Digest</span> HTTP 字段；参见 <a
+                                href="#obsolete-3230" title="Obsoleting RFC 3230">第 1.3 节</a>。
+                        </p>
+                    </div>
+                    <section id="document-structure">
+                        <h3 id="rfc.section.1.1"><a href="#rfc.section.1.1">1.1.</a>&nbsp;<a
+                                href="#document-structure">文档结构</a></h3>
+                        <div id="rfc.section.1.1.p.1" class="avoidbreakafter">
+                            <p>本文档的结构如下：</p>
+                        </div>
+                        <div id="rfc.section.1.1.p.2">
+                            <ul>
+                                <li>
+                                    <div>
+                                        <p>新的请求与响应头字段及尾部字段定义。</p>
+                                    </div>
+                                    <div>
+                                        <ul>
+                                            <li><a href="#content-digest" title="The Content-Digest Field">第 2 节</a>
+                                                (<span class="tt">Content-Digest</span>),</li>
+                                            <li><a href="#representation-digest" title="The Repr-Digest Field">第 3 节</a>
+                                                (<span class="tt">Repr-Digest</span>), 和</li>
+                                            <li><a href="#want-fields" title="Integrity Preference Fields">第 4 节</a>
+                                                (<span class="tt">Want-Content-Digest</span> 与 <span
+                                                    class="tt">Want-Repr-Digest</span>）。</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div>
+                                        <p>与表示数据完整性相关的特定考虑。</p>
+                                    </div>
+                                    <div>
+                                        <ul>
+                                            <li><a href="#state-changing-requests"
+                                                    title="Using Repr-Digest in State-Changing Requests">第 3.1 节</a>
+                                                （有状态变更请求），</li>
+                                            <li><a href="#digest-and-content-location"
+                                                    title="Repr-Digest and Content-Location in Responses">第 3.2
+                                                    节</a>（Content-Location），</li>
+                                            <li><a href="#resource-representation"
+                                                    title="Resource Representation and Representation Data">附录 A</a>
+                                                包含了消息交换中关于表示数据的示例，以及</li>
+                                            <li>附录 <a href="#examples-unsolicited"
+                                                    title="Examples of Unsolicited Digest">B</a> 与 <a
+                                                    href="#examples-solicited"
+                                                    title="Examples of Want-Repr-Digest Solicited Digest">C</a> 包含了
+                                                <span class="tt">Repr-Digest</span> 与 <span
+                                                    class="tt">Want-Repr-Digest</span> 在消息交换中的示例。
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li><a href="#algorithms" title="Hash Algorithm Considerations and Registration">第 5
+                                        节</a> 提出哈希算法的考虑并定义未来条目的注册流程。</li>
+                            </ul>
+                        </div>
+                    </section>
+                    <section id="concept-overview">
+                        <h3 id="rfc.section.1.2"><a href="#rfc.section.1.2">1.2.</a>&nbsp;<a
+                                href="#concept-overview">概念概述</a></h3>
+                        <div id="rfc.section.1.2.p.1">
+                            <p>本文档定义的 HTTP 字段可用于实现 HTTP 完整性。发送方选择哈希算法并基于与 HTTP 消息相关的输入计算摘要。算法标识符与摘要在 HTTP
+                                字段中传输。接收方可以验证摘要以实现完整性检查。哈希算法在 “Hash Algorithms for HTTP Digest Fields” 注册表中注册（参见 <a
+                                    href="#establish-hash-algorithm-registry"
+                                    title="Creation of the Hash Algorithms for HTTP Digest Fields Registry">第 7.2
+                                    节</a>）。</p>
+                        </div>
+                        <div id="rfc.section.1.2.p.2">
+                            <p>选择用于计算摘要的数据取决于 HTTP 消息的用例。本文档为 HTTP 表示数据与 HTTP 内容提供了不同的字段。</p>
+                        </div>
+                        <div id="rfc.section.1.2.p.3">
+                            <p>在某些用例中，仅需对 HTTP 内容字节做简单摘要。<span class="tt">Content-Digest</span>
+                                请求与响应头以及尾部字段被定义用于支持对内容的摘要（参见 <a
+                                    href="https://www.rfc-editor.org/rfc/rfc9110.html#section-6.4">[HTTP] 第 6.4
+                                    节</a>）；详见 <a href="#content-digest" title="The Content-Digest Field">第 2 节</a>。</p>
+                        </div>
+                        <div id="rfc.section.1.2.p.4">
+                            <p>对于更高级的用例，定义了 <span class="tt">Repr-Digest</span> 请求与响应头以及尾部字段（参见 <a
+                                    href="#representation-digest" title="The Repr-Digest Field">第 3
+                                    节</a>）。它包含通过对选定的表示数据应用哈希算法计算得到的摘要值（参见 <a
+                                    href="https://www.rfc-editor.org/rfc/rfc9110.html#section-8.1">[HTTP] 第 8.1
+                                    节</a>）。基于选定表示的 <span class="tt">Repr-Digest</span>
+                                便于将其应用到需要对消息内容进行某种处理后才视作资源表示，或内容表示资源的部分表示（例如范围请求，参见 <a
+                                    href="https://www.rfc-editor.org/rfc/rfc9110.html#section-14">[HTTP] 第 14 节</a>）的用例。
+                            </p>
+                        </div>
+                        <div id="rfc.section.1.2.p.5">
+                            <p><span class="tt">Content-Digest</span> 与 <span class="tt">Repr-Digest</span>
+                                支持哈希算法的可替换性。<span class="tt">Want-Content-Digest</span> 与 <span
+                                    class="tt">Want-Repr-Digest</span> 字段允许端点分别表达对接收 <span
+                                    class="tt">Content-Digest</span> 与 <span class="tt">Repr-Digest</span>
+                                的兴趣，并可在其中表达算法偏好。</p>
+                        </div>
+                        <div id="rfc.section.1.2.p.6">
+                            <p><span class="tt">Content-Digest</span> 与 <span class="tt">Repr-Digest</span>
+                                合称为“完整性字段”。<span class="tt">Want-Content-Digest</span> 与 <span
+                                    class="tt">Want-Repr-Digest</span> 合称为“完整性偏好字段”。</p>
+                        </div>
+                        <div id="rfc.section.1.2.p.7">
+                            <p>完整性字段与 <span class="tt">Content-Encoding</span> 和 <span class="tt">Content-Type</span>
+                                头字段相关联。因此，当通过 HTTP 传输时，同一资源可能具有多个不同的摘要值。</p>
+                        </div>
+                        <div id="rfc.section.1.2.p.8">
+                            <p>完整性字段适用于 HTTP 消息的内容或 HTTP 表示；它们不适用于 HTTP 消息或消息字段本身。然而，它们可以与保护元数据的其它机制（例如数字签名）结合使用，从而对
+                                HTTP 交换的阶段性或整体提供保护。例如，可以使用 HTTP Message Signatures <a href="#RFC9421"><cite
+                                        title="HTTP Message Signatures">[SIGNATURES]</cite></a> 对完整性字段进行签名，从而为 HTTP
+                                内容或表示数据提供覆盖保护。</p>
+                        </div>
+                        <div id="rfc.section.1.2.p.9">
+                            <p>本规范不定义身份验证、授权或隐私的手段。</p>
+                        </div>
+                    </section>
+                    <section id="obsolete-3230">
+                        <h3 id="rfc.section.1.3"><a href="#rfc.section.1.3">1.3.</a>&nbsp;<a href="#obsolete-3230">废弃
+                                RFC 3230</a></h3>
+                        <div id="rfc.section.1.3.p.1">
+                            <p><a href="#RFC3230"><cite title="Instance Digests in HTTP">[RFC3230]</cite></a> 定义了用于 HTTP
+                                完整性的 <span class="tt">Digest</span> 与 <span class="tt">Want-Digest</span>
+                                字段，并引入了“instance”（实例）与“instance manipulation”（实例处理）等术语以解释诸如选定表示数据（参见 <a
+                                    href="https://www.rfc-editor.org/rfc/rfc9110.html#section-8.1">[HTTP] 第 8.1
+                                    节</a>）之类的概念，这些概念现在已作为 HTTP 语义更通用地定义并实现。</p>
+                        </div>
+                        <div id="rfc.section.1.3.p.2">
+                            <p>实践表明，对 <a href="#RFC3230"><cite title="Instance Digests in HTTP">[RFC3230]</cite></a>
+                                的实现对“instance”含义的解释不一致，导致互操作性问题。最常见的问题是错误地使用（即现在称为）消息内容来计算摘要，而不是使用（即现在称为）表示数据，尽管后者为最初的意图。有趣的是，时间也表明对消息内容的摘要在某些用例中是有益的，因此难以判断对
+                                <a href="#RFC3230"><cite title="Instance Digests in HTTP">[RFC3230]</cite></a>
+                                的不一致实现是出于有意还是无意。
+                            </p>
+                        </div>
+                        <div id="rfc.section.1.3.p.3">
+                            <p>为了解决 <span class="tt">Digest</span> 与 <span class="tt">Want-Digest</span>
+                                的实现间潜在不一致与歧义，本文档废弃了 <a href="#RFC3230"><cite
+                                        title="Instance Digests in HTTP">[RFC3230]</cite></a>。本文档中定义的完整性字段（第 <a
+                                    href="#content-digest" title="The Content-Digest Field">2 节</a> 与第 <a
+                                    href="#representation-digest" title="The Repr-Digest Field">3 节</a>）以及完整性偏好字段（第 <a
+                                    href="#want-fields" title="Integrity Preference Fields">4 节</a>）更好地与当前 HTTP
+                                语义对齐，且其名称更清晰地表达了预期用法。</p>
+                        </div>
+                    </section>
+                    <section id="notational-conventions">
+                        <h3 id="rfc.section.1.4"><a href="#rfc.section.1.4">1.4.</a>&nbsp;<a
+                                href="#notational-conventions">表示法约定</a></h3>
+                        <div id="rfc.section.1.4.p.1">
+                            <p>文中关键字 "<em class="bcp14">MUST</em>"、"<em class="bcp14">MUST NOT</em>"、"<em
+                                    class="bcp14">REQUIRED</em>"、"<em class="bcp14">SHALL</em>"、"<em class="bcp14">SHALL
+                                    NOT</em>"、"<em class="bcp14">SHOULD</em>"、"<em class="bcp14">SHOULD NOT</em>"、"<em
+                                    class="bcp14">RECOMMENDED</em>"、"<em class="bcp14">NOT RECOMMENDED</em>"、"<em
+                                    class="bcp14">MAY</em>" 和 "<em class="bcp14">OPTIONAL</em>" 的解释，见 BCP 14（参见 <a
+                                    href="#RFC2119"><cite
+                                        title="Key words for use in RFCs to Indicate Requirement Levels">[RFC2119]</cite></a>
+                                与 <a href="#RFC8174"><cite
+                                        title="Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words">[RFC8174]</cite></a>），仅当这些词以全部大写形式出现时按该定义解释。
+                            </p>
+                        </div>
+                        <div id="rfc.section.1.4.p.2">
+                            <p>本文档使用在 <a href="#RFC5234"><cite
+                                        title="Augmented BNF for Syntax Specifications: ABNF">[RFC5234]</cite></a> 中定义并经
+                                <a href="#RFC7405"><cite
+                                        title="Case-Sensitive String Support in ABNF">[RFC7405]</cite></a> 更新的增强
+                                BNF（ABNF）。这包括规则 CR（回车）、LF（换行）与 CRLF（回车换行）。
+                            </p>
+                        </div>
+                        <div id="rfc.section.1.4.p.3">
+                            <p>本文档使用 <a href="https://www.rfc-editor.org/rfc/rfc8941.html#section-3">[STRUCTURED-FIELDS]
+                                    第 3 节</a> 中的术语来指定语法与解析：Boolean、Byte Sequence、Dictionary、Integer 和 List。</p>
+                        </div>
+                        <div id="rfc.section.1.4.p.4">
+                            <p>文中对术语 “representation”、“selected representation”、“representation data”、“representation
+                                metadata”、“user agent” 与 “content” 的定义，应按 <a href="#RFC9110"><cite
+                                        title="HTTP Semantics">[HTTP]</cite></a> 的描述理解。</p>
+                        </div>
+                        <div id="rfc.section.1.4.p.5">
+                            <p>本文档使用 <a href="#RFC8792"><cite
+                                        title="Handling Long Lines in Content of Internet-Drafts and RFCs">[FOLDING]</cite></a>
+                                中描述的行折叠策略。</p>
+                        </div>
+                        <div id="rfc.section.1.4.p.6">
+                            <p>哈希算法名称应尊重其定义文档中使用的大小写（例如 SHA-1、CRC32c）。</p>
+                        </div>
+                        <div id="rfc.section.1.4.p.7">
+                            <p>HTTP 消息使用 Algorithm Key（算法键）来指示哈希算法。文中若以散文提及 Algorithm Key，则使用引号（例如 "sha", "crc32c"）。</p>
+                        </div>
+                        <div id="rfc.section.1.4.p.8">
+                            <p>术语 “checksum” 描述将算法应用于字节序列所产生的输出，而 “digest” 仅用于字段中包含的值。</p>
+                        </div>
+                        <div id="rfc.section.1.4.p.9">
+                            <p>“完整性字段” 为 <span class="tt">Content-Digest</span> 和 <span class="tt">Repr-Digest</span>
+                                的集合称谓。</p>
+                        </div>
+                        <div id="rfc.section.1.4.p.10">
+                            <p>“完整性偏好字段” 为 <span class="tt">Want-Repr-Digest</span> 与 <span
+                                    class="tt">Want-Content-Digest</span> 的集合称谓。</p>
+                        </div>
+                    </section>
+                </section>
+                <hr class="hidden-print">
+                <section id="content-digest">
+                    <h2 id="rfc.section.2" class="np"><a href="#rfc.section.2">2.</a>&nbsp;<a href="#content-digest">
+                            <span class="tt">Content-Digest</span> 字段</a></h2>
+                    <div id="rfc.section.2.p.1" class="avoidbreakafter">
+                        <p><span class="tt">Content-Digest</span> HTTP 字段可用于请求和响应中，用来传达对实际消息内容应用哈希算法后计算得到的摘要（参见 <a
+                                href="https://www.rfc-editor.org/rfc/rfc9110.html#section-6.4">[HTTP] 第 6.4 节</a>）。它的类型为
+                            Dictionary（参见 <a
+                                href="https://www.rfc-editor.org/rfc/rfc8941.html#section-3.2">[STRUCTURED-FIELDS] 第 3.2
+                                节</a>），其中每个：</p>
+                    </div>
+                    <div id="rfc.section.2.p.2">
+                        <ul>
+                            <li>key 表示用于计算摘要的哈希算法（参见 <a href="#algorithms"
+                                    title="Hash Algorithm Considerations and Registration">第 5 节</a>）；</li>
+                            <li>value 是一个 Byte Sequence（参见 <a
+                                    href="https://www.rfc-editor.org/rfc/rfc8941.html#section-3.3.5">[STRUCTURED-FIELDS]
+                                    第 3.3.5 节</a>），用于传达摘要计算所产生的字节输出的编码形式。</li>
+                        </ul>
+                    </div>
+                    <div id="rfc.section.2.p.3" class="avoidbreakafter">
+                        <p>例如：</p>
+                    </div>
+                    <div id="rfc.section.2.p.4">
+                        <pre class="text">
+NOTE: '\' line wrapping per RFC 8792
+
+Content-Digest: \
+  sha-512=:YMAam51Jz/jOATT6/zvHrLVgOYTGFy1d6GJiOHTohq4yP+pgk4vf2aCs\
+  yRZOtw8MjkM7iw7yZ/WkppmM44T3qg==:
+</pre>
+                    </div>
+                    <div id="rfc.section.2.p.5">
+                        <p>Dictionary 类型可用于附加使用不同哈希算法计算的多个摘要，以支持具有不同或不断演进能力的端点群体。此类方法可支持从较弱算法向更强算法的过渡（参见 <a
+                                href="#sec-agility" title="Algorithm Agility">第 6.6 节</a>）。</p>
+                    </div>
+                    <div id="rfc.section.2.p.6">
+                        <pre class="text">
+NOTE: '\' line wrapping per RFC 8792
+
+Content-Digest: \
+  sha-256=:d435Qo+nKZ+gLcUHn7GQtQ72hiBVAgqoLsZnZPiTGPk=:,\
+  sha-512=:YMAam51Jz/jOATT6/zvHrLVgOYTGFy1d6GJiOHTohq4yP+pgk4vf2aCs\
+  yRZOtw8MjkM7iw7yZ/WkppmM44T3qg==:
+</pre>
+                    </div>
+                    <div id="rfc.section.2.p.7">
+                        <p>接收方 <em class="bcp14">MAY</em> 忽略任意或全部摘要。特定应用行为或本地策略 <em class="bcp14">MAY</em>
+                            对传达的摘要的处理与验证实践设定额外限制。安全注意事项讨论了与忽略摘要（参见 <a href="#sec-agility" title="Algorithm Agility">第
+                                6.6 节</a>）与验证多个摘要（参见 <a href="#sec-exhaustion" title="Resource Exhaustion">第 6.7
+                                节</a>）相关的问题。</p>
+                    </div>
+                    <div id="rfc.section.2.p.8">
+                        <p>发送方 <em class="bcp14">MAY</em> 在不知接收方是否支持某一哈希算法的情况下发送摘要。发送方 <em class="bcp14">MAY</em>
+                            在知晓接收方会忽略该摘要时仍发送之。</p>
+                    </div>
+                    <div id="rfc.section.2.p.9">
+                        <p><span class="tt">Content-Digest</span> 可在尾部（trailer）节中发送。在此情况下，<span
+                                class="tt">Content-Digest</span> <em class="bcp14">MAY</em> 被合并到头部节中；参见 <a
+                                href="https://www.rfc-editor.org/rfc/rfc9110.html#section-6.5.1">[HTTP] 第 6.5.1 节</a>。
+                        </p>
+                    </div>
+                </section>
+                <hr class="hidden-print">
+                <section id="representation-digest">
+                    <h2 id="rfc.section.3" class="np"><a href="#rfc.section.3">3.</a>&nbsp;<a
+                            href="#representation-digest"> <span class="tt">Repr-Digest</span> 字段</a></h2>
+                    <div id="rfc.section.3.p.1">
+                        <p><span class="tt">Repr-Digest</span> HTTP 字段可用于请求和响应中，用来传达对整个选定表示数据应用哈希算法后计算得到的摘要（参见 <a
+                                href="https://www.rfc-editor.org/rfc/rfc9110.html#section-8.1">[HTTP] 第 8.1 节</a>）。</p>
+                    </div>
+                    <div id="rfc.section.3.p.2">
+                        <p>表示（representations）考虑了 HTTP 语义对消息的影响。例如，内容可能会受到范围请求或诸如 HEAD 这类方法的影响，而内容在“线上”的传输方式依赖于其它转换（例如
+                            HTTP/1.1 的传输编码；参见 <a
+                                href="https://www.rfc-editor.org/rfc/rfc9112.html#section-6.1">[HTTP/1.1] 第 6.1
+                                节</a>）。为帮助说明 HTTP 表示的概念，附录 A 提供了若干示例。</p>
+                    </div>
+                    <div id="rfc.section.3.p.3">
+                        <p>当消息没有表示数据时，仍然可以通过对空字符串计算摘要来断言未发送表示数据（参见 <a href="#usage-in-signatures"
+                                title="Usage in Signatures">第 6.3 节</a>）。</p>
+                    </div>
+                    <div id="rfc.section.3.p.4" class="avoidbreakafter">
+                        <p><span class="tt">Repr-Digest</span> 的类型为 Dictionary（参见 <a
+                                href="https://www.rfc-editor.org/rfc/rfc8941.html#section-3.2">[STRUCTURED-FIELDS] 第 3.2
+                                节</a>），其中每个：</p>
+                    </div>
+                    <div id="rfc.section.3.p.5">
+                        <ul>
+                            <li>key 表示用于计算摘要的哈希算法（参见 <a href="#algorithms"
+                                    title="Hash Algorithm Considerations and Registration">第 5 节</a>）；</li>
+                            <li>value 是一个 Byte Sequence，用于传达摘要计算生成的字节输出的编码形式。</li>
+                        </ul>
+                    </div>
+                    <div id="rfc.section.3.p.6" class="avoidbreakafter">
+                        <p>例如：</p>
+                    </div>
+                    <div id="rfc.section.3.p.7">
+                        <pre class="text">
+NOTE: '\' line wrapping per RFC 8792
+
+Repr-Digest: \
+  sha-512=:YMAam51Jz/jOATT6/zvHrLVgOYTGFy1d6GJiOHTohq4yP+pgk4vf2aCs\
+  yRZOtw8MjkM7iw7yZ/WkppmM44T3qg==:
+</pre>
+                    </div>
+                    <div id="rfc.section.3.p.8">
+                        <p>Dictionary 类型可用于附加使用不同哈希算法计算的多个摘要，以支持具有不同或不断演进能力的端点群体。此类方法可支持从较弱算法向更强算法的过渡（参见 <a
+                                href="#sec-agility" title="Algorithm Agility">第 6.6 节</a>）。</p>
+                    </div>
+                    <div id="rfc.section.3.p.9">
+                        <pre class="text">
+NOTE: '\' line wrapping per RFC 8792
+
+Repr-Digest: \
+  sha-256=:d435Qo+nKZ+gLcUHn7GQtQ72hiBVAgqoLsZnZPiTGPk=:,\
+  sha-512=:YMAam51Jz/jOATT6/zvHrLVgOYTGFy1d6GJiOHTohq4yP+pgk4vf2aCs\
+  yRZOtw8MjkM7iw7yZ/WkppmM44T3qg==:
+</pre>
+                    </div>
+                    <div id="rfc.section.3.p.10">
+                        <p>接收方 <em class="bcp14">MAY</em> 忽略任意或全部摘要。特定应用行为或本地策略 <em class="bcp14">MAY</em>
+                            对传达的摘要的处理与验证实践设定额外限制。安全注意事项讨论了与忽略摘要（参见 <a href="#sec-agility" title="Algorithm Agility">第
+                                6.6 节</a>）与验证多个摘要（参见 <a href="#sec-exhaustion" title="Resource Exhaustion">第 6.7
+                                节</a>）相关的问题。</p>
+                    </div>
+                    <div id="rfc.section.3.p.11">
+                        <p>发送方 <em class="bcp14">MAY</em> 在不知接收方是否支持某一哈希算法的情况下发送摘要。发送方 <em class="bcp14">MAY</em>
+                            在知晓接收方会忽略该摘要时仍发送之。</p>
+                    </div>
+                    <div id="rfc.section.3.p.12">
+                        <p><span class="tt">Repr-Digest</span> 可在尾部（trailer）节中发送。在此情况下，<span
+                                class="tt">Repr-Digest</span> <em class="bcp14">MAY</em> 被合并到头部节中；参见 <a
+                                href="https://www.rfc-editor.org/rfc/rfc9110.html#section-6.5.1">[HTTP] 第 6.5.1 节</a>。
+                        </p>
+                    </div>
+                    <section id="state-changing-requests">
+                        <h3 id="rfc.section.3.1"><a href="#rfc.section.3.1">3.1.</a>&nbsp;<a
+                                href="#state-changing-requests">在有状态变更请求中使用 <span class="tt">Repr-Digest</span></a></h3>
+                        <div id="rfc.section.3.1.p.1">
+                            <p>当封装在有状态变更请求中的表示并不描述目标资源时，表示摘要 <em class="bcp14">MUST</em>
+                                在表示数据上计算。这是唯一可行的选择，因为表示摘要要求完整的表示元数据（参见 <a href="#representation-digest"
+                                    title="The Repr-Digest Field">第 3 节</a>）。</p>
+                        </div>
+                        <div id="rfc.section.3.1.p.2">
+                            <p>在响应中，</p>
+                        </div>
+                        <div id="rfc.section.3.1.p.3">
+                            <ul>
+                                <li>如果该表示描述了请求的状态，<span class="tt">Repr-Digest</span> <em class="bcp14">MUST</em>
+                                    在所封装的表示上计算（见 <a href="#post-referencing-status"
+                                        title="POST Response Describes the Request Status">附录 B.8</a>）；</li>
+                                <li>如果存在被引用的资源，<span class="tt">Repr-Digest</span> <em class="bcp14">MUST</em>
+                                    在被引用资源的选定表示上计算，即便该表示与目标资源不同。此情况可能导致对封装表示或不对封装表示计算 <span
+                                        class="tt">Repr-Digest</span>。</li>
+                            </ul>
+                        </div>
+                        <div id="rfc.section.3.1.p.4">
+                            <p>后一种情况应根据给定方法的 HTTP 语义执行，例如使用 <span class="tt">Content-Location</span> 头字段（参见 <a
+                                    href="https://www.rfc-editor.org/rfc/rfc9110.html#section-8.7">[HTTP] 第 8.7
+                                    节</a>）。相反，<span class="tt">Location</span> 头字段不影响 <span
+                                    class="tt">Repr-Digest</span>，因为它并非表示元数据。</p>
+                        </div>
+                        <div id="rfc.section.3.1.p.5">
+                            <p>例如，在 PATCH 请求中，表示摘要将对补丁文档计算，因为表示元数据指向的是补丁文档而非目标资源（参见 <a
+                                    href="https://www.rfc-editor.org/rfc/rfc5789.html#section-2">[PATCH] 第 2
+                                    节</a>）。而在响应中，表示摘要将对被修补资源的选定表示计算。</p>
+                        </div>
+                    </section>
+                    <section id="digest-and-content-location">
+                        <h3 id="rfc.section.3.2"><a href="#rfc.section.3.2">3.2.</a>&nbsp;<a
+                                href="#digest-and-content-location"><span class="tt">Repr-Digest</span> 与响应中的
+                                Content-Location</a></h3>
+                        <div id="rfc.section.3.2.p.1">
+                            <p>当有状态变更方法返回 <span class="tt">Content-Location</span> 头字段时，所封装的表示指代由该字段值标识的资源，并应据此计算 <span
+                                    class="tt">Repr-Digest</span>。示例见 <a href="#post-not-request-uri"
+                                    title="POST Response Does Not Reference the Request URI">附录 B.7</a>。</p>
+                        </div>
+                    </section>
+                </section>
+                <hr class="hidden-print">
+                <section id="want-fields">
+                    <h2 id="rfc.section.4" class="np"><a href="#rfc.section.4">4.</a>&nbsp;<a
+                            href="#want-fields">完整性偏好字段</a></h2>
+                    <div id="rfc.section.4.p.1">
+                        <p>发送方可以使用 <span class="tt">Want-Content-Digest</span> 或 <span
+                                class="tt">Want-Repr-Digest</span> HTTP 字段来指示其对完整性字段的兴趣以及哈希算法偏好。这些字段可以在请求和响应中使用。</p>
+                    </div>
+                    <div id="rfc.section.4.p.2">
+                        <p><span class="tt">Want-Content-Digest</span> 表示发送方希望接收（通过 <span
+                                class="tt">Content-Digest</span> 字段）与请求 URI 和表示元数据相关联的消息的内容摘要。<span
+                                class="tt">Want-Repr-Digest</span> 表示发送方希望接收（通过 <span class="tt">Repr-Digest</span>
+                            字段）与请求 URI 和表示元数据相关联的消息的表示摘要。</p>
+                    </div>
+                    <div id="rfc.section.4.p.3">
+                        <p>如果在响应中使用 <span class="tt">Want-Content-Digest</span> 或 <span
+                                class="tt">Want-Repr-Digest</span>，则表示服务器希望客户端在未来的请求中提供相应的完整性字段。</p>
+                    </div>
+                    <div id="rfc.section.4.p.4">
+                        <p>完整性偏好字段仅为提示。字段的接收方可以忽略该提示，并使用任意算法发送完整性字段或完全省略该字段；例如，参见 <a
+                                href="#ex-server-selects-unsupported-algorithm"
+                                title="Server Selects Algorithm Unsupported by Client">附录
+                                C.2</a>。忽略偏好并不是协议错误。使用完整性字段和完整性偏好的应用可以定义除本规范之外的期望或约束。被忽略的偏好属于应用特定的事项。</p>
+                    </div>
+                    <div id="rfc.section.4.p.5" class="avoidbreakafter">
+                        <p><span class="tt">Want-Content-Digest</span> 和 <span class="tt">Want-Repr-Digest</span> 的类型为
+                            Dictionary，其中每个：</p>
+                    </div>
+                    <div id="rfc.section.4.p.6">
+                        <ul>
+                            <li>key 表示用于计算摘要的哈希算法（参见 <a href="#algorithms"
+                                    title="Hash Algorithm Considerations and Registration">第 5 节</a>）；</li>
+                            <li>value 是一个 <span class="tt">Integer</span>（参见 <a
+                                    href="https://www.rfc-editor.org/rfc/rfc8941.html#section-3.3.1">[STRUCTURED-FIELDS]
+                                    第 3.3.1 节</a>），表示一个递增的相对加权偏好。其取值范围必须为 0 到 10（含）。1 为最不偏好，10 为最偏好，值 0 表示“不接受”。</li>
+                        </ul>
+                    </div>
+                    <div id="rfc.section.4.p.7" class="avoidbreakafter">
+                        <p>示例：</p>
+                    </div>
+                    <div id="rfc.section.4.p.8">
+                        <pre class="text">
+Want-Repr-Digest: sha-256=1
+Want-Repr-Digest: sha-512=3, sha-256=10, unixsum=0
+Want-Content-Digest: sha-256=1
+Want-Content-Digest: sha-512=3, sha-256=10, unixsum=0
+</pre>
+                    </div>
+                </section>
+                <hr class="hidden-print">
+                <section id="algorithms">
+                    <h2 id="rfc.section.5" class="np"><a href="#rfc.section.5">5.</a>&nbsp;<a
+                            href="#algorithms">哈希算法的考虑与注册</a></h2>
+                    <div id="rfc.section.5.p.1">
+                        <p>用于完整性的哈希算法有多种选择。算法的选择取决于若干因素，例如完整性用例、实现的需求或约束，或应用的设计与工作流。</p>
+                    </div>
+                    <div id="rfc.section.5.p.2">
+                        <p>初始的一组算法将由 IANA 在 “Hash Algorithms for HTTP Digest Fields” 注册表中注册；参见 <a
+                                href="#establish-hash-algorithm-registry"
+                                title="Creation of the Hash Algorithms for HTTP Digest Fields Registry">第 7.2
+                                节</a>。其他算法可以按照本节规定的策略进行注册。</p>
+                    </div>
+                    <div id="rfc.section.5.p.3">
+                        <p>每个算法都有一个状态字段，用于帮助实现者在选择时参考。</p>
+                    </div>
+                    <div id="rfc.section.5.p.4">
+                        <p>状态值为 “Active” 的算法适合许多用途，建议应用使用这些算法（<em
+                                class="bcp14">RECOMMENDED</em>）。这些算法可在对抗性环境中使用，能在一定程度上抵抗碰撞、第一原像和第二原像攻击。对于对抗性场景，接受的
+                            “Active” 算法选择取决于所需的保护强度。更多考虑见 <a href="#sec-agility" title="Algorithm Agility">第 6.6 节</a>。
+                        </p>
+                    </div>
+                    <div id="rfc.section.5.p.5">
+                        <p>状态值为 “Deprecated” 的算法要么不具备上述属性，要么已知较弱（参见 <a href="#RFC6151"><cite
+                                    title="Updated Security Considerations for the MD5 Message-Digest and the HMAC-MD5 Algorithms">[NO-MD5]</cite></a>
+                            和 <a href="#RFC6194"><cite
+                                    title="Security Considerations for the SHA-0 and SHA-1 Message-Digest Algorithms">[NO-SHA]</cite></a>）。这些算法可以用于防止数据损坏，但
+                            <em class="bcp14">MUST NOT</em> 在可能存在对抗的场景中使用，例如用于对完整性字段值进行真实性签名。允许使用这些算法可以帮助某些应用（例如过去使用 <a
+                                href="#RFC3230"><cite title="Instance Digests in HTTP">[RFC3230]</cite></a>、正在迁移到本规范（参见
+                            <a href="#migrating" title="Migrating from RFC 3230">附录
+                                E</a>）并且已经有现存计算摘要值集合的应用）避免因使用更安全算法重新计算而造成的不必要的运维负担。但这类应用并不免除本节中的要求。没有此类遗留或历史负担的应用应遵循对“Active”算法的使用建议。
+                        </p>
+                    </div>
+                    <div id="rfc.section.5.p.6">
+                        <p>关于算法灵活性的讨论见 <a href="#sec-agility" title="Algorithm Agility">第 6.6 节</a>。</p>
+                    </div>
+                    <div id="rfc.section.5.p.7" class="avoidbreakafter">
+                        <p>“Hash Algorithms for HTTP Digest Fields” 注册表的注册请求遵循 Specification Required 策略（参见 <a
+                                href="https://www.rfc-editor.org/rfc/rfc8126.html#section-4.6">[RFC8126] 第 4.6
+                                节</a>）。请求应使用下述模板：</p>
+                    </div>
+                    <div id="rfc.section.5.p.8">
+                        <dl>
+                            <dt>Algorithm Key:</dt>
+                            <dd style="margin-left: 1.5em">用于 <span class="tt">Content-Digest</span>、<span
+                                    class="tt">Repr-Digest</span>、<span class="tt">Want-Content-Digest</span> 或 <span
+                                    class="tt">Want-Repr-Digest</span> 字段 Dictionary 成员键的 Structured Fields 键值。</dd>
+                            <dt>Status:</dt>
+                            <dd style="margin-left: 1.5em">算法的状态。选项包括：</dd>
+                            <dt></dt>
+                            <dd style="margin-left: 1.5em">
+                                <div>
+                                    <dl>
+                                        <dt>"Active":</dt>
+                                        <dd style="margin-left: 1.5em">无已知问题的算法</dd>
+                                        <dt>"Provisional":</dt>
+                                        <dd style="margin-left: 1.5em">未经验证的算法</dd>
+                                        <dt>"Deprecated":</dt>
+                                        <dd style="margin-left: 1.5em">已弃用或不安全的算法</dd>
+                                    </dl>
+                                </div>
+                            </dd>
+                            <dt>Description:</dt>
+                            <dd style="margin-left: 1.5em">算法的简短描述。</dd>
+                            <dt>Reference(s):</dt>
+                            <dd style="margin-left: 1.5em">指向定义该 Algorithm Key 及算法技术细节的主要文档的指针。</dd>
+                        </dl>
+                    </div>
+                    <div id="rfc.section.5.p.9">
+                        <p>在审查注册请求时，指定专家应关注所请求的状态。状态值应反映标准化状态以及相关利益群体（例如 IETF 或安全相关的标准制定组织）的普遍意见。已知弱、已破坏或实验性算法不应被标注为
+                            “Active”。如果注册请求尝试将此类算法注册为 “Active”，指定专家应建议使用 “Deprecated” 或 “Provisional”。</p>
+                    </div>
+                    <div id="rfc.section.5.p.10">
+                        <p>在审查注册请求时，指定专家不得以其状态为 “Deprecated” 或 “Provisional” 为由拒绝注册请求。</p>
+                    </div>
+                    <div id="rfc.section.5.p.11">
+                        <p>允许请求更新或更改现有注册条目的字段。例如，这可用于在安全环境演变时将算法状态从 “Active” 过渡到 “Deprecated”。</p>
+                    </div>
+                </section>
+                <hr class="hidden-print">
+                <section id="security">
+                    <h2 id="rfc.section.6" class="np"><a href="#rfc.section.6">6.</a>&nbsp;<a
+                            href="#security">安全注意事项</a></h2>
+                    <section id="sec-limitations">
+                        <h3 id="rfc.section.6.1"><a href="#rfc.section.6.1">6.1.</a>&nbsp;<a
+                                href="#sec-limitations">HTTP 消息并未完全受保护</a></h3>
+                        <div id="rfc.section.6.1.p.1">
+                            <p>本文档指定的数据完整性机制保护 HTTP 表示数据或内容，但并不保护 HTTP 头字段与尾部字段，因而不能防止某些类型的损坏。</p>
+                        </div>
+                        <div id="rfc.section.6.1.p.2">
+                            <p>完整性字段并非旨在对 HTTP
+                                消息的恶意篡改提供通用保护。在缺乏额外安全机制的情况下，中间路径上的恶意行为者可以移除摘要值或用对操纵后的表示数据或内容重新计算的摘要值替换之。可以通过将本文档描述的机制与其它方法结合（例如传输层安全
+                                TLS 或数字签名，如 HTTP Message Signatures <a href="#RFC9421"><cite
+                                        title="HTTP Message Signatures">[SIGNATURES]</cite></a>）来缓解此类攻击。</p>
+                        </div>
+                    </section>
+                    <section id="end-to-end-integrity">
+                        <h3 id="rfc.section.6.2"><a href="#rfc.section.6.2">6.2.</a>&nbsp;<a
+                                href="#end-to-end-integrity">端到端完整性</a></h3>
+                        <div id="rfc.section.6.2.p.1">
+                            <p>完整性字段有助于检测由于实现错误、非预期的“转换代理”（参见 <a
+                                    href="https://www.rfc-editor.org/rfc/rfc9110.html#section-7.7">[HTTP] 第 7.7
+                                    节</a>）或数据跨越多个跃点或系统边界时的其它操作而导致的表示数据或内容修改。即使只是一个简单的端到端表示数据完整性机制也很有价值，因为用户代理可以在将数据交给
+                                HTML 解析器、视频播放器等之前验证资源检索是否成功。</p>
+                        </div>
+                        <div id="rfc.section.6.2.p.2">
+                            <p>注意，仅使用这些机制并不能在多跃点场景下提供 HTTP 消息的端到端完整性，因为元数据在任何阶段都可能被篡改。保护元数据的方法见 <a
+                                    href="#usage-in-signatures" title="Usage in Signatures">第 6.3 节</a>。</p>
+                        </div>
+                    </section>
+                    <section id="usage-in-signatures">
+                        <h3 id="rfc.section.6.3"><a href="#rfc.section.6.3">6.3.</a>&nbsp;<a
+                                href="#usage-in-signatures">在签名中的使用</a></h3>
+                        <div id="rfc.section.6.3.p.1">
+                            <p>数字签名通常与校验和值一起使用，以确定消息来源的某些标识（参见 <a href="#FIPS186-5"><cite
+                                        title="Digital Signature Standard (DSS)">[FIPS186-5]</cite></a>）。此类签名可以保护一个或多个
+                                HTTP 字段，但当完整性字段被包含在保护范围内时，需要考虑额外事项。</p>
+                        </div>
+                        <div id="rfc.section.6.3.p.2">
+                            <p>完整性字段的使用对数字签名的类型或格式没有限制。一种可行的方法是将其与 HTTP Message Signatures <a href="#RFC9421"><cite
+                                        title="HTTP Message Signatures">[SIGNATURES]</cite></a> 结合使用。</p>
+                        </div>
+                        <div id="rfc.section.6.3.p.3">
+                            <p>摘要明确依赖于“表示元数据”（例如 <span class="tt">Content-Type</span>、<span
+                                    class="tt">Content-Encoding</span>
+                                等字段的值）。如果签名保护了完整性字段但未保护其它“表示元数据”，则会使通信暴露于篡改风险。例如，行为者可以操纵 <span
+                                    class="tt">Content-Type</span> 字段值，导致接收方的摘要校验失败，从而阻止应用访问该表示。此类攻击会消耗双方的资源。另见 <a
+                                    href="#digest-and-content-location"
+                                    title="Repr-Digest and Content-Location in Responses">第 3.2 节</a>。</p>
+                        </div>
+                        <div id="rfc.section.6.3.p.4">
+                            <p>在应用完整性字段时，签名很可能被视为一种对抗性场景；参见 <a href="#algorithms"
+                                    title="Hash Algorithm Considerations and Registration">第 5 节</a>。<span
+                                    class="tt">Repr-Digest</span>
+                                在与签名结合时提供了有趣的可能性。例如，当没有内容要发送时，可以在消息中包含对空字符串的摘要；如果对该摘要进行签名，接收方可以检测到意外或恶意地添加了内容。反过来，包含并签署用于内容的完整性字段也可以帮助接收方检测内容被移除的位置。
+                            </p>
+                        </div>
+                        <div id="rfc.section.6.3.p.5">
+                            <p>对完整性字段的任何篡改都可能影响签名验证。此类篡改的例子包括对摘要去重或合并不同字段值（参见 <a
+                                    href="https://www.rfc-editor.org/rfc/rfc9110.html#section-5.2">[HTTP] 第 5.2 节</a>）。
+                            </p>
+                        </div>
+                    </section>
+                    <section id="usage-in-trailer-fields">
+                        <h3 id="rfc.section.6.4"><a href="#rfc.section.6.4">6.4.</a>&nbsp;<a
+                                href="#usage-in-trailer-fields">在尾部字段中的使用</a></h3>
+                        <div id="rfc.section.6.4.p.1">
+                            <p>在将完整性字段放入尾部（trailer）节之前，发送方应考虑中间体明确被允许丢弃任何尾部（参见 <a
+                                    href="https://www.rfc-editor.org/rfc/rfc9110.html#section-6.5.2">[HTTP] 第 6.5.2
+                                    节</a>）。</p>
+                        </div>
+                        <div id="rfc.section.6.4.p.2">
+                            <p>当完整性字段位于尾部节时，这些字段的值在内容之后才到达。若在收到尾部节之前急于处理内容，则会阻止摘要验证，从而可能导致处理无效数据。</p>
+                        </div>
+                        <div id="rfc.section.6.4.p.3">
+                            <p>在尾部节中使用完整性字段的好处之一是允许在发送过程中对字节进行哈希。然而，也可能设计出需要以特定方式处理内容的哈希算法，从而抵消这些好处。例如，Merkle Integrity
+                                Content Encoding <a href="#I-D.thomson-http-mice"><cite
+                                        title="Merkle Integrity Content Encoding">[MICE]</cite></a>
+                                需要以反向顺序处理内容，这意味着必须拥有完整数据，因此在头部或尾部发送完整性字段在处理上几乎没有差别。</p>
+                        </div>
+                    </section>
+                    <section id="variations-within-content-encoding">
+                        <h3 id="rfc.section.6.5"><a href="#rfc.section.6.5">6.5.</a>&nbsp;<a
+                                href="#variations-within-content-encoding">内容编码内的变化</a></h3>
+                        <div id="rfc.section.6.5.p.1">
+                            <p>内容编码机制可能支持不同的编码参数，这意味着相同的输入内容可以产生不同的输出。例如，GZIP
+                                支持多种压缩级别。这类编码参数通常不会作为表示元数据进行传达。例如，不同的压缩级别仍然使用相同的 "Content-Encoding: gzip"
+                                字段。另一个例子是依赖随机数或时间戳的编码，例如 <a href="#RFC8188"><cite
+                                        title="Encrypted Content-Encoding for HTTP">[RFC8188]</cite></a> 中定义的 aes128gcm
+                                内容编码。</p>
+                        </div>
+                        <div id="rfc.section.6.5.p.2">
+                            <p>由于内容编码内可能存在变动，完整性字段传达的校验和不能在“静态存储”场景中作为完整性证明，除非整个内容被持久化保存。</p>
+                        </div>
+                    </section>
+                    <section id="sec-agility">
+                        <h3 id="rfc.section.6.6"><a href="#rfc.section.6.6">6.6.</a>&nbsp;<a
+                                href="#sec-agility">算法灵活性</a></h3>
+                        <div id="rfc.section.6.6.p.1">
+                            <p>哈希算法的安全属性并非固定不变。算法灵活性（参见 <a href="#RFC7696"><cite
+                                        title="Guidelines for Cryptographic Algorithm Agility and Selecting Mandatory-to-Implement Algorithms">[RFC7696]</cite></a>）通过允许实现从
+                                IANA 的 “Hash Algorithms for HTTP Digest Fields” 注册表中选择哈希算法来实现；参见 <a
+                                    href="#establish-hash-algorithm-registry"
+                                    title="Creation of the Hash Algorithms for HTTP Digest Fields Registry">第 7.2 节</a>。
+                            </p>
+                        </div>
+                        <div id="rfc.section.6.6.p.2">
+                            <p>通过 <span class="tt">Want-Content-Digest</span> 或 <span
+                                    class="tt">Want-Repr-Digest</span>（参见 <a href="#want-fields"
+                                    title="Integrity Preference Fields">第 4
+                                    节</a>）协商哈希算法，或通过发送多个摘要由接收方选择，支持从弱算法过渡到更强算法。依赖某个摘要来实现安全性的接收方将易受其愿意接受的最弱算法的攻击。端点应注意，发送多个值会消耗资源，如果接收方忽略这些值则可能被浪费（参见
+                                <a href="#representation-digest" title="The Repr-Digest Field">第 3 节</a>）。
+                            </p>
+                        </div>
+                        <div id="rfc.section.6.6.p.3">
+                            <p>尽管算法灵活性允许向更强算法迁移，但它不能阻止弱算法的使用。完整性字段并不对哈希算法的降级或替换攻击提供任何缓解措施（参见 <a
+                                    href="https://www.rfc-editor.org/rfc/rfc6211.html#section-1">[RFC6211] 第 1
+                                    节</a>）。为防止此类攻击，端点可以将其支持的算法集合限制为更强的算法，并通过使用 TLS 和/或数字签名来保护字段值。</p>
+                        </div>
+                    </section>
+                    <section id="sec-exhaustion">
+                        <h3 id="rfc.section.6.7"><a href="#rfc.section.6.7">6.7.</a>&nbsp;<a
+                                href="#sec-exhaustion">资源耗尽</a></h3>
+                        <div id="rfc.section.6.7.p.1">
+                            <p>验证完整性字段会消耗计算资源。为避免资源耗尽，实现在验证时可以限制算法类型、验证次数或内容大小。在这些情况下，完全跳过验证或忽略更高优先级算法的验证失败会留下降级攻击的可能性（参见
+                                <a href="#sec-agility" title="Algorithm Agility">第 6.6 节</a>）。
+                            </p>
+                        </div>
+                    </section>
+                </section>
+                <hr class="hidden-print">
+                <section id="iana-considerations">
+                    <h2 id="rfc.section.7" class="np"><a href="#rfc.section.7">7.</a>&nbsp;<a
+                            href="#iana-considerations">IANA 注意事项</a></h2>
+                    <section id="http-field-name-registration">
+                        <h3 id="rfc.section.7.1"><a href="#rfc.section.7.1">7.1.</a>&nbsp;<a
+                                href="#http-field-name-registration">HTTP 字段名注册</a></h3>
+                        <div id="rfc.section.7.1.p.1" class="avoidbreakafter">
+                            <p>IANA 已更新 “Hypertext Transfer Protocol (HTTP) Field Name Registry” <a
+                                    href="#RFC9110"><cite title="HTTP Semantics">[HTTP]</cite></a>，如下表所示：</p>
+                        </div>
+                        <div class="table table-condensed table-striped">
+                            <table class="v3 text-center">
+                                <caption>表 1：Hypertext Transfer Protocol (HTTP) 字段名注册表更新</caption>
+                                <thead>
+                                    <tr>
+                                        <th class="text-left" colspan="1" rowspan="1">字段名</th>
+                                        <th class="text-left" colspan="1" rowspan="1">状态</th>
+                                        <th class="text-left" colspan="1" rowspan="1">参考</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="text-left" colspan="1" rowspan="1"><span
+                                                class="tt">Content-Digest</span></td>
+                                        <td class="text-left" colspan="1" rowspan="1">permanent</td>
+                                        <td class="text-left" colspan="1" rowspan="1"><a href="#content-digest"
+                                                title="The Content-Digest Field">第 2 节</a>（RFC 9530）</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left" colspan="1" rowspan="1"><span
+                                                class="tt">Repr-Digest</span></td>
+                                        <td class="text-left" colspan="1" rowspan="1">permanent</td>
+                                        <td class="text-left" colspan="1" rowspan="1"><a href="#representation-digest"
+                                                title="The Repr-Digest Field">第 3 节</a>（RFC 9530）</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left" colspan="1" rowspan="1"><span
+                                                class="tt">Want-Content-Digest</span></td>
+                                        <td class="text-left" colspan="1" rowspan="1">permanent</td>
+                                        <td class="text-left" colspan="1" rowspan="1"><a href="#want-fields"
+                                                title="Integrity Preference Fields">第 4 节</a>（RFC 9530）</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left" colspan="1" rowspan="1"><span
+                                                class="tt">Want-Repr-Digest</span></td>
+                                        <td class="text-left" colspan="1" rowspan="1">permanent</td>
+                                        <td class="text-left" colspan="1" rowspan="1"><a href="#want-fields"
+                                                title="Integrity Preference Fields">第 4 节</a>（RFC 9530）</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left" colspan="1" rowspan="1"><span class="tt">Digest</span>
+                                        </td>
+                                        <td class="text-left" colspan="1" rowspan="1">obsoleted</td>
+                                        <td class="text-left" colspan="1" rowspan="1"><a href="#RFC3230"><cite
+                                                    title="Instance Digests in HTTP">[RFC3230]</cite></a>，见本规范 <a
+                                                href="#obsolete-3230" title="Obsoleting RFC 3230">第 1.3 节</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left" colspan="1" rowspan="1"><span
+                                                class="tt">Want-Digest</span></td>
+                                        <td class="text-left" colspan="1" rowspan="1">obsoleted</td>
+                                        <td class="text-left" colspan="1" rowspan="1"><a href="#RFC3230"><cite
+                                                    title="Instance Digests in HTTP">[RFC3230]</cite></a>，见本规范 <a
+                                                href="#obsolete-3230" title="Obsoleting RFC 3230">第 1.3 节</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                    <section id="establish-hash-algorithm-registry">
+                        <h3 id="rfc.section.7.2"><a href="#rfc.section.7.2">7.2.</a>&nbsp;<a
+                                href="#establish-hash-algorithm-registry">创建 “Hash Algorithms for HTTP Digest Fields”
+                                注册表</a></h3>
+                        <div id="rfc.section.7.2.p.1">
+                            <p>IANA 已在 &lt;<a
+                                    href="https://www.iana.org/assignments/http-digest-hash-alg/">https://www.iana.org/assignments/http-digest-hash-al/</a>&gt;
+                                创建了新的 “Hash Algorithms for HTTP Digest Fields” 注册表，并用表 <a
+                                    href="#iana-hash-algorithm-table" title="Initial Hash Algorithms">表 2</a>
+                                中的条目填充了该注册表。新注册的流程见 <a href="#algorithms"
+                                    title="Hash Algorithm Considerations and Registration">第 5 节</a>。</p>
+                        </div>
+                        <div class="table table-condensed table-striped" id="iana-hash-algorithm-table">
+                            <table class="v3 text-center">
+                                <caption>表 2：初始哈希算法</caption>
+                                <thead>
+                                    <tr>
+                                        <th class="text-left" colspan="1" rowspan="1">Algorithm Key</th>
+                                        <th class="text-left" colspan="1" rowspan="1">Status</th>
+                                        <th class="text-left" colspan="1" rowspan="1">Description</th>
+                                        <th class="text-left" colspan="1" rowspan="1">Reference</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="text-left" colspan="1" rowspan="1">sha-512</td>
+                                        <td class="text-left" colspan="1" rowspan="1">Active</td>
+                                        <td class="text-left" colspan="1" rowspan="1">SHA-512 算法。</td>
+                                        <td class="text-left" colspan="1" rowspan="1"><a href="#RFC6234"><cite
+                                                    title="US Secure Hash Algorithms (SHA and SHA-based HMAC and HKDF)">[RFC6234]</cite></a>,
+                                            <a href="#RFC4648"><cite
+                                                    title="The Base16, Base32, and Base64 Data Encodings">[RFC4648]</cite></a>,
+                                            RFC 9530
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left" colspan="1" rowspan="1">sha-256</td>
+                                        <td class="text-left" colspan="1" rowspan="1">Active</td>
+                                        <td class="text-left" colspan="1" rowspan="1">SHA-256 算法。</td>
+                                        <td class="text-left" colspan="1" rowspan="1"><a href="#RFC6234"><cite
+                                                    title="US Secure Hash Algorithms (SHA and SHA-based HMAC and HKDF)">[RFC6234]</cite></a>,
+                                            <a href="#RFC4648"><cite
+                                                    title="The Base16, Base32, and Base64 Data Encodings">[RFC4648]</cite></a>,
+                                            RFC 9530
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left" colspan="1" rowspan="1">md5</td>
+                                        <td class="text-left" colspan="1" rowspan="1">Deprecated</td>
+                                        <td class="text-left" colspan="1" rowspan="1">MD5 算法。易受碰撞攻击；参见 <a
+                                                href="#RFC6151"><cite
+                                                    title="Updated Security Considerations for the MD5 Message-Digest and the HMAC-MD5 Algorithms">[NO-MD5]</cite></a>
+                                            与 <a href="#CMU-836068"><cite
+                                                    title="MD5 vulnerable to collision attacks">[CMU-836068]</cite></a>
+                                        </td>
+                                        <td class="text-left" colspan="1" rowspan="1"><a href="#RFC1321"><cite
+                                                    title="The MD5 Message-Digest Algorithm">[RFC1321]</cite></a>, <a
+                                                href="#RFC4648"><cite
+                                                    title="The Base16, Base32, and Base64 Data Encodings">[RFC4648]</cite></a>,
+                                            RFC 9530</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left" colspan="1" rowspan="1">sha</td>
+                                        <td class="text-left" colspan="1" rowspan="1">Deprecated</td>
+                                        <td class="text-left" colspan="1" rowspan="1">SHA-1 算法。易受碰撞攻击；参见 <a
+                                                href="#RFC6194"><cite
+                                                    title="Security Considerations for the SHA-0 and SHA-1 Message-Digest Algorithms">[NO-SHA]</cite></a>
+                                            与 <a href="#IACR-2020-014"><cite
+                                                    title="SHA-1 is a Shambles">[IACR-2020-014]</cite></a></td>
+                                        <td class="text-left" colspan="1" rowspan="1"><a href="#RFC3174"><cite
+                                                    title="US Secure Hash Algorithm 1 (SHA1)">[RFC3174]</cite></a>, <a
+                                                href="#RFC4648"><cite
+                                                    title="The Base16, Base32, and Base64 Data Encodings">[RFC4648]</cite></a>,
+                                            <a href="#RFC6234"><cite
+                                                    title="US Secure Hash Algorithms (SHA and SHA-based HMAC and HKDF)">[RFC6234]</cite></a>,
+                                            RFC 9530
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left" colspan="1" rowspan="1">unixsum</td>
+                                        <td class="text-left" colspan="1" rowspan="1">Deprecated</td>
+                                        <td class="text-left" colspan="1" rowspan="1">UNIX "sum" 命令使用的算法。</td>
+                                        <td class="text-left" colspan="1" rowspan="1"><a href="#RFC4648"><cite
+                                                    title="The Base16, Base32, and Base64 Data Encodings">[RFC4648]</cite></a>,
+                                            <a href="#RFC6234"><cite
+                                                    title="US Secure Hash Algorithms (SHA and SHA-based HMAC and HKDF)">[RFC6234]</cite></a>,
+                                            <a href="#UNIX"><cite
+                                                    title="The Single UNIX Specification, Version 2 - 6 Vol Set for UNIX 98">[UNIX]</cite></a>,
+                                            <span class="nobr">RFC 9530</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left" colspan="1" rowspan="1">unixcksum</td>
+                                        <td class="text-left" colspan="1" rowspan="1">Deprecated</td>
+                                        <td class="text-left" colspan="1" rowspan="1">UNIX "cksum" 命令使用的算法。</td>
+                                        <td class="text-left" colspan="1" rowspan="1"><a href="#RFC4648"><cite
+                                                    title="The Base16, Base32, and Base64 Data Encodings">[RFC4648]</cite></a>,
+                                            <a href="#RFC6234"><cite
+                                                    title="US Secure Hash Algorithms (SHA and SHA-based HMAC and HKDF)">[RFC6234]</cite></a>,
+                                            <a href="#UNIX"><cite
+                                                    title="The Single UNIX Specification, Version 2 - 6 Vol Set for UNIX 98">[UNIX]</cite></a>,
+                                            <span class="nobr">RFC 9530</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left" colspan="1" rowspan="1">adler</td>
+                                        <td class="text-left" colspan="1" rowspan="1">Deprecated</td>
+                                        <td class="text-left" colspan="1" rowspan="1">ADLER32 算法。</td>
+                                        <td class="text-left" colspan="1" rowspan="1"><a href="#RFC1950"><cite
+                                                    title="ZLIB Compressed Data Format Specification version 3.3">[RFC1950]</cite></a>,
+                                            RFC 9530</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left" colspan="1" rowspan="1">crc32c</td>
+                                        <td class="text-left" colspan="1" rowspan="1">Deprecated</td>
+                                        <td class="text-left" colspan="1" rowspan="1">CRC32c 算法。</td>
+                                        <td class="text-left" colspan="1" rowspan="1"><a
+                                                href="https://www.rfc-editor.org/rfc/rfc9260.html#appendix-A">[RFC9260]
+                                                附录 A</a>,
+                                            RFC 9530</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                    <section id="deprecate-the-hypertext-transfer-protocol-http-digest-algorithm-values-registry">
+                        <h3 id="rfc.section.7.3"><a href="#rfc.section.7.3">7.3.</a>&nbsp;<a
+                                href="#deprecate-the-hypertext-transfer-protocol-http-digest-algorithm-values-registry">弃用
+                                “Hypertext Transfer Protocol (HTTP) Digest Algorithm Values” 注册表</a></h3>
+                        <div id="rfc.section.7.3.p.1" class="avoidbreakafter">
+                            <p>IANA 已弃用位于 &lt;<a
+                                    href="https://www.iana.org/assignments/http-dig-alg/">https://www.iana.org/assignments/http-dig-alg/</a>&gt;
+                                的 “Hypertext Transfer Protocol (HTTP) Digest Algorithm Values” 注册表，并将该注册表上的说明替换为如下文本：
+                            </p>
+                        </div>
+                        <div id="rfc.section.7.3.p.2">
+                            <blockquote>
+                                <p>该注册表已被弃用，因为它列出了可用于 <span class="tt">Digest</span> 与 <span
+                                        class="tt">Want-Digest</span> 字段的算法，而这些字段由 <a href="#RFC3230"><cite
+                                            title="Instance Digests in HTTP">[RFC3230]</cite></a> 定义，且该 RFC 已被 RFC 9530
+                                    废弃。虽然注册并未关闭，但鼓励新的注册使用 <a
+                                        href="https://www.iana.org/assignments/http-digest-hash-al/">“Hash Algorithms
+                                        for HTTP Digest Fields”</a> 注册表。</p>
+                            </blockquote>
+                        </div>
+                    </section>
+                </section>
+                <section class="np">
+                    <div id="rfc.references">
+                        <h2 id="rfc.section.8"><a href="#rfc.section.8">8.</a> 参考文献</h2>
+                        <section>
+                            <div id="rfc.references.2">
+                                <h3 id="rfc.section.8.1"><a href="#rfc.section.8.1">8.1.</a> 规范性参考文献</h3>
+                                <dl class="dl-horizontal">
+                                    <dt id="RFC8792">[<a href="#RFC8792" class="smpl">FOLDING</a>]</dt>
+                                    <dd>Watsen, K., Auerswald, E., Farrel, A., 和 Q. Wu，“<a
+                                            href="https://www.rfc-editor.org/rfc/rfc8792.html">在 Internet-Drafts 和 RFC
+                                            内容中处理长行</a>”，RFC 8792，<a href="https://dx.doi.org/10.17487/RFC8792">DOI
+                                            10.17487/RFC8792</a>，2020 年 6 月，&lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc8792">https://www.rfc-editor.org/info/rfc8792</a>&gt;。
+                                    </dd>
+                                    <dt id="RFC9110">[<a href="#RFC9110" class="smpl">HTTP</a>]</dt>
+                                    <dd>Fielding, R., Ed., Nottingham, M., Ed., 和 J. Reschke, Ed., “<a
+                                            href="https://www.rfc-editor.org/rfc/rfc9110.html">HTTP 语义</a>”，<a
+                                            href="https://www.rfc-editor.org/info/std97">STD 97</a>, RFC 9110, <a
+                                            href="https://dx.doi.org/10.17487/RFC9110">DOI 10.17487/RFC9110</a>, 2022 年
+                                        6 月，&lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc9110">https://www.rfc-editor.org/info/rfc9110</a>&gt;。
+                                    </dd>
+                                    <dt id="RFC1321">[<a href="#RFC1321" class="smpl">RFC1321</a>]</dt>
+                                    <dd>Rivest, R., “<a href="https://www.rfc-editor.org/rfc/rfc1321.html">MD5
+                                            消息摘要算法</a>”，RFC 1321，<a href="https://dx.doi.org/10.17487/RFC1321">DOI
+                                            10.17487/RFC1321</a>, 1992 年 4 月，&lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc1321">https://www.rfc-editor.org/info/rfc1321</a>&gt;。
+                                    </dd>
+                                    <dt id="RFC1950">[<a href="#RFC1950" class="smpl">RFC1950</a>]</dt>
+                                    <dd>Deutsch, P. 和 J-L. Gailly，“<a
+                                            href="https://www.rfc-editor.org/rfc/rfc1950.html">ZLIB 压缩数据格式规范 3.3
+                                            版本</a>”，RFC 1950，<a href="https://dx.doi.org/10.17487/RFC1950">DOI
+                                            10.17487/RFC1950</a>, 1996 年 5 月，&lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc1950">https://www.rfc-editor.org/info/rfc1950</a>&gt;。
+                                    </dd>
+                                    <dt id="RFC2119">[<a href="#RFC2119" class="smpl">RFC2119</a>]</dt>
+                                    <dd>Bradner, S., “<a href="https://www.rfc-editor.org/rfc/rfc2119.html">在 RFC
+                                            中用于指示要求级别的关键字</a>”，<a href="https://www.rfc-editor.org/info/bcp14">BCP
+                                            14</a>, RFC 2119, <a href="https://dx.doi.org/10.17487/RFC2119">DOI
+                                            10.17487/RFC2119</a>, 1997 年 3 月，&lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc2119">https://www.rfc-editor.org/info/rfc2119</a>&gt;。
+                                    </dd>
+                                    <dt id="RFC3174">[<a href="#RFC3174" class="smpl">RFC3174</a>]</dt>
+                                    <dd>Eastlake 3rd, D. 和 P. Jones，“<a
+                                            href="https://www.rfc-editor.org/rfc/rfc3174.html">美国安全哈希算法 1
+                                            (SHA1)</a>”，RFC 3174，<a href="https://dx.doi.org/10.17487/RFC3174">DOI
+                                            10.17487/RFC3174</a>, 2001 年 9 月，&lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc3174">https://www.rfc-editor.org/info/rfc3174</a>&gt;。
+                                    </dd>
+                                    <dt id="RFC4648">[<a href="#RFC4648" class="smpl">RFC4648</a>]</dt>
+                                    <dd>Josefsson, S., “<a
+                                            href="https://www.rfc-editor.org/rfc/rfc4648.html">Base16、Base32 与 Base64
+                                            数据编码</a>”，RFC 4648，<a href="https://dx.doi.org/10.17487/RFC4648">DOI
+                                            10.17487/RFC4648</a>, 2006 年 10 月，&lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc4648">https://www.rfc-editor.org/info/rfc4648</a>&gt;。
+                                    </dd>
+                                    <dt id="RFC5234">[<a href="#RFC5234" class="smpl">RFC5234</a>]</dt>
+                                    <dd>Crocker, D., Ed. 和 P. Overell, “<a
+                                            href="https://www.rfc-editor.org/rfc/rfc5234.html">语法规范的增强 BNF：ABNF</a>”，<a
+                                            href="https://www.rfc-editor.org/info/std68">STD 68</a>, RFC 5234, <a
+                                            href="https://dx.doi.org/10.17487/RFC5234">DOI 10.17487/RFC5234</a>, 2008 年
+                                        1 月，&lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc5234">https://www.rfc-editor.org/info/rfc5234</a>&gt;。
+                                    </dd>
+                                    <dt id="RFC6234">[<a href="#RFC6234" class="smpl">RFC6234</a>]</dt>
+                                    <dd>Eastlake 3rd, D. 和 T. Hansen，“<a
+                                            href="https://www.rfc-editor.org/rfc/rfc6234.html">美国安全哈希算法（SHA 及基于 SHA 的
+                                            HMAC 与 HKDF）</a>”，RFC 6234，<a href="https://dx.doi.org/10.17487/RFC6234">DOI
+                                            10.17487/RFC6234</a>, 2011 年 5 月，&lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc6234">https://www.rfc-editor.org/info/rfc6234</a>&gt;。
+                                    </dd>
+                                    <dt id="RFC7405">[<a href="#RFC7405" class="smpl">RFC7405</a>]</dt>
+                                    <dd>Kyzivat, P., “<a href="https://www.rfc-editor.org/rfc/rfc7405.html">ABNF
+                                            中的区分大小写字符串支持</a>”，RFC 7405，<a href="https://dx.doi.org/10.17487/RFC7405">DOI
+                                            10.17487/RFC7405</a>, 2014 年 12 月，&lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc7405">https://www.rfc-editor.org/info/rfc7405</a>&gt;。
+                                    </dd>
+                                    <dt id="RFC8126">[<a href="#RFC8126" class="smpl">RFC8126</a>]</dt>
+                                    <dd>Cotton, M., Leiba, B., 和 T. Narten, “<a
+                                            href="https://www.rfc-editor.org/rfc/rfc8126.html">在 RFC 中撰写 IANA
+                                            注意事项章节的指南</a>”，<a href="https://www.rfc-editor.org/info/bcp26">BCP 26</a>,
+                                        RFC 8126, <a href="https://dx.doi.org/10.17487/RFC8126">DOI
+                                            10.17487/RFC8126</a>, 2017 年 6 月，&lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc8126">https://www.rfc-editor.org/info/rfc8126</a>&gt;。
+                                    </dd>
+                                    <dt id="RFC8174">[<a href="#RFC8174" class="smpl">RFC8174</a>]</dt>
+                                    <dd>Leiba, B., “<a href="https://www.rfc-editor.org/rfc/rfc8174.html">RFC 2119
+                                            关键字中大写与小写的歧义</a>”，<a href="https://www.rfc-editor.org/info/bcp14">BCP
+                                            14</a>, RFC 8174, <a href="https://dx.doi.org/10.17487/RFC8174">DOI
+                                            10.17487/RFC8174</a>, 2017 年 5 月，&lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc8174">https://www.rfc-editor.org/info/rfc8174</a>&gt;。
+                                    </dd>
+                                    <dt id="RFC8941">[<a href="#RFC8941" class="smpl">STRUCTURED-FIELDS</a>]</dt>
+                                    <dd>Nottingham, M. 和 P-H. Kamp, “<a
+                                            href="https://www.rfc-editor.org/rfc/rfc8941.html">HTTP 的结构化字段值</a>”，RFC
+                                        8941，<a href="https://dx.doi.org/10.17487/RFC8941">DOI 10.17487/RFC8941</a>,
+                                        2021 年 2 月，&lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc8941">https://www.rfc-editor.org/info/rfc8941</a>&gt;。
+                                    </dd>
+                                </dl>
+                            </div>
+                        </section>
+                        <section>
+                            <div id="rfc.references.3">
+                                <h3 id="rfc.section.8.2"><a href="#rfc.section.8.2">8.2.</a> 信息性参考文献</h3>
+                                <dl class="dl-horizontal">
+                                    <dt id="CMU-836068">[<a href="#CMU-836068" class="smpl">CMU-836068</a>]</dt>
+                                    <dd>Carnegie Mellon University, Software Engineering Institute, “<a
+                                            href="https://www.kb.cert.org/vuls/id/836068/">MD5 易受碰撞攻击</a>”, 2008 年 12
+                                        月，&lt;<a
+                                            href="https://www.kb.cert.org/vuls/id/836068/">https://www.kb.cert.org/vuls/id/836068/</a>&gt;。
+                                    </dd>
+                                    <dt id="FIPS186-5">[<a href="#FIPS186-5" class="smpl">FIPS186-5</a>]</dt>
+                                    <dd>美国国家标准与技术研究院 (NIST), “<a
+                                            href="https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.186-5.pdf">数字签名标准
+                                            (DSS)</a>”, FIPS PUB 186-5, <a
+                                            href="https://dx.doi.org/10.6028/NIST.FIPS.186-5">DOI
+                                            10.6028/NIST.FIPS.186-5</a>, 2023 年 2 月, &lt;<a
+                                            href="https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.186-5.pdf">https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.186-5.pdf</a>&gt;。
+                                    </dd>
+                                    <dt id="RFC9112">[<a href="#RFC9112" class="smpl">HTTP/1.1</a>]</dt>
+                                    <dd>Fielding, R., Ed., Nottingham, M., Ed., 和 J. Reschke, Ed., “<a
+                                            href="https://www.rfc-editor.org/rfc/rfc9112.html">HTTP/1.1</a>”, <a
+                                            href="https://www.rfc-editor.org/info/std99">STD 99</a>, RFC 9112, <a
+                                            href="https://dx.doi.org/10.17487/RFC9112">DOI 10.17487/RFC9112</a>, 2022 年
+                                        6 月，&lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc9112">https://www.rfc-editor.org/info/rfc9112</a>&gt;。
+                                    </dd>
+                                    <dt id="IACR-2020-014">[<a href="#IACR-2020-014" class="smpl">IACR-2020-014</a>]
+                                    </dt>
+                                    <dd>Leurent, G. 和 T. Peyrin, “<a href="https://eprint.iacr.org/2020/014.pdf">SHA-1
+                                            已成废墟</a>”, 2020 年 1 月, &lt;<a
+                                            href="https://eprint.iacr.org/2020/014.pdf">https://eprint.iacr.org/2020/014.pdf</a>&gt;。
+                                    </dd>
+                                    <dt id="I-D.thomson-http-mice">[<a href="#I-D.thomson-http-mice"
+                                            class="smpl">MICE</a>]</dt>
+                                    <dd>Thomson, M. 和 J. Yasskin, “<a
+                                            href="https://datatracker.ietf.org/doc/html/draft-thomson-http-mice-03">Merkle
+                                            完整性内容编码</a>”, <a
+                                            href="https://datatracker.ietf.org/doc/draft-thomson-http-mice">工作进行中</a>,
+                                        draft-thomson-http-mice-03, 工作进行中, 2018 年 8 月, &lt;<a
+                                            href="https://datatracker.ietf.org/doc/html/draft-thomson-http-mice-03">https://datatracker.ietf.org/doc/html/draft-thomson-http-mice-03</a>&gt;。
+                                    </dd>
+                                    <dt id="RFC6151">[<a href="#RFC6151" class="smpl">NO-MD5</a>]</dt>
+                                    <dd>Turner, S. 和 L. Chen, “<a href="https://www.rfc-editor.org/rfc/rfc6151.html">针对
+                                            MD5 消息摘要与 HMAC-MD5 算法的更新安全注意事项</a>”, RFC 6151, <a
+                                            href="https://dx.doi.org/10.17487/RFC6151">DOI 10.17487/RFC6151</a>, 2011 年
+                                        3 月, &lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc6151">https://www.rfc-editor.org/info/rfc6151</a>&gt;。
+                                    </dd>
+                                    <dt id="RFC6194">[<a href="#RFC6194" class="smpl">NO-SHA</a>]</dt>
+                                    <dd>Polk, T., Chen, L., Turner, S., 和 P. Hoffman, “<a
+                                            href="https://www.rfc-editor.org/rfc/rfc6194.html">SHA-0 与 SHA-1
+                                            消息摘要算法的安全注意事项</a>”, RFC 6194, <a
+                                            href="https://dx.doi.org/10.17487/RFC6194">DOI 10.17487/RFC6194</a>, 2011 年
+                                        3 月, &lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc6194">https://www.rfc-editor.org/info/rfc6194</a>&gt;。
+                                    </dd>
+                                    <dt id="RFC5789">[<a href="#RFC5789" class="smpl">PATCH</a>]</dt>
+                                    <dd>Dusseault, L. 和 J. Snell, “<a
+                                            href="https://www.rfc-editor.org/rfc/rfc5789.html">HTTP 的 PATCH 方法</a>”, RFC
+                                        5789, <a href="https://dx.doi.org/10.17487/RFC5789">DOI 10.17487/RFC5789</a>,
+                                        2010 年 3 月, &lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc5789">https://www.rfc-editor.org/info/rfc5789</a>&gt;。
+                                    </dd>
+                                    <dt id="RFC3230">[<a href="#RFC3230" class="smpl">RFC3230</a>]</dt>
+                                    <dd>Mogul, J. 和 A. Van Hoff, “<a
+                                            href="https://www.rfc-editor.org/rfc/rfc3230.html">HTTP 中的实例摘要</a>”, RFC
+                                        3230, <a href="https://dx.doi.org/10.17487/RFC3230">DOI 10.17487/RFC3230</a>,
+                                        2002 年 1 月, &lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc3230">https://www.rfc-editor.org/info/rfc3230</a>&gt;。
+                                    </dd>
+                                    <dt id="RFC6211">[<a href="#RFC6211" class="smpl">RFC6211</a>]</dt>
+                                    <dd>Schaad, J., “<a href="https://www.rfc-editor.org/rfc/rfc6211.html">加密消息语法 (CMS)
+                                            算法标识符保护属性</a>”, RFC 6211, <a href="https://dx.doi.org/10.17487/RFC6211">DOI
+                                            10.17487/RFC6211</a>, 2011 年 4 月, &lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc6211">https://www.rfc-editor.org/info/rfc6211</a>&gt;。
+                                    </dd>
+                                    <dt id="RFC7396">[<a href="#RFC7396" class="smpl">RFC7396</a>]</dt>
+                                    <dd>Hoffman, P. 和 J. Snell, “<a
+                                            href="https://www.rfc-editor.org/rfc/rfc7396.html">JSON 合并补丁</a>”, RFC 7396,
+                                        <a href="https://dx.doi.org/10.17487/RFC7396">DOI 10.17487/RFC7396</a>, 2014 年
+                                        10 月, &lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc7396">https://www.rfc-editor.org/info/rfc7396</a>&gt;。
+                                    </dd>
+                                    <dt id="RFC7696">[<a href="#RFC7696" class="smpl">RFC7696</a>]</dt>
+                                    <dd>Housley, R., “<a
+                                            href="https://www.rfc-editor.org/rfc/rfc7696.html">密码算法灵活性与强制实现算法选择的指南</a>”,
+                                        <a href="https://www.rfc-editor.org/info/bcp201">BCP 201</a>, RFC 7696, <a
+                                            href="https://dx.doi.org/10.17487/RFC7696">DOI 10.17487/RFC7696</a>, 2015 年
+                                        11 月, &lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc7696">https://www.rfc-editor.org/info/rfc7696</a>&gt;。
+                                    </dd>
+                                    <dt id="RFC8188">[<a href="#RFC8188" class="smpl">RFC8188</a>]</dt>
+                                    <dd>Thomson, M., “<a href="https://www.rfc-editor.org/rfc/rfc8188.html">用于 HTTP
+                                            的加密内容编码</a>”, RFC 8188, <a href="https://dx.doi.org/10.17487/RFC8188">DOI
+                                            10.17487/RFC8188</a>, 2017 年 6 月, &lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc8188">https://www.rfc-editor.org/info/rfc8188</a>&gt;。
+                                    </dd>
+                                    <dt id="RFC9260">[<a href="#RFC9260" class="smpl">RFC9260</a>]</dt>
+                                    <dd>Stewart, R., Tüxen, M., 和 K. Nielsen, “<a
+                                            href="https://www.rfc-editor.org/rfc/rfc9260.html">流控制传输协议</a>”, RFC 9260,
+                                        <a href="https://dx.doi.org/10.17487/RFC9260">DOI 10.17487/RFC9260</a>, 2022 年 6
+                                        月, &lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc9260">https://www.rfc-editor.org/info/rfc9260</a>&gt;。
+                                    </dd>
+                                    <dt id="RFC9457">[<a href="#RFC9457" class="smpl">RFC9457</a>]</dt>
+                                    <dd>Nottingham, M., Wilde, E., 和 S. Dalal, “<a
+                                            href="https://www.rfc-editor.org/rfc/rfc9457.html">HTTP API 的问题详细信息</a>”,
+                                        RFC 9457, <a href="https://dx.doi.org/10.17487/RFC9457">DOI
+                                            10.17487/RFC9457</a>, 2023 年 7 月, &lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc9457">https://www.rfc-editor.org/info/rfc9457</a>&gt;。
+                                    </dd>
+                                    <dt id="RFC9421">[<a href="#RFC9421" class="smpl">SIGNATURES</a>]</dt>
+                                    <dd>Backman, A., Ed., Richer, J., Ed., 和 M. Sporny, “<a
+                                            href="https://www.rfc-editor.org/rfc/rfc9421.html">HTTP 消息签名</a>”, RFC 9421,
+                                        <a href="https://dx.doi.org/10.17487/RFC9421">DOI 10.17487/RFC9421</a>, 2024 年 2
+                                        月, &lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc9421">https://www.rfc-editor.org/info/rfc9421</a>&gt;。
+                                    </dd>
+                                    <dt id="RFC8446">[<a href="#RFC8446" class="smpl">TLS</a>]</dt>
+                                    <dd>Rescorla, E., “<a href="https://www.rfc-editor.org/rfc/rfc8446.html">传输层安全 (TLS)
+                                            协议 第 1.3 版</a>”, RFC 8446, <a href="https://dx.doi.org/10.17487/RFC8446">DOI
+                                            10.17487/RFC8446</a>, 2018 年 8 月, &lt;<a
+                                            href="https://www.rfc-editor.org/info/rfc8446">https://www.rfc-editor.org/info/rfc8446</a>&gt;。
+                                    </dd>
+                                    <dt id="UNIX">[<a href="#UNIX" class="smpl">UNIX</a>]</dt>
+                                    <dd>The Open Group, “The Single UNIX Specification, Version 2 - 6 Vol Set for UNIX
+                                        98”, 1998 年 1 月。</dd>
+                                </dl>
+                            </div>
+                        </section>
+                    </div>
+                </section>
+                <hr class="hidden-print">
+                <section id="resource-representation">
+                    <h2 id="rfc.section.A" class="np"><a href="#rfc.section.A">附录 A.</a>&nbsp;<a
+                            href="#resource-representation">资源表示与表示数据</a></h2>
+                    <div id="rfc.section.A.p.1">
+                        <p>下面的示例展示了表示元数据、内容转换和方法如何影响消息与内容。这些示例并非穷尽所有情况。</p>
+                    </div>
+                    <div id="rfc.section.A.p.2">
+                        <p>除非另有说明，示例均基于 JSON 对象 <span class="tt">{"hello": "world"}</span> 后跟一个
+                            LF。当内容包含不可打印字符（例如经编码时），将以十六进制编码字节序列显示。</p>
+                    </div>
+                    <div id="rfc.section.A.p.3">
+                        <p>设想客户端希望使用 PUT 方法上载一个 JSON 对象。它可以使用 application/json 的 <span class="tt">Content-Type</span>
+                            且不使用任何内容编码来完成此操作。</p>
+                    </div>
+                    <div id="rfc.figure.1">
+                        <div>
+                            <pre class="text">
+PUT /entries/1234 HTTP/1.1
+Host: foo.example
+Content-Type: application/json
+Content-Length: 19
+
+{"hello": "world"}
+</pre>
+                        </div>
+                    </div>
+                    <p class="figure">图 1：包含 JSON 对象且无任何内容编码的请求</p>
+                    <div id="rfc.section.A.p.4">
+                        <p>然而，使用内容编码颇为常见。客户端也可以用 GZIP 编码上载相同的数据（参见 <a
+                                href="https://www.rfc-editor.org/rfc/rfc9110.html#section-8.4.1.3">[HTTP] 第 8.4.1.3
+                                节</a>）。
+                            注意，在这种情况下，由于编码开销，<span class="tt">Content-Length</span> 的值会更大。</p>
+                    </div>
+                    <div id="ex-put-gz"></div>
+                    <div id="rfc.figure.2">
+                        <div>
+                            <pre class="text">
+PUT /entries/1234 HTTP/1.1
+Host: foo.example
+Content-Type: application/json
+Content-Encoding: gzip
+Content-Length: 39
+
+1F 8B 08 00 88 41 37 64 00 FF
+AB 56 CA 48 CD C9 C9 57 B2 52
+50 2A CF 2F CA 49 51 AA E5 02
+00 D9 E4 31 E7 13 00 00 00
+</pre>
+                        </div>
+                    </div>
+                    <p class="figure">图 2：包含 GZIP 编码 JSON 对象的请求</p>
+                    <div id="rfc.section.A.p.5">
+                        <p>在未通过 <span class="tt">Content-Encoding</span> 指示的情况下发送 GZIP 编码的数据意味着内容格式错误。在此情形下，服务器可以返回错误响应。
+                        </p>
+                    </div>
+                    <div id="rfc.figure.3">
+                        <div>
+                            <pre class="text">
+PUT /entries/1234 HTTP/1.1
+Host: foo.example
+Content-Type: application/json
+
+Content-Length: 39
+
+1F 8B 08 00 88 41 37 64 00 FF
+AB 56 CA 48 CD C9 C9 57 B2 52
+50 2A CF 2F CA 49 51 AA E5 02
+00 D9 E4 31 E7 13 00 00 00
+</pre>
+                        </div>
+                    </div>
+                    <p class="figure">图 3：包含格式错误 JSON 的请求</p>
+                    <div id="rfc.figure.4">
+                        <div>
+                            <pre class="text">
+HTTP/1.1 400 Bad Request
+</pre>
+                        </div>
+                    </div>
+                    <p class="figure">图 4：针对格式错误内容的错误响应</p>
+                    <div id="rfc.section.A.p.6">
+                        <p>范围请求会影响传输的消息内容。在此示例中，客户端访问位于 <span class="tt">/entries/1234</span> 的资源，该资源为 JSON 对象 <span
+                                class="tt">{"hello": "world"}</span> 后跟一个 LF。然而，客户端指示了首选的内容编码及特定的字节范围。</p>
+                    </div>
+                    <div id="rfc.figure.5">
+                        <div>
+                            <pre class="text">
+GET /entries/1234 HTTP/1.1
+Host: foo.example
+Accept-Encoding: gzip
+Range: bytes=1-7
+</pre>
+                        </div>
+                    </div>
+                    <p class="figure">图 5：请求部分内容</p>
+                    <div id="rfc.section.A.p.7">
+                        <p>服务器通过返回部分表示满足客户端请求（等价于图 2 中完整 JSON 对象的前 10 个字节）。</p>
+                    </div>
+                    <div id="rfc.figure.6">
+                        <div>
+                            <pre class="text">
+HTTP/1.1 206 Partial Content
+Content-Encoding: gzip
+Content-Type: application/json
+Content-Range: bytes 0-9/39
+
+1F 8B 08 00 A5 B4 BD 62 02 FF
+</pre>
+                        </div>
+                    </div>
+                    <p class="figure">图 6：来自 GZIP 编码表示的部分响应</p>
+                    <div id="rfc.section.A.p.8">
+                        <p>除了内容编码或范围请求外，HTTP 方法也会影响传输的消息内容。例如，HEAD 请求的响应不携带内容，但此示例中仍包含 <span
+                                class="tt">Content-Length</span>；见 <a
+                                href="https://www.rfc-editor.org/rfc/rfc9110.html#section-8.6">[HTTP] 第 8.6 节</a>。</p>
+                    </div>
+                    <div id="rfc.figure.7">
+                        <div>
+                            <pre class="text">
+HEAD /entries/1234 HTTP/1.1
+Host: foo.example
+Accept: application/json
+Accept-Encoding: gzip
+</pre>
+                        </div>
+                    </div>
+                    <p class="figure">图 7：HEAD 请求</p>
+                    <div id="rfc.figure.8">
+                        <div>
+                            <pre class="text">
+HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Encoding: gzip
+Content-Length: 39
+</pre>
+                        </div>
+                    </div>
+                    <p class="figure">图 8：对 HEAD 请求的响应（空内容）</p>
+                    <div id="rfc.section.A.p.9">
+                        <p>最后，响应的语义可能使目标 URI 与所封装的表示解耦。在下面的示例中，客户端向 <span class="tt">/authors/</span> 发出 POST 请求，但响应包含一个
+                            <span class="tt">Content-Location</span> 头字段，指示所封装的表示对应于位于 <span
+                                class="tt">/authors/123</span> 的资源。注意此示例中未发送 <span class="tt">Content-Length</span>。
+                        </p>
+                    </div>
+                    <div id="rfc.figure.9">
+                        <div>
+                            <pre class="text">
+POST /authors/ HTTP/1.1
+Host: foo.example
+Accept: application/json
+Content-Type: application/json
+
+{"author": "Camilleri"}
+</pre>
+                        </div>
+                    </div>
+                    <p class="figure">图 9：POST 请求</p>
+                    <div id="rfc.figure.10">
+                        <div>
+                            <pre class="text">
+HTTP/1.1 201 Created
+Content-Type: application/json
+Content-Location: /authors/123
+Location: /authors/123
+
+{"id": "123", "author": "Camilleri"}
+</pre>
+                        </div>
+                    </div>
+                    <p class="figure">图 10：包含 Content-Location 头字段的响应</p>
+                </section>
+                <hr class="hidden-print">
+                <section id="examples-unsolicited">
+                    <h2 id="rfc.section.B" class="np"><a href="#rfc.section.B">附录 B.</a>&nbsp;<a
+                            href="#examples-unsolicited">未经请求的 <span class="tt">Digest</span> 示例</a></h2>
+                    <div id="rfc.section.B.p.1">
+                        <p>下面的示例演示了服务器在客户端未使用 <span class="tt">Want-Content-Digest</span> 或 <span
+                                class="tt">Want-Repr-Digest</span> 请求的情况下返回 <span class="tt">Content-Digest</span> 或
+                            <span class="tt">Repr-Digest</span> 字段的交互场景。
+                        </p>
+                    </div>
+                    <div id="rfc.section.B.p.2">
+                        <p>某些示例在内容中包含 JSON 对象。为便于展示，那些能完全符合行长限制的对象以单行紧凑表示且不包含前导空格；超出行长限制的对象将按每个键值对一行并带两个空格前导缩进的形式展示。</p>
+                    </div>
+                    <div id="rfc.section.B.p.3">
+                        <p>本文档中定义的校验和机制与媒体类型无关，并不为特定格式提供规范化算法。示例中的计算包含任何空格。尽管示例可以同时包含两个字段，<span
+                                class="tt">Content-Digest</span> 和 <span class="tt">Repr-Digest</span> 也可以单独返回。</p>
+                    </div>
+                    <section id="example-full-representation">
+                        <h3 id="rfc.section.B.1"><a href="#rfc.section.B.1">B.1.</a>&nbsp;<a
+                                href="#example-full-representation">服务器返回完整表示数据</a></h3>
+                        <div id="rfc.section.B.1.p.1">
+                            <p>在此示例中，消息内容传达了完整的表示数据。这意味着在响应中，<span class="tt">Content-Digest</span> 与 <span
+                                    class="tt">Repr-Digest</span> 都是对 JSON 对象 <span class="tt">{"hello": "world"}</span>
+                                后跟一个 LF 计算得到的；因此它们具有相同的值。</p>
+                        </div>
+                        <div id="rfc.figure.11">
+                            <div>
+                                <pre class="text">
+GET /items/123 HTTP/1.1
+Host: foo.example
+</pre>
+                            </div>
+                        </div>
+                        <p class="figure">图 11：获取某项的 GET 请求</p>
+                        <div id="rfc.figure.12">
+                            <div>
+                                <pre class="text">
+NOTE: '\' line wrapping per RFC 8792
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 19
+Content-Digest: \
+  sha-256=:RK/0qy18MlBSVnWgjwz6lZEWjP/lF5HF9bvEF8FabDg=:
+Repr-Digest: \
+  sha-256=:RK/0qy18MlBSVnWgjwz6lZEWjP/lF5HF9bvEF8FabDg=:
+
+{"hello": "world"}
+</pre>
+                            </div>
+                        </div>
+                        <p class="figure">图 12：具有相同 <span class="tt">Repr-Digest</span> 与 <span
+                                class="tt">Content-Digest</span> 的响应</p>
+                    </section>
+                    <section id="server-returns-no-representation-data">
+                        <h3 id="rfc.section.B.2"><a href="#rfc.section.B.2">B.2.</a>&nbsp;<a
+                                href="#server-returns-no-representation-data">服务器不返回表示数据</a></h3>
+                        <div id="rfc.section.B.2.p.1">
+                            <p>在此示例中，使用 HEAD 请求来检索资源的校验和。</p>
+                        </div>
+                        <div id="rfc.section.B.2.p.2">
+                            <p>响应中的 <span class="tt">Content-Digest</span> 字段值是对空内容计算的。<span
+                                    class="tt">Repr-Digest</span> 是对 JSON 对象 <span class="tt">{"hello": "world"}</span>
+                                后跟一个 LF 计算的，但由于没有内容该对象不显示出来。</p>
+                        </div>
+                        <div id="rfc.figure.13">
+                            <div>
+                                <pre class="text">
+HEAD /items/123 HTTP/1.1
+Host: foo.example
+</pre>
+                            </div>
+                        </div>
+                        <p class="figure">图 13：获取某项的 HEAD 请求</p>
+                        <div id="rfc.figure.14">
+                            <div>
+                                <pre class="text">
+NOTE: '\' line wrapping per RFC 8792
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Digest: \
+  sha-256=:47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=:
+Repr-Digest: \
+  sha-256=:RK/0qy18MlBSVnWgjwz6lZEWjP/lF5HF9bvEF8FabDg=:
+</pre>
+                            </div>
+                        </div>
+                        <p class="figure">图 14：同时包含 <span class="tt">Content-Digest</span> 与 <span
+                                class="tt">Digest</span>（空内容）的响应</p>
+                    </section>
+                    <section id="server-returns-partial-representation-data">
+                        <h3 id="rfc.section.B.3"><a href="#rfc.section.B.3">B.3.</a>&nbsp;<a
+                                href="#server-returns-partial-representation-data">服务器返回部分表示数据</a></h3>
+                        <div id="rfc.section.B.3.p.1">
+                            <p>在此示例中，客户端发出范围请求，服务器以部分内容响应。</p>
+                        </div>
+                        <div id="rfc.figure.15">
+                            <div>
+                                <pre class="text">
+GET /items/123 HTTP/1.1
+Host: foo.example
+Range: bytes=10-18
+</pre>
+                            </div>
+                        </div>
+                        <p class="figure">图 15：请求部分内容</p>
+                        <div id="rfc.figure.16">
+                            <div>
+                                <pre class="text">
+NOTE: '\' line wrapping per RFC 8792
+
+HTTP/1.1 206 Partial Content
+Content-Type: application/json
+Content-Range: bytes 10-18/19
+Content-Digest: \
+  sha-256=:jjcgBDWNAtbYUXI37CVG3gRuGOAjaaDRGpIUFsdyepQ=:
+Repr-Digest: \
+  sha-256=:RK/0qy18MlBSVnWgjwz6lZEWjP/lF5HF9bvEF8FabDg=:
+
+"world"}
+</pre>
+                            </div>
+                        </div>
+                        <p class="figure">图 16：同时具有 <span class="tt">Content-Digest</span> 与 <span
+                                class="tt">Repr-Digest</span> 的部分响应</p>
+                        <div id="rfc.section.B.3.p.2" class="avoidbreakafter">
+                            <p>在上述响应消息中，请注意 <span class="tt">Repr-Digest</span> 与 <span
+                                    class="tt">Content-Digests</span> 不同。<span class="tt">Repr-Digest</span> 字段值是在整个
+                                JSON 对象 <span class="tt">{"hello": "world"}</span> 后跟一个 LF 上计算的，字段如下所示：</p>
+                        </div>
+                        <div id="rfc.section.B.3.p.3">
+                            <pre class="text">
+NOTE: '\' line wrapping per RFC 8792
+
+Repr-Digest: \
+  sha-256=:RK/0qy18MlBSVnWgjwz6lZEWjP/lF5HF9bvEF8FabDg=:
+</pre>
+                        </div>
+                        <div id="rfc.section.B.3.p.4" class="avoidbreakafter">
+                            <p>然而，由于消息内容受限为字节 10-18，<span class="tt">Content-Digest</span> 字段值是在序列 <span
+                                    class="tt">"world"}</span> 后跟一个 LF 上计算的，因此产生如下结果：</p>
+                        </div>
+                        <div id="rfc.section.B.3.p.5">
+                            <pre class="text">
+NOTE: '\' line wrapping per RFC 8792
+
+Content-Digest: \
+  sha-256=:jjcgBDWNAtbYUXI37CVG3gRuGOAjaaDRGpIUFsdyepQ=:
+</pre>
+                        </div>
+                    </section>
+                    <section id="client-and-server-provide-full-representation-data">
+                        <h3 id="rfc.section.B.4"><a href="#rfc.section.B.4">B.4.</a>&nbsp;<a
+                                href="#client-and-server-provide-full-representation-data">客户端与服务器提供完整表示数据</a></h3>
+                        <div id="rfc.section.B.4.p.1">
+                            <p>请求包含一个在所封装表示上计算的 <span class="tt">Repr-Digest</span> 字段值。它还包含一个声明客户端支持 Brotli 编码的 <span
+                                    class="tt">Accept-Encoding: br</span> 头字段。</p>
+                        </div>
+                        <div id="rfc.section.B.4.p.2">
+                            <p>响应包含一个指示所选表示为 Brotli 编码的 <span class="tt">Content-Encoding: br</span>。因此响应中的 <span
+                                    class="tt">Repr-Digest</span> 字段值与请求中不同。</p>
+                        </div>
+                        <div id="rfc.section.B.4.p.3">
+                            <p>出于展示目的，响应体以十六进制编码字节序列显示，因为其中包含不可打印字符。</p>
+                        </div>
+                        <div id="rfc.figure.17">
+                            <div>
+                                <pre class="text">
+NOTE: '\' line wrapping per RFC 8792
+
+PUT /items/123 HTTP/1.1
+Host: foo.example
+Content-Type: application/json
+Accept-Encoding: br
+Repr-Digest: \
+  sha-256=:RK/0qy18MlBSVnWgjwz6lZEWjP/lF5HF9bvEF8FabDg=:
+
+{"hello": "world"}
+</pre>
+                            </div>
+                        </div>
+                        <p class="figure">图 17：带有 <span class="tt">Digest</span> 的 PUT 请求</p>
+                        <div id="rfc.figure.18">
+                            <div>
+                                <pre class="text">
+NOTE: '\' line wrapping per RFC 8792
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Location: /items/123
+Content-Encoding: br
+Content-Length: 23
+Repr-Digest: \
+  sha-256=:d435Qo+nKZ+gLcUHn7GQtQ72hiBVAgqoLsZnZPiTGPk=:
+
+8B 08 80 7B 22 68 65 6C 6C 6F
+22 3A 20 22 77 6F 72 6C 64 22
+7D 0A 03
+</pre>
+                            </div>
+                        </div>
+                        <p class="figure">图 18：包含已编码响应摘要的响应</p>
+                    </section>
+                    <section id="client-provides-full-representation-data-server-provides-no-representation-data">
+                        <h3 id="rfc.section.B.5"><a href="#rfc.section.B.5">B.5.</a>&nbsp;<a
+                                href="#client-provides-full-representation-data-server-provides-no-representation-data">客户端提供完整表示数据且服务器不提供表示数据</a>
+                        </h3>
+                        <div id="rfc.section.B.5.p.1">
+                            <p>请求中的 <span class="tt">Repr-Digest</span> 字段值是在所封装内容上计算的，该内容为 JSON 对象 <span
+                                    class="tt">{"hello": "world"}</span> 后跟一个 LF。</p>
+                        </div>
+                        <div id="rfc.section.B.5.p.2">
+                            <p>响应中的 <span class="tt">Repr-Digest</span> 字段值取决于表示元数据头字段，包括 <span
+                                    class="tt">Content-Encoding: br</span>，即使响应不包含内容亦然。</p>
+                        </div>
+                        <div id="rfc.section.B.5.p.3">
+                            <pre class="text">
+NOTE: '\' line wrapping per RFC 8792
+
+PUT /items/123 HTTP/1.1
+Host: foo.example
+Content-Type: application/json
+Content-Length: 19
+Accept-Encoding: br
+Repr-Digest: \
+  sha-256=:RK/0qy18MlBSVnWgjwz6lZEWjP/lF5HF9bvEF8FabDg==:
+
+{"hello": "world"}
+</pre>
+                        </div>
+                        <div id="rfc.figure.19">
+                            <div>
+                                <pre class="text">
+HTTP/1.1 204 No Content
+Content-Type: application/json
+Content-Encoding: br
+Repr-Digest: sha-256=:d435Qo+nKZ+gLcUHn7GQtQ72hiBVAgqoLsZnZPiTGPk=:
+</pre>
+                            </div>
+                        </div>
+                        <p class="figure">图 19：带有 <span class="tt">Digest</span> 的空响应</p>
+                    </section>
+                    <section id="client-and-server-provide-full-representation-data-1">
+                        <h3 id="rfc.section.B.6"><a href="#rfc.section.B.6">B.6.</a>&nbsp;<a
+                                href="#client-and-server-provide-full-representation-data-1">客户端与服务器提供完整表示数据</a></h3>
+                        <div id="rfc.section.B.6.p.1">
+                            <p>响应包含使用不同算法的两个摘要值。</p>
+                        </div>
+                        <div id="rfc.section.B.6.p.2">
+                            <p>出于展示目的，响应体以十六进制编码字节序列显示，因为其中包含不可打印字符。</p>
+                        </div>
+                        <div id="rfc.figure.20">
+                            <div>
+                                <pre class="text">
+NOTE: '\' line wrapping per RFC 8792
+
+PUT /items/123 HTTP/1.1
+Host: foo.example
+Content-Type: application/json
+Accept-Encoding: br
+Repr-Digest: \
+  sha-256=:RK/0qy18MlBSVnWgjwz6lZEWjP/lF5HF9bvEF8FabDg==:
+
+{"hello": "world"}
+</pre>
+                            </div>
+                        </div>
+                        <p class="figure">图 20：带有 <span class="tt">Digest</span> 的 PUT 请求</p>
+                        <div id="rfc.figure.21">
+                            <div>
+                                <pre class="text">
+NOTE: '\' line wrapping per RFC 8792
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Encoding: br
+Content-Location: /items/123
+Repr-Digest: \
+  sha-256=:d435Qo+nKZ+gLcUHn7GQtQ72hiBVAgqoLsZnZPiTGPk=:,\
+  sha-512=:db7fdBbgZMgX1Wb2MjA8zZj+rSNgfmDCEEXM8qLWfpfoNY0sCpHAzZbj\
+  09X1/7HAb7Od5Qfto4QpuBsFbUO3dQ==:
+
+8B 08 80 7B 22 68 65 6C 6C 6F
+22 3A 20 22 77 6F 72 6C 64 22
+7D 0A 03
+</pre>
+                            </div>
+                        </div>
+                        <p class="figure">图 21：对已编码内容的响应摘要</p>
+                    </section>
+                    <section id="post-not-request-uri">
+                        <h3 id="rfc.section.B.7"><a href="#rfc.section.B.7">B.7.</a>&nbsp;<a
+                                href="#post-not-request-uri">POST 响应未引用请求 URI</a></h3>
+                        <div id="rfc.section.B.7.p.1">
+                            <p>请求中的 <span class="tt">Repr-Digest</span> 字段值是在所封装的表示上计算的（见 <a
+                                    href="#state-changing-requests"
+                                    title="Using Repr-Digest in State-Changing Requests">第 3.1 节</a>），该表示为 JSON 对象 <span
+                                    class="tt">{"title": "New Title"}</span> 后跟一个 LF。</p>
+                        </div>
+                        <div id="rfc.section.B.7.p.2">
+                            <p>响应中封装的表示是一个多行 JSON 对象后跟一个 LF。它通过 <span class="tt">Content-Location</span> 指向由其值标识的资源（参见
+                                <a href="https://www.rfc-editor.org/rfc/rfc9110.html#section-6.4.2">[HTTP] 第 6.4.2
+                                    节</a>）；因此应用可以将 <span class="tt">Repr-Digest</span> 与由 <span
+                                    class="tt">Content-Location</span> 引用的资源关联使用。
+                            </p>
+                        </div>
+                        <div id="rfc.figure.22">
+                            <div>
+                                <pre class="text">
+POST /books HTTP/1.1
+Host: foo.example
+Content-Type: application/json
+Accept: application/json
+Accept-Encoding: identity
+Repr-Digest: sha-256=:mEkdbO7Srd9LIOegftO0aBX+VPTVz7/CSHes2Z27gc4=:
+
+{"title": "New Title"}
+</pre>
+                            </div>
+                        </div>
+                        <p class="figure">图 22：带有 <span class="tt">Digest</span> 的 POST 请求</p>
+                        <div id="rfc.figure.23">
+                            <div>
+                                <pre class="text">
+HTTP/1.1 201 Created
+Content-Type: application/json
+Content-Location: /books/123
+Location: /books/123
+Repr-Digest: sha-256=:uVSlinTTdQUwm2On4k8TJUikGN1bf/Ds8WPX4oe0h9I=:
+
+{
+  "id": "123",
+  "title": "New Title"
+}
+</pre>
+                            </div>
+                        </div>
+                        <p class="figure">图 23：包含资源摘要的响应</p>
+                    </section>
+                    <section id="post-referencing-status">
+                        <h3 id="rfc.section.B.8"><a href="#rfc.section.B.8">B.8.</a>&nbsp;<a
+                                href="#post-referencing-status">POST 响应描述请求状态</a></h3>
+                        <div id="rfc.section.B.8.p.1">
+                            <p>请求中的 <span class="tt">Repr-Digest</span> 字段值是在所封装的表示上计算的（见 <a
+                                    href="#state-changing-requests"
+                                    title="Using Repr-Digest in State-Changing Requests">第 3.1 节</a>），该表示为 JSON 对象 <span
+                                    class="tt">{"title": "New Title"}</span> 后跟一个 LF。</p>
+                        </div>
+                        <div id="rfc.section.B.8.p.2">
+                            <p>响应中封装的表示描述了请求的状态，因此 <span class="tt">Repr-Digest</span> 在该封装表示上计算。它为一个多行 JSON 对象后跟一个 LF。
+                            </p>
+                        </div>
+                        <div id="rfc.section.B.8.p.3">
+                            <p>响应的 <span class="tt">Repr-Digest</span> 与由 <span class="tt">Location</span>
+                                引用的资源之间没有明确关联。</p>
+                        </div>
+                        <div id="rfc.figure.24">
+                            <div>
+                                <pre class="text">
+POST /books HTTP/1.1
+Host: foo.example
+Content-Type: application/json
+Accept: application/json
+Accept-Encoding: identity
+Repr-Digest: sha-256=:mEkdbO7Srd9LIOegftO0aBX+VPTVz7/CSHes2Z27gc4=:
+
+{"title": "New Title"}
+</pre>
+                            </div>
+                        </div>
+                        <p class="figure">图 24：带有 <span class="tt">Digest</span> 的 POST 请求</p>
+                        <div id="rfc.figure.25">
+                            <div>
+                                <pre class="text">
+HTTP/1.1 201 Created
+Content-Type: application/json
+Repr-Digest: sha-256=:yXIGDTN5VrfoyisKlXgRKUHHMs35SNtyC3szSz1dbO8=:
+Location: /books/123
+
+{
+  "status": "created",
+  "id": "123",
+  "ts": 1569327729,
+  "instance": "/books/123"
+}
+</pre>
+                            </div>
+                        </div>
+                        <p class="figure">图 25：包含表示摘要的响应</p>
+                    </section>
+                    <section id="digest-with-patch">
+                        <h3 id="rfc.section.B.9"><a href="#rfc.section.B.9">B.9.</a>&nbsp;<a
+                                href="#digest-with-patch"><span class="tt">Digest</span> 与 PATCH</a></h3>
+                        <div id="rfc.section.B.9.p.1">
+                            <p>此情形类似于目标资源反映目标 URI 的 POST 请求。</p>
+                        </div>
+                        <div id="rfc.section.B.9.p.2">
+                            <p>PATCH 请求使用 <span class="tt">application/merge-patch+json</span> 媒体类型（参见 <a
+                                    href="#RFC7396"><cite title="JSON Merge Patch">[RFC7396]</cite></a>）。<span
+                                    class="tt">Repr-Digest</span> 在对应补丁文档的内容上计算，该内容为 JSON 对象 <span class="tt">{"title":
+                                    "New Title"}</span> 后跟一个 LF。</p>
+                        </div>
+                        <div id="rfc.section.B.9.p.3">
+                            <p>响应中的 <span class="tt">Repr-Digest</span> 字段值是在被修补资源的完整表示上计算的。它为一个多行 JSON 对象后跟一个 LF。</p>
+                        </div>
+                        <div id="fig-patch"></div>
+                        <div id="rfc.figure.26">
+                            <div>
+                                <pre class="text">
+PATCH /books/123 HTTP/1.1
+Host: foo.example
+Content-Type: application/merge-patch+json
+Accept: application/json
+Accept-Encoding: identity
+Repr-Digest: sha-256=:mEkdbO7Srd9LIOegftO0aBX+VPTVz7/CSHes2Z27gc4=:
+
+{"title": "New Title"}
+</pre>
+                            </div>
+                        </div>
+                        <p class="figure">图 26：带有 <span class="tt">Digest</span> 的 PATCH 请求</p>
+                        <div id="rfc.figure.27">
+                            <div>
+                                <pre class="text">
+HTTP/1.1 200 OK
+Content-Type: application/json
+Repr-Digest: sha-256=:uVSlinTTdQUwm2On4k8TJUikGN1bf/Ds8WPX4oe0h9I=:
+
+{
+  "id": "123",
+  "title": "New Title"
+}
+</pre>
+                            </div>
+                        </div>
+                        <p class="figure">图 27：包含表示摘要的响应</p>
+                        <div id="rfc.section.B.9.p.4">
+                            <p>注意，不带内容但具有相同 <span class="tt">Repr-Digest</span> 字段值的 <span class="tt">204 No
+                                    Content</span> 响应也同样是合法的。在那种情况下，<span class="tt">Content-Digest</span> 会在空内容上计算。</p>
+                        </div>
+                    </section>
+                    <section id="error-responses">
+                        <h3 id="rfc.section.B.10"><a href="#rfc.section.B.10">B.10.</a>&nbsp;<a
+                                href="#error-responses">错误响应</a></h3>
+                        <div id="rfc.section.B.10.p.1">
+                            <p>在错误响应中，表示数据不必指向目标资源，而是指向错误的表示。</p>
+                        </div>
+                        <div id="rfc.section.B.10.p.2">
+                            <p>在下面的示例中，客户端向图 26（参见 <a href="#fig-patch" title="PATCH Request with Digest">PATCH
+                                    请求</a>）中相同的请求对 /books/123 发出补丁请求。然而，该资源不存在，服务器生成了一个 404 响应，响应体按照 <a
+                                    href="#RFC9457"><cite title="Problem Details for HTTP APIs">[RFC9457]</cite></a>
+                                描述了错误。</p>
+                        </div>
+                        <div id="rfc.section.B.10.p.3">
+                            <p>响应中的 <span class="tt">Repr-Digest</span> 字段值是在此封装表示上计算的。它为一个多行 JSON 对象后跟一个 LF。</p>
+                        </div>
+                        <div id="rfc.figure.28">
+                            <div>
+                                <pre class="text">
+HTTP/1.1 404 Not Found
+Content-Type: application/problem+json
+Repr-Digest: sha-256=:EXB0S2VF2H7ijkAVJkH1Sm0pBho0iDZcvVUHHXTTZSA=:
+
+{
+  "title": "Not Found",
+  "detail": "Cannot PATCH a non-existent resource",
+  "status": 404
+}
+</pre>
+                            </div>
+                        </div>
+                        <p class="figure">图 28：包含错误表示摘要的响应</p>
+                    </section>
+                    <section id="use-with-trailer-fields-and-transfer-coding">
+                        <h3 id="rfc.section.B.11"><a href="#rfc.section.B.11">B.11.</a>&nbsp;<a
+                                href="#use-with-trailer-fields-and-transfer-coding">与尾部字段和传输编码一起使用</a></h3>
+                        <div id="rfc.section.B.11.p.1">
+                            <p>源服务器将 <span class="tt">Repr-Digest</span> 作为尾部字段发送，以便在流式传输内容时计算摘要值，从而减轻资源消耗。由于 <span
+                                    class="tt">Repr-Digest</span> 设计为独立于一次或多次传输编码的使用（参见 <a href="#representation-digest"
+                                    title="The Repr-Digest Field">第 3 节</a>），因此其字段值与附录 B.1 中相同。</p>
+                        </div>
+                        <div id="rfc.section.B.11.p.2">
+                            <p>在下面的响应内容中，字符串 "\r\n" 表示 CRLF 字节。</p>
+                        </div>
+                        <div id="rfc.figure.29">
+                            <div>
+                                <pre class="text">
+GET /items/123 HTTP/1.1
+Host: foo.example
+</pre>
+                            </div>
+                        </div>
+                        <p class="figure">图 29：GET 请求</p>
+                        <div id="rfc.figure.30">
+                            <div>
+                                <pre class="text">
+NOTE: '\' line wrapping per RFC 8792
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+Transfer-Encoding: chunked
+Trailer: Repr-Digest
+
+8\r\n
+{"hello"\r\n
+8\r\n
+: "world\r\n
+3\r\n
+"}\n\r\n
+0\r\n
+Repr-Digest: \
+  sha-256=:RK/0qy18MlBSVnWgjwz6lZEWjP/lF5HF9bvEF8FabDg==:\r\n
+</pre>
+                            </div>
+                        </div>
+                        <p class="figure">图 30：带有 <span class="tt">Digest</span> 的分块响应</p>
+                    </section>
+                </section>
+                <hr class="hidden-print">
+                <section id="examples-solicited">
+                    <h2 id="rfc.section.C" class="np"><a href="#rfc.section.C">Appendix C.</a>&nbsp;<a
+                            href="#examples-solicited">示例：<span class="tt">Want-Repr-Digest</span> 请求的 <span
+                                class="tt">Digest</span></a></h2>
+                    <div id="rfc.section.C.p.1">
+                        <p>下面的示例演示了客户端使用 <span class="tt">Want-Repr-Digest</span> 请求 <span class="tt">Repr-Digest</span>
+                            的交互场景。<span class="tt">Content-Digest</span> 与 <span class="tt">Want-Content-Digest</span>
+                            的行为相同。</p>
+                    </div>
+                    <div id="rfc.section.C.p.2">
+                        <p>某些示例在内容中包含 JSON 对象。为便于展示，能够完全符合行长限制的对象以单行紧凑表示且不包含前导空格；超出行长限制的对象将按每个键值对一行并带两个空格前导缩进的形式展示。</p>
+                    </div>
+                    <div id="rfc.section.C.p.3">
+                        <p>本文档中描述的校验和机制与媒体类型无关，并不为特定格式提供规范化算法。示例的计算包含任何空格。</p>
+                    </div>
+                    <section id="server-selects-clients-least-preferred-algorithm">
+                        <h3 id="rfc.section.C.1"><a href="#rfc.section.C.1">C.1.</a>&nbsp;<a
+                                href="#server-selects-clients-least-preferred-algorithm">服务器选择客户端最不偏好的算法</a></h3>
+                        <div id="rfc.section.C.1.p.1">
+                            <p>客户端请求摘要并偏好 "sha"。服务器仍然可以自由地用 "sha-256" 作出响应。</p>
+                        </div>
+                        <div id="rfc.figure.31">
+                            <div>
+                                <pre class="text">
+GET /items/123 HTTP/1.1
+Host: foo.example
+Want-Repr-Digest: sha-256=3, sha=10
+</pre>
+                            </div>
+                        </div>
+                        <p class="figure">图 31：带有 <span class="tt">Want-Repr-Digest</span> 的 GET 请求</p>
+                        <div id="rfc.figure.32">
+                            <div>
+                                <pre class="text">
+NOTE: '\' line wrapping per RFC 8792
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+Repr-Digest: \
+  sha-256=:RK/0qy18MlBSVnWgjwz6lZEWjP/lF5HF9bvEF8FabDg==:
+
+{"hello": "world"}
+</pre>
+                            </div>
+                        </div>
+                        <p class="figure">图 32：使用不同算法的响应</p>
+                    </section>
+                    <section id="ex-server-selects-unsupported-algorithm">
+                        <h3 id="rfc.section.C.2"><a href="#rfc.section.C.2">C.2.</a>&nbsp;<a
+                                href="#ex-server-selects-unsupported-algorithm">服务器选择客户端不支持的算法</a></h3>
+                        <div id="rfc.section.C.2.p.1">
+                            <p>客户端请求 "sha" 摘要，因为那是它唯一支持的算法。服务器没有义务生成包含 "sha" 摘要的响应；它可以改用不同的算法。</p>
+                        </div>
+                        <div id="rfc.figure.33">
+                            <div>
+                                <pre class="text">
+GET /items/123 HTTP/1.1
+Host: foo.example
+Want-Repr-Digest: sha=10
+</pre>
+                            </div>
+                        </div>
+                        <p class="figure">图 33：带有 <span class="tt">Want-Repr-Digest</span> 的 GET 请求</p>
+                        <div id="rfc.figure.34">
+                            <div>
+                                <pre class="text">
+NOTE: '\' line wrapping per RFC 8792
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+Repr-Digest: \
+  sha-512=:YMAam51Jz/jOATT6/zvHrLVgOYTGFy1d6GJiOHTohq4yP+pgk4vf2aCs\
+  yRZOtw8MjkM7iw7yZ/WkppmM44T3qg==:
+
+{"hello": "world"}
+</pre>
+                            </div>
+                        </div>
+                        <p class="figure">图 34：使用客户端不支持算法的响应</p>
+                    </section>
+                    <section id="server-does-not-support-client-algorithm-and-returns-an-error">
+                        <h3 id="rfc.section.C.3"><a href="#rfc.section.C.3">C.3.</a>&nbsp;<a
+                                href="#server-does-not-support-client-algorithm-and-returns-an-error">服务器不支持客户端算法并返回错误</a>
+                        </h3>
+                        <div id="rfc.section.C.3.p.1">
+                            <p><a href="#ex-server-selects-unsupported-algorithm"
+                                    title="Server Selects Algorithm Unsupported by Client">附录 C.2</a>
+                                是一个示例，展示了服务器忽略客户端首选摘要算法的情形。作为替代，服务器也可以拒绝该请求并返回包含 4xx 或 5xx
+                                等错误状态码的响应。本规范未对状态码选择提出强制性要求；下面的示例只是说明一种可选方案。</p>
+                        </div>
+                        <div id="rfc.section.C.3.p.2">
+                            <p>在此示例中，客户端请求 "sha" <span class="tt">Repr-Digest</span>，服务器返回包含问题详细信息（参见 <a
+                                    href="#RFC9457"><cite
+                                        title="Problem Details for HTTP APIs">[RFC9457]</cite></a>）的错误响应体。问题详细信息列出了服务器支持的哈希算法。这仅为示例；本规范未定义此类内容的格式或要求。
+                            </p>
+                        </div>
+                        <div id="rfc.figure.35">
+                            <div>
+                                <pre class="text">
+GET /items/123 HTTP/1.1
+Host: foo.example
+Want-Repr-Digest: sha=10
+</pre>
+                            </div>
+                        </div>
+                        <p class="figure">图 35：带有 <span class="tt">Want-Repr-Digest</span> 的 GET 请求</p>
+                        <div id="rfc.figure.36">
+                            <div>
+                                <pre class="text">
+HTTP/1.1 400 Bad Request
+Content-Type: application/problem+json
+
+{
+  "title": "Bad Request",
+  "detail": "Supported hashing algorithms: sha-256, sha-512",
+  "status": 400
+}
+</pre>
+                            </div>
+                        </div>
+                        <p class="figure">图 36：响应中通告支持的算法</p>
+                    </section>
+                </section>
+                <hr class="hidden-print">
+                <section id="sample-digest-values">
+                    <h2 id="rfc.section.D" class="np"><a href="#rfc.section.D">Appendix D.</a>&nbsp;<a
+                            href="#sample-digest-values">示例 <span class="tt">Digest</span> 值</a></h2>
+                    <div id="rfc.section.D.p.1">
+                        <p>本节展示针对不同哈希算法的摘要值示例。输入值为 JSON 对象 <span class="tt">{"hello":
+                                "world"}</span>。摘要值是对该输入运行相关哈希算法得到输出字节，然后将输出字节通过 Byte Sequence 序列化处理得到的；参见 <a
+                                href="https://www.rfc-editor.org/rfc/rfc8941.html#section-4.1.8">[STRUCTURED-FIELDS] 第
+                                4.1.8 节</a>。</p>
+                    </div>
+                    <div id="rfc.section.D.p.2">
+                        <pre class="text">
+NOTE: '\' line wrapping per RFC 8792
+
+sha-512 -   :WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm+\
+            AbwAgBWnrIiYllu7BNNyealdVLvRwEmTHWXvJwew==:
+
+sha-256 -   :X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
+
+md5 -       :Sd/dVLAcvNLSq16eXua5uQ==:
+
+sha -       :07CavjDP4u3/TungoUHJO/Wzr4c=:
+
+unixsum -   :GQU=:
+
+unixcksum - :7zsHAA==:
+
+adler -     :OZkGFw==:
+
+crc32c -    :Q3lHIA==:
+</pre>
+                    </div>
+                </section>
+                <hr class="hidden-print">
+                <section id="migrating">
+                    <h2 id="rfc.section.E" class="np"><a href="#rfc.section.E">Appendix E.</a>&nbsp;<a
+                            href="#migrating">从 RFC 3230 迁移</a></h2>
+                    <div id="rfc.section.E.p.1">
+                        <p>HTTP 摘要是通过对输入数据应用哈希算法计算得到的。<a href="#RFC3230"><cite
+                                    title="Instance Digests in HTTP">[RFC3230]</cite></a>
+                            将输入数据定义为“instance”（实例），并对其进行了定义。该“instance”概念现已被 HTTP 语义中的“representation”所取代。已知一些实现将 <a
+                                href="#RFC3230"><cite title="Instance Digests in HTTP">[RFC3230]</cite></a> 中的
+                            “instance” 误解为 HTTP 内容。将内容用于 <span class="tt">Digest</span> 字段是一个错误，会导致遵从 <a
+                                href="#RFC3230"><cite title="Instance Digests in HTTP">[RFC3230]</cite></a>
+                            的对等方之间发生互操作性问题。</p>
+                    </div>
+                    <div id="rfc.section.E.p.2">
+                        <p><a href="#RFC3230"><cite title="Instance Digests in HTTP">[RFC3230]</cite></a> 原本仅打算使用 HTTP
+                            现在定义为选定表示数据的内容。<span class="tt">Repr-Digest</span> 字段的定义中（参见 <a
+                                href="#representation-digest" title="The Repr-Digest Field">第 3 节</a>）对摘要与表示的语义概念进行了说明。
+                        </p>
+                    </div>
+                    <div id="rfc.section.E.p.3">
+                        <p>尽管 <span class="tt">Digest</span> 与 <span class="tt">Repr-Digest</span> 的语法不同，但本文件对 <span
+                                class="tt">Repr-Digest</span> 给出的考虑与示例同样适用于 <span
+                                class="tt">Digest</span>，因为它们作用于相同的输入数据；参见第 <a href="#state-changing-requests"
+                                title="Using Repr-Digest in State-Changing Requests">3.1 节</a>、第 <a href="#security"
+                                title="Security Considerations">6 节</a> 与第 <a href="#usage-in-signatures"
+                                title="Usage in Signatures">6.3 节</a>。</p>
+                    </div>
+                    <div id="rfc.section.E.p.4">
+                        <p><a href="#RFC3230"><cite title="Instance Digests in HTTP">[RFC3230]</cite></a> 从未能够在 <span
+                                class="tt">Digest</span> 字段中传达 HTTP 消息内容的摘要；而 <span class="tt">Content-Digest</span>
+                            现在提供了该功能。</p>
+                    </div>
+                    <div id="rfc.section.E.p.5">
+                        <p><a href="#RFC3230"><cite title="Instance Digests in HTTP">[RFC3230]</cite></a> 允许算法定义其用于
+                            <span class="tt">Digest</span> 字段的输出编码格式，结果出现了 base64、十六进制或十进制等混合格式。通过使用 Structured
+                            Fields，<span class="tt">Content-Digest</span> 与 <span class="tt">Repr-Digest</span>
+                            仅使用单一编码格式。附录 D（<a href="#sample-digest-values"
+                                title="Sample Digest Values">示例摘要值</a>）中提供了进一步说明与示例。
+                        </p>
+                    </div>
+                </section>
+                <hr class="hidden-print">
+                <section id="acknowledgements">
+                    <h2 id="rfc.section.unnumbered-4" class="np"><a href="#acknowledgements">致谢</a></h2>
+                    <div id="rfc.section.unnumbered-4.p.1">
+                        <p>本文档基于 <a href="#RFC3230"><cite title="Instance Digests in HTTP">[RFC3230]</cite></a> 的思想，因此感谢
+                            Jeff Mogul 与 Arthur Van Hoff 的卓越工作。将 <a href="#RFC3230"><cite
+                                    title="Instance Digests in HTTP">[RFC3230]</cite></a> 刷新为现规范的初衷源于与 Mark
+                            Nottingham、Jeffrey Yasskin 和 Martin Thomson 在审查 MICE 内容编码时的讨论。</p>
+                    </div>
+                    <div id="rfc.section.unnumbered-4.p.2">
+                        <p>感谢 Julian Reschke 对本文档的宝贵贡献，以及以下通过报告错误、提出建设性问题、起草或审阅文本并评估未决问题来改进本规范的贡献者：Mike Bishop、Brian
+                            Campbell、Matthew Kerwin、James Manger、Tommy Pauly、Sean Turner、Justin Richer 与 Erik Wilde。</p>
+                    </div>
+                </section>
+                <hr class="hidden-print">
+                <section id="rfc.authors" class="np">
+                    <h2><a href="#rfc.authors">作者联系信息</a></h2>
+                    <address><b>Roberto Polli</b><br>Team Digitale, Italian Government<br>Italy<br>EMail: <a
+                            href="mailto:robipolli@gmail.com">robipolli@gmail.com</a></address>
+                    <address><b>Lucas Pardue</b><br>Cloudflare<br>EMail: <a
+                            href="mailto:lucas@lucaspardue.com">lucas@lucaspardue.com</a></address>
+                </section>
+            </div>
+        </div>
+    </div>
+    <script src="https://httpwg.org/assets/node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="https://httpwg.org/assets/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="https://htmlspecs.com/dropdown.js"></script>
+</body>
+
+</html>
