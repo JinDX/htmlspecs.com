@@ -24,7 +24,7 @@ const checkLinks = async (links, category) => {
     process.stdout.write(`\rProgress: ${finished}/${total}`);
   };
 
-  const w3Links = links.filter(item => item.src.includes('w3.org'));
+  const w3Links = links.filter(item => item.src.includes('w3.org/TR'));
   links = links.filter(item => !item.src.includes('w3.org'));
 
   const w3Requests = w3Links.map((link, index) => {
