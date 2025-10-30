@@ -72,18 +72,49 @@ const checkLinks = async (links, category) => {
   const otherRequests = links.map(link => {
     return new Promise(resolve => {
       https.get(link.src, { method: 'HEAD' }, res => {
+        const etag = res.headers['etag'] || res.headers.etag;
         const lastModified = res.headers['last-modified'];
-        if (lastModified) {
-          const newTime = new Date(lastModified);
-          const oldTime = new Date(link['last-modified']);
-          const diffMs = Math.abs(newTime - oldTime);
-          const diffMin = diffMs / 1000 / 60;
-          if (diffMin >= 1) {
-            const info =
-              `- ${link.text} has been updated:\n  - New time: ${newTime.toUTCString()}\n  - Old time: ${oldTime.toUTCString()}\n  - Link: ${link.src}`;
-            logResult(info);
+
+        const hasStoredEtag = Object.prototype.hasOwnProperty.call(link, 'etag');
+        const storedLastIsZero = link['last-modified'] === '0';
+
+        if (hasStoredEtag) {
+          const stored = link.etag;
+          if (etag) {
+            if (stored !== etag) {
+              const info =
+                `- ${link.text} ETag changed:\n  - Old ETag: ${stored}\n  - New ETag: ${etag}\n  - Link: ${link.src}`;
+              logResult(info);
+            }
+          } else {
+            // 如果存储的 last-modified 为 "0"，则不确认更新
+            if (!storedLastIsZero && lastModified && link['last-modified']) {
+              const newTime = new Date(lastModified);
+              const oldTime = new Date(link['last-modified']);
+              const diffMs = Math.abs(newTime - oldTime);
+              const diffMin = diffMs / 1000 / 60;
+              if (diffMin >= 1) {
+                const info =
+                  `- ${link.text} has been updated (no ETag from server):\n  - New time: ${newTime.toUTCString()}\n  - Old time: ${oldTime.toUTCString()}\n  - Link: ${link.src}`;
+                logResult(info);
+              }
+            }
+          }
+        } else {
+          // 无存储 etag：若存储 last-modified 为 "0" 则跳过确认
+          if (!storedLastIsZero && lastModified && link['last-modified']) {
+            const newTime = new Date(lastModified);
+            const oldTime = new Date(link['last-modified']);
+            const diffMs = Math.abs(newTime - oldTime);
+            const diffMin = diffMs / 1000 / 60;
+            if (diffMin >= 1) {
+              const info =
+                `- ${link.text} has been updated:\n  - New time: ${newTime.toUTCString()}\n  - Old time: ${oldTime.toUTCString()}\n  - Link: ${link.src}`;
+              logResult(info);
+            }
           }
         }
+
         showProgress();
         resolve();
       }).on('error', e => {
@@ -106,6 +137,7 @@ const main = async () => {
   }
   await checkLinks(data.links, 'Standard Specifications');
   await checkLinks(data.cssLinks, 'CSS Related Specifications');
+  await checkLinks(data.httpLinks, 'HTTP Related Specifications');
   logResult('All checks completed! 😊');
   process.exit(0);
 };

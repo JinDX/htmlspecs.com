@@ -1782,349 +1782,416 @@ const cssLinks = [
 ];
 const httpLinks = [
 
-    //## HTTP|HTTP|HTTP
-    {
-        text: "index",
-        href: "https://htmlspecs.com/http/",
-        src: "https://httpwg.org/specs/",
-        "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        lang: "cjk",
-        state: ""
-    },
+{
+  text: "index",
+  href: "https://htmlspecs.com/http/",
+  src: "https://httpwg.org/specs/",
+  "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
+  etag: "\"69016230-2e87\"",
+  lang: "cjk",
+  state: ""
+},
 
-    //### 核心规范|핵심 명세|コア仕様
-    {
-        text: "HTTP Semantics (RFC 9110)",
-        href: "https://htmlspecs.com/http/rfc9110.html",
-        src: "https://httpwg.org/specs/rfc9110.html",
-        "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        lang: "cjk",
-        state: "RFC"
-    },
-    {
-        text: "HTTP Caching",
-        href: "https://htmlspecs.com/http/rfc9111.html",
-        src: "https://httpwg.org/specs/rfc9111.html",
-        "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        lang: "cjk",
-        state: "RFC"
-    },
-    {
-        text: "HTTP/1.1",
-        href: "https://htmlspecs.com/http/rfc9112.html",
-        src: "https://httpwg.org/specs/rfc9112.html",
-        "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        lang: "cjk",
-        state: "RFC"
-    },
-    {
-        text: "HTTP/2",
-        href: "https://htmlspecs.com/http/rfc9113.html",
-        src: "https://httpwg.org/specs/rfc9113.html",
-        "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        lang: "cjk",
-        state: "RFC"
-    },
-    {
-        text: "HTTP/3",
-        href: "https://htmlspecs.com/http/rfc9114.html",
-        src: "https://httpwg.org/specs/rfc9114.html",
-        "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        lang: "cjk",
-        state: "RFC"
-    },
-    {
-        text: "HPACK: Header Compression for HTTP/2",
-        href: "https://htmlspecs.com/http/rfc7541.html",
-        src: "https://httpwg.org/specs/rfc7541.html",
-        "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        lang: "cjk",
-        state: "RFC"
-    },
-    {
-        text: "QPACK: Field Compression for HTTP/3",
-        href: "https://htmlspecs.com/http/rfc9204.html",
-        src: "https://httpwg.org/specs/rfc9204.html",
-        "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        lang: "cjk",
-        state: "RFC"
-    },
-    {
-        text: "Structured Field Values for HTTP",
-        href: "https://htmlspecs.com/http/rfc9651.html",
-        src: "https://httpwg.org/specs/rfc9651.html",
-        "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        lang: "cjk",
-        state: "RFC"
-    },
-    {
-        text: "Building Protocols with HTTP",
-        href: "https://htmlspecs.com/http/rfc9205.html",
-        src: "https://httpwg.org/specs/rfc9205.html",
-        "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        lang: "cjk",
-        state: "RFC"
-    },
+{
+  text: "HTTP Semantics (RFC 9110)",
+  href: "https://htmlspecs.com/http/rfc9110.html",
+  src: "https://httpwg.org/specs/rfc9110.html",
+  "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
+  etag: "\"69016230-df679\"",
+  lang: "cjk",
+  state: "RFC"
+},
 
-    //### 方法|메서드|メソッド
-    {
-        text: "PATCH Method for HTTP",
-        href: "https://htmlspecs.com/http/rfc5789.html",
-        src: "https://httpwg.org/specs/rfc5789.html",
-        "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        lang: "cjk",
-        state: "RFC"
-    },
+{
+  text: "HTTP Caching",
+  href: "https://htmlspecs.com/http/rfc9111.html",
+  src: "https://httpwg.org/specs/rfc9111.html",
+  "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
+  etag: "\"69016230-2b98d\"",
+  lang: "cjk",
+  state: "RFC"
+},
 
-    //### 状态码|상태 코드|状态码
-    {
-        text: "Additional HTTP Status Codes",
-        href: "https://htmlspecs.com/http/rfc6585.html",
-        src: "https://httpwg.org/specs/rfc6585.html",
-        "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        lang: "cjk",
-        state: "RFC"
-    },
-    {
-        text: "An HTTP Status Code to Report Legal Obstacles",
-        href: "https://htmlspecs.com/http/rfc7725.html",
-        src: "https://httpwg.org/specs/rfc7725.html",
-        "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        lang: "cjk",
-        state: "RFC"
-    },
-    {
-        text: "An HTTP Status Code for Indicating Hints",
-        href: "https://htmlspecs.com/http/rfc8297.html",
-        src: "https://httpwg.org/specs/rfc8297.html",
-        "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        lang: "cjk",
-        state: "RFC"
-    },
+{
+  text: "HTTP/1.1",
+  href: "https://htmlspecs.com/http/rfc9112.html",
+  src: "https://httpwg.org/specs/rfc9112.html",
+  "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
+  etag: "\"69016230-36986\"",
+  lang: "cjk",
+  state: "RFC"
+},
 
-    //### 缓存扩展|캐싱 확장|キャッシュ拡張
-    {
-        text: "HTTP Cache-Control Extensions for Stale Content",
-        href: "https://htmlspecs.com/http/rfc5861.html",
-        src: "https://httpwg.org/specs/rfc5861.html",
-        "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        lang: "cjk",
-        state: "RFC"
-    },
-    {
-        text: "HTTP Immutable Responses",
-        href: "https://htmlspecs.com/http/rfc8246.html",
-        src: "https://httpwg.org/specs/rfc8246.html",
-        "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        lang: "cjk",
-        state: "RFC"
-    },
-    {
-        text: "The Cache-Status HTTP Response Header Field",
-        href: "https://htmlspecs.com/http/rfc9211.html",
-        src: "https://httpwg.org/specs/rfc9211.html",
-        "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        lang: "cjk",
-        state: "RFC"
-    },
-    {
-        text: "Targeted HTTP Cache Control",
-        href: "https://htmlspecs.com/http/rfc9213.html",
-        src: "https://httpwg.org/specs/rfc9213.html",
-        "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        lang: "cjk",
-        state: "RFC"
-    },
+{
+  text: "HTTP/2",
+  href: "https://htmlspecs.com/http/rfc9113.html",
+  src: "https://httpwg.org/specs/rfc9113.html",
+  "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
+  etag: "\"69016230-4fb9e\"",
+  lang: "cjk",
+  state: "RFC"
+},
 
-    //### 内容相关扩展|콘텐츠 관련 확장|コンテンツ関連の拡張
-    {
-        text: "HTTP State Management Mechanism",
-        href: "https://htmlspecs.com/http/rfc6265.html",
-        src: "https://httpwg.org/specs/rfc6265.html",
-        "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        lang: "cjk",
-        state: "RFC"
-    },
-    {
-        text: "Use of the Content-Disposition Header Field in the Hypertext Transfer Protocol (HTTP)",
-        href: "https://htmlspecs.com/http/rfc6266.html",
-        src: "https://httpwg.org/specs/rfc6266.html",
-        "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        lang: "cjk",
-        state: "RFC"
-    },
-    {
-        text: "Hypertext Transfer Protocol (HTTP) Client-Initiated Content-Encoding",
-        href: "https://htmlspecs.com/http/rfc7694.html",
-        src: "https://httpwg.org/specs/rfc7694.html",
-        "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        lang: "cjk",
-        state: "RFC"
-    },
-    {
-        text: "Prefer Header for HTTP",
-        href: "https://htmlspecs.com/http/rfc7240.html",
-        src: "https://httpwg.org/specs/rfc7240.html",
-        "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        lang: "cjk",
-        state: "RFC"
-    },
-    {
-        text: "Web Linking",
-        href: "https://htmlspecs.com/http/rfc8288.html",
-        src: "https://httpwg.org/specs/rfc8288.html",
-        "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        lang: "cjk",
-        state: "RFC"
-    },
-    {
-        text: "Compression Dictionary Transport",
-        href: "https://htmlspecs.com/http/rfc9842.html",
-        src: "https://httpwg.org/specs/rfc9842.html",
-        "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        lang: "cjk",
-        state: "RFC"
-    },
+{
+  text: "HTTP/3",
+  href: "https://htmlspecs.com/http/rfc9114.html",
+  src: "https://httpwg.org/specs/rfc9114.html",
+  "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
+  etag: "\"69016230-44fa1\"",
+  lang: "cjk",
+  state: "RFC"
+},
 
-    //### 连接与中介扩展|연결 및 중개자 확장|接続および中継拡張
-    {
-        text: "The ALPN HTTP Header Field",
-        href: "https://htmlspecs.com/http/rfc7639.html",
-        src: "https://httpwg.org/specs/rfc7639.html",
-        "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        lang: "cjk",
-        state: "RFC"
-    },
-    {
-        text: "HTTP Alternative Services",
-        href: "https://htmlspecs.com/http/rfc7838.html",
-        src: "https://httpwg.org/specs/rfc7838.html",
-        "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        lang: "cjk",
-        state: "RFC"
-    },
-    {
-        text: "The ORIGIN HTTP/2 Frame",
-        href: "https://htmlspecs.com/http/rfc8336.html",
-        src: "https://httpwg.org/specs/rfc8336.html",
-        "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        lang: "cjk",
-        state: "RFC"
-    },
-    {
-        text: "Bootstrapping WebSockets with HTTP/2",
-        href: "https://htmlspecs.com/http/rfc8441.html",
-        src: "https://httpwg.org/specs/rfc8441.html",
-        "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        lang: "cjk",
-        state: "RFC"
-    },
-    {
-        text: "The Proxy-Status HTTP Response Header Field",
-        href: "https://htmlspecs.com/http/rfc9209.html",
-        src: "https://httpwg.org/specs/rfc9209.html",
-        "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        lang: "cjk",
-        state: "RFC"
-    },
-    {
-        text: "Extensible Prioritization Scheme for HTTP",
-        href: "https://htmlspecs.com/http/rfc9218.html",
-        src: "https://httpwg.org/specs/rfc9218.html",
-        "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        lang: "cjk",
-        state: "RFC"
-    },
-    {
-        text: "Bootstrapping WebSockets with HTTP/3",
-        href: "https://htmlspecs.com/http/rfc9220.html",
-        src: "https://httpwg.org/specs/rfc9220.html",
-        "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        lang: "cjk",
-        state: "RFC"
-    },
-    {
-        text: "Proxying UDP in HTTP",
-        href: "https://htmlspecs.com/http/rfc9298.html",
-        src: "https://www.rfc-editor.org/rfc/rfc9298",
-        "last-modified": "Wed, 22 Oct 2025 00:05:19 GMT",
-        lang: "cjk",
-        state: "RFC"
-    },
-    {
-        text: "The ORIGIN Extension in HTTP/3",
-        href: "https://htmlspecs.com/http/rfc9412.html",
-        src: "https://httpwg.org/specs/rfc9412.html",
-        "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        lang: "cjk",
-        state: "RFC"
-    },
-    {
-        text: "Client-Cert HTTP Header Field",
-        href: "https://htmlspecs.com/http/rfc9440.html",
-        src: "https://httpwg.org/specs/rfc9440.html",
-        "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        lang: "cjk",
-        state: "RFC"
-    },
+{
+  text: "HPACK: Header Compression for HTTP/2",
+  href: "https://htmlspecs.com/http/rfc7541.html",
+  src: "https://httpwg.org/specs/rfc7541.html",
+  "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
+  etag: "\"69016230-2921e\"",
+  lang: "cjk",
+  state: "RFC"
+},
 
-    //### 安全相关扩展|보안 관련 확장|セキュリティ関連の拡張
-    {
-        text: "HTTP Digest Access Authentication",
-        href: "https://htmlspecs.com/http/rfc7616.html",
-        src: "https://httpwg.org/specs/rfc7616.html",
-        "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        lang: "cjk",
-        state: "RFC"
-    },
-    {
-        text: "The 'Basic' HTTP Authentication Scheme",
-        href: "https://htmlspecs.com/http/rfc7617.html",
-        src: "https://httpwg.org/specs/rfc7617.html",
-        "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        lang: "cjk",
-        state: "RFC"
-    },
-    {
-        text: "Encrypted Content-Encoding for HTTP",
-        href: "https://htmlspecs.com/http/rfc8188.html",
-        src: "https://httpwg.org/specs/rfc8188.html",
-        "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        lang: "cjk",
-        state: "RFC"
-    },
-    {
-        text: "Using Early Data in HTTP",
-        href: "https://htmlspecs.com/http/rfc8470.html",
-        src: "https://httpwg.org/specs/rfc8470.html",
-        "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        lang: "cjk",
-        state: "RFC"
-    },
-    {
-        text: "HTTP Message Signatures",
-        href: "https://htmlspecs.com/http/rfc9421.html",
-        src: "https://httpwg.org/specs/rfc9421.html",
-        "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        lang: "cjk",
-        state: "RFC"
-    },
-    {
-        text: "Digest Fields",
-        href: "https://htmlspecs.com/http/rfc9530.html",
-        src: "https://httpwg.org/specs/rfc9530.html",
-        "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        lang: "cjk",
-        state: "RFC"
-    },
-    {
-        text: "The Concealed HTTP Authentication Scheme",
-        href: "https://htmlspecs.com/http/rfc9729.html",
-        src: "https://httpwg.org/specs/rfc9729.html",
-        "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        lang: "cjk",
-        state: "RFC"
-    }
+{
+  text: "QPACK: Field Compression for HTTP/3",
+  href: "https://htmlspecs.com/http/rfc9204.html",
+  src: "https://httpwg.org/specs/rfc9204.html",
+  "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
+  etag: "\"69016230-27785\"",
+  lang: "cjk",
+  state: "RFC"
+},
+
+{
+  text: "Structured Field Values for HTTP",
+  href: "https://htmlspecs.com/http/rfc9651.html",
+  src: "https://httpwg.org/specs/rfc9651.html",
+  "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
+  etag: "\"69016230-2132a\"",
+  lang: "cjk",
+  state: "RFC"
+},
+
+{
+  text: "Building Protocols with HTTP",
+  href: "https://htmlspecs.com/http/rfc9205.html",
+  src: "https://httpwg.org/specs/rfc9205.html",
+  "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
+  etag: "\"69016230-1dd77\"",
+  lang: "cjk",
+  state: "RFC"
+},
+
+{
+  text: "PATCH Method for HTTP",
+  href: "https://htmlspecs.com/http/rfc5789.html",
+  src: "https://httpwg.org/specs/rfc5789.html",
+  "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
+  etag: "\"69016230-9b07\"",
+  lang: "cjk",
+  state: "RFC"
+},
+
+{
+  text: "Additional HTTP Status Codes",
+  href: "https://htmlspecs.com/http/rfc6585.html",
+  src: "https://httpwg.org/specs/rfc6585.html",
+  "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
+  etag: "\"69016230-90ef\"",
+  lang: "cjk",
+  state: "RFC"
+},
+
+{
+  text: "An HTTP Status Code to Report Legal Obstacles",
+  href: "https://htmlspecs.com/http/rfc7725.html",
+  src: "https://httpwg.org/specs/rfc7725.html",
+  "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
+  etag: "\"69016230-68db\"",
+  lang: "cjk",
+  state: "RFC"
+},
+
+{
+  text: "An HTTP Status Code for Indicating Hints",
+  href: "https://htmlspecs.com/http/rfc8297.html",
+  src: "https://httpwg.org/specs/rfc8297.html",
+  "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
+  etag: "\"69016230-73c4\"",
+  lang: "cjk",
+  state: "RFC"
+},
+
+{
+  text: "HTTP Cache-Control Extensions for Stale Content",
+  href: "https://htmlspecs.com/http/rfc5861.html",
+  src: "https://httpwg.org/specs/rfc5861.html",
+  "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
+  etag: "\"69016230-6a77\"",
+  lang: "cjk",
+  state: "RFC"
+},
+
+{
+  text: "HTTP Immutable Responses",
+  href: "https://htmlspecs.com/http/rfc8246.html",
+  src: "https://httpwg.org/specs/rfc8246.html",
+  "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
+  etag: "\"69016230-6f44\"",
+  lang: "cjk",
+  state: "RFC"
+},
+
+{
+  text: "The Cache-Status HTTP Response Header Field",
+  href: "https://htmlspecs.com/http/rfc9211.html",
+  src: "https://httpwg.org/specs/rfc9211.html",
+  "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
+  etag: "\"69016230-abd1\"",
+  lang: "cjk",
+  state: "RFC"
+},
+
+{
+  text: "Targeted HTTP Cache Control",
+  href: "https://htmlspecs.com/http/rfc9213.html",
+  src: "https://httpwg.org/specs/rfc9213.html",
+  "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
+  etag: "\"69016230-a034\"",
+  lang: "cjk",
+  state: "RFC"
+},
+
+{
+  text: "HTTP State Management Mechanism",
+  href: "https://htmlspecs.com/http/rfc6265.html",
+  src: "https://httpwg.org/specs/rfc6265.html",
+  "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
+  etag: "\"69016230-1d2cd\"",
+  lang: "cjk",
+  state: "RFC"
+},
+
+{
+  text: "Use of the Content-Disposition Header Field in the Hypertext Transfer Protocol (HTTP)",
+  href: "https://htmlspecs.com/http/rfc6266.html",
+  src: "https://httpwg.org/specs/rfc6266.html",
+  "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
+  etag: "\"69016230-de1b\"",
+  lang: "cjk",
+  state: "RFC"
+},
+
+{
+  text: "Hypertext Transfer Protocol (HTTP) Client-Initiated Content-Encoding",
+  href: "https://htmlspecs.com/http/rfc7694.html",
+  src: "https://httpwg.org/specs/rfc7694.html",
+  "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
+  etag: "\"69016230-8a24\"",
+  lang: "cjk",
+  state: "RFC"
+},
+
+{
+  text: "Prefer Header for HTTP",
+  href: "https://htmlspecs.com/http/rfc7240.html",
+  src: "https://httpwg.org/specs/rfc7240.html",
+  "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
+  etag: "\"69016230-d5cb\"",
+  lang: "cjk",
+  state: "RFC"
+},
+
+{
+  text: "Web Linking",
+  href: "https://htmlspecs.com/http/rfc8288.html",
+  src: "https://httpwg.org/specs/rfc8288.html",
+  "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
+  etag: "\"69016230-14cc2\"",
+  lang: "cjk",
+  state: "RFC"
+},
+
+{
+  text: "Compression Dictionary Transport",
+  href: "https://htmlspecs.com/http/rfc9842.html",
+  src: "https://httpwg.org/specs/rfc9842.html",
+  "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
+  etag: "\"69016230-144e8\"",
+  lang: "cjk",
+  state: "RFC"
+},
+
+{
+  text: "The ALPN HTTP Header Field",
+  href: "https://htmlspecs.com/http/rfc7639.html",
+  src: "https://httpwg.org/specs/rfc7639.html",
+  "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
+  etag: "\"69016230-86f9\"",
+  lang: "cjk",
+  state: "RFC"
+},
+
+{
+  text: "HTTP Alternative Services",
+  href: "https://htmlspecs.com/http/rfc7838.html",
+  src: "https://httpwg.org/specs/rfc7838.html",
+  "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
+  etag: "\"69016230-139cc\"",
+  lang: "cjk",
+  state: "RFC"
+},
+
+{
+  text: "The ORIGIN HTTP/2 Frame",
+  href: "https://htmlspecs.com/http/rfc8336.html",
+  src: "https://httpwg.org/specs/rfc8336.html",
+  "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
+  etag: "\"69016230-aabc\"",
+  lang: "cjk",
+  state: "RFC"
+},
+
+{
+  text: "Bootstrapping WebSockets with HTTP/2",
+  href: "https://htmlspecs.com/http/rfc8441.html",
+  src: "https://httpwg.org/specs/rfc8441.html",
+  "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
+  etag: "\"69016230-9881\"",
+  lang: "cjk",
+  state: "RFC"
+},
+
+{
+  text: "The Proxy-Status HTTP Response Header Field",
+  href: "https://htmlspecs.com/http/rfc9209.html",
+  src: "https://httpwg.org/specs/rfc9209.html",
+  "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
+  etag: "\"69016230-14f69\"",
+  lang: "cjk",
+  state: "RFC"
+},
+
+{
+  text: "Extensible Prioritization Scheme for HTTP",
+  href: "https://htmlspecs.com/http/rfc9218.html",
+  src: "https://httpwg.org/specs/rfc9218.html",
+  "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
+  etag: "\"69016230-1843f\"",
+  lang: "cjk",
+  state: "RFC"
+},
+
+{
+  text: "Bootstrapping WebSockets with HTTP/3",
+  href: "https://htmlspecs.com/http/rfc9220.html",
+  src: "https://httpwg.org/specs/rfc9220.html",
+  "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
+  etag: "\"69016230-6676\"",
+  lang: "cjk",
+  state: "RFC"
+},
+
+{
+  text: "Proxying UDP in HTTP",
+  href: "https://htmlspecs.com/http/rfc9298.html",
+  src: "https://www.rfc-editor.org/rfc/rfc9298",
+  "last-modified": "0",
+  etag: null,
+  lang: "cjk",
+  state: "RFC"
+},
+
+{
+  text: "The ORIGIN Extension in HTTP/3",
+  href: "https://htmlspecs.com/http/rfc9412.html",
+  src: "https://httpwg.org/specs/rfc9412.html",
+  "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
+  etag: "\"69016230-64f2\"",
+  lang: "cjk",
+  state: "RFC"
+},
+
+{
+  text: "Client-Cert HTTP Header Field",
+  href: "https://htmlspecs.com/http/rfc9440.html",
+  src: "https://httpwg.org/specs/rfc9440.html",
+  "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
+  etag: "\"69016230-105df\"",
+  lang: "cjk",
+  state: "RFC"
+},
+
+{
+  text: "HTTP Digest Access Authentication",
+  href: "https://htmlspecs.com/http/rfc7616.html",
+  src: "https://httpwg.org/specs/rfc7616.html",
+  "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
+  etag: "\"69016230-1b777\"",
+  lang: "cjk",
+  state: "RFC"
+},
+
+{
+  text: "The 'Basic' HTTP Authentication Scheme",
+  href: "https://htmlspecs.com/http/rfc7617.html",
+  src: "https://httpwg.org/specs/rfc7617.html",
+  "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
+  etag: "\"69016230-e5a0\"",
+  lang: "cjk",
+  state: "RFC"
+},
+
+{
+  text: "Encrypted Content-Encoding for HTTP",
+  href: "https://htmlspecs.com/http/rfc8188.html",
+  src: "https://httpwg.org/specs/rfc8188.html",
+  "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
+  etag: "\"69016230-eab6\"",
+  lang: "cjk",
+  state: "RFC"
+},
+
+{
+  text: "Using Early Data in HTTP",
+  href: "https://htmlspecs.com/http/rfc8470.html",
+  src: "https://httpwg.org/specs/rfc8470.html",
+  "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
+  etag: "\"69016230-caa3\"",
+  lang: "cjk",
+  state: "RFC"
+},
+
+{
+  text: "HTTP Message Signatures",
+  href: "https://htmlspecs.com/http/rfc9421.html",
+  src: "https://httpwg.org/specs/rfc9421.html",
+  "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
+  etag: "\"69016230-5a94f\"",
+  lang: "cjk",
+  state: "RFC"
+},
+
+{
+  text: "Digest Fields",
+  href: "https://htmlspecs.com/http/rfc9530.html",
+  src: "https://httpwg.org/specs/rfc9530.html",
+  "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
+  etag: "\"69016230-2016f\"",
+  lang: "cjk",
+  state: "RFC"
+},
+
+{
+  text: "The Concealed HTTP Authentication Scheme",
+  href: "https://htmlspecs.com/http/rfc9729.html",
+  src: "https://httpwg.org/specs/rfc9729.html",
+  "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
+  etag: "\"69016230-11b87\"",
+  lang: "cjk",
+  state: "RFC"
+}
+
 ];
 
 if (typeof module !== 'undefined' && module.exports) {
