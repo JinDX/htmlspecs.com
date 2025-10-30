@@ -400,7 +400,7 @@ loadDataScript(function () {
     document.head.appendChild(style);
 
     function extractRelevantLinks(data) {
-        return data.filter(link => link.src.includes('w3.org') || link.src.includes('wicg.github.io'));
+        return data.filter(link => link.src.includes('w3.org/TR') || link.src.includes('wicg.github.io'));
     }
 
     const relevantLinksFromLinks = extractRelevantLinks(links);
