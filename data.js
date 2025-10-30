@@ -931,7 +931,7 @@ const cssLinks = [
 
     //## CSS|CSS|CSS
     {
-        text: "index",
+        text: "CSS current work",
         href: "https://htmlspecs.com/css/",
         src: "https://www.w3.org/Style/CSS/current-work",
         "last-modified": "-",
