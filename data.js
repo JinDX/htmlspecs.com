@@ -936,7 +936,7 @@ const cssLinks = [
         src: "https://www.w3.org/Style/CSS/current-work",
         "last-modified": "-",
         lang: "cjk",
-        state: "WD"
+        state: ""
     },
     {
         text: "CSS 2.2 Specification",
