@@ -931,6 +931,14 @@ const cssLinks = [
 
     //## CSS|CSS|CSS
     {
+        text: "index",
+        href: "https://htmlspecs.com/css/",
+        src: "https://www.w3.org/Style/CSS/current-work",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
+    {
         text: "CSS 2.2 Specification",
         href: "https://htmlspecs.com/css/css22/",
         src: "https://www.w3.org/TR/2016/WD-CSS22-20160412/",
