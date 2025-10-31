@@ -86,7 +86,6 @@ cssBlockLines.forEach(line => {
     }
 });
 
-// { 新增 } 解析 httpLinks 的分类元信息并收集每个分类下的 text 列表
 let httpCategories = extractCategories(dataJsContent.match(/const\s+httpLinks\s*=\s*\[[\s\S]*?];/)?.[0] || '');
 
 let currentHttpIdx = -1;
@@ -156,7 +155,6 @@ function generateMd(classified, cssClassified /*, ...existing params...*/ , http
         while (i < items.length) {
             const l = items[i];
             if (l.state === 'Guide' && i > 0) {
-                // 合并到上一条
                 lines[lines.length - 1] = lines[lines.length - 1].replace(/\n$/, '') + '，' + linkToMd(l) + '\n';
                 i++;
             } else {
@@ -189,7 +187,6 @@ function generateMd(classified, cssClassified /*, ...existing params...*/ , http
         }
     }
 
-    // { 新增 } 在 CSS 区块之后渲染 HTTP 区块（若分类名为 "HTTP" 则使用 H2）
     for (const cat of httpCategories) {
         const items = httpClassified[cat.id];
         if (items && items.length) {
@@ -211,7 +208,6 @@ const classified = classifyLinks(links, categories);
 const cssSpecs = cssLinks.filter(o => o && typeof o === 'object');
 const cssClassified = classifyLinks(cssSpecs, cssCategories);
 
-// { 新增 } 解析并分类 httpLinks，同时传入生成函数
 const httpSpecs = extractArray('httpLinks').filter(l => !l.lang || l.lang.includes(langArg));
 const httpClassified = classifyLinks(httpSpecs, httpCategories);
 
