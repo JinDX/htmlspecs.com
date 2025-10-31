@@ -220,6 +220,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [CSS Animation Worklet API](https://htmlspecs.com/css/css-animation-worklet-1)（[Source](https://www.w3.org/TR/2019/WD-css-animation-worklet-1-20190625/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 
 ### 包含
+- [CSS Containment Module Level 1](https://htmlspecs.com/css/css-contain-1)（[Source](https://www.w3.org/TR/2024/REC-css-contain-1-20240625/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [CSS Containment Module Level 2](https://htmlspecs.com/css/css-contain-2)（[Source](https://www.w3.org/TR/2022/WD-css-contain-2-20220917/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Containment Module Level 3](https://htmlspecs.com/css/css-contain-3)（[Source](https://www.w3.org/TR/2022/WD-css-contain-3-20220818/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 
