@@ -25,7 +25,8 @@ const checkLinks = async (links, category) => {
   };
 
   const w3Links = links.filter(item => item.src.includes('w3.org/TR'));
-  links = links.filter(item => !item.src.includes('w3.org'));
+  // 只把包含 /TR 的当作 w3 特殊处理，其它链接继续处理（避免把其它 w3.org 链接意外丢弃）
+  const otherLinks = links.filter(item => !item.src.includes('w3.org/TR'));
 
   const w3Requests = w3Links.map((link, index) => {
     return new Promise(resolve => {
@@ -69,17 +70,26 @@ const checkLinks = async (links, category) => {
     });
   });
 
-  const otherRequests = links.map(link => {
+  const otherRequests = otherLinks.map(link => {
     return new Promise(resolve => {
       https.get(link.src, { method: 'HEAD' }, res => {
-        const etag = res.headers['etag'] || res.headers.etag;
+        let etag = res.headers['etag'] || res.headers.etag;
         const lastModified = res.headers['last-modified'];
+
+        // 去除 etag 中的所有双引号
+        if (etag) {
+          etag = etag.replace(/"/g, '');
+        }
 
         const hasStoredEtag = Object.prototype.hasOwnProperty.call(link, 'etag');
         const storedLastIsZero = link['last-modified'] === '0';
 
         if (hasStoredEtag) {
-          const stored = link.etag;
+          // 也去除存储的 etag 中的所有双引号
+          let stored = link.etag;
+          if (stored) {
+            stored = stored.replace(/"/g, '');
+          }
           if (etag) {
             if (stored !== etag) {
               const info =
@@ -127,7 +137,8 @@ const checkLinks = async (links, category) => {
   });
 
   await Promise.all([...w3Requests, ...otherRequests]);
-  process.stdout.write('\n');
+  // 补齐进度显示，防止少数分支遗漏导致输出不满
+  process.stdout.write(`\rProgress: ${total}/${total}\n`);
   logResult('\n');
 };
 
