@@ -1157,6 +1157,14 @@ const cssLinks = [
         state: "WD"
     },
     {
+        text: "CSS Geometry Module Level 1",
+        href: "https://htmlspecs.com/css/css-geometry-1",
+        src: "https://www.w3.org/TR/2018/CR-geometry-1-20181204/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "CR"
+    },
+    {
         text: "CSS Display Module Level 3",
         href: "https://htmlspecs.com/css/css-display-3",
         src: "https://www.w3.org/TR/2023/CR-css-display-3-20230330/",
