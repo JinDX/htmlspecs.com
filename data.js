@@ -1308,6 +1308,14 @@ const cssLinks = [
         lang: "cjk",
         state: "WD"
     },
+    {
+        text: "CSS Paged Media Module Level 3",
+        href: "https://htmlspecs.com/css/css-page-3",
+        src: "https://www.w3.org/TR/2023/WD-css-page-3-20230914/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
 
     //### 导航|내비게이션|ナビゲーション
     {
