@@ -1476,6 +1476,14 @@ const cssLinks = [
 
     //### 包含|컨테인먼트|コンテインメント
     {
+        text: "CSS Containment Module Level 1",
+        href: "https://htmlspecs.com/css/css-contain-1",
+        src: "https://www.w3.org/TR/2024/REC-css-contain-1-20240625/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "REC"
+    },
+    {
         text: "CSS Containment Module Level 2",
         href: "https://htmlspecs.com/css/css-contain-2",
         src: "https://www.w3.org/TR/2022/WD-css-contain-2-20220917/",
