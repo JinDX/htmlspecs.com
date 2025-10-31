@@ -1707,7 +1707,7 @@ const cssLinks = [
     {
         text: "CSS Values and Units Module Level 4",
         href: "https://htmlspecs.com/css/css-values-4",
-        src: "https://www.w3.org/TR/2023/WD-css-values-4-20231027/",
+        src: "https://www.w3.org/TR/2024/WD-css-values-4-20240312/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
@@ -1774,6 +1774,7 @@ const cssLinks = [
 ];
 const httpLinks = [
 
+    //## HTTP|HTTP|HTTP
     {
         text: "index",
         href: "https://htmlspecs.com/http/",
@@ -1784,6 +1785,7 @@ const httpLinks = [
         state: ""
     },
 
+    //### 核心规范|핵심 명세|コア仕様
     {
         text: "HTTP Semantics (RFC 9110)",
         href: "https://htmlspecs.com/http/rfc9110.html",
@@ -1874,6 +1876,7 @@ const httpLinks = [
         state: "RFC"
     },
 
+    //### 方法|메서드|メソッド
     {
         text: "PATCH Method for HTTP",
         href: "https://htmlspecs.com/http/rfc5789.html",
@@ -1884,6 +1887,7 @@ const httpLinks = [
         state: "RFC"
     },
 
+    //### 状态码|상태 코드|状态码
     {
         text: "Additional HTTP Status Codes",
         href: "https://htmlspecs.com/http/rfc6585.html",
@@ -1914,6 +1918,7 @@ const httpLinks = [
         state: "RFC"
     },
 
+    //### 缓存扩展|캐싱 확장|キャッシュ拡張
     {
         text: "HTTP Cache-Control Extensions for Stale Content",
         href: "https://htmlspecs.com/http/rfc5861.html",
@@ -1954,6 +1959,7 @@ const httpLinks = [
         state: "RFC"
     },
 
+    //### 内容相关扩展|콘텐츠 관련 확장|コンテンツ関連の拡張
     {
         text: "HTTP State Management Mechanism",
         href: "https://htmlspecs.com/http/rfc6265.html",
@@ -2014,6 +2020,7 @@ const httpLinks = [
         state: "RFC"
     },
 
+    //### 连接与中介扩展|연결 및 중개자 확장|接続および中継拡張
     {
         text: "The ALPN HTTP Header Field",
         href: "https://htmlspecs.com/http/rfc7639.html",
@@ -2114,6 +2121,7 @@ const httpLinks = [
         state: "RFC"
     },
 
+    //### 安全相关扩展|보안 관련 확장|セキュリティ関連の拡張
     {
         text: "HTTP Digest Access Authentication",
         href: "https://htmlspecs.com/http/rfc7616.html",

@@ -252,7 +252,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [CSS Basic User Interface Module Level 4](https://htmlspecs.com/css/css-ui-4)（[Source](https://www.w3.org/TR/2021/WD-css-ui-4-20210316/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Syntax Module Level 3](https://htmlspecs.com/css/css-syntax-3)（[Source](https://www.w3.org/TR/2021/CRD-css-syntax-3-20211224/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [CSS Values and Units Module Level 3](https://htmlspecs.com/css/css-values-3)（[Source](https://www.w3.org/TR/2024/CRD-css-values-3-20240322/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
-- [CSS Values and Units Module Level 4](https://htmlspecs.com/css/css-values-4)（[Source](https://www.w3.org/TR/2023/WD-css-values-4-20231027/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [CSS Values and Units Module Level 4](https://htmlspecs.com/css/css-values-4)（[Source](https://www.w3.org/TR/2024/WD-css-values-4-20240312/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Environment Variables Module Level 1](https://htmlspecs.com/css/css-env-1)（[Source](https://www.w3.org/TR/2025/WD-css-env-1-20250923/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Logical Properties and Values Level 1](https://htmlspecs.com/css/css-logical-1)（[Source](https://www.w3.org/TR/2018/WD-css-logical-1-20180827/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Mixins Module Level 1](https://htmlspecs.com/css/css-mixins-1)（[Source](https://www.w3.org/TR/2025/WD-css-mixins-1-20250515/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
@@ -262,4 +262,60 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [CSS Painting API Level 1](https://htmlspecs.com/css/css-paint-api-1)（[Source](https://www.w3.org/TR/2021/CRD-css-paint-api-1-20211216/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [CSS Layout API Level 1](https://htmlspecs.com/css/css-layout-api-1)（[Source](https://www.w3.org/TR/2018/WD-css-layout-api-1-20180412/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Properties and Values API Level 1](https://htmlspecs.com/css/css-properties-values-api-1)（[Source](https://www.w3.org/TR/2024/WD-css-properties-values-api-1-20240326/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+
+## HTTP
+- [index](https://htmlspecs.com/http/)（[Source](https://httpwg.org/specs/)）
+
+### 核心规范
+- [HTTP Semantics (RFC 9110)](https://htmlspecs.com/http/rfc9110.html)（[Source](https://httpwg.org/specs/rfc9110.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [HTTP Caching](https://htmlspecs.com/http/rfc9111.html)（[Source](https://httpwg.org/specs/rfc9111.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [HTTP/1.1](https://htmlspecs.com/http/rfc9112.html)（[Source](https://httpwg.org/specs/rfc9112.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [HTTP/2](https://htmlspecs.com/http/rfc9113.html)（[Source](https://httpwg.org/specs/rfc9113.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [HTTP/3](https://htmlspecs.com/http/rfc9114.html)（[Source](https://httpwg.org/specs/rfc9114.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [HPACK: Header Compression for HTTP/2](https://htmlspecs.com/http/rfc7541.html)（[Source](https://httpwg.org/specs/rfc7541.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [QPACK: Field Compression for HTTP/3](https://htmlspecs.com/http/rfc9204.html)（[Source](https://httpwg.org/specs/rfc9204.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [Structured Field Values for HTTP](https://htmlspecs.com/http/rfc9651.html)（[Source](https://httpwg.org/specs/rfc9651.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [Building Protocols with HTTP](https://htmlspecs.com/http/rfc9205.html)（[Source](https://httpwg.org/specs/rfc9205.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+
+### 方法
+- [PATCH Method for HTTP](https://htmlspecs.com/http/rfc5789.html)（[Source](https://httpwg.org/specs/rfc5789.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+
+### 状态码
+- [Additional HTTP Status Codes](https://htmlspecs.com/http/rfc6585.html)（[Source](https://httpwg.org/specs/rfc6585.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [An HTTP Status Code to Report Legal Obstacles](https://htmlspecs.com/http/rfc7725.html)（[Source](https://httpwg.org/specs/rfc7725.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [An HTTP Status Code for Indicating Hints](https://htmlspecs.com/http/rfc8297.html)（[Source](https://httpwg.org/specs/rfc8297.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+
+### 缓存扩展
+- [HTTP Cache-Control Extensions for Stale Content](https://htmlspecs.com/http/rfc5861.html)（[Source](https://httpwg.org/specs/rfc5861.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [HTTP Immutable Responses](https://htmlspecs.com/http/rfc8246.html)（[Source](https://httpwg.org/specs/rfc8246.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [The Cache-Status HTTP Response Header Field](https://htmlspecs.com/http/rfc9211.html)（[Source](https://httpwg.org/specs/rfc9211.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [Targeted HTTP Cache Control](https://htmlspecs.com/http/rfc9213.html)（[Source](https://httpwg.org/specs/rfc9213.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+
+### 内容相关扩展
+- [HTTP State Management Mechanism](https://htmlspecs.com/http/rfc6265.html)（[Source](https://httpwg.org/specs/rfc6265.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [Use of the Content-Disposition Header Field in the Hypertext Transfer Protocol (HTTP)](https://htmlspecs.com/http/rfc6266.html)（[Source](https://httpwg.org/specs/rfc6266.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [Hypertext Transfer Protocol (HTTP) Client-Initiated Content-Encoding](https://htmlspecs.com/http/rfc7694.html)（[Source](https://httpwg.org/specs/rfc7694.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [Prefer Header for HTTP](https://htmlspecs.com/http/rfc7240.html)（[Source](https://httpwg.org/specs/rfc7240.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [Web Linking](https://htmlspecs.com/http/rfc8288.html)（[Source](https://httpwg.org/specs/rfc8288.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [Compression Dictionary Transport](https://htmlspecs.com/http/rfc9842.html)（[Source](https://httpwg.org/specs/rfc9842.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+
+### 连接与中介扩展
+- [The ALPN HTTP Header Field](https://htmlspecs.com/http/rfc7639.html)（[Source](https://httpwg.org/specs/rfc7639.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [HTTP Alternative Services](https://htmlspecs.com/http/rfc7838.html)（[Source](https://httpwg.org/specs/rfc7838.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [The ORIGIN HTTP/2 Frame](https://htmlspecs.com/http/rfc8336.html)（[Source](https://httpwg.org/specs/rfc8336.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [Bootstrapping WebSockets with HTTP/2](https://htmlspecs.com/http/rfc8441.html)（[Source](https://httpwg.org/specs/rfc8441.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [The Proxy-Status HTTP Response Header Field](https://htmlspecs.com/http/rfc9209.html)（[Source](https://httpwg.org/specs/rfc9209.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [Extensible Prioritization Scheme for HTTP](https://htmlspecs.com/http/rfc9218.html)（[Source](https://httpwg.org/specs/rfc9218.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [Bootstrapping WebSockets with HTTP/3](https://htmlspecs.com/http/rfc9220.html)（[Source](https://httpwg.org/specs/rfc9220.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [Proxying UDP in HTTP](https://htmlspecs.com/http/rfc9298.html)（[Source](https://www.rfc-editor.org/rfc/rfc9298) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [The ORIGIN Extension in HTTP/3](https://htmlspecs.com/http/rfc9412.html)（[Source](https://httpwg.org/specs/rfc9412.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [Client-Cert HTTP Header Field](https://htmlspecs.com/http/rfc9440.html)（[Source](https://httpwg.org/specs/rfc9440.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+
+### 安全相关扩展
+- [HTTP Digest Access Authentication](https://htmlspecs.com/http/rfc7616.html)（[Source](https://httpwg.org/specs/rfc7616.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [Encrypted Content-Encoding for HTTP](https://htmlspecs.com/http/rfc8188.html)（[Source](https://httpwg.org/specs/rfc8188.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [Using Early Data in HTTP](https://htmlspecs.com/http/rfc8470.html)（[Source](https://httpwg.org/specs/rfc8470.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [HTTP Message Signatures](https://htmlspecs.com/http/rfc9421.html)（[Source](https://httpwg.org/specs/rfc9421.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [Digest Fields](https://htmlspecs.com/http/rfc9530.html)（[Source](https://httpwg.org/specs/rfc9530.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [The Concealed HTTP Authentication Scheme](https://htmlspecs.com/http/rfc9729.html)（[Source](https://httpwg.org/specs/rfc9729.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 
