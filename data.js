@@ -1253,6 +1253,14 @@ const cssLinks = [
         state: "WD"
     },
     {
+        text: "CSS Box Sizing Module Level 4",
+        href: "https://htmlspecs.com/css/css-sizing-4",
+        src: "https://www.w3.org/TR/2021/WD-css-sizing-4-20210520/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
+    {
         text: "CSS Box Alignment Module Level 3",
         href: "https://htmlspecs.com/css/css-align-3",
         src: "https://www.w3.org/TR/2025/WD-css-align-3-20250311/",
