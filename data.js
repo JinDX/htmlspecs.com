@@ -1760,6 +1760,14 @@ const cssLinks = [
         lang: "cjk",
         state: "WD"
     },
+    {
+        text: "CSS Scoping Module Level 1",
+        href: "https://htmlspecs.com/css/css-scoping-1",
+        src: "https://www.w3.org/TR/2014/WD-css-scoping-1-20140403/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
 
     //### CSS Houdini APIs|CSS Houdini API|CSS Houdini API
     {
