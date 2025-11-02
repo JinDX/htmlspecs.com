@@ -980,6 +980,14 @@ const cssLinks = [
         lang: "cjk",
         state: "CRD"
     },
+    // {
+    //     text: "CSS Color HDR Module Level 1",
+    //     href: "https://htmlspecs.com/css/css-color-hdr-1",
+    //     src: "https://www.w3.org/TR/2024/WD-css-color-hdr-1-20241217/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "CRD"
+    // },
     {
         text: "CSS Filter Effects Module Level 1",
         href: "https://htmlspecs.com/css/filter-effects-1",
@@ -1012,6 +1020,14 @@ const cssLinks = [
         lang: "cjk",
         state: "CRD"
     },
+    // {
+    //     text: "CSS Conditional Rules Module Level 5",
+    //     href: "https://htmlspecs.com/css/css-conditional-5",
+    //     src: "https://www.w3.org/TR/2025/WD-css-conditional-5-20251030/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "CSS Backgrounds and Borders Level 3",
         href: "https://htmlspecs.com/css/css-backgrounds-3",
@@ -1020,6 +1036,14 @@ const cssLinks = [
         lang: "cjk",
         state: "CRD"
     },
+    // {
+    //     text: "CSS Borders and Box Decorations Module Level 4",
+    //     href: "https://htmlspecs.com/css/css-borders-4",
+    //     src: "https://www.w3.org/TR/2025/WD-css-borders-4-20250722/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "CSS Custom Highlight API Module Level 1",
         href: "https://htmlspecs.com/css/css-highlight-api-1",
@@ -1046,6 +1070,14 @@ const cssLinks = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "CSS Fonts Module Level 5",
+    //     href: "https://htmlspecs.com/css/css-fonts-5",
+    //     src: "https://www.w3.org/TR/2024/WD-css-fonts-5-20240206/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "CSS Font Loading Module Level 3",
         href: "https://htmlspecs.com/css/css-font-loading",
@@ -1172,6 +1204,14 @@ const cssLinks = [
         lang: "cjk",
         state: "CR"
     },
+    // {
+    //     text: "CSS Display Module Level 4",
+    //     href: "https://htmlspecs.com/css/css-display-4",
+    //     src: "https://www.w3.org/TR/2024/WD-css-display-4-20241219/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "CR"
+    // },
     {
         text: "CSS Flexible Box Layout Module Level 1",
         href: "https://htmlspecs.com/css/css-flexbox-1",
@@ -1220,6 +1260,14 @@ const cssLinks = [
         lang: "cjk",
         state: "CR"
     },
+    // {
+    //     text: "CSS Multi-column Layout Module Level 2",
+    //     href: "https://htmlspecs.com/css/css-multicol-2",
+    //     src: "https://www.w3.org/TR/2024/WD-css-multicol-2-20241219/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "CSS Shapes Module Level 1",
         href: "https://htmlspecs.com/css/css-shapes-1",
@@ -1324,6 +1372,14 @@ const cssLinks = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "CSS Generated Content for Paged Media Module",
+    //     href: "https://htmlspecs.com/css/css-gcpm-3",
+    //     src: "https://www.w3.org/TR/2024/WD-css-gcpm-3-20240125/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
 
     //### 导航|내비게이션|ナビゲーション
     {
@@ -1671,6 +1727,14 @@ const cssLinks = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "CSS Viewport Module Level 1",
+    //     href: "https://htmlspecs.com/css/css-viewport-1",
+    //     src: "https://www.w3.org/TR/2024/WD-css-viewport-1-20240125/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "CSS Cascading and Inheritance Level 3",
         href: "https://htmlspecs.com/css/css-cascade-3",
@@ -1744,6 +1808,14 @@ const cssLinks = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "CSS Values and Units Module Level 5",
+    //     href: "https://htmlspecs.com/css/css-values-5",
+    //     src: "https://www.w3.org/TR/2024/WD-css-values-5-20241111/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "CSS Environment Variables Module Level 1",
         href: "https://htmlspecs.com/css/css-env-1",
