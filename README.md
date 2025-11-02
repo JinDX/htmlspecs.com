@@ -152,6 +152,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 ### 字体
 - [CSS Fonts Module Level 3](https://htmlspecs.com/css/css-fonts-3)（[Source](https://www.w3.org/TR/2018/REC-css-fonts-3-20180920/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [CSS Fonts Module Level 4](https://htmlspecs.com/css/css-fonts-4)（[Source](https://www.w3.org/TR/2024/WD-css-fonts-4-20240201/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [CSS Fonts Module Level 5](https://htmlspecs.com/css/css-fonts-5)（[Source](https://www.w3.org/TR/2024/WD-css-fonts-5-20240206/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Font Loading Module Level 3](https://htmlspecs.com/css/css-font-loading)（[Source](https://www.w3.org/TR/2023/WD-css-font-loading-3-20230406/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 
 ### 文本和排版
