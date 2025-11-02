@@ -1372,14 +1372,14 @@ const cssLinks = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "CSS Generated Content for Paged Media Module",
-    //     href: "https://htmlspecs.com/css/css-gcpm-3",
-    //     src: "https://www.w3.org/TR/2024/WD-css-gcpm-3-20240125/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "CSS Generated Content for Paged Media Module",
+        href: "https://htmlspecs.com/css/css-gcpm-3",
+        src: "https://www.w3.org/TR/2024/WD-css-gcpm-3-20240125/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
 
     //### 导航|내비게이션|ナビゲーション
     {
