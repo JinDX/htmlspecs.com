@@ -1260,14 +1260,14 @@ const cssLinks = [
         lang: "cjk",
         state: "CR"
     },
-    // {
-    //     text: "CSS Multi-column Layout Module Level 2",
-    //     href: "https://htmlspecs.com/css/css-multicol-2",
-    //     src: "https://www.w3.org/TR/2024/WD-css-multicol-2-20241219/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "CSS Multi-column Layout Module Level 2",
+        href: "https://htmlspecs.com/css/css-multicol-2",
+        src: "https://www.w3.org/TR/2024/WD-css-multicol-2-20241219/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     {
         text: "CSS Shapes Module Level 1",
         href: "https://htmlspecs.com/css/css-shapes-1",
