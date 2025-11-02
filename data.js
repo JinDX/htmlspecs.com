@@ -1020,14 +1020,14 @@ const cssLinks = [
         lang: "cjk",
         state: "CRD"
     },
-    // {
-    //     text: "CSS Conditional Rules Module Level 5",
-    //     href: "https://htmlspecs.com/css/css-conditional-5",
-    //     src: "https://www.w3.org/TR/2025/WD-css-conditional-5-20251030/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "CSS Conditional Rules Module Level 5",
+        href: "https://htmlspecs.com/css/css-conditional-5",
+        src: "https://www.w3.org/TR/2025/WD-css-conditional-5-20251030/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     {
         text: "CSS Backgrounds and Borders Level 3",
         href: "https://htmlspecs.com/css/css-backgrounds-3",
