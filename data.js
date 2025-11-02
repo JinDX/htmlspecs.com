@@ -1070,14 +1070,14 @@ const cssLinks = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "CSS Fonts Module Level 5",
-    //     href: "https://htmlspecs.com/css/css-fonts-5",
-    //     src: "https://www.w3.org/TR/2024/WD-css-fonts-5-20240206/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "CSS Fonts Module Level 5",
+        href: "https://htmlspecs.com/css/css-fonts-5",
+        src: "https://www.w3.org/TR/2024/WD-css-fonts-5-20240206/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     {
         text: "CSS Font Loading Module Level 3",
         href: "https://htmlspecs.com/css/css-font-loading",
