@@ -364,14 +364,14 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
-    // {
-    //     text: "Serial API",
-    //     href: "https://htmlspecs.com/serial",
-    //     src: "https://wicg.github.io/serial/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "Serial API",
+        href: "https://htmlspecs.com/serial",
+        src: "https://wicg.github.io/serial/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "Draft"
+    },
     // {
     //     text: "WebHID API",
     //     href: "https://htmlspecs.com/webhid",
