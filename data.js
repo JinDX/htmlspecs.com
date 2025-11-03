@@ -1727,14 +1727,14 @@ const cssLinks = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "CSS Viewport Module Level 1",
-    //     href: "https://htmlspecs.com/css/css-viewport-1",
-    //     src: "https://www.w3.org/TR/2024/WD-css-viewport-1-20240125/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "CSS Viewport Module Level 1",
+        href: "https://htmlspecs.com/css/css-viewport-1",
+        src: "https://www.w3.org/TR/2024/WD-css-viewport-1-20240125/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     {
         text: "CSS Cascading and Inheritance Level 3",
         href: "https://htmlspecs.com/css/css-cascade-3",
