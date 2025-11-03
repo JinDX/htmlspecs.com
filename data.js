@@ -364,6 +364,46 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
+    // {
+    //     text: "Serial API",
+    //     href: "https://htmlspecs.com/serial",
+    //     src: "https://wicg.github.io/serial/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
+    // {
+    //     text: "WebHID API",
+    //     href: "https://htmlspecs.com/webhid",
+    //     src: "https://wicg.github.io/webhid/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
+    // {
+    //     text: "WebUSB API",
+    //     href: "https://htmlspecs.com/webusb",
+    //     src: "https://wicg.github.io/webusb/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
+    // {
+    //     text: "Web Bluetooth API",
+    //     href: "https://htmlspecs.com/web-bluetooth",
+    //     src: "https://webbluetoothcg.github.io/web-bluetooth/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
+    // {
+    //     text: "Web NFC API",
+    //     href: "https://htmlspecs.com/web-nfc",
+    //     src: "https://w3c.github.io/web-nfc/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
     {
         text: "Screen Orientation",
         href: "https://htmlspecs.com/screen-orientation",
