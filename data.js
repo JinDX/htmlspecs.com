@@ -368,7 +368,7 @@ const links = [
         text: "Serial API",
         href: "https://htmlspecs.com/serial",
         src: "https://wicg.github.io/serial/",
-        "last-modified": "-",
+        "last-modified": "Wed, 30 Jul 2025 23:24:41 GMT",
         lang: "cjk",
         state: "Draft"
     },
@@ -376,7 +376,7 @@ const links = [
         text: "WebHID API",
         href: "https://htmlspecs.com/webhid",
         src: "https://wicg.github.io/webhid/",
-        "last-modified": "-",
+        "last-modified": "Fri, 13 Sep 2024 20:42:40 GMT",
         lang: "cjk",
         state: "Draft"
     },
@@ -384,7 +384,7 @@ const links = [
         text: "WebUSB API",
         href: "https://htmlspecs.com/webusb",
         src: "https://wicg.github.io/webusb/",
-        "last-modified": "-",
+        "last-modified": "Thu, 13 Feb 2025 19:01:51 GMT",
         lang: "cjk",
         state: "Draft"
     },
