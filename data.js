@@ -388,14 +388,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
-    // {
-    //     text: "Web Bluetooth API",
-    //     href: "https://htmlspecs.com/web-bluetooth",
-    //     src: "https://webbluetoothcg.github.io/web-bluetooth/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "Web Bluetooth API",
+        href: "https://htmlspecs.com/web-bluetooth",
+        src: "https://webbluetoothcg.github.io/web-bluetooth/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "Draft"
+    },
     // {
     //     text: "Web NFC API",
     //     href: "https://htmlspecs.com/web-nfc",
