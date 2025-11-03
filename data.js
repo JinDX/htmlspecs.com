@@ -392,7 +392,7 @@ const links = [
         text: "Web Bluetooth API",
         href: "https://htmlspecs.com/web-bluetooth",
         src: "https://webbluetoothcg.github.io/web-bluetooth/",
-        "last-modified": "-",
+        "last-modified": "Wed, 24 Sep 2025 18:30:14 GMT",
         lang: "cjk",
         state: "Draft"
     },
