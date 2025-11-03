@@ -255,6 +255,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [CSS Custom Properties for Cascading Variables Module Level 1](https://htmlspecs.com/css/css-variables-1)（[Source](https://www.w3.org/TR/2022/CR-css-variables-1-20220616/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
 - [CSS Object Model (CSSOM)](https://htmlspecs.com/css/cssom-1)（[Source](https://www.w3.org/TR/2021/WD-cssom-1-20210826/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSSOM View Module](https://htmlspecs.com/css/cssom-view)（[Source](https://www.w3.org/TR/2025/WD-cssom-view-1-20250916/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [CSS Viewport Module Level 1](https://htmlspecs.com/css/css-viewport-1)（[Source](https://www.w3.org/TR/2024/WD-css-viewport-1-20240125/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Cascading and Inheritance Level 3](https://htmlspecs.com/css/css-cascade-3)（[Source](https://www.w3.org/TR/2021/REC-css-cascade-3-20210211/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [CSS Cascading and Inheritance Level 4](https://htmlspecs.com/css/css-cascade-4)（[Source](https://www.w3.org/TR/2022/CR-css-cascade-4-20220113/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
 - [CSS Cascading and Inheritance Level 5](https://htmlspecs.com/css/css-cascade-5)（[Source](https://www.w3.org/TR/2022/CR-css-cascade-5-20220113/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
@@ -264,6 +265,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [CSS Syntax Module Level 3](https://htmlspecs.com/css/css-syntax-3)（[Source](https://www.w3.org/TR/2021/CRD-css-syntax-3-20211224/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [CSS Values and Units Module Level 3](https://htmlspecs.com/css/css-values-3)（[Source](https://www.w3.org/TR/2024/CRD-css-values-3-20240322/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [CSS Values and Units Module Level 4](https://htmlspecs.com/css/css-values-4)（[Source](https://www.w3.org/TR/2024/WD-css-values-4-20240312/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [CSS Values and Units Module Level 5](https://htmlspecs.com/css/css-values-5)（[Source](https://www.w3.org/TR/2024/WD-css-values-5-20241111/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Environment Variables Module Level 1](https://htmlspecs.com/css/css-env-1)（[Source](https://www.w3.org/TR/2025/WD-css-env-1-20250923/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Logical Properties and Values Level 1](https://htmlspecs.com/css/css-logical-1)（[Source](https://www.w3.org/TR/2018/WD-css-logical-1-20180827/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Mixins Module Level 1](https://htmlspecs.com/css/css-mixins-1)（[Source](https://www.w3.org/TR/2025/WD-css-mixins-1-20250515/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
@@ -330,7 +332,4 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [HTTP Message Signatures](https://htmlspecs.com/http/rfc9421.html)（[Source](https://httpwg.org/specs/rfc9421.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [Digest Fields](https://htmlspecs.com/http/rfc9530.html)（[Source](https://httpwg.org/specs/rfc9530.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [The Concealed HTTP Authentication Scheme](https://htmlspecs.com/http/rfc9729.html)（[Source](https://httpwg.org/specs/rfc9729.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
-
-
-
 
