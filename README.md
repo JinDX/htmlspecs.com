@@ -54,6 +54,8 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 ### 设备和硬件访问
 - [Pointer Events](https://htmlspecs.com/pointerevents2)（[Source](https://www.w3.org/TR/2019/REC-pointerevents2-20190404/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Serial API](https://htmlspecs.com/serial)（[Source](https://wicg.github.io/serial/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
+- [WebHID API](https://htmlspecs.com/webhid)（[Source](https://wicg.github.io/webhid/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
+- [WebUSB API](https://htmlspecs.com/webusb)（[Source](https://wicg.github.io/webusb/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Screen Orientation](https://htmlspecs.com/screen-orientation)（[Source](https://www.w3.org/TR/2023/WD-screen-orientation-20251016/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Screen Wake Lock](https://htmlspecs.com/screen-wake-lock)（[Source](https://www.w3.org/TR/2024/WD-screen-wake-lock-20241024/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Idle Detection API](https://htmlspecs.com/idle-detection)（[Source](https://wicg.github.io/idle-detection/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）

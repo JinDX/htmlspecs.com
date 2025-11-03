@@ -372,22 +372,22 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
-    // {
-    //     text: "WebHID API",
-    //     href: "https://htmlspecs.com/webhid",
-    //     src: "https://wicg.github.io/webhid/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
-    // {
-    //     text: "WebUSB API",
-    //     href: "https://htmlspecs.com/webusb",
-    //     src: "https://wicg.github.io/webusb/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "WebHID API",
+        href: "https://htmlspecs.com/webhid",
+        src: "https://wicg.github.io/webhid/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "Draft"
+    },
+    {
+        text: "WebUSB API",
+        href: "https://htmlspecs.com/webusb",
+        src: "https://wicg.github.io/webusb/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "Draft"
+    },
     // {
     //     text: "Web Bluetooth API",
     //     href: "https://htmlspecs.com/web-bluetooth",
