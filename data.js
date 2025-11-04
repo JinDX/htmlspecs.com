@@ -396,14 +396,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
-    // {
-    //     text: "Web NFC API",
-    //     href: "https://htmlspecs.com/web-nfc",
-    //     src: "https://w3c.github.io/web-nfc/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "Web NFC API",
+        href: "https://htmlspecs.com/web-nfc",
+        src: "https://w3c.github.io/web-nfc/",
+        "last-modified": "Mon, 18 Aug 2025 10:42:18 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
     {
         text: "Screen Orientation",
         href: "https://htmlspecs.com/screen-orientation",
