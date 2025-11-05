@@ -424,7 +424,7 @@ const links = [
         text: "Web NFC API",
         href: "https://htmlspecs.com/web-nfc",
         src: "https://w3c.github.io/web-nfc/",
-        "last-modified": "Mon, 18 Aug 2025 10:42:18 GMT",
+        "last-modified": "Wed, 05 Nov 2025 10:11:52 GMT",
         lang: "cjk",
         state: "Draft"
     },
