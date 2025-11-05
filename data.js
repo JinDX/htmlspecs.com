@@ -35,6 +35,30 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
+    // {
+    //     text: "WebAssembly Core Specification",
+    //     href: "https://htmlspecs.com/wasm-core",
+    //     src: "https://webassembly.github.io/spec/core/bikeshed/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
+    {
+        text: "WebAssembly JavaScript Interface",
+        href: "https://htmlspecs.com/wasm-js-api-2",
+        src: "https://www.w3.org/TR/2025/CRD-wasm-js-api-2-20251102/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "CRD"
+    },
+    {
+        text: "WebAssembly Web API",
+        href: "https://htmlspecs.com/wasm-web-api-2",
+        src: "https://www.w3.org/TR/2025/CRD-wasm-web-api-2-20251102/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "CRD"
+    },
     {
         text: "DOM",
         href: "https://htmlspecs.com/dom",
