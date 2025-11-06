@@ -15,7 +15,7 @@ const links = [
         text: "ECMAScript® 2026 Language Specification",
         href: "https://ecma262.com/",
         src: "https://tc39.es/ecma262/",
-        "last-modified": "Tue, 04 Nov 2025 17:57:16 GMT",
+        "last-modified": "Wed, 05 Nov 2025 19:38:19 GMT",
         lang: "cjk",
         state: "Draft"
     },
@@ -308,7 +308,7 @@ const links = [
         text: "User-Agent Client Hints",
         href: "https://htmlspecs.com/ua-client-hints",
         src: "https://wicg.github.io/ua-client-hints/",
-        "last-modified": "Fri, 09 May 2025 23:49:01 GMT",
+        "last-modified": "Wed, 05 Nov 2025 13:48:26 GMT",
         lang: "cjk",
         state: "Draft"
     },
