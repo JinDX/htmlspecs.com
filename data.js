@@ -144,7 +144,7 @@ const links = [
         text: "Compression",
         href: "https://htmlspecs.com/compression",
         src: "https://compression.spec.whatwg.org/",
-        "last-modified": "Wed, 01 Oct 2025 03:28:16 GMT",
+        "last-modified": "Wed, 05 Nov 2025 12:46:53 GMT",
         lang: "cjk",
         state: "LS"
     },
