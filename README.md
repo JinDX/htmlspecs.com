@@ -107,7 +107,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Web Authentication Level 2](https://htmlspecs.com/webauthn-2)（[Source](https://www.w3.org/TR/2021/REC-webauthn-2-20210408/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [HTML Sanitizer API](https://htmlspecs.com/sanitizer-api)（[Source](https://wicg.github.io/sanitizer-api/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Subresource Integrity (SRI)](https://htmlspecs.com/sri)（[Source](https://www.w3.org/TR/2016/REC-SRI-20160623/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
-- [Content Security Policy Level 3](https://htmlspecs.com/CSP3)（[Source](https://www.w3.org/TR/2025/WD-CSP3-20250711/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Content Security Policy Level 3](https://htmlspecs.com/CSP3)（[Source](https://www.w3.org/TR/2025/WD-CSP3-20251106/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Permissions Policy](https://htmlspecs.com/permissions-policy)（[Source](https://www.w3.org/TR/2025/WD-permissions-policy-1-20251006/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Global Privacy Control (GPC)](https://htmlspecs.com/gpc)（[Source](https://www.w3.org/TR/2025/WD-gpc-20250916/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Secure Contexts](https://htmlspecs.com/secure-contexts)（[Source](https://www.w3.org/TR/2023/CRD-secure-contexts-20231110/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
