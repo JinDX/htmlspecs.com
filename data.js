@@ -1271,7 +1271,7 @@ const cssLinks = [
     {
         text: "CSS Display Module Level 4",
         href: "https://htmlspecs.com/css/css-display-4",
-        src: "https://www.w3.org/TR/2024/WD-css-display-4-20241219/",
+        src: "https://www.w3.org/TR/2025/WD-css-display-4-20251106/",
         "last-modified": "-",
         lang: "cjk",
         state: "CR"
