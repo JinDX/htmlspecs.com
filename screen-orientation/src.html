@@ -567,18 +567,18 @@
             }
         }
     </style>
-    <meta name="revision" content="245ed4444872dedd88bb8c8ea55d7e9fba7dae01">
+    <meta name="revision" content="a8d0379a50a792672eeb36d8998b6004550577f8">
     <meta name="description" content="The Screen Orientation specification standardizes the
         types and angles for a device's screen orientation, and provides a
         means for locking and unlocking it. The API, defined by this
         specification, exposes the current type and angle of the device's
         screen orientation, and dispatches events when it changes. This enables
         web applications to programmatically adapt the user experience for
-        multiple screen orientations, working alongside CSS. The API also
-        allows for the screen orientation to be locked under certain
-        preconditions. This is particularly useful for applications such as
-        computer games, where users physically rotate the device, but the
-        screen orientation itself should not change.">
+        multiple screen orientations, working alongside CSS. This API is
+        particularly useful for applications such as computer games, where
+        users physically rotate the device, but the screen orientation itself
+        should not change. The API restricts locking the screen orientation
+        only if certain pre-lock conditions are met.">
     <link rel="canonical" href="https://www.w3.org/TR/screen-orientation/">
     <style>
         .hljs {
@@ -828,7 +828,7 @@
     <script id="initialUserConfig" type="application/json">{
   "specStatus": "WD",
   "shortName": "screen-orientation",
-  "previousPublishDate": "2023-08-09",
+  "previousPublishDate": "2025-10-21",
   "previousMaturity": "WD",
   "editors": [
     {
@@ -852,10 +852,10 @@
   "group": "webapps",
   "caniuse": "screen-orientation",
   "xref": "web-platform",
-  "gitRevision": "245ed4444872dedd88bb8c8ea55d7e9fba7dae01",
-  "publishDate": "2025-10-16",
-  "publishISODate": "2025-10-16T00:00:00.000Z",
-  "generatedSubtitle": "W3C Working Draft 16 October 2025"
+  "gitRevision": "a8d0379a50a792672eeb36d8998b6004550577f8",
+  "publishDate": "2025-10-21",
+  "publishISODate": "2025-10-21T00:00:00.000Z",
+  "generatedSubtitle": "W3C Working Draft 21 October 2025"
 }</script>
     <link rel="stylesheet" href="https://www.w3.org/StyleSheets/TR/2021/W3C-WD">
 </head>
@@ -867,14 +867,14 @@
             </a></p>
         <h1 id="title" class="title">Screen Orientation</h1>
         <p id="w3c-state"><a href="https://www.w3.org/standards/types#WD">W3C Working Draft</a> <time
-                class="dt-published" datetime="2025-10-16">16 October 2025</time></p>
+                class="dt-published" datetime="2025-10-21">21 October 2025</time></p>
         <details open="">
             <summary>More details about this document</summary>
             <dl>
                 <dt>This version:</dt>
                 <dd>
                     <a class="u-url"
-                        href="https://www.w3.org/TR/2025/WD-screen-orientation-20251016/">https://www.w3.org/TR/2025/WD-screen-orientation-20251016/</a>
+                        href="https://www.w3.org/TR/2025/WD-screen-orientation-20251021/">https://www.w3.org/TR/2025/WD-screen-orientation-20251021/</a>
                 </dd>
                 <dt>Latest published version:</dt>
                 <dd>
@@ -949,11 +949,12 @@
             specification, exposes the current type and angle of the device's
             screen orientation, and dispatches events when it changes. This enables
             web applications to programmatically adapt the user experience for
-            multiple screen orientations, working alongside CSS. The API also
-            allows for the screen orientation to be locked under certain
-            preconditions. This is particularly useful for applications such as
-            computer games, where users physically rotate the device, but the
-            screen orientation itself should not change.
+            multiple screen orientations, working alongside CSS. This API is
+            particularly useful for applications such as computer games, where
+            users physically rotate the device, but the screen orientation itself
+            should not change. The API restricts locking the screen orientation
+            only if certain <a data-link-type="dfn|abstract-op" href="#dfn-pre-lock-conditions" class="internalDFN"
+                id="ref-for-dfn-pre-lock-conditions-1">pre-lock conditions</a> are met.
         </p>
     </section>
     <section id="sotd" class="introductory">
@@ -1129,7 +1130,18 @@
             <li class="tocline"><a class="tocxref" href="#privacy-and-security-considerations"><bdi class="secno">12.
                     </bdi>
                     Privacy and Security Considerations
-                </a></li>
+                </a>
+                <ol class="toc">
+                    <li class="tocline"><a class="tocxref" href="#event-delivery-restrictions"><bdi class="secno">12.1
+                            </bdi>
+                            Event Delivery Restrictions
+                        </a></li>
+                    <li class="tocline"><a class="tocxref" href="#anti-fingerprinting-mitigations"><bdi
+                                class="secno">12.2 </bdi>
+                            Anti-fingerprinting Mitigations
+                        </a></li>
+                </ol>
+            </li>
             <li class="tocline"><a class="tocxref" href="#conformance"><bdi class="secno">13. </bdi>Conformance</a></li>
             <li class="tocline"><a class="tocxref" href="#idl-index"><bdi class="secno">A. </bdi>IDL Index</a></li>
             <li class="tocline"><a class="tocxref" href="#index"><bdi class="secno">B. </bdi>Index</a>
@@ -1160,9 +1172,9 @@
         <p><em>This section is non-normative.</em></p>
 
         <p>
-            In this example, clicking the "Lock" button requests to go into
+            In this example, selecting the "Lock" button requests to go into
             fullscreen and then locks the screen to the opposite orientation.
-            Clicking the "Unlock" button unlocks the screen.
+            Selecting the "Unlock" button unlocks the screen.
         </p>
         <div class="example" id="example-locking-to-a-specific-orientation-and-unlocking">
             <div class="marker">
@@ -1613,33 +1625,29 @@ interface <a class="internalDFN idlID" data-link-type="interface" href="#dom-scr
             </div>
 
             <p>
+                <dfn data-plurals="pre-lock condition" id="dfn-pre-lock-conditions" tabindex="0" aria-haspopup="dialog"
+                    data-dfn-type="dfn">pre-lock conditions</dfn> are optional requirements that a
+                <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#user-agent"
+                    id="ref-for-index-term-user-agent-1">user agent</a> <em class="rfc2119">MAY</em> impose before
+                allowing screen orientation locking.
+                Common pre-lock conditions include requiring the document to be in
+                fullscreen mode or being part of an installed web application. See
+                <a href="#appmanifest-interaction" data-matched-text="[[[#appmanifest-interaction]]]"
+                    class="sec-ref"><bdi class="secno">10. </bdi>
+                    Interaction with Web Application Manifest</a> and <a href="#fullscreen-interaction"
+                    data-matched-text="[[[#fullscreen-interaction]]]" class="sec-ref"><bdi class="secno">9. </bdi>
+                    Interaction with Fullscreen API</a> for
+                specific examples.
+            </p>
+            <p>
                 When the <a data-link-type="idl" data-lt="lock()" href="#dom-screenorientation-lock" class="internalDFN"
                     id="ref-for-dom-screenorientation-lock-1"><code>lock</code></a><code>()</code> method is invoked
                 with <a data-link-type="idl" data-lt="OrientationLockType" href="#dom-orientationlocktype"
                     class="internalDFN" id="ref-for-dom-orientationlocktype-4"><code>OrientationLockType</code></a>
                 <var data-type="OrientationLockType">orientation</var>, the <a data-link-type="dfn"
-                    href="https://infra.spec.whatwg.org/#user-agent" id="ref-for-index-term-user-agent-1">user agent</a>
+                    href="https://infra.spec.whatwg.org/#user-agent" id="ref-for-index-term-user-agent-2">user agent</a>
                 <em class="rfc2119">MUST</em> run the
                 following steps.
-            </p>
-            <p>
-                The <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#user-agent"
-                    id="ref-for-index-term-user-agent-2">user agent</a> <em class="rfc2119">MAY</em> require a <a
-                    data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document"
-                    id="ref-for-index-term-document-1">document</a> and its associated
-                <a data-link-type="dfn"
-                    href="https://html.spec.whatwg.org/multipage/document-sequences.html#concept-document-bc"
-                    id="ref-for-index-term-browsing-context-for-document-1">browsing context</a> to meet one or more
-                <dfn data-plurals="pre-lock condition" id="dfn-pre-lock-conditions" tabindex="0" aria-haspopup="dialog"
-                    data-dfn-type="dfn">pre-lock
-                    conditions</dfn> in order to <a data-link-type="dfn|abstract-op"
-                    href="#dfn-lock-the-screen-orientation" class="internalDFN"
-                    id="ref-for-dfn-lock-the-screen-orientation-3">lock the screen orientation</a>. See
-                <a href="#appmanifest-interaction" data-matched-text="[[[#appmanifest-interaction]]]"
-                    class="sec-ref"><bdi class="secno">10. </bdi>
-                    Interaction with Web Application Manifest</a> and <a href="#fullscreen-interaction"
-                    data-matched-text="[[[#fullscreen-interaction]]]" class="sec-ref"><bdi class="secno">9. </bdi>
-                    Interaction with Fullscreen API</a>.
             </p>
             <ol class="algorithm">
                 <li>Let <var data-type="Document">document</var> be <a data-link-type="dfn"
@@ -1672,6 +1680,27 @@ interface <a class="internalDFN idlID" data-link-type="interface" href="#dom-scr
                         data-link-type="interface" data-lt="DOMException"
                         href="https://webidl.spec.whatwg.org/#idl-DOMException"
                         id="ref-for-index-term-domexception-interface-1"><code>DOMException</code></a> and abort these
+                    steps.
+                </li>
+                <li>If the <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#user-agent"
+                        id="ref-for-index-term-user-agent-4">user agent</a> requires <var
+                        data-type="Document">document</var> and its associated
+                    <a data-link-type="dfn"
+                        href="https://html.spec.whatwg.org/multipage/document-sequences.html#concept-document-bc"
+                        id="ref-for-index-term-browsing-context-for-document-1">browsing context</a> to meet <a
+                        data-link-type="dfn|abstract-op" href="#dfn-pre-lock-conditions" class="internalDFN"
+                        id="ref-for-dfn-pre-lock-conditions-2">pre-lock conditions</a> in
+                    order to <a data-link-type="dfn|abstract-op" href="#dfn-lock-the-screen-orientation"
+                        class="internalDFN" id="ref-for-dfn-lock-the-screen-orientation-3">lock the screen
+                        orientation</a>, and those conditions are
+                    not met, return <a data-link-type="dfn"
+                        href="https://webidl.spec.whatwg.org/#a-promise-rejected-with"
+                        id="ref-for-index-term-a-promise-rejected-with-3">a promise rejected with</a> a "<a
+                        data-link-type="exception" href="https://webidl.spec.whatwg.org/#notallowederror"
+                        id="ref-for-index-term-notallowederror-exception-1"><code>NotAllowedError</code></a>"
+                    <a data-link-type="interface" data-lt="DOMException"
+                        href="https://webidl.spec.whatwg.org/#idl-DOMException"
+                        id="ref-for-index-term-domexception-interface-2"><code>DOMException</code></a> and abort these
                     steps.
                 </li>
                 <li data-tests="lock-basic.html">If <var data-type="Document">document</var>'s
@@ -1715,7 +1744,7 @@ interface <a class="internalDFN idlID" data-link-type="interface" href="#dom-scr
                     class="internalDFN"
                     id="ref-for-dom-screenorientation-unlock-1"><code>unlock</code></a><code>()</code> method is
                 invoked, the <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#user-agent"
-                    id="ref-for-index-term-user-agent-4">user agent</a> <em class="rfc2119">MUST</em> run
+                    id="ref-for-index-term-user-agent-5">user agent</a> <em class="rfc2119">MUST</em> run
                 the following steps:
             </p>
             <ol class="algorithm">
@@ -1770,8 +1799,8 @@ interface <a class="internalDFN idlID" data-link-type="interface" href="#dom-scr
                         class="internalDFN" id="ref-for-dfn-default-screen-orientation-1">default screen orientation</a>
                     which might or might
                     not be known by the <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#user-agent"
-                        id="ref-for-index-term-user-agent-5">user agent</a>. Hence, the <a data-link-type="dfn"
-                        href="https://infra.spec.whatwg.org/#user-agent" id="ref-for-index-term-user-agent-6">user
+                        id="ref-for-index-term-user-agent-6">user agent</a>. Hence, the <a data-link-type="dfn"
+                        href="https://infra.spec.whatwg.org/#user-agent" id="ref-for-index-term-user-agent-7">user
                         agent</a> can not
                     predict what the new orientation is going to be and even if it is
                     going to change at all.
@@ -1793,17 +1822,18 @@ interface <a class="internalDFN idlID" data-link-type="interface" href="#dom-scr
                 <var data-type="Document">document</var> are the following steps:
             </p>
             <ol class="algorithm">
-                <li data-tests="non-fully-active.html">If <var data-type="Document">document</var> is not
+                <li data-tests="non-fully-active.html">If <var data-type="Document">document</var> is not a
                     <a data-link-type="dfn"
-                        href="https://html.spec.whatwg.org/multipage/document-sequences.html#fully-active"
-                        id="ref-for-index-term-fully-active-for-document-1">fully active</a>, <a data-link-type="dfn"
+                        href="https://html.spec.whatwg.org/multipage/interaction.html#fully-active-descendant-of-a-top-level-traversable-with-user-attention"
+                        id="ref-for-index-term-fully-active-descendant-of-a-top-level-traversable-with-user-attention-for-document-1">fully
+                        active descendant of a top-level traversable with user attention</a>, <a data-link-type="dfn"
                         href="https://webidl.spec.whatwg.org/#dfn-throw"
-                        id="ref-for-index-term-throw-for-exception-3">throw</a> an
-                    "<a data-link-type="exception" href="https://webidl.spec.whatwg.org/#invalidstateerror"
-                        id="ref-for-index-term-invalidstateerror-exception-1"><code>InvalidStateError</code></a>" <a
-                        data-link-type="interface" data-lt="DOMException"
+                        id="ref-for-index-term-throw-for-exception-3">throw</a> an "<a data-link-type="exception"
+                        href="https://webidl.spec.whatwg.org/#invalidstateerror"
+                        id="ref-for-index-term-invalidstateerror-exception-1"><code>InvalidStateError</code></a>"
+                    <a data-link-type="interface" data-lt="DOMException"
                         href="https://webidl.spec.whatwg.org/#idl-DOMException"
-                        id="ref-for-index-term-domexception-interface-2"><code>DOMException</code></a>.
+                        id="ref-for-index-term-domexception-interface-3"><code>DOMException</code></a>.
                 </li>
                 <li data-tests="lock-sandboxed-iframe.html">If <var data-type="Document">document</var> has the
                     <a data-link-type="dfn"
@@ -1816,7 +1846,7 @@ interface <a class="internalDFN idlID" data-link-type="interface" href="#dom-scr
                         id="ref-for-index-term-securityerror-exception-1"><code>SecurityError</code></a>" <a
                         data-link-type="interface" data-lt="DOMException"
                         href="https://webidl.spec.whatwg.org/#idl-DOMException"
-                        id="ref-for-index-term-domexception-interface-3"><code>DOMException</code></a>.
+                        id="ref-for-index-term-domexception-interface-4"><code>DOMException</code></a>.
                 </li>
                 <li data-tests="hidden_document.html">If <var data-type="Document">document</var>'s
                     <a data-link-type="dfn"
@@ -1828,7 +1858,7 @@ interface <a class="internalDFN idlID" data-link-type="interface" href="#dom-scr
                         id="ref-for-index-term-securityerror-exception-2"><code>SecurityError</code></a>" <a
                         data-link-type="interface" data-lt="DOMException"
                         href="https://webidl.spec.whatwg.org/#idl-DOMException"
-                        id="ref-for-index-term-domexception-interface-4"><code>DOMException</code></a>.
+                        id="ref-for-index-term-domexception-interface-5"><code>DOMException</code></a>.
                 </li>
             </ol>
         </section>
@@ -2063,7 +2093,7 @@ interface <a class="internalDFN idlID" data-link-type="interface" href="#dom-scr
                     href="https://html.spec.whatwg.org/multipage/document-sequences.html#browsing-context"
                     id="ref-for-index-term-browsing-context-2">browsing context</a> <var>context</var> is created, the
                 <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#user-agent"
-                    id="ref-for-index-term-user-agent-7">user agent</a>
+                    id="ref-for-index-term-user-agent-8">user agent</a>
                 <em class="rfc2119">MUST</em>:
             </p>
             <ol class="algorithm" data-tests="orientation-reading.html">
@@ -2108,7 +2138,7 @@ interface <a class="internalDFN idlID" data-link-type="interface" href="#dom-scr
                     data-link-type="interface" data-lt="DOMString" href="https://webidl.spec.whatwg.org/#idl-DOMString"
                     id="ref-for-index-term-domstring-interface-1"><code>DOMString</code></a>
                 <var>exceptionName</var>, the <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#user-agent"
-                    id="ref-for-index-term-user-agent-8">user agent</a> <em class="rfc2119">MUST</em>:
+                    id="ref-for-index-term-user-agent-9">user agent</a> <em class="rfc2119">MUST</em>:
             </p>
             <ol class="algorithm" data-tests="orientation-locking.html">
                 <li class="assert"><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#assert"
@@ -2137,7 +2167,7 @@ interface <a class="internalDFN idlID" data-link-type="interface" href="#dom-scr
                         id="ref-for-index-term-reject-1">reject</a> <var data-type="Promise">promise</var>
                     with a new <var>exceptionName</var> <a data-link-type="interface" data-lt="DOMException"
                         href="https://webidl.spec.whatwg.org/#idl-DOMException"
-                        id="ref-for-index-term-domexception-interface-5"><code>DOMException</code></a>.
+                        id="ref-for-index-term-domexception-interface-6"><code>DOMException</code></a>.
                 </li>
                 <li>Set <var>document</var>'s <a data-link-type="attribute" data-lt="[[orientationPendingPromise]]"
                         href="#dfn-orientationpendingpromise" class="internalDFN"
@@ -2162,13 +2192,13 @@ interface <a class="internalDFN idlID" data-link-type="interface" href="#dom-scr
                     href="https://dom.spec.whatwg.org/#document"
                     id="ref-for-index-term-document-interface-4"><code>Document</code></a> <var>document</var>, the
                 <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#user-agent"
-                    id="ref-for-index-term-user-agent-9">user agent</a> <em class="rfc2119">MUST</em> perform the
+                    id="ref-for-index-term-user-agent-10">user agent</a> <em class="rfc2119">MUST</em> perform the
                 following steps:
             </p>
             <ol class="algorithm">
                 <li>If <var>document</var> stops being <a data-link-type="dfn"
                         href="https://html.spec.whatwg.org/multipage/document-sequences.html#fully-active"
-                        id="ref-for-index-term-fully-active-for-document-2">fully active</a> while <a
+                        id="ref-for-index-term-fully-active-for-document-1">fully active</a> while <a
                         data-link-type="dfn"
                         href="https://html.spec.whatwg.org/multipage/infrastructure.html#in-parallel"
                         id="ref-for-index-term-in-parallel-1">in parallel</a>, and <a data-link-type="attribute"
@@ -2184,8 +2214,8 @@ interface <a class="internalDFN idlID" data-link-type="interface" href="#dom-scr
                         id="ref-for-index-term-aborterror-exception-3"><code>AbortError</code></a>".
                 </li>
                 <li>Let <var>topDocument</var> be <var>document</var>'s <a data-link-type="dfn"
-                        href="https://html.spec.whatwg.org/multipage/document-sequences.html#top-level-browsing-context"
-                        id="ref-for-index-term-top-level-browsing-context-1">top-level browsing context</a>'s
+                        href="https://html.spec.whatwg.org/multipage/document-sequences.html#top-level-traversable"
+                        id="ref-for-index-term-top-level-traversable-1">top-level traversable</a>'s
                     <a data-link-type="dfn"
                         href="https://html.spec.whatwg.org/multipage/document-sequences.html#nav-document"
                         id="ref-for-index-term-active-document-for-navigable-1">active document</a>.
@@ -2229,7 +2259,7 @@ interface <a class="internalDFN idlID" data-link-type="interface" href="#dom-scr
                     <ol>
                         <li>If <var>document</var> has stopped being <a data-link-type="dfn"
                                 href="https://html.spec.whatwg.org/multipage/document-sequences.html#fully-active"
-                                id="ref-for-index-term-fully-active-for-document-3">fully active</a>, and
+                                id="ref-for-index-term-fully-active-for-document-2">fully active</a>, and
                             if the <var>document</var>'s <a data-link-type="attribute"
                                 data-lt="[[orientationPendingPromise]]" href="#dfn-orientationpendingpromise"
                                 class="internalDFN"
@@ -2301,7 +2331,10 @@ interface <a class="internalDFN idlID" data-link-type="interface" href="#dom-scr
                                     web applications from changing the screen orientation, or if
                                     the underlying platform, rather than the user agent, does not
                                     allow locking the screen orientation to the given
-                                    <var>orientation</var>.
+                                    <var>orientation</var>. Note that differences in user preferences or
+                                    platform capabilities could potentially be used for
+                                    fingerprinting, as they may create detectable patterns in lock
+                                    failure behavior.
                                 </p>
                             </div>
                         </li>
@@ -2380,16 +2413,16 @@ interface <a class="internalDFN idlID" data-link-type="interface" href="#dom-scr
             <p data-tests="onchange-event.html">
                 When a user-agent determines that the screen's orientation has changed
                 for a <a data-link-type="dfn"
+                    href="https://html.spec.whatwg.org/multipage/document-sequences.html#top-level-traversable"
+                    id="ref-for-index-term-top-level-traversable-2">top-level traversable</a>, or the user moves the <a
+                    data-link-type="dfn"
                     href="https://html.spec.whatwg.org/multipage/document-sequences.html#top-level-browsing-context"
-                    id="ref-for-index-term-top-level-browsing-context-2">top-level browsing context</a>, or the user
-                moves the <a data-link-type="dfn"
-                    href="https://html.spec.whatwg.org/multipage/document-sequences.html#top-level-browsing-context"
-                    id="ref-for-index-term-top-level-browsing-context-3">top-level browsing context</a> to a different
+                    id="ref-for-index-term-top-level-browsing-context-1">top-level browsing context</a> to a different
                 screen, then run the <a data-link-type="dfn|abstract-op" href="#dfn-screen-orientation-change-steps"
                     class="internalDFN" id="ref-for-dfn-screen-orientation-change-steps-2">screen orientation change
                     steps</a> with the <a data-link-type="dfn"
-                    href="https://html.spec.whatwg.org/multipage/document-sequences.html#top-level-browsing-context"
-                    id="ref-for-index-term-top-level-browsing-context-4">top-level browsing context</a>'s
+                    href="https://html.spec.whatwg.org/multipage/document-sequences.html#top-level-traversable"
+                    id="ref-for-index-term-top-level-traversable-3">top-level traversable</a>'s
                 <a data-link-type="dfn"
                     href="https://html.spec.whatwg.org/multipage/document-sequences.html#nav-document"
                     id="ref-for-index-term-active-document-for-navigable-3">active document</a>.
@@ -2402,10 +2435,10 @@ interface <a class="internalDFN idlID" data-link-type="interface" href="#dom-scr
                     data-type="Document">document</var> are as follows:
             </p>
             <ol class="algorithm">
-                <li>If <var data-type="Document">document</var>'s <a data-link-type="dfn"
-                        href="https://html.spec.whatwg.org/multipage/interaction.html#visibility-state"
-                        id="ref-for-index-term-visibility-state-for-document-2">visibility state</a> is "hidden", abort
-                    these steps.
+                <li>If <var data-type="Document">document</var> is not a <a data-link-type="dfn"
+                        href="https://html.spec.whatwg.org/multipage/interaction.html#fully-active-descendant-of-a-top-level-traversable-with-user-attention"
+                        id="ref-for-index-term-fully-active-descendant-of-a-top-level-traversable-with-user-attention-for-document-2">fully
+                        active descendant of a top-level traversable with user attention</a>, abort these steps.
                 </li>
                 <li>Let <var>type</var> and <var>angle</var> be the screen's <a data-link-type="dfn|abstract-op"
                         href="#dfn-current-orientation-type" class="internalDFN"
@@ -2495,15 +2528,16 @@ interface <a class="internalDFN idlID" data-link-type="interface" href="#dom-scr
                     <p>
                         Developers need to be aware that <a data-link-type="dfn"
                             href="https://dom.spec.whatwg.org/#concept-document"
-                            id="ref-for-index-term-document-2">documents</a> with a "hidden"
+                            id="ref-for-index-term-documents-1">documents</a> that are not
                         <a data-link-type="dfn"
-                            href="https://html.spec.whatwg.org/multipage/interaction.html#visibility-state"
-                            id="ref-for-index-term-visibility-state-for-document-3">visibility state</a> will not
-                        receive an orientation change
-                        event. However, once the <a data-link-type="dfn"
-                            href="https://dom.spec.whatwg.org/#concept-document"
-                            id="ref-for-index-term-document-3">document</a> becomes visible again, it will
-                        receive the change event.
+                            href="https://html.spec.whatwg.org/multipage/interaction.html#fully-active-descendant-of-a-top-level-traversable-with-user-attention"
+                            id="ref-for-index-term-fully-active-descendant-of-a-top-level-traversable-with-user-attention-for-document-3">fully
+                            active descendant of a top-level traversable with user attention</a> will not receive
+                        orientation change events. However,
+                        once a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document"
+                            id="ref-for-index-term-documents-2">document</a> meets these requirements again, it will
+                        receive
+                        change events reflecting the current orientation.
                     </p>
                 </aside>
             </div>
@@ -2524,8 +2558,8 @@ interface <a class="internalDFN idlID" data-link-type="interface" href="#dom-scr
             </p>
             <ol class="algorithm">
                 <li>If <var>document</var> is not a <a data-link-type="dfn"
-                        href="https://html.spec.whatwg.org/multipage/document-sequences.html#top-level-browsing-context"
-                        id="ref-for-index-term-top-level-browsing-context-5">top-level browsing context</a>'s
+                        href="https://html.spec.whatwg.org/multipage/document-sequences.html#top-level-traversable"
+                        id="ref-for-index-term-top-level-traversable-4">top-level traversable</a>'s
                     <a data-link-type="dfn"
                         href="https://html.spec.whatwg.org/multipage/document-sequences.html#nav-document"
                         id="ref-for-index-term-active-document-for-navigable-5">active document</a>, abort these steps.
@@ -2565,8 +2599,8 @@ interface <a class="internalDFN idlID" data-link-type="interface" href="#dom-scr
                         id="ref-for-index-term-aborterror-exception-6"><code>AbortError</code></a>".
                 </li>
                 <li>Let <var>topDocument</var> be <var data-type="Document">document</var>'s <a data-link-type="dfn"
-                        href="https://html.spec.whatwg.org/multipage/document-sequences.html#top-level-browsing-context"
-                        id="ref-for-index-term-top-level-browsing-context-6">top-level browsing context</a>'s
+                        href="https://html.spec.whatwg.org/multipage/document-sequences.html#top-level-traversable"
+                        id="ref-for-index-term-top-level-traversable-5">top-level traversable</a>'s
                     <a data-link-type="dfn"
                         href="https://html.spec.whatwg.org/multipage/document-sequences.html#nav-document"
                         id="ref-for-index-term-active-document-for-navigable-6">active document</a>.
@@ -2586,17 +2620,18 @@ interface <a class="internalDFN idlID" data-link-type="interface" href="#dom-scr
         </div>
 
         <p>
-            A user agent <em class="rfc2119">SHOULD</em> restrict the use of <a data-link-type="idl" data-lt="lock()"
+            A user agent <em class="rfc2119">MUST</em> restrict the use of <a data-link-type="idl" data-lt="lock()"
                 href="#dom-screenorientation-lock" class="internalDFN"
                 id="ref-for-dom-screenorientation-lock-3"><code>lock</code></a><code>()</code> to
             simple fullscreen documents as a <a data-link-type="dfn|abstract-op" href="#dfn-pre-lock-conditions"
-                class="internalDFN" id="ref-for-dfn-pre-lock-conditions-1">pre-lock condition</a>. [<cite><a
-                    class="bibref" data-link-type="biblio" href="#bib-fullscreen"
-                    title="Fullscreen API Standard">fullscreen</a></cite>]
+                class="internalDFN" id="ref-for-dfn-pre-lock-conditions-3">pre-lock condition</a>. This
+            requirement prevents fingerprinting through differences in user agent
+            behavior regarding orientation locking permissions. [<cite><a class="bibref" data-link-type="biblio"
+                    href="#bib-fullscreen" title="Fullscreen API Standard">fullscreen</a></cite>]
         </p>
         <p>
             When a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document"
-                id="ref-for-index-term-document-4">document</a> exits fullscreen, it also runs the <a
+                id="ref-for-index-term-documents-3">document</a> exits fullscreen, it also runs the <a
                 data-link-type="dfn|abstract-op" href="#dfn-fully-unlock-the-screen-orientation-steps"
                 class="internalDFN" id="ref-for-dfn-fully-unlock-the-screen-orientation-steps-2">fully unlock the screen
                 orientation steps</a>. [<cite><a class="bibref" data-link-type="biblio" href="#bib-fullscreen"
@@ -2627,7 +2662,7 @@ interface <a class="internalDFN idlID" data-link-type="interface" href="#dom-scr
                 data-cite-href="https://www.w3.org/TR/mediaqueries-5/#display-mode"
                 href="https://www.w3.org/TR/mediaqueries-5/#display-mode" id="ref-for-index-term-display-mode-1">display
                 mode</a> as a <a data-link-type="dfn|abstract-op" href="#dfn-pre-lock-conditions" class="internalDFN"
-                id="ref-for-dfn-pre-lock-conditions-2">pre-lock condition</a>.
+                id="ref-for-dfn-pre-lock-conditions-4">pre-lock condition</a>.
         </p>
     </section>
     <section id="accessibility-considerations">
@@ -2670,54 +2705,110 @@ interface <a class="internalDFN idlID" data-link-type="interface" href="#dom-scr
             <a data-link-type="dfn|abstract-op" data-lt="current orientation angle"
                 href="#dfn-current-orientation-angle" class="internalDFN"
                 id="ref-for-dfn-current-orientation-angle-5">angle</a> are a potential
-            fingerprinting vector. The following mitigation help protect a user's
-            privacy by not revealing how a device is being held, and also prevents
+            fingerprinting vectors. The following mitigations help protect a user's
+            privacy by not revealing how a device is being held, and also prevent
             the <a data-link-type="dfn|abstract-op" href="#dfn-secondary" class="internalDFN"
                 id="ref-for-dfn-secondary-13">secondary</a> orientation type and associated angles from being
-            user for fingerprinting purposes.
+            used for fingerprinting purposes.
         </p>
-        <p>
-            To resist fingerprinting (e.g., in private browsing), user agents <em class="rfc2119">MAY</em>:
-        </p>
-        <ol>
-            <li>For the life of a <a data-link-type="dfn"
-                    href="https://html.spec.whatwg.org/multipage/document-sequences.html#top-level-browsing-context"
-                    id="ref-for-index-term-top-level-browsing-context-7">top-level browsing context</a>, behave as if
-                the
-                screen's <a data-link-type="dfn|abstract-op" href="#dfn-natural" class="internalDFN"
-                    id="ref-for-dfn-natural-8">natural</a> orientation is
-                <a data-link-type="attribute" data-lt="[[initialType]]" href="#dfn-initialtype" class="internalDFN"
-                    id="ref-for-dfn-initialtype-2"><code>[[initialType]]</code></a>.
-            </li>
-            <li>Restrict the possible return values of the
-                <a data-link-type="idl" href="#dom-screenorientation-type" class="internalDFN"
-                    id="ref-for-dom-screenorientation-type-2"><code>type</code></a> getter to
-                "<a data-link-type="idl" href="#dom-orientationtype-portrait-primary" class="internalDFN"
-                    id="ref-for-dom-orientationtype-portrait-primary-2"><code>portrait-primary</code></a>" or
-                "<a data-link-type="idl" href="#dom-orientationtype-landscape-primary" class="internalDFN"
-                    id="ref-for-dom-orientationtype-landscape-primary-2"><code>landscape-primary</code></a>". The screen
-                aspect ratio
-                determines which is returned.
-            </li>
-            <li>If the <a data-link-type="dfn|abstract-op" href="#dfn-current-orientation-type" class="internalDFN"
-                    id="ref-for-dfn-current-orientation-type-9">current orientation type</a> matches
-                <a data-link-type="attribute" data-lt="[[initialType]]" href="#dfn-initialtype" class="internalDFN"
-                    id="ref-for-dfn-initialtype-3"><code>[[initialType]]</code></a>, return <code>0</code> for the
-                <a data-link-type="idl" href="#dom-screenorientation-angle" class="internalDFN"
-                    id="ref-for-dom-screenorientation-angle-3"><code>angle</code></a> getter. Otherwise, return
-                <code>90</code>.
-            </li>
-            <li>If the screen orientation changes, only fire the
-                <a href="#dfn-change" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-change-3">change</a>
-                event when the
-                <a data-link-type="dfn|abstract-op" href="#dfn-current-orientation-type" class="internalDFN"
-                    id="ref-for-dfn-current-orientation-type-10">current orientation type</a> changes from <a
-                    data-link-type="dfn|abstract-op" href="#dfn-portrait" class="internalDFN"
-                    id="ref-for-dfn-portrait-5">portrait</a> to
-                <a data-link-type="dfn|abstract-op" href="#dfn-landscape" class="internalDFN"
-                    id="ref-for-dfn-landscape-6">landscape</a>, or vice versa.
-            </li>
-        </ol>
+        <section id="event-delivery-restrictions">
+            <div class="header-wrapper">
+                <h3 id="x12-1-event-delivery-restrictions"><bdi class="secno">12.1 </bdi>
+                    Event Delivery Restrictions
+                </h3><a class="self-link" href="#event-delivery-restrictions"
+                    aria-label="Permalink for Section 12.1"></a>
+            </div>
+            <p>
+                To protect user privacy, orientation change events are subject to
+                several delivery restrictions:
+            </p>
+            <ul>
+                <li>Events only fire on a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document"
+                        id="ref-for-index-term-documents-4">document</a> that is a <a data-link-type="dfn"
+                        href="https://html.spec.whatwg.org/multipage/interaction.html#fully-active-descendant-of-a-top-level-traversable-with-user-attention"
+                        id="ref-for-index-term-fully-active-descendant-of-a-top-level-traversable-with-user-attention-for-document-4">fully
+                        active descendant of a top-level traversable with user attention</a>.
+                </li>
+                <li>Additional <a data-link-type="dfn"
+                        href="https://html.spec.whatwg.org/multipage/interaction.html#visibility-state"
+                        id="ref-for-index-term-visibility-state-for-document-2">visibility state</a> checks provide
+                    defense-in-depth against hidden documents.
+                </li>
+                <li>Events originate from the <a data-link-type="dfn"
+                        href="https://html.spec.whatwg.org/multipage/document-sequences.html#nav-document"
+                        id="ref-for-index-term-active-document-for-navigable-7">active document</a> of a
+                    <a data-link-type="dfn"
+                        href="https://html.spec.whatwg.org/multipage/document-sequences.html#top-level-traversable"
+                        id="ref-for-index-term-top-level-traversable-6">top-level traversable</a> and propagate to
+                    descendant documents.
+                </li>
+            </ul>
+            <p>
+                The requirement for <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document"
+                    id="ref-for-index-term-documents-5">documents</a> to be <a data-link-type="dfn"
+                    href="https://html.spec.whatwg.org/multipage/interaction.html#fully-active-descendant-of-a-top-level-traversable-with-user-attention"
+                    id="ref-for-index-term-fully-active-descendant-of-a-top-level-traversable-with-user-attention-for-document-5">fully
+                    active descendant of a top-level traversable with user attention</a> ensures
+                that orientation events are only delivered to documents in windows that
+                are both visible at the system level and have the user's attention
+                (either through focus or the ability to receive keyboard input). The
+                additional visibility state check provides defense in depth. These
+                restrictions prevent background tabs, hidden windows, and minimized
+                applications from collecting orientation data for fingerprinting
+                purposes.
+            </p>
+        </section>
+        <section id="anti-fingerprinting-mitigations">
+            <div class="header-wrapper">
+                <h3 id="x12-2-anti-fingerprinting-mitigations"><bdi class="secno">12.2 </bdi>
+                    Anti-fingerprinting Mitigations
+                </h3><a class="self-link" href="#anti-fingerprinting-mitigations"
+                    aria-label="Permalink for Section 12.2"></a>
+            </div>
+            <p>
+                To resist fingerprinting, user agents <em class="rfc2119">SHOULD</em> implement the following
+                protections, particularly in privacy-conscious contexts such as private
+                browsing modes:
+            </p>
+            <ol>
+                <li>For the life of a <a data-link-type="dfn"
+                        href="https://html.spec.whatwg.org/multipage/document-sequences.html#top-level-traversable"
+                        id="ref-for-index-term-top-level-traversable-7">top-level traversable</a>, behave as if the
+                    screen's <a data-link-type="dfn|abstract-op" href="#dfn-natural" class="internalDFN"
+                        id="ref-for-dfn-natural-8">natural</a> orientation is
+                    <a data-link-type="attribute" data-lt="[[initialType]]" href="#dfn-initialtype" class="internalDFN"
+                        id="ref-for-dfn-initialtype-2"><code>[[initialType]]</code></a>.
+                </li>
+                <li>Restrict the possible return values of the
+                    <a data-link-type="idl" href="#dom-screenorientation-type" class="internalDFN"
+                        id="ref-for-dom-screenorientation-type-2"><code>type</code></a> getter to
+                    "<a data-link-type="idl" href="#dom-orientationtype-portrait-primary" class="internalDFN"
+                        id="ref-for-dom-orientationtype-portrait-primary-2"><code>portrait-primary</code></a>" or
+                    "<a data-link-type="idl" href="#dom-orientationtype-landscape-primary" class="internalDFN"
+                        id="ref-for-dom-orientationtype-landscape-primary-2"><code>landscape-primary</code></a>". The
+                    screen aspect ratio
+                    determines which is returned.
+                </li>
+                <li>If the <a data-link-type="dfn|abstract-op" href="#dfn-current-orientation-type" class="internalDFN"
+                        id="ref-for-dfn-current-orientation-type-9">current orientation type</a> matches
+                    <a data-link-type="attribute" data-lt="[[initialType]]" href="#dfn-initialtype" class="internalDFN"
+                        id="ref-for-dfn-initialtype-3"><code>[[initialType]]</code></a>, return <code>0</code> for the
+                    <a data-link-type="idl" href="#dom-screenorientation-angle" class="internalDFN"
+                        id="ref-for-dom-screenorientation-angle-3"><code>angle</code></a> getter. Otherwise, return
+                    <code>90</code>.
+                </li>
+                <li>If the screen orientation changes, only fire the
+                    <a href="#dfn-change" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-change-3">change</a>
+                    event when the
+                    <a data-link-type="dfn|abstract-op" href="#dfn-current-orientation-type" class="internalDFN"
+                        id="ref-for-dfn-current-orientation-type-10">current orientation type</a> changes from <a
+                        data-link-type="dfn|abstract-op" href="#dfn-portrait" class="internalDFN"
+                        id="ref-for-dfn-portrait-5">portrait</a> to
+                    <a data-link-type="dfn|abstract-op" href="#dfn-landscape" class="internalDFN"
+                        id="ref-for-dfn-landscape-6">landscape</a>, or vice versa.
+                </li>
+            </ol>
+        </section>
     </section>
     <section id="conformance">
         <div class="header-wrapper">
@@ -3065,13 +3156,13 @@ interface <a class="internalDFN idlID" data-link-type="interface" href="#dom-scr
                     following:
                     <ul>
                         <li>
-                            <span class="index-term" data-href="https://dom.spec.whatwg.org/#concept-document"
-                                id="index-term-document" tabindex="0" aria-haspopup="dialog">document</span>
-                        </li>
-                        <li>
                             <span class="index-term" data-href="https://dom.spec.whatwg.org/#document"
                                 id="index-term-document-interface" tabindex="0"
                                 aria-haspopup="dialog"><code>Document</code> interface</span>
+                        </li>
+                        <li>
+                            <span class="index-term" data-href="https://dom.spec.whatwg.org/#concept-document"
+                                id="index-term-documents" tabindex="0" aria-haspopup="dialog">documents</span>
                         </li>
                         <li>
                             <span class="index-term" data-href="https://dom.spec.whatwg.org/#eventtarget"
@@ -3155,6 +3246,13 @@ interface <a class="internalDFN idlID" data-link-type="interface" href="#dom-scr
                         </li>
                         <li>
                             <span class="index-term"
+                                data-href="https://html.spec.whatwg.org/multipage/interaction.html#fully-active-descendant-of-a-top-level-traversable-with-user-attention"
+                                id="index-term-fully-active-descendant-of-a-top-level-traversable-with-user-attention-for-document"
+                                tabindex="0" aria-haspopup="dialog">fully active descendant of a top-level traversable
+                                with user attention (for <code>Document</code>)</span>
+                        </li>
+                        <li>
+                            <span class="index-term"
                                 data-href="https://html.spec.whatwg.org/multipage/infrastructure.html#in-parallel"
                                 id="index-term-in-parallel" tabindex="0" aria-haspopup="dialog">in parallel</span>
                         </li>
@@ -3186,6 +3284,12 @@ interface <a class="internalDFN idlID" data-link-type="interface" href="#dom-scr
                                 data-href="https://html.spec.whatwg.org/multipage/document-sequences.html#top-level-browsing-context"
                                 id="index-term-top-level-browsing-context" tabindex="0" aria-haspopup="dialog">top-level
                                 browsing context</span>
+                        </li>
+                        <li>
+                            <span class="index-term"
+                                data-href="https://html.spec.whatwg.org/multipage/document-sequences.html#top-level-traversable"
+                                id="index-term-top-level-traversable" tabindex="0" aria-haspopup="dialog">top-level
+                                traversable</span>
                         </li>
                         <li>
                             <span class="index-term"
@@ -3302,6 +3406,11 @@ interface <a class="internalDFN idlID" data-link-type="interface" href="#dom-scr
                             <span class="index-term" data-href="https://webidl.spec.whatwg.org/#invalidstateerror"
                                 id="index-term-invalidstateerror-exception" tabindex="0"
                                 aria-haspopup="dialog"><code>InvalidStateError</code> exception</span>
+                        </li>
+                        <li>
+                            <span class="index-term" data-href="https://webidl.spec.whatwg.org/#notallowederror"
+                                id="index-term-notallowederror-exception" tabindex="0"
+                                aria-haspopup="dialog"><code>NotAllowedError</code> exception</span>
                         </li>
                         <li>
                             <span class="index-term" data-href="https://webidl.spec.whatwg.org/#notsupportederror"
@@ -3613,8 +3722,8 @@ interface <a class="internalDFN idlID" data-link-type="interface" href="#dom-scr
                     enum</a>
             </li>
             <li>
-                <a href="#ref-for-dfn-landscape-6" title="§ 12. Privacy and Security Considerations">§ 12. Privacy and
-                    Security Considerations</a>
+                <a href="#ref-for-dfn-landscape-6" title="§ 12.2 Anti-fingerprinting Mitigations">§ 12.2
+                    Anti-fingerprinting Mitigations</a>
             </li>
         </ul>
     </div>
@@ -3645,8 +3754,8 @@ interface <a class="internalDFN idlID" data-link-type="interface" href="#dom-scr
                 <a href="#ref-for-dfn-natural-7" title="§ 6. OrientationLockType enum">§ 6. OrientationLockType enum</a>
             </li>
             <li>
-                <a href="#ref-for-dfn-natural-8" title="§ 12. Privacy and Security Considerations">§ 12. Privacy and
-                    Security Considerations</a>
+                <a href="#ref-for-dfn-natural-8" title="§ 12.2 Anti-fingerprinting Mitigations">§ 12.2
+                    Anti-fingerprinting Mitigations</a>
             </li>
         </ul>
     </div>
@@ -3673,8 +3782,8 @@ interface <a class="internalDFN idlID" data-link-type="interface" href="#dom-scr
                     enum</a>
             </li>
             <li>
-                <a href="#ref-for-dfn-portrait-5" title="§ 12. Privacy and Security Considerations">§ 12. Privacy and
-                    Security Considerations</a>
+                <a href="#ref-for-dfn-portrait-5" title="§ 12.2 Anti-fingerprinting Mitigations">§ 12.2
+                    Anti-fingerprinting Mitigations</a>
             </li>
         </ul>
     </div>
@@ -3840,9 +3949,12 @@ interface <a class="internalDFN idlID" data-link-type="interface" href="#dom-scr
             </li>
             <li>
                 <a href="#ref-for-dfn-current-orientation-type-8" title="§ 12. Privacy and Security Considerations">§
-                    12. Privacy and Security Considerations</a> <a href="#ref-for-dfn-current-orientation-type-9"
-                    title="Reference 2">(2)</a> <a href="#ref-for-dfn-current-orientation-type-10"
-                    title="Reference 3">(3)</a>
+                    12. Privacy and Security Considerations</a>
+            </li>
+            <li>
+                <a href="#ref-for-dfn-current-orientation-type-9" title="§ 12.2 Anti-fingerprinting Mitigations">§ 12.2
+                    Anti-fingerprinting Mitigations</a> <a href="#ref-for-dfn-current-orientation-type-10"
+                    title="Reference 2">(2)</a>
             </li>
         </ul>
     </div>
@@ -4033,8 +4145,8 @@ interface <a class="internalDFN idlID" data-link-type="interface" href="#dom-scr
                 <a href="#ref-for-dom-screenorientation-type-1" title="§ 5.5 type attribute">§ 5.5 type attribute</a>
             </li>
             <li>
-                <a href="#ref-for-dom-screenorientation-type-2" title="§ 12. Privacy and Security Considerations">§ 12.
-                    Privacy and Security Considerations</a>
+                <a href="#ref-for-dom-screenorientation-type-2" title="§ 12.2 Anti-fingerprinting Mitigations">§ 12.2
+                    Anti-fingerprinting Mitigations</a>
             </li>
         </ul>
     </div>
@@ -4054,8 +4166,8 @@ interface <a class="internalDFN idlID" data-link-type="interface" href="#dom-scr
                 <a href="#ref-for-dom-screenorientation-angle-2" title="Reference 2">(2)</a>
             </li>
             <li>
-                <a href="#ref-for-dom-screenorientation-angle-3" title="§ 12. Privacy and Security Considerations">§ 12.
-                    Privacy and Security Considerations</a>
+                <a href="#ref-for-dom-screenorientation-angle-3" title="§ 12.2 Anti-fingerprinting Mitigations">§ 12.2
+                    Anti-fingerprinting Mitigations</a>
             </li>
         </ul>
     </div>
@@ -4115,8 +4227,8 @@ interface <a class="internalDFN idlID" data-link-type="interface" href="#dom-scr
                     Initializing the ScreenOrientation object</a>
             </li>
             <li>
-                <a href="#ref-for-dfn-initialtype-2" title="§ 12. Privacy and Security Considerations">§ 12. Privacy and
-                    Security Considerations</a> <a href="#ref-for-dfn-initialtype-3" title="Reference 2">(2)</a>
+                <a href="#ref-for-dfn-initialtype-2" title="§ 12.2 Anti-fingerprinting Mitigations">§ 12.2
+                    Anti-fingerprinting Mitigations</a> <a href="#ref-for-dfn-initialtype-3" title="Reference 2">(2)</a>
             </li>
         </ul>
     </div>
@@ -4154,11 +4266,17 @@ interface <a class="internalDFN idlID" data-link-type="interface" href="#dom-scr
         <p><b>Referenced in:</b></p>
         <ul>
             <li>
-                <a href="#ref-for-dfn-pre-lock-conditions-1" title="§ 9. Interaction with Fullscreen API">§ 9.
+                <a href="#ref-for-dfn-pre-lock-conditions-1" title="§ Abstract">§ Abstract</a>
+            </li>
+            <li>
+                <a href="#ref-for-dfn-pre-lock-conditions-2" title="§ 5.2 lock() method">§ 5.2 lock() method</a>
+            </li>
+            <li>
+                <a href="#ref-for-dfn-pre-lock-conditions-3" title="§ 9. Interaction with Fullscreen API">§ 9.
                     Interaction with Fullscreen API</a>
             </li>
             <li>
-                <a href="#ref-for-dfn-pre-lock-conditions-2" title="§ 10. Interaction with Web Application Manifest">§
+                <a href="#ref-for-dfn-pre-lock-conditions-4" title="§ 10. Interaction with Web Application Manifest">§
                     10. Interaction with Web Application Manifest</a>
             </li>
         </ul>
@@ -4200,8 +4318,8 @@ interface <a class="internalDFN idlID" data-link-type="interface" href="#dom-scr
                     change</a>
             </li>
             <li>
-                <a href="#ref-for-dfn-change-3" title="§ 12. Privacy and Security Considerations">§ 12. Privacy and
-                    Security Considerations</a>
+                <a href="#ref-for-dfn-change-3" title="§ 12.2 Anti-fingerprinting Mitigations">§ 12.2
+                    Anti-fingerprinting Mitigations</a>
             </li>
         </ul>
     </div>
@@ -4474,7 +4592,7 @@ interface <a class="internalDFN idlID" data-link-type="interface" href="#dom-scr
             </li>
             <li>
                 <a href="#ref-for-dom-orientationtype-portrait-primary-2"
-                    title="§ 12. Privacy and Security Considerations">§ 12. Privacy and Security Considerations</a>
+                    title="§ 12.2 Anti-fingerprinting Mitigations">§ 12.2 Anti-fingerprinting Mitigations</a>
             </li>
             <li>
                 <a href="#ref-for-dom-orientationtype-portrait-primary-3" title="§ A. IDL Index">§ A. IDL Index</a>
@@ -4522,7 +4640,7 @@ interface <a class="internalDFN idlID" data-link-type="interface" href="#dom-scr
             </li>
             <li>
                 <a href="#ref-for-dom-orientationtype-landscape-primary-2"
-                    title="§ 12. Privacy and Security Considerations">§ 12. Privacy and Security Considerations</a>
+                    title="§ 12.2 Anti-fingerprinting Mitigations">§ 12.2 Anti-fingerprinting Mitigations</a>
             </li>
             <li>
                 <a href="#ref-for-dom-orientationtype-landscape-primary-3" title="§ A. IDL Index">§ A. IDL Index</a>
@@ -4714,29 +4832,6 @@ interface <a class="internalDFN idlID" data-link-type="interface" href="#dom-scr
             </li>
         </ul>
     </div>
-    <div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-index-term-document"
-        aria-label="Links in this document to definition: document">
-        <span class="caret"></span>
-        <div>
-            <a class="self-link" href="https://dom.spec.whatwg.org/#concept-document"
-                aria-label="Permalink for definition: document. Activate to close this dialog.">Permalink</a>
-
-        </div>
-        <p><b>Referenced in:</b></p>
-        <ul>
-            <li>
-                <a href="#ref-for-index-term-document-1" title="§ 5.2 lock() method">§ 5.2 lock() method</a>
-            </li>
-            <li>
-                <a href="#ref-for-index-term-document-2" title="§ 8.5 Handling page visibility changes">§ 8.5 Handling
-                    page visibility changes</a> <a href="#ref-for-index-term-document-3" title="Reference 2">(2)</a>
-            </li>
-            <li>
-                <a href="#ref-for-index-term-document-4" title="§ 9. Interaction with Fullscreen API">§ 9. Interaction
-                    with Fullscreen API</a>
-            </li>
-        </ul>
-    </div>
     <div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-index-term-document-interface"
         aria-label="Links in this document to definition: Document interface">
         <span class="caret"></span>
@@ -4770,6 +4865,30 @@ interface <a class="internalDFN idlID" data-link-type="interface" href="#dom-scr
             <li>
                 <a href="#ref-for-index-term-document-interface-6" title="§ 8.7 Fully unlocking the orientation">§ 8.7
                     Fully unlocking the orientation</a>
+            </li>
+        </ul>
+    </div>
+    <div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-index-term-documents"
+        aria-label="Links in this document to definition: documents">
+        <span class="caret"></span>
+        <div>
+            <a class="self-link" href="https://dom.spec.whatwg.org/#concept-document"
+                aria-label="Permalink for definition: documents. Activate to close this dialog.">Permalink</a>
+
+        </div>
+        <p><b>Referenced in:</b></p>
+        <ul>
+            <li>
+                <a href="#ref-for-index-term-documents-1" title="§ 8.5 Handling page visibility changes">§ 8.5 Handling
+                    page visibility changes</a> <a href="#ref-for-index-term-documents-2" title="Reference 2">(2)</a>
+            </li>
+            <li>
+                <a href="#ref-for-index-term-documents-3" title="§ 9. Interaction with Fullscreen API">§ 9. Interaction
+                    with Fullscreen API</a>
+            </li>
+            <li>
+                <a href="#ref-for-index-term-documents-4" title="§ 12.1 Event Delivery Restrictions">§ 12.1 Event
+                    Delivery Restrictions</a> <a href="#ref-for-index-term-documents-5" title="Reference 2">(2)</a>
             </li>
         </ul>
     </div>
@@ -4836,6 +4955,10 @@ interface <a class="internalDFN idlID" data-link-type="interface" href="#dom-scr
             <li>
                 <a href="#ref-for-index-term-active-document-for-navigable-6"
                     title="§ 8.7 Fully unlocking the orientation">§ 8.7 Fully unlocking the orientation</a>
+            </li>
+            <li>
+                <a href="#ref-for-index-term-active-document-for-navigable-7"
+                    title="§ 12.1 Event Delivery Restrictions">§ 12.1 Event Delivery Restrictions</a>
             </li>
         </ul>
     </div>
@@ -5025,12 +5148,40 @@ interface <a class="internalDFN idlID" data-link-type="interface" href="#dom-scr
         <p><b>Referenced in:</b></p>
         <ul>
             <li>
-                <a href="#ref-for-index-term-fully-active-for-document-1" title="§ 5.4 Common Safety Checks">§ 5.4
-                    Common Safety Checks</a>
+                <a href="#ref-for-index-term-fully-active-for-document-1" title="§ 8.3 Applying an orientation lock">§
+                    8.3 Applying an orientation lock</a> <a href="#ref-for-index-term-fully-active-for-document-2"
+                    title="Reference 2">(2)</a>
+            </li>
+        </ul>
+    </div>
+    <div class="dfn-panel" hidden="" role="dialog" aria-modal="true"
+        id="dfn-panel-for-index-term-fully-active-descendant-of-a-top-level-traversable-with-user-attention-for-document"
+        aria-label="Links in this document to definition: fully active descendant of a top-level traversable with user attention (for Document)">
+        <span class="caret"></span>
+        <div>
+            <a class="self-link"
+                href="https://html.spec.whatwg.org/multipage/interaction.html#fully-active-descendant-of-a-top-level-traversable-with-user-attention"
+                aria-label="Permalink for definition: fully active descendant of a top-level traversable with user attention (for Document). Activate to close this dialog.">Permalink</a>
+
+        </div>
+        <p><b>Referenced in:</b></p>
+        <ul>
+            <li>
+                <a href="#ref-for-index-term-fully-active-descendant-of-a-top-level-traversable-with-user-attention-for-document-1"
+                    title="§ 5.4 Common Safety Checks">§ 5.4 Common Safety Checks</a>
             </li>
             <li>
-                <a href="#ref-for-index-term-fully-active-for-document-2" title="§ 8.3 Applying an orientation lock">§
-                    8.3 Applying an orientation lock</a> <a href="#ref-for-index-term-fully-active-for-document-3"
+                <a href="#ref-for-index-term-fully-active-descendant-of-a-top-level-traversable-with-user-attention-for-document-2"
+                    title="§ 8.4 Screen orientation change">§ 8.4 Screen orientation change</a>
+            </li>
+            <li>
+                <a href="#ref-for-index-term-fully-active-descendant-of-a-top-level-traversable-with-user-attention-for-document-3"
+                    title="§ 8.5 Handling page visibility changes">§ 8.5 Handling page visibility changes</a>
+            </li>
+            <li>
+                <a href="#ref-for-index-term-fully-active-descendant-of-a-top-level-traversable-with-user-attention-for-document-4"
+                    title="§ 12.1 Event Delivery Restrictions">§ 12.1 Event Delivery Restrictions</a> <a
+                    href="#ref-for-index-term-fully-active-descendant-of-a-top-level-traversable-with-user-attention-for-document-5"
                     title="Reference 2">(2)</a>
             </li>
         </ul>
@@ -5159,26 +5310,46 @@ interface <a class="internalDFN idlID" data-link-type="interface" href="#dom-scr
         <p><b>Referenced in:</b></p>
         <ul>
             <li>
-                <a href="#ref-for-index-term-top-level-browsing-context-1" title="§ 8.3 Applying an orientation lock">§
-                    8.3 Applying an orientation lock</a>
+                <a href="#ref-for-index-term-top-level-browsing-context-1" title="§ 8.4 Screen orientation change">§ 8.4
+                    Screen orientation change</a>
+            </li>
+        </ul>
+    </div>
+    <div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-index-term-top-level-traversable"
+        aria-label="Links in this document to definition: top-level traversable">
+        <span class="caret"></span>
+        <div>
+            <a class="self-link"
+                href="https://html.spec.whatwg.org/multipage/document-sequences.html#top-level-traversable"
+                aria-label="Permalink for definition: top-level traversable. Activate to close this dialog.">Permalink</a>
+
+        </div>
+        <p><b>Referenced in:</b></p>
+        <ul>
+            <li>
+                <a href="#ref-for-index-term-top-level-traversable-1" title="§ 8.3 Applying an orientation lock">§ 8.3
+                    Applying an orientation lock</a>
             </li>
             <li>
-                <a href="#ref-for-index-term-top-level-browsing-context-2" title="§ 8.4 Screen orientation change">§ 8.4
-                    Screen orientation change</a> <a href="#ref-for-index-term-top-level-browsing-context-3"
-                    title="Reference 2">(2)</a> <a href="#ref-for-index-term-top-level-browsing-context-4"
-                    title="Reference 3">(3)</a>
+                <a href="#ref-for-index-term-top-level-traversable-2" title="§ 8.4 Screen orientation change">§ 8.4
+                    Screen orientation change</a> <a href="#ref-for-index-term-top-level-traversable-3"
+                    title="Reference 2">(2)</a>
             </li>
             <li>
-                <a href="#ref-for-index-term-top-level-browsing-context-5" title="§ 8.6 Handling unloading documents">§
-                    8.6 Handling unloading documents</a>
+                <a href="#ref-for-index-term-top-level-traversable-4" title="§ 8.6 Handling unloading documents">§ 8.6
+                    Handling unloading documents</a>
             </li>
             <li>
-                <a href="#ref-for-index-term-top-level-browsing-context-6"
-                    title="§ 8.7 Fully unlocking the orientation">§ 8.7 Fully unlocking the orientation</a>
+                <a href="#ref-for-index-term-top-level-traversable-5" title="§ 8.7 Fully unlocking the orientation">§
+                    8.7 Fully unlocking the orientation</a>
             </li>
             <li>
-                <a href="#ref-for-index-term-top-level-browsing-context-7"
-                    title="§ 12. Privacy and Security Considerations">§ 12. Privacy and Security Considerations</a>
+                <a href="#ref-for-index-term-top-level-traversable-6" title="§ 12.1 Event Delivery Restrictions">§ 12.1
+                    Event Delivery Restrictions</a>
+            </li>
+            <li>
+                <a href="#ref-for-index-term-top-level-traversable-7" title="§ 12.2 Anti-fingerprinting Mitigations">§
+                    12.2 Anti-fingerprinting Mitigations</a>
             </li>
         </ul>
     </div>
@@ -5234,12 +5405,8 @@ interface <a class="internalDFN idlID" data-link-type="interface" href="#dom-scr
                     Common Safety Checks</a>
             </li>
             <li>
-                <a href="#ref-for-index-term-visibility-state-for-document-2" title="§ 8.4 Screen orientation change">§
-                    8.4 Screen orientation change</a>
-            </li>
-            <li>
-                <a href="#ref-for-index-term-visibility-state-for-document-3"
-                    title="§ 8.5 Handling page visibility changes">§ 8.5 Handling page visibility changes</a>
+                <a href="#ref-for-index-term-visibility-state-for-document-2"
+                    title="§ 12.1 Event Delivery Restrictions">§ 12.1 Event Delivery Restrictions</a>
             </li>
         </ul>
     </div>
@@ -5328,23 +5495,24 @@ interface <a class="internalDFN idlID" data-link-type="interface" href="#dom-scr
             <li>
                 <a href="#ref-for-index-term-user-agent-1" title="§ 5.2 lock() method">§ 5.2 lock() method</a> <a
                     href="#ref-for-index-term-user-agent-2" title="Reference 2">(2)</a> <a
-                    href="#ref-for-index-term-user-agent-3" title="Reference 3">(3)</a>
+                    href="#ref-for-index-term-user-agent-3" title="Reference 3">(3)</a> <a
+                    href="#ref-for-index-term-user-agent-4" title="Reference 4">(4)</a>
             </li>
             <li>
-                <a href="#ref-for-index-term-user-agent-4" title="§ 5.3 unlock() method">§ 5.3 unlock() method</a> <a
-                    href="#ref-for-index-term-user-agent-5" title="Reference 2">(2)</a> <a
-                    href="#ref-for-index-term-user-agent-6" title="Reference 3">(3)</a>
+                <a href="#ref-for-index-term-user-agent-5" title="§ 5.3 unlock() method">§ 5.3 unlock() method</a> <a
+                    href="#ref-for-index-term-user-agent-6" title="Reference 2">(2)</a> <a
+                    href="#ref-for-index-term-user-agent-7" title="Reference 3">(3)</a>
             </li>
             <li>
-                <a href="#ref-for-index-term-user-agent-7" title="§ 8.1 Initializing the ScreenOrientation object">§ 8.1
+                <a href="#ref-for-index-term-user-agent-8" title="§ 8.1 Initializing the ScreenOrientation object">§ 8.1
                     Initializing the ScreenOrientation object</a>
             </li>
             <li>
-                <a href="#ref-for-index-term-user-agent-8" title="§ 8.2 Rejecting a document's current lock promise">§
+                <a href="#ref-for-index-term-user-agent-9" title="§ 8.2 Rejecting a document's current lock promise">§
                     8.2 Rejecting a document's current lock promise</a>
             </li>
             <li>
-                <a href="#ref-for-index-term-user-agent-9" title="§ 8.3 Applying an orientation lock">§ 8.3 Applying an
+                <a href="#ref-for-index-term-user-agent-10" title="§ 8.3 Applying an orientation lock">§ 8.3 Applying an
                     orientation lock</a>
             </li>
         </ul>
@@ -5426,7 +5594,8 @@ interface <a class="internalDFN idlID" data-link-type="interface" href="#dom-scr
         <ul>
             <li>
                 <a href="#ref-for-index-term-a-promise-rejected-with-1" title="§ 5.2 lock() method">§ 5.2 lock()
-                    method</a> <a href="#ref-for-index-term-a-promise-rejected-with-2" title="Reference 2">(2)</a>
+                    method</a> <a href="#ref-for-index-term-a-promise-rejected-with-2" title="Reference 2">(2)</a> <a
+                    href="#ref-for-index-term-a-promise-rejected-with-3" title="Reference 3">(3)</a>
             </li>
         </ul>
     </div>
@@ -5472,15 +5641,15 @@ interface <a class="internalDFN idlID" data-link-type="interface" href="#dom-scr
         <ul>
             <li>
                 <a href="#ref-for-index-term-domexception-interface-1" title="§ 5.2 lock() method">§ 5.2 lock()
-                    method</a>
+                    method</a> <a href="#ref-for-index-term-domexception-interface-2" title="Reference 2">(2)</a>
             </li>
             <li>
-                <a href="#ref-for-index-term-domexception-interface-2" title="§ 5.4 Common Safety Checks">§ 5.4 Common
-                    Safety Checks</a> <a href="#ref-for-index-term-domexception-interface-3" title="Reference 2">(2)</a>
-                <a href="#ref-for-index-term-domexception-interface-4" title="Reference 3">(3)</a>
+                <a href="#ref-for-index-term-domexception-interface-3" title="§ 5.4 Common Safety Checks">§ 5.4 Common
+                    Safety Checks</a> <a href="#ref-for-index-term-domexception-interface-4" title="Reference 2">(2)</a>
+                <a href="#ref-for-index-term-domexception-interface-5" title="Reference 3">(3)</a>
             </li>
             <li>
-                <a href="#ref-for-index-term-domexception-interface-5"
+                <a href="#ref-for-index-term-domexception-interface-6"
                     title="§ 8.2 Rejecting a document's current lock promise">§ 8.2 Rejecting a document's current lock
                     promise</a>
             </li>
@@ -5555,6 +5724,23 @@ interface <a class="internalDFN idlID" data-link-type="interface" href="#dom-scr
             <li>
                 <a href="#ref-for-index-term-invalidstateerror-exception-1" title="§ 5.4 Common Safety Checks">§ 5.4
                     Common Safety Checks</a>
+            </li>
+        </ul>
+    </div>
+    <div class="dfn-panel" hidden="" role="dialog" aria-modal="true"
+        id="dfn-panel-for-index-term-notallowederror-exception"
+        aria-label="Links in this document to definition: NotAllowedError exception">
+        <span class="caret"></span>
+        <div>
+            <a class="self-link" href="https://webidl.spec.whatwg.org/#notallowederror"
+                aria-label="Permalink for definition: NotAllowedError exception. Activate to close this dialog.">Permalink</a>
+
+        </div>
+        <p><b>Referenced in:</b></p>
+        <ul>
+            <li>
+                <a href="#ref-for-index-term-notallowederror-exception-1" title="§ 5.2 lock() method">§ 5.2 lock()
+                    method</a>
             </li>
         </ul>
     </div>
