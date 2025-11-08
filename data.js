@@ -1956,7 +1956,7 @@ const httpLinks = [
         href: "https://htmlspecs.com/http/",
         src: "https://httpwg.org/specs/",
         "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        etag: "69016230-2e87",
+        etag: "690e5d66-2ed0",
         lang: "cjk",
         state: ""
     },
@@ -1967,7 +1967,7 @@ const httpLinks = [
         href: "https://htmlspecs.com/http/rfc9110.html",
         src: "https://httpwg.org/specs/rfc9110.html",
         "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        etag: "69016230-df679",
+        etag: "690e5d66-df679",
         lang: "cjk",
         state: "RFC"
     },
@@ -1977,7 +1977,7 @@ const httpLinks = [
         href: "https://htmlspecs.com/http/rfc9111.html",
         src: "https://httpwg.org/specs/rfc9111.html",
         "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        etag: "69016230-2b98d",
+        etag: "690e5d66-2b98d",
         lang: "cjk",
         state: "RFC"
     },
@@ -1987,7 +1987,7 @@ const httpLinks = [
         href: "https://htmlspecs.com/http/rfc9112.html",
         src: "https://httpwg.org/specs/rfc9112.html",
         "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        etag: "69016230-36986",
+        etag: "690e5d66-36986",
         lang: "cjk",
         state: "RFC"
     },
@@ -1997,7 +1997,7 @@ const httpLinks = [
         href: "https://htmlspecs.com/http/rfc9113.html",
         src: "https://httpwg.org/specs/rfc9113.html",
         "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        etag: "69016230-4fb9e",
+        etag: "690e5d66-4fb9e",
         lang: "cjk",
         state: "RFC"
     },
@@ -2017,7 +2017,7 @@ const httpLinks = [
         href: "https://htmlspecs.com/http/rfc7541.html",
         src: "https://httpwg.org/specs/rfc7541.html",
         "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        etag: "69016230-2921e",
+        etag: "690e5d66-2921e",
         lang: "cjk",
         state: "RFC"
     },
@@ -2027,7 +2027,7 @@ const httpLinks = [
         href: "https://htmlspecs.com/http/rfc9204.html",
         src: "https://httpwg.org/specs/rfc9204.html",
         "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        etag: "69016230-27785",
+        etag: "690e5d66-27785",
         lang: "cjk",
         state: "RFC"
     },
@@ -2037,7 +2037,7 @@ const httpLinks = [
         href: "https://htmlspecs.com/http/rfc9651.html",
         src: "https://httpwg.org/specs/rfc9651.html",
         "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        etag: "69016230-2132a",
+        etag: "690e5d66-2132a",
         lang: "cjk",
         state: "RFC"
     },
@@ -2047,7 +2047,7 @@ const httpLinks = [
         href: "https://htmlspecs.com/http/rfc9205.html",
         src: "https://httpwg.org/specs/rfc9205.html",
         "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        etag: "69016230-1dd77",
+        etag: "690e5d66-1dd77",
         lang: "cjk",
         state: "RFC"
     },
@@ -2058,7 +2058,7 @@ const httpLinks = [
         href: "https://htmlspecs.com/http/rfc5789.html",
         src: "https://httpwg.org/specs/rfc5789.html",
         "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        etag: "69016230-9b07",
+        etag: "690e5d66-9b07",
         lang: "cjk",
         state: "RFC"
     },
@@ -2069,7 +2069,7 @@ const httpLinks = [
         href: "https://htmlspecs.com/http/rfc6585.html",
         src: "https://httpwg.org/specs/rfc6585.html",
         "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        etag: "69016230-90ef",
+        etag: "690e5d66-90ef",
         lang: "cjk",
         state: "RFC"
     },
@@ -2079,7 +2079,7 @@ const httpLinks = [
         href: "https://htmlspecs.com/http/rfc7725.html",
         src: "https://httpwg.org/specs/rfc7725.html",
         "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        etag: "69016230-68db",
+        etag: "690e5d66-68db",
         lang: "cjk",
         state: "RFC"
     },
@@ -2089,7 +2089,7 @@ const httpLinks = [
         href: "https://htmlspecs.com/http/rfc8297.html",
         src: "https://httpwg.org/specs/rfc8297.html",
         "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        etag: "69016230-73c4",
+        etag: "690e5d66-73c4",
         lang: "cjk",
         state: "RFC"
     },
@@ -2100,7 +2100,7 @@ const httpLinks = [
         href: "https://htmlspecs.com/http/rfc5861.html",
         src: "https://httpwg.org/specs/rfc5861.html",
         "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        etag: "69016230-6a77",
+        etag: "690e5d66-6a77",
         lang: "cjk",
         state: "RFC"
     },
@@ -2110,7 +2110,7 @@ const httpLinks = [
         href: "https://htmlspecs.com/http/rfc8246.html",
         src: "https://httpwg.org/specs/rfc8246.html",
         "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        etag: "69016230-6f44",
+        etag: "690e5d66-6f44",
         lang: "cjk",
         state: "RFC"
     },
@@ -2120,7 +2120,7 @@ const httpLinks = [
         href: "https://htmlspecs.com/http/rfc9211.html",
         src: "https://httpwg.org/specs/rfc9211.html",
         "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        etag: "69016230-abd1",
+        etag: "690e5d66-abd1",
         lang: "cjk",
         state: "RFC"
     },
@@ -2130,7 +2130,7 @@ const httpLinks = [
         href: "https://htmlspecs.com/http/rfc9213.html",
         src: "https://httpwg.org/specs/rfc9213.html",
         "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        etag: "69016230-a034",
+        etag: "690e5d66-a034",
         lang: "cjk",
         state: "RFC"
     },
@@ -2141,7 +2141,7 @@ const httpLinks = [
         href: "https://htmlspecs.com/http/rfc6265.html",
         src: "https://httpwg.org/specs/rfc6265.html",
         "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        etag: "69016230-1d2cd",
+        etag: "690e5d66-1d2cd",
         lang: "cjk",
         state: "RFC"
     },
@@ -2151,7 +2151,7 @@ const httpLinks = [
         href: "https://htmlspecs.com/http/rfc6266.html",
         src: "https://httpwg.org/specs/rfc6266.html",
         "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        etag: "69016230-de1b",
+        etag: "690e5d66-de1b",
         lang: "cjk",
         state: "RFC"
     },
@@ -2161,7 +2161,7 @@ const httpLinks = [
         href: "https://htmlspecs.com/http/rfc7694.html",
         src: "https://httpwg.org/specs/rfc7694.html",
         "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        etag: "69016230-8a24",
+        etag: "690e5d66-8a24",
         lang: "cjk",
         state: "RFC"
     },
@@ -2171,7 +2171,7 @@ const httpLinks = [
         href: "https://htmlspecs.com/http/rfc7240.html",
         src: "https://httpwg.org/specs/rfc7240.html",
         "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        etag: "69016230-d5cb",
+        etag: "690e5d66-d5cb",
         lang: "cjk",
         state: "RFC"
     },
@@ -2181,7 +2181,7 @@ const httpLinks = [
         href: "https://htmlspecs.com/http/rfc8288.html",
         src: "https://httpwg.org/specs/rfc8288.html",
         "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        etag: "69016230-14cc2",
+        etag: "690e5d66-14cc2",
         lang: "cjk",
         state: "RFC"
     },
@@ -2191,7 +2191,7 @@ const httpLinks = [
         href: "https://htmlspecs.com/http/rfc9842.html",
         src: "https://httpwg.org/specs/rfc9842.html",
         "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        etag: "69016230-144e8",
+        etag: "690e5d66-144e8",
         lang: "cjk",
         state: "RFC"
     },
@@ -2202,7 +2202,7 @@ const httpLinks = [
         href: "https://htmlspecs.com/http/rfc7639.html",
         src: "https://httpwg.org/specs/rfc7639.html",
         "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        etag: "69016230-86f9",
+        etag: "690e5d66-86f9",
         lang: "cjk",
         state: "RFC"
     },
@@ -2212,7 +2212,7 @@ const httpLinks = [
         href: "https://htmlspecs.com/http/rfc7838.html",
         src: "https://httpwg.org/specs/rfc7838.html",
         "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        etag: "69016230-139cc",
+        etag: "690e5d66-139cc",
         lang: "cjk",
         state: "RFC"
     },
@@ -2222,7 +2222,7 @@ const httpLinks = [
         href: "https://htmlspecs.com/http/rfc8336.html",
         src: "https://httpwg.org/specs/rfc8336.html",
         "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        etag: "69016230-aabc",
+        etag: "690e5d66-aabc",
         lang: "cjk",
         state: "RFC"
     },
@@ -2232,7 +2232,7 @@ const httpLinks = [
         href: "https://htmlspecs.com/http/rfc8441.html",
         src: "https://httpwg.org/specs/rfc8441.html",
         "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        etag: "69016230-9881",
+        etag: "690e5d66-9881",
         lang: "cjk",
         state: "RFC"
     },
@@ -2242,7 +2242,7 @@ const httpLinks = [
         href: "https://htmlspecs.com/http/rfc9209.html",
         src: "https://httpwg.org/specs/rfc9209.html",
         "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        etag: "69016230-14f69",
+        etag: "690e5d66-14f69",
         lang: "cjk",
         state: "RFC"
     },
@@ -2252,7 +2252,7 @@ const httpLinks = [
         href: "https://htmlspecs.com/http/rfc9218.html",
         src: "https://httpwg.org/specs/rfc9218.html",
         "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        etag: "69016230-1843f",
+        etag: "690e5d66-1843f",
         lang: "cjk",
         state: "RFC"
     },
@@ -2262,7 +2262,7 @@ const httpLinks = [
         href: "https://htmlspecs.com/http/rfc9220.html",
         src: "https://httpwg.org/specs/rfc9220.html",
         "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        etag: "69016230-6676",
+        etag: "690e5d66-6676",
         lang: "cjk",
         state: "RFC"
     },
@@ -2282,7 +2282,7 @@ const httpLinks = [
         href: "https://htmlspecs.com/http/rfc9412.html",
         src: "https://httpwg.org/specs/rfc9412.html",
         "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        etag: "69016230-64f2",
+        etag: "690e5d66-64f2",
         lang: "cjk",
         state: "RFC"
     },
@@ -2292,7 +2292,7 @@ const httpLinks = [
         href: "https://htmlspecs.com/http/rfc9440.html",
         src: "https://httpwg.org/specs/rfc9440.html",
         "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        etag: "69016230-105df",
+        etag: "690e5d66-105df",
         lang: "cjk",
         state: "RFC"
     },
@@ -2303,7 +2303,7 @@ const httpLinks = [
         href: "https://htmlspecs.com/http/rfc7616.html",
         src: "https://httpwg.org/specs/rfc7616.html",
         "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        etag: "69016230-1b777",
+        etag: "690e5d66-1b777",
         lang: "cjk",
         state: "RFC"
     },
@@ -2313,7 +2313,7 @@ const httpLinks = [
         href: "https://htmlspecs.com/http/rfc7617.html",
         src: "https://httpwg.org/specs/rfc7617.html",
         "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        etag: "69016230-e5a0",
+        etag: "690e5d66-e5a0",
         lang: "cjk",
         state: "RFC"
     },
@@ -2323,7 +2323,7 @@ const httpLinks = [
         href: "https://htmlspecs.com/http/rfc8188.html",
         src: "https://httpwg.org/specs/rfc8188.html",
         "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        etag: "69016230-eab6",
+        etag: "690e5d66-eab6",
         lang: "cjk",
         state: "RFC"
     },
@@ -2333,7 +2333,7 @@ const httpLinks = [
         href: "https://htmlspecs.com/http/rfc8470.html",
         src: "https://httpwg.org/specs/rfc8470.html",
         "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        etag: "69016230-caa3",
+        etag: "690e5d66-caa3",
         lang: "cjk",
         state: "RFC"
     },
@@ -2343,7 +2343,7 @@ const httpLinks = [
         href: "https://htmlspecs.com/http/rfc9421.html",
         src: "https://httpwg.org/specs/rfc9421.html",
         "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        etag: "69016230-5a94f",
+        etag: "690e5d66-5a94f",
         lang: "cjk",
         state: "RFC"
     },
@@ -2353,7 +2353,7 @@ const httpLinks = [
         href: "https://htmlspecs.com/http/rfc9530.html",
         src: "https://httpwg.org/specs/rfc9530.html",
         "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        etag: "69016230-2016f",
+        etag: "690e5d66-2016f",
         lang: "cjk",
         state: "RFC"
     },
@@ -2363,7 +2363,7 @@ const httpLinks = [
         href: "https://htmlspecs.com/http/rfc9729.html",
         src: "https://httpwg.org/specs/rfc9729.html",
         "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        etag: "69016230-11b87",
+        etag: "690e5d66-11b87",
         lang: "cjk",
         state: "RFC"
     }
