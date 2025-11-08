@@ -1050,7 +1050,7 @@ const cssLinks = [
         src: "https://www.w3.org/TR/2024/WD-css-color-hdr-1-20241217/",
         "last-modified": "-",
         lang: "cjk",
-        state: "CRD"
+        state: "WD"
     },
     {
         text: "CSS Filter Effects Module Level 1",
@@ -1274,7 +1274,7 @@ const cssLinks = [
         src: "https://www.w3.org/TR/2025/WD-css-display-4-20251106/",
         "last-modified": "-",
         lang: "cjk",
-        state: "CR"
+        state: "WD"
     },
     {
         text: "CSS Flexible Box Layout Module Level 1",
