@@ -2135,6 +2135,16 @@ const httpLinks = [
         state: "RFC"
     },
 
+    {
+        text: "HTTP Cache Groups",
+        href: "https://htmlspecs.com/http/rfc9875.html",
+        src: "https://httpwg.org/specs/rfc9875.html",
+        "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
+        etag: "690e5d66-7de6",
+        lang: "cjk",
+        state: "RFC"
+    },
+
     //### 内容相关扩展|콘텐츠 관련 확장|コンテンツ関連の拡張
     {
         text: "HTTP State Management Mechanism",
