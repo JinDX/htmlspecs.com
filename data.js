@@ -2007,7 +2007,7 @@ const httpLinks = [
         href: "https://htmlspecs.com/http/rfc9114.html",
         src: "https://httpwg.org/specs/rfc9114.html",
         "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-        etag: "69016230-44fa1",
+        etag: "690e5d66-44fa1",
         lang: "cjk",
         state: "RFC"
     },
