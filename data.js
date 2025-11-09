@@ -381,12 +381,28 @@ const links = [
 
     //### 设备和硬件访问|디바이스 및 하드웨어 접근|デバイスとハードウェアアクセス
     {
-        text: "Pointer Events",
+        text: "Pointer Events Level 2",
         href: "https://htmlspecs.com/pointerevents2",
         src: "https://www.w3.org/TR/2019/REC-pointerevents2-20190404/",
         "last-modified": "-",
         lang: "cjk",
         state: "REC"
+    },
+    {
+        text: "Pointer Events Level 3",
+        href: "https://htmlspecs.com/pointerevents3",
+        src: "https://www.w3.org/TR/2025/CR-pointerevents3-20251106/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "CR"
+    },
+    {
+        text: "Pointer Events Level 4",
+        href: "https://htmlspecs.com/pointerevents4",
+        src: "https://www.w3.org/TR/2025/WD-pointerevents4-20251022/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
     },
     {
         text: "Serial API",
