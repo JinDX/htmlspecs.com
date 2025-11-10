@@ -165,10 +165,10 @@ const links = [
         state: "LS"
     },
     {
-        text: "Minimum Common Web Platform API",
+        text: "Minimum common web API",
         href: "https://htmlspecs.com/min-common-api",
         src: "https://min-common-api.proposal.wintertc.org/",
-        "last-modified": "Tue, 14 Oct 2025 14:04:47 GMT",
+        "last-modified": "Mon, 10 Nov 2025 01:14:06 GMT",
         lang: "cjk",
         state: "Draft"
     },
