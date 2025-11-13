@@ -55,14 +55,14 @@ function rewriteHref(href) {
     const lang = getCurrentLang();
     if (lang === "jp") {
         return href.replace("htmlspecs.com", "jp.htmlspecs.com")
-            .replace("ecma262.com/", "ecma262.com/j");
+            .replace("ecma262.com/", "ecma262.com/j/");
     }
     if (lang === "ko") {
         return href.replace("htmlspecs.com", "ko.htmlspecs.com")
-            .replace("ecma262.com/", "ecma262.com/k");
+            .replace("ecma262.com/", "ecma262.com/k/");
     }
     if (lang === "cn") {
-        return href.replace("ecma262.com/", "ecma262.com/c");
+        return href.replace("ecma262.com/", "ecma262.com/c/");
     }
     return href;
 }
