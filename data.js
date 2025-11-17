@@ -249,6 +249,22 @@ const links = [
         state: "LS"
     },
     {
+        text: "WebSub",
+        href: "https://htmlspecs.com/websub/",
+        src: "https://www.w3.org/TR/2018/REC-websub-20180123/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "REC"
+    },
+    {
+        text: "ActivityPub",
+        href: "https://htmlspecs.com/activitypub/",
+        src: "https://www.w3.org/TR/2018/REC-activitypub-20180123/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "REC"
+    },
+    {
         text: "WebTransport",
         href: "https://htmlspecs.com/webtransport/",
         src: "https://www.w3.org/TR/2025/WD-webtransport-20251022/",
