@@ -36,7 +36,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [WebSockets](https://htmlspecs.com/websockets/)（[Source](https://websockets.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [WebSub](https://htmlspecs.com/websub/)（[Source](https://www.w3.org/TR/2018/REC-websub-20180123/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [ActivityPub](https://htmlspecs.com/activitypub/)（[Source](https://www.w3.org/TR/2018/REC-activitypub-20180123/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
-- [WebTransport](https://htmlspecs.com/webtransport/)（[Source](https://www.w3.org/TR/2025/WD-webtransport-20251022/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [WebTransport](https://htmlspecs.com/webtransport/)（[Source](https://www.w3.org/TR/2025/WD-webtransport-20251118/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Service Workers](https://htmlspecs.com/service-workers/)（[Source](https://www.w3.org/TR/2025/CRD-service-workers-20251113/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [Push API](https://htmlspecs.com/push-api/)（[Source](https://www.w3.org/TR/2025/WD-push-api-20250925/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [WebRTC](https://htmlspecs.com/webrtc/)（[Source](https://www.w3.org/TR/2025/REC-webrtc-20250313/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
