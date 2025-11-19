@@ -108,7 +108,8 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Event Timing API](https://htmlspecs.com/event-timing/)（[Source](https://www.w3.org/TR/2025/WD-event-timing-20251017/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 
 ### 安全和认证
-- [Web Authentication Level 2](https://htmlspecs.com/webauthn-2/)（[Source](https://www.w3.org/TR/2021/REC-webauthn-2-20210408/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
+- [Web Authentication: An API for accessing Public Key Credentials Level 2](https://htmlspecs.com/webauthn-2/)（[Source](https://www.w3.org/TR/2021/REC-webauthn-2-20210408/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
+- [Web Authentication: An API for accessing Public Key Credentials Level 3](https://htmlspecs.com/webauthn-3/)（[Source](https://www.w3.org/TR/2025/WD-webauthn-3-20250127/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [HTML Sanitizer API](https://htmlspecs.com/sanitizer-api/)（[Source](https://wicg.github.io/sanitizer-api/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Subresource Integrity (SRI)](https://htmlspecs.com/sri/)（[Source](https://www.w3.org/TR/2016/REC-SRI-20160623/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Content Security Policy Level 3](https://htmlspecs.com/CSP3/)（[Source](https://www.w3.org/TR/2025/WD-CSP3-20251106/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
@@ -123,7 +124,6 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 ### 媒体和图形
 - [WebGPU](https://htmlspecs.com/webgpu/)（[Source](https://www.w3.org/TR/2025/CRD-webgpu-20251028/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [WebGPU Shading Language](https://htmlspecs.com/WGSL/)（[Source](https://www.w3.org/TR/2025/CRD-WGSL-20251104/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
-- [Web Animations](https://htmlspecs.com/web-animations-1/)（[Source](https://www.w3.org/TR/2023/WD-web-animations-1-20230605/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Scalable Vector Graphics (SVG) 2](https://htmlspecs.com/SVG2/)（[Source](https://www.w3.org/TR/2018/CR-SVG2-20181004/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
 - [Picture-in-Picture](https://htmlspecs.com/picture-in-picture/)（[Source](https://www.w3.org/TR/2025/WD-picture-in-picture-20250820/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Presentation API](https://htmlspecs.com/presentation-api/)（[Source](https://www.w3.org/TR/2025/CRD-presentation-api-20250212/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
@@ -235,6 +235,8 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [CSS Transitions Level 2](https://htmlspecs.com/css/css-transitions-2/)（[Source](https://www.w3.org/TR/2023/WD-css-transitions-2-20230905/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Animations Level 1](https://htmlspecs.com/css/css-animations-1/)（[Source](https://www.w3.org/TR/2023/WD-css-animations-1-20230302/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Animations Level 2](https://htmlspecs.com/css/css-animations-2/)（[Source](https://www.w3.org/TR/2023/WD-css-animations-2-20230602/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Web Animations](https://htmlspecs.com/css/web-animations-1/)（[Source](https://www.w3.org/TR/2023/WD-web-animations-1-20230605/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Web Animations Module Level 2](https://htmlspecs.com/css/web-animations-2/)（[Source](https://www.w3.org/TR/2025/WD-web-animations-2-20251115/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Motion Path Module Level 1](https://htmlspecs.com/css/motion-1/)（[Source](https://www.w3.org/TR/2024/WD-motion-1-20241105/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS View Transitions Module Level 1](https://htmlspecs.com/css/css-view-transitions-1/)（[Source](https://www.w3.org/TR/2024/CRD-css-view-transitions-1-20240328/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [CSS View Transitions Module Level 2](https://htmlspecs.com/css/css-view-transitions-2/)（[Source](https://www.w3.org/TR/2024/WD-css-view-transitions-2-20241113/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）

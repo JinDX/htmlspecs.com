@@ -785,12 +785,20 @@ const links = [
 
     //### 安全和认证|보안 및 인증|セキュリティと認証
     {
-        text: "Web Authentication Level 2",
+        text: "Web Authentication: An API for accessing Public Key Credentials Level 2",
         href: "https://htmlspecs.com/webauthn-2/",
         src: "https://www.w3.org/TR/2021/REC-webauthn-2-20210408/",
         "last-modified": "-",
         lang: "cjk",
         state: "REC"
+    },
+    {
+        text: "Web Authentication: An API for accessing Public Key Credentials Level 3",
+        href: "https://htmlspecs.com/webauthn-3/",
+        src: "https://www.w3.org/TR/2025/WD-webauthn-3-20250127/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
     },
     {
         text: "HTML Sanitizer API",
@@ -890,14 +898,6 @@ const links = [
         "last-modified": "-",
         lang: "cjk",
         state: "CRD"
-    },
-    {
-        text: "Web Animations",
-        href: "https://htmlspecs.com/web-animations-1/",
-        src: "https://www.w3.org/TR/2023/WD-web-animations-1-20230605/",
-        "last-modified": "-",
-        lang: "cjk",
-        state: "WD"
     },
     {
         text: "Scalable Vector Graphics (SVG) 2",
@@ -1612,6 +1612,23 @@ const cssLinks = [
         text: "CSS Animations Level 2",
         href: "https://htmlspecs.com/css/css-animations-2/",
         src: "https://www.w3.org/TR/2023/WD-css-animations-2-20230602/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
+    {
+        text: "Web Animations",
+        href: "https://htmlspecs.com/css/web-animations-1/",
+        src: "https://www.w3.org/TR/2023/WD-web-animations-1-20230605/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
+    
+    {
+        text: "Web Animations Module Level 2",
+        href: "https://htmlspecs.com/css/web-animations-2/",
+        src: "https://www.w3.org/TR/2025/WD-web-animations-2-20251115/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
