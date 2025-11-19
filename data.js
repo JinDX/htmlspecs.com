@@ -769,7 +769,7 @@ const links = [
     {
         text: "Paint Timing",
         href: "https://htmlspecs.com/paint-timing/",
-        src: "https://www.w3.org/TR/2025/WD-paint-timing-20251020/",
+        src: "https://www.w3.org/TR/2025/WD-paint-timing-20251119/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
