@@ -2112,7 +2112,7 @@ const httpLinks = [
         state: "RFC"
     },
 
-    //### 状态码|상태 코드|状态码
+    //### 状态码|상태 코드|ステータスコード
     {
         text: "Additional HTTP Status Codes",
         href: "https://htmlspecs.com/http/rfc6585.html",
