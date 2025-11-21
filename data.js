@@ -1628,7 +1628,7 @@ const cssLinks = [
     {
         text: "Web Animations Module Level 2",
         href: "https://htmlspecs.com/css/web-animations-2/",
-        src: "https://www.w3.org/TR/2025/WD-web-animations-2-20251115/",
+        src: "https://www.w3.org/TR/2025/WD-web-animations-2-20251120/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
