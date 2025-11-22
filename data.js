@@ -722,7 +722,7 @@ const links = [
         text: "Observable",
         href: "https://htmlspecs.com/observable/",
         src: "https://wicg.github.io/observable/",
-        "last-modified": "Fri, 05 Sep 2025 13:43:42 GMT",
+        "last-modified": "Fri, 21 Nov 2025 14:15:47 GMT",
         lang: "cjk",
         state: "Draft"
     },
