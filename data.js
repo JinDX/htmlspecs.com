@@ -1022,7 +1022,7 @@ const cssLinks = [
         text: "CSS current work",
         href: "https://htmlspecs.com/css/",
         src: "https://www.w3.org/Style/CSS/current-work",
-        "last-modified": "Tue, 18 Nov 2025 07:40:23 GMT",
+        "last-modified": "Fri, 21 Nov 2025 17:54:41 GMT",
         lang: "cjk",
         state: ""
     },
