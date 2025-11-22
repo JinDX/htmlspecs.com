@@ -11,7 +11,7 @@ const LANGUAGES = {
         disclaimer: "这是一份志愿者翻译，译文中可能包含错误。本译文仅供参考，应以 W3C 网站上的原始英文版本（<a href='{src}'>{text}</a>）为准。"
     },
     jp: {
-        otherStandards: "他の標準",
+        otherStandards: "他の仕様",
         githubTitle: "GitHub ソースコードを見る、スター ⭐",
         cssRelated: "CSS 関連",
         httpRelated: "HTTP",
