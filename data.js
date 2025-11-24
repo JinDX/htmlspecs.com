@@ -320,14 +320,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
-    // {
-    //     text: "Periodic Background Sync",
-    //     href: "https://htmlspecs.com/periodic-background-sync/",
-    //     src: "https://wicg.github.io/periodic-background-sync/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "Periodic Background Sync",
+        href: "https://htmlspecs.com/periodic-background-sync/",
+        src: "https://wicg.github.io/periodic-background-sync/",
+        "last-modified": "Mon, 12 Apr 2021 10:20:07 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
     {
         text: "User-Agent Client Hints",
         href: "https://htmlspecs.com/ua-client-hints/",
