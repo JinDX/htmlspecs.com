@@ -228,7 +228,7 @@ const links = [
         text: "Streams",
         href: "https://htmlspecs.com/streams/",
         src: "https://streams.spec.whatwg.org/",
-        "last-modified": "Thu, 25 Sep 2025 00:41:51 GMT",
+        "last-modified": "Mon, 24 Nov 2025 06:22:14 GMT",
         lang: "cjk",
         state: "LS"
     },
