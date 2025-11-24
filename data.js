@@ -378,14 +378,14 @@ const links = [
         lang: "cjk",
         state: "LS"
     },
-    // {
-    //     text: "File System Access API",
-    //     href: "https://htmlspecs.com/file-system-access/",
-    //     src: "https://wicg.github.io/file-system-access/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "File System Access API",
+        href: "https://htmlspecs.com/file-system-access/",
+        src: "https://wicg.github.io/file-system-access/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "Draft"
+    },
     {
         text: "Cookie Store API",
         href: "https://htmlspecs.com/cookiestore/",
