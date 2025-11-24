@@ -320,6 +320,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
+    // {
+    //     text: "Periodic Background Sync",
+    //     href: "https://htmlspecs.com/periodic-background-sync/",
+    //     src: "https://wicg.github.io/periodic-background-sync/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
     {
         text: "User-Agent Client Hints",
         href: "https://htmlspecs.com/ua-client-hints/",
@@ -370,6 +378,14 @@ const links = [
         lang: "cjk",
         state: "LS"
     },
+    // {
+    //     text: "File System Access API",
+    //     href: "https://htmlspecs.com/file-system-access/",
+    //     src: "https://wicg.github.io/file-system-access/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
     {
         text: "Cookie Store API",
         href: "https://htmlspecs.com/cookiestore/",
