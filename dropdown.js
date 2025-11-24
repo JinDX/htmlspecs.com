@@ -325,7 +325,6 @@ loadDataScript(function () {
             dropdownContent.appendChild(cssTitle);
             dropdownContent.appendChild(cssContent);
 
-            // 添加 HTTP 区块（与 CSS 区块相同的行为）
             var httpTitle = createLink("#", t.httpRelated);
             httpTitle.style.cursor = "pointer";
             httpTitle.style.padding = "10px 15px";

@@ -25,7 +25,6 @@ const checkLinks = async (links, category) => {
   };
 
   const w3Links = links.filter(item => item.src.includes('w3.org/TR'));
-  // 只把包含 /TR 的当作 w3 特殊处理，其它链接继续处理（避免把其它 w3.org 链接意外丢弃）
   const otherLinks = links.filter(item => !item.src.includes('w3.org/TR'));
 
   const w3Requests = w3Links.map((link, index) => {
@@ -76,7 +75,6 @@ const checkLinks = async (links, category) => {
         let etag = res.headers['etag'] || res.headers.etag;
         const lastModified = res.headers['last-modified'];
 
-        // 去除 etag 中的所有双引号
         if (etag) {
           etag = etag.replace(/"/g, '');
         }
@@ -85,7 +83,6 @@ const checkLinks = async (links, category) => {
         const storedLastIsZero = link['last-modified'] === '0';
 
         if (hasStoredEtag) {
-          // 也去除存储的 etag 中的所有双引号
           let stored = link.etag;
           if (stored) {
             stored = stored.replace(/"/g, '');
@@ -97,7 +94,6 @@ const checkLinks = async (links, category) => {
               logResult(info);
             }
           } else {
-            // 如果存储的 last-modified 为 "0"，则不确认更新
             if (!storedLastIsZero && lastModified && link['last-modified']) {
               const newTime = new Date(lastModified);
               const oldTime = new Date(link['last-modified']);
@@ -111,7 +107,6 @@ const checkLinks = async (links, category) => {
             }
           }
         } else {
-          // 无存储 etag：若存储 last-modified 为 "0" 则跳过确认
           if (!storedLastIsZero && lastModified && link['last-modified']) {
             const newTime = new Date(lastModified);
             const oldTime = new Date(link['last-modified']);
@@ -137,7 +132,6 @@ const checkLinks = async (links, category) => {
   });
 
   await Promise.all([...w3Requests, ...otherRequests]);
-  // 补齐进度显示，防止少数分支遗漏导致输出不满
   process.stdout.write(`\rProgress: ${total}/${total}\n`);
   logResult('\n');
 };
