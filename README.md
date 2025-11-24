@@ -52,6 +52,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Storage](https://htmlspecs.com/storage/)（[Source](https://storage.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [File API](https://htmlspecs.com/FileAPI/)（[Source](https://www.w3.org/TR/2024/WD-FileAPI-20241204/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [File System](https://htmlspecs.com/fs/)（[Source](https://fs.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
+- [File System Access API](https://htmlspecs.com/file-system-access/)（[Source](https://wicg.github.io/file-system-access/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Cookie Store API](https://htmlspecs.com/cookiestore/)（[Source](https://cookiestore.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [File and Directory Entries API](https://htmlspecs.com/entries-api/)（[Source](https://wicg.github.io/entries-api/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Web Locks API](https://htmlspecs.com/web-locks/)（[Source](https://www.w3.org/TR/2025/WD-web-locks-20250924/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
