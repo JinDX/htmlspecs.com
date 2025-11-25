@@ -99,6 +99,22 @@ const links = [
         lang: "cjk",
         state: "LS"
     },
+    // {
+    //     text: "The JavaScript Object Notation (JSON) Data Interchange Format",
+    //     href: "https://htmlspecs.com/json/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc8259.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
+    // {
+    //     text: "JSON-LD 1.1",
+    //     href: "https://htmlspecs.com/json-ld11/",
+    //     src: "https://www.w3.org/TR/2020/REC-json-ld11-20200716/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "REC"
+    // },
     {
         text: "MIME Sniffing",
         href: "https://htmlspecs.com/mimesniff/",
@@ -660,6 +676,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "Generic Sensor API",
+    //     href: "https://htmlspecs.com/generic-sensor/",
+    //     src: "https://www.w3.org/TR/2024/CRD-generic-sensor-20240222/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "CRD"
+    // },
     {
         text: "Battery Status API",
         href: "https://htmlspecs.com/battery-status/",
@@ -832,6 +856,14 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
+    // {
+    //     text: "Web Cryptography API",
+    //     href: "https://htmlspecs.com/webcrypto-2/",
+    //     src: "https://www.w3.org/TR/2025/WD-webcrypto-2-20250422/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "Content Security Policy Level 3",
         href: "https://htmlspecs.com/CSP3/",
@@ -1640,7 +1672,6 @@ const cssLinks = [
         lang: "cjk",
         state: "WD"
     },
-    
     {
         text: "Web Animations Module Level 2",
         href: "https://htmlspecs.com/css/web-animations-2/",
