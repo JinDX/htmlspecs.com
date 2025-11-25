@@ -7,7 +7,7 @@ const links = [
         text: "HTML",
         href: "https://htmlspecs.com/",
         src: "https://html.spec.whatwg.org/multipage/",
-        "last-modified": "Mon, 24 Nov 2025 08:07:44 GMT",
+        "last-modified": "Mon, 24 Nov 2025 15:45:18 GMT",
         lang: "cjk",
         state: "LS"
     },
@@ -15,7 +15,7 @@ const links = [
         text: "ECMAScript® 2026 Language Specification",
         href: "https://ecma262.com/",
         src: "https://tc39.es/ecma262/",
-        "last-modified": "Mon, 24 Nov 2025 21:20:19 GMT",
+        "last-modified": "Tue, 25 Nov 2025 01:05:58 GMT",
         lang: "cjk",
         state: "Draft"
     },
