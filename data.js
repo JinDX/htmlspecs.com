@@ -1181,6 +1181,14 @@ const cssLinks = [
         state: "CRD"
     },
     {
+        text: "CSS Backgrounds Module Level 4",
+        href: "https://htmlspecs.com/css/css-backgrounds-4/",
+        src: "https://www.w3.org/TR/2025/WD-css-backgrounds-4-20251125/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "CRD"
+    },
+    {
         text: "CSS Borders and Box Decorations Module Level 4",
         href: "https://htmlspecs.com/css/css-borders-4/",
         src: "https://www.w3.org/TR/2025/WD-css-borders-4-20250722/",
