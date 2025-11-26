@@ -116,7 +116,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Subresource Integrity (SRI)](https://htmlspecs.com/sri/)（[Source](https://www.w3.org/TR/2016/REC-SRI-20160623/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Content Security Policy Level 3](https://htmlspecs.com/CSP3/)（[Source](https://www.w3.org/TR/2025/WD-CSP3-20251106/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Permissions Policy](https://htmlspecs.com/permissions-policy/)（[Source](https://www.w3.org/TR/2025/WD-permissions-policy-1-20251006/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
-- [Global Privacy Control (GPC)](https://htmlspecs.com/gpc/)（[Source](https://www.w3.org/TR/2025/WD-gpc-20251121/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Global Privacy Control (GPC)](https://htmlspecs.com/gpc/)（[Source](https://www.w3.org/TR/2025/WD-gpc-20251125/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Secure Contexts](https://htmlspecs.com/secure-contexts/)（[Source](https://www.w3.org/TR/2023/CRD-secure-contexts-20231110/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [Referrer Policy](https://htmlspecs.com/referrer-policy/)（[Source](https://www.w3.org/TR/2017/CR-referrer-policy-20170126/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
 - [Mixed Content](https://htmlspecs.com/mixed-content/)（[Source](https://www.w3.org/TR/2023/CRD-mixed-content-20230223/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
