@@ -289,9 +289,9 @@ const links = [
         state: "WD"
     },
     {
-        text: "Service Workers",
+        text: "Service Workers Nightly",
         href: "https://htmlspecs.com/service-workers/",
-        src: "https://www.w3.org/TR/2025/CRD-service-workers-20251113/",
+        src: "https://www.w3.org/TR/2025/CRD-service-workers-20251126/",
         "last-modified": "-",
         lang: "cjk",
         state: "CRD"
