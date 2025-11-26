@@ -299,7 +299,7 @@ const links = [
     {
         text: "Push API",
         href: "https://htmlspecs.com/push-api/",
-        src: "https://www.w3.org/TR/2025/WD-push-api-20251124/",
+        src: "https://www.w3.org/TR/2025/WD-push-api-20251125/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
