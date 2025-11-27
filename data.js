@@ -15,7 +15,7 @@ const links = [
         text: "ECMAScript® 2026 Language Specification",
         href: "https://ecma262.com/",
         src: "https://tc39.es/ecma262/",
-        "last-modified": "Tue, 25 Nov 2025 01:05:58 GMT",
+        "last-modified": "Wed, 26 Nov 2025 16:36:45 GMT",
         lang: "cjk",
         state: "Draft"
     },
@@ -934,7 +934,7 @@ const links = [
     {
         text: "WebGPU",
         href: "https://htmlspecs.com/webgpu/",
-        src: "https://www.w3.org/TR/2025/CRD-webgpu-20251120/",
+        src: "https://www.w3.org/TR/2025/CRD-webgpu-20251126/",
         "last-modified": "-",
         lang: "cjk",
         state: "CRD"
