@@ -12,6 +12,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [URL Pattern](https://htmlspecs.com/urlpattern/)（[Source](https://urlpattern.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [Web IDL](https://htmlspecs.com/webidl/)（[Source](https://webidl.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [Encoding](https://htmlspecs.com/encoding/)（[Source](https://encoding.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
+- [JSON-LD 1.1](https://htmlspecs.com/json-ld11/)（[Source](https://www.w3.org/TR/2020/REC-json-ld11-20200716/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [MIME Sniffing](https://htmlspecs.com/mimesniff/)（[Source](https://mimesniff.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [Infra](https://htmlspecs.com/infra/)（[Source](https://infra.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [Web Application Manifest](https://htmlspecs.com/appmanifest/)（[Source](https://www.w3.org/TR/2025/WD-appmanifest-20250903/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）

@@ -107,14 +107,14 @@ const links = [
     //     lang: "cjk",
     //     state: "RFC"
     // },
-    // {
-    //     text: "JSON-LD 1.1",
-    //     href: "https://htmlspecs.com/json-ld11/",
-    //     src: "https://www.w3.org/TR/2020/REC-json-ld11-20200716/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "REC"
-    // },
+    {
+        text: "JSON-LD 1.1",
+        href: "https://htmlspecs.com/json-ld11/",
+        src: "https://www.w3.org/TR/2020/REC-json-ld11-20200716/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "REC"
+    },
     {
         text: "MIME Sniffing",
         href: "https://htmlspecs.com/mimesniff/",
