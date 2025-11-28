@@ -856,14 +856,6 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
-    // {
-    //     text: "Web Cryptography API",
-    //     href: "https://htmlspecs.com/webcrypto-2/",
-    //     src: "https://www.w3.org/TR/2025/WD-webcrypto-2-20250422/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
     {
         text: "Content Security Policy Level 3",
         href: "https://htmlspecs.com/CSP3/",
