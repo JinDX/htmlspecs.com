@@ -103,7 +103,7 @@ const links = [
         text: "The JavaScript Object Notation (JSON) Data Interchange Format",
         href: "https://htmlspecs.com/json/",
         src: "https://www.rfc-editor.org/rfc/rfc8259.html",
-        "last-modified": "Thu, 20 Nov 2025 22:19:26 GMT",
+        "last-modified": "0",
         lang: "cjk",
         state: "RFC"
     },
