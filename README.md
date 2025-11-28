@@ -12,6 +12,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [URL Pattern](https://htmlspecs.com/urlpattern/)（[Source](https://urlpattern.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [Web IDL](https://htmlspecs.com/webidl/)（[Source](https://webidl.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [Encoding](https://htmlspecs.com/encoding/)（[Source](https://encoding.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
+- [The JavaScript Object Notation (JSON) Data Interchange Format](https://htmlspecs.com/json/)（[Source](https://www.rfc-editor.org/rfc/rfc8259.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [JSON-LD 1.1](https://htmlspecs.com/json-ld11/)（[Source](https://www.w3.org/TR/2020/REC-json-ld11-20200716/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [MIME Sniffing](https://htmlspecs.com/mimesniff/)（[Source](https://mimesniff.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [Infra](https://htmlspecs.com/infra/)（[Source](https://infra.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
@@ -90,6 +91,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [WebOTP API](https://htmlspecs.com/web-otp/)（[Source](https://wicg.github.io/web-otp/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Device Posture API](https://htmlspecs.com/device-posture/)（[Source](https://www.w3.org/TR/2024/CR-device-posture-20241126/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
 - [Ambient Light Sensor](https://htmlspecs.com/ambient-light/)（[Source](https://www.w3.org/TR/2025/WD-ambient-light-20250212/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Generic Sensor API](https://htmlspecs.com/generic-sensor/)（[Source](https://www.w3.org/TR/2024/CRD-generic-sensor-20240222/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [Battery Status API](https://htmlspecs.com/battery-status/)（[Source](https://www.w3.org/TR/2024/WD-battery-status-20241024/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Vibration API](https://htmlspecs.com/vibration/)（[Source](https://www.w3.org/TR/2025/CRD-vibration-20250212/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 

@@ -99,14 +99,14 @@ const links = [
         lang: "cjk",
         state: "LS"
     },
-    // {
-    //     text: "The JavaScript Object Notation (JSON) Data Interchange Format",
-    //     href: "https://htmlspecs.com/json/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc8259.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
+    {
+        text: "The JavaScript Object Notation (JSON) Data Interchange Format",
+        href: "https://htmlspecs.com/json/",
+        src: "https://www.rfc-editor.org/rfc/rfc8259.html",
+        "last-modified": "Thu, 20 Nov 2025 22:19:26 GMT",
+        lang: "cjk",
+        state: "RFC"
+    },
     {
         text: "JSON-LD 1.1",
         href: "https://htmlspecs.com/json-ld11/",
@@ -676,14 +676,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "Generic Sensor API",
-    //     href: "https://htmlspecs.com/generic-sensor/",
-    //     src: "https://www.w3.org/TR/2024/CRD-generic-sensor-20240222/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "CRD"
-    // },
+    {
+        text: "Generic Sensor API",
+        href: "https://htmlspecs.com/generic-sensor/",
+        src: "https://www.w3.org/TR/2024/CRD-generic-sensor-20240222/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "CRD"
+    },
     {
         text: "Battery Status API",
         href: "https://htmlspecs.com/battery-status/",
