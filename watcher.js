@@ -132,7 +132,7 @@ const checkLinks = async (links, category) => {
   });
 
   await Promise.all([...w3Requests, ...otherRequests]);
-  process.stdout.write(`\rProgress: ${total}/${total}\n`);
+  process.stdout.write(`\n`);
   logResult('\n');
 };
 
