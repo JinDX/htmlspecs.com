@@ -466,6 +466,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    {
+        text: "Data on the Web Best Practices",
+        href: "https://htmlspecs.com/dwbp/",
+        src: "https://www.w3.org/TR/2017/REC-dwbp-20170131/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "REC"
+    },
 
     //### 设备和硬件访问|디바이스 및 하드웨어 접근|デバイスとハードウェアアクセス
     {
