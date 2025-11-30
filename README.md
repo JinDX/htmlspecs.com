@@ -38,6 +38,8 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [WebSockets](https://htmlspecs.com/websockets/)（[Source](https://websockets.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [WebSub](https://htmlspecs.com/websub/)（[Source](https://www.w3.org/TR/2018/REC-websub-20180123/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [ActivityPub](https://htmlspecs.com/activitypub/)（[Source](https://www.w3.org/TR/2018/REC-activitypub-20180123/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
+- [Webmention](https://htmlspecs.com/webmention/)（[Source](https://www.w3.org/TR/2017/REC-webmention-20170112/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
+- [Micropub](https://htmlspecs.com/micropub/)（[Source](https://www.w3.org/TR/2017/REC-micropub-20170523/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [WebTransport](https://htmlspecs.com/webtransport/)（[Source](https://www.w3.org/TR/2025/WD-webtransport-20251118/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Service Workers Nightly](https://htmlspecs.com/service-workers/)（[Source](https://www.w3.org/TR/2025/CRD-service-workers-20251126/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [Push API](https://htmlspecs.com/push-api/)（[Source](https://www.w3.org/TR/2025/WD-push-api-20251125/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
@@ -63,7 +65,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Pointer Events Level 2](https://htmlspecs.com/pointerevents2/)（[Source](https://www.w3.org/TR/2019/REC-pointerevents2-20190404/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Pointer Events Level 3](https://htmlspecs.com/pointerevents3/)（[Source](https://www.w3.org/TR/2025/CR-pointerevents3-20251106/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
 - [Pointer Events Level 4](https://htmlspecs.com/pointerevents4/)（[Source](https://www.w3.org/TR/2025/WD-pointerevents4-20251022/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
-- [Serial API](https://htmlspecs.com/serial/)（[Source](https://wicg.github.io/serial/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
+- [Web Serial API](https://htmlspecs.com/serial/)（[Source](https://wicg.github.io/serial/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [WebHID API](https://htmlspecs.com/webhid/)（[Source](https://wicg.github.io/webhid/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [WebUSB API](https://htmlspecs.com/webusb/)（[Source](https://wicg.github.io/webusb/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Web Bluetooth API](https://htmlspecs.com/web-bluetooth/)（[Source](https://webbluetoothcg.github.io/web-bluetooth/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
