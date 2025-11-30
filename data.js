@@ -141,6 +141,14 @@ const links = [
         state: "WD"
     },
     {
+        text: "Web App Manifest - Application Information",
+        href: "https://htmlspecs.com/manifest-app-info/",
+        src: "https://www.w3.org/TR/2023/NOTE-manifest-app-info-20230821/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "NOTE"
+    },
+    {
         text: "Compatibility",
         href: "https://htmlspecs.com/compat/",
         src: "https://compat.spec.whatwg.org/",
@@ -276,6 +284,22 @@ const links = [
         text: "ActivityPub",
         href: "https://htmlspecs.com/activitypub/",
         src: "https://www.w3.org/TR/2018/REC-activitypub-20180123/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "REC"
+    },
+    {
+        text: "Activity Streams 2.0",
+        href: "https://htmlspecs.com/activitystreams-core/",
+        src: "https://www.w3.org/TR/2017/REC-activitystreams-core-20170523/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "REC"
+    },
+    {
+        text: "Linked Data Notifications",
+        href: "https://htmlspecs.com/ldn/",
+        src: "https://www.w3.org/TR/2017/REC-ldn-20170502/",
         "last-modified": "-",
         lang: "cjk",
         state: "REC"
