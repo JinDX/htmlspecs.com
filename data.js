@@ -281,6 +281,22 @@ const links = [
         state: "REC"
     },
     {
+        text: "Webmention",
+        href: "https://htmlspecs.com/webmention/",
+        src: "https://www.w3.org/TR/2017/REC-webmention-20170112/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "REC"
+    },
+    {
+        text: "Micropub",
+        href: "https://htmlspecs.com/micropub/",
+        src: "https://www.w3.org/TR/2017/REC-micropub-20170523/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "REC"
+    },
+    {
         text: "WebTransport",
         href: "https://htmlspecs.com/webtransport/",
         src: "https://www.w3.org/TR/2025/WD-webtransport-20251118/",
