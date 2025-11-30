@@ -453,7 +453,7 @@ const links = [
         state: "WD"
     },
     {
-        text: "Serial API",
+        text: "Web Serial API",
         href: "https://htmlspecs.com/serial/",
         src: "https://wicg.github.io/serial/",
         "last-modified": "Wed, 30 Jul 2025 23:24:41 GMT",
