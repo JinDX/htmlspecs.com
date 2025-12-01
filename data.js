@@ -2090,6 +2090,40 @@ const cssLinks = [
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
+    },
+
+    //### 设计令牌|디자인 토큰|デザイントークン
+    {
+        text: "Design Tokens Technical Reports 2025.10",
+        href: "https://htmlspecs.com/css/design-tokens/",
+        src: "https://www.designtokens.org/tr/2025.10/",
+        "last-modified": "0",
+        lang: "cjk",
+        state: "CG-FINAL"
+    },
+    {
+        text: "Design Tokens Format Module 2025.10",
+        href: "https://htmlspecs.com/css/design-tokens-format/",
+        src: "https://www.designtokens.org/tr/2025.10/format/",
+        "last-modified": "0",
+        lang: "cjk",
+        state: "CG-FINAL"
+    },
+    {
+        text: "Design Tokens Color Module 2025.10",
+        href: "https://htmlspecs.com/css/design-tokens-color/",
+        src: "https://www.designtokens.org/tr/2025.10/color/",
+        "last-modified": "0",
+        lang: "cjk",
+        state: "CG-FINAL"
+    },
+    {
+        text: "Design Tokens Resolver Module 2025.10",
+        href: "https://htmlspecs.com/css/design-tokens-resolver/",
+        src: "https://www.designtokens.org/tr/2025.10/resolver/",
+        "last-modified": "0",
+        lang: "cjk",
+        state: "CG-FINAL"
     }
 ];
 const httpLinks = [
