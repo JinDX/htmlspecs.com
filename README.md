@@ -136,7 +136,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [WebGPU](https://htmlspecs.com/webgpu/)（[Source](https://www.w3.org/TR/2025/CRD-webgpu-20251126/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [WebGPU Shading Language](https://htmlspecs.com/WGSL/)（[Source](https://www.w3.org/TR/2025/CRD-WGSL-20251201/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [Scalable Vector Graphics (SVG) 2](https://htmlspecs.com/SVG2/)（[Source](https://www.w3.org/TR/2018/CR-SVG2-20181004/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
-- [Picture-in-Picture](https://htmlspecs.com/picture-in-picture/)（[Source](https://www.w3.org/TR/2025/WD-picture-in-picture-20250820/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Picture-in-Picture](https://htmlspecs.com/picture-in-picture/)（[Source](https://www.w3.org/TR/2025/WD-picture-in-picture-20251202/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Presentation API](https://htmlspecs.com/presentation-api/)（[Source](https://www.w3.org/TR/2025/CRD-presentation-api-20250212/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [Scroll-driven Animations](https://htmlspecs.com/scroll-animations-1/)（[Source](https://www.w3.org/TR/2023/WD-scroll-animations-1-20230606/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Media Capture and Streams](https://htmlspecs.com/mediacapture-streams/)（[Source](https://www.w3.org/TR/2025/CRD-mediacapture-streams-20251009/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
