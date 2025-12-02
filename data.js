@@ -1167,7 +1167,7 @@ const cssLinks = [
     {
         text: "CSS Color HDR Module Level 1",
         href: "https://htmlspecs.com/css/css-color-hdr-1/",
-        src: "https://www.w3.org/TR/2024/WD-css-color-hdr-1-20241217/",
+        src: "https://www.w3.org/TR/2025/WD-css-color-hdr-1-20251202/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
