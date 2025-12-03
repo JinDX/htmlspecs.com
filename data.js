@@ -414,7 +414,7 @@ const links = [
         text: "Storage",
         href: "https://htmlspecs.com/storage/",
         src: "https://storage.spec.whatwg.org/",
-        "last-modified": "Tue, 12 Aug 2025 13:09:18 GMT",
+        "last-modified": "Wed, 03 Dec 2025 05:57:24 GMT",
         lang: "cjk",
         state: "LS"
     },
