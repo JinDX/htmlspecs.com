@@ -292,7 +292,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [CSS Values and Units Module Level 4](https://htmlspecs.com/css/css-values-4/)（[Source](https://www.w3.org/TR/2024/WD-css-values-4-20240312/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Values and Units Module Level 5](https://htmlspecs.com/css/css-values-5/)（[Source](https://www.w3.org/TR/2024/WD-css-values-5-20241111/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Environment Variables Module Level 1](https://htmlspecs.com/css/css-env-1/)（[Source](https://www.w3.org/TR/2025/WD-css-env-1-20250923/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
-- [CSS Logical Properties and Values Level 1](https://htmlspecs.com/css/css-logical-1/)（[Source](https://www.w3.org/TR/2018/WD-css-logical-1-20180827/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [CSS Logical Properties and Values Level 1](https://htmlspecs.com/css/css-logical-1/)（[Source](https://www.w3.org/TR/2025/WD-css-logical-1-20251204/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Mixins Module Level 1](https://htmlspecs.com/css/css-mixins-1/)（[Source](https://www.w3.org/TR/2025/WD-css-mixins-1-20250515/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Scoping Module Level 1](https://htmlspecs.com/css/css-scoping-1/)（[Source](https://www.w3.org/TR/2014/WD-css-scoping-1-20140403/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 

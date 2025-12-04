@@ -2035,7 +2035,7 @@ const cssLinks = [
     {
         text: "CSS Logical Properties and Values Level 1",
         href: "https://htmlspecs.com/css/css-logical-1/",
-        src: "https://www.w3.org/TR/2018/WD-css-logical-1-20180827/",
+        src: "https://www.w3.org/TR/2025/WD-css-logical-1-20251204/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
