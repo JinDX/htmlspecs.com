@@ -1383,10 +1383,10 @@ const cssLinks = [
     {
         text: "CSS Geometry Module Level 1",
         href: "https://htmlspecs.com/css/geometry-1/",
-        src: "https://www.w3.org/TR/2018/CR-geometry-1-20181204/",
+        src: "https://www.w3.org/TR/2025/CRD-geometry-1-20251204/",
         "last-modified": "-",
         lang: "cjk",
-        state: "CR"
+        state: "CRD"
     },
     {
         text: "CSS Display Module Level 3",
