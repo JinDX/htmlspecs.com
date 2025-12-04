@@ -421,7 +421,7 @@ const links = [
     {
         text: "File API",
         href: "https://htmlspecs.com/FileAPI/",
-        src: "https://www.w3.org/TR/2024/WD-FileAPI-20241204/",
+        src: "https://www.w3.org/TR/2025/WD-FileAPI-20251203/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
