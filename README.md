@@ -106,7 +106,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [High Resolution Time](https://htmlspecs.com/hr-time-3/)（[Source](https://www.w3.org/TR/2024/WD-hr-time-3-20241107/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Intersection Observer](https://htmlspecs.com/intersection-observer/)（[Source](https://www.w3.org/TR/2023/WD-intersection-observer-20231018/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Resize Observer](https://htmlspecs.com/resize-observer/)（[Source](https://www.w3.org/TR/2020/WD-resize-observer-1-20200211/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
-- [Navigation Timing Level 2](https://htmlspecs.com/navigation-timing-2/)（[Source](https://www.w3.org/TR/2025/WD-navigation-timing-2-20251111/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Navigation Timing Level 2](https://htmlspecs.com/navigation-timing-2/)（[Source](https://www.w3.org/TR/2025/WD-navigation-timing-2-20251205/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Resource Timing](https://htmlspecs.com/resource-timing/)（[Source](https://www.w3.org/TR/2025/CRD-resource-timing-20250820/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [User Timing Level 2](https://htmlspecs.com/user-timing-2/)（[Source](https://www.w3.org/TR/2019/REC-user-timing-2-20190226/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Observable](https://htmlspecs.com/observable/)（[Source](https://wicg.github.io/observable/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
