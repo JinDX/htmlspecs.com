@@ -785,7 +785,7 @@ const links = [
     {
         text: "Navigation Timing Level 2",
         href: "https://htmlspecs.com/navigation-timing-2/",
-        src: "https://www.w3.org/TR/2025/WD-navigation-timing-2-20251111/",
+        src: "https://www.w3.org/TR/2025/WD-navigation-timing-2-20251205/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
