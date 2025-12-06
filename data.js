@@ -1572,6 +1572,14 @@ const cssLinks = [
         lang: "cjk",
         state: "WD"
     },
+    {
+        text: "CSS Generated Content Module Level 3",
+        href: "https://htmlspecs.com/css/css-content-3/",
+        src: "https://www.w3.org/TR/2025/WD-css-content-3-20251204/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
 
     //### 导航|내비게이션|ナビゲーション
     {
