@@ -478,7 +478,15 @@ const links = [
         text: "GraphQL",
         href: "https://htmlspecs.com/graphql/",
         src: "https://spec.graphql.org/draft/",
-        "last-modified": "-",
+        "last-modified": "Fri, 07 Nov 2025 12:34:12 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
+    {
+        text: "OpenAPI Specification v3.2.0",
+        href: "https://htmlspecs.com/openapi/",
+        src: "https://spec.openapis.org/oas/latest.html",
+        "last-modified": "Wed, 26 Nov 2025 12:56:42 GMT",
         lang: "cjk",
         state: "Draft"
     },
