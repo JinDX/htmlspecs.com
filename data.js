@@ -474,6 +474,14 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
+    {
+        text: "GraphQL",
+        href: "https://htmlspecs.com/graphql/",
+        src: "https://spec.graphql.org/draft/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "Draft"
+    },
 
     //### 设备和硬件访问|디바이스 및 하드웨어 접근|デバイスとハードウェアアクセス
     {
