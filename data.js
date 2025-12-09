@@ -35,6 +35,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
+    {
+        text: "Source map format specification",
+        href: "https://htmlspecs.com/ecma426/",
+        src: "https://tc39.es/ecma426/",
+        "last-modified": "Wed, 03 Dec 2025 16:55:38 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
     // {
     //     text: "WebAssembly Core Specification",
     //     href: "https://htmlspecs.com/wasm-core",
