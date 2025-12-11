@@ -417,6 +417,14 @@ const links = [
         lang: "cjk",
         state: "CRD"
     },
+    {
+        text: "Network Error Logging",
+        href: "https://htmlspecs.com/network-error-logging/",
+        src: "https://www.w3.org/TR/2025/WD-network-error-logging-20250505/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
 
     //### 存储和数据|저장 및 데이터|ストレージとデータ
     {
