@@ -776,7 +776,7 @@ const links = [
     {
         text: "Generic Sensor API",
         href: "https://htmlspecs.com/generic-sensor/",
-        src: "https://www.w3.org/TR/2024/CRD-generic-sensor-20240222/",
+        src: "https://www.w3.org/TR/2025/CRD-generic-sensor-20251211/",
         "last-modified": "-",
         lang: "cjk",
         state: "CRD"

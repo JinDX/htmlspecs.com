@@ -5,8 +5,8 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [HTML](https://htmlspecs.com/)（[Source](https://html.spec.whatwg.org/multipage/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [ECMAScript® 2026 Language Specification](https://ecma262.com/c)（[Source](https://tc39.es/ecma262/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)），- [How to Read](https://htmlspecs.com/es-howto/)（[Source](https://timothygu.me/es-howto/)）
 - [ECMAScript® 2026 Internationalization API Specification](https://htmlspecs.com/ecma402/)（[Source](https://tc39.es/ecma402/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
+- [Language Tags and Locale Identifiers for the World Wide Web](https://htmlspecs.com/ltli/)（[Source](https://www.w3.org/TR/2020/WD-ltli-20201007) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Source map format specification](https://htmlspecs.com/ecma426/)（[Source](https://tc39.es/ecma426/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
-- [Language Tags and Locale Identifiers for the World Wide Web](https://htmlspecs.com/ltli/)（[Source](https://www.w3.org/TR/2020/WD-ltli-20201007/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [WebAssembly JavaScript Interface](https://htmlspecs.com/wasm-js-api-2/)（[Source](https://www.w3.org/TR/2025/CRD-wasm-js-api-2-20251122/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [WebAssembly Web API](https://htmlspecs.com/wasm-web-api-2/)（[Source](https://www.w3.org/TR/2025/CRD-wasm-web-api-2-20251122/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [DOM](https://htmlspecs.com/dom/)（[Source](https://dom.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
@@ -103,7 +103,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [WebOTP API](https://htmlspecs.com/web-otp/)（[Source](https://wicg.github.io/web-otp/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Device Posture API](https://htmlspecs.com/device-posture/)（[Source](https://www.w3.org/TR/2024/CR-device-posture-20241126/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
 - [Ambient Light Sensor](https://htmlspecs.com/ambient-light/)（[Source](https://www.w3.org/TR/2025/WD-ambient-light-20250212/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
-- [Generic Sensor API](https://htmlspecs.com/generic-sensor/)（[Source](https://www.w3.org/TR/2024/CRD-generic-sensor-20240222/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
+- [Generic Sensor API](https://htmlspecs.com/generic-sensor/)（[Source](https://www.w3.org/TR/2025/CRD-generic-sensor-20251211/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [Battery Status API](https://htmlspecs.com/battery-status/)（[Source](https://www.w3.org/TR/2024/WD-battery-status-20241024/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Vibration API](https://htmlspecs.com/vibration/)（[Source](https://www.w3.org/TR/2025/CRD-vibration-20250212/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 
