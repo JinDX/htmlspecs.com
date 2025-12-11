@@ -246,6 +246,15 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
+    {
+        text: "Accessibility Conformance Testing (ACT) Rules Format 1.1",
+        href: "https://htmlspecs.com/act-rules-format/",
+        src: "https://www.w3.org/TR/2025/CR-act-rules-format-1.1-20250819/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "CR"
+    },
+
 
     //### 网络和通信|네트워크와 통신|ネットワークと通信
     {
