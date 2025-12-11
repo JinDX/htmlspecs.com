@@ -36,6 +36,14 @@ const links = [
         state: "Draft"
     },
     {
+        text: "Language Tags and Locale Identifiers for the World Wide Web",
+        href: "https://htmlspecs.com/ltli/",
+        src: "https://www.w3.org/TR/2020/WD-ltli-20201007",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
+    {
         text: "Source map format specification",
         href: "https://htmlspecs.com/ecma426/",
         src: "https://tc39.es/ecma426/",
