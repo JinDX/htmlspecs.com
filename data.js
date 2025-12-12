@@ -7,7 +7,7 @@ const links = [
         text: "HTML",
         href: "https://htmlspecs.com/",
         src: "https://html.spec.whatwg.org/multipage/",
-        "last-modified": "Mon, 08 Dec 2025 06:02:22 GMT",
+        "last-modified": "Thu, 11 Dec 2025 14:16:12 GMT",
         lang: "cjk",
         state: "LS"
     },
@@ -208,7 +208,7 @@ const links = [
         text: "Minimum common web API",
         href: "https://htmlspecs.com/min-common-api/",
         src: "https://min-common-api.proposal.wintertc.org/",
-        "last-modified": "Wed, 19 Nov 2025 04:18:38 GMT",
+        "last-modified": "Thu, 11 Dec 2025 16:05:13 GMT",
         lang: "cjk",
         state: "Draft"
     },
@@ -479,7 +479,7 @@ const links = [
         text: "Cookie Store API",
         href: "https://htmlspecs.com/cookiestore/",
         src: "https://cookiestore.spec.whatwg.org/",
-        "last-modified": "Wed, 05 Nov 2025 12:51:29 GMT",
+        "last-modified": "Thu, 11 Dec 2025 19:09:32 GMT",
         lang: "cjk",
         state: "LS"
     },
