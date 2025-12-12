@@ -356,7 +356,7 @@ const links = [
     {
         text: "Service Workers Nightly",
         href: "https://htmlspecs.com/service-workers/",
-        src: "https://www.w3.org/TR/2025/CRD-service-workers-20251126/",
+        src: "https://www.w3.org/TR/2025/CRD-service-workers-20251212/",
         "last-modified": "-",
         lang: "cjk",
         state: "CRD"
