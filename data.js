@@ -394,6 +394,14 @@ const links = [
         state: "WD"
     },
     {
+        text: "Digital Goods API",
+        href: "https://htmlspecs.com/digital-goods/",
+        src: "https://wicg.github.io/digital-goods/",
+        "last-modified": "Fri, 18 Mar 2022 14:07:13 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
+    {
         text: "Background Fetch",
         href: "https://htmlspecs.com/background-fetch/",
         src: "https://wicg.github.io/background-fetch/",
