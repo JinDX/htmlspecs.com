@@ -1025,6 +1025,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    {
+        text: "Private State Token API",
+        href: "https://htmlspecs.com/trust-token-api/",
+        src: "https://wicg.github.io/trust-token-api/",
+        "last-modified": "Thu, 18 Jul 2024 14:19:08 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
 
 
     //### 媒体和图形|미디어 및 그래픽|メディアとグラフィックス
