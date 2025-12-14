@@ -31,6 +31,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Web Content Accessibility Guidelines (WCAG) 2.2](https://htmlspecs.com/WCAG22/)（[Source](https://www.w3.org/TR/2024/REC-WCAG22-20241212/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [W3C Accessibility Guidelines (WCAG) 3.0](https://htmlspecs.com/wcag-3.0/)（[Source](https://www.w3.org/TR/2025/WD-wcag-3.0-20250904/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Accessible Rich Internet Applications (WAI-ARIA) 1.2](https://htmlspecs.com/wai-aria-1.2/)（[Source](https://www.w3.org/TR/2023/REC-wai-aria-1.2-20230606/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
+- [Accessible Rich Internet Applications (WAI-ARIA) 1.3](https://htmlspecs.com/wai-aria-1.3/)（[Source](https://www.w3.org/TR/2024/WD-wai-aria-1.3-20240123/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [ARIA in HTML](https://htmlspecs.com/html-aria/)（[Source](https://www.w3.org/TR/2025/REC-html-aria-20250805/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Accessible Name and Description Computation 1.1](https://htmlspecs.com/accname-1.1/)（[Source](https://www.w3.org/TR/2018/REC-accname-1.1-20181218/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Accessibility Conformance Testing (ACT) Rules Format 1.1](https://htmlspecs.com/act-rules-format/)（[Source](https://www.w3.org/TR/2025/CR-act-rules-format-1.1-20250819/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
