@@ -244,7 +244,7 @@ const links = [
         src: "https://www.w3.org/TR/2024/WD-wai-aria-1.3-20240123/",
         "last-modified": "-",
         lang: "cjk",
-        state: "REC"
+        state: "WD"
     },
     {
         text: "ARIA in HTML",
