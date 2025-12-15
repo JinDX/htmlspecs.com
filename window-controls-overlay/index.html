@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>
+        窗口控件覆盖层
+    </title>
+    <script src="https://www.w3.org/Tools/respec/respec-w3c" class="remove" defer></script>
+    <script class="remove">
+        // All config options at https://respec.org/docs/
+        var respecConfig = {
+            mdn: true,
+            specStatus: "CG-DRAFT",
+            editors: [{
+                name: "Diego González",
+                url: "https://twitter.com/diekus",
+                company: "Microsoft",
+                companyURL: "https://www.microsoft.com"
+            }],
+            github: "WICG/window-controls-overlay",
+            shortName: "window-controls-overlay",
+            xref: {
+                profile: "web-platform",
+                specs: [
+                    "appmanifest",
+                    "cssom-view",
+                    "geometry-1",
+                    "manifest-incubations",
+                    "MEDIAQUERIES-5"
+                ]
+            },
+            group: "wicg",
+
+        };
+    </script>
+</head>
+
+<body>
+    <section id="abstract">
+        <p>
+            本文档指定了一组技术，允许 Web 开发者控制通常由已安装 web 应用在桌面环境中占据的标题栏区域。 这些技术被称为 (<abbr title="窗口控件覆盖层">WCO</abbr>)。
+        </p>
+    </section>
+    <section id="sotd">
+        <p>
+            本草案旨在作为 WCO 标准化过程的起点，其中描述的技术可能会迁移到不同工作组的其他规范中。
+        </p>
+    </section>
+    <section class="informative">
+        <h2>
+            介绍
+        </h2>
+        <p>
+            面向非移动设备的应用通常托管在带有标题栏的窗口中。 标题栏是一个通常表示为窗口顶部的水平条的 UI 元素，显示活动程序的名称或当前活动文档的名称以及 [=窗口控件=]。 现代应用可以利用标题栏中的区域来展示 UI
+            内容，以创造更好的用户体验。
+        </p>
+        <p>
+            对于托管在用户代理 (UA) 框架内的已安装 web 应用，可以通过声明首选的显示模式来对框架进行某种定制。 开发者可以通过清单文件的 `display` 成员选择最符合应用需求的模式。
+            然而，这些模式是有限的，并不能提供对标题栏相同级别的控制，因此希望为其已安装应用创建沉浸式、类似原生的标题栏的开发者无法仅通过上述成员实现。
+            相反，客户端区域从保留的标题栏区域正下方开始，这会在屏幕较小的便携设备上导致应用空间受限。
+        </p>
+        <p>
+            WCO 通过只在框架上保留 [=窗口控件=] 的 [=覆盖层=] 来允许创建自定义标题栏 UI，这样 web 内容就可以流入先前由标题栏占据的区域。
+        </p><img src="https://wicg.github.io/window-controls-overlay/spec-wco.png" alt="显示控件区域的空白窗口框架。">
+        <section>
+            <h3>
+                示例
+            </h3>
+            <aside class="example">
+                <p>
+                    在标题栏区域定位一个 div
+                </p>
+                <pre class="css">
+            .titleBar {
+              position: fixed;
+              left: env(titlebar-area-x, 0);
+              top: env(titlebar-area-y, 0);
+              width: env(titlebar-area-width, 100%);
+              height: env(titlebar-area-height, 40px);
+              app-region: drag;
+          }
+          </pre>
+                <pre>
+            &lt;div class="titlebar"&gt;
+              这是位于标题栏区域的网页内容！
+            &lt;div&gt;
+          </pre>
+            </aside>
+        </section>
+        <aside class="note">
+            <p>
+                WCO 功能在使用窗口范式来承载应用的环境中很有用。 凹口、不规则形状的视口或围绕硬件约束布局内容超出了本规范的范围。
+            </p>
+            <p>
+                桌面类环境的窗口范式在几十年中已被证明是管理信息架构的有效方法。 这一范式仍在演进，其部分演进是允许现代应用控制以前为标题栏保留的窗口区域。 WCO
+                以与使用原生技术创建的应用相同的方式实现这一点，使其能够利用当前的能力。
+            </p>
+            <p>
+                <strong>凹口和其他硬件元素不会干扰任何平台上应用窗口的标题栏区域</strong>。 它们可能与操作系统的某些部分（例如状态区或菜单区）相交，而这些完全由主机操作系统处理。 WCO
+                功能不处理任何可能被凹口相交的区域。
+            </p>
+            <p>
+                凹口留给开发者的可用空间通常很有限，可能位于任意位置，并且不一定是矩形。 此外，大多数实现凹口以最大化屏占比的厂商的 GUI 指南建议不要在凹口周围放置内容。
+            </p>
+        </aside>
+    </section>
+    <section>
+        <h2>
+            概念
+        </h2>
+        <ul>
+            <li>
+                <dfn>Window Controls Overlay</dfn>：一种针对运行在非移动环境中的已安装 web 应用的特性，允许使用 JS 和 CSS 将视口扩展到 [=标题栏区域=]。
+            </li>
+            <li>
+                <dfn>Title bar area</dfn>：当启用 WCO 时，这是在窗口框架中由标题栏占据但不包括容纳 [=控件覆盖层=] 的区域对应的区域。
+            </li>
+            <li>
+                <dfn data-lt="controls of the window">Window controls</dfn>：
+                操作系统在应用间一致使用的界面元素，允许用户执行某些操作来控制应用。 [=窗口控件=] 中的常见操作包括最小化、最大化/还原和关闭按钮。
+            </li>
+            <li>
+                <dfn data-lt="overlaid">Overlay</dfn> of [=window controls=]：容纳 [=窗口控件=] 并覆盖在视口之上的区域。
+            </li><img src="https://wicg.github.io/window-controls-overlay/spec-wco-areas.png" alt="带有圈出窗口控件的窗口框架。">
+        </ul>
+    </section>
+    <section>
+        <h2>
+            对 `Navigator` 接口的扩展
+        </h2>
+        <p>
+            [[HTML]] 规范定义了 <dfn>Navigator</dfn> 接口，本规范对其进行了扩展：
+        </p>
+        <pre class="idl">
+        [SecureContext, Exposed=(Window)]
+        partial interface Navigator {
+          [SameObject] readonly attribute WindowControlsOverlay windowControlsOverlay;
+        };
+      </pre>
+    </section>
+    <section>
+        <h2>
+            对 `Window` 接口的扩展
+        </h2>
+        <section>
+            <h3>
+                内部槽位
+            </h3>
+            <table class="simple">
+                <thead>
+                    <tr>
+                        <th>
+                            内部槽位
+                        </th>
+                        <th>
+                            初始值
+                        </th>
+                        <th>
+                            描述
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <dfn data-dfn-for="Window">[[\TitleBarArea]]</dfn>
+                        </td>
+                        <td>
+                            用于标题栏区域的空 [=struct=]。
+                        </td>
+                        <td>
+                            一个存储定义标题栏区域的值的 [=struct=]。这些值为 `x`、`y`、`width`、`height`。
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </section>
+    <section data-dfn-for='WindowControlsOverlay' data-link-for='WindowControlsOverlay'>
+        <h2>
+            <dfn>WindowControlsOverlay</dfn> 接口
+        </h2>
+        <pre class='idl' data-cite="DOM HTML">
+        [Exposed=Window]
+        interface WindowControlsOverlay : EventTarget {
+          readonly attribute boolean visible;
+          DOMRect getTitlebarAreaRect();
+          attribute EventHandler ongeometrychange;
+        };
+
+        [Exposed=Window]
+        interface WindowControlsOverlayGeometryChangeEvent : Event {
+          constructor(DOMString type, WindowControlsOverlayGeometryChangeEventInit eventInitDict);
+          [SameObject] readonly attribute DOMRect titlebarAreaRect;
+          readonly attribute boolean visible;
+        };
+
+        dictionary WindowControlsOverlayGeometryChangeEventInit : EventInit {
+          required DOMRect titlebarAreaRect;
+          boolean visible = false;
+        };
+      </pre>
+        <section>
+            <h3>
+                <dfn>visible</dfn> 属性
+            </h3>
+            <p>
+                `visible` 属性是一个 [=boolean=]，当 {{Window/window}}.[[\TitleBarArea]] 的值不为 0 时返回 `true`。
+            </p>
+        </section>
+        <section>
+            <h3>
+                <dfn>getTitlebarAreaRect</dfn> 方法
+            </h3>
+            <p>
+                `getTitlebarAreaRect()` 方法返回一个表示可用于显示网页内容的 DOMRect。该可用标题栏区域不包括 [=窗口控件=] [=覆盖层=] 下方的区域。
+            </p><img src="https://wicg.github.io/window-controls-overlay/spec-wco-gbr.png"
+                alt="描绘 getTitlebarAreaRect 方法返回区域的示意图">
+            <aside class="note">
+                <p>
+                    客户端视口在启用 WCO 功能时并不会在渲染内容时作出特殊考虑。内容将以在浏览器窗口内显示的相同方式进行显示。为了避免内容被 [=窗口控件=] 的 [=覆盖层=] 所遮挡，开发者需要使用
+                    `getTitlebarAreaRect` 方法或 [=标题栏区域 env 变量=]。
+                </p>
+            </aside>
+            <aside class="note">
+                <p>
+                    如果某个用户代理不支持 WCO，开发者可以为 [=manifest/display_override=] 使用 [=manifest/display=] 以及相应的 CSS 变量和 JS
+                    对象采用合理的回退方案。
+                </p>
+            </aside>
+        </section>
+        <section>
+            <h3>
+                <dfn>ongeometrychange</dfn> 属性
+            </h3>
+            <p>
+                `ongeometrychange` 属性是一个事件处理器，其对应的事件类型为 "change"。
+            </p>
+        </section>
+    </section>
+    <section>
+        <h2>
+            新的 [=display mode/window-controls-overlay=] [=display mode=] 的添加
+            </code>
+        </h2>
+        <p>
+            本规范定义了以下 [=display mode=]：
+        </p>
+        <dl>
+            <dt>
+                <dfn data-export="" data-dfn-for="display mode">
+                    window-controls-overlay
+                </dfn>
+            </dt>
+            <dd>
+                Web 应用以本机操作系统窗口控件可见的方式打开，但网页内容扩展到标题栏区域的其余部分。应用还可以在网页内容中指定 [=可拖动区域=] 来创建定制的标题栏。
+            </dd>
+        </dl>
+        <p>
+            <code>[=display mode/window-controls-overlay=]</code>
+            [=display mode=] 可以在清单的
+            <code>[=manifest/display_override=]</code> 成员中指定。
+        </p>
+        <aside class="issue">
+            <p>
+                待办事项：这是可能属于其他规范的功能的草案文本。本文档可能不是本草案中某些工作最终的发布场所。（manifest/manifest 孵化）
+            </p>
+        </aside>
+    </section>
+    <section>
+        <h2>
+            <dfn>标题栏区域环境变量</dfn>
+        </h2>
+        <aside class="issue">
+            <p>
+                待办事项：这是可能属于其他规范的功能的草案文本。本文档可能不是本草案中某些工作最终的发布场所。（CSS）
+            </p>
+        </aside>
+        <section>
+            <h3>
+                <dfn>标题栏区域 env 变量</dfn>
+            </h3>
+            <table dfn-type="value" dfn-for="env()">
+                <tr>
+                    <th>
+                        名称
+                    </th>
+                    <th>
+                        值
+                    </th>
+                </tr>
+                <tr>
+                    <td>
+                        <dfn>`titlebar-area-x`</dfn>
+                    </td>
+                    <td>
+                        <a href="https://drafts.csswg.org/css-values-3/#length-value">length</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <dfn>`titlebar-area-y`</dfn>
+                    </td>
+                    <td>
+                        <a href="https://drafts.csswg.org/css-values-3/#length-value">length</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <dfn>`titlebar-area-width`</dfn>
+                    </td>
+                    <td>
+                        <a href="https://drafts.csswg.org/css-values-3/#length-value">length</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <dfn>`titlebar-area-height`</dfn>
+                    </td>
+                    <td>
+                        <a href="https://drafts.csswg.org/css-values-3/#length-value">length</a>
+                    </td>
+                </tr>
+            </table>
+            <p>
+                [=标题栏区域环境变量=] 是四个 env 变量，通过从视口的起点开始的宽度和高度定义一个矩形。该区域对应于标题栏的可用区域，允许在其边界内定位动态 Web 内容。
+            </p>
+        </section>
+    </section>
+    <section>
+        <h2>
+            与 CSSOM 的集成
+        </h2>
+        <p>
+            本规范通过修补 <a href="https://www.w3.org/TR/cssom-view-1/#run-the-resize-steps">下面的算法</a> 与 [[cssom-view]] 规范集成：
+        </p>
+        <p>
+            在视口 [=Window/resize=] 算法中，在第 1 步之后运行 [=调整标题栏区域大小=]。
+        </p>
+    </section>
+    <section>
+        <h2>
+            算法
+        </h2>
+        <section>
+            <h3>
+                调整标题栏区域大小
+            </h3>
+            <p>
+                要为窗口 |win| <dfn data-lt="title bar region resizes">调整标题栏区域大小</dfn>，运行以下步骤：
+            </p>
+            <ol>
+                <li>If |win|'s [=overlay=] has had its width or height changed (e.g.
+                    as a result of the user resizing the browser window, or changing the
+                    page zoom factor, or other UI appearing or disappearing on the
+                    [=overlay=]), since the last time these steps were run, [=fire an
+                    event=] named `ongeometrychange` at the {{Window/window}} object and
+                    [=update the overlay area information=].
+                </li>
+            </ol>
+        </section>
+        <section>
+            <h3>
+                更新覆盖层区域信息
+            </h3>
+            <p>
+                要 <dfn>更新覆盖层区域信息</dfn>，运行以下步骤：
+            </p>
+            <ol class="algorithm">
+                <li>令 |ovls| 为一个由窗口框架上容纳 [=窗口控件=] 的 [=覆盖层=] 定义的区域组成的 [=列表=]。
+                </li>
+                <li>令 |tba| 为表示可用标题栏区域的空 {{DOMRect}} 对象。
+                    <ol>
+                        <li>如果 |ovls| 中只有一个覆盖区域，则将 |tba| 设置为一个 {{DOMRect}}，其范围从框架边缘到 |ovls| 的最内侧边缘。
+                        </li>
+                        <li>如果 |ovls| 中有多个覆盖区域，则将 |tba| 设置为一个 {{DOMRect}}，其范围为 |ovls| 中区域的交集与 [=document=] 的<a
+                                href="https://drafts.csswg.org/css2/#viewport">viewport</a> 之间的区域。
+                        </li>
+                        <li>|tba| 的高度应与 |ovls| 中区域的高度相同。
+                        </li>
+                    </ol>
+                </li>
+                <li>使 {{Window/window}}.[[\TitleBarArea]] 等于 |tba|。
+                </li>
+                <li>使用来自 {{Window/window}}.[[\TitleBarArea]] 的信息更新 [=标题栏区域 env 变量=]。
+                </li>
+            </ol>
+        </section>
+    </section>
+    <section>
+        <h2>
+            安全性与隐私考量
+        </h2>
+        <section>
+            <h3>
+                安全
+            </h3>
+            <section>
+                <h4>
+                    欺骗风险
+                </h4>
+                <p>
+                    在无框窗口中显示已安装的 web 应用为开发者在先前由用户代理控制的受信任区域中进行内容欺骗提供了空间。
+                </p>
+                <p>
+                    在 Chromium 浏览器中，当前 `standalone` 模式包含一个标题栏，初次启动时左侧显示网页标题，右侧显示页面的来源（后面跟随“设置和更多”按钮以及窗口控件）。几秒钟后，来源文本会消失。
+                </p>
+                <p>
+                    在 RTL（从右到左）配置的浏览器中，此布局会翻转，使得来源文本位于左侧。 如果来源与覆盖层右边缘之间的内边距不足，这会使窗口控件覆盖层存在篡改来源的风险。例如，来源 "evil.ltd"
+                    可能会被拼接上受信任站点 "google.com"，从而使用户误以为来源是可信的。
+                </p>
+            </section>
+            <section>
+                <h4>
+                    范围外导航
+                </h4>
+                <p>
+                    已安装 web 应用的另一个现有安全特性是指示用户何时离开应用声明范围的指示器。 当用户导航到范围外时，标题栏和网页内容之间会出现一条黑色条，并包含以下信息：
+                </p>
+                <ul>
+                    <li>一个关闭按钮，允许用户轻松返回到应用范围内
+                    </li>
+                    <li>一个安全图标，单击时会打开安全信息弹出窗口
+                    </li>
+                    <li>站点的来源和标题
+                    </li>
+                </ul>
+                <p>
+                    启用窗口控件覆盖层后，如果用户导航到范围外，覆盖层将临时被替换为一个独立的标题栏。 当用户导航回范围内时，独立标题栏将再次隐藏并显示覆盖层。
+                </p>
+            </section>
+        </section>
+        <section>
+            <h3>
+                隐私
+            </h3>
+            <p>
+                启用 Window Controls Overlay 会增加指纹识别的表面，因为覆盖层的大小可能因操作系统、文本缩放、操作系统字体大小、操作系统缩放因子和网页内容的缩放因子而异。
+            </p>
+            <p>
+                虽然这可能是一个潜在的指纹识别问题，但它仅适用于使用窗口控件覆盖层功能的已安装桌面 web 应用，而不适用于一般的浏览器使用。 此外，windowControlsOverlay API 将不可用于嵌入在已安装
+                web 应用内的 iframe。
+            </p>
+        </section>
+    </section>
+    <section class="appendix informative" id="acknowledgments">
+        <h2>
+            致谢
+        </h2>
+        <p>
+            衷心感谢 Amanda Baker、Joshua Bell 和 Yoav Weiss 对本工作的贡献。
+        </p>
+    </section>
+    <section id="conformance"></section>
+</body>
+
+</html>
