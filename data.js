@@ -697,7 +697,7 @@ const links = [
         text: "Window Controls Overlay",
         href: "https://htmlspecs.com/window-controls-overlay/",
         src: "https://wicg.github.io/window-controls-overlay/",
-        "last-modified": "Mon, 15 Dec 2025 02:03:46 GMT",
+        "last-modified": "Wed, 31 May 2023 16:44:53 GMT",
         lang: "cjk",
         state: "Draft"
     },
