@@ -694,6 +694,14 @@ const links = [
         state: "WD"
     },
     {
+        text: "Window Controls Overlay",
+        href: "https://htmlspecs.com/window-controls-overlay/",
+        src: "https://wicg.github.io/window-controls-overlay/",
+        "last-modified": "Mon, 15 Dec 2025 02:03:46 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
+    {
         text: "Web Share API",
         href: "https://htmlspecs.com/web-share/",
         src: "https://www.w3.org/TR/2023/REC-web-share-20230530/",
@@ -1010,6 +1018,14 @@ const links = [
         state: "CR"
     },
     {
+        text: "Fetch Metadata Request Headers",
+        href: "https://htmlspecs.com/fetch-metadata/",
+        src: "https://www.w3.org/TR/2025/WD-fetch-metadata-20250401/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
+    {
         text: "Mixed Content",
         href: "https://htmlspecs.com/mixed-content/",
         src: "https://www.w3.org/TR/2023/CRD-mixed-content-20230223/",
@@ -1099,6 +1115,14 @@ const links = [
         "last-modified": "-",
         lang: "cjk",
         state: "CRD"
+    },
+    {
+        text: "Media Stream Recording",
+        href: "https://htmlspecs.com/media-stream-recording/",
+        src: "https://www.w3.org/TR/2025/WD-mediastream-recording-20250417/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
     },
     {
         text: "Media Source Extensions",
