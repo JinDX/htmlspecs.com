@@ -896,6 +896,14 @@ const links = [
         state: "WD"
     },
     {
+        text: "Prioritized Task Scheduling",
+        href: "https://htmlspecs.com/scheduling-apis/",
+        src: "https://wicg.github.io/scheduling-apis/",
+        "last-modified": "Fri, 30 May 2025 20:42:26 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
+    {
         text: "Reporting API",
         href: "https://htmlspecs.com/reporting-1/",
         src: "https://www.w3.org/TR/2025/WD-reporting-1-20250611/",
