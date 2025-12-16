@@ -126,6 +126,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Page Lifecycle](https://htmlspecs.com/page-lifecycle/)（[Source](https://wicg.github.io/page-lifecycle/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Server Timing](https://htmlspecs.com/server-timing/)（[Source](https://www.w3.org/TR/2023/WD-server-timing-20230411/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Paint Timing](https://htmlspecs.com/paint-timing/)（[Source](https://www.w3.org/TR/2025/WD-paint-timing-20251119/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Largest Contentful Paint](https://htmlspecs.com/largest-contentful-paint/)（[Source](https://www.w3.org/TR/2025/WD-largest-contentful-paint-20250911/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Event Timing API](https://htmlspecs.com/event-timing/)（[Source](https://www.w3.org/TR/2025/WD-event-timing-20251017/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 
 ### 安全和认证
