@@ -944,6 +944,14 @@ const links = [
         state: "WD"
     },
     {
+        text: "Largest Contentful Paint",
+        href: "https://htmlspecs.com/largest-contentful-paint/",
+        src: "https://www.w3.org/TR/2025/WD-largest-contentful-paint-20250911/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
+    {
         text: "Event Timing API",
         href: "https://htmlspecs.com/event-timing/",
         src: "https://www.w3.org/TR/2025/WD-event-timing-20251017/",
