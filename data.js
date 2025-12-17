@@ -777,7 +777,7 @@ const links = [
         text: "WebOTP API",
         href: "https://htmlspecs.com/web-otp/",
         src: "https://wicg.github.io/web-otp/",
-        "last-modified": "Tue, 04 Feb 2025 17:18:17 GMT",
+        "last-modified": "Tue, 04 Feb 2025 17:18:16 GMT",
         lang: "cjk",
         state: "Draft"
     },

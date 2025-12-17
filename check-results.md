@@ -1,15 +1,9 @@
-# Specification Check Summary
+# Spec Check Results
 
-## Checking category: Standard Specifications 😊
+## Category: Standard Specifications
 
+## Category: CSS Related Specifications
 
+## Category: HTTP Related Specifications
 
-## Checking category: CSS Related Specifications 😊
-
-
-
-## Checking category: HTTP Related Specifications 😊
-
-
-
-All checks completed! 😊
+All checks completed!
