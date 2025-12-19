@@ -27,6 +27,23 @@ const checkLinks = async (links, category) => {
   const w3Links = links.filter(item => item.src.includes('w3.org/TR'));
   const otherLinks = links.filter(item => !item.src.includes('w3.org/TR'));
 
+  function httpsGetWithRetry(url, options, maxRetry, onResponse, onError, delay = 500) {
+    let attempt = 0;
+    function tryRequest() {
+      https.get(url, options, res => {
+        onResponse(res);
+      }).on('error', err => {
+        if (attempt < maxRetry) {
+          attempt++;
+          setTimeout(tryRequest, delay);
+        } else {
+          onError(err);
+        }
+      });
+    }
+    tryRequest();
+  }
+
   const w3Requests = w3Links.map((link, index) => {
     return new Promise(resolve => {
       const options = {
@@ -34,64 +51,85 @@ const checkLinks = async (links, category) => {
           'Referer': link.src
         }
       };
-
       setTimeout(() => {
-        https.get('https://www.w3.org/TR/tr-outdated-spec', options, res => {
-          if (res.statusCode < 200 || res.statusCode >= 400) {
-            showProgress();
-            return resolve();
-          }
-          let rawData = '';
-          res.on('data', chunk => {
-            rawData += chunk;
-          });
-          res.on('end', () => {
-            try {
-              const currentSpec = JSON.parse(rawData);
-              if (currentSpec && currentSpec.warning && currentSpec.latestUrl) {
-                const info = `- Note: ${link.text} ([original link](${link.src})) has a newer version available: [latest specification](${currentSpec.latestUrl}) ✨`;
-                logResult(info);
-              }
-            } catch (err) {
-              const errorMsg = `- Failed to parse w3.org response for ${link.src}: ${err.message} 😅`;
-              logResult(errorMsg);
+        httpsGetWithRetry(
+          'https://www.w3.org/TR/tr-outdated-spec',
+          options,
+          2,
+          res => {
+            if (res.statusCode < 200 || res.statusCode >= 400) {
+              showProgress();
+              return resolve();
             }
+            let rawData = '';
+            res.on('data', chunk => {
+              rawData += chunk;
+            });
+            res.on('end', () => {
+              try {
+                const currentSpec = JSON.parse(rawData);
+                if (currentSpec && currentSpec.warning && currentSpec.latestUrl) {
+                  const info = `- Note: ${link.text} ([original link](${link.src})) has a newer version available: [latest specification](${currentSpec.latestUrl}) ✨`;
+                  logResult(info);
+                }
+              } catch (err) {
+                const errorMsg = `- Failed to parse w3.org response for ${link.src}: ${err.message} 😅`;
+                logResult(errorMsg);
+              }
+              showProgress();
+              resolve();
+            });
+          },
+          err => {
+            const errorMsg = `- Request to w3.org failed for ${link.src}: ${err.message} 😢`;
+            logResult(errorMsg);
             showProgress();
             resolve();
-          });
-        }).on('error', err => {
-          const errorMsg = `- Request to w3.org failed for ${link.src}: ${err.message} 😢`;
-          logResult(errorMsg);
-          showProgress();
-          resolve();
-        });
+          },
+          500
+        );
       }, index * 500);
     });
   });
 
   const otherRequests = otherLinks.map(link => {
     return new Promise(resolve => {
-      https.get(link.src, { method: 'HEAD' }, res => {
-        let etag = res.headers['etag'] || res.headers.etag;
-        const lastModified = res.headers['last-modified'];
+      let attempt = 0;
+      function tryHead() {
+        https.get(link.src, { method: 'HEAD' }, res => {
+          let etag = res.headers['etag'] || res.headers.etag;
+          const lastModified = res.headers['last-modified'];
 
-        if (etag) {
-          etag = etag.replace(/"/g, '');
-        }
-
-        const hasStoredEtag = Object.prototype.hasOwnProperty.call(link, 'etag');
-        const storedLastIsZero = link['last-modified'] === '0';
-
-        if (hasStoredEtag) {
-          let stored = link.etag;
-          if (stored) {
-            stored = stored.replace(/"/g, '');
-          }
           if (etag) {
-            if (stored !== etag) {
-              const info =
-                `- ${link.text} ETag changed:\n  - Old ETag: ${stored}\n  - New ETag: ${etag}\n  - Link: ${link.src}`;
-              logResult(info);
+            etag = etag.replace(/"/g, '');
+          }
+
+          const hasStoredEtag = Object.prototype.hasOwnProperty.call(link, 'etag');
+          const storedLastIsZero = link['last-modified'] === '0';
+
+          if (hasStoredEtag) {
+            let stored = link.etag;
+            if (stored) {
+              stored = stored.replace(/"/g, '');
+            }
+            if (etag) {
+              if (stored !== etag) {
+                const info =
+                  `- ${link.text} ETag changed:\n  - Old ETag: ${stored}\n  - New ETag: ${etag}\n  - Link: ${link.src}`;
+                logResult(info);
+              }
+            } else {
+              if (!storedLastIsZero && lastModified && link['last-modified']) {
+                const newTime = new Date(lastModified);
+                const oldTime = new Date(link['last-modified']);
+                const diffMs = Math.abs(newTime - oldTime);
+                const diffMin = diffMs / 1000 / 60;
+                if (diffMin >= 1) {
+                  const info =
+                    `- ${link.text} has been updated (no ETag from server):\n  - New time: ${newTime.toUTCString()}\n  - Old time: ${oldTime.toUTCString()}\n  - Link: ${link.src}`;
+                  logResult(info);
+                }
+              }
             }
           } else {
             if (!storedLastIsZero && lastModified && link['last-modified']) {
@@ -101,33 +139,27 @@ const checkLinks = async (links, category) => {
               const diffMin = diffMs / 1000 / 60;
               if (diffMin >= 1) {
                 const info =
-                  `- ${link.text} has been updated (no ETag from server):\n  - New time: ${newTime.toUTCString()}\n  - Old time: ${oldTime.toUTCString()}\n  - Link: ${link.src}`;
+                  `- ${link.text} has been updated:\n  - New time: ${newTime.toUTCString()}\n  - Old time: ${oldTime.toUTCString()}\n  - Link: ${link.src}`;
                 logResult(info);
               }
             }
           }
-        } else {
-          if (!storedLastIsZero && lastModified && link['last-modified']) {
-            const newTime = new Date(lastModified);
-            const oldTime = new Date(link['last-modified']);
-            const diffMs = Math.abs(newTime - oldTime);
-            const diffMin = diffMs / 1000 / 60;
-            if (diffMin >= 1) {
-              const info =
-                `- ${link.text} has been updated:\n  - New time: ${newTime.toUTCString()}\n  - Old time: ${oldTime.toUTCString()}\n  - Link: ${link.src}`;
-              logResult(info);
-            }
-          }
-        }
 
-        showProgress();
-        resolve();
-      }).on('error', e => {
-        const errorMsg = `- Failed to fetch ${link.src}: ${e.message} 😢`;
-        logResult(errorMsg);
-        showProgress();
-        resolve();
-      });
+          showProgress();
+          resolve();
+        }).on('error', e => {
+          if (attempt < 2) {
+            attempt++;
+            setTimeout(tryHead, 500);
+          } else {
+            const errorMsg = `- Failed to fetch ${link.src}: ${e.message} 😢`;
+            logResult(errorMsg);
+            showProgress();
+            resolve();
+          }
+        });
+      }
+      tryHead();
     });
   });
 
