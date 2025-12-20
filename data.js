@@ -959,14 +959,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "Prefetch",
-    //     href: "https://htmlspecs.com/prefetch/",
-    //     src: "https://wicg.github.io/nav-speculation/prefetch.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "Prefetch",
+        href: "https://htmlspecs.com/prefetch/",
+        src: "https://wicg.github.io/nav-speculation/prefetch.html",
+        "last-modified": "Tue, 09 Dec 2025 14:58:00 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
     // {
     //     text: "Prerendering Revamped",
     //     href: "https://htmlspecs.com/prerendering/",
