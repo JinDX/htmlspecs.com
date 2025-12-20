@@ -959,6 +959,22 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "Prefetch",
+    //     href: "https://htmlspecs.com/prefetch/",
+    //     src: "https://wicg.github.io/nav-speculation/prefetch.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
+    // {
+    //     text: "Prerendering Revamped",
+    //     href: "https://htmlspecs.com/prerendering/",
+    //     src: "https://wicg.github.io/nav-speculation/prerendering.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
 
     //### 安全和认证|보안 및 인증|セキュリティと認証
     {
