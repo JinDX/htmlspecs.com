@@ -277,7 +277,7 @@ const links = [
         text: "Fetch",
         href: "https://htmlspecs.com/fetch/",
         src: "https://fetch.spec.whatwg.org/",
-        "last-modified": "Mon, 15 Dec 2025 16:09:36 GMT",
+        "last-modified": "Fri, 19 Dec 2025 11:58:57 GMT",
         lang: "cjk",
         state: "LS"
     },
