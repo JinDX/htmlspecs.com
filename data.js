@@ -100,6 +100,14 @@ const links = [
         state: "LS"
     },
     {
+        text: "Scroll To Text Fragment",
+        href: "https://htmlspecs.com/scroll-to-text-fragment/",
+        src: "https://wicg.github.io/scroll-to-text-fragment/",
+        "last-modified": "Mon, 24 Mar 2025 14:42:36 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
+    {
         text: "Web IDL",
         href: "https://htmlspecs.com/webidl/",
         src: "https://webidl.spec.whatwg.org/",
@@ -1718,14 +1726,6 @@ const cssLinks = [
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
-    },
-    {
-        text: "Scroll To Text Fragment",
-        href: "https://htmlspecs.com/css/scroll-to-text-fragment/",
-        src: "https://wicg.github.io/scroll-to-text-fragment/",
-        "last-modified": "Mon, 24 Mar 2025 14:42:36 GMT",
-        lang: "cjk",
-        state: "Draft"
     },
 
     //### 书写模式|쓰기 모드|書字モード
