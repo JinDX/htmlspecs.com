@@ -123,22 +123,6 @@ const links = [
         lang: "cjk",
         state: "RFC"
     },
-    // {
-    //     text: "YAML™ 1.2.2",
-    //     href: "https://htmlspecs.com/yaml/",
-    //     src: "https://yaml.org/spec/1.2.2/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Spec"
-    // },
-    // {
-    //     text: "Date and Time on the Internet: Timestamps (RFC 3339)",
-    //     href: "https://htmlspecs.com/rfc3339/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc3339.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
     {
         text: "JSON-LD 1.1",
         href: "https://htmlspecs.com/json-ld11/",
@@ -1009,14 +993,6 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "JSON Web Token (JWT) — RFC 7519",
-    //     href: "https://htmlspecs.com/jwt/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc7519.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
     {
         text: "HTML Sanitizer API",
         href: "https://htmlspecs.com/sanitizer-api/",
