@@ -12,6 +12,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [DOM](https://htmlspecs.com/dom/)（[Source](https://dom.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [URL](https://htmlspecs.com/url/)（[Source](https://url.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [URL Pattern](https://htmlspecs.com/urlpattern/)（[Source](https://urlpattern.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
+- [Scroll To Text Fragment](https://htmlspecs.com/scroll-to-text-fragment/)（[Source](https://wicg.github.io/scroll-to-text-fragment/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Web IDL](https://htmlspecs.com/webidl/)（[Source](https://webidl.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [Encoding](https://htmlspecs.com/encoding/)（[Source](https://encoding.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [The JavaScript Object Notation (JSON) Data Interchange Format](https://htmlspecs.com/json/)（[Source](https://www.rfc-editor.org/rfc/rfc8259.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
@@ -239,7 +240,6 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 
 ### 导航
 - [CSS Spatial Navigation Level 1](https://htmlspecs.com/css/css-nav-1/)（[Source](https://www.w3.org/TR/2019/WD-css-nav-1-20191126/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
-- [Scroll To Text Fragment](https://htmlspecs.com/css/scroll-to-text-fragment/)（[Source](https://wicg.github.io/scroll-to-text-fragment/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 
 ### 书写模式
 - [CSS Writing Modes Level 3](https://htmlspecs.com/css/css-writing-modes-3/)（[Source](https://www.w3.org/TR/2019/REC-css-writing-modes-3-20191210/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
