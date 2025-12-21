@@ -1719,6 +1719,14 @@ const cssLinks = [
         lang: "cjk",
         state: "WD"
     },
+    {
+        text: "Scroll To Text Fragment",
+        href: "https://htmlspecs.com/css/scroll-to-text-fragment/",
+        src: "https://wicg.github.io/scroll-to-text-fragment/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "Draft"
+    },
 
     //### 书写模式|쓰기 모드|書字モード
     {
