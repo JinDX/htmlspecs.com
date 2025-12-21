@@ -1723,7 +1723,7 @@ const cssLinks = [
         text: "Scroll To Text Fragment",
         href: "https://htmlspecs.com/css/scroll-to-text-fragment/",
         src: "https://wicg.github.io/scroll-to-text-fragment/",
-        "last-modified": "-",
+        "last-modified": "Mon, 24 Mar 2025 14:42:36 GMT",
         lang: "cjk",
         state: "Draft"
     },
