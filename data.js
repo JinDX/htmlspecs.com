@@ -1197,7 +1197,7 @@ const links = [
         state: "WD"
     },
     {
-        text: "Image Capture",
+        text: "MediaStream Image Capture",
         href: "https://htmlspecs.com/image-capture/",
         src: "https://www.w3.org/TR/2025/WD-image-capture-20250423/",
         "last-modified": "-",
