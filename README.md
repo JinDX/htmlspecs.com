@@ -157,6 +157,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Scroll-driven Animations](https://htmlspecs.com/scroll-animations-1/)（[Source](https://www.w3.org/TR/2023/WD-scroll-animations-1-20230606/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Media Capture and Streams](https://htmlspecs.com/mediacapture-streams/)（[Source](https://www.w3.org/TR/2025/CRD-mediacapture-streams-20251009/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [Media Stream Recording](https://htmlspecs.com/media-stream-recording/)（[Source](https://www.w3.org/TR/2025/WD-mediastream-recording-20250417/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [WebVTT: The Web Video Text Tracks Format](https://htmlspecs.com/webvtt1/)（[Source](https://www.w3.org/TR/2019/CR-webvtt1-20190404/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
 - [Media Source Extensions](https://htmlspecs.com/media-source-2/)（[Source](https://www.w3.org/TR/2025/WD-media-source-2-20251104/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [WebCodecs](https://htmlspecs.com/webcodecs/)（[Source](https://www.w3.org/TR/2025/WD-webcodecs-20251124/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Media Session](https://htmlspecs.com/mediasession/)（[Source](https://www.w3.org/TR/2025/WD-mediasession-20250919/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
