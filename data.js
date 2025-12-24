@@ -1042,6 +1042,14 @@ const links = [
         state: "WD"
     },
     {
+        text: "Privacy Principles",
+        href: "https://htmlspecs.com/privacy-principles/",
+        src: "https://www.w3.org/TR/2025/STMT-privacy-principles-20250515/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "STMT"
+    },
+    {
         text: "Secure Contexts",
         href: "https://htmlspecs.com/secure-contexts/",
         src: "https://www.w3.org/TR/2023/CRD-secure-contexts-20231110/",
