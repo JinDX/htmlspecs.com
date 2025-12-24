@@ -39,6 +39,7 @@ const stateMap = {
     'DISC': ['Discontinued Draft', 'https://img.shields.io/badge/DISC-ffcc00'],
     'NOTE': ['Note', 'https://img.shields.io/badge/NOTE-309c40'],
     'RFC': ['RFC', 'https://img.shields.io/badge/RFC-0057B8'],
+    'STMT': ['Statement', 'https://img.shields.io/badge/STMT-6c757d'],
     'Guide': ['Guide', 'https://img.shields.io/badge/Guide-6c757d']
 };
 
