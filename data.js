@@ -630,6 +630,14 @@ const links = [
         state: "Draft"
     },
     {
+        text: "Handwriting Recognition API",
+        href: "https://htmlspecs.com/handwriting-recognition/",
+        src: "https://wicg.github.io/handwriting-recognition/",
+        "last-modified": "Wed, 09 Jul 2025 15:17:15 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
+    {
         text: "Screen Orientation",
         href: "https://htmlspecs.com/screen-orientation/",
         src: "https://www.w3.org/TR/2025/WD-screen-orientation-20251021/",
