@@ -361,6 +361,14 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
+    // {
+    //     text: "Web Annotation Data Model",
+    //     href: "https://htmlspecs.com/annotation-model/",
+    //     src: "https://www.w3.org/TR/2017/REC-annotation-model-20170223/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "REC"
+    // },
     {
         text: "WebTransport",
         href: "https://htmlspecs.com/webtransport/",
