@@ -361,14 +361,14 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
-    // {
-    //     text: "Web Annotation Data Model",
-    //     href: "https://htmlspecs.com/annotation-model/",
-    //     src: "https://www.w3.org/TR/2017/REC-annotation-model-20170223/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "REC"
-    // },
+    {
+        text: "Web Annotation Data Model",
+        href: "https://htmlspecs.com/annotation-model/",
+        src: "https://www.w3.org/TR/2017/REC-annotation-model-20170223/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "REC"
+    },
     {
         text: "WebTransport",
         href: "https://htmlspecs.com/webtransport/",
@@ -424,6 +424,14 @@ const links = [
         "last-modified": "Fri, 18 Mar 2022 14:07:13 GMT",
         lang: "cjk",
         state: "Draft"
+    },
+    {
+        text: "Secure Payment Confirmation",
+        href: "https://htmlspecs.com/secure-payment-confirmation/",
+        src: "https://www.w3.org/TR/2025/CRD-secure-payment-confirmation-20251209/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "CRD"
     },
     {
         text: "Background Fetch",
