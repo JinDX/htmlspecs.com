@@ -662,6 +662,14 @@ const links = [
         state: "Draft"
     },
     {
+        text: "Web Speech API",
+        href: "https://htmlspecs.com/web-speech-api/",
+        src: "https://webaudio.github.io/web-speech-api/",
+        "last-modified": "Mon, 07 Jul 2025 17:19:40 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
+    {
         text: "EyeDropper API",
         href: "https://htmlspecs.com/eyedropper-api/",
         src: "https://wicg.github.io/eyedropper-api/",
