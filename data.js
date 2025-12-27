@@ -830,6 +830,14 @@ const links = [
         state: "WD"
     },
     {
+        text: "Proximity Sensor",
+        href: "https://htmlspecs.com/proximity/",
+        src: "https://www.w3.org/TR/2025/WD-proximity-20250212/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
+    {
         text: "Generic Sensor API",
         href: "https://htmlspecs.com/generic-sensor/",
         src: "https://www.w3.org/TR/2025/CRD-generic-sensor-20251211/",
@@ -1259,6 +1267,22 @@ const links = [
         "last-modified": "-",
         lang: "cjk",
         state: "CRD"
+    },
+    {
+        text: "WebXR Augmented Reality Module - Level 1",
+        href: "https://htmlspecs.com/webxr-ar-module-1/",
+        src: "https://www.w3.org/TR/2025/CRD-webxr-ar-module-1-20250425/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "CRD"
+    },
+    {
+        text: "WebXR Hand Input Module - Level 1",
+        href: "https://htmlspecs.com/webxr-hand-input-1/",
+        src: "https://www.w3.org/TR/2024/WD-webxr-hand-input-1-20240605/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
     },
     {
         text: "Portable Network Graphics (PNG) 3",
