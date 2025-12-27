@@ -147,7 +147,6 @@ const links = [
         lang: "cjk",
         state: "LS"
     },
-
     {
         text: "Infra",
         href: "https://htmlspecs.com/infra/",
@@ -155,6 +154,14 @@ const links = [
         "last-modified": "Mon, 24 Nov 2025 08:10:31 GMT",
         lang: "cjk",
         state: "LS"
+    },
+    {
+        text: "Web User Agents",
+        href: "https://htmlspecs.com/web-user-agents/",
+        src: "https://www.w3.org/TR/2025/DNOTE-web-user-agents-20251127/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "NOTE"
     },
     {
         text: "Web Application Manifest",
