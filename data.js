@@ -1293,6 +1293,14 @@ const links = [
         state: "WD"
     },
     {
+        text: "WebXR Gamepads Module - Level 1",
+        href: "https://htmlspecs.com/webxr-gamepads-module-1/",
+        src: "https://www.w3.org/TR/2025/WD-webxr-gamepads-module-1-20250707/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
+    {
         text: "Portable Network Graphics (PNG) 3",
         href: "https://htmlspecs.com/png-3/",
         src: "https://www.w3.org/TR/2025/REC-png-3-20250624/",
