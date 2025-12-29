@@ -653,6 +653,14 @@ const links = [
         state: "Draft"
     },
     {
+        text: "Accelerated Shape Detection in Images",
+        href: "https://htmlspecs.com/shape-detection-api/",
+        src: "https://wicg.github.io/shape-detection-api/",
+        "last-modified": "Wed, 08 Jan 2025 00:11:58 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
+    {
         text: "Screen Orientation",
         href: "https://htmlspecs.com/screen-orientation/",
         src: "https://www.w3.org/TR/2025/WD-screen-orientation-20251021/",
