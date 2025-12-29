@@ -570,6 +570,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
+    {
+        text: "Storage Access API",
+        href: "https://htmlspecs.com/storage-access/",
+        src: "https://privacycg.github.io/storage-access/",
+        "last-modified": "Sat, 18 Oct 2025 13:57:57 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
 
     //### 设备和硬件访问|디바이스 및 하드웨어 접근|デバイスとハードウェアアクセス
     {
