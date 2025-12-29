@@ -757,6 +757,14 @@ const links = [
         state: "Draft"
     },
     {
+        text: "Window Management",
+        href: "https://htmlspecs.com/window-management/",
+        src: "https://www.w3.org/TR/2024/WD-window-management-20240607/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
+    {
         text: "Web Share API",
         href: "https://htmlspecs.com/web-share/",
         src: "https://www.w3.org/TR/2023/REC-web-share-20230530/",
