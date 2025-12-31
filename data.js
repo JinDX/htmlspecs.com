@@ -916,6 +916,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    {
+        text: "Gyroscope",
+        href: "https://htmlspecs.com/gyroscope/",
+        src: "https://www.w3.org/TR/2024/CRD-gyroscope-20241008/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "CRD"
+    },
 
     //### 性能和观察者|성능 및 옵저버|パフォーマンスとオブザーバ
     {
