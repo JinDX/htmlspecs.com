@@ -908,6 +908,14 @@ const links = [
         lang: "cjk",
         state: "CRD"
     },
+    {
+        text: "Magnetometer",
+        href: "https://htmlspecs.com/magnetometer/",
+        src: "https://www.w3.org/TR/2025/WD-magnetometer-20250212/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
 
     //### 性能和观察者|성능 및 옵저버|パフォーマンスとオブザーバ
     {
