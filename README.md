@@ -42,6 +42,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Fetch](https://htmlspecs.com/fetch/)（[Source](https://fetch.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [Streams](https://htmlspecs.com/streams/)（[Source](https://streams.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [XMLHttpRequest](https://htmlspecs.com/xhr/)（[Source](https://xhr.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
+- [Selection API](https://htmlspecs.com/selection-api/)（[Source](https://www.w3.org/TR/2025/WD-selection-api-20250105/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [WebSockets](https://htmlspecs.com/websockets/)（[Source](https://websockets.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [WebSub](https://htmlspecs.com/websub/)（[Source](https://www.w3.org/TR/2018/REC-websub-20180123/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [ActivityPub](https://htmlspecs.com/activitypub/)（[Source](https://www.w3.org/TR/2018/REC-activitypub-20180123/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
@@ -119,6 +120,9 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Generic Sensor API](https://htmlspecs.com/generic-sensor/)（[Source](https://www.w3.org/TR/2025/CRD-generic-sensor-20251211/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [Battery Status API](https://htmlspecs.com/battery-status/)（[Source](https://www.w3.org/TR/2024/WD-battery-status-20241024/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Vibration API](https://htmlspecs.com/vibration/)（[Source](https://www.w3.org/TR/2025/CRD-vibration-20250212/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
+- [Accelerometer](https://htmlspecs.com/accelerometer/)（[Source](https://www.w3.org/TR/2025/CRD-accelerometer-20250212/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
+- [Magnetometer](https://htmlspecs.com/magnetometer/)（[Source](https://www.w3.org/TR/2025/WD-magnetometer-20250212/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Gyroscope](https://htmlspecs.com/gyroscope/)（[Source](https://www.w3.org/TR/2024/CRD-gyroscope-20241008/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 
 ### 性能和观察者
 - [Performance Timeline](https://htmlspecs.com/performance-timeline/)（[Source](https://www.w3.org/TR/2025/CRD-performance-timeline-20250521/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
@@ -140,6 +144,8 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Event Timing API](https://htmlspecs.com/event-timing/)（[Source](https://www.w3.org/TR/2025/WD-event-timing-20251017/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Prefetch](https://htmlspecs.com/prefetch/)（[Source](https://wicg.github.io/nav-speculation/prefetch.html) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Prerendering Revamped](https://htmlspecs.com/prerendering/)（[Source](https://wicg.github.io/nav-speculation/prerendering.html) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
+- [Performance measure memory](https://wicg.github.io/performance-measure-memory/)（[Source](https://wicg.github.io/performance-measure-memory/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
+- [Device Memory API](https://htmlspecs.com/device-memory/)（[Source](https://www.w3.org/TR/2025/WD-device-memory-1-20251211/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 
 ### 安全和认证
 - [Web Authentication: An API for accessing Public Key Credentials Level 2](https://htmlspecs.com/webauthn-2/)（[Source](https://www.w3.org/TR/2021/REC-webauthn-2-20210408/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
@@ -174,6 +180,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Media Capabilities](https://htmlspecs.com/media-capabilities/)（[Source](https://www.w3.org/TR/2025/WD-media-capabilities-20251125/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [MediaStream Image Capture](https://htmlspecs.com/image-capture/)（[Source](https://www.w3.org/TR/2025/WD-image-capture-20250423/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Encrypted Media Extensions](https://htmlspecs.com/encrypted-media-2/)（[Source](https://www.w3.org/TR/2025/WD-encrypted-media-2-20251126/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Remote Playback](https://htmlspecs.com/remote-playback/)（[Source](https://www.w3.org/TR/2024/CRD-remote-playback-20240430/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [WebXR Device API](https://htmlspecs.com/webxr/)（[Source](https://www.w3.org/TR/2025/CRD-webxr-20251001/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [WebXR Augmented Reality Module - Level 1](https://htmlspecs.com/webxr-ar-module-1/)（[Source](https://www.w3.org/TR/2025/CRD-webxr-ar-module-1-20250425/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [WebXR Hand Input Module - Level 1](https://htmlspecs.com/webxr-hand-input-1/)（[Source](https://www.w3.org/TR/2024/WD-webxr-hand-input-1-20240605/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
