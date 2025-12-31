@@ -1348,6 +1348,14 @@ const links = [
         state: "WD"
     },
     {
+        text: "Remote Playback",
+        href: "https://htmlspecs.com/remote-playback/",
+        src: "https://www.w3.org/TR/2024/CRD-remote-playback-20240430/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "CRD"
+    },
+    {
         text: "WebXR Device API",
         href: "https://htmlspecs.com/webxr/",
         src: "https://www.w3.org/TR/2025/CRD-webxr-20251001/",
