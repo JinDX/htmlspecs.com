@@ -1078,6 +1078,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
+    {
+        text: "Performance measure memory",
+        href: "https://wicg.github.io/performance-measure-memory/",
+        src: "https://wicg.github.io/performance-measure-memory/",
+        "last-modified": "Fri, 28 May 2021 11:50:10 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
 
     //### 安全和认证|보안 및 인증|セキュリティと認証
     {
