@@ -1086,6 +1086,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
+    {
+        text: "Device Memory API",
+        href: "https://htmlspecs.com/device-memory/",
+        src: "https://www.w3.org/TR/2025/WD-device-memory-1-20251211/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
 
     //### 安全和认证|보안 및 인증|セキュリティと認証
     {
