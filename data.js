@@ -313,6 +313,14 @@ const links = [
         state: "LS"
     },
     {
+        text: "Selection API",
+        href: "https://htmlspecs.com/selection-api/",
+        src: "https://www.w3.org/TR/2025/WD-selection-api-20250105/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
+    {
         text: "WebSockets",
         href: "https://htmlspecs.com/websockets/",
         src: "https://websockets.spec.whatwg.org/",
