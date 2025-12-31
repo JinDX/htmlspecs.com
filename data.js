@@ -900,6 +900,14 @@ const links = [
         lang: "cjk",
         state: "CRD"
     },
+    {
+        text: "Accelerometer",
+        href: "https://htmlspecs.com/accelerometer/",
+        src: "https://www.w3.org/TR/2025/CRD-accelerometer-20250212/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "CRD"
+    },
 
     //### 性能和观察者|성능 및 옵저버|パフォーマンスとオブザーバ
     {
