@@ -1427,6 +1427,14 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
+    {
+        text: "Image Resource",
+        href: "https://htmlspecs.com/image-resource/",
+        src: "https://www.w3.org/TR/2021/WD-image-resource-20210604/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
 
     //### 开发者工具|개발자 도구|開発者ツール
     {
