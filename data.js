@@ -84,6 +84,14 @@ const links = [
         state: "LS"
     },
     {
+        text: "EditContext API",
+        href: "https://htmlspecs.com/edit-context/",
+        src: "https://www.w3.org/TR/2025/WD-edit-context-20251112/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
+    {
         text: "URL",
         href: "https://htmlspecs.com/url/",
         src: "https://url.spec.whatwg.org/",
