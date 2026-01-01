@@ -285,6 +285,14 @@ const links = [
         lang: "cjk",
         state: "CR"
     },
+    {
+        text: "Using ARIA",
+        href: "https://htmlspecs.com/using-aria/",
+        src: "https://www.w3.org/TR/2018/WD-using-aria-20180927/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
 
 
     //### 网络和通信|네트워크와 통신|ネットワークと通信
