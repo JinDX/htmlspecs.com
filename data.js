@@ -1308,6 +1308,14 @@ const links = [
         state: "CRD"
     },
     {
+        text: "Autoplay Detection",
+        href: "https://htmlspecs.com/autoplay-detection/",
+        src: "https://www.w3.org/TR/2025/WD-autoplay-detection-20250904/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
+    {
         text: "Media Stream Recording",
         href: "https://htmlspecs.com/media-stream-recording/",
         src: "https://www.w3.org/TR/2025/WD-mediastream-recording-20250417/",
