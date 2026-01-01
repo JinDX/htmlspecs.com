@@ -457,14 +457,6 @@ const links = [
         state: "Draft"
     },
     {
-        text: "Secure Payment Confirmation",
-        href: "https://htmlspecs.com/secure-payment-confirmation/",
-        src: "https://www.w3.org/TR/2025/CRD-secure-payment-confirmation-20251209/",
-        "last-modified": "-",
-        lang: "cjk",
-        state: "CRD"
-    },
-    {
         text: "Background Fetch",
         href: "https://htmlspecs.com/background-fetch/",
         src: "https://wicg.github.io/background-fetch/",
@@ -747,6 +739,14 @@ const links = [
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
+    },
+    {
+        text: "UI Events KeyboardEvent code Values",
+        href: "https://htmlspecs.com/uievents-code/",
+        src: "https://www.w3.org/TR/2025/REC-uievents-code-20250422/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "REC"
     },
     {
         text: "Contact Picker API",
@@ -1135,6 +1135,14 @@ const links = [
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
+    },
+    {
+        text: "Secure Payment Confirmation",
+        href: "https://htmlspecs.com/secure-payment-confirmation/",
+        src: "https://www.w3.org/TR/2025/CRD-secure-payment-confirmation-20251209/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "CRD"
     },
     {
         text: "HTML Sanitizer API",
