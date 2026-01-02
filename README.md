@@ -44,7 +44,6 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Fetch](https://htmlspecs.com/fetch/)（[Source](https://fetch.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [Streams](https://htmlspecs.com/streams/)（[Source](https://streams.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [XMLHttpRequest](https://htmlspecs.com/xhr/)（[Source](https://xhr.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
-- [Selection API](https://htmlspecs.com/selection-api/)（[Source](https://www.w3.org/TR/2025/WD-selection-api-20250105/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [WebSockets](https://htmlspecs.com/websockets/)（[Source](https://websockets.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [WebSub](https://htmlspecs.com/websub/)（[Source](https://www.w3.org/TR/2018/REC-websub-20180123/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [ActivityPub](https://htmlspecs.com/activitypub/)（[Source](https://www.w3.org/TR/2018/REC-activitypub-20180123/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
@@ -112,6 +111,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Device Orientation and Motion](https://htmlspecs.com/orientation-event/)（[Source](https://www.w3.org/TR/2025/CRD-orientation-event-20250212/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [Pointer Lock 2.0](https://htmlspecs.com/pointerlock/)（[Source](https://www.w3.org/TR/2025/WD-pointerlock-2-20250929/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Clipboard API and events](https://htmlspecs.com/clipboard-apis/)（[Source](https://www.w3.org/TR/2025/WD-clipboard-apis-20251124/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Selection API](https://htmlspecs.com/selection-api/)（[Source](https://www.w3.org/TR/2025/WD-selection-api-20250105/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Input Events Level 1](https://htmlspecs.com/input-events-1/)（[Source](https://www.w3.org/TR/2023/DISC-input-events-1-20230928/) ![Discontinued Draft](https://img.shields.io/badge/DISC-ffcc00)）
 - [Input Events Level 2](https://htmlspecs.com/input-events-2/)（[Source](https://www.w3.org/TR/2025/WD-input-events-2-20250814/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Permissions](https://htmlspecs.com/permissions/)（[Source](https://www.w3.org/TR/2025/WD-permissions-20251006/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
