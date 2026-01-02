@@ -959,6 +959,14 @@ const links = [
         state: "CRD"
     },
     {
+        text: "Compute Pressure API",
+        href: "https://htmlspecs.com/compute-pressure/",
+        src: "https://www.w3.org/TR/2025/CRD-compute_pressure-20250521/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "CRD"
+    },
+    {
         text: "High Resolution Time",
         href: "https://htmlspecs.com/hr-time-3/",
         src: "https://www.w3.org/TR/2024/WD-hr-time-3-20241107/",
