@@ -99,6 +99,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Screen Capture](https://htmlspecs.com/screen-capture/)（[Source](https://www.w3.org/TR/2025/WD-screen-capture-20250717/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [UI Events](https://htmlspecs.com/uievents/)（[Source](https://www.w3.org/TR/2024/WD-uievents-20240907/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [UI Events KeyboardEvent code Values](https://htmlspecs.com/uievents-code/)（[Source](https://www.w3.org/TR/2025/REC-uievents-code-20250422/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
+- [Keyboard Map](https://htmlspecs.com/keyboard-map/)（[Source](https://wicg.github.io/keyboard-map/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Contact Picker API](https://htmlspecs.com/contact-picker/)（[Source](https://www.w3.org/TR/2024/WD-contact-picker-20240708/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Notifications API](https://htmlspecs.com/notifications/)（[Source](https://notifications.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [Badging API](https://htmlspecs.com/badging/)（[Source](https://www.w3.org/TR/2025/WD-badging-20251006/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
@@ -128,6 +129,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 
 ### 性能和观察者
 - [Performance Timeline](https://htmlspecs.com/performance-timeline/)（[Source](https://www.w3.org/TR/2025/CRD-performance-timeline-20250521/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
+- [Compute Pressure API](https://htmlspecs.com/compute-pressure/)（[Source](https://www.w3.org/TR/2025/CRD-compute_pressure-20250521/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [High Resolution Time](https://htmlspecs.com/hr-time-3/)（[Source](https://www.w3.org/TR/2024/WD-hr-time-3-20241107/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Intersection Observer](https://htmlspecs.com/intersection-observer/)（[Source](https://www.w3.org/TR/2023/WD-intersection-observer-20231018/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Resize Observer](https://htmlspecs.com/resize-observer/)（[Source](https://www.w3.org/TR/2020/WD-resize-observer-1-20200211/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
@@ -172,6 +174,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [WebGPU Shading Language](https://htmlspecs.com/WGSL/)（[Source](https://www.w3.org/TR/2025/CRD-WGSL-20251215/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [Scalable Vector Graphics (SVG) 2](https://htmlspecs.com/SVG2/)（[Source](https://www.w3.org/TR/2018/CR-SVG2-20181004/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
 - [Picture-in-Picture](https://htmlspecs.com/picture-in-picture/)（[Source](https://www.w3.org/TR/2025/WD-picture-in-picture-20251202/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Document Picture-in-Picture](https://htmlspecs.com/document-picture-in-picture/)（[Source](https://wicg.github.io/document-picture-in-picture/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Presentation API](https://htmlspecs.com/presentation-api/)（[Source](https://www.w3.org/TR/2025/CRD-presentation-api-20250212/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [Scroll-driven Animations](https://htmlspecs.com/scroll-animations-1/)（[Source](https://www.w3.org/TR/2023/WD-scroll-animations-1-20230606/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Media Capture and Streams](https://htmlspecs.com/mediacapture-streams/)（[Source](https://www.w3.org/TR/2025/CRD-mediacapture-streams-20251009/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
