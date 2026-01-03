@@ -741,6 +741,14 @@ const links = [
         state: "REC"
     },
     {
+        text: "Keyboard Map",
+        href: "https://htmlspecs.com/keyboard-map/",
+        src: "https://wicg.github.io/keyboard-map/",
+        "last-modified": "Fri, 17 Jun 2022 14:59:55 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
+    {
         text: "Contact Picker API",
         href: "https://htmlspecs.com/contact-picker/",
         src: "https://www.w3.org/TR/2024/WD-contact-picker-20240708/",
