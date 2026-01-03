@@ -1292,6 +1292,14 @@ const links = [
         state: "WD"
     },
     {
+        text: "Document Picture-in-Picture",
+        href: "https://htmlspecs.com/document-picture-in-picture/",
+        src: "https://wicg.github.io/document-picture-in-picture/",
+        "last-modified": "Tue, 01 Oct 2024 18:16:43 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
+    {
         text: "Presentation API",
         href: "https://htmlspecs.com/presentation-api/",
         src: "https://www.w3.org/TR/2025/CRD-presentation-api-20250212/",
