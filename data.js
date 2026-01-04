@@ -235,6 +235,22 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
+    {
+        text: "MathML Core",
+        href: "https://htmlspecs.com/mathml-core/",
+        src: "https://www.w3.org/TR/2025/CR-mathml-core-20250624/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "CR"
+    },
+    // {
+    //     text: "MathML4",
+    //     href: "https://htmlspecs.com/mathml4/",
+    //     src: "https://www.w3.org/TR/2025/WD-mathml4-20251218/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
 
     //### 可访问性|접근성|アクセシビリティ
     {
