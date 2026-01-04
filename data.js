@@ -1264,6 +1264,22 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
+    {
+        text: "Trusted Types",
+        href: "https://htmlspecs.com/trusted-types/",
+        src: "https://www.w3.org/TR/2025/WD-trusted-types-20251103/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
+    {
+        text: "Clear Site Data",
+        href: "https://htmlspecs.com/clear-site-data/",
+        src: "https://www.w3.org/TR/2017/WD-clear-site-data-20171130/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
 
 
     //### 媒体和图形|미디어 및 그래픽|メディアとグラフィックス
