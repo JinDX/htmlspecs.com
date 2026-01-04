@@ -168,6 +168,8 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Credential Management Level 1](https://htmlspecs.com/credential-management-1/)（[Source](https://www.w3.org/TR/2025/WD-credential-management-1-20251028/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Federated Credential Management API (FedCM)](https://htmlspecs.com/fedcm/)（[Source](https://www.w3.org/TR/2024/WD-fedcm-1-20240820/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Private State Token API](https://htmlspecs.com/trust-token-api/)（[Source](https://wicg.github.io/trust-token-api/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
+- [Trusted Types](https://htmlspecs.com/trusted-types/)（[Source](https://www.w3.org/TR/2025/WD-trusted-types-20251103/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Clear Site Data](https://htmlspecs.com/clear-site-data/)（[Source](https://www.w3.org/TR/2017/WD-clear-site-data-20171130/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 
 ### 媒体和图形
 - [WebGPU](https://htmlspecs.com/webgpu/)（[Source](https://www.w3.org/TR/2025/CRD-webgpu-20251205/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
