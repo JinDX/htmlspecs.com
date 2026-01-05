@@ -394,6 +394,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Hypertext Transfer Protocol (HTTP) Client-Initiated Content-Encoding](https://htmlspecs.com/http/rfc7694.html)（[Source](https://httpwg.org/specs/rfc7694.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [Prefer Header for HTTP](https://htmlspecs.com/http/rfc7240.html)（[Source](https://httpwg.org/specs/rfc7240.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [Web Linking](https://htmlspecs.com/http/rfc8288.html)（[Source](https://httpwg.org/specs/rfc8288.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [HTTP Client Hints](https://htmlspecs.com/http/rfc8942.html)（[Source](https://httpwg.org/specs/rfc8942.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [Compression Dictionary Transport](https://htmlspecs.com/http/rfc9842.html)（[Source](https://httpwg.org/specs/rfc9842.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 
 ### 连接与中介扩展
