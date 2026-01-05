@@ -2783,6 +2783,16 @@ const httpLinks = [
     },
 
     {
+        text: "HTTP Client Hints",
+        href: "https://htmlspecs.com/http/rfc8942.html",
+        src: "https://httpwg.org/specs/rfc8942.html",
+        "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
+        etag: "695b0d14-c560",
+        lang: "cjk",
+        state: "RFC"
+    },
+
+    {
         text: "Compression Dictionary Transport",
         href: "https://htmlspecs.com/http/rfc9842.html",
         src: "https://httpwg.org/specs/rfc9842.html",
