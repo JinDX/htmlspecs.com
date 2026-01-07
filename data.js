@@ -1064,7 +1064,7 @@ const links = [
     },
     {
         text: "requestIdleCallback()",
-        href: "https://htmlspecs.com/request-idle-callback/",
+        href: "https://htmlspecs.com/requestidlecallback/",
         src: "https://www.w3.org/TR/2025/WD-requestidlecallback-20250521/",
         "last-modified": "-",
         lang: "cjk",
