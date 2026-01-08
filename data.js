@@ -2099,7 +2099,7 @@ const cssLinks = [
     {
         text: "CSS Transitions",
         href: "https://htmlspecs.com/css/css-transitions-1/",
-        src: "https://www.w3.org/TR/2018/WD-css-transitions-1-20181011/",
+        src: "https://www.w3.org/TR/2026/WD-css-transitions-1-20260108/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
