@@ -7,7 +7,7 @@ const links = [
         text: "HTML",
         href: "https://htmlspecs.com/",
         src: "https://html.spec.whatwg.org/multipage/",
-        "last-modified": "Wed, 17 Dec 2025 09:10:03 GMT",
+        "last-modified": "Thu, 08 Jan 2026 12:14:47 GMT",
         lang: "cjk",
         state: "LS"
     },
