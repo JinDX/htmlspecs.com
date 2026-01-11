@@ -505,6 +505,7 @@ const links = [
         state: "WD"
     },
 
+
     //### 存储和数据|저장 및 데이터|ストレージとデータ
     {
         text: "Indexed Database API 3.0",
@@ -599,6 +600,14 @@ const links = [
         href: "https://htmlspecs.com/storage-access/",
         src: "https://privacycg.github.io/storage-access/",
         "last-modified": "Sat, 18 Oct 2025 13:57:57 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
+    {
+        text: "Subresource Loading with Web Bundles",
+        href: "https://htmlspecs.com/webpackage-subresource-loading/",
+        src: "https://wicg.github.io/webpackage/subresource-loading.html",
+        "last-modified": "Mon, 29 Jul 2024 17:25:28 GMT",
         lang: "cjk",
         state: "Draft"
     },
