@@ -710,6 +710,14 @@ const links = [
         state: "WD"
     },
     {
+        text: "Local Font Access",
+        href: "https://htmlspecs.com/local-font-access/",
+        src: "https://wicg.github.io/local-font-access/",
+        "last-modified": "Fri, 07 Jun 2024 22:11:00 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
+    {
         text: "Idle Detection API",
         href: "https://htmlspecs.com/idle-detection/",
         src: "https://wicg.github.io/idle-detection/",
