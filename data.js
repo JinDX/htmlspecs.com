@@ -47,7 +47,7 @@ const links = [
         text: "Source map format specification",
         href: "https://htmlspecs.com/ecma426/",
         src: "https://tc39.es/ecma426/",
-        "last-modified": "Wed, 03 Dec 2025 16:55:38 GMT",
+        "last-modified": "Tue, 13 Jan 2026 15:05:55 GMT",
         lang: "cjk",
         state: "Draft"
     },
