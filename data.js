@@ -551,7 +551,7 @@ const links = [
         text: "Cookie Store API",
         href: "https://htmlspecs.com/cookiestore/",
         src: "https://cookiestore.spec.whatwg.org/",
-        "last-modified": "Thu, 15 Jan 2026 08:59:50 GMT",
+        "last-modified": "Thu, 15 Jan 2026 13:26:59 GMT",
         lang: "cjk",
         state: "LS"
     },
@@ -1185,14 +1185,14 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
-    // {
-    //     text: "Web Authentication: An API for accessing Public Key Credentials Level 3",
-    //     href: "https://htmlspecs.com/webauthn-3/",
-    //     src: "https://www.w3.org/TR/2025/WD-webauthn-3-20250127/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "Web Authentication: An API for accessing Public Key Credentials Level 3",
+        href: "https://htmlspecs.com/webauthn-3/",
+        src: "https://www.w3.org/TR/2026/CR-webauthn-3-20260113/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     {
         text: "Secure Payment Confirmation",
         href: "https://htmlspecs.com/secure-payment-confirmation/",
