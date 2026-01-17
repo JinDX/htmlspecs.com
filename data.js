@@ -51,14 +51,6 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
-    // {
-    //     text: "WebAssembly Core Specification",
-    //     href: "https://htmlspecs.com/wasm-core",
-    //     src: "https://webassembly.github.io/spec/core/bikeshed/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
     {
         text: "WebAssembly JavaScript Interface",
         href: "https://htmlspecs.com/wasm-js-api-2/",
@@ -1321,54 +1313,6 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "JSON Web Token (JWT)",
-    //     href: "https://htmlspecs.com/jwt/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc7519",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
-    // {
-    //     text: "JSON Web Signature (JWS)",
-    //     href: "https://htmlspecs.com/jws/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc7515",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
-    // {
-    //     text: "JSON Web Encryption (JWE)",
-    //     href: "https://htmlspecs.com/jwe/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc7516",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
-    // {
-    //     text: "JSON Web Key (JWK)",
-    //     href: "https://htmlspecs.com/jwk/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc7517",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
-    // {
-    //     text: "JSON Web Algorithms (JWA)",
-    //     href: "https://htmlspecs.com/jwa/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc7518",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
-    // {
-    //     text: "JWT Best Current Practices",
-    //     href: "https://htmlspecs.com/jwt-bcp/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc8725",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
 
 
     //### 媒体和图形|미디어 및 그래픽|メディアとグラフィックス
@@ -2225,7 +2169,6 @@ const cssLinks = [
         lang: "cjk",
         state: "CRD"
     },
-
     {
         text: "CSS View Transitions Module Level 2",
         href: "https://htmlspecs.com/css/css-view-transitions-2/",
@@ -2480,7 +2423,6 @@ const cssLinks = [
         lang: "cjk",
         state: "CRD"
     },
-
     {
         text: "CSS Values and Units Module Level 3",
         href: "https://htmlspecs.com/css/css-values-3/",
@@ -2630,7 +2572,6 @@ const httpLinks = [
         lang: "cjk",
         state: "RFC"
     },
-
     {
         text: "HTTP Caching",
         href: "https://htmlspecs.com/http/rfc9111.html",
@@ -2640,7 +2581,6 @@ const httpLinks = [
         lang: "cjk",
         state: "RFC"
     },
-
     {
         text: "HTTP/1.1",
         href: "https://htmlspecs.com/http/rfc9112.html",
@@ -2650,7 +2590,6 @@ const httpLinks = [
         lang: "cjk",
         state: "RFC"
     },
-
     {
         text: "HTTP/2",
         href: "https://htmlspecs.com/http/rfc9113.html",
@@ -2660,7 +2599,6 @@ const httpLinks = [
         lang: "cjk",
         state: "RFC"
     },
-
     {
         text: "HTTP/3",
         href: "https://htmlspecs.com/http/rfc9114.html",
@@ -2670,7 +2608,6 @@ const httpLinks = [
         lang: "cjk",
         state: "RFC"
     },
-
     {
         text: "HPACK: Header Compression for HTTP/2",
         href: "https://htmlspecs.com/http/rfc7541.html",
@@ -2680,7 +2617,6 @@ const httpLinks = [
         lang: "cjk",
         state: "RFC"
     },
-
     {
         text: "QPACK: Field Compression for HTTP/3",
         href: "https://htmlspecs.com/http/rfc9204.html",
@@ -2690,7 +2626,6 @@ const httpLinks = [
         lang: "cjk",
         state: "RFC"
     },
-
     {
         text: "Structured Field Values for HTTP",
         href: "https://htmlspecs.com/http/rfc9651.html",
@@ -2700,7 +2635,6 @@ const httpLinks = [
         lang: "cjk",
         state: "RFC"
     },
-
     {
         text: "Building Protocols with HTTP",
         href: "https://htmlspecs.com/http/rfc9205.html",
@@ -2732,7 +2666,6 @@ const httpLinks = [
         lang: "cjk",
         state: "RFC"
     },
-
     {
         text: "An HTTP Status Code to Report Legal Obstacles",
         href: "https://htmlspecs.com/http/rfc7725.html",
@@ -2742,7 +2675,6 @@ const httpLinks = [
         lang: "cjk",
         state: "RFC"
     },
-
     {
         text: "An HTTP Status Code for Indicating Hints",
         href: "https://htmlspecs.com/http/rfc8297.html",
@@ -2763,7 +2695,6 @@ const httpLinks = [
         lang: "cjk",
         state: "RFC"
     },
-
     {
         text: "HTTP Immutable Responses",
         href: "https://htmlspecs.com/http/rfc8246.html",
@@ -2773,7 +2704,6 @@ const httpLinks = [
         lang: "cjk",
         state: "RFC"
     },
-
     {
         text: "The Cache-Status HTTP Response Header Field",
         href: "https://htmlspecs.com/http/rfc9211.html",
@@ -2783,7 +2713,6 @@ const httpLinks = [
         lang: "cjk",
         state: "RFC"
     },
-
     {
         text: "Targeted HTTP Cache Control",
         href: "https://htmlspecs.com/http/rfc9213.html",
@@ -2793,7 +2722,6 @@ const httpLinks = [
         lang: "cjk",
         state: "RFC"
     },
-
     {
         text: "HTTP Cache Groups",
         href: "https://htmlspecs.com/http/rfc9875.html",
@@ -2814,7 +2742,6 @@ const httpLinks = [
         lang: "cjk",
         state: "RFC"
     },
-
     {
         text: "Use of the Content-Disposition Header Field in the Hypertext Transfer Protocol (HTTP)",
         href: "https://htmlspecs.com/http/rfc6266.html",
@@ -2824,7 +2751,6 @@ const httpLinks = [
         lang: "cjk",
         state: "RFC"
     },
-
     {
         text: "Hypertext Transfer Protocol (HTTP) Client-Initiated Content-Encoding",
         href: "https://htmlspecs.com/http/rfc7694.html",
@@ -2834,7 +2760,6 @@ const httpLinks = [
         lang: "cjk",
         state: "RFC"
     },
-
     {
         text: "Prefer Header for HTTP",
         href: "https://htmlspecs.com/http/rfc7240.html",
@@ -2844,7 +2769,6 @@ const httpLinks = [
         lang: "cjk",
         state: "RFC"
     },
-
     {
         text: "Web Linking",
         href: "https://htmlspecs.com/http/rfc8288.html",
@@ -2854,7 +2778,6 @@ const httpLinks = [
         lang: "cjk",
         state: "RFC"
     },
-
     {
         text: "HTTP Client Hints",
         href: "https://htmlspecs.com/http/rfc8942.html",
@@ -2864,7 +2787,6 @@ const httpLinks = [
         lang: "cjk",
         state: "RFC"
     },
-
     {
         text: "Compression Dictionary Transport",
         href: "https://htmlspecs.com/http/rfc9842.html",
@@ -2885,7 +2807,6 @@ const httpLinks = [
         lang: "cjk",
         state: "RFC"
     },
-
     {
         text: "HTTP Alternative Services",
         href: "https://htmlspecs.com/http/rfc7838.html",
@@ -2895,7 +2816,6 @@ const httpLinks = [
         lang: "cjk",
         state: "RFC"
     },
-
     {
         text: "The ORIGIN HTTP/2 Frame",
         href: "https://htmlspecs.com/http/rfc8336.html",
@@ -2905,7 +2825,6 @@ const httpLinks = [
         lang: "cjk",
         state: "RFC"
     },
-
     {
         text: "Bootstrapping WebSockets with HTTP/2",
         href: "https://htmlspecs.com/http/rfc8441.html",
@@ -2915,7 +2834,6 @@ const httpLinks = [
         lang: "cjk",
         state: "RFC"
     },
-
     {
         text: "The Proxy-Status HTTP Response Header Field",
         href: "https://htmlspecs.com/http/rfc9209.html",
@@ -2925,7 +2843,6 @@ const httpLinks = [
         lang: "cjk",
         state: "RFC"
     },
-
     {
         text: "Extensible Prioritization Scheme for HTTP",
         href: "https://htmlspecs.com/http/rfc9218.html",
@@ -2935,7 +2852,6 @@ const httpLinks = [
         lang: "cjk",
         state: "RFC"
     },
-
     {
         text: "Bootstrapping WebSockets with HTTP/3",
         href: "https://htmlspecs.com/http/rfc9220.html",
@@ -2945,7 +2861,6 @@ const httpLinks = [
         lang: "cjk",
         state: "RFC"
     },
-
     {
         text: "Proxying UDP in HTTP",
         href: "https://htmlspecs.com/http/rfc9298.html",
@@ -2955,7 +2870,6 @@ const httpLinks = [
         lang: "cjk",
         state: "RFC"
     },
-
     {
         text: "The ORIGIN Extension in HTTP/3",
         href: "https://htmlspecs.com/http/rfc9412.html",
@@ -2965,7 +2879,6 @@ const httpLinks = [
         lang: "cjk",
         state: "RFC"
     },
-
     {
         text: "Client-Cert HTTP Header Field",
         href: "https://htmlspecs.com/http/rfc9440.html",
@@ -2986,7 +2899,6 @@ const httpLinks = [
         lang: "cjk",
         state: "RFC"
     },
-
     {
         text: "The 'Basic' HTTP Authentication Scheme",
         href: "https://htmlspecs.com/http/rfc7617.html",
@@ -2996,7 +2908,6 @@ const httpLinks = [
         lang: "cjk",
         state: "RFC"
     },
-
     {
         text: "Encrypted Content-Encoding for HTTP",
         href: "https://htmlspecs.com/http/rfc8188.html",
@@ -3006,7 +2917,6 @@ const httpLinks = [
         lang: "cjk",
         state: "RFC"
     },
-
     {
         text: "Using Early Data in HTTP",
         href: "https://htmlspecs.com/http/rfc8470.html",
@@ -3016,7 +2926,6 @@ const httpLinks = [
         lang: "cjk",
         state: "RFC"
     },
-
     {
         text: "HTTP Message Signatures",
         href: "https://htmlspecs.com/http/rfc9421.html",
@@ -3026,7 +2935,6 @@ const httpLinks = [
         lang: "cjk",
         state: "RFC"
     },
-
     {
         text: "Digest Fields",
         href: "https://htmlspecs.com/http/rfc9530.html",
@@ -3036,7 +2944,6 @@ const httpLinks = [
         lang: "cjk",
         state: "RFC"
     },
-
     {
         text: "The Concealed HTTP Authentication Scheme",
         href: "https://htmlspecs.com/http/rfc9729.html",
