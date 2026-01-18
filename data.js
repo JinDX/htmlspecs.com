@@ -476,7 +476,7 @@ const links = [
         text: "User-Agent Client Hints",
         href: "https://htmlspecs.com/ua-client-hints/",
         src: "https://wicg.github.io/ua-client-hints/",
-        "last-modified": "Fri, 16 Jan 2026 16:01:37 GMT",
+        "last-modified": "Sat, 17 Jan 2026 13:33:09 GMT",
         lang: "cjk",
         state: "Draft"
     },
