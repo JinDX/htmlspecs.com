@@ -51,6 +51,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
+    // {
+    //     text: "WebAssembly Core Specification",
+    //     href: "https://htmlspecs.com/wasm-core",
+    //     src: "https://webassembly.github.io/spec/core/bikeshed/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
     {
         text: "WebAssembly JavaScript Interface",
         href: "https://htmlspecs.com/wasm-js-api-2/",
@@ -1313,6 +1321,54 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "JSON Web Token (JWT)",
+    //     href: "https://htmlspecs.com/jwt/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc7519",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
+    // {
+    //     text: "JSON Web Signature (JWS)",
+    //     href: "https://htmlspecs.com/jws/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc7515",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
+    // {
+    //     text: "JSON Web Encryption (JWE)",
+    //     href: "https://htmlspecs.com/jwe/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc7516",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
+    // {
+    //     text: "JSON Web Key (JWK)",
+    //     href: "https://htmlspecs.com/jwk/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc7517",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
+    // {
+    //     text: "JSON Web Algorithms (JWA)",
+    //     href: "https://htmlspecs.com/jwa/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc7518",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
+    // {
+    //     text: "JWT Best Current Practices",
+    //     href: "https://htmlspecs.com/jwt-bcp/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc8725",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
 
 
     //### 媒体和图形|미디어 및 그래픽|メディアとグラフィックス
