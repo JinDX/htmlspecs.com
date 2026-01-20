@@ -158,7 +158,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 
 ### 安全和认证
 - [Web Authentication: An API for accessing Public Key Credentials Level 2](https://htmlspecs.com/webauthn-2/)（[Source](https://www.w3.org/TR/2021/REC-webauthn-2-20210408/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
-- [Web Authentication: An API for accessing Public Key Credentials Level 3](https://htmlspecs.com/webauthn-2/)（[Source](https://www.w3.org/TR/2026/CR-webauthn-3-20260113/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
+- [Web Authentication: An API for accessing Public Key Credentials Level 3](https://htmlspecs.com/webauthn-3/)（[Source](https://www.w3.org/TR/2026/CR-webauthn-3-20260113/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Secure Payment Confirmation](https://htmlspecs.com/secure-payment-confirmation/)（[Source](https://www.w3.org/TR/2025/CRD-secure-payment-confirmation-20251209/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [HTML Sanitizer API](https://htmlspecs.com/sanitizer-api/)（[Source](https://wicg.github.io/sanitizer-api/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Subresource Integrity (SRI)](https://htmlspecs.com/sri/)（[Source](https://www.w3.org/TR/2016/REC-SRI-20160623/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
@@ -175,6 +175,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Private State Token API](https://htmlspecs.com/trust-token-api/)（[Source](https://wicg.github.io/trust-token-api/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Trusted Types](https://htmlspecs.com/trusted-types/)（[Source](https://www.w3.org/TR/2025/WD-trusted-types-20251103/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Clear Site Data](https://htmlspecs.com/clear-site-data/)（[Source](https://www.w3.org/TR/2017/WD-clear-site-data-20171130/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [JSON Web Token (JWT)](https://htmlspecs.com/jwt/)（[Source](https://www.rfc-editor.org/rfc/rfc7519) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 
 ### 媒体和图形
 - [WebGPU](https://htmlspecs.com/webgpu/)（[Source](https://www.w3.org/TR/2026/CRD-webgpu-20260112/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
@@ -340,7 +341,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [CSS Cascading and Inheritance Level 5](https://htmlspecs.com/css/css-cascade-5/)（[Source](https://www.w3.org/TR/2022/CR-css-cascade-5-20220113/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
 - [CSS Cascading and Inheritance Level 6](https://htmlspecs.com/css/css-cascade-6/)（[Source](https://www.w3.org/TR/2024/WD-css-cascade-6-20240906/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Basic User Interface Module Level 3](https://htmlspecs.com/css/css-ui-3/)（[Source](https://www.w3.org/TR/2018/REC-css-ui-3-20180621/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
-- [CSS Basic User Interface Module Level 4](https://htmlspecs.com/css/css-ui-4/)（[Source](https://www.w3.org/TR/2021/WD-css-ui-4-20210316/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [CSS Basic User Interface Module Level 4](https://htmlspecs.com/css/css-ui-4/)（[Source](https://www.w3.org/TR/2026/WD-css-ui-4-20260120/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Syntax Module Level 3](https://htmlspecs.com/css/css-syntax-3/)（[Source](https://www.w3.org/TR/2021/CRD-css-syntax-3-20211224/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [CSS Values and Units Module Level 3](https://htmlspecs.com/css/css-values-3/)（[Source](https://www.w3.org/TR/2024/CRD-css-values-3-20240322/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [CSS Values and Units Module Level 4](https://htmlspecs.com/css/css-values-4/)（[Source](https://www.w3.org/TR/2024/WD-css-values-4-20240312/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
