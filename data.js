@@ -1321,14 +1321,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "JSON Web Token (JWT)",
-    //     href: "https://htmlspecs.com/jwt/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc7519",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
+    {
+        text: "JSON Web Token (JWT)",
+        href: "https://htmlspecs.com/jwt/",
+        src: "https://www.rfc-editor.org/rfc/rfc7519",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "RFC"
+    },
     // {
     //     text: "JSON Web Signature (JWS)",
     //     href: "https://htmlspecs.com/jws/",
