@@ -2466,7 +2466,7 @@ const cssLinks = [
     {
         text: "CSS Basic User Interface Module Level 4",
         href: "https://htmlspecs.com/css/css-ui-4/",
-        src: "https://www.w3.org/TR/2021/WD-css-ui-4-20210316/",
+        src: "https://www.w3.org/TR/2026/WD-css-ui-4-20260120/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
