@@ -1353,14 +1353,14 @@ const links = [
         lang: "cjk",
         state: "RFC"
     },
-    // {
-    //     text: "JSON Web Algorithms (JWA)",
-    //     href: "https://htmlspecs.com/jwa/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc7518",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
+    {
+        text: "JSON Web Algorithms (JWA)",
+        href: "https://htmlspecs.com/jwa/",
+        src: "https://www.rfc-editor.org/rfc/rfc7518",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "RFC"
+    },
     // {
     //     text: "JWT Best Current Practices",
     //     href: "https://htmlspecs.com/jwt-bcp/",
