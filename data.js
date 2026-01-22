@@ -1329,14 +1329,14 @@ const links = [
         lang: "cjk",
         state: "RFC"
     },
-    // {
-    //     text: "JSON Web Signature (JWS)",
-    //     href: "https://htmlspecs.com/jws/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc7515",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
+    {
+        text: "JSON Web Signature (JWS)",
+        href: "https://htmlspecs.com/jws/",
+        src: "https://www.rfc-editor.org/rfc/rfc7515",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "RFC"
+    },
     // {
     //     text: "JSON Web Encryption (JWE)",
     //     href: "https://htmlspecs.com/jwe/",
