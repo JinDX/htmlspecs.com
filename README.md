@@ -180,6 +180,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [JSON Web Encryption (JWE)](https://htmlspecs.com/jwe/)（[Source](https://www.rfc-editor.org/rfc/rfc7516) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [JSON Web Key (JWK)](https://htmlspecs.com/jwk/)（[Source](https://www.rfc-editor.org/rfc/rfc7517) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [JSON Web Algorithms (JWA)](https://htmlspecs.com/jwa/)（[Source](https://www.rfc-editor.org/rfc/rfc7518) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [JWT Best Current Practices](https://htmlspecs.com/jwt-bcp/)（[Source](https://www.rfc-editor.org/rfc/rfc8725) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 
 ### 媒体和图形
 - [WebGPU](https://htmlspecs.com/webgpu/)（[Source](https://www.w3.org/TR/2026/CRD-webgpu-20260112/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
