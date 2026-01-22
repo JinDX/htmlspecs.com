@@ -1337,22 +1337,22 @@ const links = [
         lang: "cjk",
         state: "RFC"
     },
-    // {
-    //     text: "JSON Web Encryption (JWE)",
-    //     href: "https://htmlspecs.com/jwe/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc7516",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
-    // {
-    //     text: "JSON Web Key (JWK)",
-    //     href: "https://htmlspecs.com/jwk/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc7517",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
+    {
+        text: "JSON Web Encryption (JWE)",
+        href: "https://htmlspecs.com/jwe/",
+        src: "https://www.rfc-editor.org/rfc/rfc7516",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "RFC"
+    },
+    {
+        text: "JSON Web Key (JWK)",
+        href: "https://htmlspecs.com/jwk/",
+        src: "https://www.rfc-editor.org/rfc/rfc7517",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "RFC"
+    },
     // {
     //     text: "JSON Web Algorithms (JWA)",
     //     href: "https://htmlspecs.com/jwa/",
