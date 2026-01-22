@@ -2386,7 +2386,7 @@ const cssLinks = [
     {
         text: "CSS Nesting Module Level 1",
         href: "https://htmlspecs.com/css/css-nesting-1/",
-        src: "https://www.w3.org/TR/2023/WD-css-nesting-1-20230214/",
+        src: "https://www.w3.org/TR/2026/WD-css-nesting-1-20260122/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"

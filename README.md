@@ -336,7 +336,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [CSS Scrollbars Styling Module Level 1](https://htmlspecs.com/css/css-scrollbars-1/)（[Source](https://www.w3.org/TR/2021/CR-css-scrollbars-1-20211209/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
 - [CSS Scroll Anchoring Module Level 1](https://htmlspecs.com/css/css-scroll-anchoring-1/)（[Source](https://www.w3.org/TR/2020/WD-css-scroll-anchoring-1-20201111/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Will Change Module Level 1](https://htmlspecs.com/css/css-will-change-1/)（[Source](https://www.w3.org/TR/2022/CRD-css-will-change-1-20220505/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
-- [CSS Nesting Module Level 1](https://htmlspecs.com/css/css-nesting-1/)（[Source](https://www.w3.org/TR/2023/WD-css-nesting-1-20230214/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [CSS Nesting Module Level 1](https://htmlspecs.com/css/css-nesting-1/)（[Source](https://www.w3.org/TR/2026/WD-css-nesting-1-20260122/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Custom Properties for Cascading Variables Module Level 1](https://htmlspecs.com/css/css-variables-1/)（[Source](https://www.w3.org/TR/2022/CR-css-variables-1-20220616/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
 - [CSS Object Model (CSSOM)](https://htmlspecs.com/css/cssom-1/)（[Source](https://www.w3.org/TR/2021/WD-cssom-1-20210826/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSSOM View Module](https://htmlspecs.com/css/cssom-view/)（[Source](https://www.w3.org/TR/2025/WD-cssom-view-1-20250916/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
