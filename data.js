@@ -1361,14 +1361,14 @@ const links = [
         lang: "cjk",
         state: "RFC"
     },
-    // {
-    //     text: "JWT Best Current Practices",
-    //     href: "https://htmlspecs.com/jwt-bcp/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc8725",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
+    {
+        text: "JWT Best Current Practices",
+        href: "https://htmlspecs.com/jwt-bcp/",
+        src: "https://www.rfc-editor.org/rfc/rfc8725",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "RFC"
+    },
 
 
     //### 媒体和图形|미디어 및 그래픽|メディアとグラフィックス
