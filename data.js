@@ -246,7 +246,7 @@ const links = [
     {
         text: "MathML4",
         href: "https://htmlspecs.com/mathml4/",
-        src: "https://www.w3.org/TR/2025/WD-mathml4-20251218/",
+        src: "https://www.w3.org/TR/2026/WD-mathml4-20260122/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
