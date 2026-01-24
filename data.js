@@ -2322,7 +2322,7 @@ const cssLinks = [
     {
         text: "Selectors Level 4",
         href: "https://htmlspecs.com/css/selectors-4/",
-        src: "https://www.w3.org/TR/2022/WD-selectors-4-20221111/",
+        src: "https://www.w3.org/TR/2026/WD-selectors-4-20260122/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
