@@ -47,7 +47,7 @@ const links = [
         text: "Source map format specification",
         href: "https://htmlspecs.com/ecma426/",
         src: "https://tc39.es/ecma426/",
-        "last-modified": "Tue, 27 Jan 2026 17:59:11 GMT",
+        "last-modified": "Thu, 29 Jan 2026 20:52:07 GMT",
         lang: "cjk",
         state: "Draft"
     },
@@ -591,7 +591,7 @@ const links = [
         text: "OpenAPI Specification v3.2.0",
         href: "https://htmlspecs.com/openapi/",
         src: "https://spec.openapis.org/oas/latest.html",
-        "last-modified": "Thu, 29 Jan 2026 09:31:02 GMT",
+        "last-modified": "Thu, 29 Jan 2026 22:27:49 GMT",
         lang: "cjk",
         state: "Draft"
     },
