@@ -2016,7 +2016,7 @@ const cssLinks = [
     {
         text: "CSS Anchor Positioning Module Level 1",
         href: "https://htmlspecs.com/css/css-anchor-position-1/",
-        src: "https://www.w3.org/TR/2025/WD-css-anchor-position-1-20251222/",
+        src: "https://www.w3.org/TR/2026/WD-css-anchor-position-1-20260130/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
