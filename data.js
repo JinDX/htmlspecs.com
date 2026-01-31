@@ -1399,7 +1399,7 @@ const links = [
     {
         text: "Picture-in-Picture",
         href: "https://htmlspecs.com/picture-in-picture/",
-        src: "https://www.w3.org/TR/2025/WD-picture-in-picture-20251202/",
+        src: "https://www.w3.org/TR/2026/WD-picture-in-picture-20260130/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
