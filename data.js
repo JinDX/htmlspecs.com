@@ -1976,7 +1976,7 @@ const cssLinks = [
     {
         text: "CSS Box Alignment Module Level 3",
         href: "https://htmlspecs.com/css/css-align-3/",
-        src: "https://www.w3.org/TR/2025/WD-css-align-3-20250311/",
+        src: "https://www.w3.org/TR/2026/WD-css-align-3-20260130/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
