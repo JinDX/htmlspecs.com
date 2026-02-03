@@ -984,7 +984,7 @@ const links = [
     {
         text: "Gyroscope",
         href: "https://htmlspecs.com/gyroscope/",
-        src: "https://www.w3.org/TR/2024/CRD-gyroscope-20241008/",
+        src: "https://www.w3.org/TR/2026/CRD-gyroscope-20260202/",
         "last-modified": "-",
         lang: "cjk",
         state: "CRD"
