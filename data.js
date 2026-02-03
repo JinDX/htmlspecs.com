@@ -641,7 +641,7 @@ const links = [
         text: "Web Serial API",
         href: "https://htmlspecs.com/serial/",
         src: "https://wicg.github.io/serial/",
-        "last-modified": "Wed, 30 Jul 2025 23:24:41 GMT",
+        "last-modified": "Mon, 02 Feb 2026 18:40:17 GMT",
         lang: "cjk",
         state: "Draft"
     },
