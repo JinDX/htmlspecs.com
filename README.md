@@ -304,7 +304,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [CSS Transforms Module Level 1](https://htmlspecs.com/css/css-transforms-1/)（[Source](https://www.w3.org/TR/2019/CR-css-transforms-1-20190214/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
 - [CSS Transforms Module Level 2](https://htmlspecs.com/css/css-transforms-2/)（[Source](https://www.w3.org/TR/2021/WD-css-transforms-2-20211109/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Transitions](https://htmlspecs.com/css/css-transitions-1/)（[Source](https://www.w3.org/TR/2026/WD-css-transitions-1-20260108/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
-- [CSS Transitions Level 2](https://htmlspecs.com/css/css-transitions-2/)（[Source](https://www.w3.org/TR/2023/WD-css-transitions-2-20230905/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [CSS Transitions Level 2](https://htmlspecs.com/css/css-transitions-2/)（[Source](https://www.w3.org/TR/2026/WD-css-transitions-2-20260204/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Animations Level 1](https://htmlspecs.com/css/css-animations-1/)（[Source](https://www.w3.org/TR/2023/WD-css-animations-1-20230302/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Animations Level 2](https://htmlspecs.com/css/css-animations-2/)（[Source](https://www.w3.org/TR/2023/WD-css-animations-2-20230602/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Web Animations](https://htmlspecs.com/css/web-animations-1/)（[Source](https://www.w3.org/TR/2023/WD-web-animations-1-20230605/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
