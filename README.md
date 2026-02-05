@@ -39,7 +39,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Accessible Rich Internet Applications (WAI-ARIA) 1.3](https://htmlspecs.com/wai-aria-1.3/)（[Source](https://www.w3.org/TR/2024/WD-wai-aria-1.3-20240123/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [ARIA in HTML](https://htmlspecs.com/html-aria/)（[Source](https://www.w3.org/TR/2025/REC-html-aria-20250805/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Accessible Name and Description Computation 1.1](https://htmlspecs.com/accname-1.1/)（[Source](https://www.w3.org/TR/2018/REC-accname-1.1-20181218/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
-- [Accessibility Conformance Testing (ACT) Rules Format 1.1](https://htmlspecs.com/act-rules-format/)（[Source](https://www.w3.org/TR/2025/CR-act-rules-format-1.1-20250819/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
+- [Accessibility Conformance Testing (ACT) Rules Format 1.1](https://htmlspecs.com/act-rules-format/)（[Source](https://www.w3.org/TR/2026/REC-act-rules-format-1.1-20260205/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Using ARIA](https://htmlspecs.com/using-aria/)（[Source](https://www.w3.org/TR/2018/WD-using-aria-20180927/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 
 ### 网络和通信
