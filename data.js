@@ -1408,7 +1408,7 @@ const links = [
         text: "Document Picture-in-Picture",
         href: "https://htmlspecs.com/document-picture-in-picture/",
         src: "https://wicg.github.io/document-picture-in-picture/",
-        "last-modified": "Tue, 01 Oct 2024 18:16:43 GMT",
+        "last-modified": "Wed, 04 Feb 2026 18:29:06 GMT",
         lang: "cjk",
         state: "Draft"
     },
