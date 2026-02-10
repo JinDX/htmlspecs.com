@@ -7,7 +7,7 @@ const links = [
         text: "HTML",
         href: "https://htmlspecs.com/",
         src: "https://html.spec.whatwg.org/multipage/",
-        "last-modified": "Thu, 05 Feb 2026 08:22:07 GMT",
+        "last-modified": "Sun, 08 Feb 2026 15:44:40 GMT",
         lang: "cjk",
         state: "LS"
     },
@@ -47,7 +47,7 @@ const links = [
         text: "Source map format specification",
         href: "https://htmlspecs.com/ecma426/",
         src: "https://tc39.es/ecma426/",
-        "last-modified": "Thu, 29 Jan 2026 20:52:07 GMT",
+        "last-modified": "Mon, 09 Feb 2026 16:19:57 GMT",
         lang: "cjk",
         state: "Draft"
     },
@@ -1130,7 +1130,7 @@ const links = [
     {
         text: "Largest Contentful Paint",
         href: "https://htmlspecs.com/largest-contentful-paint/",
-        src: "https://www.w3.org/TR/2025/WD-largest-contentful-paint-20250911/",
+        src: "https://www.w3.org/TR/2026/WD-largest-contentful-paint-20260206/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
@@ -1147,7 +1147,7 @@ const links = [
         text: "Prefetch",
         href: "https://htmlspecs.com/prefetch/",
         src: "https://wicg.github.io/nav-speculation/prefetch.html",
-        "last-modified": "Tue, 13 Jan 2026 02:24:16 GMT",
+        "last-modified": "Mon, 09 Feb 2026 14:13:19 GMT",
         lang: "cjk",
         state: "Draft"
     },
@@ -1155,7 +1155,7 @@ const links = [
         text: "Prerendering Revamped",
         href: "https://htmlspecs.com/prerendering/",
         src: "https://wicg.github.io/nav-speculation/prerendering.html",
-        "last-modified": "Tue, 13 Jan 2026 02:24:16 GMT",
+        "last-modified": "Mon, 09 Feb 2026 14:13:19 GMT",
         lang: "cjk",
         state: "Draft"
     },
