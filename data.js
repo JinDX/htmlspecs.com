@@ -760,7 +760,7 @@ const links = [
     {
         text: "UI Events",
         href: "https://htmlspecs.com/uievents/",
-        src: "https://www.w3.org/TR/2024/WD-uievents-20240907/",
+        src: "https://www.w3.org/TR/2026/WD-uievents-20260210/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
