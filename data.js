@@ -624,7 +624,7 @@ const links = [
     {
         text: "Pointer Events Level 3",
         href: "https://htmlspecs.com/pointerevents3/",
-        src: "https://www.w3.org/TR/2026/CRD-pointerevents3-20260125/",
+        src: "https://www.w3.org/TR/2026/CRD-pointerevents3-20260212/",
         "last-modified": "-",
         lang: "cjk",
         state: "CRD"
