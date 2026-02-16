@@ -1175,6 +1175,15 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    {
+        text: "Layout Instability API",
+        href: "https://htmlspecs.com/layout-instability/",
+        src: "https://wicg.github.io/layout-instability/",
+        "last-modified": "Wed, 17 Dec 2025 12:26:17 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
+
 
     //### 安全和认证|보안 및 인증|セキュリティと認証
     {
