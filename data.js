@@ -7,7 +7,7 @@ const links = [
         text: "HTML",
         href: "https://htmlspecs.com/",
         src: "https://html.spec.whatwg.org/multipage/",
-        "last-modified": "Thu, 12 Feb 2026 08:38:53 GMT",
+        "last-modified": "Fri, 13 Feb 2026 19:19:56 GMT",
         lang: "cjk",
         state: "LS"
     },
@@ -1175,6 +1175,15 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    {
+        text: "Layout Instability API",
+        href: "https://htmlspecs.com/layout-instability/",
+        src: "https://wicg.github.io/layout-instability/",
+        "last-modified": "Wed, 17 Dec 2025 12:26:17 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
+
 
     //### 安全和认证|보안 및 인증|セキュリティと認証
     {
@@ -1284,7 +1293,7 @@ const links = [
     {
         text: "Credential Management Level 1",
         href: "https://htmlspecs.com/credential-management-1/",
-        src: "https://www.w3.org/TR/2025/WD-credential-management-1-20251028/",
+        src: "https://www.w3.org/TR/2026/WD-credential-management-1-20260213/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
