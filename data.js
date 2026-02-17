@@ -450,8 +450,8 @@ const links = [
     },
     {
         text: "Payment Handler API",
-        href: "https://htmlspecs.com/payment-handler/",
-        src: "https://www.w3.org/TR/2025/WD-payment-handler-20250927/",
+        href: "https://htmlspecs.com/web-based-payment-handler/",
+        src: "https://www.w3.org/TR/2026/WD-web-based-payment-handler-20260217/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
