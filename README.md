@@ -1,5 +1,5 @@
 # htmlspecs.com
-HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
+HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡🇨🇳
 
 ### 核心规范
 - [HTML](https://htmlspecs.com/)（[Source](https://html.spec.whatwg.org/multipage/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
