@@ -332,7 +332,7 @@ const links = [
         text: "Streams",
         href: "https://htmlspecs.com/streams/",
         src: "https://streams.spec.whatwg.org/",
-        "last-modified": "Mon, 24 Nov 2025 06:22:14 GMT",
+        "last-modified": "Mon, 16 Feb 2026 17:47:22 GMT",
         lang: "cjk",
         state: "LS"
     },
