@@ -1042,7 +1042,7 @@ const links = [
     {
         text: "Resource Timing",
         href: "https://htmlspecs.com/resource-timing/",
-        src: "https://www.w3.org/TR/2025/CRD-resource-timing-20251209/",
+        src: "https://www.w3.org/TR/2026/CRD-resource-timing-20260217/",
         "last-modified": "-",
         lang: "cjk",
         state: "CRD"
