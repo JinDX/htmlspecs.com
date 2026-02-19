@@ -1847,7 +1847,7 @@ const cssLinks = [
     {
         text: "Media Queries Level 5",
         href: "https://htmlspecs.com/css/mediaqueries-5/",
-        src: "https://www.w3.org/TR/2021/WD-mediaqueries-5-20211218/",
+        src: "https://www.w3.org/TR/2026/WD-mediaqueries-5-20260219/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
