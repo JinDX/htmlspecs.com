@@ -331,6 +331,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [CSS Namespaces Module Level 3](https://htmlspecs.com/css/css-namespaces-3/)（[Source](https://www.w3.org/TR/2014/REC-css-namespaces-3-20140320/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Selectors Level 3](https://htmlspecs.com/css/selectors-3/)（[Source](https://www.w3.org/TR/2018/REC-selectors-3-20181106/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Selectors Level 4](https://htmlspecs.com/css/selectors-4/)（[Source](https://www.w3.org/TR/2026/WD-selectors-4-20260122/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Selectors Level 5](https://htmlspecs.com/css/selectors-5/)（[Source](https://www.w3.org/TR/2026/WD-selectors-5-20260217/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Style Attributes](https://htmlspecs.com/css/css-style-attr/)（[Source](https://www.w3.org/TR/2013/REC-css-style-attr-20131107/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [CSS Overscroll Behavior Module Level 1](https://htmlspecs.com/css/css-overscroll-1/)（[Source](https://www.w3.org/TR/2019/WD-css-overscroll-1-20190606/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Scroll Snap Module Level 1](https://htmlspecs.com/css/css-scroll-snap-1/)（[Source](https://www.w3.org/TR/2021/CR-css-scroll-snap-1-20210311/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）

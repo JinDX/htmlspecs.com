@@ -2345,6 +2345,14 @@ const cssLinks = [
         state: "WD"
     },
     {
+        text: "Selectors Level 5",
+        href: "https://htmlspecs.com/css/selectors-5/",
+        src: "https://www.w3.org/TR/2026/WD-selectors-5-20260217/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
+    {
         text: "CSS Style Attributes",
         href: "https://htmlspecs.com/css/css-style-attr/",
         src: "https://www.w3.org/TR/2013/REC-css-style-attr-20131107/",
