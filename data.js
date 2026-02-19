@@ -1818,6 +1818,14 @@ const cssLinks = [
         lang: "cjk",
         state: "WD"
     },
+    {
+        text: "CSS Rhythm Module Level 1",
+        href: "https://htmlspecs.com/css/css-rhythm-1/",
+        src: "https://www.w3.org/TR/2026/WD-css-rhythm-1-20260217/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
 
     //### 媒体查询|미디어 쿼리|メディアクエリ
     {
