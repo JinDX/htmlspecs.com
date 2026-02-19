@@ -30,7 +30,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Test Utils](https://htmlspecs.com/testutils/)（[Source](https://testutils.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [Minimum common web API](https://htmlspecs.com/min-common-api/)（[Source](https://min-common-api.proposal.wintertc.org/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [MathML Core](https://htmlspecs.com/mathml-core/)（[Source](https://www.w3.org/TR/2025/CR-mathml-core-20250624/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
-- [MathML4](https://htmlspecs.com/mathml4/)（[Source](https://www.w3.org/TR/2026/WD-mathml4-20260129/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [MathML4](https://htmlspecs.com/mathml4/)（[Source](https://www.w3.org/TR/2026/WD-mathml4-20260219/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 
 ### 可访问性
 - [Web Content Accessibility Guidelines (WCAG) 2.2](https://htmlspecs.com/WCAG22/)（[Source](https://www.w3.org/TR/2024/REC-WCAG22-20241212/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
