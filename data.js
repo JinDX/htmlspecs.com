@@ -1839,7 +1839,7 @@ const cssLinks = [
     {
         text: "Media Queries Level 4",
         href: "https://htmlspecs.com/css/mediaqueries-4/",
-        src: "https://www.w3.org/TR/2021/CRD-mediaqueries-4-20211225/",
+        src: "https://www.w3.org/TR/2026/CRD-mediaqueries-4-20260219/",
         "last-modified": "-",
         lang: "cjk",
         state: "CRD"
