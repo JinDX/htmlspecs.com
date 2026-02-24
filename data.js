@@ -312,10 +312,10 @@ const links = [
     {
         text: "Using ARIA",
         href: "https://htmlspecs.com/using-aria/",
-        src: "https://www.w3.org/TR/2018/WD-using-aria-20180927/",
+        src: "https://www.w3.org/TR/2026/DISC-using-aria-20260224/",
         "last-modified": "-",
         lang: "cjk",
-        state: "WD"
+        state: "DISC"
     },
 
 
