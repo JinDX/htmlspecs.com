@@ -1138,7 +1138,7 @@ const links = [
     {
         text: "Event Timing API",
         href: "https://htmlspecs.com/event-timing/",
-        src: "https://www.w3.org/TR/2025/WD-event-timing-20251017/",
+        src: "https://www.w3.org/TR/2026/WD-event-timing-20260223/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
