@@ -1010,7 +1010,7 @@ const links = [
     {
         text: "High Resolution Time",
         href: "https://htmlspecs.com/hr-time-3/",
-        src: "https://www.w3.org/TR/2024/WD-hr-time-3-20241107/",
+        src: "https://www.w3.org/TR/2026/WD-hr-time-3-20260225/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
