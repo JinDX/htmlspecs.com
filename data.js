@@ -2025,7 +2025,7 @@ const cssLinks = [
     {
         text: "CSS Gap Decorations Module Level 1",
         href: "https://htmlspecs.com/css/css-gaps-1/",
-        src: "https://www.w3.org/TR/2025/WD-css-gaps-1-20250417/",
+        src: "https://www.w3.org/TR/2026/WD-css-gaps-1-20260227/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
