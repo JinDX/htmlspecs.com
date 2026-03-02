@@ -86,7 +86,7 @@
             font-style: normal;
         }
     </style>
-    <title>源映射格式规范</title>
+    <title>Source map format specification</title>
     <script>'use strict';
         let sdoBox = {
             init() {
@@ -420,6 +420,8 @@
                     return item.caption;
                 case 'step':
                     return item.id;
+                case 'concrete method':
+                    return item.abstractAoid;
                 default:
                     throw new Error("Can't get key for " + item.type);
             }
@@ -950,7 +952,7 @@
                 this.$pane.appendChild(this.$tableContainer);
 
                 if (menu != null) {
-                    menu.$specContainer.after(this.$container);
+                    menu.$specContainer.appendChild(this.$container);
                 }
             },
 
@@ -1282,9 +1284,6 @@
                 document.documentElement.classList.toggle('show-ao-annotations');
             } else if (e.key === '?') {
                 document.getElementById('shortcuts-help').classList.toggle('active');
-            } else if (e.key === ';') {
-                let el = document.getElementById('bd75b99add5f');
-                if (el != null) el.remove();
             }
         }
 
@@ -2352,7 +2351,7 @@
         }
 
         emu-nt {
-            display: inline-block;
+            display: inline;
             font-style: italic;
             white-space: nowrap;
             text-indent: 0;
@@ -2727,7 +2726,7 @@
         }
 
         emu-table td {
-            background: transparent;
+            background: var(--background-color);
         }
 
         td[colspan]:not([colspan="1"]),
@@ -2840,7 +2839,7 @@
             height: 100vh;
             max-width: 500px;
             box-sizing: border-box;
-            background: var(--control-background-color);
+            background-color: var(--control-background-color);
             overflow: hidden;
             transition: opacity 0.1s linear;
             padding: 0 5px;
@@ -3287,7 +3286,7 @@
 
         .toolbox::after {
             border-color: var(--toolbox-tail-background-outside-color);
-            border-top-color: var(--control-border-color);
+            border-top-color: var(--control-background-color);
             border-width: 10px;
             margin-left: -10px;
         }
@@ -3305,7 +3304,7 @@
             left: 0;
             right: 0;
             display: none;
-            background: var(--control-background-color);
+            background-color: var(--control-background-color);
             z-index: 1;
         }
 
@@ -3346,23 +3345,15 @@
             padding-right: 5px;
         }
 
-        emu-normative-optional {
-            display: block;
-        }
-
-        emu-normative-optional::before {
-            display: block;
-            color: var(--attributes-tag-foreground-color);
-            content: "NORMATIVE OPTIONAL";
-        }
-
-        emu-normative-optional,
         [normative-optional],
         [deprecated],
         [legacy] {
             border-left: 5px solid var(--normative-optional-border-color);
-            padding: 0.5em;
             background: var(--normative-optional-background-color);
+        }
+
+        :is([normative-optional], [deprecated], [legacy]):not(ul, ol, span) {
+            padding: 0.5em;
         }
 
         .attributes-tag {
@@ -3389,7 +3380,7 @@
             outline: solid 10000px var(--control-dialog-fade-color);
             border-radius: 5px;
             border-width: 1px 1px 0 1px;
-            background: var(--control-background-color);
+            background-color: var(--control-background-color);
             display: none;
         }
 
@@ -3716,18 +3707,6 @@
                 /* it's okay to break after the last item in a list, even if it's also the first item in the list */
             }
 
-            emu-normative-optional {
-                break-inside: avoid;
-            }
-
-            emu-normative-optional emu-clause[id] {
-                margin-top: 0;
-            }
-
-            emu-normative-optional emu-alg>ol {
-                margin-bottom: 0;
-            }
-
             emu-note {
                 gap: initial;
                 justify-content: space-between;
@@ -3912,7 +3891,7 @@
             caption,
             table>figcaption {
                 caption-side: top;
-                color: #555555;
+                color: #000;
                 font-weight: bold;
                 margin-bottom: 1rem;
                 text-align: center;
@@ -3928,6 +3907,7 @@
                 break-inside: avoid-page;
             }
 
+            /* This inheritance looks weird—it's due to how Prince manages continuity in tables across pages */
             table>figcaption {
                 display: table-caption;
                 -prince-caption-page: following;
@@ -4147,6 +4127,26 @@
 
             p.ECMAaddress {
                 margin: 0;
+            }
+
+            #sec-terms-and-definitions dfn {
+                font-style: normal;
+            }
+
+            #sec-terms-and-definitions h1 .secnum {
+                display: block;
+            }
+
+            #sec-terms-and-definitions>h1>.secnum {
+                display: inline;
+            }
+
+            #sec-terms-and-definitions h1+p {
+                margin-top: 0;
+            }
+
+            p.adoption-info {
+                float: bottom;
             }
 
         }
@@ -4478,7 +4478,7 @@
         </div>
     </div>
     <div id="spec-container">
-        <h1 class="version">草案 ECMA-426 / 2026年2月20日</h1>
+        <h1 class="version">草案 ECMA-426 / 2026年3月2日</h1>
         <h1 class="title">源映射格式规范</h1>
         <p><img src="https://tc39.es/ecma426/img/ecma-logo.svg" id="ecma-logo" alt="Ecma International 标志"></p>
         <div id="metadata-block">
@@ -4638,14 +4638,13 @@
                         </emu-clause>
                     </blockquote>
 
-                    <p>所有返回<emu-xref href="#sec-completion-record-specification-type"><a
-                                href="https://tc39.es/ecma262/#sec-completion-record-specification-type">补全</a></emu-xref>记录的<emu-xref
-                            href="#sec-algorithm-conventions-abstract-operations"><a
-                                href="https://tc39.es/ecma262/#sec-algorithm-conventions-abstract-operations">抽象操作</a></emu-xref>调用，默认使用<emu-xref
-                            aoid="ReturnIfAbrupt"><a
-                                href="https://tc39.es/ecma262/#sec-returnifabrupt">ReturnIfAbrupt</a></emu-xref>宏包裹，除非已经被<emu-xref
-                            aoid="Completion"><a
-                                href="https://tc39.es/ecma262/#sec-completion-ao">Completion</a></emu-xref>显式包裹。例如：</p>
+                    <p>所有对 <emu-xref href="#sec-algorithm-conventions-abstract-operations"><a
+                                href="https://tc39.es/ecma262/#sec-algorithm-conventions-abstract-operations">抽象操作</a></emu-xref>
+                        的调用，如果返回 <emu-xref href="#sec-completion-record-specification-type"><a
+                                href="https://tc39.es/ecma262/#sec-completion-record-specification-type">Completion</a></emu-xref>
+                        记录，除非显式被 <emu-xref aoid="Completion"><a
+                                href="https://tc39.es/ecma262/#sec-completion-ao">Completion</a></emu-xref> 调用包裹，均默认包裹在
+                        ReturnIfAbrupt 宏中。例如：</p>
                     <emu-alg example="">
                         <ol>
                             <li>令 <var>result</var> 为 <emu-xref aoid="GetTheAnswer" id="_ref_23"><a
@@ -4661,9 +4660,7 @@
                     <p>等价于：</p>
                     <emu-alg example="">
                         <ol>
-                            <li>令 <var>result</var> 为 <emu-xref aoid="ReturnIfAbrupt"><a
-                                        href="https://tc39.es/ecma262/#sec-returnifabrupt">ReturnIfAbrupt</a></emu-xref>(<emu-xref
-                                    aoid="GetTheAnswer" id="_ref_25"><a
+                            <li>令 <var>result</var> 为 ReturnIfAbrupt(<emu-xref aoid="GetTheAnswer" id="_ref_25"><a
                                         href="#example-get-the-answer">GetTheAnswer</a></emu-xref>(<var>value</var>))。
                             </li>
                             <li>令 <var>second</var> 为 <emu-xref aoid="Completion"><a
@@ -7554,58 +7551,104 @@
 
             <div class="copyright-notice" id="copyright-notice">
                 <h2>Copyright Notice</h2>
+                <p>COPYRIGHT NOTICE</p>
+
                 <p>© 2026 Ecma International</p>
 
-                <p>This draft document may be copied and furnished to others, and derivative works that comment on or
-                    otherwise explain it or assist in its implementation may be prepared, copied, published, and
-                    distributed, in whole or in part, without restriction of any kind, provided that the above copyright
-                    notice and this section are included on all such copies and derivative works. However, this document
-                    itself may not be modified in any way, including by removing the copyright notice or references to
-                    Ecma International, except as needed for the purpose of developing any document or deliverable
-                    produced by Ecma International.</p>
+                <p>By obtaining and/or copying this work, you (the licensee) agree that you have read, understood, and
+                    will
+                    comply with the following terms and conditions.</p>
 
-                <p>This disclaimer is valid only prior to final version of this document. After approval all rights on
-                    the standard are reserved by Ecma International.</p>
+                <p>This document may be copied, published and distributed to others, and certain derivative works of it
+                    may be
+                    prepared, copied, published, and distributed, in whole or in part, provided that the above copyright
+                    notice
+                    and this Copyright License and Disclaimer are included on all such copies and derivative works. The
+                    only
+                    derivative works that are permissible under this Copyright License and Disclaimer are:</p>
 
-                <p>The limited permissions are granted through the standardization phase and will not be revoked by Ecma
-                    International or its successors or assigns during this time.</p>
+                <p>(i) works which incorporate all or portion of this document for the purpose of providing commentary
+                    or
+                    explanation (such as an annotated version of the document),</p>
 
-                <p>This document and the information contained herein is provided on an "AS IS" basis and ECMA
-                    INTERNATIONAL DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY
-                    WARRANTY THAT THE USE OF THE INFORMATION HEREIN WILL NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY
-                    IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.</p>
+                <p>(ii) works which incorporate all or portion of this document for the purpose of incorporating
+                    features that
+                    provide accessibility,</p>
+
+                <p>(iii) translations of this document into languages other than English and into different formats and
+                </p>
+
+                <p>(iv) works by making use of this specification in standard conformant products by implementing (e.g.
+                    by copy
+                    and paste wholly or partly) the functionality therein.</p>
+
+                <p>However, the content of this document itself may not be modified in any way, including by removing
+                    the
+                    copyright notice or references to Ecma International, except as required to translate it into
+                    languages other
+                    than English or into a different format.</p>
+
+                <p>The official version of an Ecma International document is the English language version on the Ecma
+                    International website. In the event of discrepancies between a translated version and the official
+                    version,
+                    the official version shall govern.</p>
+
+                <p>The limited permissions granted above are perpetual and will not be revoked by Ecma International or
+                    its
+                    successors or assigns.</p>
+
+                <p>This document and the information contained herein is provided on an “AS IS” basis and ECMA
+                    INTERNATIONAL
+                    DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE
+                    OF THE
+                    INFORMATION HEREIN WILL NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY IMPLIED WARRANTIES OF
+                    MERCHANTABILITY OR
+                    FITNESS FOR A PARTICULAR PURPOSE.</p>
             </div>
             <h2>Software License</h2>
             <p>All Software contained in this document ("Software") is protected by copyright and is being made
-                available under the "BSD License", included below. This Software may be subject to third party rights
-                (rights from parties other than Ecma International), including patent rights, and no licenses under such
-                third party rights are granted under this license even if the third party concerned is a member of Ecma
-                International. SEE THE ECMA CODE OF CONDUCT IN PATENT MATTERS AVAILABLE AT <a
+                available
+                under the "BSD License", included below. This Software may be subject to third party rights (rights from
+                parties
+                other than Ecma International), including patent rights, and no licenses under such third party rights
+                are
+                granted under this license even if the third party concerned is a member of Ecma International. SEE THE
+                ECMA
+                CODE OF CONDUCT IN PATENT MATTERS AVAILABLE AT <a
                     href="https://ecma-international.org/memento/codeofconduct.htm">https://ecma-international.org/memento/codeofconduct.htm</a>
                 FOR INFORMATION REGARDING THE LICENSING OF PATENT CLAIMS THAT ARE REQUIRED TO IMPLEMENT ECMA
-                INTERNATIONAL STANDARDS.</p>
+                INTERNATIONAL
+                STANDARDS.</p>
 
             <p>Redistribution and use in source and binary forms, with or without modification, are permitted provided
-                that the following conditions are met:</p>
+                that
+                the following conditions are met:</p>
 
             <ol>
                 <li>Redistributions of source code must retain the above copyright notice, this list of conditions and
-                    the following disclaimer.</li>
+                    the
+                    following disclaimer.</li>
                 <li>Redistributions in binary form must reproduce the above copyright notice, this list of conditions
-                    and the following disclaimer in the documentation and/or other materials provided with the
-                    distribution.</li>
+                    and the
+                    following disclaimer in the documentation and/or other materials provided with the distribution.
+                </li>
                 <li>Neither the name of the authors nor Ecma International may be used to endorse or promote products
-                    derived from this software without specific prior written permission.</li>
+                    derived
+                    from this software without specific prior written permission.</li>
             </ol>
 
             <p>THIS SOFTWARE IS PROVIDED BY THE ECMA INTERNATIONAL "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
-                INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-                PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL ECMA INTERNATIONAL BE LIABLE FOR ANY DIRECT, INDIRECT,
-                INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-                SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
-                AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
-                OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
-                SUCH DAMAGE.</p>
+                INCLUDING,
+                BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+                DISCLAIMED. IN NO EVENT SHALL ECMA INTERNATIONAL BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+                SPECIAL,
+                EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+                SERVICES;
+                LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+                WHETHER
+                IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+                USE OF
+                THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</p>
 
         </emu-annex>
 
