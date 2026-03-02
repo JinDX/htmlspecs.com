@@ -2320,14 +2320,14 @@ const cssLinks = [
         lang: "cjk",
         state: "NOTE"
     },
-    // {
-    //     text: "CSS Snapshot 2026",
-    //     href: "https://htmlspecs.com/css/css-2026/",
-    //     src: "https://www.w3.org/TR/2026/NOTE-css-2026-20260226/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "NOTE"
-    // },
+    {
+        text: "CSS Snapshot 2026",
+        href: "https://htmlspecs.com/css/css-2026/",
+        src: "https://www.w3.org/TR/2026/NOTE-css-2026-20260226/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "NOTE"
+    },
     {
         text: "CSS Namespaces Module Level 3",
         href: "https://htmlspecs.com/css/css-namespaces-3/",
