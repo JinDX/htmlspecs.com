@@ -1205,7 +1205,7 @@ const links = [
     {
         text: "Secure Payment Confirmation",
         href: "https://htmlspecs.com/secure-payment-confirmation/",
-        src: "https://www.w3.org/TR/2025/CRD-secure-payment-confirmation-20251209/",
+        src: "https://www.w3.org/TR/2026/CRD-secure-payment-confirmation-20260302/",
         "last-modified": "-",
         lang: "cjk",
         state: "CRD"
