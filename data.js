@@ -264,7 +264,7 @@ const links = [
     {
         text: "W3C Accessibility Guidelines (WCAG) 3.0",
         href: "https://htmlspecs.com/wcag-3.0/",
-        src: "https://www.w3.org/TR/2025/WD-wcag-3.0-20250904/",
+        src: "https://www.w3.org/TR/2026/WD-wcag-3.0-20260303/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
