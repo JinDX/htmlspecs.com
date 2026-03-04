@@ -1747,7 +1747,7 @@ const cssLinks = [
     {
         text: "CSS Fonts Module Level 5",
         href: "https://htmlspecs.com/css/css-fonts-5/",
-        src: "https://www.w3.org/TR/2024/WD-css-fonts-5-20240206/",
+        src: "https://www.w3.org/TR/2026/WD-css-fonts-5-20260303/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
