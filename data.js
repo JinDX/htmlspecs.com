@@ -443,7 +443,7 @@ const links = [
     {
         text: "Payment Request API",
         href: "https://htmlspecs.com/payment-request/",
-        src: "https://www.w3.org/TR/2026/CRD-payment-request-20260302/",
+        src: "https://www.w3.org/TR/2026/CRD-payment-request-20260303/",
         "last-modified": "-",
         lang: "cjk",
         state: "CRD"
