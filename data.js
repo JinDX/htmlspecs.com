@@ -340,7 +340,7 @@ const links = [
         text: "XMLHttpRequest",
         href: "https://htmlspecs.com/xhr/",
         src: "https://xhr.spec.whatwg.org/",
-        "last-modified": "Mon, 18 Aug 2025 06:58:17 GMT",
+        "last-modified": "Mon, 09 Mar 2026 06:16:00 GMT",
         lang: "cjk",
         state: "LS"
     },
