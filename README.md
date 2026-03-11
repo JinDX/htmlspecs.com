@@ -184,7 +184,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [JWT Best Current Practices](https://htmlspecs.com/jwt-bcp/)（[Source](https://www.rfc-editor.org/rfc/rfc8725) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 
 ### 媒体和图形
-- [WebGPU](https://htmlspecs.com/webgpu/)（[Source](https://www.w3.org/TR/2026/CRD-webgpu-20260303/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
+- [WebGPU](https://htmlspecs.com/webgpu/)（[Source](https://www.w3.org/TR/2026/CRD-webgpu-20260310/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [WebGPU Shading Language](https://htmlspecs.com/WGSL/)（[Source](https://www.w3.org/TR/2026/CRD-WGSL-20260129/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [Scalable Vector Graphics (SVG) 2](https://htmlspecs.com/SVG2/)（[Source](https://www.w3.org/TR/2018/CR-SVG2-20181004/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
 - [Picture-in-Picture](https://htmlspecs.com/picture-in-picture/)（[Source](https://www.w3.org/TR/2026/WD-picture-in-picture-20260303/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
