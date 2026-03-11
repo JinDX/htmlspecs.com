@@ -1480,7 +1480,7 @@ const links = [
     {
         text: "WebCodecs",
         href: "https://htmlspecs.com/webcodecs/",
-        src: "https://www.w3.org/TR/2026/WD-webcodecs-20260129/",
+        src: "https://www.w3.org/TR/2026/WD-webcodecs-20260310/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
