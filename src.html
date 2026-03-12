@@ -58,7 +58,7 @@
             <code>whatwg/html repository</code></span></a>
         <a href="https://github.com/whatwg/html/commits" class="changes"><span><strong>Commits</strong>
             <code>on GitHub</code></span></a>
-        <a id="commit-snapshot-link" href="/commit-snapshots/d59fb13c28c62d50f103a95577f15fc1e8bd7500/"
+        <a id="commit-snapshot-link" href="/commit-snapshots/e161310ae7951d27791f59123871c147541d6624/"
           class="changes"><span><strong>Snapshot</strong> <code>as of this commit</code></span></a>
         <a href="https://twitter.com/htmlstandard" class="changes"><span><strong>Twitter Updates</strong>
             <code>@htmlstandard</code></span></a>
@@ -1439,7 +1439,9 @@
               </ol>
             </li>
             <li><a href="#sandboxing"><span class="secno">7.1.5</span> Sandboxing</a></li>
-            <li><a href="#policy-containers"><span class="secno">7.1.6</span> Policy containers</a></li>
+            <li><a href="#iframe-element-referrer-policy"><span class="secno">7.1.6</span> <code>iframe</code> element
+                referrer policy</a></li>
+            <li><a href="#policy-containers"><span class="secno">7.1.7</span> Policy containers</a></li>
           </ol>
         </li>
         <li><a href="#nav-traversal-apis"><span class="secno">7.2</span> APIs related to navigation and
@@ -6099,6 +6101,8 @@ a<c- p="">.</c->setAttribute<c- p="">(</c-><c- t="">'href'</c-><c- p="">,</c-> <
           <li><dfn id="a-priori-authenticated-url"><a
                 href="https://w3c.github.io/webappsec-mixed-content/#a-priori-authenticated-url"><i>a priori</i>
                 authenticated URL</a></dfn></li>
+          <li><dfn id="mixed-content"><a href="https://w3c.github.io/webappsec-mixed-content/#mixed-content">mixed
+                content</a></dfn></li>
         </ul>
 
         <p>The following terms are defined in <cite>Subresource Integrity</cite>: <a href="#refsSRI">[SRI]</a></p>
@@ -20360,7 +20364,10 @@ o<c- p="">.</c->myself <c- o="">=</c-> o<c- p="">;</c-></code></pre>
 
     <p>The <dfn id="internal-ancestor-origin-objects-list-creation-steps">internal ancestor origin objects list creation
         steps</dfn> given a
-      <code id="ancestor-origins:document-2"><a href="#document">Document</a></code> object <var>innerDoc</var> are:
+      <code id="ancestor-origins:document-2"><a href="#document">Document</a></code> object <var>document</var> and a <a
+        id="ancestor-origins:referrer-policy" href="https://w3c.github.io/webappsec-referrer-policy/#referrer-policy"
+        data-x-internal="referrer-policy">referrer policy</a>
+      <var>referrerPolicy</var> are:
     </p>
 
     <ol>
@@ -20368,7 +20375,7 @@ o<c- p="">.</c->myself <c- o="">=</c-> o<c- p="">;</c-></code></pre>
         <p>Let <var>output</var> be « ».</p>
       </li>
       <li>
-        <p>Let <var>parentDoc</var> be <var>innerDoc</var>'s <a href="#doc-container-document"
+        <p>Let <var>parentDoc</var> be <var>document</var>'s <a href="#doc-container-document"
             id="ancestor-origins:doc-container-document">container document</a>.</p>
       </li>
       <li>
@@ -20387,9 +20394,54 @@ o<c- p="">.</c->myself <c- o="">=</c-> o<c- p="">;</c-></code></pre>
             list</a>.</p>
       </li>
       <li>
-        <p><a href="https://infra.spec.whatwg.org/#list-append" id="ancestor-origins:list-append"
-            data-x-internal="list-append">Append</a> <var>parentDoc</var>'s <a
-            href="https://dom.spec.whatwg.org/#concept-document-origin" id="ancestor-origins:concept-document-origin"
+        <p>Let <var>container</var> be <var>document</var>'s <a href="#node-navigable"
+            id="ancestor-origins:node-navigable">node navigable</a>'s <a href="#nav-container"
+            id="ancestor-origins:nav-container">container</a>.</p>
+      </li>
+      <li>
+        <p>Let <var>masked</var> be false.</p>
+      </li>
+      <li>
+        <p>If <var>referrerPolicy</var> is "<code>no-referrer</code>", then set
+          <var>masked</var> to true.
+        </p>
+      </li>
+      <li>
+        <p>Otherwise, if <var>referrerPolicy</var> is "<code>same-origin</code>" and
+          <var>parentDoc</var>'s <a href="https://dom.spec.whatwg.org/#concept-document-origin"
+            id="ancestor-origins:concept-document-origin" data-x-internal="concept-document-origin">origin</a> is not <a
+            href="#same-origin" id="ancestor-origins:same-origin">same
+            origin</a> with <var>document</var>'s <a href="https://dom.spec.whatwg.org/#concept-document-origin"
+            id="ancestor-origins:concept-document-origin-2" data-x-internal="concept-document-origin">origin</a>,
+          then set <var>masked</var> to true.
+        </p>
+
+        <p class="note">Since <a id="ancestor-origins:mixed-content"
+            href="https://w3c.github.io/webappsec-mixed-content/#mixed-content" data-x-internal="mixed-content">mixed
+            content</a> checks prevent <a href="#non-secure-context" id="ancestor-origins:non-secure-context">non-secure
+            context</a>
+          <a href="#environment" id="ancestor-origins:environment">environments</a> in <a href="#secure-context"
+            id="ancestor-origins:secure-context">secure context</a> <a href="#environment"
+            id="ancestor-origins:environment-2">environments</a>, there's no need to check for <a href="#secure-context"
+            id="ancestor-origins:secure-context-2">secure contexts</a> for "<code>strict-origin</code>",
+          "<code>strict-origin-when-cross-origin</code>", and "<code>no-referrer-when-downgrade</code>". The
+          "<code>origin</code>" and "<code>origin-when-cross-origin</code>" values also don't need special treatment
+          since we're
+          at most exposing an <a href="https://dom.spec.whatwg.org/#concept-document-origin"
+            id="ancestor-origins:concept-document-origin-3" data-x-internal="concept-document-origin">origin</a> here.
+        </p>
+      </li>
+      <li>
+        <p>If <var>masked</var> is true, then <a href="https://infra.spec.whatwg.org/#list-append"
+            id="ancestor-origins:list-append" data-x-internal="list-append">append</a> a new <a
+            href="#concept-origin-opaque" id="ancestor-origins:concept-origin-opaque">opaque origin</a> to
+          <var>output</var>.
+        </p>
+      </li>
+      <li>
+        <p>Otherwise, <a href="https://infra.spec.whatwg.org/#list-append" id="ancestor-origins:list-append-2"
+            data-x-internal="list-append">append</a> <var>parentDoc</var>'s <a
+            href="https://dom.spec.whatwg.org/#concept-document-origin" id="ancestor-origins:concept-document-origin-4"
             data-x-internal="concept-document-origin">origin</a> to <var>output</var>.</p>
       </li>
       <li>
@@ -20400,10 +20452,25 @@ o<c- p="">.</c->myself <c- o="">=</c-> o<c- p="">;</c-></code></pre>
 
         <ol>
           <li>
-            <p><a href="https://infra.spec.whatwg.org/#list-append" id="ancestor-origins:list-append-2"
-                data-x-internal="list-append">Append</a> <var>ancestorOrigin</var> to
-              <var>output</var>.
-            </p>
+            <p>If <var>masked</var> is true and <var>ancestorOrigin</var> is <a href="#same-origin"
+                id="ancestor-origins:same-origin-2">same origin</a>
+              with <var>parentDoc</var>'s <a href="https://dom.spec.whatwg.org/#concept-document-origin"
+                id="ancestor-origins:concept-document-origin-5" data-x-internal="concept-document-origin">origin</a>,
+              then <a href="https://infra.spec.whatwg.org/#list-append" id="ancestor-origins:list-append-3"
+                data-x-internal="list-append">append</a> a new <a href="#concept-origin-opaque"
+                id="ancestor-origins:concept-origin-opaque-2">opaque
+                origin</a> to <var>output</var> and <a id="ancestor-origins:continue"
+                href="https://infra.spec.whatwg.org/#iteration-continue" data-x-internal="continue">continue</a>.</p>
+          </li>
+          <li>
+            <p><a href="https://infra.spec.whatwg.org/#list-append" id="ancestor-origins:list-append-4"
+                data-x-internal="list-append">Append</a> <var>ancestorOrigin</var> to <var>output</var> and
+              set <var>masked</var> to false.</p>
+
+            <p class="note">Setting <var>masked</var> to false here doesn't imply that all further
+              ancestors' origins are necessarily exposed. They might have been previously masked when an
+              ancestor document ran these steps, and the resulting list is used as a starting point when a
+              child document is created (see step 5 above).</p>
           </li>
         </ol>
       </li>
@@ -20446,7 +20513,7 @@ o<c- p="">.</c->myself <c- o="">=</c-> o<c- p="">;</c-></code></pre>
 
         <ol>
           <li>
-            <p><a href="https://infra.spec.whatwg.org/#list-append" id="ancestor-origins:list-append-3"
+            <p><a href="https://infra.spec.whatwg.org/#list-append" id="ancestor-origins:list-append-5"
                 data-x-internal="list-append">Append</a> the <a href="#ascii-serialisation-of-an-origin"
                 id="ancestor-origins:ascii-serialisation-of-an-origin">serialization</a> of <var>origin</var> to
               <var>output</var>.
@@ -20461,6 +20528,156 @@ o<c- p="">.</c->myself <c- o="">=</c-> o<c- p="">;</c-></code></pre>
         </p>
       </li>
     </ol>
+  </div>
+
+  <div class="example">
+    <p>Consider a <a href="#top-level-browsing-context" id="ancestor-origins:top-level-browsing-context">top-level
+        browsing context</a> document with the URL <code>https://a.example/top</code>:</p>
+
+    <pre><code class="html"><c- cp="">&lt;!doctype html&gt;</c->
+<c- p="">&lt;</c-><c- f="">title</c-><c- p="">&gt;</c->top<c- p="">&lt;/</c-><c- f="">title</c-><c- p="">&gt;</c->
+<c- p="">&lt;</c-><c- f="">iframe</c-> <c- e="">referrerpolicy</c-><c- o="">=</c-><c- s="">"no-referrer"</c-> <c- e="">src</c-><c- o="">=</c-><c- s="">"https://a.example/child"</c-><c- p="">&gt;&lt;/</c-><c- f="">iframe</c-><c- p="">&gt;</c-></code></pre>
+
+    <p>The child document:</p>
+
+    <pre><code class="html"><c- cp="">&lt;!doctype html&gt;</c->
+<c- p="">&lt;</c-><c- f="">title</c-><c- p="">&gt;</c->child<c- p="">&lt;/</c-><c- f="">title</c-><c- p="">&gt;</c->
+<c- p="">&lt;</c-><c- f="">iframe</c-> <c- e="">src</c-><c- o="">=</c-><c- s="">"https://b.example/grandchild"</c-><c- p="">&gt;&lt;/</c-><c- f="">iframe</c-><c- p="">&gt;</c->
+<c- p="">&lt;</c-><c- f="">script</c-><c- p="">&gt;</c->
+ console<c- p="">.</c->log<c- p="">([...</c->location<c- p="">.</c->ancestorOrigins<c- p="">]);</c->
+<c- p="">&lt;/</c-><c- f="">script</c-><c- p="">&gt;</c-></code></pre>
+
+    <p>The grandchild document:</p>
+
+    <pre><code class="html"><c- cp="">&lt;!doctype html&gt;</c->
+<c- p="">&lt;</c-><c- f="">title</c-><c- p="">&gt;</c->grandchild<c- p="">&lt;/</c-><c- f="">title</c-><c- p="">&gt;</c->
+<c- p="">&lt;</c-><c- f="">script</c-><c- p="">&gt;</c->
+ console<c- p="">.</c->log<c- p="">([...</c->location<c- p="">.</c->ancestorOrigins<c- p="">]);</c->
+<c- p="">&lt;/</c-><c- f="">script</c-><c- p="">&gt;</c-></code></pre>
+
+    <p>When the child's <code id="ancestor-origins:document-5"><a href="#document">Document</a></code> object is
+      created, its parent's origin is masked
+      because the <code id="ancestor-origins:the-iframe-element"><a href="#the-iframe-element">iframe</a></code>
+      element's <code
+        id="ancestor-origins:attr-iframe-referrerpolicy"><a href="#attr-iframe-referrerpolicy">referrerpolicy</a></code>
+      attribute's value is "<code>no-referrer</code>", even though the documents are <a href="#same-origin"
+        id="ancestor-origins:same-origin-3">same origin</a>. The value
+      logged is « "<code>null</code>" ».</p>
+
+    <p>When the grandchild's <code id="ancestor-origins:document-6"><a href="#document">Document</a></code> object is
+      created, the child's
+      <code id="ancestor-origins:document-7"><a href="#document">Document</a></code> object's <a
+        href="#concept-document-internal-ancestor-origin-objects-list"
+        id="ancestor-origins:concept-document-internal-ancestor-origin-objects-list-3">internal ancestor origin objects
+        list</a> (which contains a single <a href="#concept-origin-opaque"
+        id="ancestor-origins:concept-origin-opaque-3">opaque origin</a>)
+      is used as a starting point, and the child's <a href="https://dom.spec.whatwg.org/#concept-document-origin"
+        id="ancestor-origins:concept-document-origin-6" data-x-internal="concept-document-origin">origin</a>
+      is added to the list. The value logged is thus « "<code>https://a.example</code>",
+      "<code>null</code>" ».
+    </p>
+  </div>
+
+  <div class="example">
+    <p>If we consider the previous example but the <code
+        id="ancestor-origins:the-iframe-element-2"><a href="#the-iframe-element">iframe</a></code> element in the top
+      document
+      has no <code
+        id="ancestor-origins:attr-iframe-referrerpolicy-2"><a href="#attr-iframe-referrerpolicy">referrerpolicy</a></code>
+      attribute, and instead the
+      <code id="ancestor-origins:the-iframe-element-3"><a href="#the-iframe-element">iframe</a></code> element in the
+      child document has <code>referrerpolicy="no-referrer"</code>.
+    </p>
+
+    <p>In this case, the top document's <a href="https://dom.spec.whatwg.org/#concept-document-origin"
+        id="ancestor-origins:concept-document-origin-7" data-x-internal="concept-document-origin">origin</a> is added
+      to the child's <code id="ancestor-origins:document-8"><a href="#document">Document</a></code> object's <a
+        href="#concept-document-internal-ancestor-origin-objects-list"
+        id="ancestor-origins:concept-document-internal-ancestor-origin-objects-list-4">internal ancestor origin objects
+        list</a>. The value logged is « "<code>https://a.example</code>" ».</p>
+
+    <p>For the grandchild, the child's <a href="https://dom.spec.whatwg.org/#concept-document-origin"
+        id="ancestor-origins:concept-document-origin-8" data-x-internal="concept-document-origin">origin</a> is masked
+      as an <a href="#concept-origin-opaque" id="ancestor-origins:concept-origin-opaque-4">opaque origin</a>. Since the
+      top document's <a href="https://dom.spec.whatwg.org/#concept-document-origin"
+        id="ancestor-origins:concept-document-origin-9" data-x-internal="concept-document-origin">origin</a> is <a
+        href="#same-origin" id="ancestor-origins:same-origin-4">same origin</a> with the child
+      document's <a href="https://dom.spec.whatwg.org/#concept-document-origin"
+        id="ancestor-origins:concept-document-origin-10" data-x-internal="concept-document-origin">origin</a>, it is
+      also masked. The value
+      logged is thus « "<code>null</code>", "<code>null</code>" ».</p>
+  </div>
+
+  <div class="example">
+    <p>In this example, we show that the top-level document's origin is not masked even though
+      there's a descendant same-origin document whose origin <em>is</em> masked, since there's a
+      cross-origin document in between.</p>
+
+    <ul>
+      <li>
+        <p>Top-level with URL <code>https://a.example/top</code></p>
+        <pre><code class="html"><c- p="">&lt;</c-><c- f="">iframe</c-> <c- e="">src</c-><c- o="">=</c-><c- s="">"https://b.example/child"</c-><c- p="">&gt;&lt;/</c-><c- f="">iframe</c-><c- p="">&gt;</c-></code></pre>
+        <p>The <a href="#concept-document-ancestor-origins-list"
+            id="ancestor-origins:concept-document-ancestor-origins-list">ancestor origins list</a>
+          associated list is « ».</p>
+      </li>
+      <li>
+        <p>Child with URL <code>https://b.example/child</code></p>
+        <pre><code class="html"><c- p="">&lt;</c-><c- f="">iframe</c-> <c- e="">src</c-><c- o="">=</c-><c- s="">"https://a.example/grandchild"</c-><c- p="">&gt;&lt;/</c-><c- f="">iframe</c-><c- p="">&gt;</c-></code></pre>
+        <p>The <a href="#concept-document-ancestor-origins-list"
+            id="ancestor-origins:concept-document-ancestor-origins-list-2">ancestor origins list</a>
+          associated list is « "<code>https://a.example</code>" ».</p>
+      </li>
+      <li>
+        <p>Grandchild with URL <code>https://a.example/grandchild</code></p>
+        <pre><code class="html"><c- p="">&lt;</c-><c- f="">iframe</c-> <c- e="">src</c-><c- o="">=</c-><c- s="">"https://c.example/grandgrandchild"</c->
+     <c- e="">referrerpolicy</c-><c- o="">=</c-><c- s="">"no-referrer"</c-><c- p="">&gt;&lt;/</c-><c- f="">iframe</c-><c- p="">&gt;</c-></code></pre>
+        <p>The <a href="#concept-document-ancestor-origins-list"
+            id="ancestor-origins:concept-document-ancestor-origins-list-3">ancestor origins list</a> associated list is
+          « "<code>https://b.example</code>", "<code>https://a.example</code>" ».</p>
+      </li>
+      <li>
+        <p>Grandgrandchild with URL <code>https://c.example/grandgrandchild</code></p>
+        <p>The <a href="#concept-document-ancestor-origins-list"
+            id="ancestor-origins:concept-document-ancestor-origins-list-4">ancestor origins list</a>
+          associated list is « "<code>null</code>", "<code>https://b.example</code>",
+          "<code>https://a.example</code>" ». The top-level origin is not masked.</p>
+      </li>
+    </ul>
+  </div>
+
+  <div class="example">
+    <p>If we consider the previous example but the top-level document's <code
+        id="ancestor-origins:the-iframe-element-4"><a href="#the-iframe-element">iframe</a></code> also has
+      <code>referrerpolicy="no-referrer"</code>, then the resulting <a href="#concept-document-ancestor-origins-list"
+        id="ancestor-origins:concept-document-ancestor-origins-list-5">ancestor origins list</a> associated list for
+      each document would be:
+    </p>
+
+    <ul>
+      <li>
+        <p>Top-level: « »</p>
+      </li>
+      <li>
+        <p>Child: « "<code>null</code>" »</p>
+      </li>
+      <li>
+        <p>Grandchild: « "<code>https://b.example</code>", "<code>null</code>"
+          »</p>
+      </li>
+      <li>
+        <p>Grandgrandchild: « "<code>null</code>", "<code>https://b.example</code>", "<code>null</code>" ». The
+          top-level origin is
+          masked because it was masked when the child document ran the <a
+            href="#internal-ancestor-origin-objects-list-creation-steps"
+            id="ancestor-origins:internal-ancestor-origin-objects-list-creation-steps">internal ancestor origin
+            objects list creation steps</a>, and that result is passed on to the grandchild document's
+          <a href="#internal-ancestor-origin-objects-list-creation-steps"
+            id="ancestor-origins:internal-ancestor-origin-objects-list-creation-steps-2">internal ancestor origin
+            objects list creation steps</a>, and so on.
+        </p>
+      </li>
+    </ul>
   </div>
 
 
@@ -59580,7 +59797,11 @@ Noodliness do you wish to reach out for?<c- p="">&lt;/</c-><c- f="">p</c-><c- p=
       policy</a>
     used when <a href="#process-the-iframe-attributes"
       id="the-iframe-element:process-the-iframe-attributes-5">processing the <code>iframe</code>
-      attributes</a>. <a href="#refsREFERRERPOLICY">[REFERRERPOLICY]</a>
+      attributes</a> as well as allowing masking of some <a href="https://dom.spec.whatwg.org/#concept-document-origin"
+      id="the-iframe-element:concept-document-origin-2" data-x-internal="concept-document-origin">origins</a> in the <a
+      href="#internal-ancestor-origin-objects-list-creation-steps"
+      id="the-iframe-element:internal-ancestor-origin-objects-list-creation-steps">internal ancestor origin objects list
+      creation steps</a>. <a href="#refsREFERRERPOLICY">[REFERRERPOLICY]</a>
   </p>
 
   <p>The <dfn data-dfn-for="iframe" id="attr-iframe-loading" data-dfn-type="element-attr"><code>loading</code></dfn>
@@ -162405,7 +162626,43 @@ button2<c- p="">.</c->onclick <c- o="">=</c-> <c- p="">()</c-> <c- p="">=&gt;</c
   </div>
 
 
-  <h4 id="policy-containers"><span class="secno">7.1.6</span> Policy containers<a href="#policy-containers"
+  <h4 id="iframe-element-referrer-policy"><span class="secno">7.1.6</span> <code
+      id="iframe-element-referrer-policy:the-iframe-element"><a href="#the-iframe-element">iframe</a></code> element
+    referrer policy<a href="#iframe-element-referrer-policy" class="self-link"></a></h4>
+
+  <div data-algorithm="">
+    <p>To <dfn id="determining-the-iframe-element-referrer-policy">determine the
+        <code>iframe</code> element referrer policy</dfn> given an element-or-null
+      <var>embedder</var>:
+    </p>
+
+    <ol>
+      <li>
+        <p>If <var>embedder</var> is an <code
+            id="iframe-element-referrer-policy:the-iframe-element-2"><a href="#the-iframe-element">iframe</a></code>
+          element, then return
+          <var>embedder</var>'s <code
+            id="iframe-element-referrer-policy:attr-iframe-referrerpolicy"><a href="#attr-iframe-referrerpolicy">referrerpolicy</a></code>
+          attribute's
+          state's corresponding keyword.
+        </p>
+      </li>
+      <li>
+        <p>Return the empty string.</p>
+      </li>
+    </ol>
+  </div>
+
+  <p class="note">This is used for allowing masking of some <a
+      href="https://dom.spec.whatwg.org/#concept-document-origin"
+      id="iframe-element-referrer-policy:concept-document-origin" data-x-internal="concept-document-origin">origins</a>
+    in the <a href="#internal-ancestor-origin-objects-list-creation-steps"
+      id="iframe-element-referrer-policy:internal-ancestor-origin-objects-list-creation-steps">internal ancestor origin
+      objects list
+      creation steps</a>.</p>
+
+
+  <h4 id="policy-containers"><span class="secno">7.1.7</span> Policy containers<a href="#policy-containers"
       class="self-link"></a></h4>
 
   <p>A <dfn id="policy-container" data-export="">policy container</dfn> is a <a id="policy-containers:struct"
@@ -168215,12 +168472,6 @@ console<c- p="">.</c->assert<c- p="">(</c->iframeWindow<c- p="">.</c->frameEleme
       </li>
     </ol>
   </div>
-
-  <p class="warning">The details of how the <code
-      id="the-location-interface:dom-location-ancestororigins-2"><a href="#dom-location-ancestororigins">ancestorOrigins</a></code>
-    attribute works are still
-    controversial and might change. See <a href="https://github.com/whatwg/html/issues/1918">issue
-      #1918</a> for more information.</p>
 
   <hr>
 
@@ -180285,13 +180536,19 @@ forwardButton<c- p="">.</c->disabled <c- o="">=</c-> <c- o="">!</c->navigation<c
         </dl>
       </li>
       <li>
+        <p>Let <var>iframeReferrerPolicy</var> be the result of <a
+            href="#determining-the-iframe-element-referrer-policy"
+            id="creating-browsing-contexts:determining-the-iframe-element-referrer-policy">determining the
+            <code>iframe</code> element referrer policy</a> given <var>embedder</var>.</p>
+      </li>
+      <li>
         <p>Set <var>document</var>'s <a href="#concept-document-internal-ancestor-origin-objects-list"
             id="creating-browsing-contexts:concept-document-internal-ancestor-origin-objects-list">internal ancestor
             origin objects
             list</a> to the result of running the <a href="#internal-ancestor-origin-objects-list-creation-steps"
             id="creating-browsing-contexts:internal-ancestor-origin-objects-list-creation-steps">internal ancestor
             origin objects list creation
-            steps</a> given <var>document</var>.</p>
+            steps</a> given <var>document</var> and <var>iframeReferrerPolicy</var>.</p>
       </li>
       <li>
         <p>Set <var>document</var>'s <a href="#concept-document-ancestor-origins-list"
@@ -182600,6 +182857,10 @@ location<c- p="">.</c->href <c- o="">=</c-> <c- t="">'#foo'</c-><c- p="">;</c-><
     <dt><dfn id="target-snapshot-params-sandbox">sandboxing flags</dfn></dt>
     <dd>a <a href="#sandboxing-flag-set" id="navigation-supporting-concepts:sandboxing-flag-set-3">sandboxing flag
         set</a></dd>
+    <dt><dfn id="target-snapshot-params-iframe-referrer-policy"><code>iframe</code> element referrer policy</dfn></dt>
+    <dd>a <a id="navigation-supporting-concepts:referrer-policy"
+        href="https://w3c.github.io/webappsec-referrer-policy/#referrer-policy"
+        data-x-internal="referrer-policy">referrer policy</a></dd>
   </dl>
 
   <div data-algorithm="">
@@ -182607,16 +182868,30 @@ location<c- p="">.</c->href <c- o="">=</c-> <c- t="">'#foo'</c-><c- p="">;</c-><
       given a <a href="#navigable" id="navigation-supporting-concepts:navigable-2">navigable</a>
       <var>targetNavigable</var>, return a new <a href="#target-snapshot-params"
         id="navigation-supporting-concepts:target-snapshot-params">target snapshot
-        params</a> with <a href="#target-snapshot-params-sandbox"
-        id="navigation-supporting-concepts:target-snapshot-params-sandbox">sandboxing flags</a> set to
-      the result of <a href="#determining-the-creation-sandboxing-flags"
-        id="navigation-supporting-concepts:determining-the-creation-sandboxing-flags">determining the creation
-        sandboxing flags</a> given
-      <var>targetNavigable</var>'s <a href="#nav-bc" id="navigation-supporting-concepts:nav-bc">active browsing
-        context</a> and
-      <var>targetNavigable</var>'s <a href="#nav-container"
-        id="navigation-supporting-concepts:nav-container">container</a>.
+        params</a> with:
     </p>
+
+    <dl class="props">
+      <dt><a href="#target-snapshot-params-sandbox"
+          id="navigation-supporting-concepts:target-snapshot-params-sandbox">sandboxing flags</a></dt>
+      <dd>the result of <a href="#determining-the-creation-sandboxing-flags"
+          id="navigation-supporting-concepts:determining-the-creation-sandboxing-flags">determining the creation
+          sandboxing flags</a> given
+        <var>targetNavigable</var>'s <a href="#nav-bc" id="navigation-supporting-concepts:nav-bc">active browsing
+          context</a> and
+        <var>targetNavigable</var>'s <a href="#nav-container"
+          id="navigation-supporting-concepts:nav-container">container</a>
+      </dd>
+      <dt><a href="#target-snapshot-params-iframe-referrer-policy"
+          id="navigation-supporting-concepts:target-snapshot-params-iframe-referrer-policy"><code>iframe</code> element
+          referrer policy</a></dt>
+      <dd>the result of <a href="#determining-the-iframe-element-referrer-policy"
+          id="navigation-supporting-concepts:determining-the-iframe-element-referrer-policy">determining the
+          <code>iframe</code> element referrer policy</a> given
+        <var>targetNavigable</var>'s <a href="#nav-container"
+          id="navigation-supporting-concepts:nav-container-2">container</a>
+      </dd>
+    </dl>
   </div>
 
   <hr>
@@ -182682,6 +182957,15 @@ location<c- p="">.</c->href <c- o="">=</c-> <c- t="">'#foo'</c-><c- p="">;</c-><
     <dd>a <a href="#sandboxing-flag-set" id="navigation-supporting-concepts:sandboxing-flag-set-4">sandboxing flag
         set</a> to impose on the new <code
         id="navigation-supporting-concepts:document-8"><a href="#document">Document</a></code></dd>
+    <dt><dfn data-dfn-for="navigation params" id="navigation-params-iframe-referrer-policy"><code>iframe</code> element
+        referrer policy</dfn></dt>
+    <dd>a <a id="navigation-supporting-concepts:referrer-policy-2"
+        href="https://w3c.github.io/webappsec-referrer-policy/#referrer-policy"
+        data-x-internal="referrer-policy">referrer policy</a>, used in the <a
+        href="#internal-ancestor-origin-objects-list-creation-steps"
+        id="navigation-supporting-concepts:internal-ancestor-origin-objects-list-creation-steps">internal ancestor
+        origin objects list
+        creation steps</a></dd>
     <dt><dfn data-dfn-for="navigation params" id="navigation-params-coop">opener policy</dfn></dt>
     <dd>an <a href="#cross-origin-opener-policy" id="navigation-supporting-concepts:cross-origin-opener-policy">opener
         policy</a> to use for the new <code
@@ -183603,6 +183887,13 @@ location<c- p="">.</c->href <c- o="">=</c-> <c- t="">'#foo'</c-><c- p="">;</c-><
                   <dt><a href="#navigation-params-sandboxing"
                       id="beginning-navigation:navigation-params-sandboxing">final sandboxing flag set</a></dt>
                   <dd><var>finalSandboxFlags</var></dd>
+                  <dt><a href="#navigation-params-iframe-referrer-policy"
+                      id="beginning-navigation:navigation-params-iframe-referrer-policy"><code>iframe</code> element
+                      referrer policy</a></dt>
+                  <dd><var>targetSnapshotParams</var>'s <a href="#target-snapshot-params-iframe-referrer-policy"
+                      id="beginning-navigation:target-snapshot-params-iframe-referrer-policy"><code>iframe</code>
+                      element referrer
+                      policy</a></dd>
                   <dt><a href="#navigation-params-coop" id="beginning-navigation:navigation-params-coop">opener
                       policy</a></dt>
                   <dd><var>coop</var></dd>
@@ -184248,6 +184539,13 @@ location<c- p="">.</c->href <c- o="">=</c-> <c- t="">'#foo'</c-><c- p="">;</c-><
           <dt><a href="#navigation-params-sandboxing"
               id="the-javascript:-url-special-case:navigation-params-sandboxing">final sandboxing flag set</a></dt>
           <dd><var>finalSandboxFlags</var></dd>
+          <dt><a href="#navigation-params-iframe-referrer-policy"
+              id="the-javascript:-url-special-case:navigation-params-iframe-referrer-policy"><code>iframe</code> element
+              referrer policy</a></dt>
+          <dd><var>targetSnapshotParams</var>'s <a href="#target-snapshot-params-iframe-referrer-policy"
+              id="the-javascript:-url-special-case:target-snapshot-params-iframe-referrer-policy"><code>iframe</code>
+              element referrer
+              policy</a></dd>
           <dt><a href="#navigation-params-coop" id="the-javascript:-url-special-case:navigation-params-coop">opener
               policy</a></dt>
           <dd><var>coop</var></dd>
@@ -186421,6 +186719,13 @@ location<c- p="">.</c->href <c- o="">=</c-> <c- t="">'#foo'</c-><c- p="">;</c-><
           <dd><var>targetSnapshotParams</var>'s <a href="#target-snapshot-params-sandbox"
               id="populating-a-session-history-entry:target-snapshot-params-sandbox-3">sandboxing
               flags</a></dd>
+          <dt><a href="#navigation-params-iframe-referrer-policy"
+              id="populating-a-session-history-entry:navigation-params-iframe-referrer-policy"><code>iframe</code>
+              element referrer policy</a></dt>
+          <dd><var>targetSnapshotParams</var>'s <a href="#target-snapshot-params-iframe-referrer-policy"
+              id="populating-a-session-history-entry:target-snapshot-params-iframe-referrer-policy"><code>iframe</code>
+              element referrer
+              policy</a></dd>
           <dt><a href="#navigation-params-coop" id="populating-a-session-history-entry:navigation-params-coop">opener
               policy</a></dt>
           <dd><var>coop</var></dd>
@@ -191374,7 +191679,11 @@ location<c- p="">.</c->href <c- o="">=</c-> <c- t="">'#foo'</c-><c- p="">;</c-><
             list</a> to the result of running the <a href="#internal-ancestor-origin-objects-list-creation-steps"
             id="shared-document-creation-infrastructure:internal-ancestor-origin-objects-list-creation-steps">internal
             ancestor origin objects list creation
-            steps</a> given <var>document</var>.</p>
+            steps</a> given <var>document</var> and <var>navigationParams</var>'s <a
+            href="#navigation-params-iframe-referrer-policy"
+            id="shared-document-creation-infrastructure:navigation-params-iframe-referrer-policy"><code>iframe</code>
+            element referrer
+            policy</a>.</p>
       </li>
       <li>
         <p>Set <var>document</var>'s <a href="#concept-document-ancestor-origins-list"
@@ -192185,6 +192494,10 @@ document<c- p="">.</c->domain <c- o="">=</c-> <c- t="">'example.com'</c-><c- p="
           <dt><a href="#navigation-params-sandboxing" id="read-ua-inline:navigation-params-sandboxing">final sandboxing
               flag set</a></dt>
           <dd>an empty set</dd>
+          <dt><a href="#navigation-params-iframe-referrer-policy"
+              id="read-ua-inline:navigation-params-iframe-referrer-policy"><code>iframe</code> element referrer
+              policy</a></dt>
+          <dd>the empty string</dd>
           <dt><a href="#navigation-params-coop" id="read-ua-inline:navigation-params-coop">opener policy</a></dt>
           <dd><var>coop</var></dd>
           <dt><a href="#navigation-params-nav-timing-type"

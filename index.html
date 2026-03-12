@@ -64,7 +64,7 @@
         <a href="https://github.com/whatwg/html/commits" class="changes"><span><strong>提交记录</strong>
             <code>在GitHub上</code></span></a>
         <a id="commit-snapshot-link"
-          href="https://html.spec.whatwg.org/commit-snapshots/d59fb13c28c62d50f103a95577f15fc1e8bd7500/" class="changes"
+          href="https://html.spec.whatwg.org/commit-snapshots/e161310ae7951d27791f59123871c147541d6624/" class="changes"
           title="你也可以按&#39;y&#39;键"><span><strong>快照</strong>
             <code>截至此提交</code></span></a>
         <a href="https://twitter.com/htmlstandard" class="changes"><span><strong>Twitter更新</strong>
@@ -1546,7 +1546,9 @@
               </ol>
             </li>
             <li><a href="#sandboxing"><span class=secno>7.1.5</span> 沙盒</a></li>
-            <li><a href="#policy-containers"><span class=secno>7.1.6</span> 策略容器</a></li>
+            <li><a href="#iframe-element-referrer-policy"><span class="secno">7.1.6</span> <code>iframe</code> 元素
+                推荐人策略</a></li>
+            <li><a href="#policy-containers"><span class=secno>7.1.7</span> 策略容器</a></li>
           </ol>
         </li>
         <li><a href="#nav-traversal-apis"><span class=secno>7.2</span> 与导航和会话历史相关的 APIs</a>
@@ -5509,6 +5511,8 @@ new parallel queue" data-export="">启动一个新的并行队列</dfn>，请运
           <li><dfn id="a-priori-authenticated-url"><a
                 href="https://w3c.github.io/webappsec-mixed-content/#a-priori-authenticated-url"><i>先验</i>认证的URL</a></dfn>
           </li>
+          <li><dfn id="mixed-content"><a href="https://w3c.github.io/webappsec-mixed-content/#mixed-content">混合
+                内容</a></dfn></li>
         </ul>
 
         <p>以下术语在<cite>Subresource Integrity</cite>中定义：<a href="#refsSRI">[SRI]</a></p>
@@ -17395,13 +17399,14 @@ o<c- p="">.</c->myself <c- o="">=</c-> o<c- p="">;</c-></code></pre>
   <h4 id="ancestor-origins"><span class="secno">3.1.3</span> 上级来源<a href="#ancestor-origins" class="self-link"></a></h4>
 
   <div data-algorithm="">
-    <p>A <code id="ancestor-origins:document"><a href="#document">Document</a></code> 对象有一个关联的 <dfn
-        data-dfn-for="Document" id="concept-document-internal-ancestor-origin-objects-list" data-export="">内部
-        上级来源对象
-        列表</dfn>，初始为 null。</p>
+    <p>一个 <code id="ancestor-origins:document"><a href="#document">Document</a></code> 对象有关联的 <dfn
+        data-dfn-for="Document" id="concept-document-internal-ancestor-origin-objects-list"
+        data-export="">内部祖先来源对象列表</dfn>，初始值为 null。</p>
 
-    <p>The <dfn id="internal-ancestor-origin-objects-list-creation-steps">内部上级来源对象列表创建步骤</dfn> 给定一个
-      <code id="ancestor-origins:document-2"><a href="#document">Document</a></code> 对象 <var>innerDoc</var> 如下：
+    <p>给定 <code id="ancestor-origins:document-2"><a href="#document">Document</a></code> 对象 <var>document</var> 和 <a
+        id="ancestor-origins:referrer-policy" href="https://w3c.github.io/webappsec-referrer-policy/#referrer-policy"
+        data-x-internal="referrer-policy">推荐人策略</a>
+      <var>referrerPolicy</var>，<dfn id="internal-ancestor-origin-objects-list-creation-steps">内部祖先来源对象列表创建步骤</dfn>如下：
     </p>
 
     <ol>
@@ -17409,41 +17414,93 @@ o<c- p="">.</c->myself <c- o="">=</c-> o<c- p="">;</c-></code></pre>
         <p>令 <var>output</var> 为 « »。</p>
       </li>
       <li>
-        <p>令 <var>parentDoc</var> 为 <var>innerDoc</var> 的 <a href="#doc-container-document"
+        <p>令 <var>parentDoc</var> 为 <var>document</var> 的 <a href="#doc-container-document"
             id="ancestor-origins:doc-container-document">容器文档</a>。</p>
       </li>
       <li>
         <p>如果 <var>parentDoc</var> 为 null，则返回 <var>output</var>。</p>
       </li>
       <li>
-        <p><a id="ancestor-origins:assert" href="https://infra.spec.whatwg.org/#assert" data-x-internal="assert">断言</a>：
-          <var>parentDoc</var> 是 <a href="#fully-active" id="ancestor-origins:fully-active">完全活动</a> 的。
-        </p>
+        <p><a id="ancestor-origins:assert" href="https://infra.spec.whatwg.org/#assert"
+            data-x-internal="assert">断言</a>：<var>parentDoc</var> 是 <a href="#fully-active"
+            id="ancestor-origins:fully-active">完全激活</a>状态。</p>
       </li>
       <li>
         <p>令 <var>ancestorOrigins</var> 为 <var>parentDoc</var> 的 <a
             href="#concept-document-internal-ancestor-origin-objects-list"
-            id="ancestor-origins:concept-document-internal-ancestor-origin-objects-list">内部上级来源对象
-            列表</a>。</p>
+            id="ancestor-origins:concept-document-internal-ancestor-origin-objects-list">内部祖先来源对象列表</a>。</p>
       </li>
       <li>
-        <p><a href="https://infra.spec.whatwg.org/#list-append" id="ancestor-origins:list-append"
-            data-x-internal="list-append">将</a> <var>parentDoc</var> 的 <a
-            href="https://dom.spec.whatwg.org/#concept-document-origin" id="ancestor-origins:concept-document-origin"
-            data-x-internal="concept-document-origin">来源</a> 添加到 <var>output</var>。</p>
+        <p>令 <var>container</var> 为 <var>document</var> 的 <a href="#node-navigable"
+            id="ancestor-origins:node-navigable">节点可导航</a>的 <a href="#nav-container"
+            id="ancestor-origins:nav-container">容器</a>。</p>
+      </li>
+      <li>
+        <p>令 <var>masked</var> 为 false。</p>
+      </li>
+      <li>
+        <p>如果 <var>referrerPolicy</var> 为 "<code>no-referrer</code>"，则将 <var>masked</var> 设为 true。
+        </p>
+      </li>
+      <li>
+        <p>否则，如果 <var>referrerPolicy</var> 为 "<code>same-origin</code>" 且
+          <var>parentDoc</var> 的 <a href="https://dom.spec.whatwg.org/#concept-document-origin"
+            id="ancestor-origins:concept-document-origin" data-x-internal="concept-document-origin">来源</a> 与 <a
+            href="#same-origin" id="ancestor-origins:same-origin">相同来源</a> <var>document</var> 的
+          <a href="https://dom.spec.whatwg.org/#concept-document-origin" id="ancestor-origins:concept-document-origin-2"
+            data-x-internal="concept-document-origin">来源</a> 不同，
+          则将 <var>masked</var> 设为 true。
+        </p>
+
+        <p class="note">由于<a id="ancestor-origins:mixed-content"
+            href="https://w3c.github.io/webappsec-mixed-content/#mixed-content" data-x-internal="mixed-content">混合内容</a>
+          检查会阻止 <a href="#non-secure-context" id="ancestor-origins:non-secure-context">非安全上下文</a>
+          在 <a href="#secure-context" id="ancestor-origins:secure-context">安全上下文</a> <a href="#environment"
+            id="ancestor-origins:environment-2">环境</a> 中存在，无需针对 "<code>strict-origin</code>"、
+          "<code>strict-origin-when-cross-origin</code>" 和 "<code>no-referrer-when-downgrade</code>" 检查安全上下文。
+          "<code>origin</code>" 和 "<code>origin-when-cross-origin</code>" 的值也不需特殊处理，
+          因为此处至多暴露一个 <a href="https://dom.spec.whatwg.org/#concept-document-origin"
+            id="ancestor-origins:concept-document-origin-3" data-x-internal="concept-document-origin">来源</a>。
+        </p>
+      </li>
+      <li>
+        <p>如果 <var>masked</var> 为 true，则 <a href="https://infra.spec.whatwg.org/#list-append"
+            id="ancestor-origins:list-append" data-x-internal="list-append">追加</a>一个新的 <a href="#concept-origin-opaque"
+            id="ancestor-origins:concept-origin-opaque">不透明来源</a>至
+          <var>output</var>。
+        </p>
+      </li>
+      <li>
+        <p>否则，<a href="https://infra.spec.whatwg.org/#list-append" id="ancestor-origins:list-append-2"
+            data-x-internal="list-append">追加</a> <var>parentDoc</var> 的 <a
+            href="https://dom.spec.whatwg.org/#concept-document-origin" id="ancestor-origins:concept-document-origin-4"
+            data-x-internal="concept-document-origin">来源</a>至 <var>output</var>。</p>
       </li>
       <li>
         <p><a href="https://infra.spec.whatwg.org/#list-iterate" id="ancestor-origins:list-iterate"
-            data-x-internal="list-iterate">对于</a> <var>ancestorOrigin</var> 属于
-          <var>ancestorOrigins</var> 的每一项：
+            data-x-internal="list-iterate">对于每个</a> <var>ancestorOrigin</var> 属于 <var>ancestorOrigins</var>：
         </p>
 
         <ol>
           <li>
-            <p><a href="https://infra.spec.whatwg.org/#list-append" id="ancestor-origins:list-append-2"
-                data-x-internal="list-append">将</a> <var>ancestorOrigin</var> 添加到
-              <var>output</var>。
+            <p>如果 <var>masked</var> 为 true 且 <var>ancestorOrigin</var> 与 <var>parentDoc</var> 的
+              <a href="https://dom.spec.whatwg.org/#concept-document-origin"
+                id="ancestor-origins:concept-document-origin-5" data-x-internal="concept-document-origin">来源</a>
+              为 <a href="#same-origin" id="ancestor-origins:same-origin-2">相同来源</a>，
+              则 <a href="https://infra.spec.whatwg.org/#list-append" id="ancestor-origins:list-append-3"
+                data-x-internal="list-append">追加</a>一个新的 <a href="#concept-origin-opaque"
+                id="ancestor-origins:concept-origin-opaque-2">不透明来源</a>至 <var>output</var>，
+              并 <a id="ancestor-origins:continue" href="https://infra.spec.whatwg.org/#iteration-continue"
+                data-x-internal="continue">继续</a>。
             </p>
+          </li>
+          <li>
+            <p><a href="https://infra.spec.whatwg.org/#list-append" id="ancestor-origins:list-append-4"
+                data-x-internal="list-append">追加</a> <var>ancestorOrigin</var> 至 <var>output</var>，
+              并设置 <var>masked</var> 为 false。</p>
+
+            <p class="note">在此设置 <var>masked</var> 为 false 并不意味着所有后续祖先来源都必然暴露。
+              它们可能已经在先前祖先文档运行这些步骤时被遮蔽，且结果列表作为子文档创建时的起始点（见上方第5步）。</p>
           </li>
         </ol>
       </li>
@@ -17501,6 +17558,142 @@ o<c- p="">.</c->myself <c- o="">=</c-> o<c- p="">;</c-></code></pre>
     </ol>
   </div>
 
+  <div class="example">
+    <p>假设有一个<a href="#top-level-browsing-context" id="ancestor-origins:top-level-browsing-context">顶级浏览上下文</a>文档，URL是
+      <code>https://a.example/top</code>：
+    </p>
+
+    <pre><code class="html"><c- cp="">&lt;!doctype html&gt;</c->
+<c- p="">&lt;</c-><c- f="">title</c-><c- p="">&gt;</c->top<c- p="">&lt;/</c-><c- f="">title</c-><c- p="">&gt;</c->
+<c- p="">&lt;</c-><c- f="">iframe</c-> <c- e="">referrerpolicy</c-><c- o="">=</c-><c- s="">"no-referrer"</c-> <c- e="">src</c-><c- o="">=</c-><c- s="">"https://a.example/child"</c-><c- p="">&gt;&lt;/</c-><c- f="">iframe</c-><c- p="">&gt;</c-></code></pre>
+
+    <p>子文档：</p>
+
+    <pre><code class="html"><c- cp="">&lt;!doctype html&gt;</c->
+<c- p="">&lt;</c-><c- f="">title</c-><c- p="">&gt;</c->child<c- p="">&lt;/</c-><c- f="">title</c-><c- p="">&gt;</c->
+<c- p="">&lt;</c-><c- f="">iframe</c-> <c- e="">src</c-><c- o="">=</c-><c- s="">"https://b.example/grandchild"</c-><c- p="">&gt;&lt;/</c-><c- f="">iframe</c-><c- p="">&gt;</c->
+<c- p="">&lt;</c-><c- f="">script</c-><c- p="">&gt;</c->
+ console<c- p="">.</c->log<c- p="">([...</c->location<c- p="">.</c->ancestorOrigins<c- p="">]);</c->
+<c- p="">&lt;/</c-><c- f="">script</c-><c- p="">&gt;</c-></code></pre>
+
+    <p>孙子文档：</p>
+
+    <pre><code class="html"><c- cp="">&lt;!doctype html&gt;</c->
+<c- p="">&lt;</c-><c- f="">title</c-><c- p="">&gt;</c->grandchild<c- p="">&lt;/</c-><c- f="">title</c-><c- p="">&gt;</c->
+<c- p="">&lt;</c-><c- f="">script</c-><c- p="">&gt;</c->
+ console<c- p="">.</c->log<c- p="">([...</c->location<c- p="">.</c->ancestorOrigins<c- p="">]);</c->
+<c- p="">&lt;/</c-><c- f="">script</c-><c- p="">&gt;</c-></code></pre>
+
+    <p>当子文档的 <code id="ancestor-origins:document-5"><a href="#document">Document</a></code> 对象被创建时，其父文档的来源被遮蔽，
+      因为 <code id="ancestor-origins:the-iframe-element"><a href="#the-iframe-element">iframe</a></code> 元素的 <code
+        id="ancestor-origins:attr-iframe-referrerpolicy"><a href="#attr-iframe-referrerpolicy">referrerpolicy</a></code>
+      属性值为 "<code>no-referrer</code>"，即便文档是<a href="#same-origin" id="ancestor-origins:same-origin-3">同源</a>。日志值为 «
+      "<code>null</code>" »。
+    </p>
+
+    <p>当孙子文档的 <code id="ancestor-origins:document-6"><a href="#document">Document</a></code> 对象被创建时，
+      子文档的 <code id="ancestor-origins:document-7"><a href="#document">Document</a></code> 对象的
+      <a href="#concept-document-internal-ancestor-origin-objects-list"
+        id="ancestor-origins:concept-document-internal-ancestor-origin-objects-list-3">内部祖先来源对象列表</a>
+      （其中包含一个 <a href="#concept-origin-opaque" id="ancestor-origins:concept-origin-opaque-3">不透明来源</a>）作为起始点，且子文档的
+      <a href="https://dom.spec.whatwg.org/#concept-document-origin" id="ancestor-origins:concept-document-origin-6"
+        data-x-internal="concept-document-origin">来源</a>
+      被添加到列表。日志值为 « "<code>https://a.example</code>",
+      "<code>null</code>" »。
+    </p>
+  </div>
+
+  <div class="example">
+    <p>如果我们考虑前面的例子，但顶层文档中的 <code
+        id="ancestor-origins:the-iframe-element-2"><a href="#the-iframe-element">iframe</a></code> 元素
+      没有 <code
+        id="ancestor-origins:attr-iframe-referrerpolicy-2"><a href="#attr-iframe-referrerpolicy">referrerpolicy</a></code>
+      属性，而是子文档中的 <code id="ancestor-origins:the-iframe-element-3"><a href="#the-iframe-element">iframe</a></code>
+      元素有 <code>referrerpolicy="no-referrer"</code>。
+    </p>
+
+    <p>此情况下，顶层文档的 <a href="https://dom.spec.whatwg.org/#concept-document-origin"
+        id="ancestor-origins:concept-document-origin-7" data-x-internal="concept-document-origin">来源</a>
+      被添加到子文档的 <code id="ancestor-origins:document-8"><a href="#document">Document</a></code> 对象的
+      <a href="#concept-document-internal-ancestor-origin-objects-list"
+        id="ancestor-origins:concept-document-internal-ancestor-origin-objects-list-4">内部祖先来源对象列表</a>。日志值为 «
+      "<code>https://a.example</code>" »。
+    </p>
+
+    <p>对于孙子文档，子文档的 <a href="https://dom.spec.whatwg.org/#concept-document-origin"
+        id="ancestor-origins:concept-document-origin-8" data-x-internal="concept-document-origin">来源</a>
+      被作为 <a href="#concept-origin-opaque" id="ancestor-origins:concept-origin-opaque-4">不透明来源</a>遮蔽。
+      由于顶层文档的 <a href="https://dom.spec.whatwg.org/#concept-document-origin"
+        id="ancestor-origins:concept-document-origin-9" data-x-internal="concept-document-origin">来源</a>
+      与子文档的 <a href="https://dom.spec.whatwg.org/#concept-document-origin"
+        id="ancestor-origins:concept-document-origin-10" data-x-internal="concept-document-origin">来源</a>同源，也被遮蔽。
+      日志值为 « "<code>null</code>", "<code>null</code>" »。
+    </p>
+  </div>
+
+  <div class="example">
+    <p>此例展示，顶级文档的来源不会被遮蔽，即使有一个后代同源文档的来源被遮蔽，因为中间存在跨源文档。</p>
+
+    <ul>
+      <li>
+        <p>顶级，URL <code>https://a.example/top</code></p>
+        <pre><code class="html"><c- p="">&lt;</c-><c- f="">iframe</c-> <c- e="">src</c-><c- o="">=</c-><c- s="">"https://b.example/child"</c-><c- p="">&gt;&lt;/</c-><c- f="">iframe</c-><c- p="">&gt;</c-></code></pre>
+        <p>关联的 <a href="#concept-document-ancestor-origins-list"
+            id="ancestor-origins:concept-document-ancestor-origins-list">祖先来源列表</a>为 « »。</p>
+      </li>
+      <li>
+        <p>子，URL <code>https://b.example/child</code></p>
+        <pre><code class="html"><c- p="">&lt;</c-><c- f="">iframe</c-> <c- e="">src</c-><c- o="">=</c-><c- s="">"https://a.example/grandchild"</c-><c- p="">&gt;&lt;/</c-><c- f="">iframe</c-><c- p="">&gt;</c-></code></pre>
+        <p>关联的 <a href="#concept-document-ancestor-origins-list"
+            id="ancestor-origins:concept-document-ancestor-origins-list-2">祖先来源列表</a>为 «
+          "<code>https://a.example</code>" »。</p>
+      </li>
+      <li>
+        <p>孙子，URL <code>https://a.example/grandchild</code></p>
+        <pre><code class="html"><c- p="">&lt;</c-><c- f="">iframe</c-> <c- e="">src</c-><c- o="">=</c-><c- s="">"https://c.example/grandgrandchild"</c->
+     <c- e="">referrerpolicy</c-><c- o="">=</c-><c- s="">"no-referrer"</c-><c- p="">&gt;&lt;/</c-><c- f="">iframe</c-><c- p="">&gt;</c-></code></pre>
+        <p>关联的 <a href="#concept-document-ancestor-origins-list"
+            id="ancestor-origins:concept-document-ancestor-origins-list-3">祖先来源列表</a>为 «
+          "<code>https://b.example</code>", "<code>https://a.example</code>" »。</p>
+      </li>
+      <li>
+        <p>曾孙，URL <code>https://c.example/grandgrandchild</code></p>
+        <p>关联的 <a href="#concept-document-ancestor-origins-list"
+            id="ancestor-origins:concept-document-ancestor-origins-list-4">祖先来源列表</a>
+          为 « "<code>null</code>", "<code>https://b.example</code>",
+          "<code>https://a.example</code>" »。顶级来源未被遮蔽。</p>
+      </li>
+    </ul>
+  </div>
+
+  <div class="example">
+    <p>如果我们考虑前面的例子，但顶级文档的 <code
+        id="ancestor-origins:the-iframe-element-4"><a href="#the-iframe-element">iframe</a></code> 也有
+      <code>referrerpolicy="no-referrer"</code>，那么每个文档关联的 <a href="#concept-document-ancestor-origins-list"
+        id="ancestor-origins:concept-document-ancestor-origins-list-5">祖先来源列表</a>为：
+    </p>
+
+    <ul>
+      <li>
+        <p>顶级：「」</p>
+      </li>
+      <li>
+        <p>子：「"<code>null</code>"」</p>
+      </li>
+      <li>
+        <p>孙子：「"<code>https://b.example</code>", "<code>null</code>"
+          」</p>
+      </li>
+      <li>
+        <p>曾孙：「"<code>null</code>", "<code>https://b.example</code>", "<code>null</code>"」。
+          顶级来源被遮蔽，因为它在子文档运行<a href="#internal-ancestor-origin-objects-list-creation-steps"
+            id="ancestor-origins:internal-ancestor-origin-objects-list-creation-steps">内部祖先来源对象列表创建步骤</a>时已被遮蔽，结果继续传递到孙子文档的
+          <a href="#internal-ancestor-origin-objects-list-creation-steps"
+            id="ancestor-origins:internal-ancestor-origin-objects-list-creation-steps-2">内部祖先来源对象列表创建步骤</a>，依此类推。
+        </p>
+      </li>
+    </ul>
+  </div>
 
   <h4 id="resource-metadata-management"><span class="secno">3.1.4</span> <dfn>资源元数据管理</dfn><a
       href="#resource-metadata-management" class="self-link"></a></h4>
@@ -51444,11 +51637,19 @@ Noodliness do you wish to reach out for?<c- p="">&lt;/</c-><c- f="">p</c-><c- p=
   <hr>
 
   <p><dfn data-dfn-for="iframe" id="attr-iframe-referrerpolicy"
-      data-dfn-type="element-attr"><code>referrerpolicy</code></dfn> 属性是一个 <a href="#referrer-policy-attribute"
-      id="the-iframe-element:referrer-policy-attribute">引用来源政策属性</a>。它的作用是设置在 <a href="#process-the-iframe-attributes"
-      id="the-iframe-element:process-the-iframe-attributes-5">处理 <code>iframe</code> 属性</a> 时使用的 <a
-      id="the-iframe-element:referrer-policy-3" href="https://w3c.github.io/webappsec-referrer-policy/#referrer-policy"
-      data-x-internal="referrer-policy">引用来源政策</a>。<a href="#refsREFERRERPOLICY">[REFERRERPOLICY]</a></p>
+      data-dfn-type="element-attr"><code>referrerpolicy</code></dfn> 属性是
+    <a href="#referrer-policy-attribute" id="the-iframe-element:referrer-policy-attribute">推荐人策略属性</a>。
+    它的作用是设置<a id="the-iframe-element:referrer-policy-3"
+      href="https://w3c.github.io/webappsec-referrer-policy/#referrer-policy"
+      data-x-internal="referrer-policy">推荐人策略</a>
+    ，该策略会在<a href="#process-the-iframe-attributes" id="the-iframe-element:process-the-iframe-attributes-5">处理
+      <code>iframe</code>
+      属性</a>时被使用，并允许在<a href="https://dom.spec.whatwg.org/#concept-document-origin"
+      id="the-iframe-element:concept-document-origin-2" data-x-internal="concept-document-origin">来源</a>的部分内容在
+    <a href="#internal-ancestor-origin-objects-list-creation-steps"
+      id="the-iframe-element:internal-ancestor-origin-objects-list-creation-steps">内部祖先来源对象列表创建步骤</a>中进行遮蔽。
+    <a href="#refsREFERRERPOLICY">[REFERRERPOLICY]</a>
+  </p>
 
   <p><dfn data-dfn-for="iframe" id="attr-iframe-loading" data-dfn-type="element-attr"><code>loading</code></dfn> 属性是一个
     <a href="#lazy-loading-attribute" id="the-iframe-element:lazy-loading-attribute">延迟加载属性</a>。它的作用是指示对于视口之外的 <code
@@ -138820,8 +139021,39 @@ policy" id="embedder-policy-report-only-reporting-endpoint" data-export="">仅�
     </ul>
   </div>
 
+  <h4 id="iframe-element-referrer-policy"><span class="secno">7.1.6</span> <code
+      id="iframe-element-referrer-policy:the-iframe-element"><a href="#the-iframe-element">iframe</a></code> 元素
+    推荐人策略<a href="#iframe-element-referrer-policy" class="self-link"></a></h4>
 
-  <h4 id="policy-containers"><span class=secno>7.1.6</span> 策略容器<a href="#policy-containers" class="self-link"></a>
+  <div data-algorithm="">
+    <p>给定一个 element-or-null <var>embedder</var>，
+      <dfn id="determining-the-iframe-element-referrer-policy">确定
+        <code>iframe</code> 元素推荐人策略</dfn>的步骤如下：
+    </p>
+
+    <ol>
+      <li>
+        <p>如果 <var>embedder</var> 是一个 <code
+            id="iframe-element-referrer-policy:the-iframe-element-2"><a href="#the-iframe-element">iframe</a></code>
+          元素，则返回
+          <var>embedder</var> 的 <code
+            id="iframe-element-referrer-policy:attr-iframe-referrerpolicy"><a href="#attr-iframe-referrerpolicy">referrerpolicy</a></code>
+          属性状态对应的关键字。
+        </p>
+      </li>
+      <li>
+        <p>返回空字符串。</p>
+      </li>
+    </ol>
+  </div>
+
+  <p class="note">此方法用于在<a href="https://dom.spec.whatwg.org/#concept-document-origin"
+      id="iframe-element-referrer-policy:concept-document-origin" data-x-internal="concept-document-origin">来源</a>
+    的部分内容于<a href="#internal-ancestor-origin-objects-list-creation-steps"
+      id="iframe-element-referrer-policy:internal-ancestor-origin-objects-list-creation-steps">内部祖先来源对象列表
+      创建步骤</a>时进行遮蔽。</p>
+
+  <h4 id="policy-containers"><span class=secno>7.1.7</span> 策略容器<a href="#policy-containers" class="self-link"></a>
   </h4>
 
   <p><dfn id="policy-container" data-export="">策略容器</dfn>是包含适用于<code
@@ -144091,11 +144323,6 @@ console<c- p="">.</c->assert<c- p="">(</c->iframeWindow<c- p="">.</c->frameEleme
       </li>
     </ol>
   </div>
-
-  <p class="warning">关于 <code
-      id="the-location-interface:dom-location-ancestororigins-2"><a href="#dom-location-ancestororigins">ancestorOrigins</a></code>
-    属性的工作细节仍存在争议，可能会改变。更多信息参见 <a href="https://github.com/whatwg/html/issues/1918">issue
-      #1918</a>。</p>
 
   <hr>
 
@@ -154366,176 +154593,189 @@ forwardButton<c- p="">.</c->disabled <c- o="">=</c-> <c- o="">!</c->navigation<c
       class="self-link"></a></h5>
 
   <div data-algorithm="">
-    <p>要<dfn id="creating-a-new-browsing-context">创建一个新的浏览上下文和文档</dfn>，给定null或一个<code
-        id="creating-browsing-contexts:document"><a href="#document">文档</a></code>对象<var>creator</var>，null或一个元素<var>embedder</var>，以及一个<a
-        href="#browsing-context-group"
-        id="creating-browsing-contexts:browsing-context-group">浏览上下文组</a><var>group</var>：
+    <p>要<dfn id="creating-a-new-browsing-context">创建一个新的浏览上下文和文档</dfn>，给定 null 或一个
+      <code id="creating-browsing-contexts:document"><a href="#document">Document</a></code>
+      对象 <var>creator</var>，null 或一个元素 <var>embedder</var>，以及一个
+      <a href="#browsing-context-group" id="creating-browsing-contexts:browsing-context-group">浏览上下文组</a>
+      <var>group</var>：
     </p>
-
     <ol>
       <li>
-        <p>让<var>browsingContext</var>成为一个新的<a href="#browsing-context"
-            id="creating-browsing-contexts:browsing-context">浏览上下文</a>。</p>
+        <p>令 <var>browsingContext</var> 为一个新的
+          <a href="#browsing-context" id="creating-browsing-contexts:browsing-context">浏览上下文</a>。
+        </p>
       </li>
       <li>
-        <p>让<var>unsafeContextCreationTime</var>成为<a id="creating-browsing-contexts:unsafe-shared-current-time"
+        <p>令 <var>unsafeContextCreationTime</var> 为
+          <a id="creating-browsing-contexts:unsafe-shared-current-time"
             href="https://w3c.github.io/hr-time/#dfn-unsafe-shared-current-time"
-            data-x-internal="unsafe-shared-current-time">unsafe shared current time</a>。</p>
+            data-x-internal="unsafe-shared-current-time">不安全共享当前时间</a>。
+        </p>
       </li>
       <li>
-        <p>让<var>creatorOrigin</var>为null。</p>
+        <p>令 <var>creatorOrigin</var> 为 null。</p>
       </li>
       <li>
-        <p>让<var>creatorBaseURL</var>为null。</p>
+        <p>令 <var>creatorBaseURL</var> 为 null。</p>
       </li>
       <li id="creator-browsing-context">
-        <p>如果<var>creator</var>非null，则：</p>
+        <p>如果 <var>creator</var> 非 null，则：</p>
         <ol>
           <li>
-            <p>将<var>creatorOrigin</var>设为<var>creator</var>的<a
-                href="https://dom.spec.whatwg.org/#concept-document-origin"
+            <p>设置 <var>creatorOrigin</var> 为 <var>creator</var> 的
+              <a href="https://dom.spec.whatwg.org/#concept-document-origin"
                 id="creating-browsing-contexts:concept-document-origin"
-                data-x-internal="concept-document-origin">origin</a>。</p>
+                data-x-internal="concept-document-origin">来源</a>。
+            </p>
           </li>
           <li>
-            <p>将<var>creatorBaseURL</var>设为<var>creator</var>的<a href="#document-base-url"
-                id="creating-browsing-contexts:document-base-url">document base URL</a>。</p>
+            <p>设置 <var>creatorBaseURL</var> 为 <var>creator</var> 的
+              <a href="#document-base-url" id="creating-browsing-contexts:document-base-url">文档基础 URL</a>。
+            </p>
           </li>
           <li>
-            <p>将<var>browsingContext</var>的<a href="#virtual-browsing-context-group-id"
-                id="creating-browsing-contexts:virtual-browsing-context-group-id">virtual browsing context group
-                ID</a>设为<var>creator</var>的<a href="#concept-document-bc"
-                id="creating-browsing-contexts:concept-document-bc">browsing context</a>的<a href="#bc-tlbc"
-                id="creating-browsing-contexts:bc-tlbc">top-level browsing
-                context</a>的<a href="#virtual-browsing-context-group-id"
-                id="creating-browsing-contexts:virtual-browsing-context-group-id-2">virtual browsing context group
-                ID</a>。
+            <p>设置 <var>browsingContext</var> 的
+              <a href="#virtual-browsing-context-group-id"
+                id="creating-browsing-contexts:virtual-browsing-context-group-id">
+                虚拟浏览上下文组 ID</a> 为 <var>creator</var> 的
+              <a href="#concept-document-bc" id="creating-browsing-contexts:concept-document-bc">浏览上下文</a>
+              的 <a href="#bc-tlbc" id="creating-browsing-contexts:bc-tlbc">顶级浏览上下文</a> 的
+              <a href="#virtual-browsing-context-group-id"
+                id="creating-browsing-contexts:virtual-browsing-context-group-id-2">
+                虚拟浏览上下文组 ID</a>。
             </p>
           </li>
         </ol>
       </li>
       <li>
-        <p>让<var>sandboxFlags</var>成为<a href="#determining-the-creation-sandboxing-flags"
-            id="creating-browsing-contexts:determining-the-creation-sandboxing-flags">determining the creation
-            sandboxing
-            flags</a>的结果，给定<var>browsingContext</var>和<var>embedder</var>。</p>
+        <p>令 <var>sandboxFlags</var> 为
+          <a href="#determining-the-creation-sandboxing-flags"
+            id="creating-browsing-contexts:determining-the-creation-sandboxing-flags">确定创建沙箱标志</a>的结果，
+          参数为 <var>browsingContext</var> 和 <var>embedder</var>。
+        </p>
       </li>
       <li id="about-blank-origin">
-        <p>让<var>origin</var>成为<a href="#determining-the-origin"
-            id="creating-browsing-contexts:determining-the-origin">determining the origin</a>的结果，给定<code
-            id="creating-browsing-contexts:about:blank"><a href="#about:blank">about:blank</a></code>、<var>sandboxFlags</var>和<var>creatorOrigin</var>。
+        <p>令 <var>origin</var> 为
+          <a href="#determining-the-origin" id="creating-browsing-contexts:determining-the-origin">确定来源</a>的结果，
+          参数为 <code id="creating-browsing-contexts:about:blank"><a href="#about:blank">about:blank</a></code>、
+          <var>sandboxFlags</var> 和
+          <var>creatorOrigin</var>。
         </p>
       </li>
       <li>
-        <p>让<var>permissionsPolicy</var>成为<a id="creating-browsing-contexts:creating-a-permissions-policy"
+        <p>令 <var>permissionsPolicy</var> 为
+          <a id="creating-browsing-contexts:creating-a-permissions-policy"
             href="https://w3c.github.io/webappsec-feature-policy/#create-for-navigable"
-            data-x-internal="creating-a-permissions-policy">creating a permissions
-            policy</a>的结果，给定<var>embedder</var>和<var>origin</var>。<a
-            href="#refsPERMISSIONSPOLICY">[PERMISSIONSPOLICY]</a>
+            data-x-internal="creating-a-permissions-policy">创建权限策略</a>的结果，
+          参数为 <var>embedder</var> 和 <var>origin</var>。
+          <a href="#refsPERMISSIONSPOLICY">[PERMISSIONSPOLICY]</a>
         </p>
       </li>
       <li>
-        <p>让<var>agent</var>成为<a href="#obtain-similar-origin-window-agent"
-            id="creating-browsing-contexts:obtain-similar-origin-window-agent">obtaining a similar-origin window
-            agent</a>的结果，给定<var>origin</var>、<var>group</var>和false。</p>
+        <p>令 <var>agent</var> 为
+          <a href="#obtain-similar-origin-window-agent"
+            id="creating-browsing-contexts:obtain-similar-origin-window-agent">获取类似来源的窗口代理</a>的结果，
+          参数为 <var>origin</var>、<var>group</var> 和 false。
+        </p>
       </li>
       <li>
-        <p>让<var>realm execution context</var>成为<a href="#creating-a-new-javascript-realm"
-            id="creating-browsing-contexts:creating-a-new-javascript-realm">creating a new
-            realm</a>的结果，给定<var>agent</var>和以下定制内容：</p>
+        <p>令 <var>realm execution context</var> 为
+          <a href="#creating-a-new-javascript-realm"
+            id="creating-browsing-contexts:creating-a-new-javascript-realm">创建新执行域</a>的结果，
+          参数为 <var>agent</var> 和以下定制：
+        </p>
         <ul>
           <li>
-            <p>对于global object，创建一个新的<code id="creating-browsing-contexts:window"><a href="#window">Window</a></code>对象。
+            <p>针对全局对象，创建一个新的
+              <code id="creating-browsing-contexts:window"><a href="#window">Window</a></code> 对象。
             </p>
           </li>
           <li>
-            <p>对于global <b>this</b> binding，使用<var>browsingContext</var>的<code
-                id="creating-browsing-contexts:windowproxy"><a href="#windowproxy">WindowProxy</a></code>对象。
+            <p>针对全局 <b>this</b> 绑定，使用 <var>browsingContext</var> 的
+              <code id="creating-browsing-contexts:windowproxy"><a href="#windowproxy">WindowProxy</a></code> 对象。
             </p>
           </li>
         </ul>
       </li>
       <li>
-        <p>让<var>topLevelCreationURL</var>成为<code
-            id="creating-browsing-contexts:about:blank-2"><a href="#about:blank">about:blank</a></code>，如果<var>embedder</var>为null；否则<var>embedder</var>的<a
-            href="#relevant-settings-object" id="creating-browsing-contexts:relevant-settings-object">relevant settings
-            object</a>的<a href="#concept-environment-top-level-creation-url"
-            id="creating-browsing-contexts:concept-environment-top-level-creation-url">top-level creation URL</a>。</p>
+        <p>令 <var>topLevelCreationURL</var> 为 <code
+            id="creating-browsing-contexts:about:blank-2"><a href="#about:blank">about:blank</a></code>
+          如果 <var>embedder</var> 为 null；
+          否则为 <var>embedder</var> 的
+          <a href="#relevant-settings-object" id="creating-browsing-contexts:relevant-settings-object">相关设置对象</a>的
+          <a href="#concept-environment-top-level-creation-url"
+            id="creating-browsing-contexts:concept-environment-top-level-creation-url">顶级创建 URL</a>。
+        </p>
       </li>
       <li>
-        <p>让<var>topLevelOrigin</var>成为<var>origin</var>，如果<var>embedder</var>为null；否则<var>embedder</var>的<a
-            href="#relevant-settings-object" id="creating-browsing-contexts:relevant-settings-object-2">relevant
-            settings
-            object</a>的<a href="#concept-environment-top-level-origin"
-            id="creating-browsing-contexts:concept-environment-top-level-origin">top-level origin</a>。</p>
+        <p>令 <var>topLevelOrigin</var> 为 <var>origin</var> 如果 <var>embedder</var> 为 null；
+          否则为 <var>embedder</var> 的
+          <a href="#relevant-settings-object" id="creating-browsing-contexts:relevant-settings-object-2">相关设置对象</a>的
+          <a href="#concept-environment-top-level-origin"
+            id="creating-browsing-contexts:concept-environment-top-level-origin">顶级来源</a>。
+        </p>
       </li>
       <li>
         <p><a href="#set-up-a-window-environment-settings-object"
-            id="creating-browsing-contexts:set-up-a-window-environment-settings-object">Set up a window environment
-            settings object</a> with <code
-            id="creating-browsing-contexts:about:blank-3"><a href="#about:blank">about:blank</a></code>,
-          <var>realm execution context</var>, null, <var>topLevelCreationURL</var>, and <var>topLevelOrigin</var>。
+            id="creating-browsing-contexts:set-up-a-window-environment-settings-object">设置窗口环境设置对象</a>，
+          参数为 <code id="creating-browsing-contexts:about:blank-3"><a href="#about:blank">about:blank</a></code>、
+          <var>realm execution context</var>、null、<var>topLevelCreationURL</var> 和
+          <var>topLevelOrigin</var>。
         </p>
       </li>
       <li>
-        <p>让<var>loadTimingInfo</var>成为新的<a href="#document-load-timing-info"
-            id="creating-browsing-contexts:document-load-timing-info">document load timing info</a> with its <a
-            href="#navigation-start-time" id="creating-browsing-contexts:navigation-start-time">navigation start
-            time</a>
-          set to the result of calling
-          <a id="creating-browsing-contexts:coarsen-time" href="https://w3c.github.io/hr-time/#dfn-coarsen-time"
-            data-x-internal="coarsen-time">coarsen time</a> with <var>unsafeContextCreationTime</var> and the new <a
-            href="#environment-settings-object" id="creating-browsing-contexts:environment-settings-object">environment
-            settings object</a>'s <a href="#concept-settings-object-cross-origin-isolated-capability"
-            id="creating-browsing-contexts:concept-settings-object-cross-origin-isolated-capability">cross-origin
-            isolated
-            capability</a>。
+        <p>令 <var>loadTimingInfo</var> 为新的
+          <a href="#document-load-timing-info" id="creating-browsing-contexts:document-load-timing-info">文档加载计时信息</a>，
+          其 <a href="#navigation-start-time" id="creating-browsing-contexts:navigation-start-time">导航开始时间</a>
+          设置为调用 <a id="creating-browsing-contexts:coarsen-time" href="https://w3c.github.io/hr-time/#dfn-coarsen-time"
+            data-x-internal="coarsen-time">粗化时间</a>
+          的结果，参数为 <var>unsafeContextCreationTime</var> 和新
+          <a href="#environment-settings-object" id="creating-browsing-contexts:environment-settings-object">环境设置对象</a>的
+          <a href="#concept-settings-object-cross-origin-isolated-capability"
+            id="creating-browsing-contexts:concept-settings-object-cross-origin-isolated-capability">跨域隔离能力</a>。
         </p>
       </li>
       <li>
-        <p>让<var>document</var>成为新的
-
-          <code id="creating-browsing-contexts:document-2"><a href="#document">Document</a></code>，with:
+        <p>令 <var>document</var> 为新的
+          <code id="creating-browsing-contexts:document-2"><a href="#document">Document</a></code>，其属性：
         </p>
         <dl class="props">
           <dt><a href="https://dom.spec.whatwg.org/#concept-document-type"
-              id="creating-browsing-contexts:concept-document-type" data-x-internal="concept-document-type">type</a>
+              id="creating-browsing-contexts:concept-document-type" data-x-internal="concept-document-type">类型</a>
           </dt>
           <dd>"<code>html</code>"</dd>
           <dt><a href="https://dom.spec.whatwg.org/#concept-document-content-type"
               id="creating-browsing-contexts:concept-document-content-type"
-              data-x-internal="concept-document-content-type">content type</a></dt>
-          <dd>"<code id="creating-browsing-contexts:text/html"><a href="#text/html">text/html</a></code>"
-          </dd>
+              data-x-internal="concept-document-content-type">内容类型</a></dt>
+          <dd>"<code id="creating-browsing-contexts:text/html"><a href="#text/html">text/html</a></code>"</dd>
           <dt><a href="https://dom.spec.whatwg.org/#concept-document-mode"
-              id="creating-browsing-contexts:concept-document-mode" data-x-internal="concept-document-mode">mode</a>
+              id="creating-browsing-contexts:concept-document-mode" data-x-internal="concept-document-mode">模式</a>
           </dt>
           <dd>"<code>quirks</code>"</dd>
           <dt><a href="https://dom.spec.whatwg.org/#concept-document-origin"
-              id="creating-browsing-contexts:concept-document-origin-2"
-              data-x-internal="concept-document-origin">origin</a></dt>
+              id="creating-browsing-contexts:concept-document-origin-2" data-x-internal="concept-document-origin">来源</a>
+          </dt>
           <dd><var>origin</var></dd>
-          <dt><a href="#concept-document-bc" id="creating-browsing-contexts:concept-document-bc-2">browsing context</a>
+          <dt><a href="#concept-document-bc" id="creating-browsing-contexts:concept-document-bc-2">浏览上下文</a>
           </dt>
           <dd><var>browsingContext</var></dd>
           <dt><a href="#concept-document-permissions-policy"
-              id="creating-browsing-contexts:concept-document-permissions-policy">permissions policy</a></dt>
+              id="creating-browsing-contexts:concept-document-permissions-policy">权限策略</a></dt>
           <dd><var>permissionsPolicy</var></dd>
-          <dt><a href="#active-sandboxing-flag-set" id="creating-browsing-contexts:active-sandboxing-flag-set">active
-              sandboxing flag set</a></dt>
+          <dt><a href="#active-sandboxing-flag-set"
+              id="creating-browsing-contexts:active-sandboxing-flag-set">激活沙箱标志集</a></dt>
           <dd><var>sandboxFlags</var></dd>
-          <dt><a href="#load-timing-info" id="creating-browsing-contexts:load-timing-info">load
-              timing info</a></dt>
+          <dt><a href="#load-timing-info" id="creating-browsing-contexts:load-timing-info">加载计时信息</a></dt>
           <dd><var>loadTimingInfo</var></dd>
-          <dt><a href="#is-initial-about:blank" id="creating-browsing-contexts:is-initial-about:blank">is initial
+          <dt><a href="#is-initial-about:blank" id="creating-browsing-contexts:is-initial-about:blank">是否初始
               <code>about:blank</code></a></dt>
           <dd>true</dd>
           <dt><a href="#concept-document-about-base-url"
-              id="creating-browsing-contexts:concept-document-about-base-url">about base URL</a></dt>
+              id="creating-browsing-contexts:concept-document-about-base-url">about 基础 URL</a></dt>
           <dd><var>creatorBaseURL</var></dd>
           <dt><a href="https://dom.spec.whatwg.org/#concept-document-allow-declarative-shadow-roots"
               id="creating-browsing-contexts:concept-document-allow-declarative-shadow-roots"
-              data-x-internal="concept-document-allow-declarative-shadow-roots">allow declarative shadow roots</a></dt>
+              data-x-internal="concept-document-allow-declarative-shadow-roots">允许声明式 Shadow Root</a></dt>
           <dd>true</dd>
           <dt><a href="https://dom.spec.whatwg.org/#document-custom-element-registry"
               id="creating-browsing-contexts:document-custom-element-registry"
@@ -154546,93 +154786,110 @@ forwardButton<c- p="">.</c->disabled <c- o="">=</c-> <c- o="">!</c->navigation<c
         </dl>
       </li>
       <li>
-        <p>将 <var>document</var> 的 <a href="#concept-document-internal-ancestor-origin-objects-list"
-            id="creating-browsing-contexts:concept-document-internal-ancestor-origin-objects-list">内部祖先
-            源对象
-            列表</a> 在给定 <var>document</var> 时运行 <a href="#internal-ancestor-origin-objects-list-creation-steps"
-            id="creating-browsing-contexts:internal-ancestor-origin-objects-list-creation-steps">内部祖先
-            源对象列表创建
-            步骤</a> 的结果。</p>
+        <p>令 <var>iframeReferrerPolicy</var> 为
+          <a href="#determining-the-iframe-element-referrer-policy"
+            id="creating-browsing-contexts:determining-the-iframe-element-referrer-policy">确定
+            <code>iframe</code> 元素推荐人策略</a>的结果，参数为 <var>embedder</var>。
+        </p>
       </li>
       <li>
-        <p>将 <var>document</var> 的 <a href="#concept-document-ancestor-origins-list"
-            id="creating-browsing-contexts:concept-document-ancestor-origins-list">祖先
-            源列表</a> 在给定 <var>document</var> 时运行 <a href="#ancestor-origins-list-creation-steps"
-            id="creating-browsing-contexts:ancestor-origins-list-creation-steps">祖先源列表创建
-            步骤</a> 的结果。</p>
+        <p>将 <var>document</var> 的
+          <a href="#concept-document-internal-ancestor-origin-objects-list"
+            id="creating-browsing-contexts:concept-document-internal-ancestor-origin-objects-list">
+            内部祖先来源对象列表</a> 设置为运行
+          <a href="#internal-ancestor-origin-objects-list-creation-steps"
+            id="creating-browsing-contexts:internal-ancestor-origin-objects-list-creation-steps">
+            内部祖先来源对象列表创建步骤</a>后结果，参数为 <var>document</var> 和 <var>iframeReferrerPolicy</var>。
+        </p>
       </li>
       <li>
-        <p>如果<var>creator</var>非null，则：</p>
+        <p>将 <var>document</var> 的
+          <a href="#concept-document-ancestor-origins-list"
+            id="creating-browsing-contexts:concept-document-ancestor-origins-list">祖先来源列表</a>
+          设置为运行
+          <a href="#ancestor-origins-list-creation-steps"
+            id="creating-browsing-contexts:ancestor-origins-list-creation-steps">
+            祖先来源列表创建步骤</a>后结果，参数为 <var>document</var>。
+        </p>
+      </li>
+      <li>
+        <p>如果 <var>creator</var> 非 null，则：</p>
         <ol>
           <li>
-            <p>将<var>document</var>的<a href="#the-document&#39;s-referrer"
-                id="creating-browsing-contexts:the-document&#39;s-referrer">referrer</a>设为<a
-                href="https://url.spec.whatwg.org/#concept-url-serializer"
-                id="creating-browsing-contexts:concept-url-serializer"
-                data-x-internal="concept-url-serializer">serialization</a> of <var>creator</var>的<a
-                href="https://dom.spec.whatwg.org/#concept-document-url"
-                id="creating-browsing-contexts:the-document&#39;s-address"
-                data-x-internal="the-document&#39;s-address">URL</a>。</p>
+            <p>设置 <var>document</var> 的
+              <a href="#the-document's-referrer" id="creating-browsing-contexts:the-document's-referrer">referrer</a>
+              为 <var>creator</var> 的
+              <a href="https://url.spec.whatwg.org/#concept-url-serializer"
+                id="creating-browsing-contexts:concept-url-serializer" data-x-internal="concept-url-serializer">序列化</a>
+              <a href="https://dom.spec.whatwg.org/#concept-document-url"
+                id="creating-browsing-contexts:the-document's-address" data-x-internal="the-document's-address">URL</a>。
+            </p>
           </li>
           <li>
-            <p>将<var>document</var>的<a href="#concept-document-policy-container"
-                id="creating-browsing-contexts:concept-document-policy-container">policy
-                container</a>设为<var>creator</var>的<a href="#concept-document-policy-container"
-                id="creating-browsing-contexts:concept-document-policy-container-2">policy container</a>的<a
-                href="#clone-a-policy-container" id="creating-browsing-contexts:clone-a-policy-container">clone</a>。</p>
+            <p>设置 <var>document</var> 的
+              <a href="#concept-document-policy-container"
+                id="creating-browsing-contexts:concept-document-policy-container">policy container</a>
+              为 <var>creator</var> 的
+              <a href="#concept-document-policy-container"
+                id="creating-browsing-contexts:concept-document-policy-container-2">policy container</a> 的
+              <a href="#clone-a-policy-container" id="creating-browsing-contexts:clone-a-policy-container">克隆</a>。
+            </p>
           </li>
           <li>
-            <p>如果<var>creator</var>的<a href="https://dom.spec.whatwg.org/#concept-document-origin"
+            <p>如果 <var>creator</var> 的
+              <a href="https://dom.spec.whatwg.org/#concept-document-origin"
                 id="creating-browsing-contexts:concept-document-origin-3"
-                data-x-internal="concept-document-origin">origin</a>是<a href="#same-origin"
-                id="creating-browsing-contexts:same-origin">same origin</a> with <var>creator</var>的<a
-                href="#relevant-settings-object" id="creating-browsing-contexts:relevant-settings-object-3">relevant
-                settings object</a>的<a href="#concept-environment-top-level-origin"
-                id="creating-browsing-contexts:concept-environment-top-level-origin-2">top-level
-                origin</a>，则将<var>document</var>的<a href="#concept-document-coop"
-                id="creating-browsing-contexts:concept-document-coop">opener
-                policy</a>设为<var>creator</var>的<a href="#concept-document-bc"
-                id="creating-browsing-contexts:concept-document-bc-3">browsing context</a>的<a href="#bc-tlbc"
-                id="creating-browsing-contexts:bc-tlbc-2">top-level browsing
-                context</a>的<a href="#active-document" id="creating-browsing-contexts:active-document">active
-                document</a>的<a href="#concept-document-coop"
-                id="creating-browsing-contexts:concept-document-coop-2">opener policy</a>。</p>
+                data-x-internal="concept-document-origin">来源</a>
+              与 <var>creator</var> 的
+              <a href="#relevant-settings-object" id="creating-browsing-contexts:relevant-settings-object-3">相关设置对象</a>
+              的
+              <a href="#concept-environment-top-level-origin"
+                id="creating-browsing-contexts:concept-environment-top-level-origin-2">顶级来源</a> 同源，
+              则将 <var>document</var> 的 <a href="#concept-document-coop"
+                id="creating-browsing-contexts:concept-document-coop">opener policy</a>
+              设置为 <var>creator</var> 的
+              <a href="#concept-document-bc" id="creating-browsing-contexts:concept-document-bc-3">浏览上下文</a> 的
+              <a href="#bc-tlbc" id="creating-browsing-contexts:bc-tlbc-2">顶级浏览上下文</a> 的
+              <a href="#active-document" id="creating-browsing-contexts:active-document">激活文档</a> 的
+              <a href="#concept-document-coop" id="creating-browsing-contexts:concept-document-coop-2">opener
+                policy</a>。
+            </p>
           </li>
         </ol>
       </li>
       <li>
         <p><a id="creating-browsing-contexts:assert" href="https://infra.spec.whatwg.org/#assert"
-            data-x-internal="assert">Assert</a>: <var>document</var>的<a
-            href="https://dom.spec.whatwg.org/#concept-document-url"
-            id="creating-browsing-contexts:the-document&#39;s-address-2"
-            data-x-internal="the-document&#39;s-address">URL</a>和<var>document</var>的<a href="#relevant-settings-object"
-            id="creating-browsing-contexts:relevant-settings-object-4">relevant settings object</a>的<a
-            href="#concept-environment-creation-url"
-            id="creating-browsing-contexts:concept-environment-creation-url">creation URL</a>是<code
-            id="creating-browsing-contexts:about:blank-4"><a href="#about:blank">about:blank</a></code>。
+            data-x-internal="assert">断言</a>：<var>document</var> 的
+          <a href="https://dom.spec.whatwg.org/#concept-document-url"
+            id="creating-browsing-contexts:the-document's-address-2" data-x-internal="the-document's-address">URL</a>
+          和 <var>document</var> 的
+          <a href="#relevant-settings-object" id="creating-browsing-contexts:relevant-settings-object-4">相关设置对象</a> 的
+          <a href="#concept-environment-creation-url"
+            id="creating-browsing-contexts:concept-environment-creation-url">创建 URL</a> 均为
+          <code id="creating-browsing-contexts:about:blank-4"><a href="#about:blank">about:blank</a></code>。
         </p>
       </li>
       <li>
-        <p>将<var>document</var>标记为<a href="#ready-for-post-load-tasks"
-            id="creating-browsing-contexts:ready-for-post-load-tasks">ready for post-load tasks</a>。</p>
-      </li>
-      <li>
-        <p><a href="#populate-with-html/head/body" id="creating-browsing-contexts:populate-with-html/head/body">Populate
-            with
-            <code>html</code>/<code>head</code>/<code>body</code></a> given <var>document</var>。</p>
-      </li>
-      <li>
-        <p><a href="#make-active" id="creating-browsing-contexts:make-active">Make active</a>
-          <var>document</var>。
+        <p>标记 <var>document</var> 为
+          <a href="#ready-for-post-load-tasks" id="creating-browsing-contexts:ready-for-post-load-tasks">
+            已准备好进行加载后任务</a>。
         </p>
       </li>
       <li>
-        <p><a href="#completely-finish-loading" id="creating-browsing-contexts:completely-finish-loading">Completely
-            finish loading</a> <var>document</var>。
-        </p>
+        <p><a href="#populate-with-html/head/body" id="creating-browsing-contexts:populate-with-html/head/body">
+            使用 <code>html</code>/<code>head</code>/<code>body</code> 填充</a>，
+          参数为 <var>document</var>。</p>
       </li>
       <li>
-        <p>返回<var>browsingContext</var>和<var>document</var>。</p>
+        <p><a href="#make-active" id="creating-browsing-contexts:make-active">
+            激活</a> <var>document</var>。</p>
+      </li>
+      <li>
+        <p><a href="#completely-finish-loading" id="creating-browsing-contexts:completely-finish-loading">
+            完全加载完成</a> <var>document</var>。</p>
+      </li>
+      <li>
+        <p>返回 <var>browsingContext</var> 和 <var>document</var>。</p>
       </li>
     </ol>
   </div>
@@ -156515,122 +156772,144 @@ location<c- p="">.</c->href <c- o="">=</c-> <c- t="">'#foo'</c-><c- p="">;</c-><
   <hr>
 
   <p><dfn id="target-snapshot-params">目标快照参数</dfn> <a id="navigation-supporting-concepts:struct-2"
-      href="https://infra.spec.whatwg.org/#struct" data-x-internal="struct">结构</a>用于捕获被导航的<a href="#navigable"
-      id="navigation-supporting-concepts:navigable">导航对象</a>的数据。与<a href="#source-snapshot-params"
-      id="navigation-supporting-concepts:source-snapshot-params-3">源快照参数</a>类似，它在导航开始时进行快照，并在整个导航过程中使用。它具有以下<a
-      href="https://infra.spec.whatwg.org/#struct-item" id="navigation-supporting-concepts:struct-item-2"
-      data-x-internal="struct-item">项目</a>：</p>
+      href="https://infra.spec.whatwg.org/#struct" data-x-internal="struct">结构</a>用于从被导航的
+    <a href="#navigable" id="navigation-supporting-concepts:navigable">可导航对象</a>捕获数据。与<a href="#source-snapshot-params"
+      id="navigation-supporting-concepts:source-snapshot-params-3">源快照参数</a>
+    类似，它会在导航开始时快照，并贯穿整个导航生命周期使用。
+    它具有以下<a href="https://infra.spec.whatwg.org/#struct-item" id="navigation-supporting-concepts:struct-item-2"
+      data-x-internal="struct-item">项</a>：
+  </p>
 
   <dl>
-    <dt><dfn id="target-snapshot-params-sandbox">沙盒标志</dfn></dt>
-    <dd><a href="#sandboxing-flag-set" id="navigation-supporting-concepts:sandboxing-flag-set-3">沙盒标志集</a></dd>
+    <dt><dfn id="target-snapshot-params-sandbox">沙箱标志</dfn></dt>
+    <dd>一个<a href="#sandboxing-flag-set" id="navigation-supporting-concepts:sandboxing-flag-set-3">沙箱标志集合</a></dd>
+    <dt><dfn id="target-snapshot-params-iframe-referrer-policy"><code>iframe</code> 元素推荐人策略</dfn></dt>
+    <dd>一个<a id="navigation-supporting-concepts:referrer-policy"
+        href="https://w3c.github.io/webappsec-referrer-policy/#referrer-policy"
+        data-x-internal="referrer-policy">推荐人策略</a></dd>
   </dl>
 
   <div data-algorithm="">
-    <p>要<dfn id="snapshotting-target-snapshot-params">快照目标快照参数</dfn>，给定一个<a href="#navigable"
-        id="navigation-supporting-concepts:navigable-2">导航对象</a><var>targetNavigable</var>，返回一个新的<a
-        href="#target-snapshot-params" id="navigation-supporting-concepts:target-snapshot-params">目标快照参数</a>，其中<a
-        href="#target-snapshot-params-sandbox"
-        id="navigation-supporting-concepts:target-snapshot-params-sandbox">沙盒标志</a>设置为给定<var>targetNavigable</var>的<a
-        href="#nav-bc" id="navigation-supporting-concepts:nav-bc">活动浏览上下文</a>和<var>targetNavigable</var>的<a
-        href="#nav-container" id="navigation-supporting-concepts:nav-container">容器</a>时确定的<a
-        href="#determining-the-creation-sandboxing-flags"
-        id="navigation-supporting-concepts:determining-the-creation-sandboxing-flags">创建沙盒标志</a>的结果。</p>
+    <p>要<dfn id="snapshotting-target-snapshot-params">快照目标快照参数</dfn>，
+      给定一个<a href="#navigable" id="navigation-supporting-concepts:navigable-2">可导航对象</a>
+      <var>targetNavigable</var>，返回一个新的<a href="#target-snapshot-params"
+        id="navigation-supporting-concepts:target-snapshot-params">目标快照参数</a>，内容如下：
+    </p>
+
+    <dl class="props">
+      <dt><a href="#target-snapshot-params-sandbox"
+          id="navigation-supporting-concepts:target-snapshot-params-sandbox">沙箱标志</a></dt>
+      <dd>运行<a href="#determining-the-creation-sandboxing-flags"
+          id="navigation-supporting-concepts:determining-the-creation-sandboxing-flags">确定创建沙箱标志</a>
+        的结果，参数为
+        <var>targetNavigable</var> 的 <a href="#nav-bc" id="navigation-supporting-concepts:nav-bc">活动浏览上下文</a> 和
+        <var>targetNavigable</var> 的 <a href="#nav-container" id="navigation-supporting-concepts:nav-container">容器</a>
+      </dd>
+      <dt><a href="#target-snapshot-params-iframe-referrer-policy"
+          id="navigation-supporting-concepts:target-snapshot-params-iframe-referrer-policy"><code>iframe</code>
+          元素推荐人策略</a></dt>
+      <dd>运行<a href="#determining-the-iframe-element-referrer-policy"
+          id="navigation-supporting-concepts:determining-the-iframe-element-referrer-policy">确定
+          <code>iframe</code> 元素推荐人策略</a>，参数为
+        <var>targetNavigable</var> 的 <a href="#nav-container" id="navigation-supporting-concepts:nav-container-2">容器</a>
+      </dd>
+    </dl>
   </div>
 
   <hr>
 
-  <p>导航过程的大部分工作聚焦于如何创建一个新的
+  <p>大部分导航过程关注于如何创建新的
     <code id="navigation-supporting-concepts:document-3"><a href="#document">Document</a></code>，
-    其最终实现在
-    <a href="#initialise-the-document-object" id="navigation-supporting-concepts:initialise-the-document-object">创建并初始化
-      <code>Document</code>
-      对象</a>
-    算法中。该算法的参数通过 <dfn id="navigation-params">navigation params</dfn>
+    最终在<a href="#initialise-the-document-object"
+      id="navigation-supporting-concepts:initialise-the-document-object">创建并初始化 <code>Document</code> 对象</a>
+    算法中完成。该算法的参数通过 <dfn id="navigation-params">导航参数</dfn>
     <a id="navigation-supporting-concepts:struct-3" href="https://infra.spec.whatwg.org/#struct"
-      data-x-internal="struct">结构体</a>进行跟踪，其中包含如下<a href="https://infra.spec.whatwg.org/#struct-item"
-      id="navigation-supporting-concepts:struct-item-3" data-x-internal="struct-item">条目</a>：
+      data-x-internal="struct">结构</a>跟踪，结构具有以下
+    <a href="https://infra.spec.whatwg.org/#struct-item" id="navigation-supporting-concepts:struct-item-3"
+      data-x-internal="struct-item">项</a>：
   </p>
 
   <dl>
     <dt><dfn data-dfn-for="navigation params" id="navigation-params-id">id</dfn></dt>
-    <dd>null 或 <a href="#navigation-id" id="navigation-supporting-concepts:navigation-id">navigation ID</a></dd>
-    <dt><dfn data-dfn-for="navigation params" id="navigation-params-navigable">navigable</dfn></dt>
-    <dd>要被导航的 <a href="#navigable" id="navigation-supporting-concepts:navigable-3">navigable</a></dd>
-    <dt><dfn data-dfn-for="navigation params" id="navigation-params-request">request</dfn></dt>
-    <dd>null 或发起导航的<a href="https://fetch.spec.whatwg.org/#concept-request"
-        id="navigation-supporting-concepts:concept-request" data-x-internal="concept-request">request</a></dd>
-    <dt><dfn data-dfn-for="navigation params" id="navigation-params-response">response</dfn></dt>
-    <dd>最终导航到的<a href="https://fetch.spec.whatwg.org/#concept-response"
-        id="navigation-supporting-concepts:concept-response" data-x-internal="concept-response">response</a>
-      （也可能是<a id="navigation-supporting-concepts:network-error"
-        href="https://fetch.spec.whatwg.org/#concept-network-error" data-x-internal="network-error">网络错误</a>）
-    </dd>
+    <dd>null 或 <a href="#navigation-id" id="navigation-supporting-concepts:navigation-id">导航ID</a></dd>
+    <dt><dfn data-dfn-for="navigation params" id="navigation-params-navigable">可导航对象</dfn></dt>
+    <dd>将被导航的 <a href="#navigable" id="navigation-supporting-concepts:navigable-3">可导航对象</a></dd>
+    <dt><dfn data-dfn-for="navigation params" id="navigation-params-request">请求</dfn></dt>
+    <dd>null 或用于发起导航的 <a href="https://fetch.spec.whatwg.org/#concept-request"
+        id="navigation-supporting-concepts:concept-request" data-x-internal="concept-request">请求</a></dd>
+    <dt><dfn data-dfn-for="navigation params" id="navigation-params-response">响应</dfn></dt>
+    <dd>最终导航到的 <a href="https://fetch.spec.whatwg.org/#concept-response"
+        id="navigation-supporting-concepts:concept-response" data-x-internal="concept-response">响应</a>
+      （可能是<a id="navigation-supporting-concepts:network-error"
+        href="https://fetch.spec.whatwg.org/#concept-network-error" data-x-internal="network-error">网络错误</a>）</dd>
     <dt><dfn data-dfn-for="navigation params" id="navigation-params-fetch-controller">fetch
-        controller</dfn></dt>
-    <dd>null 或<a id="navigation-supporting-concepts:fetch-controller"
-        href="https://fetch.spec.whatwg.org/#fetch-controller" data-x-internal="fetch-controller">fetch controller</a>
+        控制器</dfn></dt>
+    <dd>null 或 <a id="navigation-supporting-concepts:fetch-controller"
+        href="https://fetch.spec.whatwg.org/#fetch-controller" data-x-internal="fetch-controller">fetch 控制器</a>
     </dd>
     <dt><dfn data-dfn-for="navigation params" id="navigation-params-commit-early-hints">commit early
         hints</dfn></dt>
-    <dd>null 或在<code id="navigation-supporting-concepts:document-4"><a href="#document">Document</a></code>创建后接收它的一个算法
+    <dd>null 或接受一个 <code id="navigation-supporting-concepts:document-4"><a href="#document">Document</a></code>
+      的算法，在文档创建后调用
     </dd>
     <dt><dfn data-dfn-for="navigation params" id="navigation-params-coop-enforcement-result">COOP
-        enforcement result</dfn></dt>
-    <dd><a href="#coop-enforcement-result" id="navigation-supporting-concepts:coop-enforcement-result">opener policy
-        enforcement result</a>，用于报告并可能导致<a
-        href="#browsing-context-group-switches-due-to-cross-origin-opener-policy">浏览上下文组切换</a></dd>
-    <dt><dfn data-dfn-for="navigation params" id="navigation-params-reserved-environment">reserved
-        environment</dfn></dt>
-    <dd>null 或为新的 <code id="navigation-supporting-concepts:document-5"><a href="#document">Document</a></code> 保留的
-      <a href="#environment" id="navigation-supporting-concepts:environment">environment</a>
+        执行结果</dfn></dt>
+    <dd>一个 <a href="#coop-enforcement-result" id="navigation-supporting-concepts:coop-enforcement-result">opener policy
+        执行结果</a>，用于报告，可能会导致<a href="#browsing-context-group-switches-due-to-cross-origin-opener-policy">浏览上下文组切换</a>
     </dd>
-    <dt><dfn data-dfn-for="navigation params" id="navigation-params-origin">origin</dfn></dt>
-    <dd>用于新 <code id="navigation-supporting-concepts:document-6"><a href="#document">Document</a></code> 的
-      <a href="#concept-origin" id="navigation-supporting-concepts:concept-origin">origin</a>
+    <dt><dfn data-dfn-for="navigation params" id="navigation-params-reserved-environment">预留环境</dfn></dt>
+    <dd>null 或为新 <code id="navigation-supporting-concepts:document-5"><a href="#document">Document</a></code> 预留的
+      <a href="#environment" id="navigation-supporting-concepts:environment">环境</a>
+    </dd>
+    <dt><dfn data-dfn-for="navigation params" id="navigation-params-origin">来源</dfn></dt>
+    <dd>用于新 <a href="#concept-origin" id="navigation-supporting-concepts:concept-origin">来源</a> 的
+      <code id="navigation-supporting-concepts:document-6"><a href="#document">Document</a></code>
     </dd>
     <dt><dfn data-dfn-for="navigation params" id="navigation-params-policy-container">policy
-        container</dfn></dt>
-    <dd>用于新 <code id="navigation-supporting-concepts:document-7"><a href="#document">Document</a></code> 的
-      <a href="#policy-container" id="navigation-supporting-concepts:policy-container-3">policy container</a>
+        容器</dfn></dt>
+    <dd>用于新 <a href="#policy-container" id="navigation-supporting-concepts:policy-container-3">policy 容器</a> 的
+      <code id="navigation-supporting-concepts:document-7"><a href="#document">Document</a></code>
     </dd>
-    <dt><dfn data-dfn-for="navigation params" id="navigation-params-sandboxing">final sandboxing flag
-        set</dfn></dt>
-    <dd>强加给新 <code id="navigation-supporting-concepts:document-8"><a href="#document">Document</a></code> 的
-      <a href="#sandboxing-flag-set" id="navigation-supporting-concepts:sandboxing-flag-set-4">sandboxing flag set</a>
+    <dt><dfn data-dfn-for="navigation params" id="navigation-params-sandboxing">最终沙箱标志集合</dfn></dt>
+    <dd>要应用于新 <a href="#sandboxing-flag-set" id="navigation-supporting-concepts:sandboxing-flag-set-4">沙箱标志集合</a> 的
+      <code id="navigation-supporting-concepts:document-8"><a href="#document">Document</a></code>
     </dd>
+    <dt><dfn data-dfn-for="navigation params" id="navigation-params-iframe-referrer-policy"><code>iframe</code>
+        元素推荐人策略</dfn></dt>
+    <dd>一个<a id="navigation-supporting-concepts:referrer-policy-2"
+        href="https://w3c.github.io/webappsec-referrer-policy/#referrer-policy"
+        data-x-internal="referrer-policy">推荐人策略</a>，用于<a href="#internal-ancestor-origin-objects-list-creation-steps"
+        id="navigation-supporting-concepts:internal-ancestor-origin-objects-list-creation-steps">内部祖先来源对象列表创建步骤</a></dd>
     <dt><dfn data-dfn-for="navigation params" id="navigation-params-coop">opener policy</dfn></dt>
-    <dd>用于新 <code id="navigation-supporting-concepts:document-9"><a href="#document">Document</a></code> 的
-      <a href="#cross-origin-opener-policy" id="navigation-supporting-concepts:cross-origin-opener-policy">opener
-        policy</a>
+    <dd>用于新 <a href="#cross-origin-opener-policy" id="navigation-supporting-concepts:cross-origin-opener-policy">opener
+        policy</a> 的
+      <code id="navigation-supporting-concepts:document-9"><a href="#document">Document</a></code>
     </dd>
-    <dt><dfn data-dfn-for="navigation params" id="navigation-params-nav-timing-type">navigation timing
-        type</dfn></dt>
-    <dd>用于为新 <code id="navigation-supporting-concepts:document-10"><a href="#document">Document</a></code>
-      <a href="https://w3c.github.io/navigation-timing/#dfn-create-the-navigation-timing-entry"
-        id="navigation-supporting-concepts:create-the-navigation-timing-entry"
-        data-x-internal="create-the-navigation-timing-entry">创建 navigation timing entry</a> 的
-      <code
+    <dt><dfn data-dfn-for="navigation params" id="navigation-params-nav-timing-type">导航计时类型</dfn></dt>
+    <dd>一个 <code
         id="navigation-supporting-concepts:navigationtimingtype"><a data-x-internal="navigationtimingtype" href="https://w3c.github.io/navigation-timing/#dom-navigationtimingtype">NavigationTimingType</a></code>
-    </dd>
-    <dt><dfn data-dfn-for="navigation params" id="navigation-params-about-base-url">about base
+      用于为新 <code id="navigation-supporting-concepts:document-10"><a href="#document">Document</a></code> <a
+        href="https://w3c.github.io/navigation-timing/#dfn-create-the-navigation-timing-entry"
+        id="navigation-supporting-concepts:create-the-navigation-timing-entry"
+        data-x-internal="create-the-navigation-timing-entry">创建导航计时条目</a></dd>
+    <dt><dfn data-dfn-for="navigation params" id="navigation-params-about-base-url">about 基础
         URL</dfn></dt>
-    <dd>用于填充新 <code id="navigation-supporting-concepts:document-11"><a href="#document">Document</a></code> 的 <a
-        href="#concept-document-about-base-url"
-        id="navigation-supporting-concepts:concept-document-about-base-url">about base URL</a> 的
-      <a id="navigation-supporting-concepts:url" href="https://url.spec.whatwg.org/#concept-url"
-        data-x-internal="url">URL</a> 或 null
+    <dd>一个<a id="navigation-supporting-concepts:url" href="https://url.spec.whatwg.org/#concept-url"
+        data-x-internal="url">URL</a>或 null，用于填充新 <code
+        id="navigation-supporting-concepts:document-11"><a href="#document">Document</a></code> 的
+      <a href="#concept-document-about-base-url"
+        id="navigation-supporting-concepts:concept-document-about-base-url">about 基础 URL</a>
     </dd>
-    <dt><dfn data-dfn-for="navigation params" id="navigation-params-user-involvement">user
-        involvement</dfn></dt>
-    <dd>在为新
-      <code id="navigation-supporting-concepts:document-12"><a href="#document">Document</a></code>
-      <a href="#obtain-browsing-context-navigation"
-        id="navigation-supporting-concepts:obtain-browsing-context-navigation">获取浏览上下文</a>时使用的
-      <a href="#user-navigation-involvement" id="navigation-supporting-concepts:user-navigation-involvement">user
-        navigation involvement</a>
+    <dt><dfn data-dfn-for="navigation params" id="navigation-params-user-involvement">用户
+        参与度</dfn></dt>
+    <dd>一个<a href="#user-navigation-involvement"
+        id="navigation-supporting-concepts:user-navigation-involvement">用户导航参与度</a>，
+      当<a href="#obtain-browsing-context-navigation"
+        id="navigation-supporting-concepts:obtain-browsing-context-navigation">获取浏览上下文</a>用于新
+      <code id="navigation-supporting-concepts:document-12"><a href="#document">Document</a></code>时使用
     </dd>
   </dl>
+
 
   <p class="note">一旦创建了一个<a href="#navigation-params"
       id="navigation-supporting-concepts:navigation-params">导航参数</a>结构，本标准不会对其任何<a
@@ -157435,82 +157714,60 @@ location<c- p="">.</c->href <c- o="">=</c-> <c- t="">'#foo'</c-><c- p="">;</c-><
                     id="beginning-navigation:navigation-params">导航参数</a>，其中包含：</p>
 
                 <dl class="props">
-                  <dt><a href="#navigation-params-id" id="beginning-navigation:navigation-params-id">id</a>
-                  </dt>
-                  <dd><var>navigationId</var>
-                  </dd>
+                  <dt><a href="#navigation-params-id" id="beginning-navigation:navigation-params-id">标识符</a></dt>
+                  <dd><var>navigationId</var></dd>
                   <dt><a href="#navigation-params-navigable"
-                      id="beginning-navigation:navigation-params-navigable">navigable</a>
+                      id="beginning-navigation:navigation-params-navigable">可导航对象</a></dt>
+                  <dd><var>navigable</var></dd>
+                  <dt><a href="#navigation-params-request" id="beginning-navigation:navigation-params-request">请求</a>
                   </dt>
-                  <dd><var>navigable</var>
-                  </dd>
-                  <dt><a href="#navigation-params-request"
-                      id="beginning-navigation:navigation-params-request">request</a>
+                  <dd>null</dd>
+                  <dt><a href="#navigation-params-response" id="beginning-navigation:navigation-params-response">响应</a>
                   </dt>
-                  <dd>null
-                  </dd>
-                  <dt><a href="#navigation-params-response"
-                      id="beginning-navigation:navigation-params-response">response</a>
-                  </dt>
-                  <dd><var>response</var>
-                  </dd>
+                  <dd><var>response</var></dd>
                   <dt><a href="#navigation-params-fetch-controller"
-                      id="beginning-navigation:navigation-params-fetch-controller">fetch controller</a>
-                  </dt>
-                  <dd>null
-                  </dd>
+                      id="beginning-navigation:navigation-params-fetch-controller">获取控制器</a></dt>
+                  <dd>null</dd>
                   <dt><a href="#navigation-params-commit-early-hints"
-                      id="beginning-navigation:navigation-params-commit-early-hints">commit early hints</a>
-                  </dt>
-                  <dd>null
-                  </dd>
+                      id="beginning-navigation:navigation-params-commit-early-hints">提交提前提示</a></dt>
+                  <dd>null</dd>
                   <dt><a href="#navigation-params-coop-enforcement-result"
-                      id="beginning-navigation:navigation-params-coop-enforcement-result">COOP enforcement result</a>
+                      id="beginning-navigation:navigation-params-coop-enforcement-result">COOP 执行结果</a>
                   </dt>
-                  <dd><var>coopEnforcementResult</var>
-                  </dd>
+                  <dd><var>coopEnforcementResult</var></dd>
                   <dt><a href="#navigation-params-reserved-environment"
-                      id="beginning-navigation:navigation-params-reserved-environment">reserved environment</a>
+                      id="beginning-navigation:navigation-params-reserved-environment">预留环境</a></dt>
+                  <dd>null</dd>
+                  <dt><a href="#navigation-params-origin" id="beginning-navigation:navigation-params-origin">来源</a>
                   </dt>
-                  <dd>null
-                  </dd>
-                  <dt><a href="#navigation-params-origin" id="beginning-navigation:navigation-params-origin">origin</a>
-                  </dt>
-                  <dd><var>responseOrigin</var>
-                  </dd>
+                  <dd><var>responseOrigin</var></dd>
                   <dt><a href="#navigation-params-policy-container"
-                      id="beginning-navigation:navigation-params-policy-container">policy container</a>
-                  </dt>
-                  <dd><var>policyContainer</var>
-                  </dd>
+                      id="beginning-navigation:navigation-params-policy-container">策略容器</a></dt>
+                  <dd><var>policyContainer</var></dd>
                   <dt><a href="#navigation-params-sandboxing"
-                      id="beginning-navigation:navigation-params-sandboxing">final
-                      sandboxing flag set</a>
+                      id="beginning-navigation:navigation-params-sandboxing">最终沙箱标志集</a></dt>
+                  <dd><var>finalSandboxFlags</var></dd>
+                  <dt><a href="#navigation-params-iframe-referrer-policy"
+                      id="beginning-navigation:navigation-params-iframe-referrer-policy"><code>iframe</code> 元素推荐人策略</a>
                   </dt>
-                  <dd><var>finalSandboxFlags</var>
-                  </dd>
-                  <dt><a href="#navigation-params-coop" id="beginning-navigation:navigation-params-coop">opener
-                      policy</a>
-                  </dt>
-                  <dd><var>coop</var>
-                  </dd>
+                  <dd><var>targetSnapshotParams</var> 的 <a href="#target-snapshot-params-iframe-referrer-policy"
+                      id="beginning-navigation:target-snapshot-params-iframe-referrer-policy"><code>iframe</code>
+                      元素推荐人策略</a></dd>
+                  <dt><a href="#navigation-params-coop" id="beginning-navigation:navigation-params-coop">打开者策略</a></dt>
+                  <dd><var>coop</var></dd>
                   <dt><a href="#navigation-params-nav-timing-type"
-                      id="beginning-navigation:navigation-params-nav-timing-type">navigation timing type</a>
-                  </dt>
+                      id="beginning-navigation:navigation-params-nav-timing-type">导航计时类型</a></dt>
                   <dd>"<code
                       id="beginning-navigation:dom-navigationtimingtype-navigate"><a data-x-internal="dom-navigationtimingtype-navigate" href="https://w3c.github.io/navigation-timing/#dom-navigationtimingtype-navigate">navigate</a></code>"
                   </dd>
                   <dt><a href="#navigation-params-about-base-url"
-                      id="beginning-navigation:navigation-params-about-base-url">about base URL</a>
-                  </dt>
-                  <dd><var>documentState</var> 的<a href="#document-state-about-base-url"
-                      id="beginning-navigation:document-state-about-base-url-2">about 基 URL</a>
-                  </dd>
+                      id="beginning-navigation:navigation-params-about-base-url">about 基础 URL</a></dt>
+                  <dd><var>documentState</var> 的 <a href="#document-state-about-base-url"
+                      id="beginning-navigation:document-state-about-base-url-2">about 基础
+                      URL</a></dd>
                   <dt><a href="#navigation-params-user-involvement"
-                      id="beginning-navigation:navigation-params-user-involvement">user involvement</a>
-                  </dt>
-                  <dd><var>userInvolvement</var>
-                  </dd>
+                      id="beginning-navigation:navigation-params-user-involvement">用户参与度</a></dt>
+                  <dd><var>userInvolvement</var></dd>
                 </dl>
               </li>
             </ol>
@@ -158017,17 +158274,16 @@ location<c- p="">.</c->href <c- o="">=</c-> <c- t="">'#foo'</c-><c- p="">;</c-><
             id="the-javascript:-url-special-case:navigation-params">导航参数</a>，包含</p>
 
         <dl class="props">
-          <dt><a href="#navigation-params-id" id="the-javascript:-url-special-case:navigation-params-id">id</a></dt>
+          <dt><a href="#navigation-params-id" id="the-javascript:-url-special-case:navigation-params-id">标识符</a></dt>
           <dd><var>navigationId</var></dd>
           <dt><a href="#navigation-params-navigable"
-              id="the-javascript:-url-special-case:navigation-params-navigable">navigable</a></dt>
+              id="the-javascript:-url-special-case:navigation-params-navigable">可导航对象</a></dt>
           <dd><var>targetNavigable</var></dd>
           <dt><a href="#navigation-params-request"
-              id="the-javascript:-url-special-case:navigation-params-request">请求</a>
-          </dt>
-          <dd>null <span class="XXX">这将导致生成的 <code
-                id="the-javascript:-url-special-case:document-2"><a href="#document">文档</a></code>
-              的引用为 null；这样是否正确？</span></dd>
+              id="the-javascript:-url-special-case:navigation-params-request">请求</a></dt>
+          <dd>null <span class="XXX">这将导致结果 <code
+                id="the-javascript:-url-special-case:document-2"><a href="#document">Document</a></code>
+              的 referrer（推荐人）为 null；是否正确？</span></dd>
           <dt><a href="#navigation-params-response"
               id="the-javascript:-url-special-case:navigation-params-response">响应</a></dt>
           <dd><var>response</var></dd>
@@ -158035,13 +158291,13 @@ location<c- p="">.</c->href <c- o="">=</c-> <c- t="">'#foo'</c-><c- p="">;</c-><
               id="the-javascript:-url-special-case:navigation-params-fetch-controller">获取控制器</a></dt>
           <dd>null</dd>
           <dt><a href="#navigation-params-commit-early-hints"
-              id="the-javascript:-url-special-case:navigation-params-commit-early-hints">提交早期提示</a></dt>
+              id="the-javascript:-url-special-case:navigation-params-commit-early-hints">提交提前提示</a></dt>
           <dd>null</dd>
           <dt><a href="#navigation-params-coop-enforcement-result"
               id="the-javascript:-url-special-case:navigation-params-coop-enforcement-result">COOP 执行结果</a></dt>
           <dd><var>coopEnforcementResult</var></dd>
           <dt><a href="#navigation-params-reserved-environment"
-              id="the-javascript:-url-special-case:navigation-params-reserved-environment">保留环境</a></dt>
+              id="the-javascript:-url-special-case:navigation-params-reserved-environment">预留环境</a></dt>
           <dd>null</dd>
           <dt><a href="#navigation-params-origin" id="the-javascript:-url-special-case:navigation-params-origin">来源</a>
           </dt>
@@ -158050,21 +158306,27 @@ location<c- p="">.</c->href <c- o="">=</c-> <c- t="">'#foo'</c-><c- p="">;</c-><
               id="the-javascript:-url-special-case:navigation-params-policy-container">策略容器</a></dt>
           <dd><var>policyContainer</var></dd>
           <dt><a href="#navigation-params-sandboxing"
-              id="the-javascript:-url-special-case:navigation-params-sandboxing">最终沙盒标志集</a></dt>
+              id="the-javascript:-url-special-case:navigation-params-sandboxing">最终沙箱标志集</a></dt>
           <dd><var>finalSandboxFlags</var></dd>
-          <dt><a href="#navigation-params-coop" id="the-javascript:-url-special-case:navigation-params-coop">跨来源打开策略</a>
+          <dt><a href="#navigation-params-iframe-referrer-policy"
+              id="the-javascript:-url-special-case:navigation-params-iframe-referrer-policy"><code>iframe</code>
+              元素推荐人策略</a></dt>
+          <dd><var>targetSnapshotParams</var> 的 <a href="#target-snapshot-params-iframe-referrer-policy"
+              id="the-javascript:-url-special-case:target-snapshot-params-iframe-referrer-policy"><code>iframe</code>
+              元素推荐人策略</a></dd>
+          <dt><a href="#navigation-params-coop" id="the-javascript:-url-special-case:navigation-params-coop">打开者策略</a>
           </dt>
           <dd><var>coop</var></dd>
           <dt><a href="#navigation-params-nav-timing-type"
-              id="the-javascript:-url-special-case:navigation-params-nav-timing-type">导航时序类型</a></dt>
+              id="the-javascript:-url-special-case:navigation-params-nav-timing-type">导航计时类型</a></dt>
           <dd>"<code
               id="the-javascript:-url-special-case:dom-navigationtimingtype-navigate"><a data-x-internal="dom-navigationtimingtype-navigate" href="https://w3c.github.io/navigation-timing/#dom-navigationtimingtype-navigate">navigate</a></code>"
           </dd>
           <dt><a href="#navigation-params-about-base-url"
-              id="the-javascript:-url-special-case:navigation-params-about-base-url">关于基本 URL</a></dt>
+              id="the-javascript:-url-special-case:navigation-params-about-base-url">about 基础 URL</a></dt>
           <dd><var>targetNavigable</var> 的 <a href="#nav-document"
               id="the-javascript:-url-special-case:nav-document-7">活动文档</a> 的 <a href="#concept-document-about-base-url"
-              id="the-javascript:-url-special-case:concept-document-about-base-url">关于基本 URL</a></dd>
+              id="the-javascript:-url-special-case:concept-document-about-base-url">about 基础 URL</a></dd>
           <dt><a href="#navigation-params-user-involvement"
               id="the-javascript:-url-special-case:navigation-params-user-involvement">用户参与度</a></dt>
           <dd><var>userInvolvement</var></dd>
@@ -159871,10 +160133,10 @@ location<c- p="">.</c->href <c- o="">=</c-> <c- t="">'#foo'</c-><c- p="">;</c-><
         </p>
 
         <dl class="props">
-          <dt><a href="#navigation-params-id" id="populating-a-session-history-entry:navigation-params-id">id</a></dt>
+          <dt><a href="#navigation-params-id" id="populating-a-session-history-entry:navigation-params-id">标识符</a></dt>
           <dd><var>navigationId</var></dd>
           <dt><a href="#navigation-params-navigable"
-              id="populating-a-session-history-entry:navigation-params-navigable">可导航</a></dt>
+              id="populating-a-session-history-entry:navigation-params-navigable">可导航对象</a></dt>
           <dd><var>navigable</var></dd>
           <dt><a href="#navigation-params-request"
               id="populating-a-session-history-entry:navigation-params-request-4">请求</a></dt>
@@ -159886,13 +160148,14 @@ location<c- p="">.</c->href <c- o="">=</c-> <c- t="">'#foo'</c-><c- p="">;</c-><
               id="populating-a-session-history-entry:navigation-params-fetch-controller">获取控制器</a></dt>
           <dd>null</dd>
           <dt><a href="#navigation-params-commit-early-hints"
-              id="populating-a-session-history-entry:navigation-params-commit-early-hints">提交早期提示</a></dt>
+              id="populating-a-session-history-entry:navigation-params-commit-early-hints">提交提前提示</a></dt>
           <dd>null</dd>
           <dt><a href="#navigation-params-coop-enforcement-result"
-              id="populating-a-session-history-entry:navigation-params-coop-enforcement-result">COOP执行结果</a></dt>
+              id="populating-a-session-history-entry:navigation-params-coop-enforcement-result">COOP 执行结果</a></dt>
           <dd><var>coopEnforcementResult</var></dd>
           <dt><a href="#navigation-params-reserved-environment"
-              id="populating-a-session-history-entry:navigation-params-reserved-environment-3">保留环境</a></dt>
+              id="populating-a-session-history-entry:navigation-params-reserved-environment-3">预留环境</a>
+          </dt>
           <dd>null</dd>
           <dt><a href="#navigation-params-origin"
               id="populating-a-session-history-entry:navigation-params-origin-2">来源</a></dt>
@@ -159901,22 +160164,27 @@ location<c- p="">.</c->href <c- o="">=</c-> <c- t="">'#foo'</c-><c- p="">;</c-><
               id="populating-a-session-history-entry:navigation-params-policy-container-5">策略容器</a></dt>
           <dd><var>policyContainer</var></dd>
           <dt><a href="#navigation-params-sandboxing"
-              id="populating-a-session-history-entry:navigation-params-sandboxing-2">最终沙盒标志集</a></dt>
-          <dd><var>targetSnapshotParams</var>的<a href="#target-snapshot-params-sandbox"
-              id="populating-a-session-history-entry:target-snapshot-params-sandbox-3">沙盒标志</a></dd>
-          <dt><a href="#navigation-params-coop"
-              id="populating-a-session-history-entry:navigation-params-coop">跨源打开者策略</a>
+              id="populating-a-session-history-entry:navigation-params-sandboxing-2">最终沙箱标志集</a></dt>
+          <dd><var>targetSnapshotParams</var> 的 <a href="#target-snapshot-params-sandbox"
+              id="populating-a-session-history-entry:target-snapshot-params-sandbox-3">沙箱标志</a></dd>
+          <dt><a href="#navigation-params-iframe-referrer-policy"
+              id="populating-a-session-history-entry:navigation-params-iframe-referrer-policy"><code>iframe</code>
+              元素推荐人策略</a></dt>
+          <dd><var>targetSnapshotParams</var> 的 <a href="#target-snapshot-params-iframe-referrer-policy"
+              id="populating-a-session-history-entry:target-snapshot-params-iframe-referrer-policy"><code>iframe</code>
+              元素推荐人策略</a></dd>
+          <dt><a href="#navigation-params-coop" id="populating-a-session-history-entry:navigation-params-coop">打开者策略</a>
           </dt>
           <dd><var>coop</var></dd>
           <dt><a href="#navigation-params-nav-timing-type"
-              id="populating-a-session-history-entry:navigation-params-nav-timing-type">导航时序类型</a></dt>
+              id="populating-a-session-history-entry:navigation-params-nav-timing-type">导航计时类型</a></dt>
           <dd><var>navTimingType</var></dd>
           <dt><a href="#navigation-params-about-base-url"
-              id="populating-a-session-history-entry:navigation-params-about-base-url">关于基础URL</a></dt>
-          <dd><var>entry</var>的<a href="#she-document-state"
-              id="populating-a-session-history-entry:she-document-state-22">文档状态</a>的<a
+              id="populating-a-session-history-entry:navigation-params-about-base-url">about 基础 URL</a></dt>
+          <dd><var>entry</var> 的 <a href="#she-document-state"
+              id="populating-a-session-history-entry:she-document-state-22">文档状态</a> 的 <a
               href="#document-state-about-base-url"
-              id="populating-a-session-history-entry:document-state-about-base-url">关于基础URL</a></dd>
+              id="populating-a-session-history-entry:document-state-about-base-url">about 基础 URL</a></dd>
           <dt><a href="#navigation-params-user-involvement"
               id="populating-a-session-history-entry:navigation-params-user-involvement">用户参与度</a></dt>
           <dd><var>userInvolvement</var></dd>
@@ -164042,12 +164310,13 @@ location<c- p="">.</c->href <c- o="">=</c-> <c- t="">'#foo'</c-><c- p="">;</c-><
       </li>
       <li>
         <p>将 <var>document</var> 的 <a href="#concept-document-internal-ancestor-origin-objects-list"
-            id="shared-document-creation-infrastructure:concept-document-internal-ancestor-origin-objects-list">内部
-            祖先 源 对象
-            列表</a> 设置为在给定 <var>document</var> 时运行 <a href="#internal-ancestor-origin-objects-list-creation-steps"
-            id="shared-document-creation-infrastructure:internal-ancestor-origin-objects-list-creation-steps">内部
-            祖先 源 对象 列表 创建
-            步骤</a> 的结果。</p>
+            id="shared-document-creation-infrastructure:concept-document-internal-ancestor-origin-objects-list">内部祖先来源对象列表</a>
+          设置为运行 <a href="#internal-ancestor-origin-objects-list-creation-steps"
+            id="shared-document-creation-infrastructure:internal-ancestor-origin-objects-list-creation-steps">内部祖先来源对象列表创建步骤</a>后的结果，
+          参数为 <var>document</var> 和 <var>navigationParams</var> 的 <a href="#navigation-params-iframe-referrer-policy"
+            id="shared-document-creation-infrastructure:navigation-params-iframe-referrer-policy"><code>iframe</code>
+            元素推荐人策略</a>。
+        </p>
       </li>
       <li>
         <p>将 <var>document</var> 的 <a href="#concept-document-ancestor-origins-list"
@@ -164743,6 +165012,9 @@ document<c- p="">.</c->domain <c- o="">=</c-> <c- t="">'example.com'</c-><c- p="
           <dd>一个新的 <a href="#policy-container" id="read-ua-inline:policy-container">policy container</a></dd>
           <dt><a href="#navigation-params-sandboxing" id="read-ua-inline:navigation-params-sandboxing">最终沙箱标志集</a></dt>
           <dd>一个空集合</dd>
+          <dt><a href="#navigation-params-iframe-referrer-policy"
+              id="read-ua-inline:navigation-params-iframe-referrer-policy"><code>iframe</code> 元素推荐人策略</a></dt>
+          <dd>空字符串</dd>
           <dt><a href="#navigation-params-coop" id="read-ua-inline:navigation-params-coop">打开者策略</a></dt>
           <dd><var>coop</var></dd>
           <dt><a href="#navigation-params-nav-timing-type"
@@ -194618,14 +194890,14 @@ worker<c- p="">.</c->port<c- p="">.</c->postMessage<c- p="">({</c-> foo<c- o="">
     <p><a href="#between-loads-shared-worker-timeout"
         id="the-worker's-lifetime:between-loads-shared-worker-timeout-4">两次加载间共享 worker 超时</a>
       只影响<a href="#permissible-worker" id="the-worker's-lifetime:permissible-worker-4">允许</a>的定义，不影响<a
-          href="#protected-worker" id="the-worker's-lifetime:protected-worker-6">受保护</a>，因此实现并不一定需要按该时长将共享 worker 保活。
-        实现应在超时时关闭共享 worker。
+        href="#protected-worker" id="the-worker's-lifetime:protected-worker-6">受保护</a>，因此实现并不一定需要按该时长将共享 worker 保活。
+      实现应在超时时关闭共享 worker。
     </p>
 
     <p>而<a href="#extended-lifetime-shared-worker-timeout"
         id="the-worker's-lifetime:extended-lifetime-shared-worker-timeout-4">扩展生命周期共享 worker 超时</a>
       则影响<a href="#protected-worker" id="the-worker's-lifetime:protected-worker-7">受保护</a>的定义，
-        所以实现必须按该时长将共享 worker 保活（而且不能挂起）。
+      所以实现必须按该时长将共享 worker 保活（而且不能挂起）。
     </p>
   </div>
 
