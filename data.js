@@ -103,7 +103,7 @@ const links = [
         text: "URL Pattern",
         href: "https://htmlspecs.com/urlpattern/",
         src: "https://urlpattern.spec.whatwg.org/",
-        "last-modified": "Wed, 03 Dec 2025 05:48:30 GMT",
+        "last-modified": "Sun, 15 Mar 2026 09:04:08 GMT",
         lang: "cjk",
         state: "LS"
     },
