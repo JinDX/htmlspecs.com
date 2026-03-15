@@ -519,7 +519,7 @@ const links = [
         text: "Storage",
         href: "https://htmlspecs.com/storage/",
         src: "https://storage.spec.whatwg.org/",
-        "last-modified": "Mon, 16 Feb 2026 16:35:59 GMT",
+        "last-modified": "Sun, 15 Mar 2026 09:04:49 GMT",
         lang: "cjk",
         state: "LS"
     },
