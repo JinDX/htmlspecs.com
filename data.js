@@ -191,7 +191,7 @@ const links = [
         text: "Compatibility",
         href: "https://htmlspecs.com/compat/",
         src: "https://compat.spec.whatwg.org/",
-        "last-modified": "Mon, 15 Dec 2025 16:06:28 GMT",
+        "last-modified": "Sun, 15 Mar 2026 09:07:44 GMT",
         lang: "cjk",
         state: "LS"
     },
