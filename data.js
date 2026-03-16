@@ -745,7 +745,7 @@ const links = [
         text: "Fullscreen",
         href: "https://htmlspecs.com/fullscreen/",
         src: "https://fullscreen.spec.whatwg.org/",
-        "last-modified": "Tue, 20 Jan 2026 08:13:14 GMT",
+        "last-modified": "Mon, 16 Mar 2026 07:47:38 GMT",
         lang: "cjk",
         state: "LS"
     },
