@@ -1579,7 +1579,7 @@ const links = [
         text: "Console",
         href: "https://htmlspecs.com/console/",
         src: "https://console.spec.whatwg.org/",
-        "last-modified": "Tue, 12 Aug 2025 13:36:16 GMT",
+        "last-modified": "Sun, 15 Mar 2026 12:32:55 GMT",
         lang: "cjk",
         state: "LS"
     }
