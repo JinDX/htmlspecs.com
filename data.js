@@ -1496,7 +1496,7 @@ const links = [
     {
         text: "Media Capabilities",
         href: "https://htmlspecs.com/media-capabilities/",
-        src: "https://www.w3.org/TR/2026/WD-media-capabilities-20260210/",
+        src: "https://www.w3.org/TR/2026/WD-media-capabilities-20260316/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
