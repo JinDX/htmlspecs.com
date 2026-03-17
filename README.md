@@ -202,7 +202,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [MediaStream Image Capture](https://htmlspecs.com/image-capture/)（[Source](https://www.w3.org/TR/2025/WD-image-capture-20250423/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Encrypted Media Extensions](https://htmlspecs.com/encrypted-media-2/)（[Source](https://www.w3.org/TR/2025/WD-encrypted-media-2-20251126/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Remote Playback](https://htmlspecs.com/remote-playback/)（[Source](https://www.w3.org/TR/2024/CRD-remote-playback-20240430/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
-- [WebXR Device API](https://htmlspecs.com/webxr/)（[Source](https://www.w3.org/TR/2025/CRD-webxr-20251001/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
+- [WebXR Device API](https://htmlspecs.com/webxr/)（[Source](https://www.w3.org/TR/2026/CRD-webxr-20260316/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [WebXR Augmented Reality Module - Level 1](https://htmlspecs.com/webxr-ar-module-1/)（[Source](https://www.w3.org/TR/2025/CRD-webxr-ar-module-1-20250425/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [WebXR Hand Input Module - Level 1](https://htmlspecs.com/webxr-hand-input-1/)（[Source](https://www.w3.org/TR/2024/WD-webxr-hand-input-1-20240605/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [WebXR Gamepads Module - Level 1](https://htmlspecs.com/webxr-gamepads-module-1/)（[Source](https://www.w3.org/TR/2025/WD-webxr-gamepads-module-1-20250707/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
