@@ -159,7 +159,7 @@ const links = [
         text: "Infra",
         href: "https://htmlspecs.com/infra/",
         src: "https://infra.spec.whatwg.org/",
-        "last-modified": "Tue, 20 Jan 2026 08:07:05 GMT",
+        "last-modified": "Mon, 16 Mar 2026 18:45:10 GMT",
         lang: "cjk",
         state: "LS"
     },
