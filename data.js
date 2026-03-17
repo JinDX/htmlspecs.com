@@ -1456,7 +1456,7 @@ const links = [
     {
         text: "Media Stream Recording",
         href: "https://htmlspecs.com/media-stream-recording/",
-        src: "https://www.w3.org/TR/2025/WD-mediastream-recording-20250417/",
+        src: "https://www.w3.org/TR/2026/WD-mediastream-recording-20260316/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
