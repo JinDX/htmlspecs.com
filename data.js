@@ -1066,7 +1066,7 @@ const links = [
     {
         text: "Long Tasks API",
         href: "https://htmlspecs.com/longtasks-1/",
-        src: "https://www.w3.org/TR/2024/WD-longtasks-1-20240524/",
+        src: "https://www.w3.org/TR/2026/WD-longtasks-1-20260319/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
