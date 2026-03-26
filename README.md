@@ -54,7 +54,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Webmention](https://htmlspecs.com/webmention/)（[Source](https://www.w3.org/TR/2017/REC-webmention-20170112/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Micropub](https://htmlspecs.com/micropub/)（[Source](https://www.w3.org/TR/2017/REC-micropub-20170523/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Web Annotation Data Model](https://htmlspecs.com/annotation-model/)（[Source](https://www.w3.org/TR/2017/REC-annotation-model-20170223/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
-- [WebTransport](https://htmlspecs.com/webtransport/)（[Source](https://www.w3.org/TR/2026/WD-webtransport-20260311/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [WebTransport](https://htmlspecs.com/webtransport/)（[Source](https://www.w3.org/TR/2026/WD-webtransport-20260325/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Service Workers Nightly](https://htmlspecs.com/service-workers/)（[Source](https://www.w3.org/TR/2026/CRD-service-workers-20260312/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [Push API](https://htmlspecs.com/push-api/)（[Source](https://www.w3.org/TR/2025/WD-push-api-20251201/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [WebRTC](https://htmlspecs.com/webrtc/)（[Source](https://www.w3.org/TR/2025/REC-webrtc-20250313/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
@@ -112,7 +112,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Window Management](https://htmlspecs.com/window-management/)（[Source](https://www.w3.org/TR/2024/WD-window-management-20240607/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Web Share API](https://htmlspecs.com/web-share/)（[Source](https://www.w3.org/TR/2023/REC-web-share-20230530/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Web Audio API](https://htmlspecs.com/webaudio/)（[Source](https://www.w3.org/TR/2024/WD-webaudio-1.1-20241105/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
-- [Geolocation API](https://htmlspecs.com/geolocation/)（[Source](https://www.w3.org/TR/2026/REC-geolocation-20260324/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
+- [Geolocation API](https://htmlspecs.com/geolocation/)（[Source](https://www.w3.org/TR/2026/CR-geolocation-20260326/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
 - [Device Orientation and Motion](https://htmlspecs.com/orientation-event/)（[Source](https://www.w3.org/TR/2025/CRD-orientation-event-20250212/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [Pointer Lock 2.0](https://htmlspecs.com/pointerlock/)（[Source](https://www.w3.org/TR/2026/WD-pointerlock-2-20260225/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Clipboard API and events](https://htmlspecs.com/clipboard-apis/)（[Source](https://www.w3.org/TR/2025/WD-clipboard-apis-20251124/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
@@ -149,7 +149,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Page Lifecycle](https://htmlspecs.com/page-lifecycle/)（[Source](https://wicg.github.io/page-lifecycle/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Server Timing](https://htmlspecs.com/server-timing/)（[Source](https://www.w3.org/TR/2026/WD-server-timing-20260316/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Paint Timing](https://htmlspecs.com/paint-timing/)（[Source](https://www.w3.org/TR/2026/WD-paint-timing-20260324/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
-- [Largest Contentful Paint](https://htmlspecs.com/largest-contentful-paint/)（[Source](https://www.w3.org/TR/2026/WD-largest-contentful-paint-20260319/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Largest Contentful Paint](https://htmlspecs.com/largest-contentful-paint/)（[Source](https://www.w3.org/TR/2026/WD-largest-contentful-paint-20260326/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Event Timing API](https://htmlspecs.com/event-timing/)（[Source](https://www.w3.org/TR/2026/WD-event-timing-20260319/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Prefetch](https://htmlspecs.com/prefetch/)（[Source](https://wicg.github.io/nav-speculation/prefetch.html) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Prerendering Revamped](https://htmlspecs.com/prerendering/)（[Source](https://wicg.github.io/nav-speculation/prerendering.html) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
@@ -219,7 +219,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 ### 颜色
 - [CSS Color Module Level 3](https://htmlspecs.com/css/css-color-3/)（[Source](https://www.w3.org/TR/2022/REC-css-color-3-20220118/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [CSS Color Module Level 4](https://htmlspecs.com/css/css-color-4/)（[Source](https://www.w3.org/TR/2025/CRD-css-color-4-20260227/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
-- [CSS Color Module Level 5](https://htmlspecs.com/css/css-color-5/)（[Source](https://www.w3.org/TR/2026/WD-css-color-5-20260324/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [CSS Color Module Level 5](https://htmlspecs.com/css/css-color-5/)（[Source](https://www.w3.org/TR/2026/WD-css-color-5-20260325/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Color Adjustment Module Level 1](https://htmlspecs.com/css/css-color-adjust-1/)（[Source](https://www.w3.org/TR/2025/CR-css-color-adjust-1-20251216/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
 - [CSS Color HDR Module Level 1](https://htmlspecs.com/css/css-color-hdr-1/)（[Source](https://www.w3.org/TR/2026/WD-css-color-hdr-1-20260303/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Filter Effects Module Level 1](https://htmlspecs.com/css/filter-effects-1/)（[Source](https://www.w3.org/TR/2018/WD-filter-effects-1-20181218/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）

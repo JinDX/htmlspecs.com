@@ -15,7 +15,7 @@ const links = [
         text: "ECMAScript® 2026 Language Specification",
         href: "https://ecma262.com/",
         src: "https://tc39.es/ecma262/",
-        "last-modified": "Wed, 25 Mar 2026 17:22:18 GMT",
+        "last-modified": "Thu, 26 Mar 2026 04:28:42 GMT",
         lang: "cjk",
         state: "Draft"
     },
@@ -411,7 +411,7 @@ const links = [
     {
         text: "WebTransport",
         href: "https://htmlspecs.com/webtransport/",
-        src: "https://www.w3.org/TR/2026/WD-webtransport-20260311/",
+        src: "https://www.w3.org/TR/2026/WD-webtransport-20260325/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
@@ -848,7 +848,7 @@ const links = [
     {
         text: "Geolocation API",
         href: "https://htmlspecs.com/geolocation/",
-        src: "https://www.w3.org/TR/2026/REC-geolocation-20260324/",
+        src: "https://www.w3.org/TR/2026/CR-geolocation-20260326/",
         "last-modified": "-",
         lang: "cjk",
         state: "REC"
@@ -1130,7 +1130,7 @@ const links = [
     {
         text: "Largest Contentful Paint",
         href: "https://htmlspecs.com/largest-contentful-paint/",
-        src: "https://www.w3.org/TR/2026/WD-largest-contentful-paint-20260319/",
+        src: "https://www.w3.org/TR/2026/WD-largest-contentful-paint-20260326/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
@@ -1633,7 +1633,7 @@ const cssLinks = [
     {
         text: "CSS Color Module Level 5",
         href: "https://htmlspecs.com/css/css-color-5/",
-        src: "https://www.w3.org/TR/2026/WD-css-color-5-20260324/",
+        src: "https://www.w3.org/TR/2026/WD-css-color-5-20260325/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
