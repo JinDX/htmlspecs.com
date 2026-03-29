@@ -15,7 +15,7 @@ const links = [
         text: "ECMAScript® 2026 Language Specification",
         href: "https://ecma262.com/",
         src: "https://tc39.es/ecma262/",
-        "last-modified": "Fri, 27 Mar 2026 12:09:58 GMT",
+        "last-modified": "Sun, 29 Mar 2026 01:35:43 GMT",
         lang: "cjk",
         state: "Draft"
     },
@@ -246,7 +246,7 @@ const links = [
     {
         text: "MathML4",
         href: "https://htmlspecs.com/mathml4/",
-        src: "https://www.w3.org/TR/2026/WD-mathml4-20260318/",
+        src: "https://www.w3.org/TR/2026/WD-mathml4-20260328/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
@@ -591,7 +591,7 @@ const links = [
         text: "OpenAPI Specification v3.2.0",
         href: "https://htmlspecs.com/openapi/",
         src: "https://spec.openapis.org/oas/latest.html",
-        "last-modified": "Sat, 21 Mar 2026 15:13:17 GMT",
+        "last-modified": "Fri, 27 Mar 2026 14:34:56 GMT",
         lang: "cjk",
         state: "Draft"
     },
@@ -2033,7 +2033,7 @@ const cssLinks = [
     {
         text: "CSS Anchor Positioning Module Level 1",
         href: "https://htmlspecs.com/css/css-anchor-position-1/",
-        src: "https://www.w3.org/TR/2026/WD-css-anchor-position-1-20260130/",
+        src: "https://www.w3.org/TR/2026/WD-css-anchor-position-1-20260327/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
