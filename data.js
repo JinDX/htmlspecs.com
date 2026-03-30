@@ -1170,7 +1170,7 @@ const links = [
     {
         text: "Device Memory API",
         href: "https://htmlspecs.com/device-memory/",
-        src: "https://www.w3.org/TR/2026/WD-device-memory-1-20260327/",
+        src: "https://www.w3.org/TR/2026/WD-device-memory-1-20260330/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
