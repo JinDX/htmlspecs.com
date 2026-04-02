@@ -15,7 +15,7 @@ const links = [
         text: "ECMAScript® 2026 Language Specification",
         href: "https://ecma262.com/",
         src: "https://tc39.es/ecma262/",
-        "last-modified": "Wed, 01 Apr 2026 00:10:28 GMT",
+        "last-modified": "Wed, 01 Apr 2026 16:53:37 GMT",
         lang: "cjk",
         state: "Draft"
     },
@@ -31,7 +31,7 @@ const links = [
         text: "ECMAScript® 2026 Internationalization API Specification",
         href: "https://htmlspecs.com/ecma402/",
         src: "https://tc39.es/ecma402/",
-        "last-modified": "Tue, 24 Mar 2026 05:38:57 GMT",
+        "last-modified": "Wed, 01 Apr 2026 14:44:56 GMT",
         lang: "cjk",
         state: "Draft"
     },
@@ -591,7 +591,7 @@ const links = [
         text: "OpenAPI Specification v3.2.0",
         href: "https://htmlspecs.com/openapi/",
         src: "https://spec.openapis.org/oas/latest.html",
-        "last-modified": "Mon, 30 Mar 2026 10:34:55 GMT",
+        "last-modified": "Wed, 01 Apr 2026 16:08:25 GMT",
         lang: "cjk",
         state: "Draft"
     },
