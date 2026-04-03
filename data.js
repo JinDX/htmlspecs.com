@@ -583,7 +583,7 @@ const links = [
         text: "GraphQL",
         href: "https://htmlspecs.com/graphql/",
         src: "https://spec.graphql.org/draft/",
-        "last-modified": "Mon, 09 Mar 2026 10:34:20 GMT",
+        "last-modified": "Thu, 02 Apr 2026 17:43:43 GMT",
         lang: "cjk",
         state: "Draft"
     },
