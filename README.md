@@ -90,7 +90,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [WebHID API](https://htmlspecs.com/webhid/)（[Source](https://wicg.github.io/webhid/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [WebUSB API](https://htmlspecs.com/webusb/)（[Source](https://wicg.github.io/webusb/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Web Bluetooth API](https://htmlspecs.com/web-bluetooth/)（[Source](https://webbluetoothcg.github.io/web-bluetooth/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
-- [Web NFC API](https://htmlspecs.com/web-nfc/)（[Source](https://w3c.github.io/web-nfc/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
+- [Web NFC API](https://htmlspecs.com/web-nfc/)（[Source](https://w3c-cg.github.io/web-nfc/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Handwriting Recognition API](https://htmlspecs.com/handwriting-recognition/)（[Source](https://wicg.github.io/handwriting-recognition/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Accelerated Shape Detection in Images](https://htmlspecs.com/shape-detection-api/)（[Source](https://wicg.github.io/shape-detection-api/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Screen Orientation](https://htmlspecs.com/screen-orientation/)（[Source](https://www.w3.org/TR/2025/WD-screen-orientation-20251021/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
@@ -133,7 +133,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 
 ### 性能和观察者
 - [Performance Timeline](https://htmlspecs.com/performance-timeline/)（[Source](https://www.w3.org/TR/2025/CRD-performance-timeline-20250521/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
-- [Compute Pressure API](https://htmlspecs.com/compute-pressure/)（[Source](https://www.w3.org/TR/2025/CRD-compute_pressure-20250521/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
+- [Compute Pressure API](https://htmlspecs.com/compute-pressure/)（[Source](https://www.w3.org/TR/2025/CRD-compute-pressure-20250521/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [High Resolution Time](https://htmlspecs.com/hr-time-3/)（[Source](https://www.w3.org/TR/2026/WD-hr-time-3-20260324/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Intersection Observer](https://htmlspecs.com/intersection-observer/)（[Source](https://www.w3.org/TR/2023/WD-intersection-observer-20231018/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Resize Observer](https://htmlspecs.com/resize-observer/)（[Source](https://www.w3.org/TR/2020/WD-resize-observer-1-20200211/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
