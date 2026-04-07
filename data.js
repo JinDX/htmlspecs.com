@@ -1114,7 +1114,7 @@ const links = [
     {
         text: "Server Timing",
         href: "https://htmlspecs.com/server-timing/",
-        src: "https://www.w3.org/TR/2026/WD-server-timing-20260316/",
+        src: "https://www.w3.org/TR/2026/WD-server-timing-20260407/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
