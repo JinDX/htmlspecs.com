@@ -2491,7 +2491,7 @@ const cssLinks = [
     {
         text: "CSS Basic User Interface Module Level 3",
         href: "https://htmlspecs.com/css/css-ui-3/",
-        src: "https://www.w3.org/TR/2018/REC-css-ui-3-20180621/",
+        src: "https://www.w3.org/TR/2026/REC-css-ui-3-20260407/",
         "last-modified": "-",
         lang: "cjk",
         state: "REC"
