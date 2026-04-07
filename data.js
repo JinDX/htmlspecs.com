@@ -288,7 +288,7 @@ const links = [
     {
         text: "ARIA in HTML",
         href: "https://htmlspecs.com/html-aria/",
-        src: "https://www.w3.org/TR/2025/REC-html-aria-20250805/",
+        src: "https://www.w3.org/TR/2026/REC-html-aria-20260407/",
         "last-modified": "-",
         lang: "cjk",
         state: "REC"
