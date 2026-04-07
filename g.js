@@ -141,7 +141,7 @@ function linkToMd(link) {
     if (langHostMap[langArg] && displayHref.startsWith(baseDomain)) {
         displayHref = langHostMap[langArg] + displayHref.substring(baseDomain.length);
     }
-    if (link.text === 'ECMAScript® 2026 Language Specification' && ecmaLocaleMap[langArg]) {
+    if (link.text === 'ECMAScript® 2027 Language Specification' && ecmaLocaleMap[langArg]) {
         displayHref = `https://ecma262.com/${ecmaLocaleMap[langArg]}`;
     }
     return `- [${displayText}](${displayHref})（[Source](${link.src})${badge}）`;
