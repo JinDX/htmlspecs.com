@@ -2137,6 +2137,15 @@ const cssLinks = [
         state: "WD"
     },
     {
+        text: "CSS Image Animation Module Level 1",
+        href: "https://htmlspecs.com/css/css-image-animation-1/",
+        src: "https://www.w3.org/TR/2026/WD-css-image-animation-1-20260409/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
+    
+    {
         text: "CSS Masking Module Level 1",
         href: "https://htmlspecs.com/css/css-masking-1/",
         src: "https://www.w3.org/TR/2021/CRD-css-masking-1-20210805/",
