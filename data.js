@@ -1155,7 +1155,7 @@ const links = [
         text: "Prerendering Revamped",
         href: "https://htmlspecs.com/prerendering/",
         src: "https://wicg.github.io/nav-speculation/prerendering.html",
-        "last-modified": "Mon, 09 Feb 2026 14:13:19 GMT",
+        "last-modified": "Sun, 12 Apr 2026 19:57:38 GMT",
         lang: "cjk",
         state: "Draft"
     },
