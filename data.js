@@ -28,7 +28,7 @@ const links = [
         state: "Guide"
     },
     {
-        text: "ECMAScript® 2026 Internationalization API Specification",
+        text: "ECMAScript® 2027 Internationalization API Specification",
         href: "https://htmlspecs.com/ecma402/",
         src: "https://tc39.es/ecma402/",
         "last-modified": "Tue, 07 Apr 2026 10:54:43 GMT",
@@ -2662,7 +2662,7 @@ const httpLinks = [
 
     //### 核心规范|핵심 명세|コア仕様
     {
-        text: "HTTP Semantics (RFC 9110)",
+        text: "HTTP Semantics",
         href: "https://htmlspecs.com/http/rfc9110.html",
         src: "https://httpwg.org/specs/rfc9110.html",
         "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
