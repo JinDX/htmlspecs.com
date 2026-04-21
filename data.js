@@ -1147,7 +1147,7 @@ const links = [
         text: "Prefetch",
         href: "https://htmlspecs.com/prefetch/",
         src: "https://wicg.github.io/nav-speculation/prefetch.html",
-        "last-modified": "Thu, 16 Apr 2026 20:55:06 GMT",
+        "last-modified": "Mon, 20 Apr 2026 17:23:26 GMT",
         lang: "cjk",
         state: "Draft"
     },
