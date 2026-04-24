@@ -7,7 +7,7 @@ const links = [
         text: "HTML",
         href: "https://htmlspecs.com/",
         src: "https://html.spec.whatwg.org/multipage/",
-        "last-modified": "Wed, 22 Apr 2026 16:13:32 GMT",
+        "last-modified": "Thu, 23 Apr 2026 19:37:08 GMT",
         lang: "cjk",
         state: "LS"
     },
@@ -62,7 +62,7 @@ const links = [
     {
         text: "WebAssembly JavaScript Interface",
         href: "https://htmlspecs.com/wasm-js-api-2/",
-        src: "https://www.w3.org/TR/2026/CRD-wasm-js-api-2-20260422/",
+        src: "https://www.w3.org/TR/2026/CRD-wasm-js-api-2-20260423/",
         "last-modified": "-",
         lang: "cjk",
         state: "CRD"
@@ -70,7 +70,7 @@ const links = [
     {
         text: "WebAssembly Web API",
         href: "https://htmlspecs.com/wasm-web-api-2/",
-        src: "https://www.w3.org/TR/2026/CRD-wasm-web-api-2-20260422/",
+        src: "https://www.w3.org/TR/2026/CRD-wasm-web-api-2-20260423/",
         "last-modified": "-",
         lang: "cjk",
         state: "CRD"
@@ -1245,7 +1245,7 @@ const links = [
     {
         text: "Global Privacy Control (GPC)",
         href: "https://htmlspecs.com/gpc/",
-        src: "https://www.w3.org/TR/2026/WD-gpc-20260403/",
+        src: "https://www.w3.org/TR/2026/WD-gpc-20260423/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
