@@ -7,7 +7,7 @@ const links = [
         text: "HTML",
         href: "https://htmlspecs.com/",
         src: "https://html.spec.whatwg.org/multipage/",
-        "last-modified": "Thu, 23 Apr 2026 19:37:08 GMT",
+        "last-modified": "Fri, 24 Apr 2026 12:24:43 GMT",
         lang: "cjk",
         state: "LS"
     },
@@ -62,7 +62,7 @@ const links = [
     {
         text: "WebAssembly JavaScript Interface",
         href: "https://htmlspecs.com/wasm-js-api-2/",
-        src: "https://www.w3.org/TR/2026/CRD-wasm-js-api-2-20260423/",
+        src: "https://www.w3.org/TR/2026/CRD-wasm-js-api-2-20260424/",
         "last-modified": "-",
         lang: "cjk",
         state: "CRD"
@@ -70,7 +70,7 @@ const links = [
     {
         text: "WebAssembly Web API",
         href: "https://htmlspecs.com/wasm-web-api-2/",
-        src: "https://www.w3.org/TR/2026/CRD-wasm-web-api-2-20260423/",
+        src: "https://www.w3.org/TR/2026/CRD-wasm-web-api-2-20260424/",
         "last-modified": "-",
         lang: "cjk",
         state: "CRD"
@@ -332,7 +332,7 @@ const links = [
         text: "Streams",
         href: "https://htmlspecs.com/streams/",
         src: "https://streams.spec.whatwg.org/",
-        "last-modified": "Wed, 22 Apr 2026 21:12:50 GMT",
+        "last-modified": "Sat, 25 Apr 2026 13:13:02 GMT",
         lang: "cjk",
         state: "LS"
     },
