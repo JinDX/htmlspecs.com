@@ -231,7 +231,7 @@ const links = [
         text: "Minimum common web API",
         href: "https://htmlspecs.com/min-common-api/",
         src: "https://min-common-api.proposal.wintertc.org/",
-        "last-modified": "Tue, 16 Dec 2025 01:48:41 GMT",
+        "last-modified": "Tue, 28 Apr 2026 19:54:02 GMT",
         lang: "cjk",
         state: "Draft"
     },
