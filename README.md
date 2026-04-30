@@ -130,6 +130,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Accelerometer](https://htmlspecs.com/accelerometer/)（[Source](https://www.w3.org/TR/2025/CRD-accelerometer-20250212/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [Magnetometer](https://htmlspecs.com/magnetometer/)（[Source](https://www.w3.org/TR/2025/WD-magnetometer-20250212/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Gyroscope](https://htmlspecs.com/gyroscope/)（[Source](https://www.w3.org/TR/2026/CRD-gyroscope-20260202/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
+- [Gamepad](https://htmlspecs.com/gamepad/)（[Source](https://www.w3.org/TR/2025/WD-gamepad-20250710/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 
 ### 性能和观察者
 - [Performance Timeline](https://htmlspecs.com/performance-timeline/)（[Source](https://www.w3.org/TR/2025/CRD-performance-timeline-20250521/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
@@ -164,6 +165,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [HTML Sanitizer API](https://htmlspecs.com/sanitizer-api/)（[Source](https://wicg.github.io/sanitizer-api/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Subresource Integrity (SRI)](https://htmlspecs.com/sri/)（[Source](https://www.w3.org/TR/2016/REC-SRI-20160623/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Content Security Policy Level 3](https://htmlspecs.com/CSP3/)（[Source](https://www.w3.org/TR/2026/WD-CSP3-20260421/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Self-Review Questionnaire: Security and Privacy](https://htmlspecs.com/security-privacy-questionnaire/)（[Source](https://www.w3.org/TR/2025/NOTE-security-privacy-questionnaire-20250418/) !![Note](https://img.shields.io/badge/NOTE-309c40)）
 - [Permissions Policy](https://htmlspecs.com/permissions-policy/)（[Source](https://www.w3.org/TR/2025/WD-permissions-policy-1-20251006/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Global Privacy Control (GPC)](https://htmlspecs.com/gpc/)（[Source](https://www.w3.org/TR/2026/WD-gpc-20260423/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Privacy Principles](https://htmlspecs.com/privacy-principles/)（[Source](https://www.w3.org/TR/2025/STMT-privacy-principles-20250515/) ![Statement](https://img.shields.io/badge/STMT-6c757d)）
