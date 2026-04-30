@@ -989,6 +989,14 @@ const links = [
         lang: "cjk",
         state: "CRD"
     },
+    {
+        text: "Gamepad",
+        href: "https://htmlspecs.com/gamepad/",
+        src: "https://www.w3.org/TR/2025/WD-gamepad-20250710/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
 
     //### 性能和观察者|성능 및 옵저버|パフォーマンスとオブザーバ
     {
@@ -1233,6 +1241,14 @@ const links = [
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
+    },
+    {
+        text: "Self-Review Questionnaire: Security and Privacy",
+        href: "https://htmlspecs.com/security-privacy-questionnaire/",
+        src: "https://www.w3.org/TR/2025/NOTE-security-privacy-questionnaire-20250418/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "NOTE"
     },
     {
         text: "Permissions Policy",
