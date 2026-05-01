@@ -896,7 +896,7 @@ const links = [
     {
         text: "Input Events Level 2",
         href: "https://htmlspecs.com/input-events-2/",
-        src: "https://www.w3.org/TR/2025/WD-input-events-2-20250814/",
+        src: "https://www.w3.org/TR/2026/WD-input-events-2-20260501/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
