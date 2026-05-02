@@ -960,7 +960,7 @@ const links = [
     {
         text: "Vibration API",
         href: "https://htmlspecs.com/vibration/",
-        src: "https://www.w3.org/TR/2025/CRD-vibration-20250212/",
+        src: "https://www.w3.org/TR/2026/CRD-vibration-20260502/",
         "last-modified": "-",
         lang: "cjk",
         state: "CRD"
