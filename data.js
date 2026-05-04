@@ -376,6 +376,22 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
+    // {
+    //     text: "Private Network Access",
+    //     href: "https://htmlspecs.com/private-network-access/",
+    //     src: "https://wicg.github.io/private-network-access/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
+    // {
+    //     text: "WebTransport",
+    //     href: "https://htmlspecs.com/webtransport/",
+    //     src: "https://www.w3.org/TR/webtransport/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "Linked Data Notifications",
         href: "https://htmlspecs.com/ldn/",
@@ -522,6 +538,14 @@ const links = [
         "last-modified": "Sun, 15 Mar 2026 09:04:49 GMT",
         lang: "cjk",
         state: "LS"
+    },
+    {
+        text: "Storage Buckets",
+        href: "https://htmlspecs.com/storage-buckets/",
+        src: "https://wicg.github.io/storage-buckets/",
+        "last-modified": "Tue, 19 Dec 2023 00:08:15 GMT",
+        lang: "cjk",
+        state: "Draft"
     },
     {
         text: "File API",
@@ -2160,7 +2184,7 @@ const cssLinks = [
         lang: "cjk",
         state: "WD"
     },
-    
+
     {
         text: "CSS Masking Module Level 1",
         href: "https://htmlspecs.com/css/css-masking-1/",
