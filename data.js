@@ -376,14 +376,14 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
-    // {
-    //     text: "Private Network Access",
-    //     href: "https://htmlspecs.com/private-network-access/",
-    //     src: "https://wicg.github.io/private-network-access/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "Private Network Access",
+        href: "https://htmlspecs.com/private-network-access/",
+        src: "https://wicg.github.io/private-network-access/",
+        "last-modified": "Thu, 26 Sep 2024 08:21:57 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
     // {
     //     text: "WebTransport",
     //     href: "https://htmlspecs.com/webtransport/",
