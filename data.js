@@ -384,14 +384,6 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
-    // {
-    //     text: "WebTransport",
-    //     href: "https://htmlspecs.com/webtransport/",
-    //     src: "https://www.w3.org/TR/webtransport/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
     {
         text: "Linked Data Notifications",
         href: "https://htmlspecs.com/ldn/",
