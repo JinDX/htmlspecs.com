@@ -15,7 +15,7 @@ const links = [
         text: "ECMAScript® 2027 Language Specification",
         href: "https://ecma262.com/",
         src: "https://tc39.es/ecma262/",
-        "last-modified": "Sun, 03 May 2026 04:45:46 GMT",
+        "last-modified": "Tue, 05 May 2026 02:11:42 GMT",
         lang: "cjk",
         state: "Draft"
     },
