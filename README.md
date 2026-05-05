@@ -1,7 +1,7 @@
 # htmlspecs.com
 HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 
-### 核心规范
+### 核心标准
 - [HTML](https://htmlspecs.com/)（[Source](https://html.spec.whatwg.org/multipage/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [ECMAScript® 2027 Language Specification](https://ecma262.com/c)（[Source](https://tc39.es/ecma262/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)），- [How to Read](https://htmlspecs.com/es-howto/)（[Source](https://timothygu.me/es-howto/)）
 - [ECMAScript® 2027 Internationalization API Specification](https://htmlspecs.com/ecma402/)（[Source](https://tc39.es/ecma402/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
@@ -380,7 +380,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 ## HTTP
 - [index](https://htmlspecs.com/http/)（[Source](https://httpwg.org/specs/)）
 
-### 核心规范
+### 核心标准
 - [HTTP Semantics](https://htmlspecs.com/http/rfc9110.html)（[Source](https://httpwg.org/specs/rfc9110.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [HTTP Caching](https://htmlspecs.com/http/rfc9111.html)（[Source](https://httpwg.org/specs/rfc9111.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [HTTP/1.1](https://htmlspecs.com/http/rfc9112.html)（[Source](https://httpwg.org/specs/rfc9112.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
