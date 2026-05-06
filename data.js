@@ -302,6 +302,14 @@ const links = [
         state: "REC"
     },
     {
+        text: "Accessible Name and Description Computation 1.2",
+        href: "https://htmlspecs.com/accname-1.2/",
+        src: "https://www.w3.org/TR/2026/WD-accname-1.2-20260430/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
+    {
         text: "Accessibility Conformance Testing (ACT) Rules Format 1.1",
         href: "https://htmlspecs.com/act-rules-format/",
         src: "https://www.w3.org/TR/2026/REC-act-rules-format-1.1-20260205/",
