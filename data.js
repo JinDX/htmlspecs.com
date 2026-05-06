@@ -293,6 +293,30 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "Core Accessibility API Mappings 1.2",
+    //     href: "https://htmlspecs.com/core-aam-1.2/",
+    //     src: "https://www.w3.org/TR/2026/CRD-core-aam-1.2-20260430/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "CRD"
+    // },
+    // {
+    //     text: "HTML Accessibility API Mappings 1.0",
+    //     href: "https://htmlspecs.com/html-aam-1.0/",
+    //     src: "https://www.w3.org/TR/2026/WD-html-aam-1.0-20260430/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
+    // {
+    //     text: "SVG Accessibility API Mappings",
+    //     href: "https://htmlspecs.com/svg-aam-1.0/",
+    //     src: "https://www.w3.org/TR/2026/WD-svg-aam-1.0-20260430/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "WAI-ARIA Graphics Module",
         href: "https://htmlspecs.com/graphics-aria-1.0/",
@@ -1638,7 +1662,25 @@ const links = [
         "last-modified": "Sun, 15 Mar 2026 12:32:55 GMT",
         lang: "cjk",
         state: "LS"
-    }
+    },
+
+    //### 测试与自动化|테스트와 자동화|テストと自動化
+    // {
+    //     text: "WebDriver",
+    //     href: "https://htmlspecs.com/webdriver2/",
+    //     src: "https://www.w3.org/TR/2026/WD-webdriver2-20260430/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
+    // {
+    //     text: "WebDriver BiDi",
+    //     href: "https://htmlspecs.com/webdriver-bidi/",
+    //     src: "https://www.w3.org/TR/2026/WD-webdriver-bidi-20260319/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // }
 ];
 
 const cssLinks = [
