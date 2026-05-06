@@ -62,7 +62,7 @@ const links = [
     {
         text: "WebAssembly JavaScript Interface",
         href: "https://htmlspecs.com/wasm-js-api-2/",
-        src: "https://www.w3.org/TR/2026/CRD-wasm-js-api-2-20260430/",
+        src: "https://www.w3.org/TR/2026/CRD-wasm-js-api-2-20260505/",
         "last-modified": "-",
         lang: "cjk",
         state: "CRD"
@@ -70,7 +70,7 @@ const links = [
     {
         text: "WebAssembly Web API",
         href: "https://htmlspecs.com/wasm-web-api-2/",
-        src: "https://www.w3.org/TR/2026/CRD-wasm-web-api-2-20260430/",
+        src: "https://www.w3.org/TR/2026/CRD-wasm-web-api-2-20260505/",
         "last-modified": "-",
         lang: "cjk",
         state: "CRD"
@@ -270,6 +270,14 @@ const links = [
         state: "WD"
     },
     {
+        text: "Making Content Usable for People with Cognitive and Learning Disabilities",
+        href: "https://htmlspecs.com/coga-usable/",
+        src: "https://www.w3.org/TR/2021/NOTE-coga-usable-20210429/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "NOTE"
+    },
+    {
         text: "Accessible Rich Internet Applications (WAI-ARIA) 1.2",
         href: "https://htmlspecs.com/wai-aria-1.2/",
         src: "https://www.w3.org/TR/2023/REC-wai-aria-1.2-20230606/",
@@ -286,6 +294,14 @@ const links = [
         state: "WD"
     },
     {
+        text: "WAI-ARIA Graphics Module",
+        href: "https://htmlspecs.com/graphics-aria-1.0/",
+        src: "https://www.w3.org/TR/2018/REC-graphics-aria-1.0-20181002/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "REC"
+    },
+    {
         text: "ARIA in HTML",
         href: "https://htmlspecs.com/html-aria/",
         src: "https://www.w3.org/TR/2026/REC-html-aria-20260415/",
@@ -300,6 +316,14 @@ const links = [
         "last-modified": "-",
         lang: "cjk",
         state: "REC"
+    },
+    {
+        text: "Accessible Name and Description Computation 1.2",
+        href: "https://htmlspecs.com/accname-1.2/",
+        src: "https://www.w3.org/TR/2026/WD-accname-1.2-20260430/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
     },
     {
         text: "Accessibility Conformance Testing (ACT) Rules Format 1.1",
