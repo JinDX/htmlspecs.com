@@ -270,6 +270,14 @@ const links = [
         state: "WD"
     },
     {
+        text: "Making Content Usable for People with Cognitive and Learning Disabilities",
+        href: "https://htmlspecs.com/coga-usable/",
+        src: "https://www.w3.org/TR/2021/NOTE-coga-usable-20210429/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "NOTE"
+    },
+    {
         text: "Accessible Rich Internet Applications (WAI-ARIA) 1.2",
         href: "https://htmlspecs.com/wai-aria-1.2/",
         src: "https://www.w3.org/TR/2023/REC-wai-aria-1.2-20230606/",
@@ -284,6 +292,14 @@ const links = [
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
+    },
+    {
+        text: "WAI-ARIA Graphics Module",
+        href: "https://htmlspecs.com/graphics-aria-1.0/",
+        src: "https://www.w3.org/TR/2018/REC-graphics-aria-1.0-20181002/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "REC"
     },
     {
         text: "ARIA in HTML",
