@@ -655,7 +655,7 @@ const links = [
         text: "OpenAPI Specification v3.2.0",
         href: "https://htmlspecs.com/openapi/",
         src: "https://spec.openapis.org/oas/latest.html",
-        "last-modified": "Mon, 20 Apr 2026 09:54:40 GMT",
+        "last-modified": "Thu, 07 May 2026 13:58:19 GMT",
         lang: "cjk",
         state: "Draft"
     },
