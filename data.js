@@ -301,14 +301,14 @@ const links = [
         lang: "cjk",
         state: "CRD"
     },
-    // {
-    //     text: "HTML Accessibility API Mappings 1.0",
-    //     href: "https://htmlspecs.com/html-aam-1.0/",
-    //     src: "https://www.w3.org/TR/2026/WD-html-aam-1.0-20260430/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "HTML Accessibility API Mappings 1.0",
+        href: "https://htmlspecs.com/html-aam-1.0/",
+        src: "https://www.w3.org/TR/2026/WD-html-aam-1.0-20260430/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     // {
     //     text: "SVG Accessibility API Mappings",
     //     href: "https://htmlspecs.com/svg-aam-1.0/",
