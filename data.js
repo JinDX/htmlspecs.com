@@ -293,14 +293,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "Core Accessibility API Mappings 1.2",
-    //     href: "https://htmlspecs.com/core-aam-1.2/",
-    //     src: "https://www.w3.org/TR/2026/CRD-core-aam-1.2-20260430/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "CRD"
-    // },
+    {
+        text: "Core Accessibility API Mappings 1.2",
+        href: "https://htmlspecs.com/core-aam-1.2/",
+        src: "https://www.w3.org/TR/2026/CRD-core-aam-1.2-20260430/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "CRD"
+    },
     // {
     //     text: "HTML Accessibility API Mappings 1.0",
     //     href: "https://htmlspecs.com/html-aam-1.0/",
