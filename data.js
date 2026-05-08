@@ -1464,7 +1464,7 @@ const links = [
     {
         text: "WebGPU",
         href: "https://htmlspecs.com/webgpu/",
-        src: "https://www.w3.org/TR/2026/CRD-webgpu-20260310/",
+        src: "https://www.w3.org/TR/2026/CRD-webgpu-20260507/",
         "last-modified": "-",
         lang: "cjk",
         state: "CRD"
