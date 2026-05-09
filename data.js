@@ -1592,7 +1592,7 @@ const links = [
     {
         text: "Encrypted Media Extensions",
         href: "https://htmlspecs.com/encrypted-media-2/",
-        src: "https://www.w3.org/TR/2025/WD-encrypted-media-2-20251126/",
+        src: "https://www.w3.org/TR/2026/WD-encrypted-media-2-20260508/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
