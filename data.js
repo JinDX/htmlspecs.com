@@ -1272,7 +1272,7 @@ const links = [
         src: "https://www.w3.org/TR/2026/CR-webauthn-3-20260113/",
         "last-modified": "-",
         lang: "cjk",
-        state: "WD"
+        state: "CR"
     },
     {
         text: "Secure Payment Confirmation",
