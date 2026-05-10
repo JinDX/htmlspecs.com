@@ -1665,14 +1665,14 @@ const links = [
     },
 
     //### 测试与自动化|테스트와 자동화|テストと自動化
-    // {
-    //     text: "WebDriver",
-    //     href: "https://htmlspecs.com/webdriver2/",
-    //     src: "https://www.w3.org/TR/2026/WD-webdriver2-20260430/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "WebDriver",
+        href: "https://htmlspecs.com/webdriver2/",
+        src: "https://www.w3.org/TR/2026/WD-webdriver2-20260430/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     // {
     //     text: "WebDriver BiDi",
     //     href: "https://htmlspecs.com/webdriver-bidi/",
