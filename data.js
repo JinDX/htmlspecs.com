@@ -1673,14 +1673,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "WebDriver BiDi",
-    //     href: "https://htmlspecs.com/webdriver-bidi/",
-    //     src: "https://www.w3.org/TR/2026/WD-webdriver-bidi-20260319/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // }
+    {
+        text: "WebDriver BiDi",
+        href: "https://htmlspecs.com/webdriver-bidi/",
+        src: "https://www.w3.org/TR/2026/WD-webdriver-bidi-20260319/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    }
 ];
 
 const cssLinks = [
