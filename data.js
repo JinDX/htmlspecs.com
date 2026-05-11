@@ -179,6 +179,22 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "Web App Launch Handler API",
+    //     href: "https://htmlspecs.com/web-app-launch/",
+    //     src: "https://wicg.github.io/web-app-launch/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
+    // {
+    //     text: "Manifest Incubations",
+    //     href: "https://htmlspecs.com/manifest-incubations/",
+    //     src: "https://wicg.github.io/manifest-incubations/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
     {
         text: "Web App Manifest - Application Information",
         href: "https://htmlspecs.com/manifest-app-info/",
@@ -480,6 +496,14 @@ const links = [
         lang: "cjk",
         state: "CRD"
     },
+    // {
+    //     text: "Web Background Synchronization",
+    //     href: "https://htmlspecs.com/background-sync/",
+    //     src: "https://wicg.github.io/background-sync/spec/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
     {
         text: "Push API",
         href: "https://htmlspecs.com/push-api/",
@@ -757,6 +781,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
+    // {
+    //     text: "Web Neural Network API",
+    //     href: "https://htmlspecs.com/webnn/",
+    //     src: "https://www.w3.org/TR/2026/CRD-webnn-20260327/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "CRD"
+    // },
     {
         text: "Screen Orientation",
         href: "https://htmlspecs.com/screen-orientation/",
@@ -1111,6 +1143,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "Soft Navigations and Interaction Contentful Paint",
+    //     href: "https://htmlspecs.com/soft-navigations/",
+    //     src: "https://wicg.github.io/soft-navigations/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
     {
         text: "Resource Timing",
         href: "https://htmlspecs.com/resource-timing/",
@@ -1143,6 +1183,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "Long Animation Frames API",
+    //     href: "https://htmlspecs.com/long-animation-frames/",
+    //     src: "https://www.w3.org/TR/2026/WD-long-animation-frames-20260428/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "Prioritized Task Scheduling",
         href: "https://htmlspecs.com/scheduling-apis/",
@@ -1258,6 +1306,14 @@ const links = [
 
 
     //### 安全和认证|보안 및 인증|セキュリティと認証
+    // {
+    //     text: "Web Cryptography Level 2",
+    //     href: "https://htmlspecs.com/webcrypto-2/",
+    //     src: "https://www.w3.org/TR/2025/WD-webcrypto-2-20250422/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "Web Authentication: An API for accessing Public Key Credentials Level 2",
         href: "https://htmlspecs.com/webauthn-2/",
@@ -1378,6 +1434,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "Digital Credentials",
+    //     href: "https://htmlspecs.com/digital-credentials/",
+    //     src: "https://www.w3.org/TR/2026/WD-digital-credentials-20260507/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "Federated Credential Management API (FedCM)",
         href: "https://htmlspecs.com/fedcm/",
@@ -1394,6 +1458,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
+    // {
+    //     text: "Attribution Level 1",
+    //     href: "https://htmlspecs.com/attribution/",
+    //     src: "https://www.w3.org/TR/2026/WD-attribution-20260503/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "Trusted Types",
         href: "https://htmlspecs.com/trusted-types/",
@@ -2611,6 +2683,14 @@ const cssLinks = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "CSS Form Control Styling Level 1",
+    //     href: "https://htmlspecs.com/css/css-forms-1/",
+    //     src: "https://www.w3.org/TR/2025/WD-css-forms-1-20250325/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "CSS Syntax Module Level 3",
         href: "https://htmlspecs.com/css/css-syntax-3/",
