@@ -187,14 +187,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
-    // {
-    //     text: "Manifest Incubations",
-    //     href: "https://htmlspecs.com/manifest-incubations/",
-    //     src: "https://wicg.github.io/manifest-incubations/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "Manifest Incubations",
+        href: "https://htmlspecs.com/manifest-incubations/",
+        src: "https://wicg.github.io/manifest-incubations/",
+        "last-modified": "Fri, 08 May 2026 17:54:56 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
     {
         text: "Web App Manifest - Application Information",
         href: "https://htmlspecs.com/manifest-app-info/",

@@ -1,0 +1,2720 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>
+        Manifest Incubations
+    </title>
+    <script src="https://www.w3.org/Tools/respec/respec-w3c" class="remove"></script>
+    <script class='remove'>
+        // See https://github.com/w3c/respec/wiki/ for how to configure ReSpec
+        var respecConfig = {
+            specStatus: "CG-DRAFT",
+            editors: [{
+                name: "Daniel Murphy"
+            }],
+            group: "wicg",
+            github: "WICG/manifest-incubations",
+            shortName: "manifest-incubations",
+            xref: {
+                specs: [
+                    "appmanifest",
+                    "dom",
+                    "file-system-access",
+                    "fs",
+                    "mimesniff",
+                    "urlpattern",
+                    "web-app-launch",
+                    "window-controls-overlay"
+                ],
+                profile: "web-platform",
+            },
+        };
+    </script>
+</head>
+
+<body data-cite="MEDIAQUERIES-5">
+    <section id="abstract">
+        <p>
+            Feature specifications for <a href="https://www.w3.org/TR/appmanifest/">Web Application Manifest</a>
+            extensions & incubations which Chromium has shipped but do not have
+            committments / implementations from other user agents. Instead of
+            keeping these features as explainers, they are documented more
+            officially here.
+        </p>
+    </section>
+    <section id="sotd">
+        <p>
+            This is an unofficial proposal.
+        </p>
+    </section>
+    <section>
+        <h2>
+            <code><dfn data-export="" data-dfn-for=
+        "manifest">display_override</dfn></code> member
+        </h2>
+        <p>
+            For advanced usages, the [=manifest/display_override=] member can be
+            used to specify a custom fallback order of <a data-cite="appmanifest#dfn-display-modes-list">display mode
+                list values</a> for
+            developers to choose their preferred <a data-cite="appmanifest#dfn-display">display mode</a> for the web
+            application. Its
+            value is a [=display mode=].
+        </p>
+        <p>
+            The [=manifest/display_override=] member of the [=application
+            manifest=] is a <a>sequence</a> of <a data-cite="appmanifest#dfn-display-modes-list">display mode list
+                values</a>
+            including extensions like [=display mode/window-controls-overlay=] and
+            [=display mode/unframed=]. This member represents the developer's
+            preferred fallback chain for [=display mode=]s. This field overrides
+            the [=manifest/display=] member. If the user agent does not support any
+            of the [=display mode=]s specified here, then it falls back to
+            considering the [=manifest/display=] member. See <a
+                data-cite="appmanifest#dfn-process-the-display-member">processing the display
+                members</a> for the algorithm steps.
+        </p>
+        <p>
+            The following steps are added to the [=application manifest/processing
+            extension-point=] in <a data-cite="appmanifest#dfn-steps-for-determining-the-web-app-s-chosen-display-mode">
+                determining the web app's chosen display mode</a>:
+        </p>
+        <ol>
+            <li>[=list/For each=] |candidate_display_mode:DisplayModeType| of
+                |manifest:ordered map|.[=manifest/display_override=] member:
+                <ol class="algorithm">
+                    <li>If <a data-cite="appmanifest/#dfn-display-modes-list">display
+                            modes list</a> contains |candidate_display_mode:DisplayModeType|,
+                        return that |candidate_display_mode:DisplayModeType|
+                    </li>
+                    <li>If |candidate_display_mode:DisplayModeType| is [=display
+                        mode/window-controls-overlay=] and the user agent supports this,
+                        then return that |candidate_display_mode:DisplayModeType|.
+                    </li>
+                    <li>If |candidate_display_mode:DisplayModeType| is [=display
+                        mode/tabbed=] and the user agent supports this, then return that
+                        |candidate_display_mode:DisplayModeType|.
+                    </li>
+                </ol>
+            </li>
+        </ol>
+        <p class="note">
+            This member is intended to be only used for advanced cases, where the
+            developer wants explicit control over the fallback order of their
+            display modes, or for modes that are not available in the basic
+            <a data-cite="appmanifest/#dfn-display-modes-list">display modes
+                list</a>. Otherwise, the [=manifest/display=] member is sufficient for
+            most use cases.
+        </p>
+        <section>
+            <h3>
+                Concepts
+            </h3>
+            <ul>
+                <li>
+                    <dfn data-lt="controls of the window">Window controls</dfn>:
+                    interface elements that the operating system uses consistently
+                    across applications to enable the user to perform certain actions
+                    to control the application. Common actions in the [=window
+                    controls=] include minimize, maximize/restore, and close buttons.
+                </li>
+            </ul>
+        </section>
+        <section>
+            <h3>
+                Display mode extensions
+            </h3>
+            <p>
+                Additionally to the normal <a data-cite="appmanifest#dfn-display-modes-list">display modes</a>,
+                [=manifest/display_override=] also supports certain extensions to it.
+            </p>
+            <dl>
+                <dt>
+                    <dfn data-export="" data-dfn-for="display mode">unframed</dfn>
+                </dt>
+                <dd>
+                    The isolated web application does not have any host-native title
+                    bar or [=window controls=] visible and with the web contents
+                    extended to the whole title bar area. The app can specify
+                    [=draggable region=]s in the web contents to create a customized
+                    title bar.
+                </dd>
+                <dt>
+                    [=display mode/window-controls-overlay=]
+                </dt>
+                <dt>
+                    <dfn data-export="" data-dfn-for="display mode">tabbed</dfn>
+                </dt>
+                <dd>
+                    The web application can have multiple [=application contexts=]
+                    combined in a single operating-system-level window. For example,
+                    this could mean the user agent displays a tab strip UI to allow the
+                    user to switch between the application contexts.
+                </dd>
+            </dl>
+            <section class="informative">
+                <h4>
+                    [=manifest/display_override=] usage example
+                </h4>
+                <p>
+                    The following shows a [=manifest=] that prefers the
+                    <code>minimal-ui</code> <a data-cite="appmanifest#dfn-display-mode">display mode</a> over
+                    <code>standalone</code>, but if <code>minimal-ui</code> isn't
+                    supported, falls back to <code>standalone</code> as opposed to
+                    <code>browser</code>.
+                </p>
+                <pre class="example json" title="display_override usage manifest">
+            {
+              "name": "Recipe Zone",
+              "description": "All of the recipes!",
+              "icons": [{
+                "src": "icon/hd_hi",
+                "sizes": "128x128"
+              }],
+              "start_url": "/index.html",
+              "display_override": ["minimal-ui"],
+              "display": "standalone",
+              "theme_color": "yellow",
+              "background_color": "red"
+            }
+          </pre>
+            </section>
+        </section>
+        <section>
+            <h3>
+                Defining <dfn data-export="" data-lt="draggable region">draggable
+                    regions</dfn>
+            </h3>
+            <p class="issue" title="At risk feature">
+                [=app-region=] CSS property has not been implemented in any user
+                agent, so it is at risk. Note that some user agents use the
+                non-standard CSS property <dfn data-export="" data-lt="-webkit-app-region">`-webkit-app-region`</dfn>
+                for the same purpose.
+            </p>
+            <p>
+                The <dfn data-export="" data-lt="app-region">`app-region`</dfn>
+                property can be used to define with CSS which regions or elements in
+                for example a title bar are draggable.
+            </p>
+            <ul>
+                <li>To enable dragging an element, shall be set to `drag`.
+                </li>
+                <li>To disable dragging an element, shall be set to `no-drag`.
+                </li>
+            </ul>
+        </section>
+    </section>
+    <section>
+        <h2>
+            Extensions to processing the manifest
+        </h2>
+        <p>
+            To facilitate all of the new extension and incubation features added by
+            this specification, the user agent SHOULD run the following during the
+            <a data-cite="appmanifest#dfn-processing-extension-point-of-web-manifest">extension
+                point</a> in [=processing a manifest=] (having access to [=URL=]
+            |document URL:URL|, [=URL=] |manifest URL:URL|, [=ordered map=]
+            |json:ordered map|, and [=ordered map=] |manifest:ordered map|):
+        </p>
+        <ol>
+            <li>[=Process the `tab_strip` member=], passing |json|, |manifest| and
+                |manifest URL|.
+            </li>
+            <li>[=Process the `note_taking` member=], passing |json|, |manifest|
+                and |manifest URL|.
+            </li>
+            <li>[=Process the `protocol_handlers` member=], passing |json| and
+                |manifest|.
+            </li>
+            <li>[=Process the `file_handlers` member=], passing |json|, |manifest|
+                and |manifest URL|.
+            </li>
+            <li>[=Process the `related_applications` member=], passing |json| and
+                |manifest|.
+            </li>
+            <li>[=Process the `scope_extensions` member=], passing |json| and
+                |manifest|.
+            </li>
+            <li>[=Process the `migrate_from` member=], passing |json|, |manifest|
+                and |manifest URL|.
+            </li>
+            <li>[=Process the `migrate_to` member=], passing |json|, |manifest|
+                and |manifest URL|.
+            </li>
+        </ol>
+    </section>
+    <section>
+        <h2>
+            <code><dfn>tab_strip</dfn></code> member
+        </h2>
+        <p>
+            The `tab_strip` member of the <a data-cite="appmanifest#web-application-manifest">Web Application
+                Manifest</a> is
+            an <a data-cite="appmanifest#dfn-object">object</a> that contains
+            information about how the application is intended to behave in the
+            [=display mode/tabbed=] display mode. It has the following members:
+        </p>
+        <ul>
+            <li>[=tab_strip/home_tab=]
+            </li>
+            <li>[=tab_strip/new_tab_button=]
+            </li>
+        </ul>
+        <section>
+            <h3>
+                <code><dfn>home_tab</dfn></code> member
+            </h3>
+            <p>
+                The `home_tab` member of the [=tab_strip=] object is an ordered map
+                that contains information about a special "home tab" that is intended
+                to serve as the top-level menu for the application. It contains the
+                following members:
+            </p>
+            <ul>
+                <li>[=home_tab/scope_patterns=]
+                </li>
+            </ul>
+            <p>
+                The <code><dfn>scope_patterns</dfn></code> member is a list of
+                {{URLPatternInput}}s that define the [=within home tab scope|scope of
+                the home tab=] relative to the [=manifest URL=].
+            </p>
+            <aside class="note">
+                Each scope pattern is either a string which looks like a URL but has
+                "<code>*</code>" as a wildcard character, or a dictionary containing
+                separate URL components with "<code>*</code>" wildcards. See
+                [[urlpattern]] for more information.
+            </aside>
+            <p>
+                An application <dfn>has a home tab</dfn> if the applied [=display
+                mode=] of the application is [=display mode/tabbed=], and the
+                [=Document/processed manifest=] includes a non-null [=home_tab=]
+                member of the [=tab_strip=] member.
+            </p>
+            <p>
+                The <dfn>home tab context</dfn> is an optional [=application
+                context=] that has special properties compared to other application
+                contexts. If the application [=has a home tab=], every application
+                window SHOULD feature a [=home tab context=]. If not, then the
+                application windows SHOULD NOT have a [=home tab context=].
+            </p>
+            <p>
+                How the [=home tab context=] is presented is at the discretion of the
+                user agent, but it SHOULD have a different appearance to normal
+                application contexts.
+            </p>
+            <p>
+                A [=URL=] |url:URL| is said to be <dfn>within home tab scope</dfn> if
+                and only if:
+            </p>
+            <ul>
+                <li>the application [=has a home tab=], and
+                </li>
+                <li>|url| is [=manifest/within scope=] of the manifest, and
+                </li>
+                <li>at least one of the following:
+                    <ul>
+                        <li>|url| [=URL/equals=] the [=start URL=], with
+                            [=URL/equals/exclude fragments=] set to true, or
+                        </li>
+                        <li>Applying [=URL pattern/match=] given any element of the
+                            [=scope_patterns=] member of the [=home_tab=] member of the
+                            [=tab_strip=] member of the [=Document/processed manifest=] and
+                            |url| returns a {{URLPatternResult}}.
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <p>
+                A URL is is <dfn>outside of home tab scope</dfn> if it is not
+                [=within home tab scope=].
+            </p>
+            <aside class="note">
+                <p>
+                    The "home tab scope" (i.e., the set of [=URLs=] which are [=within
+                    home tab scope=]) is the set of URLs to which the [=home tab
+                    context=] can be navigated . All navigations within the application
+                    to a URL [=within home tab scope=] will be performed in the [=home
+                    tab context=], and all navigations to a URL [=outside of home tab
+                    scope=] will be performed in a different [=application context=]
+                    (i.e., another tab), creating one if necessary. The application's
+                    [=start URL=] is always part of the home tab scope (if the
+                    application [=has a home tab=]).
+                </p>
+                <p>
+                    For the purpose of matching against the [=start URL=], the
+                    [=URL/fragment=] is ignored, but the [=URL/query=] must match
+                    exactly.
+                </p>
+                <p>
+                    If the application does not [=has a home tab|have a home tab=],
+                    then the home tab scope is the empty set, and all URLs are
+                    [=outside of home tab scope=].
+                </p>
+            </aside>
+            <section>
+                <h3>
+                    Every window has a home tab
+                </h3>
+                <p>
+                    If the application [=has a home tab=], whenever a new application
+                    window is created (for example when launching the application, or
+                    when moving a tab to a new window), the user agent MUST create a
+                    new [=home tab context=] in that window. A newly created [=home tab
+                    context=] SHOULD be navigated to the [=start URL=], which by
+                    definition is [=within home tab scope=].
+                </p>
+            </section>
+            <section>
+                <h3>
+                    Navigations concerning the home tab scope
+                </h3>
+                <p>
+                    When [=navigate|navigating=] the [=top-level traversable=]
+                    associated with a [=home tab context=] to a [=URL=] |url:URL| that
+                    is [=outside of home tab scope=], the following steps are run:
+                </p>
+                <ol>
+                    <li>Let [=top-level traversable=] |tab:toplevel traversable| be the
+                        result of choosing a navigable with a target of
+                        <code>"_blank"</code> and noopener true.
+                    </li>
+                    <li>Instead of [=navigating=] the home-tab traversable,
+                        [=navigate=] |tab| with the same parameters.
+                    </li>
+                    <li>[=applied|Apply=] the current [=application manifest=] to
+                        |tab|'s [=top-level browsing context=].
+                    </li>
+                    <li>The user agent SHOULD place |tab| in the same window as the
+                        home-tab navigable.
+                    </li>
+                    <li>Focus |tab|.
+                    </li>
+                </ol>
+                <p class="issue" data-number="98"></p>
+                <p>
+                    When [=navigate|navigating=] a [=top-level traversable=] with a
+                    [=display mode=] of [=display mode/tabbed=] that is not associated
+                    with a [=home tab context=] (i.e. a non-home tab) to a [=URL=]
+                    |url:URL| that is [=within home tab scope=], the following steps
+                    are run:
+                </p>
+                <ol>
+                    <li>Let |hometab:toplevel traversable| be the [=top-level
+                        traversable=] of the [=home tab context=] associated with the
+                        current window.
+                    </li>
+                    <li>Instead of [=navigating=] the top-level traversable,
+                        [=navigate=] |hometab| with the same parameters.
+                    </li>
+                    <li>Focus |hometab|.
+                    </li>
+                </ol>
+                <aside class="note">
+                    Navigation from the home tab to a URL [=outside of home tab scope=]
+                    will open a new regular tab, leaving the existing document open in
+                    the home tab. Similarly, navigation from a regular tab to a URL
+                    [=within home tab scope=] will open in the home tab, leaving the
+                    existing document open in the tab that initiated the navigation.
+                    Developers should ensure that in both of these cases, the document
+                    left behind does not end up in an unexpected state.
+                </aside>
+            </section>
+            <section class="informative">
+                <h3>
+                    Home tab invariants
+                </h3>
+                <p>
+                    The above rules are intended to ensure that the following
+                    invariants are always true, for applications that [=has a home
+                    tab|have a home tab=]:
+                </p>
+                <ul>
+                    <li>every application window has exactly one [=home tab context=],
+                        and
+                    </li>
+                    <li>every [=home tab context=]'s active document's [=Document/URL=]
+                        is [=within home tab scope=] (unless the document's URL has changed
+                        since it was created), and
+                    </li>
+                    <li>every non-home-tab [=application context=]'s active document's
+                        [=Document/URL=] is [=outside of home tab scope=] (unless the
+                        document's URL has changed since it was created).
+                    </li>
+                </ul>
+                <p>
+                    User agents will not dynamically move documents between home-tab
+                    and non-home-tab contexts if they change their [=URL/fragment=], or
+                    use the {{History}} API to modify their display URL into or out of
+                    the home tab scope, because no navigation is taking place. For this
+                    reason, the above invariants only care about the [=Document/URLs=]
+                    that documents had at the time of their creation.
+                </p>
+                <p>
+                    For single-page applications that "pretend" to navigate by
+                    modifying their URLs, this may result in undesirable behaviour that
+                    breaks the above invariants (e.g. if the user clicks a link from
+                    the home tab to dynamically change the URL to a non-home page, they
+                    will stay inside the home tab because it is not actually
+                    navigating). To avoid this situation, the application can detect
+                    when it is in tabbed application mode and change its behavior to
+                    perform actual navigations into and out of the home tab scope,
+                    rather than modifying the URL.
+                </p>
+            </section>
+        </section>
+        <section>
+            <h3>
+                <code><dfn>new_tab_button</dfn></code> member
+            </h3>
+            <p>
+                The [=tab_strip/new_tab_button=] member is an ordered map that
+                describes the behaviour of a UI affordance (such as a button) which,
+                when clicked/activated, opens a new [=application context=] within
+                the application window. It has the following members:
+            </p>
+            <ul>
+                <li>[=new_tab_button/url=]
+                </li>
+            </ul>
+            <p>
+                The <code><dfn data-dfn-for="new_tab_button">url</dfn></code> member
+                is a string that represents a URL relative to the [=manifest URL=]
+                that is [=manifest/within scope=] of a [=Document/processed
+                manifest=].
+            </p>
+            <p>
+                An application <dfn>has a new tab button</dfn> if the
+                [=Document/processed manifest=]'s [=new_tab_button=]'s
+                [=new_tab_button/url=] member is [=outside of home tab scope=]. If
+                the application does not [=has a new tab button|have a new tab
+                button=], the user agent SHOULD NOT make the "new tab" affordance
+                available to the end user.
+            </p>
+            <aside class="note">
+                <p>
+                    The new tab button will be unavailable if its URL is [=within home
+                    tab scope=]. This rule is necessary, since otherwise, it would
+                    either imply that a) the new tab button would open a non-home tab
+                    [=within home tab scope=], violating the third home tab invariant
+                    above, or b) the new tab button would simply focus the home tab,
+                    which would be redundant and confusing UI.
+                </p>
+                <p>
+                    The default value for [=new_tab_button/url=] is the [=start URL=].
+                    This means the button will be unavailable by default if the
+                    application [=has a home tab=].
+                </p>
+            </aside>
+            <p>
+                When the new tab button is activated by the end user, the following
+                steps are run:
+            </p>
+            <ol>
+                <li>[=Create a new application context=] in the current window and
+                    focus it.
+                </li>
+                <li>Navigate it to the value of the [=new_tab_button/url=] member of
+                    [=new_tab_button=].
+                </li>
+            </ol>
+        </section>
+        <section>
+            <h2>
+                Processing the `tab_strip` member
+            </h2>
+            <p>
+                To <dfn>process the `tab_strip` member</dfn>, given [=ordered map=]
+                |json:ordered map|, [=ordered map=] |manifest:ordered map|, and
+                [=URL=] |manifest URL:URL|, run the following during the
+                <a data-cite="appmanifest#dfn-processing-extension-point-of-web-manifest">
+                    extension point</a> in [=processing a manifest=]:
+            </p>
+            <ol>
+                <li>Set |manifest|["tab_strip"] to a new [=ordered map=].
+                </li>
+                <li>If |json|["tab_strip"] does not exist or |json|["tab_strip"] is
+                    not an [=ordered map=]:
+                    <ol>
+                        <li>Set |manifest|["tab_strip"]["new_tab_button"]["url"] to
+                            |manifest|["start_url"].
+                        </li>
+                        <li>Return.
+                        </li>
+                    </ol>
+                </li>
+                <li>[=Process the `home_tab` member=] passing |json|["tab_strip"],
+                    |manifest|["tab_strip"], and |manifest URL|.
+                </li>
+                <li>[=Process the `new_tab_button` member=] passing
+                    |json|["tab_strip"], |manifest|["tab_strip"], |manifest URL|, and
+                    |manifest|["start_url"].
+                </li>
+            </ol>
+            <section>
+                <h3>
+                    Processing the `home_tab` member
+                </h3>
+                <p>
+                    To <dfn>process the `home_tab` member</dfn>, given [=ordered map=]
+                    |json tab strip:ordered map|, [=ordered map=] |manifest tab
+                    strip:ordered map|, and [=URL=] |manifest URL:URL|, run the
+                    following:
+                </p>
+                <ol>
+                    <li>If |json tab strip|["home_tab"] does not exist or |json tab
+                        strip|["home_tab"] not an [=ordered map=], return.
+                    </li>
+                    <li>Let |home tab:ordered map| be a new [=ordered map=].
+                    </li>
+                    <li>[=Process the `scope_patterns` member=] passing |json tab
+                        strip|["home_tab"]["scope_patterns"], |home tab| and |manifest
+                        URL|.
+                    </li>
+                    <li>Set |manifest tab strip|["home_tab"] to |home tab|.
+                    </li>
+                </ol>
+            </section>
+            <section>
+                <h3>
+                    Processing the `new_tab_button` member
+                </h3>
+                <p>
+                    To <dfn>process the `new_tab_button` member</dfn>, given [=ordered
+                    map=] |json tab strip:ordered map|, [=ordered map=] |manifest tab
+                    strip:ordered map|, [=URL=] |manifest URL:URL|, and [=URL=] |start
+                    URL:URL|, run the following:
+                </p>
+                <ol>
+                    <li>Set |manifest tab strip|["new_tab_button"]["url"] to |start
+                        URL|.
+                    </li>
+                    <li>If |json tab strip|["new_tab_button"] does not exist or |json
+                        tab strip|["new_tab_button"] is not an [=ordered map=], return.
+                    </li>
+                    <li>Let |url:URL| be the result of [=URL Parser|parsing=] |json tab
+                        strip|["new_tab_button"]["url"] with |manifest URL| as the base
+                        URL.
+                    </li>
+                    <li>If |url| is failure, return.
+                    </li>
+                    <li>If |url| is not [=URL/within scope=] of |manifest URL|, return.
+                    </li>
+                    <li>Set |manifest tab strip|["new_tab_button"]["url"] to |url|.
+                    </li>
+                </ol>
+            </section>
+            <section>
+                <h3>
+                    Processing the `scope_patterns` member
+                </h3>
+                <p>
+                    To <dfn>process the `scope_patterns` member</dfn>, given [=ordered
+                    map=] |json home tab:ordered map|, [=ordered map=] |manifest home
+                    tab:ordered map| and [=URL=] |manifest URL:URL|, run the following:
+                </p>
+                <ol>
+                    <li>Let |processed scope patterns:list| be a new [=list=].
+                    </li>
+                    <li>Set |manifest home tab|["scope_patterns"] to |processed scope
+                        patterns|.
+                    </li>
+                    <li>If |json home tab|["scope_patterns"] doesn't exist or |json
+                        home tab|["scope_patterns"] is not a [=list=], return.
+                    </li>
+                    <li>For each |entry:URLPatternInit| of |json home
+                        tab|["scope_patterns"]:
+                        <ol>
+                            <li>Let |pattern:URL pattern| be the result of [=build a URL
+                                pattern from an infra value|building a URL pattern from an
+                                infra value=] |entry| given |manifest URL|. If this process
+                                throws or returns null, continue.
+                            </li>
+                            <li>Append |pattern| to |processed scope patterns|.
+                            </li>
+                        </ol>
+                    </li>
+                </ol>
+                <p class="issue" data-number="97"></p>
+            </section>
+        </section>
+        <section class="informative">
+            <h2>
+                Usage Example
+            </h2>
+            <pre class="example json" title="Tabbed application manifest">
+        {
+          "name": "Tabbed App Example",
+          "start_url": "/",
+          "display": "standalone",
+          "display_override": ["tabbed"],
+          "tab_strip": {
+            "home_tab": {
+              "scope_patterns": [
+                {"pathname": "/"},
+                {"pathname": "/index.html"}
+              ]
+            },
+            "new_tab_button": {
+              "url": "/create"
+            }
+          }
+        }
+        </pre>
+            <p>
+                This example is a tabbed web app that falls back to a single-document
+                standalone window if tabbed mode is not supported. Any navigation to
+                the main index page (either <code>/</code> or
+                <code>/index.html</code>) is opened in the [=home tab context=]. The
+                new tab button will open a new tab at <code>/create</code>.
+            </p>
+            <p>
+                Note that the [=URL/query=] part of the URL is ignored by default
+                when matching against [=tab_strip/home_tab/scope_patterns=] (so a
+                navigation to <code>/index.html?utm_source=foo</code> will open in
+                the home tab). However, when matching against [=start URL=], the
+                [=URL/query=] must match exactly, so sites that want to ignore the
+                query are advised to explicitly include the [=start URL=]'s
+                [=URL/path=] as a scope pattern.
+            </p>
+        </section>
+    </section>
+    <section>
+        <h2>
+            `share_target` member
+        </h2>
+        <p>
+            The `share_target` member registers a web application as "target" for
+            share actions (e.g., for sharing a text, a URL, or a file). The
+            `share_target` member is part of the [[[web-share-target]]]
+            specification.
+        </p>
+    </section>
+    <section>
+        <h2>
+            <code><dfn>note_taking</dfn></code> member
+        </h2>
+        <p>
+            The `note_taking` member of the <a data-cite="appmanifest#web-application-manifest">Web Application
+                Manifest</a> is
+            an <a data-cite="appmanifest#dfn-object">object</a> that contains
+            information related to note-taking. It has the following members:
+        </p>
+        <ul>
+            <li>[=note_taking/new_note_url=]
+            </li>
+        </ul>
+        <p>
+            A user agent MAY use these members to treat the web application
+            differently as an application with note-taking capabilities (e.g.,
+            integrate with operating system note-taking surfaces).
+        </p>
+        <section>
+            <h3>
+                <code><dfn data-dfn-for="note_taking">new_note_url</dfn></code>
+                member
+            </h3>
+            <p>
+                The [=note_taking=] `new_note_url` member is a [=string=] that
+                represents the <a data-cite="url#concept-url">URL</a> the developer
+                would prefer the user agent load when the user wants to take a new
+                note using the web application (e.g., from an operating system
+                shortcut icon or keyboard shortcut).
+            </p>
+            <p>
+                The `new_note_url` member is purely advisory, and a user agent MAY
+                <a data-cite="appmanifest#dfn-ignore">ignore</a> it or provide the
+                end-user the choice of whether to use it. The user agent MAY provide
+                the end-user the choice to modify it.
+            </p>
+            <aside class="note">
+                <p>
+                    The `new_note_url` member is parsed with <a data-cite="appmanifest#dfn-manifest-url">manifest
+                        URL</a> as the base URL and
+                    is ignored if not [=manifest/within scope=] of the manifest.
+                </p>
+            </aside>
+        </section>
+        <section class="informative">
+            <h3>
+                Usage Example
+            </h3>
+            <p>
+                The following shows a [=manifest=] for a note-taking application.
+            </p>
+            <pre class="example json" title="Note-taking application">
+          {
+            "name": "My Note Taking App",
+            "description": "You can take notes!",
+            "icons": [{
+              "src": "icon/hd_hi",
+              "sizes": "128x128"
+            }],
+            "start_url": "/index.html",
+            "display": "standalone",
+            "note_taking": {
+              "new_note_url": "/new_note.html"
+            }
+          }
+        </pre>
+        </section>
+        <section>
+            <h3>
+                Processing the `note_taking` member
+            </h3>
+            <p>
+                To <dfn>process the `note_taking` member</dfn>, given [=ordered map=]
+                |json:ordered map|, [=ordered map=] |manifest:ordered map|, [=URL=]
+                |manifest_URL:URL|, run the following during the <a
+                    data-cite="appmanifest#dfn-processing-extension-point-of-web-manifest">extension
+                    point</a> in [=processing a manifest=]:
+            </p>
+            <ol class="algorithm">
+                <li>If |json|["note_taking"] does not [=map/exist=], return.
+                </li>
+                <li>If the type of |json|["note_taking"] is not [=ordered map=],
+                    return.
+                </li>
+                <li>Set |manifest|["note_taking"] to a new [=ordered map=].
+                </li>
+                <li>[=process the `new_note_url` member=] passing
+                    |json|["note_taking"], |manifest|["note_taking"], and |manifest URL|.
+                </li>
+            </ol>
+        </section>
+        <section>
+            <h3>
+                Processing the `new_note_url` member
+            </h3>
+            <p>
+                To <dfn>process the `new_note_url` member</dfn>, given [=ordered
+                map=] |json_note_taking:ordered map|, [=ordered map=]
+                |manifest_note_taking:ordered map|, [=URL=] |manifest_URL:URL|, run
+                the following:
+            </p>
+            <ol class="algorithm">
+                <li>If |json_note_taking|["new_note_url"] does not [=map/exist=],
+                    return.
+                </li>
+                <li>If the type of |json_note_taking|["new_note_url"] is not
+                    [=string=], return.
+                </li>
+                <li>Let |new_note_url:URL| be the result of [=URL Parser|parsing=]
+                    |json_note_taking|["new_note_url"] with |manifest URL| as the base
+                    URL.
+                </li>
+                <li>If |new_note_url| is failure, return.
+                </li>
+                <li>If |new_note_url| is not [=manifest/within scope=] of |manifest
+                    URL|, return.
+                </li>
+                <li>Set manifest_note_taking["new_note_url"] to |new_note_url|.
+                </li>
+            </ol>
+        </section>
+        <section>
+            <h3>
+                Launching the `new_note_url`
+            </h3>
+            <p>
+                To <dfn>launch the `new_note_url`</dfn>, given <a
+                    data-cite="appmanifest#dfn-processed-manifest">processed manifest</a>
+                |manifest:processed manifest|, run the following steps:
+            </p>
+            <ol>
+                <li>If |manifest|["note_taking"] does not [=map/exist=], return.
+                </li>
+                <li>If |manifest|["note_taking"]["new_note_url"] does not
+                    [=map/exist=], return.
+                </li>
+                <li>If the type of |manifest|["note_taking"]["new_note_url"] is not
+                    [=URL=], return.
+                </li>
+                <li>Run the steps to [=launch a web application=] setting |manifest|
+                    to |manifest| and |target URL| to
+                    |manifest|["note_taking"]["new_note_url"].
+                </li>
+            </ol>
+            <p>
+                The user agent MAY [=launch the `new_note_url`=] for a given
+                [=installed web application=] at any time, typically in response to a
+                user affordance.
+            </p>
+        </section>
+    </section>
+    <section>
+        <h2>
+            `protocol_handlers` member
+        </h2>
+        <p>
+            The [=manifest's=] <code><dfn data-dfn-for=
+        "manifest">protocol_handlers</dfn></code> member is an array of
+            <a>protocol handler description</a>s that allows a web application to
+            handle URL protocols.
+        </p>
+        <p>
+            On installation, a user agent SHOULD register protocol handlers with
+            the Operating System via interactions that are consistent with:
+        </p>
+        <ul>
+            <li>If there are multiple registered handlers for a protocol, the OS
+                allows the user to select which app should open it, and also allows the
+                user to set a default app.
+            </li>
+            <li>Clicking on a registered protocol will launch the registered
+                application. If this is the web app, then execute the [=invoke a
+                protocol handler=] steps defined in [=HTML=], where the user agent
+                SHOULD navigate to [=url=] and the appropriate browsing context is set
+                to a new top level browsing context.
+            </li>
+        </ul>
+        <aside class="note">
+            Protocol handlers could, for instance, be used for web app
+            communication where one app directly invokes another and passes data
+            via custom protocol links.
+        </aside>
+        <section>
+            <h3>
+                Processing the `protocol_handlers` member
+            </h3>
+            <p>
+                To <dfn>process the `protocol_handlers` member</dfn>, given
+                [=object=] |json:JSON|, |manifest:ordered map|:
+            </p>
+            <ol>
+                <li>Let |processedProtocolHandlers| be a new [=list=] of
+                    |json:JSON|["|protocol_handlers|"].
+                </li>
+                <li>Set manifest["|protocol_handlers|"] to
+                    |processedProtocolHandlers|.
+                </li>
+                <li>[=list/For each=] |protocol_handler| (<a>protocol handler
+                        description</a>):
+                    <ol>
+                        <li>If |protocol_handler|["protocol"] or
+                            |protocol_handler|["url"] is undefined, [=iteration/continue=].
+                        </li>
+                        <li>Let (|normalizedProtocol:string|, |normalizedUrl:URL|) be the
+                            result of running [=normalize protocol handler parameters=] with
+                            |protocol_handler|["protocol"], | protocol_handler|["url"] using
+                            |manifest URL| as the base URL, and [=this=]'s relevant
+                            [=environment settings object=]. If the result is failure,
+                            [=iteration/continue=].
+                        </li>
+                        <li>If |normalizedUrl| is not [=manifest/within scope=] of
+                            |manifest|, [=iteration/continue=].
+                        </li>
+                        <li>If |processedProtocolHandlers| [=list/contains=] the
+                            |normalizedUrl|, [=iteration/continue=].
+                        </li>
+                        <li>[=List/Append=] |protocol_handler| to
+                            |processedProtocolHandlers|.
+                        </li>
+                    </ol>
+                </li>
+                <li>[=list/For each=] |processedProtocolHandlers|, the user agent
+                    SHOULD [=register a protocol handler=].
+                </li>
+            </ol>
+            <p>
+                A user agent SHOULD ask users for permission before registering a
+                [=protocol handler description=] <var>protocol_handler</var>s as the
+                default handler for a protocol with the host operating system. A user
+                agent MAY truncate the list of [=protocol handler description=]
+                <var>protocol_handlers</var> presented in order to remain consistent
+                with the conventions or limitations of the host operating system.
+            </p>
+            <aside class="example">
+                <p>
+                    In the following example, the developer has included two [=protocol
+                    handler description=] <var>protocol_handler</var>s. Assuming the
+                    the manifest's URL is
+                    <samp>https://example.com/manifest.webmanifest</samp>:
+                </p>
+                <ul>
+                    <li>The first protocol handler would register to handle "web+music"
+                        URLs (e.g.: web+music://#1234). When activated, the user agent
+                        would instantiate a new[=top-level browsing context=] and navigate
+                        to
+                        <samp>https://example.com/play?songId=web+music://%231234</samp>.
+                    </li>
+                    <li>The second protocol handler would be ignored, as the protocol
+                        provided does not start with "web+" and is not part of the
+                        [=safelisted schemes=].
+                    </li>
+                </ul>
+                <pre class="json">
+            {
+              "protocol_handlers": [
+                {
+                  "protocol": "web+music",
+                  "url": "/play?songId=%s"
+                },
+                {
+                  "protocol": "store",
+                  "url": "/buy?songId=%s"
+                }
+              ]
+            }
+          </pre>
+            </aside>
+        </section>
+        <section>
+            <h2>
+                Protocol handler items
+            </h2>
+            <p>
+                Each <dfn>protocol handler description</dfn> is an [=object=] that
+                represents a protocol that the web application wants to handle,
+                corresponding to the [=manifest/protocol_handlers=] member. It has
+                the following members:
+            </p>
+            <ul>
+                <li>[=protocol handler description/protocol=]
+                </li>
+                <li>[=protocol handler description/url=]
+                </li>
+            </ul>
+            <p>
+                A user agent SHOULD use these values to register the web application
+                as a handler with the operating system. When the user activates a
+                protocol handler URL, the user agent SHOULD run <a>handling a
+                    protocol launch</a>.
+            </p>
+            <p class="note">
+                [[HTML]]'s {{NavigatorContentUtils/registerProtocolHandler()}} allows
+                web sites to register themselves as possible handlers for particular
+                protocols. What constitutes valid [=protocol handler
+                description/protocol=] and [=protocol handler description/url=]
+                values for <a>protocol handler description</a>s is defined in that
+                API. Also note that the [[HTML]] API uses <code>scheme</code> where
+                we use [=protocol handler description/protocol=] but the same
+                restrictions apply.
+            </p>
+            <section>
+                <h3>
+                    `protocol` member
+                </h3>
+                <p>
+                    The <code><dfn data-dfn-for=
+            "protocol handler description">protocol</dfn></code> member of a
+                    <a>protocol handler description</a> is a <a>string</a> that
+                    represents the protocol to be handled, such as `mailto` or
+                    `web+auth`.
+                </p>
+                <p>
+                    The [=protocol handler description/protocol=] member of a
+                    <a>protocol handler description</a> is equivalent to
+                    {{NavigatorContentUtils/registerProtocolHandler()}}'s
+                    <code>scheme</code> argument defined in [[HTML]].
+                </p>
+            </section>
+            <section>
+                <h3>
+                    `url` member
+                </h3>
+                <p>
+                    The <code><dfn data-dfn-for=
+            "protocol handler description">url</dfn></code> member of a
+                    <a>protocol handler description</a> is the <a>URL</a>
+                    [=manifest/within scope=] of the application that opens when the
+                    associated protocol is activated.
+                </p>
+                <p>
+                    The [=protocol handler description/url=] member of a <a>protocol
+                        handler description</a> is equivalent to
+                    {{NavigatorContentUtils/registerProtocolHandler()}}'s
+                    <code>url</code> argument defined in [[HTML]].
+                </p>
+            </section>
+            <section>
+                <h3>
+                    <dfn>Handling a protocol launch</dfn>
+                </h3>
+                <p>
+                    When a <a>protocol handler description</a>
+                    <var>protocol_handler</var> having [=manifest=] <var>manifest</var>
+                    is invoked, it goes through the same steps used to [=invoke a
+                    protocol handler=] where the user agent, instead of [=navigating=]
+                    to <var>resultURL</var>, SHOULD [=launch a web application=]
+                    passing <var>manifest</var> and <var>resultURL</var>.
+                </p>
+                <p class="issue">
+                    This should not invoke and alter [=invoke a protocol handler=] in
+                    this way. The computation of <var>resultURL</var> should be
+                    extracted out into a separate algorithm for general use.
+                </p>
+            </section>
+        </section>
+        <section>
+            <h2>
+                Privacy consideration: Default protocol handler
+            </h2>
+            <p>
+                Depending on the operating system capabilities, the protocol handler
+                could become a 'default' handler (e.g. handling launches of a given
+                protocol automatically) of a given protocol without the explicit
+                knowledge of the user. To protect against possible misuse, user
+                agents MAY employ protections such as:
+            </p>
+            <ul>
+                <li>Requiring explicit user consent before executing the process to
+                    [=invoke a protocol handler=].
+                </li>
+                <li>Removing the web application's OS registration as a protocol
+                    handling entity, either in response to the above dialog or by user
+                    action.
+                </li>
+                <li>Confirming protocol handler registrations on [=installation=].
+                </li>
+            </ul>
+            <p>
+                If a user agent removes the the registration of the protocol handler
+                entity it SHOULD provide UX for the user to re-register the web app
+                and protocol with the operating system.
+            </p>
+        </section>
+    </section>
+    <section>
+        <h3>
+            `file_handlers` member
+        </h3>
+        <p>
+            The [=manifest's=] <code><dfn data-export="" data-dfn-for=
+        "manifest">file_handlers</dfn></code> member is a [=list=] that
+            provides instructions for how the app handles file-opening actions that
+            originate outside of the app itself.
+        </p>
+        <p>
+            The management, presentation, and selection of registered file-handling
+            applications is at the discretion of the operating system.
+        </p>
+        <p>
+            To <dfn>process the `file_handlers` member</dfn>, given [=ordered map=]
+            |json:ordered map|, [=ordered map=] |manifest:ordered map|, [=URL=]
+            |manifest_url:URL|:
+        </p>
+        <ol class="algorithm">
+            <li>Let |processedFileHandlers:list| be a new [=list=].
+            </li>
+            <li>Set |manifest|["file_handlers"] to |processedFileHandlers|.
+            </li>
+            <li>If |json|["file_handlers"] doesn't [=map/exist=] or
+                |json|["file_handlers"] is not a [=list=], return.
+            </li>
+            <li>[=list/For each=] |entry:ordered map| of |json|["file_handlers"]:
+                <ol>
+                    <li>Let |file_handler:ordered map| be [=process a file handler
+                        item=] with |entry|, [=manifest/start_url=], [=manifest/scope=],
+                        and |manifest_url|.
+                    </li>
+                    <li>If |file_handler| is failure, [=iteration/continue=].
+                    </li>
+                    <li>[=list/Append=] |file_handler| to |processedFileHandlers|.
+                    </li>
+                </ol>
+            </li>
+        </ol>
+        <p>
+            On [=installation=], a user agent SHOULD run the process to [=register
+            file handlers=].
+        </p>
+        <section data-cite="file-system-access">
+            <h2>
+                File Handler Items
+            </h2>
+            <p>
+                Each <dfn data-local-lt="file handler">file handler</dfn> represents
+                a URL in the scope of the application that can handle launches with
+                [=file types=] it accepts. It has the following members:
+            </p>
+            <ul>
+                <li>[=file handler/action=]
+                </li>
+                <li>[=file handler/name=]
+                </li>
+                <li>[=file handler/accept=]
+                </li>
+                <li>[=file handler/icons=]
+                </li>
+            </ul>
+            <p>
+                A user agent can use these members to associate the web application
+                with [=file type=] on the operating system.
+            </p>
+            <p>
+                A <dfn>file type</dfn> can be defined by a [=MIME type=] and/or
+                [=file extension=]. A file belongs to a file type if the OS
+                determines it to have a [=MIME type=] and/or its name ends with a
+                certain [=file extension=]. A <dfn>file extension</dfn> is a string
+                that start with a "." and only contains <a data-cite="file-system-access#valid-suffix-code-points">valid
+                    suffix code
+                    points</a>. Additionally, [=file extensions=] are limited to a length
+                of 16 code points.
+            </p>
+            <section>
+                <h3>
+                    `action` member
+                </h3>
+                <p>
+                    The [=file handler=]'s <code><dfn data-dfn-for=
+            "file handler">action</dfn></code> member is a <a>string</a> that
+                    represents a URL relative to the <a data-cite="appmanifest#dfn-manifest-url">manifest URL</a> that
+                    is
+                    [=manifest/within scope=] of a <a data-cite="appmanifest#dfn-processed-manifest">processed
+                        manifest</a> . This
+                    URL will be navigated to in the steps to [=execute a file handler
+                    launch=].
+                </p>
+            </section>
+            <section>
+                <h3>
+                    `name` member
+                </h3>
+                <p>
+                    The [=file handler=]'s <code><dfn data-dfn-for=
+            "file handler">name</dfn></code> member is a <a>string</a> that
+                    identifies the file type to the user. [=User agents=] MAY pass this
+                    information to the operating system during file handler
+                    registration.
+                </p>
+                <aside class="note">
+                    <p>
+                        The [=file handler/name=] is used to identify and describe the
+                        file type in a human readable format, and is typically only
+                        displayed in OS surfaces (such as a file browser) if the web app
+                        has become the default handler for that file type. It's most
+                        useful for custom file types.
+                    </p>
+                </aside>
+            </section>
+            <section>
+                <h3>
+                    `icons` member
+                </h3>
+                <p>
+                    The <a>file handler</a>'s <code><dfn data-dfn-for=
+            "file handler">icons</dfn></code> member lists icons that serve as
+                    graphical representations of a [=file type=]. User agents MAY pass
+                    this information to the operating system during file handler
+                    registration.
+                </p>
+                <aside class="note">
+                    The [=file handler/icons=] member is expected to be an image (or
+                    collection of images at different sizes) that represents all files
+                    that are associated with the handler. This will typically appear
+                    like a document (e.g. a piece of paper) as opposed to an
+                    application logo, but might include elements (such as logos) that
+                    suggest which application the file is associated with. As with
+                    [=file handler/name=], this is typically only displayed when the
+                    app has become the default handler for a file type.
+                </aside>
+            </section>
+            <section>
+                <h3>
+                    `accept` member
+                </h3>
+                <p>
+                    The [=file handler=]'s <code><dfn data-dfn-for=
+            "file handler">accept</dfn></code> member is a <a>dictionary</a>
+                    mapping [=MIME types=] to a list of [=file extensions=].
+                </p>
+                <p>
+                    [=User agents=] MUST enforce that the [=file handler/accept=] entry
+                    only applies to files that have a matching extension.
+                </p>
+                <p>
+                    In order to [=register file handlers=], some operating systems
+                    require [=MIME types=] and some require [=file extensions=]. Thus
+                    the manifest MUST always provide both for each [=file
+                    handler/accept=] entry.
+                </p>
+                <p>
+                    In addition to complete [=MIME types=], <code>"*"</code> can be
+                    used as the subtype of a [=MIME type=] to match, for example, all
+                    image formats with <code>"image/*"</code> (that also apply to the
+                    provided list of [=file extensions=]).
+                </p>
+                <aside class="note">
+                    For example, on Linux both the [=MIME type=] and [=file extension=]
+                    is used with the <code>xdg-mime</code> utility to specify that the
+                    web application can open files with both the [=MIME type=]
+                    specified and the specific file extension. On Windows, only [=file
+                    extensions=] are used, so the [=MIME types=] are ignored.
+                </aside>
+            </section>
+            <section>
+                <h3>
+                    `launch_type` member
+                </h3>
+                <p>
+                    The [=file handler=]'s <code><dfn data-dfn-for=
+            "file handler">launch_type</dfn></code> member is a <a>string</a>
+                    that determines how the app is launched for files routed to this
+                    handler. The possible values are `"single-client"` and
+                    `"multiple-clients"`. If not provided, it defaults to
+                    `"single-client"`.
+                </p>
+                <p>
+                    When a [=file handler=] is determined to match a set of files, the
+                    [=user agent=] SHOULD use [=file handler/launch_type=] to control
+                    whether the app is launched once for each file
+                    (`"multiple-clients"`), or one time for all files
+                    (`"single-client"`). See {{LaunchParams/files}}. The user agent
+                    MUST NOT coalesce files from different [=file handlers=] into a
+                    single launch event.
+                </p>
+                <aside class="note">
+                    <p>
+                        If an app is only meant to display one file per window or tab,
+                        `"multiple-clients"` should be applied. Otherwise, one instance
+                        will be launched and all opened files will be passed via the
+                        {{LaunchParams/files}} array.
+                    </p>
+                    <p>
+                        This field is subject to platform limitations. Windows never
+                        launches an app with multiple files, but will launch a single app
+                        multiple times with one file each. As such, this field has no
+                        effect on Windows and all launches are effectively
+                        `"multiple-clients"`.
+                    </p>
+                </aside>
+            </section>
+        </section>
+        <section>
+            <h2>
+                Processing file handler items
+            </h2>
+            <p>
+                To <dfn>process a file handler item</dfn>, given [=ordered map=]
+                |item:ordered map|, [=URL=] |start_url:URL|, [=URL=] |scope:URL|, and
+                [=URL=] |manifest URL:URL|:
+            </p>
+            <ol class="algorithm">
+                <li>Return failure if any of the following is true:
+                    <ul>
+                        <li>|item|["action"] doesn't [=map/exist=] or is not a
+                            [=string=].
+                        </li>
+                        <li>|item|["accept"] doesn't [=map/exist=].
+                        </li>
+                        <li>|item|["accept"] is not a [=dictionary=].
+                        </li>
+                        <li>|item|["accept"] [=map/is empty=].
+                        </li>
+                    </ul>
+                </li>
+                <li>Let |url:URL| be the result of [=URL Parser|parsing=]
+                    |item|["action"] with |manifest_url URL| as the base URL.
+                </li>
+                <li>If |url| is failure, return failure.
+                </li>
+                <li>If |url| is not [=manifest/within scope=] of |scope|, return
+                    failure.
+                </li>
+                <li>Let |launch_type:string| be a new [=string=] initialized to
+                    "single-client".
+                </li>
+                <li>If |item|["launch_type"] [=map/exists=] and is
+                    "multiple-clients", set |launch_type| to |item|["launch_type"].
+                </li>
+                <li>Let |accept:ordered map| be a new [=ordered map=].
+                </li>
+                <li>[=map/for each=] |mime_type_string:string| → |extensions| of
+                    |item|["accept"]
+                    <ol>
+                        <li>If |extensions| is not a [=list=], [=iteration/continue=].
+                        </li>
+                        <li>If |extensions| is [=list/empty=], [=iteration/continue=].
+                        </li>
+                        <li>If |extensions| [=list/contains=] items that are not
+                            [=string=]s, [=iteration/continue=].
+                        </li>
+                        <li>If |extensions| [=list/contains=] strings that do not begin
+                            with the character `.`, [=iteration/continue=].
+                        </li>
+                        <li>If |extensions| [=list/contains=] strings that are greater
+                            than 16 characters long, [=iteration/continue=].
+                        </li>
+                        <li>Let |mime_type_parsed:mime type| be the result of running the
+                            steps of [=parse a mime type=] on |mime_type_string|.
+                        </li>
+                        <li>If |mime_type_parsed:mime type| is failure,
+                            [=iteration/continue=].
+                        </li>
+                        <li>If |mime_type_parsed/type| is not listed as a top-level type
+                            in [[IANA-MEDIA-TYPES]], [=iteration/continue=].
+                        </li>
+                        <li>Set |accept|[|mime_type_string|] to |extensions|.
+                        </li>
+                    </ol>
+                </li>
+                <li>If |accept:ordered map| is empty, return failure.
+                </li>
+                <li>Let |file_handler:ordered map| be |ordered map| «[ "action" →
+                    |url|, "name" → |item|["name"], "launch_type" → |launch_type|,
+                    "accept" → |accept| ]».
+                </li>
+                <li>
+                    <a data-cite="appmanifest#dfn-process-image-resources">Process
+                        image resources</a> passing |item|["icons"], |file_handler|,
+                    |manifest URL|, and "icons".
+                </li>
+                <li>Return |file_handler|.
+                </li>
+            </ol>
+        </section>
+        <section>
+            <h2>
+                Execute a file handler launch
+            </h2>
+            <p>
+                The steps to <dfn>execute a file handler launch</dfn> are given by
+                the following algorithm. The algorithm takes [=list=] |files:list|
+                and a [=ordered map=] |manifest:ordered_map| which holds results from
+                [=processing a manifest=].
+            </p>
+            <ol class="algorithm">
+                <li>Let |file_handlers:list| be |manifest|["file_handlers"].
+                </li>
+                <li>If |file_handlers:list| is null, return.
+                </li>
+                <li>Let |launches:ordered map| be an [=ordered map=].
+                </li>
+                <li>[=list/for each=] |filename:string| of |files|
+                    <ol>
+                        <li>[=list/for each=] |file_handler:ordered_map| of
+                            |file_handlers:list|:
+                            <ol>
+                                <li>[=map/for each=] |mime_type_string:string| →
+                                    |extensions:list| of |file_handler|["accept"]
+                                    <ol>
+                                        <li>[=list/for each=] |extension:string| of |extensions|:
+                                            <ol>
+                                                <li>If |filename| does not end in |extension|,
+                                                    [=iteration/continue=].
+                                                </li>
+                                                <li>If |launches|[|file_handler|] [=map/exists=],
+                                                    [=list/append=] |filename| to
+                                                    |launches|[|file_handler|].
+                                                </li>
+                                                <li>Else, set |launches|[|file_handler|] to a
+                                                    [=list=] with the single element |filename|.
+                                                </li>
+                                                <li>[=iteration/Continue=] to next element of
+                                                    |files|.
+                                                </li>
+                                            </ol>
+                                        </li>
+                                    </ol>
+                                </li>
+                            </ol>
+                        </li>
+                    </ol>
+                </li>
+                <li>[=map/for each=] |file_handler| → |files:list| of |launches|
+                    <ol>
+                        <li>If |file_handler|["launch_type"] is equal to
+                            "multiple-clients"
+                            <ol>
+                                <li>[=list/for each=] |file| of |files|
+                                    <ol>
+                                        <li>Let |params:LaunchParams| be a new {{LaunchParams}}
+                                            with {{LaunchParams/targetURL}} set to
+                                            |file_handler|["action"] and {{LaunchParams/files}} set
+                                            to a {{FrozenArray}} with a single element that is a
+                                            {{FileSystemHandle}} corresponding to |file|.
+                                        </li>
+                                        <li>[=Launch a web application with handling=], passing
+                                            |manifest| and |params|.
+                                        </li>
+                                    </ol>
+                                </li>
+                            </ol>
+                        </li>
+                        <li>Else,
+                            <ol>
+                                <li>Let |params:LaunchParams| be a new {{LaunchParams}} with
+                                    {{LaunchParams/targetURL}} set to |file_handler|["action"]
+                                    and {{LaunchParams/files}} set to a {{FrozenArray}} of
+                                    {{FileSystemHandle}}s that correspond to the file paths named
+                                    by |files|.
+                                </li>
+                                <li>[=Launch a web application with handling=], passing
+                                    |manifest| and |params|.
+                                </li>
+                            </ol>
+                        </li>
+                    </ol>
+                </li>
+            </ol>
+        </section>
+        <section>
+            <h3>
+                Registering file handlers
+            </h3>
+            <p>
+                A user agent SHOULD <dfn>register file handlers</dfn> with the host
+                operating system, consistent with:
+            </p>
+            <ul>
+                <li>The app is exposed in appropriate OS surfaces such as the native
+                    file browser and other surfaces that display lists of apps that can
+                    handle a given file or file type.
+                </li>
+                <li>The app is a candidate for becoming the system's default handler
+                    for associated file types.
+                </li>
+            </ul>
+            <p>
+                A user agent MAY truncate the total set of [=file extensions=] to
+                preserve functionality and prevent abuse. A user agent MAY prevent
+                associations with certain filetypes.
+            </p>
+        </section>
+        <section>
+            <h3>
+                Privacy consideration: Default file handler.
+            </h3>
+            <p>
+                Depending on the operating system capabilities, the [=file handler=]
+                could become a default handler of a given [=file type=] without the
+                explicit knowledge of the user, handling launches of a given file
+                type automatically. To protect against possible mis-use, [=user
+                agents=] MAY require explicit user consent to begin with the process
+                to [=execute a file handler launch=]. If consent is sought, the user
+                agent SHOULD allow the user to specify that the decision is permanent
+                and if so specified SHOULD remove the web application's OS
+                registration as a file handling entity.
+            </p>
+        </section>
+        <section>
+            <h3>
+                Privacy consideration: Name and icon.
+            </h3>
+            <p>
+                The name and icon of each file handler can be sensitive to privacy
+                and security, as there isn't a specified way for the user to see and
+                confirm these. Due to this, [=user agents=] MAY choose to ignore
+                these in favor of alternative strings and icons or fall back on OS
+                defaults.
+            </p>
+        </section>
+        <section class="informative">
+            <h3>
+                Example manifest with file handlers
+            </h3>
+            <p>
+                In the following example, the web application has 3 different file
+                handlers.
+            </p>
+            <aside class="example">
+                <pre class="json">
+            {
+              "name": "Grafr",
+              "file_handlers": [
+                {
+                  "action": "/open-csv",
+                  "accept": {
+                    "text/csv": [ ".csv" ],
+                    "text/plain": [ ".txt" ]
+                  }
+                },
+                {
+                  "action": "/open-svg",
+                  "accept": {
+                    "image/svg+xml": [ ".svg" ]
+                  }
+                },
+                {
+                  "action": "/open-grafr",
+                  "name": "Grafr graph",
+                  "accept": {
+                    "application/vnd.grafr-graph": [
+                      ".grafr", ".graf"
+                    ]
+                  },
+                  "launch_type": "multiple-clients",
+                  "icons": [
+                    {
+                      "src": "/grafr-file.png",
+                      "sizes": "144x144"
+                    }
+                  ]
+                }
+              ]
+            }
+          </pre>
+            </aside>
+        </section>
+    </section>
+    <section>
+        <h3>
+            `related_applications` member
+        </h3>
+        <p>
+            A <dfn>related application</dfn> is an application accessible to the
+            underlying application platform that has a relationship with the web
+            application.
+        </p>
+        <p>
+            The [=manifest's=] <code><dfn data-export="" data-dfn-for=
+        "manifest">related_applications</dfn></code> member lists <a>related
+                applications</a> and serves as an indication of such a relationship
+            between web application and <a>related applications</a>. This
+            relationship is unidirectional and unless a listed application claims
+            the same relationship, the <a>user agent</a> MUST NOT assume a
+            bi-directional endorsement.
+        </p>
+        <p>
+            Example of usages of the `related_applications` could be a crawler that
+            would use that information to gather more information about the web
+            application or a browser that could suggest a listed application as an
+            alternative if the user wants to install the web application.
+        </p>
+        <p>
+            To <dfn>process the `related_applications` member</dfn>, given
+            [=ordered map=] |json:ordered map| and [=ordered map=]
+            |manifest:ordered map|:
+        </p>
+        <ol class="algorithm">
+            <li>Let |relatedApplications:list| be a new [=list=].
+            </li>
+            <li>Set |manifest|["related_applications"] to |relatedApplications|.
+            </li>
+            <li>If |json|["related_applications"] doesn't [=map/exist=] or
+                |json|["related_applications"] is not a [=list=], return.
+            </li>
+            <li>[=list/For each=] <var>app</var> of |json|["related_applications"]:
+                <ol>
+                    <li>If neither <var>app</var>["id"] nor <var>app</var>["url"] are
+                        missing:
+                        <ol>
+                            <li>Set <var>app</var>["url"] to the result of running
+                                <a>process the `url` member of an application</a> given
+                                <var>app</var>["url"].
+                            </li>
+                            <li>[=list/append=] <var>app</var> to
+                                <var>relatedApplications</var>.
+                            </li>
+                        </ol>
+                    </li>
+                </ol>
+            </li>
+            <li>Set <var>relatedApplications</var>.
+            </li>
+        </ol>
+    </section>
+    <section>
+        <h3>
+            `prefer_related_applications` member
+        </h3>
+        <p>
+            The [=manifest's=] <code><dfn data-export="" data-dfn-for=
+        "manifest">`prefer_related_applications`</dfn></code> member is a
+            [=boolean=] that is used as a hint for the user agent to say that
+            <a>related applications</a> should be preferred over the web
+            application. If the `prefer_related_applications` member is set to
+            `true`, and the user agent wants to suggest to install the web
+            application, the user agent might want to suggest installing one of the
+            <a>related applications</a> instead.
+        </p>
+    </section>
+    <section>
+        <h3>
+            `scope_extensions` member
+        </h3>
+        <p>
+            The [=manifest's=] <code><dfn data-export="" data-dfn-for=
+        "manifest">scope_extensions</dfn></code> member represents a list of an
+            application's desired [=scope extensions=].
+        </p>
+        <p>
+            A <dfn>scope extension</dfn> extends the [=manifest/navigation scope of
+            a manifest=] by describing additional [=URLs=] that should be treated
+            as being [=within extended scope=].
+        </p>
+        <p>
+            The user agent MUST [=process the scope_extensions member=] and
+            [=validate scope extensions=] before it can [=apply extended scope=] to
+            allow additional [=URLs=] to be [=within extended scope=].
+        </p>
+        <p>
+            A [=URL=] |target:URL| is <dfn>within extended scope</dfn> of a
+            |manifest:processed manifest| if the |target| is [=manifest/within
+            scope=] of the manifest or [=matches a validated scope extension=].
+        </p>
+        <p>
+            A [=URL=] |target:URL| <dfn>matches a validated scope extension</dfn>
+            if the following algorithm returns `true`, given [=URL=] |target:URL|
+            and [=list=] |validated_scope_extensions:list|:
+        </p>
+        <ol class="algorithm">
+            <li>[=list/For each=] |entry:ordered map| of
+                |validated_scope_extensions:list|:
+                <ol>
+                    <li>If |entry| is not an [=ordered map=], or |entry|["scope"] does
+                        not [=map/exist=] or is not a [=URL=], continue.
+                    </li>
+                    <li>Let [=URL=] |resolved_scope:URL| be |entry:ordered
+                        map|["scope"].
+                    </li>
+                    <li>If |target| is [=URL/within scope=] of |resolved_scope|, return
+                        `true`.
+                    </li>
+                </ol>
+            </li>
+            <li>Return `false`.
+            </li>
+        </ol>
+        <aside class="note">
+            The [=manifest's=] `scope` member only allows URLs to be considered for
+            scope from a single [=origin=]. The `scope_extensions` member allows
+            URLs to be considered from multiple [=origins=].
+        </aside>
+        <section class="informative">
+            <h2>
+                Usage Example
+            </h2>
+            <p>
+                The following example shows a [=manifest=] for an application which
+                uses the `scope_extensions` member.
+            </p>
+            <pre class="example json" title="https://example.com/manifest.webmanifest">
+          {
+            "id": "https://example.com/app",
+            "name": "My App",
+            "icons": [{
+              "src": "icon/hd_hi",
+              "sizes": "128x128"
+            }],
+            "start_url": "/app/index.html",
+            "scope": "/app",
+            "display": "standalone",
+            "scope_extensions": [
+              { "type": "origin", "origin": "https://example.co.uk" },
+              { "type": "origin", "origin": "https://help.example.com" }]
+          }
+        </pre>
+            <p>
+                The following shows 2 [=web-app-origin-association=] files which can
+                be downloaded from the `.well-known` path of the [=origins=] listed
+                in the `scope_extensions` member.
+            </p>
+            <pre class="example json" title="https://example.co.uk/.well-known/web-app-origin-association">
+          {
+            "https://example.com/app": {
+              "scope": "/app"   
+            }
+          }
+        </pre>
+            <pre class="example json" title="https://help.example.com/.well-known/web-app-origin-association">
+          {
+            "https://example.com/app": {
+              "scope": "/"   
+            }
+          }
+        </pre>
+            <p>
+                The navigation scope of this app consists of URLs that are
+                [=URL/within scope=] of any of these [=URLs=]:
+                `https://example.com/app`, `https://example.co.uk/app`, and
+                `https://help.example.com`.
+            </p>
+        </section>
+        <section>
+            <h2>
+                Processing the `scope_extensions` member
+            </h2>
+            <p>
+                To <dfn>process the `scope_extensions` member</dfn>, given [=ordered
+                map=] |json:ordered map|, [=ordered map=] |manifest:ordered map|, and
+                [=URL=] |manifest_id:URL|:
+            </p>
+            <ol class="algorithm">
+                <li>Let |processedScopeExtensions:list| be a new [=list=].
+                </li>
+                <li>Set |manifest|["scope_extensions"] to |processedScopeExtensions|.
+                </li>
+                <li>If |json|["scope_extensions"] does not [=map/exist=] or is not a
+                    [=list=], return.
+                </li>
+                <li>[=list/For each=] |entry:ordered map| of
+                    |json|["scope_extensions"]:
+                    <ol>
+                        <li>If |entry|["type"] or |entry|["origin"] do not [=map/exist=],
+                            [=iteration/continue=].
+                        </li>
+                        <li>If |entry|["type"] is not "origin", [=iteration/continue=].
+                        </li>
+                        <li>If |entry|["origin"] is not a [=string=],
+                            [=iteration/continue=].
+                        </li>
+                        <li>Let [=URL=] |origin_url:URL| be the result of [=URL
+                            Parser|parsing=] |entry|["origin"].
+                        </li>
+                        <li>If |origin_url| is a valid |URL| with [=URL/scheme=] "https",
+                            set |entry|["origin"] to the [=URL/origin=] of |origin_url|.
+                        </li>
+                        <li>Else [=iteration/continue=].
+                        </li>
+                        <li>Validate |entry| using the algorithm from [=validate scope
+                            extensions=], given [=ordered map=] |entry:ordered map| and
+                            [=URL=] |manifest_id:URL|.
+                        </li>
+                        <li>If the previous step returned an error,
+                            [=iteration/continue=].
+                        </li>
+                        <li>Else, set |entry|["scope"] to the returned [=URL=].
+                        </li>
+                        <li>[=list/Append=] |entry| to |processedScopeExtensions|.
+                        </li>
+                    </ol>
+                </li>
+            </ol>
+            <aside class="note">
+                `origin` is the only type of scope extension entry that is currently
+                specified. Other types may be added in the future to support
+                different use cases.
+            </aside>
+        </section>
+        <section>
+            <h2>
+                Validating scope extensions
+            </h2>
+            <p>
+                To <dfn>validate scope extensions</dfn>, given [=ordered map=]
+                |extension:ordered map| and [=URL=] |manifest_id:URL|:
+            </p>
+            <ol class="algorithm">
+                <li>Let [=URL=] |origin_url:URL| be the [=URL=] of the [=URL/origin=]
+                    |extension|["origin"].
+                </li>
+                <li>Let [=URL=] |download_url:URL| be the result of [=URL
+                    Parser|parsing=] "/.well-known/web-app-origin-association" using
+                    |origin_url| as the base [=URL=].
+                </li>
+                <li>Let [=ordered map=] |json:ordered map| be the result of a
+                    [=fetch=] given |download_url|.
+                </li>
+                <li>If the [=fetch=] failed, return an error.
+                </li>
+                <li>If |json|[|manifest_id|] does not [=map/exist=] or is not an
+                    [=ordered map=], return an error.
+                </li>
+                <li>Let [=string=] |scope:string| be "/".
+                </li>
+                <li>If |json|[|manifest_id|]["scope"] [=map/exists=] and is a
+                    [=string=], set |scope| to |json|[|manifest_id|]["scope"].
+                </li>
+                <li>Let [=URL=] |resolved_scope:URL| be the result of [=URL
+                    Parser|parsing=] |scope| with |extension|["origin"] as the base
+                    [=URL=].
+                </li>
+                <li>Return |resolved_scope|.
+                </li>
+            </ol>
+        </section>
+        <section>
+            <h2>
+                Applying scope extensions
+            </h2>
+            <p>
+                The user agent MAY choose to apply <dfn>apply extended scope</dfn> in
+                some scenarios and [=manifest/scope=] in others.
+            </p>
+            <p>
+                If the [=application context=]'s [=navigable/active document=]'s
+                [=URL=] is not [=manifest/within scope=] but is [=within extended
+                scope=], the user agent SHOULD provide UI that allows the user to
+                determine the [=URL=] or at least its [=origin=], including whether
+                it is served over a secure connection. This UI SHOULD differ from any
+                UI used when the [=URL=] is not [=manifest/within scope=] of the
+                [=application context=]'s [=Document/processed manifest=], in order
+                to make it obvious that the user is still navigating the intended
+                contents of the application but also keep the user informed of the
+                privacy and security implications of navigating to a different
+                [=origin=].
+            </p>
+        </section>
+    </section>
+    <section class="informative">
+        <h2>
+            The web-app-origin-association file
+        </h2>
+        <p>
+            A <dfn>web-app-origin-association</dfn> file is a JSON file that can
+            be used to [=validate scope extensions=] or [=validate origin
+            migration=]. It confirms an association between the origin it is in
+            with one or more web applications. It identifies apps uniquely by
+            referencing manifest [=manifest/ids=].
+        </p>
+        <p>
+            Given [=origin=] |origin:origin|, a [=web-app-origin-association=]
+            file is expected to be downloadable from
+            <code>[origin]/.well-known/web-app-origin-association</code>.
+        </p>
+    </section>
+    <section>
+        <h2>
+            Web Application Origin Migration
+        </h2>
+        <p>
+            Web Application Origin Migration allows a web application to indicate
+            to the user agent that it moved from one origin to another (within the
+            same site). This then enables the user agent to migrate an installed
+            web application while preserving the user's installation and potentially
+            their settings.
+        </p>
+        <section class="informative">
+            <h3>
+                Usage Example
+            </h3>
+            <p>
+                The following example shows how a web application hosted at
+                <code>https://old.example.com</code> can be migrated to
+                <code>https://new.example.com</code>. Both origins must be
+                [=same site=] and must explicitly agree to the migration.
+            </p>
+            <p>
+                First, the old application's manifest can optionally include a
+                `migrate_to` member to signal to the user agent that it intends to
+                move (alternatively the old application can redirect to the new
+                application):
+            </p>
+            <pre class="example json" title="https://old.example.com/manifest.json">
+          {
+            "name": "My App",
+            "id": "/",
+            "migrate_to": {
+              "id": "https://new.example.com/",
+              "install_url": "https://new.example.com/install"
+            }
+          }
+        </pre>
+            <p>
+                Next, the new application's manifest includes a `migrate_from` member
+                to claim the migration from the old application:
+            </p>
+            <pre class="example json" title="https://new.example.com/manifest.json">
+          {
+            "name": "My New App",
+            "id": "/",
+            "migrate_from": [
+              {
+                "id": "https://old.example.com/",
+                "install_url": "https://old.example.com/install",
+                "behavior": "force"
+              }
+            ]
+          }
+        </pre>
+            <p>
+                Finally, the old origin must host a `web-app-origin-association`
+                file to definitively validate that it permits the new application to
+                take over. Without this file, a malicious new application could
+                claim to migrate from an old application without permission.
+            </p>
+            <pre class="example json" title="https://old.example.com/.well-known/web-app-origin-association">
+          {
+            "https://new.example.com/": {
+              "allow_migration": true
+            }
+          }
+        </pre>
+        </section>
+        <section>
+            <h3>
+                <code><dfn data-export="" data-dfn-for=
+          "manifest">migrate_from</dfn></code> member
+            </h3>
+            <p>
+                The [=manifest/migrate_from=] member is a [=list=] of either
+                [=strings=] or [=ordered maps=] that identifies the old web
+                applications that are being migrated from.
+            </p>
+            <p>
+                If an entry is a [=string=], it is treated as the [=manifest/id=] of
+                the old application.
+            </p>
+            <p>
+                If an entry is an [=ordered map=], it can have the following members:
+            </p>
+            <ul>
+                <li>
+                    <code><dfn data-dfn-for="migrate_from_item">id</dfn></code>: A
+                    [=string=] representing the [=manifest/id=] of the old application.
+                </li>
+                <li>
+                    <code><dfn data-dfn-for=
+            "migrate_from_item">install_url</dfn></code>: A [=string=]
+                    representing a URL of a page that links to the old application's
+                    manifest. A user agent can use this field to fetch the manifest of
+                    the old application in order to apply updates even if every other
+                    URL that is part of the old application redirects to the new
+                    application.
+                </li>
+                <li>
+                    <code><dfn data-dfn-for="migrate_from_item">behavior</dfn></code>: A
+                    [=string=] that can be either `"suggest"` or `"force"`. This is a
+                    hint to the user agent that might influence how forceful the UI is
+                    that the user agent presents to the user to tell them about the
+                    migration.
+                </li>
+            </ul>
+            <div class="note">
+                For the user agent to process the [=manifest/migrate_from=] member,
+                the manifest needs to also contain a valid explicit
+                <a data-cite="appmanifest#dfn-id">id</a> member in its JSON.
+            </div>
+        </section>
+        <section>
+            <h3>
+                <code><dfn data-export="" data-dfn-for=
+          "manifest">migrate_to</dfn></code> member
+            </h3>
+            <p>
+                The [=manifest/migrate_to=] member is an optional [=ordered map=] that
+                proactively signals a migration to a new application. It has the
+                following members:
+            </p>
+            <ul>
+                <li>
+                    <code><dfn data-dfn-for="migrate_to_item">id</dfn></code>: A
+                    [=string=] representing the [=manifest/id=] of the new application.
+                </li>
+                <li>
+                    <code><dfn data-dfn-for=
+            "migrate_to_item">install_url</dfn></code>: A [=string=]
+                    representing a URL of a page that links to the new application's
+                    manifest. The manifest on this page needs to include a
+                    [=manifest/migrate_from=] field that points back at this application
+                    for the migration to be processed.
+                </li>
+            </ul>
+        </section>
+        <section>
+            <h3>
+                Validating origin migration
+            </h3>
+            <p>
+                To <dfn>validate origin migration</dfn>, given [=URL=]
+                |old_manifest_id:URL| and [=URL=] |new_manifest_id:URL|:
+            </p>
+            <ol class="algorithm">
+                <li>If |old_manifest_id|'s [=URL/origin=] and |new_manifest_id|'s
+                    [=URL/origin=] are not [=same site=], return an error.
+                </li>
+                <li>If |old_manifest_id|'s [=URL/origin=] is [=same origin=] as
+                    |new_manifest_id|'s [=URL/origin=], return success.
+                </li>
+                <li>Let [=URL=] |origin_url:URL| be the [=URL/origin=] of
+                    |old_manifest_id|.
+                </li>
+                <li>Let [=URL=] |download_url:URL| be the result of [=URL
+                    Parser|parsing=] "/.well-known/web-app-origin-association" using
+                    |origin_url| as the base [=URL=].
+                </li>
+                <li>Let [=ordered map=] |json:ordered map| be the result of a
+                    [=fetch=] given |download_url|.
+                </li>
+                <li>If the [=fetch=] failed, return an error.
+                </li>
+                <li>If |json|[|new_manifest_id|] does not [=map/exist=] or is not an
+                    [=ordered map=], return an error.
+                </li>
+                <li>If |json|[|new_manifest_id|]["allow_migration"] is not `true`,
+                    return an error.
+                </li>
+                <li>Return success.
+                </li>
+            </ol>
+        </section>
+        <section>
+            <h3>
+                Processing the `migrate_from` member
+            </h3>
+            <p>
+                To <dfn>process the `migrate_from` member</dfn>, given [=ordered
+                map=] |json:ordered map|, [=ordered map=] |manifest:ordered map|, and
+                [=URL=] |manifest URL:URL|:
+            </p>
+            <ol class="algorithm">
+                <li>If |json|["id"] does not [=map/exist=] or is not a [=string=],
+                    return.
+                </li>
+                <li>If |json|["id"] is the empty string, return.
+                </li>
+                <li>Let |base_origin:origin| be |manifest|["start_url"]'s
+                    [=URL/origin=].
+                </li>
+                <li>Let |id_url:URL| be the result of [=URL Parser|parsing=]
+                    |json|["id"] with |base_origin| as the base URL.
+                </li>
+                <li>If |id_url| is failure, return.
+                </li>
+                <li>If |id_url| is not [=same origin=] as |manifest|["start_url"],
+                    return.
+                </li>
+                <li>Let |processed_migrate_from:list| be a new [=list=].
+                </li>
+                <li>Set |manifest|["migrate_from"] to |processed_migrate_from|.
+                </li>
+                <li>If |json|["migrate_from"] does not [=map/exist=] or is not a
+                    [=list=], return.
+                </li>
+                <li>[=list/For each=] |entry| of |json|["migrate_from"]:
+                    <ol>
+                        <li>Let |processed_entry:ordered map| be a new [=ordered map=].
+                        </li>
+                        <li>If |entry| is a [=string=]:
+                            <ol>
+                                <li>Let |id:URL| be the result of [=URL Parser|parsing=]
+                                    |entry| with |manifest URL| as the base URL.
+                                </li>
+                                <li>If |id| is failure, [=iteration/continue=].
+                                </li>
+                                <li>Set |processed_entry|["id"] to |id|.
+                                </li>
+                            </ol>
+                        </li>
+                        <li>Else if |entry| is an [=ordered map=]:
+                            <ol>
+                                <li>If |entry|["id"] does not [=map/exist=] or is not a
+                                    [=string=], [=iteration/continue=].
+                                </li>
+                                <li>Let |id:URL| be the result of [=URL Parser|parsing=]
+                                    |entry|["id"] with |manifest URL| as the base URL.
+                                </li>
+                                <li>If |id| is failure, [=iteration/continue=].
+                                </li>
+                                <li>Set |processed_entry|["id"] to |id|.
+                                </li>
+                                <li>If |entry|["install_url"] [=map/exists=] and is a
+                                    [=string=]:
+                                    <ol>
+                                        <li>Let |install_url:URL| be the result of [=URL
+                                            Parser|parsing=] |entry|["install_url"] with |manifest
+                                            URL| as the base URL.
+                                        </li>
+                                        <li>If |install_url| is not failure, set
+                                            |processed_entry|["install_url"] to |install_url|.
+                                        </li>
+                                    </ol>
+                                </li>
+                                <li>If |entry|["behavior"] [=map/exists=] and is a
+                                    [=string=]:
+                                    <ol>
+                                        <li>If |entry|["behavior"] is "suggest" or "force", set
+                                            |processed_entry|["behavior"] to |entry|["behavior"].
+                                        </li>
+                                    </ol>
+                                </li>
+                            </ol>
+                        </li>
+                        <li>Else, [=iteration/continue=].
+                        </li>
+                        <li>Validate |processed_entry|["id"] using the algorithm from
+                            [=validate origin migration=], given [=URL=]
+                            |processed_entry|["id"] and [=URL=] |id_url|.
+                        </li>
+                        <li>If the previous step returned an error,
+                            [=iteration/continue=].
+                        </li>
+                        <li>[=list/Append=] |processed_entry| to
+                            |processed_migrate_from|.
+                        </li>
+                    </ol>
+                </li>
+            </ol>
+        </section>
+        <section>
+            <h3>
+                Processing the `migrate_to` member
+            </h3>
+            <p>
+                To <dfn>process the `migrate_to` member</dfn>, given [=ordered
+                map=] |json:ordered map|, [=ordered map=] |manifest:ordered map|, and
+                [=URL=] |manifest URL:URL|:
+            </p>
+            <ol class="algorithm">
+                <li>If |json|["migrate_to"] does not [=map/exist=] or is not an
+                    [=ordered map=], return.
+                </li>
+                <li>Let |entry:ordered map| be |json|["migrate_to"].
+                </li>
+                <li>If |entry|["id"] does not [=map/exist=] or is not a [=string=],
+                    return.
+                </li>
+                <li>Let |id:URL| be the result of [=URL Parser|parsing=]
+                    |entry|["id"] with |manifest URL| as the base URL.
+                </li>
+                <li>If |id| is failure, return.
+                </li>
+                <li>Let |processed_migrate_to:ordered map| be a new [=ordered map=].
+                </li>
+                <li>Set |processed_migrate_to|["id"] to |id|.
+                </li>
+                <li>If |entry|["install_url"] [=map/exists=] and is a [=string=]:
+                    <ol>
+                        <li>Let |install_url:URL| be the result of [=URL
+                            Parser|parsing=] |entry|["install_url"] with |manifest URL| as
+                            the base URL.
+                        </li>
+                        <li>If |install_url| is not failure, set
+                            |processed_migrate_to|["install_url"] to |install_url|.
+                        </li>
+                    </ol>
+                </li>
+                <li>Set |manifest|["migrate_to"] to |processed_migrate_to|.
+                </li>
+            </ol>
+        </section>
+        <section>
+            <h3>
+                Privacy and Security Considerations
+            </h3>
+            <p>
+                To prevent malicious actors from silently taking over applications (e.g., a simple calculator updating
+                itself to mimic a banking app), the [=validate origin migration=] algorithm enforces a two-way
+                handshake. Both the new and the old application origins must explicitly agree to the migration via the
+                [=web-app-origin-association=] file.
+            </p>
+            <p>
+                Furthermore, migrations are restricted to be [=same site=] to ensure they are used for legitimate
+                rebranding and architecture changes within an organization's control, rather than transferring ownership
+                to unverified third parties.
+            </p>
+            <p>
+                User agents should consider including an explicit user confirmation dialog as part of the migration
+                flow, especially if an update to security-sensitive fields (such as the app name and icons) is included.
+            </p>
+        </section>
+    </section>
+    <section>
+        <h2>
+            External application resource
+        </h2>
+        <p>
+            Each <dfn data-local-lt="external application resource's">external
+                application resource</dfn> represents an application related to the web
+            application.
+        </p>
+        <p>
+            An [=external application resource=] can have the following members,
+            some of which are required to be a [=valid external application
+            resource=]:
+        </p>
+        <ul>
+            <li>[=external application resource/fingerprints=] member
+            </li>
+            <li>[=external application resource/id=] member
+            </li>
+            <li>[=external application resource/min_version=] member
+            </li>
+            <li>[=external application resource/platform=] member
+            </li>
+            <li>[=external application resource/url=] member
+            </li>
+        </ul>
+        <p>
+            A <dfn>valid external application resource</dfn> MUST have [=external
+            application resource/platform=] member, and either an [=external
+            application resource/url=] or an [=external application resource/id=]
+            member (or both).
+        </p>
+        <aside class="example">
+            <p>
+                In the following example, the web application is listing two
+                different related applications, one on Google Play Store and the
+                other one on the iTunes Store. The one on the Google Play Store has
+                an Android package name, a minimum version specifier, and
+                cryptographic fingerprints used for verification, in a
+                Play-Store-specific manner.
+            </p>
+            <pre class="json">
+          {
+            "related_applications": [
+              {
+                "platform": "play",
+                "url": "https://play.google.com/store/apps/details?id=com.example.app1",
+                "id": "com.example.app1",
+                "min_version": "2",
+                "fingerprints": [
+                  {
+                    "type": "sha256_cert",
+                    "value": "92:5A:39:05:C5:B9:EA:BC:71:48:5F:F2"
+                  }
+                ]
+              },
+              {
+                "platform": "itunes",
+                "url": "https://itunes.apple.com/app/example-app1/id123456789"
+              }
+            ]
+          }
+        </pre>
+        </aside>
+        <section>
+            <h3>
+                `platform` member
+            </h3>
+            <p>
+                The <code><dfn data-dfn-for=
+          "external application resource">platform</dfn></code> member
+                represents the [=platform=] this [=external application resource=] is
+                associated with. A <dfn data-dfn-for="">platform</dfn> represents a
+                software distribution ecosystem or possibly an operating system. This
+                specification does not define the particular values for the
+                <a>platform</a> member.
+            </p>
+            <aside class="Platforms registry">
+                The working group maintains a <a href="https://github.com/w3c/manifest/wiki/Platforms">registry of known
+                    platform values</a>.
+            </aside>
+        </section>
+        <section>
+            <h3>
+                `url` member
+            </h3>
+            <p>
+                An [=external application resource's=] <code><dfn data-dfn-for=
+          "external application resource">url</dfn></code> member is the
+                <a>URL</a> where the application can be found.
+            </p>
+            <p>
+                To <dfn>process the `url` member of an application</dfn>:
+            </p>
+            <ol class="algorithm">
+                <li>If <var>application URL</var> is missing, return null.
+                </li>
+                <li>Otherwise, [=URL Parser|parse=] <var>application URL</var> and if
+                    the result is not failure, return the result. Otherwise return null.
+                </li>
+            </ol>
+        </section>
+        <section>
+            <h3>
+                `id` member
+            </h3>
+            <p>
+                An [=external application resource's=] <code><dfn data-dfn-for=
+          "external application resource">id</dfn></code> member represents the
+                id which is used to represent the application on the platform.
+            </p>
+        </section>
+        <section>
+            <h3>
+                `min_version` member
+            </h3>
+            <p>
+                An [=external application resource's=] <code><dfn data-dfn-for=
+          "external application resource">min_version</dfn></code> member
+                represents the minimum version of the application that is considered
+                related to this web app. This version is a <a>string</a> with
+                platform-specific syntax and semantics.
+            </p>
+        </section>
+        <section>
+            <h3>
+                `fingerprints` member
+            </h3>
+            <p>
+                An [=external application resource's=] <code><dfn data-dfn-for=
+          "external application resource">fingerprints</dfn></code> member
+                represents an [=list=] of [=fingerprints=].
+            </p>
+            <p>
+                A <dfn data-local-lt="fingerprints">fingerprint</dfn> represents a
+                set of cryptographic fingerprints used for verifying the application.
+                A fingerprint has the following two members: <dfn data-dfn-for="fingerprint">type</dfn> and <dfn
+                    data-dfn-for="fingerprint">value</dfn>. Each of these are <a>string</a>s, but
+                their syntax and semantics are platform-defined.
+            </p>
+        </section>
+    </section>
+    <section data-cite="DOM">
+        <h2>
+            Installation prompts
+        </h2>
+        <p>
+            There are multiple ways that the installation process can be triggered:
+        </p>
+        <ul>
+            <li>An end-user can <dfn data-lt="manual installation">manually</dfn>
+                trigger the installation process through the user agent's
+                <abbr title="User Interface">UI</abbr>, directly invoking the steps
+                to <a>present an install prompt</a>.
+            </li>
+            <li>The installation process can occur through an <dfn>automated
+                    install prompt</dfn>: that is, a UI that the user agent presents to the
+                user when, for instance, there are sufficient <a>installability
+                    signals</a> to warrant installation of the web application.
+            </li>
+            <li>The installation process can occur through a <dfn>site-triggered
+                    install prompt</dfn>: the site can programmatically request that the
+                user agent present an install prompt to the user. The user agent MAY
+                restrict the availability of this feature to cases where, for instance,
+                there are sufficient signals to warrant [=installed web
+                application|installation=] of the web application.
+            </li>
+        </ul>
+        <p>
+            In any case, the user agent MUST NOT <a>present an install prompt</a>
+            if the document is not installable.
+        </p>
+        <p>
+            The user agent MAY, at any time (only if the document is installable),
+            run the <a>steps to notify that an install prompt is available</a> at
+            any time, giving the site the opportunity to show a <a>site-triggered
+                install prompt</a> without the user needing to interact with the user
+            agent UI.
+        </p>
+        <p>
+            To <dfn data-local-lt="presenting an install prompt|presentation of the install prompt">present
+                an install prompt</dfn>:
+        </p>
+        <ol>
+            <li>Show some user-agent-specific UI, asking the user whether to
+                proceed with installing the app. The <var>result</var> of this choice
+                is either {{AppBannerPromptOutcome/"accepted"}} or
+                {{AppBannerPromptOutcome/"dismissed"}}.
+            </li>
+            <li>Return <var>result</var>, and <a>in parallel</a>:
+                <ol>
+                    <li>If <var>result</var> is {{AppBannerPromptOutcome/"accepted"}},
+                        run the <a>steps to install the web application</a>.
+                    </li>
+                </ol>
+            </li>
+        </ol>
+        <p>
+            The <dfn>steps to notify that an install prompt is available</dfn> are
+            given by the following algorithm:
+        </p>
+        <ol>
+            <li>Wait until the {{Document}} of the <a>top-level browsing
+                    context</a> is <a data-cite="html#completely-loaded">completely
+                    loaded</a>.
+            </li>
+            <li>If there is already an <a data-lt="present an install prompt">install prompt being presented</a> or if
+                the <a>steps to install the web application</a> are currently being
+                executed, then abort this step.
+            </li>
+            <li>
+                <a>Queue a task</a> on the <a>application life-cycle task source</a>
+                to do the following:
+                <ol>
+                    <li>Let |mayShowPrompt| be the result of [=fire an event=] named
+                        `"beforeinstallprompt"` at the [=top-level browsing context=]'s
+                        [=relevant global object=] using the {{BeforeInstallPromptEvent}}
+                        interface, with steps to initialize the {{Event/cancelable}}
+                        attribute to `true`.
+                    </li>
+                    <li>If |mayShowPrompt| is true, then the user agent MAY, <a>in
+                            parallel</a>, <a>request to present an install prompt</a> with
+                        |event|.
+                    </li>
+                </ol>
+            </li>
+        </ol>
+    </section>
+    <section data-cite="DOM">
+        <h2>
+            Installable web applications
+        </h2>
+        <section>
+            <h2>
+                <dfn>Installation</dfn> process
+            </h2>
+            <p>
+                The <dfn>steps to install the web application</dfn> are given by the
+                following algorithm:
+            </p>
+            <ol>
+                <li>Let <var>manifest</var> be the manifest of an installable
+                    document.
+                </li>
+                <li>Perform an unspecified sequence of actions to attempt to register
+                    the web application in the user's operating system (e.g., create
+                    shortcuts that launch the web application, register the application
+                    in the system uninstall menu, etc.). If the installation fails (which
+                    can be for any reason, for example, the OS denying permission to the
+                    user agent to add an icon to the home screen of the device), abort
+                    these steps.
+                </li>
+                <li>
+                    <a>Queue a task</a> on the <a>application life-cycle task
+                        source</a> to <a>fire an event</a> named `"appinstalled"` at the
+                    [=top-level browsing context=]'s [=relevant global object=] for
+                    which the installation took place.
+                </li>
+            </ol>
+        </section>
+        <section class="informative">
+            <h3 id="installability-signals">
+                Installability signals
+            </h3>
+            <p>
+                By design, this specification does not provide developers with an
+                explicit API to "install" a web application. Instead, a
+                <a>manifest</a> can serve as an <dfn>installability signal</dfn> to a
+                user agent that a web application can be installed. These signals
+                will vary per user agent, as each user agent will have its own
+                heuristics to determine whether a web site is elegible of an install
+                prompt. Implementers generally will provide documentation that
+                describe their particular installabilty signals or other relevant
+                criteria a web application needs to meet to be deemed installable.
+            </p>
+            <p>
+                Examples of possible <a>installability signals</a> for a web
+                application that a user agent might implement:
+            </p>
+            <ul>
+                <li>has a [=application manifest=] with an application name and a
+                    suitable icon.
+                </li>
+                <li>is served over a secure network connection, but also functions
+                    without a network connection.
+                </li>
+                <li>has a sensible content security policy.
+                </li>
+                <li>is able to responsively adapt to display on a variety of screen
+                    sizes, catering for both mobile and desktop.
+                </li>
+                <li>shows a high degree of end-user engagement over an extended
+                    period of time.
+                </li>
+                <li>has been explicitly marked by the user as one that they value and
+                    trust (e.g., by bookmarking or "starring" it).
+                </li>
+            </ul>
+            <p>
+                This list is not exhaustive and some <a>installability signals</a>
+                might not apply to all user agents. How a user agent makes use of
+                these <a>installability signals</a> to determine if a web application
+                can be installed is left to implementers.
+            </p>
+        </section>
+    </section>
+    <section>
+        <h2>
+            Installation Events
+        </h2>
+        <p>
+            [=event|Events=] of this specification rely on the <dfn>application
+                life-cycle task source</dfn>.
+        </p>
+        <section data-dfn-for="BeforeInstallPromptEvent">
+            <h3>
+                <dfn>BeforeInstallPromptEvent</dfn> Interface
+            </h3>
+            <div class="note">
+                The <a>beforeinstallprompt</a> event is somewhat misnamed, as it does
+                not necessarily signal that a <a>manual installation</a> will follow
+                (depending on the user agent, it might just be giving the site the
+                ability to trigger an install prompt). It is so named for historical
+                reasons.
+            </div>
+            <pre class="idl" data-cite="DOM">
+          [Exposed=Window]
+          interface BeforeInstallPromptEvent : Event {
+            constructor(DOMString type, optional EventInit eventInitDict = {});
+            Promise&lt;PromptResponseObject&gt; prompt();
+          };
+
+          dictionary PromptResponseObject {
+            AppBannerPromptOutcome userChoice;
+          };
+
+          enum AppBannerPromptOutcome {
+            "accepted",
+            "dismissed"
+          };
+        </pre>
+            <p>
+                The {{BeforeInstallPromptEvent}} is dispatched when the site is
+                allowed to present a <a>site-triggered install prompt</a>, or prior
+                to the user agent presenting an <a>automated install prompt</a>. It
+                allows the site to cancel the <a>automated install prompt</a>, as
+                well as manually present the <a>site-triggered install prompt</a>.
+            </p>
+            <div class="note">
+                If the {{BeforeInstallPromptEvent}} is <em>not</em> cancelled, the
+                user agent is allowed to <a>present an install prompt</a>
+                (specifically, an <a>automated install prompt</a>) to the end-user.
+                Canceling the default action (via {{Event/preventDefault()}})
+                prevents the user agent from <a>presenting an install prompt</a>. The
+                user agent is free to run <a>steps to notify that an install prompt
+                    is available</a> again at a later time.
+            </div>
+            <p>
+                The <dfn>PromptResponseObject</dfn> contains the result of calling
+                {{BeforeInstallPromptEvent/prompt()}}. It contains one member,
+                <dfn data-dfn-for="PromptResponseObject">userChoice</dfn>, which
+                states the user's chosen outcome.
+            </p>
+            <p>
+                An instance of a {{BeforeInstallPromptEvent}} has the following
+                internal slots:
+            </p>
+            <dl data-dfn-for="BeforeInstallPromptEvent">
+                <dt>
+                    <dfn>[[\didPrompt]]</dfn>
+                </dt>
+                <dd>
+                    A boolean, initially `false`. Represents whether this event was
+                    used to <a>present an install prompt</a> to the end-user.
+                </dd>
+                <dt>
+                    <dfn>[[\userResponsePromise]]</dfn>
+                </dt>
+                <dd>
+                    A promise that represents the outcome of <a>presenting an install
+                        prompt</a>.
+                </dd>
+            </dl>
+            <section>
+                <h4>
+                    <code>prompt()</code> method
+                </h4>
+                <p>
+                    The <dfn>prompt</dfn> method, when called, runs the following
+                    steps:
+                </p>
+                <ol>
+                    <li>Let |userResponsePromise| be
+                        {{BeforeInstallPromptEvent/[[userResponsePromise]]}}.
+                    </li>
+                    <li>If |userResponsePromise| is pending:
+                        <ol>
+                            <li>If [=this=].{{BeforeInstallPromptEvent/[[didPrompt]]}} is
+                                `true`, terminate this algorithm.
+                            </li>
+                            <li>If this event's {{Event/isTrusted}} attribute is `false`,
+                                reject |userResponsePromise| with {{"NotAllowedError"}} and
+                                terminate this algorithm.
+                            </li>
+                            <li>Set [=this=].{{BeforeInstallPromptEvent/[[didPrompt]]}} to
+                                `true`.
+                            </li>
+                            <li>
+                                <a>In parallel</a>, <a>request to present an install
+                                    prompt</a> with [=this=]. Wait, possibly indefinitely, for
+                                the end-user to make a choice.
+                            </li>
+                        </ol>
+                    </li>
+                    <li>Return |userResponsePromise|.
+                    </li>
+                </ol>
+                <p>
+                    To <dfn data-noexport="">request to present an install prompt</dfn>
+                    with {{BeforeInstallPromptEvent}} <var>event</var>:
+                </p>
+                <ol>
+                    <li>
+                        <a>Present an install prompt</a> and let |outcome| be the result.
+                    </li>
+                    <li>Let |response| be a newly created {{PromptResponseObject}},
+                        initializing its {{PromptResponseObject/userChoice}} to |outcome|.
+                    </li>
+                    <li>[=Resolve=]
+                        |event|.{{BeforeInstallPromptEvent/[[userResponsePromise]]}} with
+                        |response|.
+                    </li>
+                </ol>
+            </section>
+            <section class="informative">
+                <h4>
+                    Usage example
+                </h4>
+                <p>
+                    This example shows how one might prevent an automated install
+                    prompt from showing until the user clicks a button to show a
+                    <a>site-triggered install prompt</a>. In this way, the site can
+                    leave installation at the user's discretion (rather than prompting
+                    at an arbitrary time), whilst still providing a prominent UI to do
+                    so.
+                </p>
+                <pre class="example" title="Using beforeinstallprompt to present an install button">
+              window.addEventListener("beforeinstallprompt", event =&gt; {
+                // Suppress automatic prompting.
+                event.preventDefault();
+
+                // Show the (disabled-by-default) install button. This button
+                // resolves the installButtonClicked promise when clicked.
+                installButton.disabled = false;
+
+                // Wait for the user to click the button.
+                installButton.addEventListener("click", async e =&gt; {
+                  // The prompt() method can only be used once.
+                  installButton.disabled = true;
+
+                  // Show the prompt.
+                  const userChoice = await event.prompt();
+                  console.info(`user choice was: ${userChoice}`);
+                });
+              });
+            </pre>
+            </section>
+            <section data-dfn-for="AppBannerPromptOutcome">
+                <h4>
+                    <code>AppBannerPromptOutcome</code> enum
+                </h4>
+                <p>
+                    The <dfn>AppBannerPromptOutcome</dfn> enum's values represent the
+                    outcomes from <a>presenting an install prompt</a>.
+                </p>
+                <dl>
+                    <dt>
+                        "<dfn>accepted</dfn>":
+                    </dt>
+                    <dd>
+                        The end-user indicated that they would like the user agent to
+                        install the web application.
+                    </dd>
+                    <dt>
+                        "<dfn>dismissed</dfn>":
+                    </dt>
+                    <dd>
+                        The end-user dismissed the install prompt.
+                    </dd>
+                </dl>
+            </section>
+        </section>
+        <section>
+            <h3>
+                Extensions to the `Window` object
+            </h3>
+            <pre class="idl" data-cite="HTML">
+          partial interface Window {
+            attribute EventHandler onappinstalled;
+            attribute EventHandler onbeforeinstallprompt;
+          };
+        </pre>
+            <section data-dfn-for="Window">
+                <h4>
+                    <code>onappinstalled</code> attribute
+                </h4>
+                <p>
+                    The <dfn>onappinstalled</dfn> <a>event handler IDL attribute</a>
+                    handles "<dfn class="event">appinstalled</dfn>" events.
+                </p>
+            </section>
+            <section data-dfn-for="Window">
+                <h4>
+                    <code>onbeforeinstallprompt</code> attribute
+                </h4>
+                <p>
+                    The <dfn>onbeforeinstallprompt</dfn> <a>event handler IDL
+                        attribute</a> handles "<dfn class="event">beforeinstallprompt</dfn>" events.
+                </p>
+            </section>
+        </section>
+    </section>
+    <section id="conformance"></section>
+</body>
+
+</html>

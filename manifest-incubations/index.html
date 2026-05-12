@@ -1,0 +1,2630 @@
+<!DOCTYPE html>
+<html lang="zh-hans">
+
+<head>
+    <meta charset="utf-8">
+    <title>
+        Manifest Incubations
+    </title>
+    <script src="https://www.w3.org/Tools/respec/respec-w3c" class="remove"></script>
+    <script class='remove'>
+        // See https://github.com/w3c/respec/wiki/ for how to configure ReSpec
+        var respecConfig = {
+            specStatus: "CG-DRAFT",
+            editors: [{
+                name: "Daniel Murphy"
+            }],
+            group: "wicg",
+            github: "WICG/manifest-incubations",
+            shortName: "manifest-incubations",
+            xref: {
+                specs: [
+                    "appmanifest",
+                    "dom",
+                    "file-system-access",
+                    "fs",
+                    "mimesniff",
+                    "urlpattern",
+                    "web-app-launch",
+                    "window-controls-overlay"
+                ],
+                profile: "web-platform",
+            },
+        };
+    </script>
+</head>
+
+<body data-cite="MEDIAQUERIES-5">
+    <section id="abstract">
+        <p>
+            本规范为 <a href="https://www.w3.org/TR/appmanifest/">Web Application Manifest</a>
+            扩展和孵化功能提供特性规范，这些功能 Chromium 已经发布，但
+            其他用户代理尚未承诺支持/实现。这些特性并非继续作为解释器保存，
+            而是在此处以更正式的方式记录。
+        </p>
+    </section>
+    <section id="sotd">
+        <p>
+            这是一个非正式提案。
+        </p>
+    </section>
+    <section>
+        <h2>
+            <code><dfn data-export="" data-dfn-for=
+        "manifest">display_override</dfn></code> 成员
+        </h2>
+        <p>
+            对于高级用法，可以使用 [=manifest/display_override=] 成员来
+            指定 <a data-cite="appmanifest#dfn-display-modes-list">显示模式
+                列表值</a> 的自定义后备顺序，以便
+            开发者为 Web 应用程序选择其首选的
+            <a data-cite="appmanifest#dfn-display">显示模式</a>。其
+            值是一个 [=display mode=]。
+        </p>
+        <p>
+            [=application
+            manifest=] 的 [=manifest/display_override=] 成员是
+            <a>序列</a>，由 <a data-cite="appmanifest#dfn-display-modes-list">显示模式列表
+                值</a> 组成，
+            包括 [=display mode/window-controls-overlay=] 和
+            [=display mode/unframed=] 等扩展。此成员表示开发者
+            对 [=display mode=] 的首选后备链。此字段会覆盖
+            [=manifest/display=] 成员。如果用户代理不支持此处指定的任何
+            [=display mode=]，则会回退到考虑 [=manifest/display=] 成员。
+            算法步骤见<a data-cite="appmanifest#dfn-process-the-display-member">处理 display
+                成员</a>。
+        </p>
+        <p>
+            以下步骤会添加到 <a data-cite="appmanifest#dfn-steps-for-determining-the-web-app-s-chosen-display-mode">
+                确定 Web 应用的选定显示模式</a> 中的 [=application manifest/processing
+            extension-point=]：
+        </p>
+        <ol>
+            <li>[=list/For each=] |candidate_display_mode:DisplayModeType|，其属于
+                |manifest:ordered map|.[=manifest/display_override=] 成员：
+                <ol class="algorithm">
+                    <li>如果 <a data-cite="appmanifest/#dfn-display-modes-list">显示
+                            模式列表</a> 包含 |candidate_display_mode:DisplayModeType|，
+                        则返回该 |candidate_display_mode:DisplayModeType|
+                    </li>
+                    <li>如果 |candidate_display_mode:DisplayModeType| 是 [=display
+                        mode/window-controls-overlay=] 且用户代理支持它，
+                        则返回该 |candidate_display_mode:DisplayModeType|。
+                    </li>
+                    <li>如果 |candidate_display_mode:DisplayModeType| 是 [=display
+                        mode/tabbed=] 且用户代理支持它，则返回该
+                        |candidate_display_mode:DisplayModeType|。
+                    </li>
+                </ol>
+            </li>
+        </ol>
+        <p class="note">
+            此成员旨在仅用于高级场景，在这些场景中，
+            开发者希望显式控制其显示模式的后备顺序，或者用于基本
+            <a data-cite="appmanifest/#dfn-display-modes-list">显示模式
+                列表</a> 中不可用的模式。否则，对于
+            大多数用例，[=manifest/display=] 成员已足够。
+        </p>
+        <section>
+            <h3>
+                概念
+            </h3>
+            <ul>
+                <li>
+                    <dfn data-lt="controls of the window">窗口控件</dfn>：
+                    操作系统在各应用程序中一致使用的界面元素，
+                    使用户能够执行某些操作来控制应用程序。
+                    [=window
+                    controls=] 中的常见操作包括最小化、最大化/还原和关闭按钮。
+                </li>
+            </ul>
+        </section>
+        <section>
+            <h3>
+                显示模式扩展
+            </h3>
+            <p>
+                除了普通的 <a data-cite="appmanifest#dfn-display-modes-list">显示模式</a> 之外，
+                [=manifest/display_override=] 还支持其某些扩展。
+            </p>
+            <dl>
+                <dt>
+                    <dfn data-export="" data-dfn-for="display mode">unframed</dfn>
+                </dt>
+                <dd>
+                    隔离的 Web 应用程序没有任何可见的宿主原生标题栏
+                    或 [=window controls=]，且 Web 内容扩展到整个标题栏区域。
+                    应用可以在 Web 内容中指定 [=draggable region=]，
+                    以创建自定义标题栏。
+                </dd>
+                <dt>
+                    [=display mode/window-controls-overlay=]
+                </dt>
+                <dt>
+                    <dfn data-export="" data-dfn-for="display mode">tabbed</dfn>
+                </dt>
+                <dd>
+                    Web 应用程序可以在单个操作系统级窗口中组合多个
+                    [=application contexts=]。例如，这可能意味着用户代理显示
+                    一个标签栏 UI，以允许用户在这些应用程序上下文之间切换。
+                </dd>
+            </dl>
+            <section class="informative">
+                <h4>
+                    [=manifest/display_override=] 使用示例
+                </h4>
+                <p>
+                    下面展示了一个 [=manifest=]，它相比
+                    <code>standalone</code> 更偏好
+                    <code>minimal-ui</code> <a data-cite="appmanifest#dfn-display-mode">显示模式</a>，
+                    但如果不支持 <code>minimal-ui</code>，
+                    则回退到 <code>standalone</code>，而不是
+                    <code>browser</code>。
+                </p>
+                <pre class="example json" title="display_override usage manifest">
+            {
+              "name": "Recipe Zone",
+              "description": "All of the recipes!",
+              "icons": [{
+                "src": "icon/hd_hi",
+                "sizes": "128x128"
+              }],
+              "start_url": "/index.html",
+              "display_override": ["minimal-ui"],
+              "display": "standalone",
+              "theme_color": "yellow",
+              "background_color": "red"
+            }
+          </pre>
+            </section>
+        </section>
+        <section>
+            <h3>
+                定义 <dfn data-export="" data-lt="draggable region">可拖动
+                    区域</dfn>
+            </h3>
+            <p class="issue" title="At risk feature">
+                [=app-region=] CSS 属性尚未在任何用户代理中实现，
+                因此它处于风险中。请注意，一些用户代理会将非标准 CSS 属性
+                <dfn data-export="" data-lt="-webkit-app-region">`-webkit-app-region`</dfn>
+                用于相同目的。
+            </p>
+            <p>
+                <dfn data-export="" data-lt="app-region">`app-region`</dfn>
+                属性可用于通过 CSS 定义哪些区域或元素（例如标题栏中的区域或元素）
+                是可拖动的。
+            </p>
+            <ul>
+                <li>要启用元素拖动，应设置为 `drag`。
+                </li>
+                <li>要禁用元素拖动，应设置为 `no-drag`。
+                </li>
+            </ul>
+        </section>
+    </section>
+    <section>
+        <h2>
+            对处理清单的扩展
+        </h2>
+        <p>
+            为了便于使用本规范添加的所有新扩展和孵化功能，
+            用户代理应在 [=processing a manifest=] 中的
+            <a data-cite="appmanifest#dfn-processing-extension-point-of-web-manifest">扩展
+                点</a> 期间运行以下内容（可访问 [=URL=]
+            |document URL:URL|、[=URL=] |manifest URL:URL|、[=ordered map=]
+            |json:ordered map| 和 [=ordered map=] |manifest:ordered map|）：
+        </p>
+        <ol>
+            <li>[=Process the `tab_strip` member=]，传入 |json|、|manifest| 和
+                |manifest URL|。
+            </li>
+            <li>[=Process the `note_taking` member=]，传入 |json|、|manifest|
+                和 |manifest URL|。
+            </li>
+            <li>[=Process the `protocol_handlers` member=]，传入 |json| 和
+                |manifest|。
+            </li>
+            <li>[=Process the `file_handlers` member=]，传入 |json|、|manifest|
+                和 |manifest URL|。
+            </li>
+            <li>[=Process the `related_applications` member=]，传入 |json| 和
+                |manifest|。
+            </li>
+            <li>[=Process the `scope_extensions` member=]，传入 |json| 和
+                |manifest|。
+            </li>
+            <li>[=Process the `migrate_from` member=]，传入 |json|、|manifest|
+                和 |manifest URL|。
+            </li>
+            <li>[=Process the `migrate_to` member=]，传入 |json|、|manifest|
+                和 |manifest URL|。
+            </li>
+        </ol>
+    </section>
+    <section>
+        <h2>
+            <code><dfn>tab_strip</dfn></code> 成员
+        </h2>
+        <p>
+            <a data-cite="appmanifest#web-application-manifest">Web Application
+                Manifest</a> 的 `tab_strip` 成员是一个
+            <a data-cite="appmanifest#dfn-object">对象</a>，其中包含关于
+            应用程序在 [=display mode/tabbed=] 显示模式中预期如何行为的信息。
+            它具有以下成员：
+        </p>
+        <ul>
+            <li>[=tab_strip/home_tab=]
+            </li>
+            <li>[=tab_strip/new_tab_button=]
+            </li>
+        </ul>
+        <section>
+            <h3>
+                <code><dfn>home_tab</dfn></code> 成员
+            </h3>
+            <p>
+                [=tab_strip=] 对象的 `home_tab` 成员是一个有序映射，
+                其中包含关于一个特殊“主页标签页”的信息，该主页标签页
+                旨在作为应用程序的顶级菜单。它包含以下成员：
+            </p>
+            <ul>
+                <li>[=home_tab/scope_patterns=]
+                </li>
+            </ul>
+            <p>
+                <code><dfn>scope_patterns</dfn></code> 成员是一个
+                {{URLPatternInput}} 列表，用于定义相对于 [=manifest URL=] 的
+                [=within home tab scope|主页标签页的作用域=]。
+            </p>
+            <aside class="note">
+                每个作用域模式要么是一个看起来像 URL 但以
+                "<code>*</code>" 作为通配符的字符串，要么是一个
+                包含独立 URL 组件并带有 "<code>*</code>" 通配符的字典。
+                详见 [[urlpattern]]。
+            </aside>
+            <p>
+                如果应用程序所应用的 [=display
+                mode=] 是 [=display mode/tabbed=]，且
+                [=Document/processed manifest=] 包含 [=tab_strip=] 成员的非 null
+                [=home_tab=] 成员，则称该应用程序<dfn>具有主页标签页</dfn>。
+            </p>
+            <p>
+                <dfn>主页标签页上下文</dfn>是一个可选的 [=application
+                context=]，与其他应用程序上下文相比具有特殊属性。
+                如果应用程序 [=has a home tab=]，每个应用程序窗口都应具有一个
+                [=home tab context=]。否则，应用程序窗口不应具有
+                [=home tab context=]。
+            </p>
+            <p>
+                [=home tab context=] 如何呈现由用户代理决定，但它应具有
+                不同于普通应用程序上下文的外观。
+            </p>
+            <p>
+                当且仅当满足以下条件时，称 [=URL=] |url:URL| <dfn>在主页标签页作用域内</dfn>：
+            </p>
+            <ul>
+                <li>应用程序 [=has a home tab=]，且
+                </li>
+                <li>|url| 是清单的 [=manifest/within scope=]，且
+                </li>
+                <li>至少满足以下之一：
+                    <ul>
+                        <li>|url| 与 [=start URL=] [=URL/equals=]，并且
+                            [=URL/equals/exclude fragments=] 设置为 true，或者
+                        </li>
+                        <li>给定 [=Document/processed manifest=] 的 [=tab_strip=]
+                            成员的 [=home_tab=] 成员的 [=scope_patterns=] 成员中的任一元素
+                            和 |url|，应用 [=URL pattern/match=] 返回一个
+                            {{URLPatternResult}}。
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <p>
+                如果某 URL 不 [=within home tab scope=]，则该 URL <dfn>在主页标签页作用域外</dfn>。
+            </p>
+            <aside class="note">
+                <p>
+                    “主页标签页作用域”（即 [=within
+                    home tab scope=] 的 [=URLs=] 集合）是
+                    [=home tab
+                    context=] 可以导航到的 URL 集合。应用程序内所有到
+                    [=within home tab scope=] 的 URL 的导航都将在 [=home
+                    tab context=] 中执行，而所有到 [=outside of home tab
+                    scope=] 的 URL 的导航都将在不同的 [=application context=]
+                    （即另一个标签页）中执行，并在必要时创建一个。应用程序的
+                    [=start URL=] 始终是主页标签页作用域的一部分（如果该应用程序
+                    [=has a home tab=]）。
+                </p>
+                <p>
+                    为了与 [=start URL=] 进行匹配，
+                    [=URL/fragment=] 会被忽略，但 [=URL/query=] 必须完全匹配。
+                </p>
+                <p>
+                    如果应用程序不 [=has a home tab|具有主页标签页=]，
+                    则主页标签页作用域为空集，所有 URL 都
+                    [=outside of home tab scope=]。
+                </p>
+            </aside>
+            <section>
+                <h3>
+                    每个窗口都有一个主页标签页
+                </h3>
+                <p>
+                    如果应用程序 [=has a home tab=]，则每当创建新的应用程序
+                    窗口时（例如启动应用程序时，或将标签页移动到新窗口时），
+                    用户代理必须在该窗口中创建一个新的 [=home tab context=]。
+                    新创建的 [=home tab
+                    context=] 应被导航到 [=start URL=]，该 URL 根据定义
+                    [=within home tab scope=]。
+                </p>
+            </section>
+            <section>
+                <h3>
+                    与主页标签页作用域相关的导航
+                </h3>
+                <p>
+                    当将与 [=home tab context=] 关联的 [=top-level traversable=]
+                    [=navigate|导航=] 到 [=outside of home tab scope=] 的
+                    [=URL=] |url:URL| 时，运行以下步骤：
+                </p>
+                <ol>
+                    <li>令 [=top-level traversable=] |tab:toplevel traversable| 为
+                        选择目标为
+                        <code>"_blank"</code> 且 noopener 为 true 的可导航对象所得的结果。
+                    </li>
+                    <li>不要 [=navigating=] 主页标签页 traversable，
+                        而是以相同参数 [=navigate=] |tab|。
+                    </li>
+                    <li>将当前 [=application manifest=] [=applied|应用=] 到
+                        |tab| 的 [=top-level browsing context=]。
+                    </li>
+                    <li>用户代理应将 |tab| 放置在与主页标签页可导航对象相同的窗口中。
+                    </li>
+                    <li>聚焦 |tab|。
+                    </li>
+                </ol>
+                <p class="issue" data-number="98"></p>
+                <p>
+                    当将具有 [=display mode/tabbed=] [=display mode=] 且不与
+                    [=home tab context=] 关联的 [=top-level traversable=]
+                    （即非主页标签页）[=navigate|导航=] 到
+                    [=within home tab scope=] 的 [=URL=]
+                    |url:URL| 时，运行以下步骤：
+                </p>
+                <ol>
+                    <li>令 |hometab:toplevel traversable| 为与当前窗口关联的
+                        [=home tab context=] 的 [=top-level
+                        traversable=]。
+                    </li>
+                    <li>不要 [=navigating=] 该顶级 traversable，
+                        而是以相同参数 [=navigate=] |hometab|。
+                    </li>
+                    <li>聚焦 |hometab|。
+                    </li>
+                </ol>
+                <aside class="note">
+                    从主页标签页导航到 [=outside of home tab scope=] 的 URL
+                    会打开一个新的普通标签页，使现有文档仍保留在
+                    主页标签页中。类似地，从普通标签页导航到
+                    [=within home tab scope=] 的 URL 会在主页标签页中打开，
+                    使发起该导航的标签页中的现有文档保持打开。
+                    开发者应确保在这两种情况下，被留下的文档不会最终处于
+                    意外状态。
+                </aside>
+            </section>
+            <section class="informative">
+                <h3>
+                    主页标签页不变量
+                </h3>
+                <p>
+                    上述规则旨在确保以下不变量对于 [=has a home
+                    tab|具有主页标签页=] 的应用程序始终为真：
+                </p>
+                <ul>
+                    <li>每个应用程序窗口恰好有一个 [=home tab context=]，
+                        且
+                    </li>
+                    <li>每个 [=home tab context=] 的活动文档的 [=Document/URL=]
+                        是 [=within home tab scope=]（除非该文档的 URL 自创建以来已更改），且
+                    </li>
+                    <li>每个非主页标签页 [=application context=] 的活动文档的
+                        [=Document/URL=] 是 [=outside of home tab scope=]
+                        （除非该文档的 URL 自创建以来已更改）。
+                    </li>
+                </ul>
+                <p>
+                    如果文档更改其 [=URL/fragment=]，或使用 {{History}} API
+                    将其显示 URL 修改为进入或离开主页标签页作用域，用户代理不会
+                    在主页标签页和非主页标签页上下文之间动态移动文档，因为没有发生导航。
+                    因此，上述不变量只关注文档创建时所具有的 [=Document/URLs=]。
+                </p>
+                <p>
+                    对于通过修改其 URL 来“假装”导航的单页应用程序，
+                    这可能导致不希望出现的行为，从而破坏上述不变量
+                    （例如，如果用户在主页标签页中点击链接，将 URL 动态更改为非主页页面，
+                    他们仍会停留在主页标签页内，因为实际上并没有导航）。
+                    为避免这种情况，应用程序可以检测自己是否处于标签式应用程序模式，
+                    并改变其行为，以执行真正进入和离开主页标签页作用域的导航，
+                    而不是修改 URL。
+                </p>
+            </section>
+        </section>
+        <section>
+            <h3>
+                <code><dfn>new_tab_button</dfn></code> 成员
+            </h3>
+            <p>
+                [=tab_strip/new_tab_button=] 成员是一个有序映射，
+                用于描述一个 UI 便利项（例如按钮）的行为；
+                当该便利项被点击/激活时，会在应用程序窗口内打开一个新的
+                [=application context=]。它具有以下成员：
+            </p>
+            <ul>
+                <li>[=new_tab_button/url=]
+                </li>
+            </ul>
+            <p>
+                <code><dfn data-dfn-for="new_tab_button">url</dfn></code> 成员
+                是一个字符串，表示相对于 [=manifest URL=] 的 URL，
+                该 URL 是某个 [=Document/processed
+                manifest=] 的 [=manifest/within scope=]。
+            </p>
+            <p>
+                如果 [=Document/processed manifest=] 的 [=new_tab_button=] 的
+                [=new_tab_button/url=] 成员 [=outside of home tab scope=]，
+                则应用程序<dfn>具有新标签页按钮</dfn>。如果应用程序不
+                [=has a new tab button|具有新标签页
+                按钮=]，用户代理不应向最终用户提供“新建标签页”便利项。
+            </p>
+            <aside class="note">
+                <p>
+                    如果新标签页按钮的 URL [=within home
+                    tab scope=]，则该按钮将不可用。此规则是必要的，
+                    因为否则它将意味着：a) 新标签页按钮会打开一个
+                    [=within home tab scope=] 的非主页标签页，从而违反上面的第三个
+                    主页标签页不变量；或者 b) 新标签页按钮只会聚焦主页标签页，
+                    这会是冗余且令人困惑的 UI。
+                </p>
+                <p>
+                    [=new_tab_button/url=] 的默认值是 [=start URL=]。
+                    这意味着如果应用程序 [=has a home tab=]，
+                    则该按钮默认不可用。
+                </p>
+            </aside>
+            <p>
+                当最终用户激活新标签页按钮时，运行以下步骤：
+            </p>
+            <ol>
+                <li>在当前窗口中 [=Create a new application context=] 并
+                    聚焦它。
+                </li>
+                <li>将其导航到 [=new_tab_button=] 的 [=new_tab_button/url=]
+                    成员的值。
+                </li>
+            </ol>
+        </section>
+        <section>
+            <h2>
+                处理 `tab_strip` 成员
+            </h2>
+            <p>
+                要<dfn>处理 `tab_strip` 成员</dfn>，给定 [=ordered map=]
+                |json:ordered map|、[=ordered map=] |manifest:ordered map| 和
+                [=URL=] |manifest URL:URL|，在 [=processing a manifest=] 的
+                <a data-cite="appmanifest#dfn-processing-extension-point-of-web-manifest">
+                    扩展点</a>期间运行以下步骤：
+            </p>
+            <ol>
+                <li>将 |manifest|["tab_strip"] 设置为一个新的 [=ordered map=]。
+                </li>
+                <li>如果 |json|["tab_strip"] 不存在，或 |json|["tab_strip"] 不是
+                    [=ordered map=]：
+                    <ol>
+                        <li>将 |manifest|["tab_strip"]["new_tab_button"]["url"] 设置为
+                            |manifest|["start_url"]。
+                        </li>
+                        <li>返回。
+                        </li>
+                    </ol>
+                </li>
+                <li>[=Process the `home_tab` member=]，传入 |json|["tab_strip"]、
+                    |manifest|["tab_strip"] 和 |manifest URL|。
+                </li>
+                <li>[=Process the `new_tab_button` member=]，传入
+                    |json|["tab_strip"]、|manifest|["tab_strip"]、|manifest URL| 和
+                    |manifest|["start_url"]。
+                </li>
+            </ol>
+            <section>
+                <h3>
+                    处理 `home_tab` 成员
+                </h3>
+                <p>
+                    要<dfn>处理 `home_tab` 成员</dfn>，给定 [=ordered map=]
+                    |json tab strip:ordered map|、[=ordered map=] |manifest tab
+                    strip:ordered map| 和 [=URL=] |manifest URL:URL|，运行
+                    以下步骤：
+                </p>
+                <ol>
+                    <li>如果 |json tab strip|["home_tab"] 不存在，或 |json tab
+                        strip|["home_tab"] 不是 [=ordered map=]，返回。
+                    </li>
+                    <li>令 |home tab:ordered map| 为一个新的 [=ordered map=]。
+                    </li>
+                    <li>[=Process the `scope_patterns` member=]，传入 |json tab
+                        strip|["home_tab"]["scope_patterns"]、|home tab| 和 |manifest
+                        URL|。
+                    </li>
+                    <li>将 |manifest tab strip|["home_tab"] 设置为 |home tab|。
+                    </li>
+                </ol>
+            </section>
+            <section>
+                <h3>
+                    处理 `new_tab_button` 成员
+                </h3>
+                <p>
+                    要<dfn>处理 `new_tab_button` 成员</dfn>，给定 [=ordered
+                    map=] |json tab strip:ordered map|、[=ordered map=] |manifest tab
+                    strip:ordered map|、[=URL=] |manifest URL:URL| 和 [=URL=] |start
+                    URL:URL|，运行以下步骤：
+                </p>
+                <ol>
+                    <li>将 |manifest tab strip|["new_tab_button"]["url"] 设置为 |start
+                        URL|。
+                    </li>
+                    <li>如果 |json tab strip|["new_tab_button"] 不存在，或 |json
+                        tab strip|["new_tab_button"] 不是 [=ordered map=]，返回。
+                    </li>
+                    <li>令 |url:URL| 为以 |manifest URL| 作为基准 URL
+                        [=URL Parser|解析=] |json tab
+                        strip|["new_tab_button"]["url"] 所得的结果。
+                    </li>
+                    <li>如果 |url| 是失败，返回。
+                    </li>
+                    <li>如果 |url| 不是 |manifest URL| 的 [=URL/within scope=]，返回。
+                    </li>
+                    <li>将 |manifest tab strip|["new_tab_button"]["url"] 设置为 |url|。
+                    </li>
+                </ol>
+            </section>
+            <section>
+                <h3>
+                    处理 `scope_patterns` 成员
+                </h3>
+                <p>
+                    要<dfn>处理 `scope_patterns` 成员</dfn>，给定 [=ordered
+                    map=] |json home tab:ordered map|、[=ordered map=] |manifest home
+                    tab:ordered map| 和 [=URL=] |manifest URL:URL|，运行以下步骤：
+                </p>
+                <ol>
+                    <li>令 |processed scope patterns:list| 为一个新的 [=list=]。
+                    </li>
+                    <li>将 |manifest home tab|["scope_patterns"] 设置为 |processed scope
+                        patterns|。
+                    </li>
+                    <li>如果 |json home tab|["scope_patterns"] 不存在，或 |json
+                        home tab|["scope_patterns"] 不是 [=list=]，返回。
+                    </li>
+                    <li>对于 |json home
+                        tab|["scope_patterns"] 的每个 |entry:URLPatternInit|：
+                        <ol>
+                            <li>令 |pattern:URL pattern| 为给定 |manifest URL| 时，
+                                根据 |entry| [=build a URL
+                                pattern from an infra value|从 infra 值构建 URL 模式=]
+                                所得的结果。如果此过程抛出或返回 null，则继续。
+                            </li>
+                            <li>将 |pattern| 追加到 |processed scope patterns|。
+                            </li>
+                        </ol>
+                    </li>
+                </ol>
+                <p class="issue" data-number="97"></p>
+            </section>
+        </section>
+        <section class="informative">
+            <h2>
+                使用示例
+            </h2>
+            <pre class="example json" title="Tabbed application manifest">
+        {
+          "name": "Tabbed App Example",
+          "start_url": "/",
+          "display": "standalone",
+          "display_override": ["tabbed"],
+          "tab_strip": {
+            "home_tab": {
+              "scope_patterns": [
+                {"pathname": "/"},
+                {"pathname": "/index.html"}
+              ]
+            },
+            "new_tab_button": {
+              "url": "/create"
+            }
+          }
+        }
+        </pre>
+            <p>
+                此示例是一个标签式 Web 应用；如果不支持标签式模式，
+                它会回退到单文档 standalone 窗口。任何到主索引页的导航
+                （即 <code>/</code> 或 <code>/index.html</code>）都会在
+                [=home tab context=] 中打开。新标签页按钮会在
+                <code>/create</code> 打开一个新标签页。
+            </p>
+            <p>
+                请注意，当与 [=tab_strip/home_tab/scope_patterns=] 进行匹配时，
+                URL 的 [=URL/query=] 部分默认会被忽略（因此到
+                <code>/index.html?utm_source=foo</code> 的导航会在
+                主页标签页中打开）。但是，当与 [=start URL=] 匹配时，
+                [=URL/query=] 必须完全匹配，因此希望忽略查询的站点
+                建议显式包含 [=start URL=] 的 [=URL/path=] 作为作用域模式。
+            </p>
+        </section>
+    </section>
+    <section>
+        <h2>
+            `share_target` 成员
+        </h2>
+        <p>
+            `share_target` 成员将 Web 应用程序注册为共享操作的“目标”
+            （例如，用于共享文本、URL 或文件）。
+            `share_target` 成员是 [[[web-share-target]]]
+            规范的一部分。
+        </p>
+    </section>
+    <section>
+        <h2>
+            <code><dfn>note_taking</dfn></code> 成员
+        </h2>
+        <p>
+            <a data-cite="appmanifest#web-application-manifest">Web Application
+                Manifest</a> 的 `note_taking` 成员是一个
+            <a data-cite="appmanifest#dfn-object">对象</a>，其中包含
+            与记笔记相关的信息。它具有以下成员：
+        </p>
+        <ul>
+            <li>[=note_taking/new_note_url=]
+            </li>
+        </ul>
+        <p>
+            用户代理可以使用这些成员，将 Web 应用程序作为具有记笔记能力的
+            应用程序进行区别对待（例如，与操作系统记笔记界面集成）。
+        </p>
+        <section>
+            <h3>
+                <code><dfn data-dfn-for="note_taking">new_note_url</dfn></code>
+                成员
+            </h3>
+            <p>
+                [=note_taking=] `new_note_url` 成员是一个 [=string=]，
+                表示开发者希望用户代理在用户想使用 Web 应用程序创建新笔记时
+                加载的 <a data-cite="url#concept-url">URL</a>
+                （例如，从操作系统快捷方式图标或键盘快捷键启动时）。
+            </p>
+            <p>
+                `new_note_url` 成员纯粹是建议性的，用户代理可以
+                <a data-cite="appmanifest#dfn-ignore">忽略</a>它，或向
+                最终用户提供是否使用它的选择。用户代理可以向最终用户提供
+                修改它的选择。
+            </p>
+            <aside class="note">
+                <p>
+                    `new_note_url` 成员以 <a data-cite="appmanifest#dfn-manifest-url">manifest
+                        URL</a> 作为基准 URL 解析，
+                    如果它不是清单的 [=manifest/within scope=]，则会被忽略。
+                </p>
+            </aside>
+        </section>
+        <section class="informative">
+            <h3>
+                使用示例
+            </h3>
+            <p>
+                下面展示了一个记笔记应用程序的 [=manifest=]。
+            </p>
+            <pre class="example json" title="Note-taking application">
+          {
+            "name": "My Note Taking App",
+            "description": "You can take notes!",
+            "icons": [{
+              "src": "icon/hd_hi",
+              "sizes": "128x128"
+            }],
+            "start_url": "/index.html",
+            "display": "standalone",
+            "note_taking": {
+              "new_note_url": "/new_note.html"
+            }
+          }
+        </pre>
+        </section>
+        <section>
+            <h3>
+                处理 `note_taking` 成员
+            </h3>
+            <p>
+                要<dfn>处理 `note_taking` 成员</dfn>，给定 [=ordered map=]
+                |json:ordered map|、[=ordered map=] |manifest:ordered map|、[=URL=]
+                |manifest_URL:URL|，在 [=processing a manifest=] 的 <a
+                    data-cite="appmanifest#dfn-processing-extension-point-of-web-manifest">扩展
+                    点</a>期间运行以下步骤：
+            </p>
+            <ol class="algorithm">
+                <li>如果 |json|["note_taking"] 不 [=map/exist=]，返回。
+                </li>
+                <li>如果 |json|["note_taking"] 的类型不是 [=ordered map=]，
+                    返回。
+                </li>
+                <li>将 |manifest|["note_taking"] 设置为一个新的 [=ordered map=]。
+                </li>
+                <li>[=process the `new_note_url` member=]，传入
+                    |json|["note_taking"]、|manifest|["note_taking"] 和 |manifest URL|。
+                </li>
+            </ol>
+        </section>
+        <section>
+            <h3>
+                处理 `new_note_url` 成员
+            </h3>
+            <p>
+                要<dfn>处理 `new_note_url` 成员</dfn>，给定 [=ordered
+                map=] |json_note_taking:ordered map|、[=ordered map=]
+                |manifest_note_taking:ordered map|、[=URL=] |manifest_URL:URL|，运行
+                以下步骤：
+            </p>
+            <ol class="algorithm">
+                <li>如果 |json_note_taking|["new_note_url"] 不 [=map/exist=]，
+                    返回。
+                </li>
+                <li>如果 |json_note_taking|["new_note_url"] 的类型不是
+                    [=string=]，返回。
+                </li>
+                <li>令 |new_note_url:URL| 为以 |manifest URL| 作为基准
+                    URL [=URL Parser|解析=]
+                    |json_note_taking|["new_note_url"] 所得的结果。
+                </li>
+                <li>如果 |new_note_url| 是失败，返回。
+                </li>
+                <li>如果 |new_note_url| 不是 |manifest
+                    URL| 的 [=manifest/within scope=]，返回。
+                </li>
+                <li>将 manifest_note_taking["new_note_url"] 设置为 |new_note_url|。
+                </li>
+            </ol>
+        </section>
+        <section>
+            <h3>
+                启动 `new_note_url`
+            </h3>
+            <p>
+                要<dfn>启动 `new_note_url`</dfn>，给定
+                <a data-cite="appmanifest#dfn-processed-manifest">已处理清单</a>
+                |manifest:processed manifest|，运行以下步骤：
+            </p>
+            <ol>
+                <li>如果 |manifest|["note_taking"] 不 [=map/exist=]，返回。
+                </li>
+                <li>如果 |manifest|["note_taking"]["new_note_url"] 不
+                    [=map/exist=]，返回。
+                </li>
+                <li>如果 |manifest|["note_taking"]["new_note_url"] 的类型不是
+                    [=URL=]，返回。
+                </li>
+                <li>运行 [=launch a web application=] 的步骤，将 |manifest|
+                    设置为 |manifest|，并将 |target URL| 设置为
+                    |manifest|["note_taking"]["new_note_url"]。
+                </li>
+            </ol>
+            <p>
+                用户代理可以随时为给定的 [=installed web application=]
+                [=launch the `new_note_url`=]，通常是响应用户便利项。
+            </p>
+        </section>
+    </section>
+    <section>
+        <h2>
+            `protocol_handlers` 成员
+        </h2>
+        <p>
+            [=manifest's=] <code><dfn data-dfn-for=
+        "manifest">protocol_handlers</dfn></code> 成员是一个
+            <a>协议处理器描述</a>数组，允许 Web 应用程序处理 URL 协议。
+        </p>
+        <p>
+            在安装时，用户代理应通过符合以下内容的交互，
+            向操作系统注册协议处理器：
+        </p>
+        <ul>
+            <li>如果某协议有多个已注册处理器，操作系统允许用户选择
+                应由哪个应用打开它，也允许用户设置默认应用。
+            </li>
+            <li>点击已注册协议会启动已注册的应用程序。如果该应用是 Web 应用，
+                则执行 [=HTML=] 中定义的 [=invoke a
+                protocol handler=] 步骤，其中用户代理应导航到 [=url=]，
+                且相应浏览上下文被设置为新的顶级浏览上下文。
+            </li>
+        </ul>
+        <aside class="note">
+            例如，协议处理器可用于 Web 应用通信，其中一个应用通过
+            自定义协议链接直接调用另一个应用并传递数据。
+        </aside>
+        <section>
+            <h3>
+                处理 `protocol_handlers` 成员
+            </h3>
+            <p>
+                要<dfn>处理 `protocol_handlers` 成员</dfn>，给定
+                [=object=] |json:JSON|、|manifest:ordered map|：
+            </p>
+            <ol>
+                <li>令 |processedProtocolHandlers| 为一个新的 [=list=]，
+                    由 |json:JSON|["|protocol_handlers|"] 组成。
+                </li>
+                <li>将 manifest["|protocol_handlers|"] 设置为
+                    |processedProtocolHandlers|。
+                </li>
+                <li>[=list/For each=] |protocol_handler|（<a>协议处理器
+                        描述</a>）：
+                    <ol>
+                        <li>如果 |protocol_handler|["protocol"] 或
+                            |protocol_handler|["url"] 为 undefined，则 [=iteration/continue=]。
+                        </li>
+                        <li>令 (|normalizedProtocol:string|, |normalizedUrl:URL|) 为使用
+                            |manifest URL| 作为基准 URL，并使用 [=this=] 的相关
+                            [=environment settings object=]，以
+                            |protocol_handler|["protocol"]、| protocol_handler|["url"] 运行
+                            [=normalize protocol handler parameters=] 所得的结果。
+                            如果结果为失败，则 [=iteration/continue=]。
+                        </li>
+                        <li>如果 |normalizedUrl| 不是 |manifest| 的
+                            [=manifest/within scope=]，则 [=iteration/continue=]。
+                        </li>
+                        <li>如果 |processedProtocolHandlers| [=list/contains=]
+                            |normalizedUrl|，则 [=iteration/continue=]。
+                        </li>
+                        <li>[=List/Append=] |protocol_handler| 到
+                            |processedProtocolHandlers|。
+                        </li>
+                    </ol>
+                </li>
+                <li>[=list/For each=] |processedProtocolHandlers|，用户代理
+                    应 [=register a protocol handler=]。
+                </li>
+            </ol>
+            <p>
+                用户代理应在将 [=protocol handler description=]
+                <var>protocol_handler</var>s 注册为宿主操作系统中某协议的
+                默认处理器之前请求用户许可。用户代理可以截断所呈现的
+                [=protocol handler description=] <var>protocol_handlers</var>
+                列表，以保持与宿主操作系统的惯例或限制一致。
+            </p>
+            <aside class="example">
+                <p>
+                    在以下示例中，开发者包含了两个 [=protocol
+                    handler description=] <var>protocol_handler</var>s。假设
+                    该清单的 URL 是
+                    <samp>https://example.com/manifest.webmanifest</samp>：
+                </p>
+                <ul>
+                    <li>第一个协议处理器会注册为处理 "web+music"
+                        URL（例如：web+music://#1234）。当被激活时，用户代理
+                        会实例化一个新的 [=top-level browsing context=]，并导航到
+                        <samp>https://example.com/play?songId=web+music://%231234</samp>。
+                    </li>
+                    <li>第二个协议处理器会被忽略，因为所提供的协议
+                        不是以 "web+" 开头，并且不是 [=safelisted schemes=]
+                        的一部分。
+                    </li>
+                </ul>
+                <pre class="json">
+            {
+              "protocol_handlers": [
+                {
+                  "protocol": "web+music",
+                  "url": "/play?songId=%s"
+                },
+                {
+                  "protocol": "store",
+                  "url": "/buy?songId=%s"
+                }
+              ]
+            }
+          </pre>
+            </aside>
+        </section>
+        <section>
+            <h2>
+                协议处理器项
+            </h2>
+            <p>
+                每个 <dfn>协议处理器描述</dfn> 是一个 [=object=]，
+                表示 Web 应用程序想要处理的协议，对应于
+                [=manifest/protocol_handlers=] 成员。它具有以下成员：
+            </p>
+            <ul>
+                <li>[=protocol handler description/protocol=]
+                </li>
+                <li>[=protocol handler description/url=]
+                </li>
+            </ul>
+            <p>
+                用户代理应使用这些值将 Web 应用程序注册为操作系统中的处理器。
+                当用户激活协议处理器 URL 时，用户代理应运行
+                <a>处理协议启动</a>。
+            </p>
+            <p class="note">
+                [[HTML]] 的 {{NavigatorContentUtils/registerProtocolHandler()}} 允许
+                Web 站点将自身注册为特定协议的可能处理器。
+                对 <a>协议处理器描述</a> 而言，什么构成有效的
+                [=protocol handler
+                description/protocol=] 和 [=protocol handler description/url=]
+                值由该 API 定义。还请注意，[[HTML]] API 使用
+                <code>scheme</code>，而这里使用 [=protocol handler description/protocol=]，
+                但适用相同的限制。
+            </p>
+            <section>
+                <h3>
+                    `protocol` 成员
+                </h3>
+                <p>
+                    <a>协议处理器描述</a> 的 <code><dfn data-dfn-for=
+            "protocol handler description">protocol</dfn></code> 成员是一个
+                    <a>字符串</a>，表示要处理的协议，例如 `mailto` 或
+                    `web+auth`。
+                </p>
+                <p>
+                    <a>协议处理器描述</a> 的
+                    [=protocol handler description/protocol=] 成员等价于
+                    [[HTML]] 中定义的 {{NavigatorContentUtils/registerProtocolHandler()}} 的
+                    <code>scheme</code> 参数。
+                </p>
+            </section>
+            <section>
+                <h3>
+                    `url` 成员
+                </h3>
+                <p>
+                    <a>协议处理器描述</a> 的 <code><dfn data-dfn-for=
+            "protocol handler description">url</dfn></code> 成员是相关协议
+                    被激活时打开的应用程序 [=manifest/within scope=] 的
+                    <a>URL</a>。
+                </p>
+                <p>
+                    <a>协议处理器描述</a> 的 [=protocol handler description/url=]
+                    成员等价于 [[HTML]] 中定义的
+                    {{NavigatorContentUtils/registerProtocolHandler()}} 的
+                    <code>url</code> 参数。
+                </p>
+            </section>
+            <section>
+                <h3>
+                    <dfn>处理协议启动</dfn>
+                </h3>
+                <p>
+                    当具有 [=manifest=] <var>manifest</var> 的
+                    <a>协议处理器描述</a>
+                    <var>protocol_handler</var> 被调用时，它会经过与
+                    [=invoke a
+                    protocol handler=] 相同的步骤；其中用户代理不是
+                    [=navigating=] 到 <var>resultURL</var>，而是应
+                    [=launch a web application=]，传入 <var>manifest</var> 和
+                    <var>resultURL</var>。
+                </p>
+                <p class="issue">
+                    不应以这种方式调用并修改 [=invoke a protocol handler=]。
+                    <var>resultURL</var> 的计算应被提取为一个单独的算法，
+                    供通用使用。
+                </p>
+            </section>
+        </section>
+        <section>
+            <h2>
+                隐私考虑：默认协议处理器
+            </h2>
+            <p>
+                根据操作系统能力，协议处理器可能会在用户没有明确知情的情况下
+                成为给定协议的“默认”处理器（例如自动处理给定协议的启动）。
+                为防止可能的滥用，用户代理可以采用如下保护措施：
+            </p>
+            <ul>
+                <li>在执行 [=invoke a protocol handler=] 的过程之前，
+                    要求用户明确同意。
+                </li>
+                <li>移除 Web 应用程序作为协议处理实体的 OS 注册，
+                    可以是响应上述对话框，也可以由用户操作触发。
+                </li>
+                <li>在 [=installation=] 时确认协议处理器注册。
+                </li>
+            </ul>
+            <p>
+                如果用户代理移除协议处理器实体的注册，则应为用户提供 UX，
+                以便用户可重新向操作系统注册 Web 应用和协议。
+            </p>
+        </section>
+    </section>
+    <section>
+        <h3>
+            `file_handlers` 成员
+        </h3>
+        <p>
+            [=manifest's=] <code><dfn data-export="" data-dfn-for=
+        "manifest">file_handlers</dfn></code> 成员是一个 [=list=]，
+            它提供关于应用如何处理源自应用自身之外的文件打开操作的指令。
+        </p>
+        <p>
+            已注册文件处理应用程序的管理、呈现和选择由操作系统决定。
+        </p>
+        <p>
+            要<dfn>处理 `file_handlers` 成员</dfn>，给定 [=ordered map=]
+            |json:ordered map|、[=ordered map=] |manifest:ordered map|、[=URL=]
+            |manifest_url:URL|：
+        </p>
+        <ol class="algorithm">
+            <li>令 |processedFileHandlers:list| 为一个新的 [=list=]。
+            </li>
+            <li>将 |manifest|["file_handlers"] 设置为 |processedFileHandlers|。
+            </li>
+            <li>如果 |json|["file_handlers"] 不 [=map/exist=]，或
+                |json|["file_handlers"] 不是 [=list=]，返回。
+            </li>
+            <li>[=list/For each=] |entry:ordered map|，其属于 |json|["file_handlers"]：
+                <ol>
+                    <li>令 |file_handler:ordered map| 为以 |entry|、
+                        [=manifest/start_url=]、[=manifest/scope=] 和
+                        |manifest_url| 运行 [=process a file handler
+                        item=] 所得的结果。
+                    </li>
+                    <li>如果 |file_handler| 是失败，则 [=iteration/continue=]。
+                    </li>
+                    <li>[=list/Append=] |file_handler| 到 |processedFileHandlers|。
+                    </li>
+                </ol>
+            </li>
+        </ol>
+        <p>
+            在 [=installation=] 时，用户代理应运行 [=register
+            file handlers=] 的过程。
+        </p>
+        <section data-cite="file-system-access">
+            <h2>
+                文件处理器项
+            </h2>
+            <p>
+                每个 <dfn data-local-lt="file handler">文件处理器</dfn> 表示
+                应用程序作用域内的一个 URL，该 URL 可处理带有其所接受
+                [=file types=] 的启动。它具有以下成员：
+            </p>
+            <ul>
+                <li>[=file handler/action=]
+                </li>
+                <li>[=file handler/name=]
+                </li>
+                <li>[=file handler/accept=]
+                </li>
+                <li>[=file handler/icons=]
+                </li>
+            </ul>
+            <p>
+                用户代理可以使用这些成员，在操作系统上将 Web 应用程序与
+                [=file type=] 关联。
+            </p>
+            <p>
+                <dfn>文件类型</dfn>可由 [=MIME type=] 和/或
+                [=file extension=] 定义。如果 OS 判定文件具有某个
+                [=MIME type=]，和/或其名称以某个 [=file extension=] 结尾，
+                则该文件属于某个文件类型。<dfn>文件扩展名</dfn>是一个
+                以 "." 开头且只包含
+                <a data-cite="file-system-access#valid-suffix-code-points">有效
+                    后缀代码
+                    点</a>的字符串。此外，[=file extensions=] 被限制为
+                16 个代码点的长度。
+            </p>
+            <section>
+                <h3>
+                    `action` 成员
+                </h3>
+                <p>
+                    [=file handler=] 的 <code><dfn data-dfn-for=
+            "file handler">action</dfn></code> 成员是一个 <a>字符串</a>，
+                    表示相对于 <a data-cite="appmanifest#dfn-manifest-url">manifest URL</a> 的 URL，
+                    该 URL 是某个 <a data-cite="appmanifest#dfn-processed-manifest">已处理
+                        清单</a> 的
+                    [=manifest/within scope=]。在 [=execute a file handler
+                    launch=] 的步骤中会导航到此 URL。
+                </p>
+            </section>
+            <section>
+                <h3>
+                    `name` 成员
+                </h3>
+                <p>
+                    [=file handler=] 的 <code><dfn data-dfn-for=
+            "file handler">name</dfn></code> 成员是一个 <a>字符串</a>，
+                    用于向用户标识文件类型。[=User agents=] 可以在文件处理器
+                    注册期间将此信息传递给操作系统。
+                </p>
+                <aside class="note">
+                    <p>
+                        [=file handler/name=] 用于以人类可读格式标识和描述
+                        文件类型，通常只有当 Web 应用成为该文件类型的默认处理器时，
+                        才会显示在 OS 界面（例如文件浏览器）中。它对自定义文件类型
+                        最有用。
+                    </p>
+                </aside>
+            </section>
+            <section>
+                <h3>
+                    `icons` 成员
+                </h3>
+                <p>
+                    <a>文件处理器</a>的 <code><dfn data-dfn-for=
+            "file handler">icons</dfn></code> 成员列出作为
+                    [=file type=] 图形表示的图标。用户代理可以在文件处理器
+                    注册期间将此信息传递给操作系统。
+                </p>
+                <aside class="note">
+                    [=file handler/icons=] 成员预期是表示与该处理器相关联的
+                    所有文件的图像（或不同尺寸的图像集合）。这通常会显示得像
+                    文档（例如一张纸），而不是应用程序徽标，但可能包含
+                    暗示该文件与哪个应用程序相关联的元素（例如徽标）。与
+                    [=file handler/name=] 一样，这通常只在应用成为某个文件类型的
+                    默认处理器时显示。
+                </aside>
+            </section>
+            <section>
+                <h3>
+                    `accept` 成员
+                </h3>
+                <p>
+                    [=file handler=] 的 <code><dfn data-dfn-for=
+            "file handler">accept</dfn></code> 成员是一个 <a>字典</a>，
+                    将 [=MIME types=] 映射到 [=file extensions=] 列表。
+                </p>
+                <p>
+                    [=User agents=] 必须强制执行 [=file handler/accept=] 条目
+                    仅适用于具有匹配扩展名的文件。
+                </p>
+                <p>
+                    为了 [=register file handlers=]，某些操作系统需要
+                    [=MIME types=]，某些则需要 [=file extensions=]。因此，
+                    对于每个 [=file
+                    handler/accept=] 条目，清单必须始终同时提供两者。
+                </p>
+                <p>
+                    除了完整的 [=MIME types=] 之外，<code>"*"</code> 可用作
+                    [=MIME type=] 的子类型，以匹配例如
+                    <code>"image/*"</code> 的所有图像格式（这些格式也要适用于
+                    所提供的 [=file extensions=] 列表）。
+                </p>
+                <aside class="note">
+                    例如，在 Linux 上，[=MIME type=] 和 [=file extension=]
+                    都会与 <code>xdg-mime</code> 工具一起使用，用于指定
+                    Web 应用程序可打开同时具有指定 [=MIME type=]
+                    和特定文件扩展名的文件。在 Windows 上，只使用
+                    [=file extensions=]，因此会忽略 [=MIME types=]。
+                </aside>
+            </section>
+            <section>
+                <h3>
+                    `launch_type` 成员
+                </h3>
+                <p>
+                    [=file handler=] 的 <code><dfn data-dfn-for=
+            "file handler">launch_type</dfn></code> 成员是一个
+                    <a>字符串</a>，用于确定应用如何针对路由到此处理器的文件启动。
+                    可能的值为 `"single-client"` 和
+                    `"multiple-clients"`。如果未提供，则默认为
+                    `"single-client"`。
+                </p>
+                <p>
+                    当某个 [=file handler=] 被确定为匹配一组文件时，
+                    [=user agent=] 应使用 [=file handler/launch_type=] 来控制
+                    应用是为每个文件启动一次
+                    (`"multiple-clients"`)，还是为所有文件启动一次
+                    (`"single-client"`)。见 {{LaunchParams/files}}。用户代理
+                    不得将来自不同 [=file handlers=] 的文件合并到
+                    单个启动事件中。
+                </p>
+                <aside class="note">
+                    <p>
+                        如果应用只打算每个窗口或标签页显示一个文件，
+                        应应用 `"multiple-clients"`。否则，将启动一个实例，
+                        并通过 {{LaunchParams/files}} 数组传递所有打开的文件。
+                    </p>
+                    <p>
+                        此字段受平台限制。Windows 从不使用多个文件启动一个应用，
+                        而是会使用每个文件各一次的方式多次启动单个应用。
+                        因此，此字段在 Windows 上无效，所有启动实际上都是
+                        `"multiple-clients"`。
+                    </p>
+                </aside>
+            </section>
+        </section>
+        <section>
+            <h2>
+                处理文件处理器项
+            </h2>
+            <p>
+                要<dfn>处理文件处理器项</dfn>，给定 [=ordered map=]
+                |item:ordered map|、[=URL=] |start_url:URL|、[=URL=] |scope:URL| 和
+                [=URL=] |manifest URL:URL|：
+            </p>
+            <ol class="algorithm">
+                <li>如果以下任一条件为真，则返回 failure：
+                    <ul>
+                        <li>|item|["action"] 不 [=map/exist=] 或不是
+                            [=string=]。
+                        </li>
+                        <li>|item|["accept"] 不 [=map/exist=]。
+                        </li>
+                        <li>|item|["accept"] 不是 [=dictionary=]。
+                        </li>
+                        <li>|item|["accept"] [=map/is empty=]。
+                        </li>
+                    </ul>
+                </li>
+                <li>令 |url:URL| 为以 |manifest_url URL| 作为基准 URL
+                    [=URL Parser|解析=]
+                    |item|["action"] 所得的结果。
+                </li>
+                <li>如果 |url| 是 failure，返回 failure。
+                </li>
+                <li>如果 |url| 不是 |scope| 的 [=manifest/within scope=]，
+                    返回 failure。
+                </li>
+                <li>令 |launch_type:string| 为一个新的 [=string=]，并初始化为
+                    "single-client"。
+                </li>
+                <li>如果 |item|["launch_type"] [=map/exists=] 且为
+                    "multiple-clients"，则将 |launch_type| 设置为 |item|["launch_type"]。
+                </li>
+                <li>令 |accept:ordered map| 为一个新的 [=ordered map=]。
+                </li>
+                <li>[=map/for each=] |mime_type_string:string| → |extensions|，其属于
+                    |item|["accept"]
+                    <ol>
+                        <li>如果 |extensions| 不是 [=list=]，则 [=iteration/continue=]。
+                        </li>
+                        <li>如果 |extensions| 是 [=list/empty=]，则 [=iteration/continue=]。
+                        </li>
+                        <li>如果 |extensions| [=list/contains=] 非
+                            [=string=] 项，则 [=iteration/continue=]。
+                        </li>
+                        <li>如果 |extensions| [=list/contains=] 不以字符 `.`
+                            开头的字符串，则 [=iteration/continue=]。
+                        </li>
+                        <li>如果 |extensions| [=list/contains=] 长度大于
+                            16 个字符的字符串，则 [=iteration/continue=]。
+                        </li>
+                        <li>令 |mime_type_parsed:mime type| 为在 |mime_type_string|
+                            上运行 [=parse a mime type=] 的步骤所得的结果。
+                        </li>
+                        <li>如果 |mime_type_parsed:mime type| 是 failure，
+                            则 [=iteration/continue=]。
+                        </li>
+                        <li>如果 |mime_type_parsed/type| 未被列为 [[IANA-MEDIA-TYPES]]
+                            中的顶级类型，则 [=iteration/continue=]。
+                        </li>
+                        <li>将 |accept|[|mime_type_string|] 设置为 |extensions|。
+                        </li>
+                    </ol>
+                </li>
+                <li>如果 |accept:ordered map| 为空，返回 failure。
+                </li>
+                <li>令 |file_handler:ordered map| 为 |ordered map| «[ "action" →
+                    |url|, "name" → |item|["name"], "launch_type" → |launch_type|,
+                    "accept" → |accept| ]»。
+                </li>
+                <li>
+                    <a data-cite="appmanifest#dfn-process-image-resources">处理
+                        图像资源</a>，传入 |item|["icons"]、|file_handler|、
+                    |manifest URL| 和 "icons"。
+                </li>
+                <li>返回 |file_handler|。
+                </li>
+            </ol>
+        </section>
+        <section>
+            <h2>
+                执行文件处理器启动
+            </h2>
+            <p>
+                <dfn>执行文件处理器启动</dfn>的步骤由以下算法给出。
+                该算法接受 [=list=] |files:list| 和一个 [=ordered map=]
+                |manifest:ordered_map|，该有序映射保存 [=processing a manifest=]
+                的结果。
+            </p>
+            <ol class="algorithm">
+                <li>令 |file_handlers:list| 为 |manifest|["file_handlers"]。
+                </li>
+                <li>如果 |file_handlers:list| 为 null，返回。
+                </li>
+                <li>令 |launches:ordered map| 为一个 [=ordered map=]。
+                </li>
+                <li>[=list/for each=] |filename:string|，其属于 |files|
+                    <ol>
+                        <li>[=list/for each=] |file_handler:ordered_map|，其属于
+                            |file_handlers:list|：
+                            <ol>
+                                <li>[=map/for each=] |mime_type_string:string| →
+                                    |extensions:list|，其属于 |file_handler|["accept"]
+                                    <ol>
+                                        <li>[=list/for each=] |extension:string|，其属于 |extensions|：
+                                            <ol>
+                                                <li>如果 |filename| 不以 |extension| 结尾，
+                                                    则 [=iteration/continue=]。
+                                                </li>
+                                                <li>如果 |launches|[|file_handler|] [=map/exists=]，
+                                                    则 [=list/append=] |filename| 到
+                                                    |launches|[|file_handler|]。
+                                                </li>
+                                                <li>否则，将 |launches|[|file_handler|] 设置为
+                                                    一个 [=list=]，其中唯一元素为 |filename|。
+                                                </li>
+                                                <li>[=iteration/Continue=] 到 |files| 的下一个元素。
+                                                </li>
+                                            </ol>
+                                        </li>
+                                    </ol>
+                                </li>
+                            </ol>
+                        </li>
+                    </ol>
+                </li>
+                <li>[=map/for each=] |file_handler| → |files:list|，其属于 |launches|
+                    <ol>
+                        <li>如果 |file_handler|["launch_type"] 等于
+                            "multiple-clients"
+                            <ol>
+                                <li>[=list/for each=] |file|，其属于 |files|
+                                    <ol>
+                                        <li>令 |params:LaunchParams| 为一个新的 {{LaunchParams}}，
+                                            其中 {{LaunchParams/targetURL}} 设置为
+                                            |file_handler|["action"]，且 {{LaunchParams/files}} 设置为
+                                            一个 {{FrozenArray}}，其中唯一元素是与 |file|
+                                            对应的 {{FileSystemHandle}}。
+                                        </li>
+                                        <li>[=Launch a web application with handling=]，传入
+                                            |manifest| 和 |params|。
+                                        </li>
+                                    </ol>
+                                </li>
+                            </ol>
+                        </li>
+                        <li>否则，
+                            <ol>
+                                <li>令 |params:LaunchParams| 为一个新的 {{LaunchParams}}，
+                                    其中 {{LaunchParams/targetURL}} 设置为 |file_handler|["action"]，
+                                    且 {{LaunchParams/files}} 设置为由与 |files| 指定的文件路径
+                                    对应的 {{FileSystemHandle}} 组成的 {{FrozenArray}}。
+                                </li>
+                                <li>[=Launch a web application with handling=]，传入
+                                    |manifest| 和 |params|。
+                                </li>
+                            </ol>
+                        </li>
+                    </ol>
+                </li>
+            </ol>
+        </section>
+        <section>
+            <h3>
+                注册文件处理器
+            </h3>
+            <p>
+                用户代理应以与以下内容一致的方式，在宿主操作系统中
+                <dfn>注册文件处理器</dfn>：
+            </p>
+            <ul>
+                <li>应用会暴露在适当的 OS 界面中，例如原生文件浏览器
+                    和显示可处理给定文件或文件类型的应用列表的其他界面。
+                </li>
+                <li>应用是成为相关文件类型系统默认处理器的候选者。
+                </li>
+            </ul>
+            <p>
+                用户代理可以截断 [=file extensions=] 的总集合，以保留功能并防止滥用。
+                用户代理可以阻止与某些文件类型建立关联。
+            </p>
+        </section>
+        <section>
+            <h3>
+                隐私考虑：默认文件处理器。
+            </h3>
+            <p>
+                根据操作系统能力，[=file handler=] 可能会在用户没有明确知情的情况下
+                成为给定 [=file type=] 的默认处理器，自动处理给定文件类型的启动。
+                为防止可能的误用，[=user
+                agents=] 可以要求用户明确同意才开始 [=execute a file handler launch=]
+                的过程。如果请求同意，用户代理应允许用户指定该决定是永久的；
+                如果如此指定，则应移除 Web 应用程序作为文件处理实体的 OS 注册。
+            </p>
+        </section>
+        <section>
+            <h3>
+                隐私考虑：名称和图标。
+            </h3>
+            <p>
+                每个文件处理器的名称和图标可能涉及隐私和安全，因为没有指定
+                用户查看并确认这些内容的方式。因此，[=user agents=] 可以选择忽略
+                这些内容，转而使用替代字符串和图标，或回退到 OS 默认值。
+            </p>
+        </section>
+        <section class="informative">
+            <h3>
+                带有文件处理器的示例清单
+            </h3>
+            <p>
+                在以下示例中，Web 应用程序具有 3 个不同的文件处理器。
+            </p>
+            <aside class="example">
+                <pre class="json">
+            {
+              "name": "Grafr",
+              "file_handlers": [
+                {
+                  "action": "/open-csv",
+                  "accept": {
+                    "text/csv": [ ".csv" ],
+                    "text/plain": [ ".txt" ]
+                  }
+                },
+                {
+                  "action": "/open-svg",
+                  "accept": {
+                    "image/svg+xml": [ ".svg" ]
+                  }
+                },
+                {
+                  "action": "/open-grafr",
+                  "name": "Grafr graph",
+                  "accept": {
+                    "application/vnd.grafr-graph": [
+                      ".grafr", ".graf"
+                    ]
+                  },
+                  "launch_type": "multiple-clients",
+                  "icons": [
+                    {
+                      "src": "/grafr-file.png",
+                      "sizes": "144x144"
+                    }
+                  ]
+                }
+              ]
+            }
+          </pre>
+            </aside>
+        </section>
+    </section>
+    <section>
+        <h3>
+            `related_applications` 成员
+        </h3>
+        <p>
+            <dfn>相关应用程序</dfn>是底层应用程序平台可访问的应用程序，
+            它与 Web 应用程序存在某种关系。
+        </p>
+        <p>
+            [=manifest's=] <code><dfn data-export="" data-dfn-for=
+        "manifest">related_applications</dfn></code> 成员列出<a>相关
+                应用程序</a>，并作为 Web 应用程序与<a>相关应用程序</a>之间
+            存在这种关系的指示。此关系是单向的，除非所列应用程序声称
+            存在相同关系，否则<a>用户代理</a>不得假定存在双向认可。
+        </p>
+        <p>
+            `related_applications` 的使用示例可以是爬虫利用该信息收集
+            关于 Web 应用程序的更多信息，或浏览器在用户想要安装 Web 应用程序时
+            建议所列应用程序作为替代。
+        </p>
+        <p>
+            要<dfn>处理 `related_applications` 成员</dfn>，给定
+            [=ordered map=] |json:ordered map| 和 [=ordered map=]
+            |manifest:ordered map|：
+        </p>
+        <ol class="algorithm">
+            <li>令 |relatedApplications:list| 为一个新的 [=list=]。
+            </li>
+            <li>将 |manifest|["related_applications"] 设置为 |relatedApplications|。
+            </li>
+            <li>如果 |json|["related_applications"] 不 [=map/exist=] 或
+                |json|["related_applications"] 不是 [=list=]，返回。
+            </li>
+            <li>[=list/For each=] <var>app</var>，其属于 |json|["related_applications"]：
+                <ol>
+                    <li>如果 <var>app</var>["id"] 和 <var>app</var>["url"] 都不缺失：
+                        <ol>
+                            <li>将 <var>app</var>["url"] 设置为给定
+                                <var>app</var>["url"] 运行
+                                <a>处理应用程序的 `url` 成员</a>所得的结果。
+                            </li>
+                            <li>[=list/append=] <var>app</var> 到
+                                <var>relatedApplications</var>。
+                            </li>
+                        </ol>
+                    </li>
+                </ol>
+            </li>
+            <li>设置 <var>relatedApplications</var>。
+            </li>
+        </ol>
+    </section>
+    <section>
+        <h3>
+            `prefer_related_applications` 成员
+        </h3>
+        <p>
+            [=manifest's=] <code><dfn data-export="" data-dfn-for=
+        "manifest">`prefer_related_applications`</dfn></code> 成员是一个
+            [=boolean=]，用作给用户代理的提示，表示应优先使用
+            <a>相关应用程序</a>而不是 Web 应用程序。如果
+            `prefer_related_applications` 成员设置为 `true`，且用户代理想要
+            建议安装该 Web 应用程序，则用户代理可能想要改为建议安装其中一个
+            <a>相关应用程序</a>。
+        </p>
+    </section>
+    <section>
+        <h3>
+            `scope_extensions` 成员
+        </h3>
+        <p>
+            [=manifest's=] <code><dfn data-export="" data-dfn-for=
+        "manifest">scope_extensions</dfn></code> 成员表示应用程序期望的
+            [=scope extensions=] 列表。
+        </p>
+        <p>
+            <dfn>作用域扩展</dfn>通过描述应被视为
+            [=within extended scope=] 的额外 [=URLs=]，扩展
+            [=manifest/navigation scope of
+            a manifest=]。
+        </p>
+        <p>
+            用户代理必须先 [=process the scope_extensions member=] 并
+            [=validate scope extensions=]，之后才能 [=apply extended scope=]，
+            以允许额外的 [=URLs=] 被视为 [=within extended scope=]。
+        </p>
+        <p>
+            如果 |target| 是清单的 [=manifest/within
+            scope=]，或 [=matches a validated scope extension=]，
+            则 [=URL=] |target:URL| <dfn>在扩展作用域内</dfn>于
+            |manifest:processed manifest|。
+        </p>
+        <p>
+            如果给定 [=URL=] |target:URL| 和 [=list=]
+            |validated_scope_extensions:list| 时，以下算法返回 `true`，
+            则 [=URL=] |target:URL| <dfn>匹配已验证的作用域扩展</dfn>：
+        </p>
+        <ol class="algorithm">
+            <li>[=list/For each=] |entry:ordered map|，其属于
+                |validated_scope_extensions:list|：
+                <ol>
+                    <li>如果 |entry| 不是 [=ordered map=]，或 |entry|["scope"] 不
+                        [=map/exist=]，或不是 [=URL=]，继续。
+                    </li>
+                    <li>令 [=URL=] |resolved_scope:URL| 为 |entry:ordered
+                        map|["scope"]。
+                    </li>
+                    <li>如果 |target| 是 |resolved_scope| 的 [=URL/within scope=]，
+                        返回 `true`。
+                    </li>
+                </ol>
+            </li>
+            <li>返回 `false`。
+            </li>
+        </ol>
+        <aside class="note">
+            [=manifest's=] `scope` 成员只允许将来自单个 [=origin=] 的 URL
+            视为在作用域内。`scope_extensions` 成员允许将来自多个
+            [=origins=] 的 URL 视为在作用域内。
+        </aside>
+        <section class="informative">
+            <h2>
+                使用示例
+            </h2>
+            <p>
+                以下示例展示了一个使用 `scope_extensions` 成员的应用程序的
+                [=manifest=]。
+            </p>
+            <pre class="example json" title="https://example.com/manifest.webmanifest">
+          {
+            "id": "https://example.com/app",
+            "name": "My App",
+            "icons": [{
+              "src": "icon/hd_hi",
+              "sizes": "128x128"
+            }],
+            "start_url": "/app/index.html",
+            "scope": "/app",
+            "display": "standalone",
+            "scope_extensions": [
+              { "type": "origin", "origin": "https://example.co.uk" },
+              { "type": "origin", "origin": "https://help.example.com" }]
+          }
+        </pre>
+            <p>
+                下面展示了 2 个 [=web-app-origin-association=] 文件，
+                它们可从 `scope_extensions` 成员中列出的 [=origins=] 的
+                `.well-known` 路径下载。
+            </p>
+            <pre class="example json" title="https://example.co.uk/.well-known/web-app-origin-association">
+          {
+            "https://example.com/app": {
+              "scope": "/app"   
+            }
+          }
+        </pre>
+            <pre class="example json" title="https://help.example.com/.well-known/web-app-origin-association">
+          {
+            "https://example.com/app": {
+              "scope": "/"   
+            }
+          }
+        </pre>
+            <p>
+                此应用的导航作用域由 [=URL/within scope=] 于以下任一
+                [=URLs=] 的 URL 构成：
+                `https://example.com/app`、`https://example.co.uk/app` 和
+                `https://help.example.com`。
+            </p>
+        </section>
+        <section>
+            <h2>
+                处理 `scope_extensions` 成员
+            </h2>
+            <p>
+                要<dfn>处理 `scope_extensions` 成员</dfn>，给定 [=ordered
+                map=] |json:ordered map|、[=ordered map=] |manifest:ordered map| 和
+                [=URL=] |manifest_id:URL|：
+            </p>
+            <ol class="algorithm">
+                <li>令 |processedScopeExtensions:list| 为一个新的 [=list=]。
+                </li>
+                <li>将 |manifest|["scope_extensions"] 设置为 |processedScopeExtensions|。
+                </li>
+                <li>如果 |json|["scope_extensions"] 不 [=map/exist=] 或不是
+                    [=list=]，返回。
+                </li>
+                <li>[=list/For each=] |entry:ordered map|，其属于
+                    |json|["scope_extensions"]：
+                    <ol>
+                        <li>如果 |entry|["type"] 或 |entry|["origin"] 不 [=map/exist=]，
+                            则 [=iteration/continue=]。
+                        </li>
+                        <li>如果 |entry|["type"] 不是 "origin"，则 [=iteration/continue=]。
+                        </li>
+                        <li>如果 |entry|["origin"] 不是 [=string=]，
+                            则 [=iteration/continue=]。
+                        </li>
+                        <li>令 [=URL=] |origin_url:URL| 为 [=URL
+                            Parser|解析=] |entry|["origin"] 所得的结果。
+                        </li>
+                        <li>如果 |origin_url| 是具有 [=URL/scheme=] "https" 的有效
+                            |URL|，则将 |entry|["origin"] 设置为 |origin_url| 的 [=URL/origin=]。
+                        </li>
+                        <li>否则 [=iteration/continue=]。
+                        </li>
+                        <li>使用 [=validate scope
+                            extensions=] 中的算法验证 |entry|，给定 [=ordered map=]
+                            |entry:ordered map| 和 [=URL=] |manifest_id:URL|。
+                        </li>
+                        <li>如果上一步返回错误，
+                            则 [=iteration/continue=]。
+                        </li>
+                        <li>否则，将 |entry|["scope"] 设置为返回的 [=URL=]。
+                        </li>
+                        <li>[=list/Append=] |entry| 到 |processedScopeExtensions|。
+                        </li>
+                    </ol>
+                </li>
+            </ol>
+            <aside class="note">
+                `origin` 是当前指定的唯一作用域扩展条目类型。
+                未来可能会添加其他类型以支持不同用例。
+            </aside>
+        </section>
+        <section>
+            <h2>
+                验证作用域扩展
+            </h2>
+            <p>
+                要<dfn>验证作用域扩展</dfn>，给定 [=ordered map=]
+                |extension:ordered map| 和 [=URL=] |manifest_id:URL|：
+            </p>
+            <ol class="algorithm">
+                <li>令 [=URL=] |origin_url:URL| 为 |extension|["origin"] 的
+                    [=URL/origin=] 的 [=URL=]。
+                </li>
+                <li>令 [=URL=] |download_url:URL| 为使用
+                    |origin_url| 作为基准 [=URL=] [=URL
+                    Parser|解析=] "/.well-known/web-app-origin-association" 所得的结果。
+                </li>
+                <li>令 [=ordered map=] |json:ordered map| 为给定 |download_url|
+                    进行 [=fetch=] 所得的结果。
+                </li>
+                <li>如果 [=fetch=] 失败，返回错误。
+                </li>
+                <li>如果 |json|[|manifest_id|] 不 [=map/exist=] 或不是
+                    [=ordered map=]，返回错误。
+                </li>
+                <li>令 [=string=] |scope:string| 为 "/"。
+                </li>
+                <li>如果 |json|[|manifest_id|]["scope"] [=map/exists=] 且是
+                    [=string=]，则将 |scope| 设置为 |json|[|manifest_id|]["scope"]。
+                </li>
+                <li>令 [=URL=] |resolved_scope:URL| 为以 |extension|["origin"]
+                    作为基准 [=URL=] [=URL
+                    Parser|解析=] |scope| 所得的结果。
+                </li>
+                <li>返回 |resolved_scope|。
+                </li>
+            </ol>
+        </section>
+        <section>
+            <h2>
+                应用作用域扩展
+            </h2>
+            <p>
+                用户代理可以选择在某些场景中应用
+                <dfn>应用扩展作用域</dfn>，而在其他场景中应用 [=manifest/scope=]。
+            </p>
+            <p>
+                如果 [=application context=] 的 [=navigable/active document=] 的
+                [=URL=] 不是 [=manifest/within scope=]，但
+                [=within extended
+                scope=]，则用户代理应提供 UI，允许用户确定该 [=URL=]
+                或至少其 [=origin=]，包括它是否通过安全连接提供。该 UI 应区别于
+                当 [=URL=] 不是 [=application context=] 的
+                [=Document/processed manifest=] 的 [=manifest/within scope=] 时
+                使用的任何 UI，以便明显表明用户仍在导航该应用程序的预期内容，
+                但也让用户了解导航到不同 [=origin=] 的隐私和安全影响。
+            </p>
+        </section>
+    </section>
+    <section class="informative">
+        <h2>
+            web-app-origin-association 文件
+        </h2>
+        <p>
+            <dfn>web-app-origin-association</dfn> 文件是一个 JSON 文件，
+            可用于 [=validate scope extensions=] 或 [=validate origin
+            migration=]。它确认其所在源与一个或多个 Web 应用程序之间的关联。
+            它通过引用清单 [=manifest/ids=] 来唯一标识应用。
+        </p>
+        <p>
+            给定 [=origin=] |origin:origin|，期望可从
+            <code>[origin]/.well-known/web-app-origin-association</code>
+            下载 [=web-app-origin-association=] 文件。
+        </p>
+    </section>
+    <section>
+        <h2>
+            Web 应用程序源迁移
+        </h2>
+        <p>
+            Web 应用程序源迁移允许 Web 应用程序向用户代理指示
+            它已从一个源移动到另一个源（在同一站点内）。这使用户代理能够
+            迁移已安装的 Web 应用程序，同时保留用户的安装状态以及可能的设置。
+        </p>
+        <section class="informative">
+            <h3>
+                使用示例
+            </h3>
+            <p>
+                以下示例展示了托管在
+                <code>https://old.example.com</code> 的 Web 应用程序如何迁移到
+                <code>https://new.example.com</code>。两个源必须是
+                [=same site=]，并且必须明确同意迁移。
+            </p>
+            <p>
+                首先，旧应用程序的清单可以可选地包含一个
+                `migrate_to` 成员，用于向用户代理发出其打算移动的信号
+                （或者旧应用程序可以重定向到新应用程序）：
+            </p>
+            <pre class="example json" title="https://old.example.com/manifest.json">
+          {
+            "name": "My App",
+            "id": "/",
+            "migrate_to": {
+              "id": "https://new.example.com/",
+              "install_url": "https://new.example.com/install"
+            }
+          }
+        </pre>
+            <p>
+                接着，新应用程序的清单包含一个 `migrate_from` 成员，
+                用于声明从旧应用程序迁移：
+            </p>
+            <pre class="example json" title="https://new.example.com/manifest.json">
+          {
+            "name": "My New App",
+            "id": "/",
+            "migrate_from": [
+              {
+                "id": "https://old.example.com/",
+                "install_url": "https://old.example.com/install",
+                "behavior": "force"
+              }
+            ]
+          }
+        </pre>
+            <p>
+                最后，旧源必须托管一个 `web-app-origin-association`
+                文件，以最终验证它允许新应用程序接管。没有此文件，
+                恶意的新应用程序可能会未经许可声称从旧应用程序迁移。
+            </p>
+            <pre class="example json" title="https://old.example.com/.well-known/web-app-origin-association">
+          {
+            "https://new.example.com/": {
+              "allow_migration": true
+            }
+          }
+        </pre>
+        </section>
+        <section>
+            <h3>
+                <code><dfn data-export="" data-dfn-for=
+          "manifest">migrate_from</dfn></code> 成员
+            </h3>
+            <p>
+                [=manifest/migrate_from=] 成员是一个由 [=strings=] 或
+                [=ordered maps=] 组成的 [=list=]，用于标识正在从中迁移的
+                旧 Web 应用程序。
+            </p>
+            <p>
+                如果条目是 [=string=]，则将其视为旧应用程序的 [=manifest/id=]。
+            </p>
+            <p>
+                如果条目是 [=ordered map=]，它可以具有以下成员：
+            </p>
+            <ul>
+                <li>
+                    <code><dfn data-dfn-for="migrate_from_item">id</dfn></code>：
+                    表示旧应用程序 [=manifest/id=] 的 [=string=]。
+                </li>
+                <li>
+                    <code><dfn data-dfn-for=
+            "migrate_from_item">install_url</dfn></code>：一个 [=string=]，
+                    表示链接到旧应用程序清单的页面的 URL。用户代理可以使用此字段
+                    获取旧应用程序的清单，以便即使旧应用程序的其他每个 URL
+                    都重定向到新应用程序，也能应用更新。
+                </li>
+                <li>
+                    <code><dfn data-dfn-for="migrate_from_item">behavior</dfn></code>：
+                    一个 [=string=]，可以是 `"suggest"` 或 `"force"`。这是给用户代理的
+                    提示，可能影响用户代理向用户呈现迁移相关 UI 的强制程度。
+                </li>
+            </ul>
+            <div class="note">
+                为了让用户代理处理 [=manifest/migrate_from=] 成员，
+                清单还需要在其 JSON 中包含有效的显式
+                <a data-cite="appmanifest#dfn-id">id</a> 成员。
+            </div>
+        </section>
+        <section>
+            <h3>
+                <code><dfn data-export="" data-dfn-for=
+          "manifest">migrate_to</dfn></code> 成员
+            </h3>
+            <p>
+                [=manifest/migrate_to=] 成员是一个可选的 [=ordered map=]，
+                用于主动发出向新应用程序迁移的信号。它具有以下成员：
+            </p>
+            <ul>
+                <li>
+                    <code><dfn data-dfn-for="migrate_to_item">id</dfn></code>：
+                    表示新应用程序 [=manifest/id=] 的 [=string=]。
+                </li>
+                <li>
+                    <code><dfn data-dfn-for=
+            "migrate_to_item">install_url</dfn></code>：一个 [=string=]，
+                    表示链接到新应用程序清单的页面的 URL。此页面上的清单需要包含
+                    指向此应用程序的 [=manifest/migrate_from=] 字段，
+                    才能处理迁移。
+                </li>
+            </ul>
+        </section>
+        <section>
+            <h3>
+                验证源迁移
+            </h3>
+            <p>
+                要<dfn>验证源迁移</dfn>，给定 [=URL=]
+                |old_manifest_id:URL| 和 [=URL=] |new_manifest_id:URL|：
+            </p>
+            <ol class="algorithm">
+                <li>如果 |old_manifest_id| 的 [=URL/origin=] 和 |new_manifest_id| 的
+                    [=URL/origin=] 不是 [=same site=]，返回错误。
+                </li>
+                <li>如果 |old_manifest_id| 的 [=URL/origin=] 与
+                    |new_manifest_id| 的 [=URL/origin=] 是 [=same origin=]，
+                    返回 success。
+                </li>
+                <li>令 [=URL=] |origin_url:URL| 为
+                    |old_manifest_id| 的 [=URL/origin=]。
+                </li>
+                <li>令 [=URL=] |download_url:URL| 为使用
+                    |origin_url| 作为基准 [=URL=] [=URL
+                    Parser|解析=] "/.well-known/web-app-origin-association" 所得的结果。
+                </li>
+                <li>令 [=ordered map=] |json:ordered map| 为给定 |download_url|
+                    进行 [=fetch=] 所得的结果。
+                </li>
+                <li>如果 [=fetch=] 失败，返回错误。
+                </li>
+                <li>如果 |json|[|new_manifest_id|] 不 [=map/exist=] 或不是
+                    [=ordered map=]，返回错误。
+                </li>
+                <li>如果 |json|[|new_manifest_id|]["allow_migration"] 不是 `true`，
+                    返回错误。
+                </li>
+                <li>返回 success。
+                </li>
+            </ol>
+        </section>
+        <section>
+            <h3>
+                处理 `migrate_from` 成员
+            </h3>
+            <p>
+                要<dfn>处理 `migrate_from` 成员</dfn>，给定 [=ordered
+                map=] |json:ordered map|、[=ordered map=] |manifest:ordered map| 和
+                [=URL=] |manifest URL:URL|：
+            </p>
+            <ol class="algorithm">
+                <li>如果 |json|["id"] 不 [=map/exist=] 或不是 [=string=]，
+                    返回。
+                </li>
+                <li>如果 |json|["id"] 是空字符串，返回。
+                </li>
+                <li>令 |base_origin:origin| 为 |manifest|["start_url"] 的
+                    [=URL/origin=]。
+                </li>
+                <li>令 |id_url:URL| 为以 |base_origin| 作为基准 URL
+                    [=URL Parser|解析=]
+                    |json|["id"] 所得的结果。
+                </li>
+                <li>如果 |id_url| 是 failure，返回。
+                </li>
+                <li>如果 |id_url| 与 |manifest|["start_url"] 不是
+                    [=same origin=]，返回。
+                </li>
+                <li>令 |processed_migrate_from:list| 为一个新的 [=list=]。
+                </li>
+                <li>将 |manifest|["migrate_from"] 设置为 |processed_migrate_from|。
+                </li>
+                <li>如果 |json|["migrate_from"] 不 [=map/exist=] 或不是
+                    [=list=]，返回。
+                </li>
+                <li>[=list/For each=] |entry|，其属于 |json|["migrate_from"]：
+                    <ol>
+                        <li>令 |processed_entry:ordered map| 为一个新的 [=ordered map=]。
+                        </li>
+                        <li>如果 |entry| 是 [=string=]：
+                            <ol>
+                                <li>令 |id:URL| 为以 |manifest URL| 作为基准 URL
+                                    [=URL Parser|解析=]
+                                    |entry| 所得的结果。
+                                </li>
+                                <li>如果 |id| 是 failure，则 [=iteration/continue=]。
+                                </li>
+                                <li>将 |processed_entry|["id"] 设置为 |id|。
+                                </li>
+                            </ol>
+                        </li>
+                        <li>否则，如果 |entry| 是 [=ordered map=]：
+                            <ol>
+                                <li>如果 |entry|["id"] 不 [=map/exist=] 或不是
+                                    [=string=]，则 [=iteration/continue=]。
+                                </li>
+                                <li>令 |id:URL| 为以 |manifest URL| 作为基准 URL
+                                    [=URL Parser|解析=]
+                                    |entry|["id"] 所得的结果。
+                                </li>
+                                <li>如果 |id| 是 failure，则 [=iteration/continue=]。
+                                </li>
+                                <li>将 |processed_entry|["id"] 设置为 |id|。
+                                </li>
+                                <li>如果 |entry|["install_url"] [=map/exists=] 且是
+                                    [=string=]：
+                                    <ol>
+                                        <li>令 |install_url:URL| 为以 |manifest
+                                            URL| 作为基准 URL [=URL
+                                            Parser|解析=] |entry|["install_url"] 所得的结果。
+                                        </li>
+                                        <li>如果 |install_url| 不是 failure，则将
+                                            |processed_entry|["install_url"] 设置为 |install_url|。
+                                        </li>
+                                    </ol>
+                                </li>
+                                <li>如果 |entry|["behavior"] [=map/exists=] 且是
+                                    [=string=]：
+                                    <ol>
+                                        <li>如果 |entry|["behavior"] 是 "suggest" 或 "force"，
+                                            则将 |processed_entry|["behavior"] 设置为 |entry|["behavior"]。
+                                        </li>
+                                    </ol>
+                                </li>
+                            </ol>
+                        </li>
+                        <li>否则，[=iteration/continue=]。
+                        </li>
+                        <li>使用 [=validate origin migration=] 中的算法验证
+                            |processed_entry|["id"]，给定 [=URL=]
+                            |processed_entry|["id"] 和 [=URL=] |id_url|。
+                        </li>
+                        <li>如果上一步返回错误，
+                            则 [=iteration/continue=]。
+                        </li>
+                        <li>[=list/Append=] |processed_entry| 到
+                            |processed_migrate_from|。
+                        </li>
+                    </ol>
+                </li>
+            </ol>
+        </section>
+        <section>
+            <h3>
+                处理 `migrate_to` 成员
+            </h3>
+            <p>
+                要<dfn>处理 `migrate_to` 成员</dfn>，给定 [=ordered
+                map=] |json:ordered map|、[=ordered map=] |manifest:ordered map| 和
+                [=URL=] |manifest URL:URL|：
+            </p>
+            <ol class="algorithm">
+                <li>如果 |json|["migrate_to"] 不 [=map/exist=] 或不是
+                    [=ordered map=]，返回。
+                </li>
+                <li>令 |entry:ordered map| 为 |json|["migrate_to"]。
+                </li>
+                <li>如果 |entry|["id"] 不 [=map/exist=] 或不是 [=string=]，
+                    返回。
+                </li>
+                <li>令 |id:URL| 为以 |manifest URL| 作为基准 URL
+                    [=URL Parser|解析=]
+                    |entry|["id"] 所得的结果。
+                </li>
+                <li>如果 |id| 是 failure，返回。
+                </li>
+                <li>令 |processed_migrate_to:ordered map| 为一个新的 [=ordered map=]。
+                </li>
+                <li>将 |processed_migrate_to|["id"] 设置为 |id|。
+                </li>
+                <li>如果 |entry|["install_url"] [=map/exists=] 且是 [=string=]：
+                    <ol>
+                        <li>令 |install_url:URL| 为以 |manifest URL| 作为
+                            基准 URL [=URL
+                            Parser|解析=] |entry|["install_url"] 所得的结果。
+                        </li>
+                        <li>如果 |install_url| 不是 failure，则将
+                            |processed_migrate_to|["install_url"] 设置为 |install_url|。
+                        </li>
+                    </ol>
+                </li>
+                <li>将 |manifest|["migrate_to"] 设置为 |processed_migrate_to|。
+                </li>
+            </ol>
+        </section>
+        <section>
+            <h3>
+                隐私与安全考虑
+            </h3>
+            <p>
+                为防止恶意行为者静默接管应用程序（例如，一个简单计算器将自身更新为模仿银行应用），
+                [=validate origin migration=] 算法强制执行双向握手。
+                新旧应用程序源都必须通过 [=web-app-origin-association=] 文件
+                明确同意迁移。
+            </p>
+            <p>
+                此外，迁移被限制为 [=same site=]，以确保它们用于组织控制范围内
+                的合法品牌重塑和架构变更，而不是将所有权转移给未经验证的第三方。
+            </p>
+            <p>
+                用户代理应考虑将显式用户确认对话框作为迁移流程的一部分，
+                尤其是在包含对安全敏感字段（例如应用名称和图标）的更新时。
+            </p>
+        </section>
+    </section>
+    <section>
+        <h2>
+            外部应用程序资源
+        </h2>
+        <p>
+            每个 <dfn data-local-lt="external application resource's">外部
+                应用程序资源</dfn> 表示一个与 Web 应用程序相关的应用程序。
+        </p>
+        <p>
+            [=external application resource=] 可以具有以下成员，
+            其中某些成员是成为 [=valid external application
+            resource=] 所必需的：
+        </p>
+        <ul>
+            <li>[=external application resource/fingerprints=] 成员
+            </li>
+            <li>[=external application resource/id=] 成员
+            </li>
+            <li>[=external application resource/min_version=] 成员
+            </li>
+            <li>[=external application resource/platform=] 成员
+            </li>
+            <li>[=external application resource/url=] 成员
+            </li>
+        </ul>
+        <p>
+            <dfn>有效外部应用程序资源</dfn>必须具有
+            [=external
+            application resource/platform=] 成员，以及
+            [=external application resource/url=] 或 [=external application resource/id=]
+            成员（或两者）。
+        </p>
+        <aside class="example">
+            <p>
+                在以下示例中，Web 应用程序列出了两个不同的相关应用程序，
+                一个在 Google Play Store 上，另一个在 iTunes Store 上。
+                Google Play Store 上的那个具有 Android 包名、最低版本说明符，
+                以及以 Play-Store 特定方式用于验证的加密指纹。
+            </p>
+            <pre class="json">
+          {
+            "related_applications": [
+              {
+                "platform": "play",
+                "url": "https://play.google.com/store/apps/details?id=com.example.app1",
+                "id": "com.example.app1",
+                "min_version": "2",
+                "fingerprints": [
+                  {
+                    "type": "sha256_cert",
+                    "value": "92:5A:39:05:C5:B9:EA:BC:71:48:5F:F2"
+                  }
+                ]
+              },
+              {
+                "platform": "itunes",
+                "url": "https://itunes.apple.com/app/example-app1/id123456789"
+              }
+            ]
+          }
+        </pre>
+        </aside>
+        <section>
+            <h3>
+                `platform` 成员
+            </h3>
+            <p>
+                <code><dfn data-dfn-for=
+          "external application resource">platform</dfn></code> 成员表示
+                此 [=external application resource=] 所关联的 [=platform=]。
+                <dfn data-dfn-for="">平台</dfn> 表示软件分发生态系统，
+                或可能表示操作系统。本规范不定义
+                <a>platform</a> 成员的具体值。
+            </p>
+            <aside class="Platforms registry">
+                工作组维护一个<a href="https://github.com/w3c/manifest/wiki/Platforms">已知
+                    platform 值注册表</a>。
+            </aside>
+        </section>
+        <section>
+            <h3>
+                `url` 成员
+            </h3>
+            <p>
+                [=external application resource's=] <code><dfn data-dfn-for=
+          "external application resource">url</dfn></code> 成员是可以找到该应用程序的
+                <a>URL</a>。
+            </p>
+            <p>
+                要<dfn>处理应用程序的 `url` 成员</dfn>：
+            </p>
+            <ol class="algorithm">
+                <li>如果 <var>application URL</var> 缺失，返回 null。
+                </li>
+                <li>否则，[=URL Parser|解析=] <var>application URL</var>；如果
+                    结果不是 failure，返回该结果。否则返回 null。
+                </li>
+            </ol>
+        </section>
+        <section>
+            <h3>
+                `id` 成员
+            </h3>
+            <p>
+                [=external application resource's=] <code><dfn data-dfn-for=
+          "external application resource">id</dfn></code> 成员表示
+                在平台上用于表示该应用程序的 id。
+            </p>
+        </section>
+        <section>
+            <h3>
+                `min_version` 成员
+            </h3>
+            <p>
+                [=external application resource's=] <code><dfn data-dfn-for=
+          "external application resource">min_version</dfn></code> 成员
+                表示被认为与此 Web 应用相关的应用程序最低版本。此版本是一个
+                <a>字符串</a>，具有平台特定的语法和语义。
+            </p>
+        </section>
+        <section>
+            <h3>
+                `fingerprints` 成员
+            </h3>
+            <p>
+                [=external application resource's=] <code><dfn data-dfn-for=
+          "external application resource">fingerprints</dfn></code> 成员
+                表示一个 [=fingerprints=] [=list=]。
+            </p>
+            <p>
+                <dfn data-local-lt="fingerprints">指纹</dfn> 表示一组用于验证
+                应用程序的加密指纹。指纹具有以下两个成员：
+                <dfn data-dfn-for="fingerprint">type</dfn> 和 <dfn data-dfn-for="fingerprint">value</dfn>。二者都是
+                <a>字符串</a>，但其语法和语义由平台定义。
+            </p>
+        </section>
+    </section>
+    <section data-cite="DOM">
+        <h2>
+            安装提示
+        </h2>
+        <p>
+            安装过程可以通过多种方式触发：
+        </p>
+        <ul>
+            <li>最终用户可以通过用户代理的
+                <abbr title="User Interface">UI</abbr>
+                <dfn data-lt="manual installation">手动</dfn>
+                触发安装过程，直接调用
+                <a>呈现安装提示</a>的步骤。
+            </li>
+            <li>安装过程可以通过<dfn>自动安装提示</dfn>发生：
+                也就是说，当例如存在足够的<a>可安装性
+                    信号</a>来支持安装 Web 应用程序时，用户代理向
+                用户呈现的 UI。
+            </li>
+            <li>安装过程可以通过<dfn>站点触发的
+                    安装提示</dfn>发生：站点可以以编程方式请求
+                用户代理向用户呈现安装提示。用户代理可以将此特性的可用性
+                限制在例如存在足够信号来支持 Web 应用程序
+                [=installed web
+                application|安装=]的情况下。
+            </li>
+        </ul>
+        <p>
+            无论哪种情况，如果文档不可安装，用户代理都不得
+            <a>呈现安装提示</a>。
+        </p>
+        <p>
+            用户代理可以在任何时候（仅当文档可安装时）
+            运行<a>通知安装提示可用的步骤</a>，
+            从而让站点有机会显示<a>站点触发的
+                安装提示</a>，而无需用户与用户代理 UI 交互。
+        </p>
+        <p>
+            要<dfn data-local-lt="presenting an install prompt|presentation of the install prompt">呈现
+                安装提示</dfn>：
+        </p>
+        <ol>
+            <li>显示某种用户代理特定的 UI，询问用户是否
+                继续安装应用。该选择的 <var>result</var>
+                要么是 {{AppBannerPromptOutcome/"accepted"}}，要么是
+                {{AppBannerPromptOutcome/"dismissed"}}。
+            </li>
+            <li>返回 <var>result</var>，并且<a>并行地</a>：
+                <ol>
+                    <li>如果 <var>result</var> 是 {{AppBannerPromptOutcome/"accepted"}}，
+                        则运行<a>安装 Web 应用程序的步骤</a>。
+                    </li>
+                </ol>
+            </li>
+        </ol>
+        <p>
+            <dfn>通知安装提示可用的步骤</dfn>由以下算法给出：
+        </p>
+        <ol>
+            <li>等待 <a>top-level browsing
+                    context</a> 的 {{Document}} <a data-cite="html#completely-loaded">完全
+                    加载</a>。
+            </li>
+            <li>如果已经有一个 <a data-lt="present an install prompt">正在呈现的安装提示</a>，或者
+                <a>安装 Web 应用程序的步骤</a> 当前正在
+                执行，则中止此步骤。
+            </li>
+            <li>
+                在 <a>application life-cycle task source</a> 上
+                <a>排入一个任务</a>以执行以下操作：
+                <ol>
+                    <li>令 |mayShowPrompt| 为在 [=top-level browsing context=] 的
+                        [=relevant global object=] 上 [=fire an event=] 名为
+                        `"beforeinstallprompt"`、使用 {{BeforeInstallPromptEvent}}
+                        接口并将 {{Event/cancelable}} 属性初始化为 `true`
+                        所得的结果。
+                    </li>
+                    <li>如果 |mayShowPrompt| 为 true，则用户代理可以<a>并行地</a>
+                        使用 |event| <a>请求呈现安装提示</a>。
+                    </li>
+                </ol>
+            </li>
+        </ol>
+    </section>
+    <section data-cite="DOM">
+        <h2>
+            可安装 Web 应用程序
+        </h2>
+        <section>
+            <h2>
+                <dfn>安装</dfn>过程
+            </h2>
+            <p>
+                <dfn>安装 Web 应用程序的步骤</dfn>由以下算法给出：
+            </p>
+            <ol>
+                <li>令 <var>manifest</var> 为可安装文档的清单。
+                </li>
+                <li>执行一系列未指定的操作，以尝试在用户的操作系统中注册
+                    Web 应用程序（例如，创建启动 Web 应用程序的快捷方式、
+                    在系统卸载菜单中注册应用程序等）。如果安装失败
+                    （可能出于任何原因，例如 OS 拒绝授予用户代理将图标添加到
+                    设备主屏幕的权限），则中止这些步骤。
+                </li>
+                <li>
+                    在 <a>application life-cycle task
+                        source</a> 上 <a>排入一个任务</a>，以在发生安装的
+                    [=top-level browsing context=] 的 [=relevant global object=] 上
+                    <a>触发事件</a>，事件名为 `"appinstalled"`。
+                </li>
+            </ol>
+        </section>
+        <section class="informative">
+            <h3 id="installability-signals">
+                可安装性信号
+            </h3>
+            <p>
+                按设计，本规范不向开发者提供显式 API 来“安装”
+                Web 应用程序。相反，<a>manifest</a> 可作为给用户代理的
+                <dfn>可安装性信号</dfn>，表示 Web 应用程序可以被安装。
+                这些信号会因用户代理而异，因为每个用户代理都有自己的启发式方法
+                来确定 Web 站点是否符合安装提示的条件。实现者通常会提供文档，
+                描述其特定的可安装性信号，或 Web 应用程序需要满足的其他相关标准，
+                以便被视为可安装。
+            </p>
+            <p>
+                用户代理可能为 Web 应用程序实现的<a>可安装性信号</a>示例：
+            </p>
+            <ul>
+                <li>具有包含应用程序名称和合适图标的 [=application manifest=]。
+                </li>
+                <li>通过安全网络连接提供，但也能在没有网络连接的情况下运行。
+                </li>
+                <li>具有合理的内容安全策略。
+                </li>
+                <li>能够响应式地适配各种屏幕尺寸的显示，兼顾移动端和桌面端。
+                </li>
+                <li>在较长时间内表现出较高程度的最终用户参与度。
+                </li>
+                <li>已被用户明确标记为他们重视和信任的站点
+                    （例如，通过书签或“星标”标记）。
+                </li>
+            </ul>
+            <p>
+                此列表并非详尽无遗，某些<a>可安装性信号</a>
+                可能并不适用于所有用户代理。用户代理如何利用这些
+                <a>可安装性信号</a> 来确定 Web 应用程序是否可安装，
+                留给实现者决定。
+            </p>
+        </section>
+    </section>
+    <section>
+        <h2>
+            安装事件
+        </h2>
+        <p>
+            本规范的 [=event|事件=] 依赖于
+            <dfn>application
+                life-cycle task source</dfn>。
+        </p>
+        <section data-dfn-for="BeforeInstallPromptEvent">
+            <h3>
+                <dfn>BeforeInstallPromptEvent</dfn> 接口
+            </h3>
+            <div class="note">
+                <a>beforeinstallprompt</a> 事件的命名有些不准确，
+                因为它不一定表示随后会发生<a>手动安装</a>
+                （取决于用户代理，它可能只是赋予站点触发安装提示的能力）。
+                该名称出于历史原因而保留。
+            </div>
+            <pre class="idl" data-cite="DOM">
+          [Exposed=Window]
+          interface BeforeInstallPromptEvent : Event {
+            constructor(DOMString type, optional EventInit eventInitDict = {});
+            Promise&lt;PromptResponseObject&gt; prompt();
+          };
+
+          dictionary PromptResponseObject {
+            AppBannerPromptOutcome userChoice;
+          };
+
+          enum AppBannerPromptOutcome {
+            "accepted",
+            "dismissed"
+          };
+        </pre>
+            <p>
+                当允许站点呈现<a>站点触发的安装提示</a>时，
+                或者在用户代理呈现<a>自动安装提示</a>之前，
+                会分派 {{BeforeInstallPromptEvent}}。它允许站点取消
+                <a>自动安装提示</a>，并手动呈现
+                <a>站点触发的安装提示</a>。
+            </p>
+            <div class="note">
+                如果 {{BeforeInstallPromptEvent}} <em>未</em>被取消，
+                用户代理则被允许向最终用户<a>呈现安装提示</a>
+                （具体而言，是<a>自动安装提示</a>）。取消默认动作
+                （通过 {{Event/preventDefault()}}）会阻止用户代理
+                <a>呈现安装提示</a>。用户代理可在稍后时间再次运行
+                <a>通知安装提示可用的步骤</a>。
+            </div>
+            <p>
+                <dfn>PromptResponseObject</dfn> 包含调用
+                {{BeforeInstallPromptEvent/prompt()}} 的结果。它包含一个成员，
+                <dfn data-dfn-for="PromptResponseObject">userChoice</dfn>，
+                该成员表示用户选择的结果。
+            </p>
+            <p>
+                {{BeforeInstallPromptEvent}} 实例具有以下内部槽：
+            </p>
+            <dl data-dfn-for="BeforeInstallPromptEvent">
+                <dt>
+                    <dfn>[[\didPrompt]]</dfn>
+                </dt>
+                <dd>
+                    一个布尔值，初始为 `false`。表示此事件是否已用于向最终用户
+                    <a>呈现安装提示</a>。
+                </dd>
+                <dt>
+                    <dfn>[[\userResponsePromise]]</dfn>
+                </dt>
+                <dd>
+                    一个 promise，表示<a>呈现安装
+                        提示</a>的结果。
+                </dd>
+            </dl>
+            <section>
+                <h4>
+                    <code>prompt()</code> 方法
+                </h4>
+                <p>
+                    当调用 <dfn>prompt</dfn> 方法时，运行以下步骤：
+                </p>
+                <ol>
+                    <li>令 |userResponsePromise| 为
+                        {{BeforeInstallPromptEvent/[[userResponsePromise]]}}。
+                    </li>
+                    <li>如果 |userResponsePromise| 是 pending：
+                        <ol>
+                            <li>如果 [=this=].{{BeforeInstallPromptEvent/[[didPrompt]]}} 是
+                                `true`，终止此算法。
+                            </li>
+                            <li>如果此事件的 {{Event/isTrusted}} 属性是 `false`，
+                                则以 {{"NotAllowedError"}} 拒绝 |userResponsePromise|，
+                                并终止此算法。
+                            </li>
+                            <li>将 [=this=].{{BeforeInstallPromptEvent/[[didPrompt]]}} 设置为
+                                `true`。
+                            </li>
+                            <li>
+                                <a>并行地</a>，使用 [=this=] <a>请求呈现安装
+                                    提示</a>。等待最终用户做出选择，可能会无限期等待。
+                            </li>
+                        </ol>
+                    </li>
+                    <li>返回 |userResponsePromise|。
+                    </li>
+                </ol>
+                <p>
+                    要使用 {{BeforeInstallPromptEvent}} <var>event</var>
+                    <dfn data-noexport="">请求呈现安装提示</dfn>：
+                </p>
+                <ol>
+                    <li>
+                        <a>呈现安装提示</a>，并令 |outcome| 为结果。
+                    </li>
+                    <li>令 |response| 为新创建的 {{PromptResponseObject}}，
+                        将其 {{PromptResponseObject/userChoice}} 初始化为 |outcome|。
+                    </li>
+                    <li>[=Resolve=]
+                        |event|.{{BeforeInstallPromptEvent/[[userResponsePromise]]}}，值为
+                        |response|。
+                    </li>
+                </ol>
+            </section>
+            <section class="informative">
+                <h4>
+                    使用示例
+                </h4>
+                <p>
+                    此示例展示了如何阻止自动安装提示显示，直到用户点击按钮来显示
+                    <a>站点触发的安装提示</a>。这样，站点可以将安装留给用户自行决定
+                    （而不是在任意时间提示），同时仍提供醒目的 UI 来执行安装。
+                </p>
+                <pre class="example" title="Using beforeinstallprompt to present an install button">
+              window.addEventListener("beforeinstallprompt", event =&gt; {
+                // 抑制自动提示。
+                event.preventDefault();
+
+                // 显示（默认禁用的）安装按钮。此按钮在点击时
+                // 解析 installButtonClicked promise。
+                installButton.disabled = false;
+
+                // 等待用户点击按钮。
+                installButton.addEventListener("click", async e =&gt; {
+                  // prompt() 方法只能使用一次。
+                  installButton.disabled = true;
+
+                  // 显示提示。
+                  const userChoice = await event.prompt();
+                  console.info(`user choice was: ${userChoice}`);
+                });
+              });
+            </pre>
+            </section>
+            <section data-dfn-for="AppBannerPromptOutcome">
+                <h4>
+                    <code>AppBannerPromptOutcome</code> 枚举
+                </h4>
+                <p>
+                    <dfn>AppBannerPromptOutcome</dfn> 枚举的值表示
+                    <a>呈现安装提示</a>后的结果。
+                </p>
+                <dl>
+                    <dt>
+                        "<dfn>accepted</dfn>"：
+                    </dt>
+                    <dd>
+                        最终用户表示希望用户代理安装该 Web 应用程序。
+                    </dd>
+                    <dt>
+                        "<dfn>dismissed</dfn>"：
+                    </dt>
+                    <dd>
+                        最终用户关闭了安装提示。
+                    </dd>
+                </dl>
+            </section>
+        </section>
+        <section>
+            <h3>
+                对 `Window` 对象的扩展
+            </h3>
+            <pre class="idl" data-cite="HTML">
+          partial interface Window {
+            attribute EventHandler onappinstalled;
+            attribute EventHandler onbeforeinstallprompt;
+          };
+        </pre>
+            <section data-dfn-for="Window">
+                <h4>
+                    <code>onappinstalled</code> 属性
+                </h4>
+                <p>
+                    <dfn>onappinstalled</dfn> <a>事件处理器 IDL 属性</a>
+                    处理 "<dfn class="event">appinstalled</dfn>" 事件。
+                </p>
+            </section>
+            <section data-dfn-for="Window">
+                <h4>
+                    <code>onbeforeinstallprompt</code> 属性
+                </h4>
+                <p>
+                    <dfn>onbeforeinstallprompt</dfn> <a>事件处理器 IDL
+                        属性</a>处理 "<dfn class="event">beforeinstallprompt</dfn>" 事件。
+                </p>
+            </section>
+        </section>
+    </section>
+    <section id="conformance"></section>
+    <script src="https://htmlspecs.com/dropdown.js"></script>
+</body>
+
+</html>
