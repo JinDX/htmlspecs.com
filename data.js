@@ -496,14 +496,14 @@ const links = [
         lang: "cjk",
         state: "CRD"
     },
-    // {
-    //     text: "Web Background Synchronization",
-    //     href: "https://htmlspecs.com/background-sync/",
-    //     src: "https://wicg.github.io/background-sync/spec/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "Web Background Synchronization",
+        href: "https://htmlspecs.com/background-sync/",
+        src: "https://wicg.github.io/background-sync/spec/",
+        "last-modified": "Fri, 12 Nov 2021 21:06:58 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
     {
         text: "Push API",
         href: "https://htmlspecs.com/push-api/",
