@@ -7,7 +7,7 @@ const links = [
         text: "HTML",
         href: "https://htmlspecs.com/",
         src: "https://html.spec.whatwg.org/multipage/",
-        "last-modified": "Sun, 10 May 2026 06:12:52 GMT",
+        "last-modified": "Mon, 11 May 2026 14:38:44 GMT",
         lang: "cjk",
         state: "LS"
     },
@@ -15,7 +15,7 @@ const links = [
         text: "ECMAScript® 2027 Language Specification",
         href: "https://ecma262.com/",
         src: "https://tc39.es/ecma262/",
-        "last-modified": "Sat, 09 May 2026 13:57:10 GMT",
+        "last-modified": "Mon, 11 May 2026 16:50:49 GMT",
         lang: "cjk",
         state: "Draft"
     },
@@ -1740,7 +1740,7 @@ const links = [
     {
         text: "WebDriver",
         href: "https://htmlspecs.com/webdriver2/",
-        src: "https://www.w3.org/TR/2026/WD-webdriver2-20260507/",
+        src: "https://www.w3.org/TR/2026/WD-webdriver2-20260511/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
@@ -1748,7 +1748,7 @@ const links = [
     {
         text: "WebDriver BiDi",
         href: "https://htmlspecs.com/webdriver-bidi/",
-        src: "https://www.w3.org/TR/2026/WD-webdriver-bidi-20260319/",
+        src: "https://www.w3.org/TR/2026/WD-webdriver-bidi-20260511/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
