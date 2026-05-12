@@ -1442,14 +1442,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
-    // {
-    //     text: "Attribution Level 1",
-    //     href: "https://htmlspecs.com/attribution/",
-    //     src: "https://www.w3.org/TR/2026/WD-attribution-20260503/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "Attribution Level 1",
+        href: "https://htmlspecs.com/attribution/",
+        src: "https://www.w3.org/TR/2026/WD-attribution-20260511/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     {
         text: "Trusted Types",
         href: "https://htmlspecs.com/trusted-types/",
