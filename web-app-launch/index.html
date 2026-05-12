@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="zh-hans">
+
+<head>
+    <meta charset="utf-8">
+    <title>
+        Web App Launch Handler API
+    </title>
+    <script src="https://www.w3.org/Tools/respec/respec-w3c" class="remove" defer></script>
+    <script class='remove'>
+        var respecConfig = {
+            specStatus: "CG-DRAFT",
+            github: {
+                repoURL: "WICG/web-app-launch",
+                branch: "main"
+            },
+            group: "wicg",
+            editors: [{
+                name: "Alan Cutter",
+                company: "Google Inc.",
+                companyURL: "https://google.com",
+                w3cid: 110742
+            }],
+            xref: {
+                specs: [
+                    "appmanifest",
+                    "file-system-access",
+                    "fs",
+                    "html",
+                    "infra",
+                    "mediaqueries",
+                    "permissions",
+                    "url",
+                    "web-platform"
+                ]
+            }
+            // To add eventually:
+            //  - mdn: true
+            //  - caniuse: "web-app-launch-handler"
+        };
+    </script>
+</head>
+
+<body data-cite="Web-Share encoding">
+    <section id="abstract">
+        <p>
+            本规范定义了一个 API，该 API 允许 Web 应用程序
+            针对已打开的应用实例，配置应用启动的行为。此 API 旨在满足
+            单实例 Web 应用的需求，例如音乐播放器。
+        </p>
+    </section>
+    <section id="sotd">
+    </section>
+    <section>
+        <h2>
+            前提条件
+        </h2>
+        <p>
+            为了实现此 API，用户代理必须支持
+            [[[appmanifest]]]。
+        </p>
+    </section>
+    <section class="informative" data-link-for="WebAppManifest">
+        <h2>
+            使用示例
+        </h2>
+        <p>
+            一个音乐播放器应用希望将应用快捷方式启动指向一个既有
+            窗口，而不中断音乐播放。此音乐应用会向 [[[appmanifest]]]
+            添加一个 [=manifest/launch_handler=] 条目，如下所示：
+        </p>
+        <pre class="example json" title="manifest.webmanifest">
+      {
+        "name": "Music Player",
+        "shortcuts": [{
+          "name": "Now Playing",
+          "url": "/"
+        }, {
+          "name": "Library",
+          "url": "/library"
+        }, {
+          "name": "Favorites",
+          "url": "/favorites"
+        }, {
+          "name": "Discover",
+          "url": "/discover"
+        }],
+        "launch_handler": {
+          "client_mode": "focus-existing"
+        }
+      }
+      </pre>
+        <p>
+            [=manifest/client_mode=] 参数被设置为
+            [=client mode/focus-existing=]，会使应用启动将
+            既有应用实例（如果有）置于焦点，而不会使其离开
+            当前文档进行导航。
+        </p>
+        <p>
+            一个 {{LaunchParams}} 将被加入 {{Window/launchQueue}} 队列，
+            音乐播放器可在其 {{LaunchConsumer}} 中读取
+            {{LaunchParams/targetURL}} 并在脚本中处理它，例如：
+        </p>
+        <pre class="example javascript" title="page.js">
+        window.launchQueue.setConsumer((launchParams) => {
+          const url = launchParams.targetURL;
+          // 如果 URL 指向应用的某个区段，则将应用视图更新到
+          // 该区段，而不中断当前正在播放的音乐。
+          if (maybeFocusAppSection(url)) {
+            return;
+          }
+          // 无法就地处理该启动，只需导航页面
+          //（会中断任何正在播放的音乐）。
+          location.href = url;
+        });
+      </pre>
+        <p>
+            一个已经在使用音乐播放器应用听音乐的用户，
+            激活 "Library" 应用快捷方式将触发到
+            /library 的应用启动，该启动会被路由到既有应用实例，
+            加入页面的 {{Window/launchQueue}} 队列，并通过已分配的
+            {{LaunchConsumer}} 将音乐播放器的资料库区段置于
+            焦点，而不影响当前的音乐播放。
+        </p>
+    </section>
+    <section data-link-for="WebAppManifest">
+        <h2>
+            对 Web App Manifest 的扩展
+        </h2>
+        <p>
+            以下步骤会被添加到
+            <a data-cite="!appmanifest#dfn-extension-point">扩展点</a>，
+            该扩展点位于
+            <a data-cite="appmanifest#dfn-processing-a-manifest">处理
+                清单</a>的步骤中：
+        </p>
+        <ol>
+            <li>运行 [=processing the launch_handler member=] 的步骤，
+                给定 [=ordered map=] |json:ordered map| 和 [=ordered map=]
+                |manifest:ordered map|。
+            </li>
+        </ol>
+        <section>
+            <h3>
+                [=manifest/launch_handler=] 成员
+            </h3>
+            <p>
+                <dfn data-dfn-for="manifest">`launch_handler`</dfn> 是一个
+                字典，包含关于 Web 应用启动应如何行为的配置。
+            </p>
+            <p class="note">
+                尽管 [=manifest/client_mode=] 是唯一成员，
+                [=manifest/launch_handler=] 仍然是一个字典。这是为了给
+                将来在需要其他类型的行为时添加更多成员预留空间。
+            </p>
+            <p>
+                <dfn>处理 launch_handler 成员</dfn>的步骤，在给定
+                [=ordered map=] |json:ordered map|、[=ordered map=]
+                |manifest:ordered map| 时，如下：
+            </p>
+            <ol class="algorithm">
+                <li>如果 |json|["launch_handler"] 不 [=map/exist=]，返回。
+                </li>
+                <li>如果 |json|["launch_handler"] 的类型不是 [=ordered map=]，
+                    返回。
+                </li>
+                <li>将 |manifest|["launch_handler"] 设置为一个新的 [=ordered map=]。
+                </li>
+                <li>[=Process the `client_mode` member=]，传入
+                    |json|["launch_handler"]、|manifest|["launch_handler"]。
+                </li>
+            </ol>
+        </section>
+        <section>
+            <h3>
+                [=manifest/client_mode=] 成员
+            </h3>
+            <p>
+                [=manifest/launch_handler=] 的
+                <dfn data-dfn-for="manifest">`client_mode`</dfn> 成员是一个
+                [=string=] 或 [=strings=] 列表，指定一个或多个
+                [=client mode targets=]。一个 [=client mode target=]
+                声明一种用于 Web 应用启动的特定客户端选择和导航行为。
+            </p>
+            <p>
+                用户代理可以仅支持 [=client mode targets=] 的一个子集，
+                具体取决于平台的约束（例如，移动设备可能不支持
+                多个应用实例同时存在）。
+            </p>
+            <p>
+            <p>
+                <dfn>客户端模式目标</dfn>如下：
+            </p>
+            <dl>
+                <dt>
+                    <dfn data-dfn-for="client mode">auto</dfn>
+                </dt>
+                <dd>
+                    使用用户代理的默认启动路由行为。
+                    <p class="note">
+                        用户代理预期会决定最适合该平台的行为。
+                        例如，在只支持单个应用实例的移动设备上，
+                        用户代理可以使用 `navigate-existing`；
+                        而在支持多个窗口的桌面设备上，用户代理可以使用
+                        `navigate-new` 以避免数据丢失。
+                    </p>
+                </dd>
+                <dt>
+                    <dfn data-dfn-for="client mode">navigate-new</dfn>
+                </dt>
+                <dd>
+                    创建一个新的 Web 应用客户端来加载该启动的目标 URL。
+                </dd>
+                <dt>
+                    <dfn data-dfn-for="client mode">navigate-existing</dfn>
+                </dt>
+                <dd>
+                    如果已有 Web 应用客户端打开，则将其置于焦点并
+                    导航到该启动的目标 URL。如果没有既有 Web
+                    应用客户端，则改用 [=client mode/navigate-new=] 行为。
+                </dd>
+                <dt>
+                    <dfn data-dfn-for="client mode">focus-existing</dfn>
+                </dt>
+                <dd>
+                    如果已有 Web 应用客户端打开，则将其置于焦点，但
+                    不导航到该启动的目标 URL，而是通过 {{LaunchParams}}
+                    传达该目标 URL。如果没有既有 Web 应用客户端，
+                    则改用 [=client mode/navigate-new=] 行为。
+                    <p class="warning">
+                        页面必须在 {{Window/launchQueue}} 上设置
+                        {{LaunchConsumer}}，以接收该启动的 {{LaunchParams}}
+                        并对其进行处理。如果页面未采取任何操作，
+                        该启动的用户体验很可能看起来像是损坏的。
+                    </p>
+                </dd>
+            </dl>
+            </p>
+            <p>
+                要<dfn>处理 `client_mode` 成员</dfn>，在给定 [=ordered
+                map=] |json_launch_handler:ordered map|、[=ordered map=]
+                |manifest_launch_handler:ordered map| 时，运行以下步骤：
+            </p>
+            <ol class="algorithm">
+                <li>如果 |json_launch_handler|["client_mode"] 不 [=map/exist=]，
+                    返回。
+                </li>
+                <li>如果 |json_launch_handler|["client_mode"] 的类型是
+                    [=list=]：
+                    <ol class="algorithm">
+                        <li>[=list/For each=] |entry|，它属于
+                            |json_launch_handler|["client_mode"]：
+                            <ol class="algorithm">
+                                <li>如果 |entry| 的类型不是 [=string=]，继续。
+                                </li>
+                                <li>如果用户代理支持 |entry|，则将
+                                    |manifest_launch_handler|["client_mode"] 设置为 |entry| 并
+                                    返回。
+                                </li>
+                            </ol>
+                        </li>
+                    </ol>
+                </li>
+                <li>如果 |json_launch_handler|["client_mode"] 是 [=string=] 且
+                    用户代理支持，则将 |manifest_launch_handler|["client_mode"] 设置为
+                    |json_launch_handler|["client_mode"] 并返回。
+                </li>
+                <li>将 |manifest_launch_handler|["client_mode"] 设置为 [=client mode/auto=]。
+                </li>
+            </ol>
+            <p class="note">
+                `client_mode` 接受字符串列表，以允许站点指定在首选
+                [=client mode target=] 不受用户代理或平台支持时使用的
+                后备 [=client mode targets=]。列表中第一个受支持的
+                [=client mode target=] 条目会被使用。
+            </p>
+        </section>
+    </section>
+    <section>
+        <h2>
+            处理 Web 应用启动
+        </h2>
+        <section>
+            <h2>
+                带处理地启动 Web 应用
+            </h2>
+            <p>
+                本规范替换既有的 [=launch a web
+                application=] 算法，以通过将其替换为
+                [=launch a web application with
+                handling=] 的步骤来包含 [=manifest/launch_handler=]
+                的行为。
+            </p>
+            <p>
+                <dfn data-export="" data-lt="launching a web application with handling">
+                    带处理地启动 Web 应用</dfn>的步骤由以下
+                算法给出。该算法接受一个 [=Document/processed
+                manifest=] |manifest:processed manifest|、一个可选的 [=URL=] 或
+                {{LaunchParams}} |params|、一个可选的 [=POST resource=] |POST
+                resource|，并返回一个 [=application context=]。
+            </p>
+            <ol class="algorithm">
+                <li>如果未给定 |params|，则将 |params| 设置为
+                    |manifest|.[=manifest/start_url=]。
+                </li>
+                <li>如果 |params| 是一个 [=URL=]，则将 |params| 设置为新的
+                    {{LaunchParams}}，其中 {{LaunchParams/targetURL}} 被设置为 |params|。
+                </li>
+                <li>断言：|params|.{{LaunchParams/targetURL}} 是 |manifest| 的
+                    [=manifest/within scope=]。
+                </li>
+                <li>将 |application context| 设置为运行
+                    [=prepare an application context=] 的步骤所得的结果，
+                    传入 |manifest|、|params| 和 |POST resource|。
+                </li>
+                <li>将 |params| 追加到
+                    |application context| 的文档的 {{Window/launchQueue}} 的
+                    [=unconsumed launch params=]。
+                </li>
+                <li>在 |application context| 的 [=navigable/active document=] 的
+                    {{Window/launchQueue}} 上运行
+                    [=process unconsumed launch params=] 的步骤。
+                    <p class="note">
+                        |application context| 可能是一个已有实例，并具有
+                        [=assigned launch consumer=]，因此有必要处理
+                        新追加的 {{LaunchParams}}。
+                    </p>
+                </li>
+            </ol>
+            <p>
+                <dfn>准备应用上下文</dfn>的步骤由以下算法给出。
+                该算法接受一个 [=Document/processed manifest=]
+                |manifest:processed manifest|、一个 {{LaunchParams}}
+                |launch params|、一个可选的 [=POST
+                resource=] |POST resource|，并返回一个 [=application context=]。
+            </p>
+            <ol class="algorithm">
+                <li>令 [=client mode target=] |client_mode| 为
+                    |manifest|.[=manifest/launch_handler=].[=manifest/client_mode=]。
+                </li>
+                <li>如果 |client_mode| 是 [=client mode/auto=]，则根据
+                    用户代理关于何者最合适的决定，将 |client_mode| 设置为
+                    [=client mode/navigate-new=] 或
+                    [=client mode/navigate-existing=]。
+                </li>
+                <li>
+                    <p>对 |client mode| 进行切换，运行以下子步骤：</p>
+                    <dl class="switch">
+                        <dt>[=client mode/navigate-new=]</code>
+                        <dd>
+                            <ol class="algorithm">
+                                <li>返回运行 [=create a new
+                                    application context=] 的步骤所得的结果，传入 |manifest|、
+                                    |launch
+                                    params|.{{LaunchParams/targetURL}} 和 |POST resource|。
+                                </li>
+                            </ol>
+                        <dt>[=client mode/navigate-existing=] 或
+                            [=client mode/focus-existing=]</code>
+                        <dd>
+                            <ol class="algorithm">
+                                <li>如果不存在已 [=applied=] |manifest| 的
+                                    [=application context=]：
+                                    <ol>
+                                        <li>
+                                            返回运行 [=create a new
+                                            application context=] 的步骤所得的结果，传入 |manifest|、
+                                            |launch params|.{{LaunchParams/targetURL}} 和 |POST
+                                            resource|。
+                                        </li>
+                                    </ol>
+                                </li>
+                                <li>令 |application context| 为一个已 [=applied=]
+                                    |manifest| 的 [=application context=]；如果有多个，
+                                    用户代理选择最合适的一个。
+                                    <p class="note">
+                                        一种合适的选择策略是选取最近处于焦点的那个。
+                                    </p>
+                                </li>
+                                <li>
+                                    如果 |client mode| 是 [=client mode/focus-existing=] 且
+                                    |application context| 的
+                                    <a data-cite="html#nav-current-history-entry">当前
+                                        会话历史条目</a>的
+                                    <a data-cite="html#she-url">URL</a> 是 |manifest| 的
+                                    [=manifest/within scope=]：
+                                    <ol>
+                                        <li>将 |application context| 的视口置于焦点。
+                                        </li>
+                                        <li>返回 |application context|。
+                                        </li>
+                                    </ol>
+                                </li>
+                                <li>
+                                    将 |application context| [=Navigate=] 到 |launch
+                                    params|.{{LaunchParams/targetURL}}，并传入 |POST resource|。
+                                </li>
+                                <li>返回 |application context|。
+                                </li>
+                            </ol>
+                    </dl>
+                </li>
+            </ol>
+        </section>
+        <section>
+            <h2>
+                处理 [=unconsumed launch params=]
+            </h2>
+            <p>
+                给定一个 {{LaunchQueue}} |queue| 时，
+                <dfn>处理未消费的启动参数</dfn>的步骤如下：
+            </p>
+            <ol>
+                <li>如果 [=assigned launch consumer=] |consumer| 已在
+                    |queue| 上设置：
+                    <ol>
+                        <li>[=list/For each=] |launch_params:LaunchParams|，它属于
+                            |queue| 的 [=unconsumed launch params=]：
+                            <ol>
+                                <li>用 |launch_params| 调用 |consumer|。
+                                </li>
+                            </ol>
+                        </li>
+                        <li>将 |queue| 的 [=unconsumed launch params=] 设置为空
+                            列表。
+                        </li>
+                    </ol>
+                </li>
+            </ol>
+        </section>
+    </section>
+    <section>
+        <h2>
+            应用启动的脚本接口
+        </h2>
+        <section data-dfn-for="LaunchParams">
+            <h3>
+                <dfn>LaunchParams</dfn> 接口
+            </h3>
+            <ul class="issue">
+                <li>这直接复制自
+                    <a href="https://wicg.github.io/manifest-incubations/index.html#launch-queue-and-launch-params">
+                        Manifest Incubations</a>，未作修改；此
+                    [=manifest/launch_handler=] 规范应成为其替代归属。
+                </li>
+                <li>{{LaunchParams}} 应为一个字典。
+                </li>
+                <li>{{LaunchParams/targetURL}} 不应可为空。
+                </li>
+                <li>{{LaunchParams/files}} 应为可选
+                </li>
+                <li>除 {{LaunchParams/targetURL}} 以外的成员中，应只有一个
+                    不是 undefined，用于指示启动的类型。
+                </li>
+            </ul>
+            <pre class="idl">
+          [Exposed=Window] interface LaunchParams {
+            readonly attribute DOMString? targetURL;
+            readonly attribute FrozenArray&lt;FileSystemHandle&gt; files;
+          };
+        </pre>
+            <p>
+                {{LaunchParams/targetURL}} 表示该启动的 [=URL=]，该 URL
+                必须是该应用的 [=manifest/within scope=]。
+            </p>
+            <p>
+                对于 {{LaunchParams/files}} 中的每个 |file handle:FileSystemHandle|，
+                使用设置为 {{FileSystemPermissionMode/"readwrite"}} 的
+                {{FileSystemPermissionDescriptor/mode}} 查询文件系统权限时，
+                必须返回 {{PermissionState/"granted"}}。
+            </p>
+        </section>
+        <section data-dfn-for="LaunchConsumer">
+            <h3>
+                <dfn>LaunchConsumer</dfn> 函数
+            </h3>
+            <pre class="idl">
+          callback LaunchConsumer = any (LaunchParams params);
+        </pre>
+        </section>
+        <section data-dfn-for="LaunchQueue">
+            <h3>
+                <dfn>LaunchQueue</dfn> 接口
+            </h3>
+            <pre class="idl">
+          partial interface Window {
+            readonly attribute LaunchQueue launchQueue;
+          };
+
+          [Exposed=Window] interface LaunchQueue {
+            undefined setConsumer(LaunchConsumer consumer);
+          };
+        </pre>
+            <p>
+                {{LaunchQueue}} 具有一个 <dfn>未消费的启动参数</dfn>，
+                它是 {{LaunchParams}} 的 [=list=]，初始为空。
+            </p>
+            <p>
+                {{LaunchQueue}} 具有一个 <dfn>已分配的启动消费者</dfn>，
+                它是一个可选的 {{LaunchConsumer}}，初始为 null。
+            </p>
+            <section>
+                <h2>
+                    <dfn>setConsumer</dfn> 方法
+                </h2>
+                <p>
+                    {{LaunchQueue/setConsumer(consumer)}} 方法步骤为：
+                </p>
+                <ol class="algorithm">
+                    <li>将 [=assigned launch consumer=] 设置为 |consumer|。
+                    </li>
+                    <li>运行 [=process unconsumed launch params=] 的步骤。
+                    </li>
+                </ol>
+            </section>
+            <p class="note">
+                {{LaunchParams}} 通过 {{LaunchQueue}} 传递给文档，
+                而不是通过事件传递，以避免在启动事件触发与页面脚本
+                附加事件监听器之间出现竞态条件。相比之下，
+                {{LaunchQueue}} 会缓冲所有已入队的 {{LaunchParams}}，
+                直到设置 {{LaunchConsumer}} 为止。
+            </p>
+        </section>
+    </section>
+    <section class="informative" data-cite="secure-contexts">
+        <h2>
+            可访问性
+        </h2>
+        <p>
+            本规范没有已知的可访问性考虑。
+        </p>
+    </section>
+    <section id="priv-sec">
+        <h2>
+            隐私与安全考虑
+        </h2>
+        <p>
+            对于 [=manifest/client_mode=] 为
+            [=client mode/focus-existing=] 的启动，实现者在
+            [=launching a web application with
+            handling=] 时应当谨慎。这些启动不得泄露
+            [=manifest/navigation scope=] 之外的 URL。给定一个
+            [=Document/processed manifest=] |manifest| 时，这在两个方向上均适用：
+        <ul>
+            <li>
+                Web 应用启动不得使用不是 |manifest| 的
+                [=manifest/within scope=] 的 {{LaunchParams/targetURL}}。
+            </li>
+            <li>
+                {{LaunchParams}} 不得被加入到其
+                <a data-cite="html#nav-current-history-entry">
+                    当前会话历史条目</a>
+                <a data-cite="html#she-url">URL</a> 不是 |manifest| 的
+                [=manifest/within scope=] 的 [=application
+                context=] 中。
+            </li>
+        </ul>
+        </p>
+        <p>
+        </p>
+    </section>
+    <section id="conformance"></section>
+    <script src="https://htmlspecs.com/dropdown.js"></script>
+</body>
+
+</html>

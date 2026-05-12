@@ -179,14 +179,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "Web App Launch Handler API",
-    //     href: "https://htmlspecs.com/web-app-launch/",
-    //     src: "https://wicg.github.io/web-app-launch/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "Web App Launch Handler API",
+        href: "https://htmlspecs.com/web-app-launch/",
+        src: "https://wicg.github.io/web-app-launch/",
+        "last-modified": "Mon, 23 Sep 2024 21:28:03 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
     // {
     //     text: "Manifest Incubations",
     //     href: "https://htmlspecs.com/manifest-incubations/",
