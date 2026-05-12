@@ -1183,14 +1183,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "Long Animation Frames API",
-    //     href: "https://htmlspecs.com/long-animation-frames/",
-    //     src: "https://www.w3.org/TR/2026/WD-long-animation-frames-20260428/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "Long Animation Frames API",
+        href: "https://htmlspecs.com/long-animation-frames/",
+        src: "https://www.w3.org/TR/2026/WD-long-animation-frames-20260428/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     {
         text: "Prioritized Task Scheduling",
         href: "https://htmlspecs.com/scheduling-apis/",
