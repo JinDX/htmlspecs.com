@@ -1143,14 +1143,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "Soft Navigations and Interaction Contentful Paint",
-    //     href: "https://htmlspecs.com/soft-navigations/",
-    //     src: "https://wicg.github.io/soft-navigations/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "Soft Navigations and Interaction Contentful Paint",
+        href: "https://htmlspecs.com/soft-navigations/",
+        src: "https://wicg.github.io/soft-navigations/",
+        "last-modified": "Thu, 16 Apr 2026 17:31:21 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
     {
         text: "Resource Timing",
         href: "https://htmlspecs.com/resource-timing/",
