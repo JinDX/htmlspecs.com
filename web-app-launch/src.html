@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>
+        Web App Launch Handler API
+    </title>
+    <script src="https://www.w3.org/Tools/respec/respec-w3c" class="remove" defer></script>
+    <script class='remove'>
+        var respecConfig = {
+            specStatus: "CG-DRAFT",
+            github: {
+                repoURL: "WICG/web-app-launch",
+                branch: "main"
+            },
+            group: "wicg",
+            editors: [{
+                name: "Alan Cutter",
+                company: "Google Inc.",
+                companyURL: "https://google.com",
+                w3cid: 110742
+            }],
+            xref: {
+                specs: [
+                    "appmanifest",
+                    "file-system-access",
+                    "fs",
+                    "html",
+                    "infra",
+                    "mediaqueries",
+                    "permissions",
+                    "url",
+                    "web-platform"
+                ]
+            }
+            // To add eventually:
+            //  - mdn: true
+            //  - caniuse: "web-app-launch-handler"
+        };
+    </script>
+</head>
+
+<body data-cite="Web-Share encoding">
+    <section id="abstract">
+        <p>
+            This specification defines an API that allows web applications to
+            configure the behaviour of app launches with respect to already open app
+            instances. This API aims to cater to the needs of single instance web
+            apps e.g. music players.
+        </p>
+    </section>
+    <section id="sotd">
+    </section>
+    <section>
+        <h2>
+            Prerequisites
+        </h2>
+        <p>
+            In order to implement this API, the user agent MUST support
+            [[[appmanifest]]].
+        </p>
+    </section>
+    <section class="informative" data-link-for="WebAppManifest">
+        <h2>
+            Usage Example
+        </h2>
+        <p>
+            A music player app wants to direct app shortcut launches to an existing
+            window without interrupting music playback. This music app would add a
+            [=manifest/launch_handler=] entry to the [[[appmanifest]]], as shown:
+        </p>
+        <pre class="example json" title="manifest.webmanifest">
+      {
+        "name": "Music Player",
+        "shortcuts": [{
+          "name": "Now Playing",
+          "url": "/"
+        }, {
+          "name": "Library",
+          "url": "/library"
+        }, {
+          "name": "Favorites",
+          "url": "/favorites"
+        }, {
+          "name": "Discover",
+          "url": "/discover"
+        }],
+        "launch_handler": {
+          "client_mode": "focus-existing"
+        }
+      }
+      </pre>
+        <p>
+            The [=manifest/client_mode=] parameter set to
+            [=client mode/focus-existing=] causes app launches to bring
+            existing app instances (if any) into focus without navigating them away
+            from their current document.
+        </p>
+        <p>
+            A {{LaunchParams}} will be enqueued on the {{Window/launchQueue}} where
+            the music player can read the {{LaunchParams/targetURL}} in its
+            {{LaunchConsumer}} and handle it in script e.g.:
+        </p>
+        <pre class="example javascript" title="page.js">
+        window.launchQueue.setConsumer((launchParams) => {
+          const url = launchParams.targetURL;
+          // If the URL is to one of the app sections, updates the app view to
+          // that section without interrupting currently playing music.
+          if (maybeFocusAppSection(url)) {
+            return;
+          }
+          // Could not handle the launch in-place, just navigate the page
+          // (interrupts any playing music).
+          location.href = url;
+        });
+      </pre>
+        <p>
+            A user, already using the music player app to listen to music,
+            activating the "Library" app shortcut will trigger an app launch to
+            /library which gets routed to the existing app instance, enqueued in the
+            page's {{Window/launchQueue}} which, through the assigned
+            {{LaunchConsumer}}, brings the library section of the music player into
+            focus without affecting the current music playback.
+        </p>
+    </section>
+    <section data-link-for="WebAppManifest">
+        <h2>
+            Extension to the Web App Manifest
+        </h2>
+        <p>
+            The following steps are added to the <a data-cite="!appmanifest#dfn-extension-point">extension point</a> in
+            the steps for
+            <a data-cite="appmanifest#dfn-processing-a-manifest">processing a
+                manifest</a>:
+        </p>
+        <ol>
+            <li>Run the steps for [=processing the launch_handler member=]
+                given [=ordered map=] |json:ordered map| and [=ordered map=]
+                |manifest:ordered map|.
+            </li>
+        </ol>
+        <section>
+            <h3>
+                [=manifest/launch_handler=] member
+            </h3>
+            <p>
+                The <dfn data-dfn-for="manifest">`launch_handler`</dfn> is a
+                dictionary containing configurations for how web app launches should
+                behave.
+            </p>
+            <p class="note">
+                [=manifest/launch_handler=] is a dictionary despite
+                [=manifest/client_mode=] being the only member. This is to give room for
+                more members to be added should other types of behaviors be needed in
+                the future.
+            </p>
+            <p>
+                The steps for <dfn>processing the launch_handler member</dfn>, given
+                [=ordered map=] |json:ordered map|, [=ordered map=]
+                |manifest:ordered map|, are as follows:
+            </p>
+            <ol class="algorithm">
+                <li>If |json|["launch_handler"] does not [=map/exist=], return.
+                </li>
+                <li>If the type of |json|["launch_handler"] is not [=ordered map=],
+                    return.
+                </li>
+                <li>Set |manifest|["launch_handler"] to a new [=ordered map=].
+                </li>
+                <li>[=Process the `client_mode` member=] passing
+                    |json|["launch_handler"], |manifest|["launch_handler"].
+                </li>
+            </ol>
+        </section>
+        <section>
+            <h3>
+                [=manifest/client_mode=] member
+            </h3>
+            <p>
+                The <dfn data-dfn-for="manifest">`client_mode`</dfn> member of the
+                [=manifest/launch_handler=] is a [=string=] or list of [=strings=]
+                that specify one or more [=client mode targets=]. A [=client mode target=]
+                declares a particular client selection and navigation behaviour to use
+                for web apps launches.
+            </p>
+            <p>
+                User agents MAY support only a subset of the [=client mode targets=]
+                depending on the constraints of the platform (e.g. mobile devices may
+                not support multiple app instances simultaneously).
+            </p>
+            <p>
+            <p>
+                The <dfn>client mode targets</dfn> are as follows:
+            </p>
+            <dl>
+                <dt>
+                    <dfn data-dfn-for="client mode">auto</dfn>
+                </dt>
+                <dd>
+                    The user agent's default launch routing behaviour is used.
+                    <p class="note">
+                        The user agent is expected to decide what works best for the
+                        platform. e.g., on mobile devices that only support single app
+                        instances the user agent may use `navigate-existing`,
+                        while on desktop devices that support multiple windows the user
+                        agent may use `navigate-new` to avoid data loss.
+                    </p>
+                </dd>
+                <dt>
+                    <dfn data-dfn-for="client mode">navigate-new</dfn>
+                </dt>
+                <dd>
+                    A new web app client is created to load the launch's target URL.
+                </dd>
+                <dt>
+                    <dfn data-dfn-for="client mode">navigate-existing</dfn>
+                </dt>
+                <dd>
+                    If an existing web app client is open it is brought to focus and
+                    navigated to the launch's target URL. If there are no existing web
+                    app clients the [=client mode/navigate-new=] behaviour is used instead.
+                </dd>
+                <dt>
+                    <dfn data-dfn-for="client mode">focus-existing</dfn>
+                </dt>
+                <dd>
+                    If an existing web app client is open it is brought to focus but
+                    not navigated to the launch's target URL, instead the target URL
+                    is communicated via {{LaunchParams}} . If there are no existing
+                    web app clients the [=client mode/navigate-new=] behaviour is used
+                    instead.
+                    <p class="warning">
+                        It is necessary for the page to have a {{LaunchConsumer}} set on
+                        {{Window/launchQueue}} to receive the launch's {{LaunchParams}}
+                        and do something with it. If no action is taken by the page the
+                        user experience of the launch is likely going to appear broken.
+                    </p>
+                </dd>
+            </dl>
+            </p>
+            <p>
+                To <dfn>process the `client_mode` member</dfn>, given [=ordered
+                map=] |json_launch_handler:ordered map|, [=ordered map=]
+                |manifest_launch_handler:ordered map|, run the following:
+            </p>
+            <ol class="algorithm">
+                <li>If |json_launch_handler|["client_mode"] does not [=map/exist=],
+                    return.
+                </li>
+                <li>If the type of |json_launch_handler|["client_mode"] is
+                    [=list=]:
+                    <ol class="algorithm">
+                        <li>[=list/For each=] |entry| of
+                            |json_launch_handler|["client_mode"]:
+                            <ol class="algorithm">
+                                <li>If the type of |entry| is not [=string=], continue.
+                                </li>
+                                <li>If |entry| is supported by the user agent, set
+                                    |manifest_launch_handler|["client_mode"] to |entry| and
+                                    return.
+                                </li>
+                            </ol>
+                        </li>
+                    </ol>
+                </li>
+                <li>If |json_launch_handler|["client_mode"] is [=string=] and supported
+                    by the user agent, set |manifest_launch_handler|["client_mode"] to
+                    |json_launch_handler|["client_mode"] and return.
+                </li>
+                <li>Set |manifest_launch_handler|["client_mode"] to [=client mode/auto=].
+                </li>
+            </ol>
+            <p class="note">
+                `client_mode` accepts a list of strings to allow sites to specify
+                fallback [=client mode targets=] to use if the preferred [=client mode
+                target=] is not supported by the user agent or platform. The first
+                supported [=client mode target=] entry in the list gets used.
+            </p>
+        </section>
+    </section>
+    <section>
+        <h2>
+            Handling Web App Launches
+        </h2>
+        <section>
+            <h2>
+                Launching a Web App with Handling
+            </h2>
+            <p>
+                This specification replaces the existing algorithm to [=launch a web
+                application=] to include the behavior of [=manifest/launch_handler=]
+                by replacing it with the steps to [=launch a web application with
+                handling=].
+            </p>
+            <p>
+                The steps to <dfn data-export="" data-lt="launching a web application with handling">
+                    launch a web application with handling</dfn> are given by the
+                following algorithm. The algorithm takes a [=Document/processed
+                manifest=] |manifest:processed manifest|, an optional [=URL=] or
+                {{LaunchParams}} |params|, an optional [=POST resource=] |POST
+                resource| and returns an [=application context=].
+            </p>
+            <ol class="algorithm">
+                <li>If |params| is not given, set |params| to
+                    |manifest|.[=manifest/start_url=].
+                </li>
+                <li>If |params| is a [=URL=], set |params| to a new {{LaunchParams}}
+                    with {{LaunchParams/targetURL}} set to |params|.
+                </li>
+                <li>Assert: |params|.{{LaunchParams/targetURL}} is [=manifest/within
+                    scope=] of |manifest|.
+                </li>
+                <li>Set |application context| to the result of running the steps to
+                    [=prepare an application context=] passing |manifest|, |params|
+                    and |POST resource|.
+                </li>
+                <li>Append |params| to the [=unconsumed launch params=] of the
+                    |application context|'s document's {{Window/launchQueue}}.
+                </li>
+                <li>Run the steps to [=process unconsumed launch params=] on the
+                    |application context|'s [=navigable/active document=]'s
+                    {{Window/launchQueue}}.
+                    <p class="note">
+                        |application context| may be an existing instance with an
+                        [=assigned launch consumer=] hence it is necessary to process
+                        the newly appended {{LaunchParams}}.
+                    </p>
+                </li>
+            </ol>
+            <p>
+                The steps to <dfn>prepare an application context</dfn> are given by
+                the following algorithm. The algorithm takes a
+                [=Document/processed manifest=] |manifest:processed manifest|, a
+                {{LaunchParams}} |launch params|, an optional [=POST
+                resource=] |POST resource| and returns an [=application context=].
+            </p>
+            <ol class="algorithm">
+                <li>Let [=client mode target=] |client_mode| be
+                    |manifest|.[=manifest/launch_handler=].[=manifest/client_mode=].
+                </li>
+                <li>If |client_mode| is [=client mode/auto=], set |client_mode| to
+                    either [=client mode/navigate-new=] or
+                    [=client mode/navigate-existing=] according to the user agent's
+                    decision for which is most appropriate.
+                </li>
+                <li>
+                    <p>Switching on |client mode|, run the following substeps:</p>
+                    <dl class="switch">
+                        <dt>[=client mode/navigate-new=]</code>
+                        <dd>
+                            <ol class="algorithm">
+                                <li>Return the result of running the steps to [=create a new
+                                    application context=] passing |manifest|, |launch
+                                    params|.{{LaunchParams/targetURL}} and |POST resource|.
+                                </li>
+                            </ol>
+                        <dt>[=client mode/navigate-existing=] or
+                            [=client mode/focus-existing=]</code>
+                        <dd>
+                            <ol class="algorithm">
+                                <li>If there is no [=application context=] that has |manifest|
+                                    [=applied=]:
+                                    <ol>
+                                        <li>
+                                            Return the result of running the steps to [=create a new
+                                            application context=] passing |manifest|,
+                                            |launch params|.{{LaunchParams/targetURL}} and |POST
+                                            resource|.
+                                        </li>
+                                    </ol>
+                                </li>
+                                <li>Let |application context| be an [=application context=]
+                                    that has |manifest| [=applied=], the user agent selects
+                                    the most appropriate one if there are multiple.
+                                    <p class="note">
+                                        An appropriate selection strategy would be to pick the
+                                        one that was most recently in focus.
+                                    </p>
+                                </li>
+                                <li>
+                                    If |client mode| is [=client mode/focus-existing=] and
+                                    |application context|'s
+                                    <a data-cite="html#nav-current-history-entry">current
+                                        session history entry</a>'s
+                                    <a data-cite="html#she-url">URL</a> is [=manifest/within
+                                    scope=] of |manifest|:
+                                    <ol>
+                                        <li>Bring |application context|'s viewport into focus.
+                                        </li>
+                                        <li>Return |application context|.
+                                        </li>
+                                    </ol>
+                                </li>
+                                <li>
+                                    [=Navigate=] |application context| to |launch
+                                    params|.{{LaunchParams/targetURL}} passing |POST resource|.
+                                </li>
+                                <li>Return |application context|.
+                                </li>
+                            </ol>
+                    </dl>
+                </li>
+            </ol>
+        </section>
+        <section>
+            <h2>
+                Processing [=unconsumed launch params=]
+            </h2>
+            <p>
+                The steps to <dfn>process unconsumed launch params</dfn> given a
+                {{LaunchQueue}} |queue| are as follows:
+            </p>
+            <ol>
+                <li>If the [=assigned launch consumer=] |consumer| is set on
+                    |queue|:
+                    <ol>
+                        <li>[=list/For each=] |launch_params:LaunchParams| of
+                            the |queue|'s [=unconsumed launch params=]:
+                            <ol>
+                                <li>Invoke |consumer| with |launch_params|.
+                                </li>
+                            </ol>
+                        </li>
+                        <li>Set |queue|'s [=unconsumed launch params=] to the empty
+                            list.
+                        </li>
+                    </ol>
+                </li>
+            </ol>
+        </section>
+    </section>
+    <section>
+        <h2>
+            Script Interfaces to App Launches
+        </h2>
+        <section data-dfn-for="LaunchParams">
+            <h3>
+                <dfn>LaunchParams</dfn> interface
+            </h3>
+            <ul class="issue">
+                <li>This has been copied directly from
+                    <a href="https://wicg.github.io/manifest-incubations/index.html#launch-queue-and-launch-params">
+                        Manifest Incubations</a> without modification, this
+                    [=manifest/launch_handler=] spec should be its replacement home.
+                </li>
+                <li>{{LaunchParams}} should be a dictionary.
+                </li>
+                <li>{{LaunchParams/targetURL}} should not be nullable.
+                </li>
+                <li>{{LaunchParams/files}} should be optional
+                </li>
+                <li>For members other than {{LaunchParams/targetURL}} only one should
+                    be not undefined, indicating the type of launch.
+                </li>
+            </ul>
+            <pre class="idl">
+          [Exposed=Window] interface LaunchParams {
+            readonly attribute DOMString? targetURL;
+            readonly attribute FrozenArray&lt;FileSystemHandle&gt; files;
+          };
+        </pre>
+            <p>
+                {{LaunchParams/targetURL}} represents the [=URL=] of the launch which
+                MUST be [=manifest/within scope=] of the application.
+            </p>
+            <p>
+                For every |file handle:FileSystemHandle| in {{LaunchParams/files}},
+                querying the file system permission with
+                {{FileSystemPermissionDescriptor/mode}} set to
+                {{FileSystemPermissionMode/"readwrite"}} MUST return
+                {{PermissionState/"granted"}}.
+            </p>
+        </section>
+        <section data-dfn-for="LaunchConsumer">
+            <h3>
+                <dfn>LaunchConsumer</dfn> function
+            </h3>
+            <pre class="idl">
+          callback LaunchConsumer = any (LaunchParams params);
+        </pre>
+        </section>
+        <section data-dfn-for="LaunchQueue">
+            <h3>
+                <dfn>LaunchQueue</dfn> interface
+            </h3>
+            <pre class="idl">
+          partial interface Window {
+            readonly attribute LaunchQueue launchQueue;
+          };
+
+          [Exposed=Window] interface LaunchQueue {
+            undefined setConsumer(LaunchConsumer consumer);
+          };
+        </pre>
+            <p>
+                {{LaunchQueue}} has an <dfn>unconsumed launch params</dfn> which is a
+                [=list=] of {{LaunchParams}} that is initially empty.
+            </p>
+            <p>
+                {{LaunchQueue}} has an <dfn>assigned launch consumer</dfn> which is
+                an optional {{LaunchConsumer}} that is initially null.
+            </p>
+            <section>
+                <h2>
+                    <dfn>setConsumer</dfn> method
+                </h2>
+                <p>
+                    The {{LaunchQueue/setConsumer(consumer)}} method steps are:
+                </p>
+                <ol class="algorithm">
+                    <li>Set the [=assigned launch consumer=] to |consumer|.
+                    </li>
+                    <li>Run the steps to [=process unconsumed launch params=].
+                    </li>
+                </ol>
+            </section>
+            <p class="note">
+                {{LaunchParams}} are passed to the document via a {{LaunchQueue}}
+                instead of via events to avoid a race condition between a launch event
+                firing and page scripts attaching the event listener. In contrast the
+                {{LaunchQueue}} buffers all enqueued {{LaunchParams}} until a
+                {{LaunchConsumer}} has been set.
+            </p>
+        </section>
+    </section>
+    <section class="informative" data-cite="secure-contexts">
+        <h2>
+            Accessibility
+        </h2>
+        <p>
+            This specification has no known accessibility considerations.
+        </p>
+    </section>
+    <section id="priv-sec">
+        <h2>
+            Privacy and Security Considerations
+        </h2>
+        <p>
+            Implementations should take care when [=launching a web application with
+            handling=] for launches where [=manifest/client_mode=] is
+            [=client mode/focus-existing=]. These launches MUST NOT leak URLs
+            outside of the [=manifest/navigation scope=]. This applies in both
+            directions given a [=Document/processed manifest=] |manifest|:
+        <ul>
+            <li>
+                Web application launches MUST NOT use a {{LaunchParams/targetURL}}
+                that is not [=manifest/within scope=] of |manifest|.
+            </li>
+            <li>
+                {{LaunchParams}} MUST NOT be enqueued in an [=application
+                context=] with a <a data-cite="html#nav-current-history-entry">
+                    current session history entry</a>
+                <a data-cite="html#she-url">URL</a> that is not [=manifest/within
+                scope=] of |manifest|.
+            </li>
+        </ul>
+        </p>
+        <p>
+        </p>
+    </section>
+    <section id="conformance"></section>
+</body>
+
+</html>
