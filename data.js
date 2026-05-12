@@ -1740,7 +1740,7 @@ const links = [
     {
         text: "WebDriver",
         href: "https://htmlspecs.com/webdriver2/",
-        src: "https://www.w3.org/TR/2026/WD-webdriver2-20260507/",
+        src: "https://www.w3.org/TR/2026/WD-webdriver2-20260511/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
