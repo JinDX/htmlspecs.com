@@ -189,7 +189,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Credential Management Level 1](https://htmlspecs.com/credential-management-1/)（[Source](https://www.w3.org/TR/2026/WD-credential-management-1-20260410/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Federated Credential Management API (FedCM)](https://htmlspecs.com/fedcm/)（[Source](https://www.w3.org/TR/2024/WD-fedcm-1-20240820/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Private State Token API](https://htmlspecs.com/trust-token-api/)（[Source](https://wicg.github.io/trust-token-api/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
-- [Attribution Level 1](https://htmlspecs.com/attribution/)（[Source](https://www.w3.org/TR/2026/WD-attribution-20260511/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Attribution Level 1](https://htmlspecs.com/attribution/)（[Source](https://www.w3.org/TR/2026/WD-attribution-20260512/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Trusted Types](https://htmlspecs.com/trusted-types/)（[Source](https://www.w3.org/TR/2026/WD-trusted-types-20260224/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Clear Site Data](https://htmlspecs.com/clear-site-data/)（[Source](https://www.w3.org/TR/2017/WD-clear-site-data-20171130/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [JSON Web Token (JWT)](https://htmlspecs.com/jwt/)（[Source](https://www.rfc-editor.org/rfc/rfc7519) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
@@ -200,7 +200,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [JWT Best Current Practices](https://htmlspecs.com/jwt-bcp/)（[Source](https://www.rfc-editor.org/rfc/rfc8725) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 
 ### 媒体和图形
-- [WebGPU](https://htmlspecs.com/webgpu/)（[Source](https://www.w3.org/TR/2026/CRD-webgpu-20260507/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
+- [WebGPU](https://htmlspecs.com/webgpu/)（[Source](https://www.w3.org/TR/2026/CRD-webgpu-20260512/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [WebGPU Shading Language](https://htmlspecs.com/WGSL/)（[Source](https://www.w3.org/TR/2026/CRD-WGSL-20260507/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [Scalable Vector Graphics (SVG) 2](https://htmlspecs.com/SVG2/)（[Source](https://www.w3.org/TR/2018/CR-SVG2-20181004/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
 - [Picture-in-Picture](https://htmlspecs.com/picture-in-picture/)（[Source](https://www.w3.org/TR/2026/WD-picture-in-picture-20260303/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
