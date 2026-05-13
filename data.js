@@ -2659,14 +2659,14 @@ const cssLinks = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "CSS Form Control Styling Level 1",
-    //     href: "https://htmlspecs.com/css/css-forms-1/",
-    //     src: "https://www.w3.org/TR/2025/WD-css-forms-1-20250325/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "CSS Form Control Styling Level 1",
+        href: "https://htmlspecs.com/css/css-forms-1/",
+        src: "https://www.w3.org/TR/2025/WD-css-forms-1-20250325/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     {
         text: "CSS Syntax Module Level 3",
         href: "https://htmlspecs.com/css/css-syntax-3/",
