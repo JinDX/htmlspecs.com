@@ -7,7 +7,7 @@ const links = [
         text: "HTML",
         href: "https://htmlspecs.com/",
         src: "https://html.spec.whatwg.org/multipage/",
-        "last-modified": "Tue, 12 May 2026 05:01:19 GMT",
+        "last-modified": "Tue, 12 May 2026 15:17:52 GMT",
         lang: "cjk",
         state: "LS"
     },
@@ -1334,7 +1334,7 @@ const links = [
         text: "HTML Sanitizer API",
         href: "https://htmlspecs.com/sanitizer-api/",
         src: "https://wicg.github.io/sanitizer-api/",
-        "last-modified": "Wed, 29 Apr 2026 07:45:31 GMT",
+        "last-modified": "Tue, 12 May 2026 18:48:07 GMT",
         lang: "cjk",
         state: "Draft"
     },
@@ -1445,7 +1445,7 @@ const links = [
     {
         text: "Attribution Level 1",
         href: "https://htmlspecs.com/attribution/",
-        src: "https://www.w3.org/TR/2026/WD-attribution-20260511/",
+        src: "https://www.w3.org/TR/2026/WD-attribution-20260512/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
@@ -1520,7 +1520,7 @@ const links = [
     {
         text: "WebGPU",
         href: "https://htmlspecs.com/webgpu/",
-        src: "https://www.w3.org/TR/2026/CRD-webgpu-20260507/",
+        src: "https://www.w3.org/TR/2026/CRD-webgpu-20260512/",
         "last-modified": "-",
         lang: "cjk",
         state: "CRD"
