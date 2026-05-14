@@ -869,14 +869,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "Capture Handle - Bootstrapping Collaboration when Screensharing",
-    //     href: "https://htmlspecs.com/capture-handle-identity/",
-    //     src: "https://www.w3.org/TR/2025/WD-capture-handle-identity-20250306/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "Capture Handle - Bootstrapping Collaboration when Screensharing",
+        href: "https://htmlspecs.com/capture-handle-identity/",
+        src: "https://www.w3.org/TR/2025/WD-capture-handle-identity-20250306/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     {
         text: "UI Events",
         href: "https://htmlspecs.com/uievents/",
