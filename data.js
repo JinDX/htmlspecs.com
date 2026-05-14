@@ -1605,14 +1605,14 @@ const links = [
         lang: "cjk",
         state: "CRD"
     },
-    // {
-    //     text: "MediaStreamTrack Content Hints",
-    //     href: "https://htmlspecs.com/mst-content-hint/",
-    //     src: "https://www.w3.org/TR/2025/WD-mst-content-hint-20250919/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "MediaStreamTrack Content Hints",
+        href: "https://htmlspecs.com/mst-content-hint/",
+        src: "https://www.w3.org/TR/2025/WD-mst-content-hint-20250919/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     {
         text: "Autoplay Detection",
         href: "https://htmlspecs.com/autoplay-detection/",
