@@ -1997,7 +1997,7 @@ const cssLinks = [
         state: "WD"
     },
     {
-        text: "CSS Ruby Layout Module Level 1",
+        text: "CSS Ruby Annotation Layout Module Level 1",
         href: "https://htmlspecs.com/css/css-ruby-1/",
         src: "https://www.w3.org/TR/2022/WD-css-ruby-1-20221231/",
         "last-modified": "-",
@@ -2284,16 +2284,6 @@ const cssLinks = [
         lang: "cjk",
         state: "CR"
     },
-
-    // //### 注音和旁注|루비|ルビ
-    // {
-    //     text: "CSS Ruby Annotation Layout Module Level 1",
-    //     href: "https://htmlspecs.com/css/css-ruby-1/",
-    //     src: "https://www.w3.org/TR/2022/WD-css-ruby-1-20221231/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
 
     //### 分割|분할|分割
     {
