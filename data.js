@@ -43,14 +43,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "Strings on the Web: Language and Direction Metadata",
-    //     href: "https://htmlspecs.com/string-meta/",
-    //     src: "https://www.w3.org/TR/2024/NOTE-string-meta-20241017/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "NOTE"
-    // },
+    {
+        text: "Strings on the Web: Language and Direction Metadata",
+        href: "https://htmlspecs.com/string-meta/",
+        src: "https://www.w3.org/TR/2024/NOTE-string-meta-20241017/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "NOTE"
+    },
     {
         text: "Source map format specification",
         href: "https://htmlspecs.com/ecma426/",
