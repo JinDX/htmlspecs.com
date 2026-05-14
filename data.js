@@ -43,6 +43,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "Strings on the Web: Language and Direction Metadata",
+    //     href: "https://htmlspecs.com/string-meta/",
+    //     src: "https://www.w3.org/TR/2024/NOTE-string-meta-20241017/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "NOTE"
+    // },
     {
         text: "Source map format specification",
         href: "https://htmlspecs.com/ecma426/",
@@ -749,6 +757,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
+    // {
+    //     text: "Web MIDI API",
+    //     href: "https://htmlspecs.com/webmidi/",
+    //     src: "https://www.w3.org/TR/2025/WD-webmidi-20250121/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "Web Bluetooth API",
         href: "https://htmlspecs.com/web-bluetooth/",
@@ -845,6 +861,22 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "Region Capture",
+    //     href: "https://htmlspecs.com/mediacapture-region/",
+    //     src: "https://www.w3.org/TR/2023/WD-mediacapture-region-20230712/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
+    // {
+    //     text: "Capture Handle - Bootstrapping Collaboration when Screensharing",
+    //     href: "https://htmlspecs.com/capture-handle-identity/",
+    //     src: "https://www.w3.org/TR/2025/WD-capture-handle-identity-20250306/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "UI Events",
         href: "https://htmlspecs.com/uievents/",
@@ -1573,6 +1605,14 @@ const links = [
         lang: "cjk",
         state: "CRD"
     },
+    // {
+    //     text: "MediaStreamTrack Content Hints",
+    //     href: "https://htmlspecs.com/mst-content-hint/",
+    //     src: "https://www.w3.org/TR/2025/WD-mst-content-hint-20250919/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "Autoplay Detection",
         href: "https://htmlspecs.com/autoplay-detection/",
@@ -2244,6 +2284,16 @@ const cssLinks = [
         lang: "cjk",
         state: "CR"
     },
+
+    // //### 注音和旁注|루비|ルビ
+    // {
+    //     text: "CSS Ruby Annotation Layout Module Level 1",
+    //     href: "https://htmlspecs.com/css/css-ruby-1/",
+    //     src: "https://www.w3.org/TR/2022/WD-css-ruby-1-20221231/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
 
     //### 分割|분할|分割
     {
