@@ -114,6 +114,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [EyeDropper API](https://htmlspecs.com/eyedropper-api/)（[Source](https://wicg.github.io/eyedropper-api/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Fullscreen](https://htmlspecs.com/fullscreen/)（[Source](https://fullscreen.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [Screen Capture](https://htmlspecs.com/screen-capture/)（[Source](https://www.w3.org/TR/2025/WD-screen-capture-20250717/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Region Capture](https://htmlspecs.com/mediacapture-region/)（[Source](https://www.w3.org/TR/2023/WD-mediacapture-region-20230712/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [UI Events](https://htmlspecs.com/uievents/)（[Source](https://www.w3.org/TR/2026/WD-uievents-20260221/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [UI Events KeyboardEvent code Values](https://htmlspecs.com/uievents-code/)（[Source](https://www.w3.org/TR/2025/REC-uievents-code-20250422/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Keyboard Map](https://htmlspecs.com/keyboard-map/)（[Source](https://wicg.github.io/keyboard-map/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）

@@ -861,14 +861,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "Region Capture",
-    //     href: "https://htmlspecs.com/mediacapture-region/",
-    //     src: "https://www.w3.org/TR/2023/WD-mediacapture-region-20230712/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "Region Capture",
+        href: "https://htmlspecs.com/mediacapture-region/",
+        src: "https://www.w3.org/TR/2023/WD-mediacapture-region-20230712/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     // {
     //     text: "Capture Handle - Bootstrapping Collaboration when Screensharing",
     //     href: "https://htmlspecs.com/capture-handle-identity/",
