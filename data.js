@@ -757,14 +757,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
-    // {
-    //     text: "Web MIDI API",
-    //     href: "https://htmlspecs.com/webmidi/",
-    //     src: "https://www.w3.org/TR/2025/WD-webmidi-20250121/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "Web MIDI API",
+        href: "https://htmlspecs.com/webmidi/",
+        src: "https://www.w3.org/TR/2025/WD-webmidi-20250121/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     {
         text: "Web Bluetooth API",
         href: "https://htmlspecs.com/web-bluetooth/",
