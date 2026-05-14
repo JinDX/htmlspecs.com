@@ -6,6 +6,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [ECMAScript® 2027 Language Specification](https://ecma262.com/c)（[Source](https://tc39.es/ecma262/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)），- [How to Read](https://htmlspecs.com/es-howto/)（[Source](https://timothygu.me/es-howto/)）
 - [ECMAScript® 2027 Internationalization API Specification](https://htmlspecs.com/ecma402/)（[Source](https://tc39.es/ecma402/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Language Tags and Locale Identifiers for the World Wide Web](https://htmlspecs.com/ltli/)（[Source](https://www.w3.org/TR/2020/WD-ltli-20201007) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Strings on the Web: Language and Direction Metadata](https://htmlspecs.com/string-meta/)（[Source](https://www.w3.org/TR/2024/NOTE-string-meta-20241017/) ![Note](https://img.shields.io/badge/NOTE-309c40)）
 - [Source map format specification](https://htmlspecs.com/ecma426/)（[Source](https://tc39.es/ecma426/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [WebAssembly JavaScript Interface](https://htmlspecs.com/wasm-js-api-2/)（[Source](https://www.w3.org/TR/2026/CRD-wasm-js-api-2-20260513/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [WebAssembly Web API](https://htmlspecs.com/wasm-web-api-2/)（[Source](https://www.w3.org/TR/2026/CRD-wasm-web-api-2-20260513/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
