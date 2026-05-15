@@ -144,7 +144,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Vibration API](https://htmlspecs.com/vibration/)（[Source](https://www.w3.org/TR/2026/CRD-vibration-20260514/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [Accelerometer](https://htmlspecs.com/accelerometer/)（[Source](https://www.w3.org/TR/2026/CRD-accelerometer-20260514/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [Magnetometer](https://htmlspecs.com/magnetometer/)（[Source](https://www.w3.org/TR/2026/WD-magnetometer-20260514/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
-- [Gyroscope](https://htmlspecs.com/gyroscope/)（[Source](https://www.w3.org/TR/2026/CRD-gyroscope-20260202/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
+- [Gyroscope](https://htmlspecs.com/gyroscope/)（[Source](https://www.w3.org/TR/2026/CRD-gyroscope-20260514/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [Gamepad](https://htmlspecs.com/gamepad/)（[Source](https://www.w3.org/TR/2025/WD-gamepad-20250710/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 
 ### 性能和观察者
