@@ -1096,7 +1096,7 @@ const links = [
     {
         text: "Magnetometer",
         href: "https://htmlspecs.com/magnetometer/",
-        src: "https://www.w3.org/TR/2025/WD-magnetometer-20250212/",
+        src: "https://www.w3.org/TR/2026/WD-magnetometer-20260514/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
