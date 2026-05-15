@@ -1056,7 +1056,7 @@ const links = [
     {
         text: "Proximity Sensor",
         href: "https://htmlspecs.com/proximity/",
-        src: "https://www.w3.org/TR/2025/WD-proximity-20250212/",
+        src: "https://www.w3.org/TR/2026/WD-proximity-20260514/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
