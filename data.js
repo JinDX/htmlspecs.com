@@ -1088,7 +1088,7 @@ const links = [
     {
         text: "Accelerometer",
         href: "https://htmlspecs.com/accelerometer/",
-        src: "https://www.w3.org/TR/2025/CRD-accelerometer-20250212/",
+        src: "https://www.w3.org/TR/2026/CRD-accelerometer-20260514/",
         "last-modified": "-",
         lang: "cjk",
         state: "CRD"
