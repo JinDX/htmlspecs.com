@@ -1048,7 +1048,7 @@ const links = [
     {
         text: "Ambient Light Sensor",
         href: "https://htmlspecs.com/ambient-light/",
-        src: "https://www.w3.org/TR/2025/WD-ambient-light-20250212/",
+        src: "https://www.w3.org/TR/2026/WD-ambient-light-20260514/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
