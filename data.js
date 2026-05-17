@@ -2787,14 +2787,14 @@ const cssLinks = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "CSS Shadow Parts Module Level 1",
-    //     href: "https://htmlspecs.com/css/css-shadow-parts-1/",
-    //     src: "https://www.w3.org/TR/2025/WD-css-shadow-parts-1-20251216/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "CSS Shadow Parts Module Level 1",
+        href: "https://htmlspecs.com/css/css-shadow-parts-1/",
+        src: "https://www.w3.org/TR/2025/WD-css-shadow-parts-1-20251216/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
 
     //### CSS Houdini APIs|CSS Houdini API|CSS Houdini API
     {
