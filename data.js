@@ -1191,14 +1191,14 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
-    // {
-    //     text: "User Timing",
-    //     href: "https://htmlspecs.com/user-timing/",
-    //     src: "https://www.w3.org/TR/2026/CRD-user-timing-20260311/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "CRD"
-    // },
+    {
+        text: "User Timing",
+        href: "https://htmlspecs.com/user-timing/",
+        src: "https://www.w3.org/TR/2026/CRD-user-timing-20260311/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "CRD"
+    },
     {
         text: "Observable",
         href: "https://htmlspecs.com/observable/",
