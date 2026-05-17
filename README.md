@@ -388,6 +388,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [CSS Logical Properties and Values Level 1](https://htmlspecs.com/css/css-logical-1/)（[Source](https://www.w3.org/TR/2025/WD-css-logical-1-20251204/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Mixins Module Level 1](https://htmlspecs.com/css/css-mixins-1/)（[Source](https://www.w3.org/TR/2025/WD-css-mixins-1-20250515/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Scoping Module Level 1](https://htmlspecs.com/css/css-scoping-1/)（[Source](https://www.w3.org/TR/2014/WD-css-scoping-1-20140403/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [CSS Shadow Parts Module Level 1](https://htmlspecs.com/css/css-shadow-parts-1/)（[Source](https://www.w3.org/TR/2025/WD-css-shadow-parts-1-20251216/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 
 ### CSS Houdini APIs
 - [CSS Typed OM Level 1](https://htmlspecs.com/css/css-typed-om-1/)（[Source](https://www.w3.org/TR/2024/WD-css-typed-om-1-20240321/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
