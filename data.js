@@ -1402,14 +1402,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "Document Policy",
-    //     href: "https://htmlspecs.com/document-policy/",
-    //     src: "https://wicg.github.io/document-policy/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "Document Policy",
+        href: "https://htmlspecs.com/document-policy/",
+        src: "https://wicg.github.io/document-policy/",
+        "last-modified": "Wed, 30 Mar 2022 14:51:34 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
     {
         text: "Global Privacy Control (GPC)",
         href: "https://htmlspecs.com/gpc/",

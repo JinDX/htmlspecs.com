@@ -185,6 +185,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Content Security Policy Level 3](https://htmlspecs.com/CSP3/)（[Source](https://www.w3.org/TR/2026/WD-CSP3-20260505/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Self-Review Questionnaire: Security and Privacy](https://htmlspecs.com/security-privacy-questionnaire/)（[Source](https://www.w3.org/TR/2025/NOTE-security-privacy-questionnaire-20250418/) ![Note](https://img.shields.io/badge/NOTE-309c40)）
 - [Permissions Policy](https://htmlspecs.com/permissions-policy/)（[Source](https://www.w3.org/TR/2025/WD-permissions-policy-1-20251006/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Document Policy](https://htmlspecs.com/document-policy/)（[Source](https://wicg.github.io/document-policy/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Global Privacy Control (GPC)](https://htmlspecs.com/gpc/)（[Source](https://www.w3.org/TR/2026/WD-gpc-20260423/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Privacy Principles](https://htmlspecs.com/privacy-principles/)（[Source](https://www.w3.org/TR/2025/STMT-privacy-principles-20250515/) ![Statement](https://img.shields.io/badge/STMT-6c757d)）
 - [Secure Contexts](https://htmlspecs.com/secure-contexts/)（[Source](https://www.w3.org/TR/2023/CRD-secure-contexts-20231110/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
