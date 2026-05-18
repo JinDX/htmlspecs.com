@@ -464,14 +464,6 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
-    // {
-    //     text: "Direct Sockets API",
-    //     href: "https://htmlspecs.com/direct-sockets/",
-    //     src: "https://wicg.github.io/direct-sockets/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
     {
         text: "Linked Data Notifications",
         href: "https://htmlspecs.com/ldn/",
