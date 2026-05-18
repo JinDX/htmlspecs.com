@@ -909,14 +909,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
-    // {
-    //     text: "Keyboard Lock",
-    //     href: "https://htmlspecs.com/keyboard-lock/",
-    //     src: "https://wicg.github.io/keyboard-lock/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "Keyboard Lock",
+        href: "https://htmlspecs.com/keyboard-lock/",
+        src: "https://wicg.github.io/keyboard-lock/",
+        "last-modified": "Wed, 06 Oct 2021 21:04:35 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
     {
         text: "Contact Picker API",
         href: "https://htmlspecs.com/contact-picker/",
