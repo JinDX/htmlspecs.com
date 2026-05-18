@@ -1005,14 +1005,14 @@ const links = [
         lang: "cjk",
         state: "NOTE"
     },
-    // {
-    //     text: "Orientation Sensor",
-    //     href: "https://htmlspecs.com/orientation-sensor/",
-    //     src: "https://www.w3.org/TR/2026/WD-orientation-sensor-20260514/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "Orientation Sensor",
+        href: "https://htmlspecs.com/orientation-sensor/",
+        src: "https://www.w3.org/TR/2026/WD-orientation-sensor-20260514/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     {
         text: "Pointer Lock 2.0",
         href: "https://htmlspecs.com/pointerlock/",
