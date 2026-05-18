@@ -997,14 +997,14 @@ const links = [
         lang: "cjk",
         state: "CRD"
     },
-    // {
-    //     text: "Motion Sensors Explainer",
-    //     href: "https://htmlspecs.com/motion-sensors/",
-    //     src: "https://www.w3.org/TR/2017/NOTE-motion-sensors-20170830/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "NOTE"
-    // },
+    {
+        text: "Motion Sensors Explainer",
+        href: "https://htmlspecs.com/motion-sensors/",
+        src: "https://www.w3.org/TR/2017/NOTE-motion-sensors-20170830/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "NOTE"
+    },
     // {
     //     text: "Orientation Sensor",
     //     href: "https://htmlspecs.com/orientation-sensor/",
