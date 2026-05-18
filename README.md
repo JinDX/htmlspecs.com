@@ -11,6 +11,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [WebAssembly JavaScript Interface](https://htmlspecs.com/wasm-js-api-2/)（[Source](https://www.w3.org/TR/2026/CRD-wasm-js-api-2-20260514/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [WebAssembly Web API](https://htmlspecs.com/wasm-web-api-2/)（[Source](https://www.w3.org/TR/2026/CRD-wasm-web-api-2-20260514/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [DOM](https://htmlspecs.com/dom/)（[Source](https://dom.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
+- [DOM Parsing and Serialization](https://htmlspecs.com/dom-parsing/)（[Source](https://www.w3.org/TR/2016/WD-DOM-Parsing-20160517/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [EditContext API](https://htmlspecs.com/edit-context/)（[Source](https://www.w3.org/TR/2026/WD-edit-context-20260430/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [URL](https://htmlspecs.com/url/)（[Source](https://url.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [URL Pattern](https://htmlspecs.com/urlpattern/)（[Source](https://urlpattern.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）

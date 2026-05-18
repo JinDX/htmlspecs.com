@@ -1,0 +1,3455 @@
+<!DOCTYPE html>
+<html lang="zh-hans" dir="ltr" typeof="bibo:Document w3p:WD"
+    prefix="bibo: http://purl.org/ontology/bibo/ w3p: http://www.w3.org/2001/02pd/rec54#">
+
+<head>
+    <meta property="dc:language" content="en" lang="">
+    <meta charset="UTF-8">
+    <title>DOM 解析与序列化</title>
+    <style>
+        /* Make these stand-out more... */
+        .externalDFN {
+            font-style: italic;
+            background-color: #fff9d6;
+        }
+
+        /* Switch statement */
+        dl.switch dt::before {
+            content: "↪ ";
+            margin-left: 1em;
+        }
+
+        /* Better spacing around various lists (implied paragraph children) */
+        ol>li,
+        section:not(#toc) ul>li,
+        section dl>dt {
+            margin: 1em 0;
+        }
+
+        var {
+            color: maroon;
+        }
+
+        /* domintro styling */
+        dl.domintro {
+            background-color: rgb(221, 255, 221);
+            padding: 1em 0.5em 1em 2em;
+            clear: both;
+        }
+
+        dl.domintro dt {
+            color: black;
+        }
+
+        dl.domintro>dd {
+            color: green;
+        }
+
+        dl.domintro::before {
+            float: right;
+            background-color: white;
+            display: block;
+            border: 2px solid black;
+            color: green;
+            margin-top: -20px;
+            padding: 2px;
+            content: "This box is non-normative. Implementation requirements are given below this box.";
+        }
+
+        /* Fancy table stuff */
+        table {
+            border-collapse: collapse;
+        }
+
+        thead tr {
+            border-bottom: 2px solid black;
+        }
+
+        tbody tr:not(:last-child) {
+            border-bottom: 1px solid black;
+        }
+
+        td {
+            border-left: 1px solid black;
+            padding: 4px;
+        }
+
+        /* Extra IDL :-) */
+        .extraidl {
+            line-height: 120%;
+            padding: 1em;
+            border-top: 1px solid #90b8de;
+            border-bottom: 1px solid #90b8de;
+        }
+
+        .extraidl:before {
+            width: 150px;
+            color: #fff;
+            padding: 3px;
+            font-weight: bold;
+            font-family: initial;
+            margin: -1em 0 1em -1em;
+            display: block;
+            content: "WebIDL";
+            background-color: rgb(144, 184, 222);
+        }
+    </style>
+
+
+    <style>
+        /*****************************************************************
+ * ReSpec 3 CSS
+ * Robin Berjon - http://berjon.com/
+ *****************************************************************/
+
+        /* --- INLINES --- */
+        em.rfc2119 {
+            text-transform: lowercase;
+            font-variant: small-caps;
+            font-style: normal;
+            color: #900;
+        }
+
+        h1 acronym,
+        h2 acronym,
+        h3 acronym,
+        h4 acronym,
+        h5 acronym,
+        h6 acronym,
+        a acronym,
+        h1 abbr,
+        h2 abbr,
+        h3 abbr,
+        h4 abbr,
+        h5 abbr,
+        h6 abbr,
+        a abbr {
+            border: none;
+        }
+
+        dfn {
+            font-weight: bold;
+        }
+
+        a.internalDFN {
+            color: inherit;
+            border-bottom: 1px solid #99c;
+            text-decoration: none;
+        }
+
+        a.externalDFN {
+            color: inherit;
+            border-bottom: 1px dotted #ccc;
+            text-decoration: none;
+        }
+
+        a.bibref {
+            text-decoration: none;
+        }
+
+        cite .bibref {
+            font-style: normal;
+        }
+
+        code {
+            color: #C83500;
+        }
+
+        /* --- TOC --- */
+        .toc a,
+        .tof a {
+            text-decoration: none;
+        }
+
+        a .secno,
+        a .figno {
+            color: #000;
+        }
+
+        ul.tof,
+        ol.tof {
+            list-style: none outside none;
+        }
+
+        .caption {
+            margin-top: 0.5em;
+            font-style: italic;
+        }
+
+        /* --- TABLE --- */
+        table.simple {
+            border-spacing: 0;
+            border-collapse: collapse;
+            border-bottom: 3px solid #005a9c;
+        }
+
+        .simple th {
+            background: #005a9c;
+            color: #fff;
+            padding: 3px 5px;
+            text-align: left;
+        }
+
+        .simple th[scope="row"] {
+            background: inherit;
+            color: inherit;
+            border-top: 1px solid #ddd;
+        }
+
+        .simple td {
+            padding: 3px 10px;
+            border-top: 1px solid #ddd;
+        }
+
+        .simple tr:nth-child(even) {
+            background: #f0f6ff;
+        }
+
+        /* --- DL --- */
+        .section dd>p:first-child {
+            margin-top: 0;
+        }
+
+        .section dd>p:last-child {
+            margin-bottom: 0;
+        }
+
+        .section dd {
+            margin-bottom: 1em;
+        }
+
+        .section dl.attrs dd,
+        .section dl.eldef dd {
+            margin-bottom: 0;
+        }
+
+        .respec-hidden {
+            display: none;
+        }
+
+        @media print {
+            .removeOnSave {
+                display: none;
+            }
+        }
+    </style>
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <style>
+        /* --- ISSUES/NOTES --- */
+        div.issue-title,
+        div.note-title,
+        div.ednote-title,
+        div.warning-title {
+            padding-right: 1em;
+            min-width: 7.5em;
+            color: #b9ab2d;
+        }
+
+        div.issue-title {
+            color: #e05252;
+        }
+
+        div.note-title,
+        div.ednote-title {
+            color: #2b2;
+        }
+
+        div.warning-title {
+            color: #f22;
+        }
+
+        div.issue-title span,
+        div.note-title span,
+        div.ednote-title span,
+        div.warning-title span {
+            text-transform: uppercase;
+        }
+
+        div.note,
+        div.issue,
+        div.ednote,
+        div.warning {
+            margin-top: 1em;
+            margin-bottom: 1em;
+        }
+
+        .note>p:first-child,
+        .ednote>p:first-child,
+        .issue>p:first-child,
+        .warning>p:first-child {
+            margin-top: 0
+        }
+
+        .issue,
+        .note,
+        .ednote,
+        .warning {
+            padding: .5em;
+            border-left-width: .5em;
+            border-left-style: solid;
+        }
+
+        div.issue,
+        div.note,
+        div.ednote,
+        div.warning {
+            padding: 1em 1.2em 0.5em;
+            margin: 1em 0;
+            position: relative;
+            clear: both;
+        }
+
+        span.note,
+        span.ednote,
+        span.issue,
+        span.warning {
+            padding: .1em .5em .15em;
+        }
+
+        .issue {
+            border-color: #e05252;
+            background: #fbe9e9;
+        }
+
+        .note,
+        .ednote {
+            border-color: #52e052;
+            background: #e9fbe9;
+        }
+
+        .warning {
+            border-color: #f11;
+            border-width: .2em;
+            border-style: solid;
+            background: #fbe9e9;
+        }
+
+        .warning-title:before {
+            content: "⚠";
+            /*U+26A0 WARNING SIGN*/
+            font-size: 3em;
+            float: left;
+            height: 100%;
+            padding-right: .3em;
+            vertical-align: top;
+            margin-top: -0.5em;
+        }
+
+        li.task-list-item {
+            list-style: none;
+        }
+
+        input.task-list-item-checkbox {
+            margin: 0 0.35em 0.25em -1.6em;
+            vertical-align: middle;
+        }
+    </style>
+    <style>
+        /* --- WEB IDL --- */
+        pre.idl {
+            border-top: 1px solid #90b8de;
+            border-bottom: 1px solid #90b8de;
+            padding: 1em;
+            line-height: 120%;
+        }
+
+        @media print {
+            pre.idl {
+                white-space: pre-wrap;
+            }
+        }
+
+        pre.idl::before {
+            content: "WebIDL";
+            display: block;
+            width: 150px;
+            background: #90b8de;
+            color: #fff;
+            font-family: sans-serif;
+            padding: 3px;
+            font-weight: bold;
+            margin: -1em 0 1em -1em;
+        }
+
+        .idlType {
+            color: #ff4500;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        /*.idlModule*/
+        /*.idlModuleID*/
+        /*.idlInterface*/
+        .idlInterfaceID,
+        .idlDictionaryID,
+        .idlCallbackID,
+        .idlEnumID {
+            font-weight: bold;
+            color: #005a9c;
+        }
+
+        a.idlEnumItem {
+            color: #000;
+            border-bottom: 1px dotted #ccc;
+            text-decoration: none;
+        }
+
+        .idlSuperclass {
+            font-style: italic;
+            color: #005a9c;
+        }
+
+        /*.idlAttribute*/
+        .idlAttrType,
+        .idlFieldType,
+        .idlMemberType {
+            color: #005a9c;
+        }
+
+        .idlAttrName,
+        .idlFieldName,
+        .idlMemberName {
+            color: #ff4500;
+        }
+
+        .idlAttrName a,
+        .idlFieldName a,
+        .idlMemberName a {
+            color: #ff4500;
+            border-bottom: 1px dotted #ff4500;
+            text-decoration: none;
+        }
+
+        /*.idlMethod*/
+        .idlMethType,
+        .idlCallbackType {
+            color: #005a9c;
+        }
+
+        .idlMethName {
+            color: #ff4500;
+        }
+
+        .idlMethName a {
+            color: #ff4500;
+            border-bottom: 1px dotted #ff4500;
+            text-decoration: none;
+        }
+
+        /*.idlCtor*/
+        .idlCtorName {
+            color: #ff4500;
+        }
+
+        .idlCtorName a {
+            color: #ff4500;
+            border-bottom: 1px dotted #ff4500;
+            text-decoration: none;
+        }
+
+        /*.idlParam*/
+        .idlParamType {
+            color: #005a9c;
+        }
+
+        .idlParamName,
+        .idlDefaultValue {
+            font-style: italic;
+        }
+
+        .extAttr {
+            color: #666;
+        }
+
+        /*.idlSectionComment*/
+        .idlSectionComment {
+            color: gray;
+        }
+
+        /*.idlIterable*/
+        .idlIterableKeyType,
+        .idlIterableValueType {
+            color: #005a9c;
+        }
+
+        /*.idlMaplike*/
+        .idlMaplikeKeyType,
+        .idlMaplikeValueType {
+            color: #005a9c;
+        }
+
+        /*.idlConst*/
+        .idlConstType {
+            color: #005a9c;
+        }
+
+        .idlConstName {
+            color: #ff4500;
+        }
+
+        .idlConstName a {
+            color: #ff4500;
+            border-bottom: 1px dotted #ff4500;
+            text-decoration: none;
+        }
+
+        /*.idlException*/
+        .idlExceptionID {
+            font-weight: bold;
+            color: #c00;
+        }
+
+        .idlTypedefID,
+        .idlTypedefType {
+            color: #005a9c;
+        }
+
+        .idlRaises,
+        .idlRaises a.idlType,
+        .idlRaises a.idlType code,
+        .excName a,
+        .excName a code {
+            color: #c00;
+            font-weight: normal;
+        }
+
+        .excName a {
+            font-family: monospace;
+        }
+
+        .idlRaises a.idlType,
+        .excName a.idlType {
+            border-bottom: 1px dotted #c00;
+        }
+
+        .excGetSetTrue,
+        .excGetSetFalse,
+        .prmNullTrue,
+        .prmNullFalse,
+        .prmOptTrue,
+        .prmOptFalse {
+            width: 45px;
+            text-align: center;
+        }
+
+        .excGetSetTrue,
+        .prmNullTrue,
+        .prmOptTrue {
+            color: #0c0;
+        }
+
+        .excGetSetFalse,
+        .prmNullFalse,
+        .prmOptFalse {
+            color: #c00;
+        }
+
+        .idlImplements a {
+            font-weight: bold;
+        }
+
+        dl.attributes,
+        dl.methods,
+        dl.constants,
+        dl.constructors,
+        dl.fields,
+        dl.dictionary-members {
+            margin-left: 2em;
+        }
+
+        .attributes dt,
+        .methods dt,
+        .constants dt,
+        .constructors dt,
+        .fields dt,
+        .dictionary-members dt {
+            font-weight: normal;
+        }
+
+        .attributes dt code,
+        .methods dt code,
+        .constants dt code,
+        .constructors dt code,
+        .fields dt code,
+        .dictionary-members dt code {
+            font-weight: bold;
+            color: #000;
+            font-family: monospace;
+        }
+
+        .attributes dt code,
+        .fields dt code,
+        .dictionary-members dt code {
+            background: #ffffd2;
+        }
+
+        .attributes dt .idlAttrType code,
+        .fields dt .idlFieldType code,
+        .dictionary-members dt .idlMemberType code {
+            color: #005a9c;
+            background: transparent;
+            font-family: inherit;
+            font-weight: normal;
+            font-style: italic;
+        }
+
+        .methods dt code {
+            background: #d9e6f8;
+        }
+
+        .constants dt code {
+            background: #ddffd2;
+        }
+
+        .constructors dt code {
+            background: #cfc;
+        }
+
+        .attributes dd,
+        .methods dd,
+        .constants dd,
+        .constructors dd,
+        .fields dd,
+        .dictionary-members dd {
+            margin-bottom: 1em;
+        }
+
+        table.parameters,
+        table.exceptions {
+            border-spacing: 0;
+            border-collapse: collapse;
+            margin: 0.5em 0;
+            width: 100%;
+        }
+
+        table.parameters {
+            border-bottom: 1px solid #90b8de;
+        }
+
+        table.exceptions {
+            border-bottom: 1px solid #deb890;
+        }
+
+        .parameters th,
+        .exceptions th {
+            color: #fff;
+            padding: 3px 5px;
+            text-align: left;
+            font-weight: normal;
+            text-shadow: #666 1px 1px 0;
+        }
+
+        .parameters th {
+            background: #90b8de;
+        }
+
+        .exceptions th {
+            background: #deb890;
+        }
+
+        .parameters td,
+        .exceptions td {
+            padding: 3px 10px;
+            border-top: 1px solid #ddd;
+            vertical-align: top;
+        }
+
+        .parameters tr:first-child td,
+        .exceptions tr:first-child td {
+            border-top: none;
+        }
+
+        .parameters td.prmName,
+        .exceptions td.excName,
+        .exceptions td.excCodeName {
+            width: 100px;
+        }
+
+        .parameters td.prmType {
+            width: 120px;
+        }
+
+        table.exceptions table {
+            border-spacing: 0;
+            border-collapse: collapse;
+            width: 100%;
+        }
+    </style>
+    <link href="https://www.w3.org/StyleSheets/TR/2016/W3C-WD" rel="stylesheet">
+    <!--[if lt IE 9]><script src='https://www.w3.org/2008/site/js/html5shiv.js'></script><![endif]-->
+</head>
+
+<body id="respecDocument" role="document" class="h-entry">
+    <div id="respecHeader" role="contentinfo" class="head">
+        <p>
+            <a href="https://www.w3.org/"><img src="https://www.w3.org/StyleSheets/TR/2016/logos/W3C" alt="W3C"
+                    height="48" width="72"></a>
+        </p>
+        <h1 class="title p-name" id="title" property="dcterms:title">DOM 解析与序列化</h1>
+        <h2 property="bibo:subtitle" id="subtitle">DOMParser、XMLSerializer、innerHTML 以及类似 API</h2>
+        <h2 id="w3c-working-draft-17-may-2016"><abbr title="万维网联盟">W3C</abbr> 工作草案 <time property="dcterms:issued"
+                class="dt-published" datetime="2016-05-17">2016年5月17日</time></h2>
+        <dl>
+            <dt>此版本：</dt>
+            <dd><a class="u-url"
+                    href="https://www.w3.org/TR/2016/WD-DOM-Parsing-20160517/">http://www.w3.org/TR/2016/WD-DOM-Parsing-20160517/</a>
+            </dd>
+            <dt>最新发布版本：</dt>
+            <dd><a href="https://www.w3.org/TR/DOM-Parsing/">http://www.w3.org/TR/DOM-Parsing/</a></dd>
+            <dt>最新编辑者草案：</dt>
+            <dd><a href="https://w3c.github.io/DOM-Parsing/">https://w3c.github.io/DOM-Parsing/</a></dd>
+            <dt>测试套件：</dt>
+            <dd><a href="http://w3c-test.org/domparsing/">http://w3c-test.org/domparsing/</a></dd>
+            <dt>上一版本：</dt>
+            <dd><a rel="dcterms:replaces"
+                    href="https://www.w3.org/TR/2014/CR-DOM-Parsing-20140617/">http://www.w3.org/TR/2014/CR-DOM-Parsing-20140617/</a>
+            </dd>
+            <dt>编辑者：</dt>
+            <dd class="p-author h-card vcard" property="bibo:editor" resource="_:editor0" data-editor-id="40117"><span
+                    property="rdf:first" typeof="foaf:Person"><span property="foaf:name" class="p-name fn">Travis
+                        Leithead</span>, <a property="foaf:workplaceHomepage" class="p-org org h-org h-card"
+                        href="http://www.microsoft.com">Microsoft</a>, <span class="ed_mailto"><a class="u-email email"
+                            property="foaf:mbox"
+                            href="mailto:travis.leithead@microsoft.com">travis.leithead@microsoft.com</a></span></span>
+                <span property="rdf:rest" resource="rdf:nil"></span>
+            </dd>
+
+            <dt>参与：</dt>
+            <dd>
+                <a href="https://github.com/w3c/DOM-Parsing">
+                    我们在 Github 上。
+                </a>
+            </dd>
+            <dd>
+                <a
+                    href="https://www.w3.org/Bugs/Public/buglist.cgi?component=DOM%20Parsing%20and%20Serialization&amp;list_id=44989&amp;product=WebAppsWG&amp;resolution=---">
+                    Bugzilla 缺陷列表。
+                </a>
+            </dd>
+            <dd>
+                <a href="https://github.com/w3c/DOM-Parsing/issues">
+                    Github Issues。
+                </a>
+            </dd>
+            <dd>
+                <a href="https://github.com/w3c/DOM-Parsing/commits">
+                    提交历史。
+                </a>
+            </dd>
+            <dd>
+                <a href="http://lists.w3.org/Archives/Public/www-dom/">
+                    邮件列表。
+                </a>
+            </dd>
+        </dl>
+        <p class="copyright">
+            <a href="https://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> ©
+            2016
+
+            <a href="https://www.w3.org/"><abbr title="World Wide Web Consortium">W3C</abbr></a><sup>®</sup>
+            (<a href="http://www.csail.mit.edu/"><abbr title="Massachusetts Institute of Technology">MIT</abbr></a>,
+            <a href="http://www.ercim.eu/"><abbr
+                    title="European Research Consortium for Informatics and Mathematics">ERCIM</abbr></a>,
+            <a href="http://www.keio.ac.jp/">Keio</a>, <a href="http://ev.buaa.edu.cn/">Beihang</a>).
+            <abbr title="World Wide Web Consortium">W3C</abbr> <a
+                href="https://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer">liability</a>,
+            <a href="https://www.w3.org/Consortium/Legal/ipr-notice#W3C_Trademarks">trademark</a> and
+            <a rel="license" href="https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document">permissive
+                document license</a>
+            rules apply.
+        </p>
+        <hr title="Separator for header">
+    </div>
+
+    <section property="dc:abstract" class="introductory" id="abstract">
+        <h2 resource="#h-abstract" id="h-abstract"><span property="xhv:role" resource="xhv:heading">摘要</span></h2>
+        <p>本规范定义了各种 API，供 Web 应用以编程方式访问
+            HTML 和通用 XML 解析器，用于解析
+            和序列化 DOM 节点。</p>
+    </section>
+    <section id="sotd" class="introductory">
+        <h2 resource="#h-sotd" id="h-sotd"><span property="xhv:role" resource="xhv:heading">本文档状态</span></h2>
+        <p>
+            <em>本节描述本文档在发布时的状态。其他文档可能会
+                取代本文档。当前 <abbr title="万维网联盟">W3C</abbr>
+                出版物列表以及本技术报告的最新修订版，可在 <a href="https://www.w3.org/TR/"><abbr title="万维网联盟">W3C</abbr> 技术报告
+                    索引</a>中找到，地址为 http://www.w3.org/TR/。</em>
+        </p>
+
+        <p>本规范基于 <a href="https://domparsing.spec.whatwg.org/">
+                DOM 解析与序列化</a>活标准的原始工作，不过它在
+            支持的特性、规范性要求和算法具体性方面已经有所分歧。在适当情况下，
+            来自该活标准的相关修正会被纳入本文档。
+        </p>
+        <p>
+            本文档由 <a href="https://www.w3.org/WebPlatform/WG/">Web Platform 工作
+                组</a>作为工作草案发布。
+            本文档旨在成为 <abbr title="万维网联盟">W3C</abbr> 推荐标准。
+            如果你希望对本文档发表评论，请将评论发送至
+            <a href="mailto:www-dom@w3.org?subject=DOM-Parsing">www-dom@w3.org</a>
+            （<a href="mailto:www-dom-request@w3.org?subject=subscribe">订阅</a>，
+            <a href="http://lists.w3.org/Archives/Public/www-dom/">归档</a>），
+            并在邮件主题开头写上 <code>DOM-Parsing</code>。
+
+            欢迎所有评论。
+        </p>
+        <p>
+            作为工作草案发布并不意味着获得 <abbr title="万维网联盟">W3C</abbr>
+            会员的认可。这是一份草案文档，可能会在任何时候被其他
+            文档更新、替换或废弃。除作为正在进行中的工作外，不应引用本文档。
+        </p>
+        <p>
+            本文档由
+            一个工作组
+            制作，该工作组
+            根据
+            <a id="sotd_patent" property="w3p:patentRules"
+                href="https://www.w3.org/Consortium/Patent-Policy-20040205/">2004年2月5日 <abbr title="万维网联盟">W3C</abbr> 专利
+                政策</a>运作。
+            <abbr title="万维网联盟">W3C</abbr> 维护一个<a href="https://www.w3.org/2004/01/pp-impl/83482/status"
+                rel="disclosure">与该工作组交付物有关的任何专利
+                披露的公开列表</a>；
+            该页面还包括
+            披露专利的说明。任何实际知晓某项专利
+            且认为该专利包含
+            <a href="https://www.w3.org/Consortium/Patent-Policy-20040205/#def-essential">必要
+                权利要求</a>的个人，必须按照
+            <a href="https://www.w3.org/Consortium/Patent-Policy-20040205/#sec-Disclosure"><abbr
+                    title="万维网联盟">W3C</abbr> 专利政策第
+                6 节</a>披露相关信息。
+        </p>
+        <p>本文档受 <a id="w3c_process_revision" href="https://www.w3.org/2015/Process-20150901/">2015年9月1日 <abbr
+                    title="万维网联盟">W3C</abbr> 流程文档</a>约束。
+        </p>
+
+    </section>
+    <nav id="toc">
+        <h2 resource="#table-of-contents" id="table-of-contents" class="introductory"><span property="xhv:role"
+                resource="xhv:heading">目录</span></h2>
+        <ul role="directory" class="toc">
+            <li class="tocline"><a class="tocxref" href="#conformance"><span class="secno">1. </span>一致性</a>
+                <ul class="toc">
+                    <li class="tocline"><a class="tocxref" href="#dependencies"><span class="secno">1.1
+                            </span>依赖项</a></li>
+                    <li class="tocline"><a class="tocxref" href="#extensibility"><span class="secno">1.2
+                            </span>可扩展性</a></li>
+                </ul>
+            </li>
+            <li class="tocline"><a class="tocxref" href="#terminology"><span class="secno">2. </span>术语</a>
+            </li>
+            <li class="tocline"><a class="tocxref" href="#namespaces"><span class="secno">3. </span>命名空间</a></li>
+            <li class="tocline"><a class="tocxref" href="#parsing-and-serializing-nodes"><span class="secno">4.
+                    </span>解析和序列化 <span title="node" class="formerLink">Node</span></a>
+                <ul class="toc">
+                    <li class="tocline"><a class="tocxref" href="#parsing"><span class="secno">4.1 </span>解析</a>
+                    </li>
+                    <li class="tocline"><a class="tocxref" href="#serializing"><span class="secno">4.2
+                            </span>序列化</a></li>
+                </ul>
+            </li>
+            <li class="tocline"><a class="tocxref" href="#the-domparser-interface"><span class="secno">5.
+                    </span><code>DOMParser</code>
+                    接口</a>
+                <ul class="toc">
+                    <li class="tocline"><a class="tocxref" href="#methods"><span class="secno">5.1 </span>方法</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="tocline"><a class="tocxref" href="#the-xmlserializer-interface"><span class="secno">6.
+                    </span><code>XMLSerializer</code>
+                    接口</a>
+                <ul class="toc">
+                    <li class="tocline"><a class="tocxref" href="#methods-1"><span class="secno">6.1 </span>方法</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="tocline"><a class="tocxref" href="#extensions-to-the-element-interface"><span class="secno">7.
+                    </span><code><span title="element" class="formerLink">Element</span></code>
+                    接口扩展</a>
+                <ul class="toc">
+                    <li class="tocline"><a class="tocxref" href="#attributes"><span class="secno">7.1
+                            </span>属性</a></li>
+                    <li class="tocline"><a class="tocxref" href="#methods-2"><span class="secno">7.2 </span>方法</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="tocline"><a class="tocxref" href="#extensions-to-the-range-interface"><span class="secno">8.
+                    </span><code><span title="range" class="formerLink">Range</span></code>
+                    接口扩展</a>
+                <ul class="toc">
+                    <li class="tocline"><a class="tocxref" href="#methods-3"><span class="secno">8.1 </span>方法</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="tocline"><a class="tocxref" href="#revision-history"><span class="secno">A. </span>修订
+                    历史</a></li>
+            <li class="tocline"><a class="tocxref" href="#acknowledgements"><span class="secno">B.
+                    </span>致谢</a></li>
+            <li class="tocline"><a class="tocxref" href="#references"><span class="secno">C. </span>参考文献</a>
+                <ul class="toc">
+                    <li class="tocline"><a class="tocxref" href="#normative-references"><span class="secno">C.1
+                            </span>规范性参考文献</a></li>
+                    <li class="tocline"><a class="tocxref" href="#informative-references"><span class="secno">C.2
+                            </span>资料性参考文献</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+
+
+
+    <section property="bibo:hasPart" resource="#crec" typeof="bibo:Chapter" id="crec" class="introductory">
+        <h2 resource="#h-crec" id="h-crec"><span property="xhv:role" resource="xhv:heading">候选推荐标准
+                退出准则</span></h2>
+        <p>在本规范的
+            <a href="http://w3c-test.org/domparsing/">测试套件</a>完成，且两个或
+            更多独立实现通过每项测试之前，本规范不会推进到提议推荐标准，尽管不要求
+            单个实现必须通过每项测试。我们预计最早不会早于 2014 年 10 月 24 日
+            满足此准则。该组还将创建一份
+            <a href="https://dvcs.w3.org/hg/innerhtml/raw-file/tip/implementationReport.html">实现报告</a>。
+        </p>
+    </section>
+
+    <!-- <section id="issues" class="introductory">
+        <h1>问题</h1>
+
+        <p class=issue>出现在本文档其余部分中的未解决问题
+        会像这样突出显示。</p>
+    </section> -->
+
+    <section property="bibo:hasPart" resource="#conformance" typeof="bibo:Chapter" id="conformance"><!--OddPage-->
+        <h2 resource="#h-conformance" id="h-conformance"><span property="xhv:role" resource="xhv:heading"><span
+                    class="secno">1. </span>一致性</span></h2>
+        <p>
+            除了标记为非规范性的章节外，本规范中的所有创作指南、图示、示例
+            和注释均为非规范性。本规范中的其他所有内容都是
+            规范性的。
+        </p>
+
+
+        <p>作为算法一部分以祈使语气表述的要求
+            （例如“strip any leading space characters”或“return false and
+            terminate these steps”）应根据引入该
+            算法时所使用的关键词（“must”、“should”、“may”等）的含义来解释。</p>
+
+        <p>以算法或具体步骤表述的一致性要求
+            可以用任何方式实现，只要最终结果是
+            等价的。（特别是，本
+            规范中定义的算法旨在易于理解，而非旨在
+            具备高性能。）</p>
+
+        <p id="hardwareLimitations">用户代理可以对原本不受约束的输入
+            施加实现特定的限制，
+            例如为了防止拒绝服务攻击、防止耗尽
+            内存，或绕过平台特定的限制。</p>
+
+        <p>当某个方法或属性被称为调用另一个方法或
+            属性时，用户代理必须调用其用于该
+            属性或方法的内部 API，以便例如作者不能通过在 ECMAScript 中
+            用自定义属性或函数覆盖属性或方法来改变其行为。</p>
+
+        <p>除非另有说明，字符串比较均以<a href="https://www.w3.org/TR/dom/#case-sensitive" class="externalDFN" title="case-sensitive">
+                区分大小写</a>的方式进行。</p>
+
+        <p>如果某个算法调用另一个算法，后者抛出的任何异常
+            （除非被显式捕获）都必须导致前者
+            终止，并将该异常传播给
+            <em>其</em>调用者。
+        </p>
+
+        <section property="bibo:hasPart" resource="#dependencies" typeof="bibo:Chapter" id="dependencies">
+            <h3 resource="#h-dependencies" id="h-dependencies"><span property="xhv:role" resource="xhv:heading"><span
+                        class="secno">1.1 </span>依赖项</span></h3>
+
+            <p>本规范中的 IDL 片段必须按照 Web IDL
+                规范中所描述的符合要求的 IDL 片段来解释。 [<cite><a href="#bib-WEBIDL" class="bibref">WEBIDL</a></cite>]</p>
+
+            <p>本规范中使用的一些术语定义于
+                [<cite><a href="#bib-DOM4" class="bibref">DOM4</a></cite>]、[<cite><a href="#bib-HTML5"
+                        class="bibref">HTML5</a></cite>] 和 [<cite><a href="#bib-XML10" class="bibref">XML10</a></cite>]。
+            </p>
+        </section>
+
+        <section property="bibo:hasPart" resource="#extensibility" typeof="bibo:Chapter" id="extensibility">
+            <h3 resource="#h-extensibility" id="h-extensibility"><span property="xhv:role" resource="xhv:heading"><span
+                        class="secno">1.2 </span>可扩展性</span></h3>
+
+            <p>强烈不鼓励对本规范进行供应商特定的专有扩展。
+                作者不得使用此类扩展，因为
+                这样做会降低互操作性并割裂用户群，
+                使只有特定用户代理的用户才能访问相关内容。</p>
+
+            <p>如果需要供应商特定的扩展，则成员应以
+                供应商特定的字符串作为前缀，以防与本规范的未来
+                版本发生冲突。扩展的定义必须确保
+                扩展的使用既不会与规范中定义的功能相矛盾，
+                也不会导致这些功能
+                不符合规范。</p>
+
+            <p>当需要对本规范进行供应商中立的扩展时，
+                可以相应更新本规范，或者可以编写
+                一个扩展规范来覆盖本规范中的
+                要求。当某个将本
+                规范应用于其活动的人决定承认
+                这种扩展规范的要求时，它就成为本
+                规范中一致性要求目的下的
+                <dfn id="dfn-other-applicable-specifications" data-dfn-type="dfn"
+                    data-lt="other applicable specifications">适用
+                    规范</dfn>。
+            </p>
+            <!-- http://www.w3.org/mid/17E341CD-E790-422C-9F9A-69347EE01CEB@iki.fi -->
+        </section>
+    </section>
+
+    <section property="bibo:hasPart" resource="#terminology" typeof="bibo:Chapter" id="terminology">
+        <!--OddPage-->
+        <h2 resource="#h-terminology" id="h-terminology"><span property="xhv:role" resource="xhv:heading"><span
+                    class="secno">2. </span>术语</span></h2>
+
+        <p>术语 <dfn id="dfn-context-object" data-dfn-type="dfn">上下文对象</dfn>表示被讨论的
+            方法或
+            属性所调用的对象。
+        </p>
+    </section>
+
+    <section property="bibo:hasPart" resource="#namespaces" typeof="bibo:Chapter" id="namespaces">
+        <!--OddPage-->
+        <h2 resource="#h-namespaces" id="h-namespaces"><span property="xhv:role" resource="xhv:heading"><span
+                    class="secno">3. </span>命名空间</span></h2>
+
+        <p><dfn id="dfn-html-ns" data-dfn-type="dfn" data-lt="html-ns">HTML 命名空间</dfn>是
+            <code>http://www.w3.org/1999/xhtml</code>。
+        </p>
+        <p><dfn id="dfn-xml-ns" data-dfn-type="dfn" data-lt="xml-ns">XML 命名空间</dfn>是
+            <code>http://www.w3.org/XML/1998/namespace</code>。
+        </p>
+        <p><dfn id="dfn-xmlns-ns" data-dfn-type="dfn" data-lt="xmlns-ns">XMLNS 命名空间</dfn>是
+            <code>http://www.w3.org/2000/xmlns/</code>。
+        </p>
+    </section>
+
+    <section property="bibo:hasPart" resource="#parsing-and-serializing-nodes" typeof="bibo:Chapter"
+        id="parsing-and-serializing-nodes">
+        <!--OddPage-->
+        <h2 resource="#h-parsing-and-serializing-nodes" id="h-parsing-and-serializing-nodes"><span property="xhv:role"
+                resource="xhv:heading"><span class="secno">4. </span>解析和序列化 <a href="https://www.w3.org/TR/dom/#node"
+                    title="node" class="externalDFN">Node</a></span></h2>
+
+        <section property="bibo:hasPart" resource="#parsing" typeof="bibo:Chapter" id="parsing">
+            <h3 resource="#h-parsing" id="h-parsing"><span property="xhv:role" resource="xhv:heading"><span
+                        class="secno">4.1 </span>解析</span></h3>
+
+            <p>以下步骤构成
+                <dfn id="dfn-concept-parse-fragment" data-dfn-type="dfn" data-lt="concept-parse-fragment">片段
+                    解析算法</dfn>，其
+                参数是一个 <var>markup</var> 字符串和一个
+                <var>context element</var>：
+
+            </p>
+            <ol>
+                <li>
+                    <p>如果 <var>context element</var> 的
+                        <a href="https://www.w3.org/TR/dom/#concept-node-document" title="concept-node-document"
+                            class="externalDFN">节点文档</a>
+                        是一个 <a href="https://www.w3.org/TR/dom/#html-document" title="html-document"
+                            class="externalDFN">HTML 文档</a>：令
+                        <var>algorithm</var> 为
+                        <a href="https://www.w3.org/TR/html5/single-page.html#html-fragment-parsing-algorithm"
+                            title="html-fragment-parsing-algorithm" class="externalDFN">HTML
+                            片段解析算法</a>。
+                    </p>
+
+                    <p>如果 <var>context element</var> 的
+                        <a href="https://www.w3.org/TR/dom/#concept-node-document" title="concept-node-document"
+                            class="externalDFN">节点文档</a>
+                        是一个 <a href="https://www.w3.org/TR/dom/#xml-document" title="xml-document"
+                            class="externalDFN">XML 文档</a>：令
+                        <var>algorithm</var> 为
+                        <a href="https://www.w3.org/TR/html5/single-page.html#xml-fragment-parsing-algorithm"
+                            title="xml-fragment-parsing-algorithm" class="externalDFN">XML
+                            片段解析算法</a>。
+                    </p>
+                </li>
+
+                <li>令 <var>new children</var> 为以 <var>markup</var> 作为
+                    <var>input</var>，并以 <var>context element</var> 作为
+                    <var><a href="https://www.w3.org/TR/html5/single-page.html#concept-frag-parse-context"
+                            title="concept-frag-parse-context" class="externalDFN">上下文</a></var>
+                    元素来调用 <var>algorithm</var> 的结果。
+                </li>
+
+                <li>令 <var>fragment</var> 为一个新的
+                    <code><a href="https://www.w3.org/TR/dom/#documentfragment" title="documentfragment" class="externalDFN">DocumentFragment</a></code>，
+                    其
+                    <a href="https://www.w3.org/TR/dom/#concept-node-document" title="concept-node-document"
+                        class="externalDFN">节点文档</a>
+                    是 <var>context element</var> 的
+                    <a href="https://www.w3.org/TR/dom/#concept-node-document" title="concept-node-document"
+                        class="externalDFN">节点文档</a>。
+
+                </li>
+                <li>将
+                    <var>new children</var> 中的每个 <a href="https://www.w3.org/TR/dom/#concept-node" title="concept-node"
+                        class="externalDFN">节点</a>
+                    <a href="https://www.w3.org/TR/dom/#concept-node-append" title="concept-node-append"
+                        class="externalDFN">追加</a>到 <var>fragment</var>
+                    （按<a href="https://www.w3.org/TR/dom/#concept-tree-order" title="concept-tree-order"
+                        class="externalDFN">树序</a>）。
+
+                    <div class="note">
+                        <div id="h-note1" role="heading" aria-level="4" class="note-title marker"><span>注</span>
+                        </div>
+                        <p class="">这确保新<a href="https://www.w3.org/TR/dom/#concept-node" title="concept-node"
+                                class="externalDFN">节点</a>的
+                            <a href="https://www.w3.org/TR/dom/#concept-node-document" title="concept-node-document"
+                                class="externalDFN">节点文档</a>
+                            是正确的。
+
+                        </p>
+                    </div>
+                </li>
+                <li>返回 <var>fragment</var> 的值。
+                </li>
+            </ol>
+        </section>
+
+        <section property="bibo:hasPart" resource="#serializing" typeof="bibo:Chapter" id="serializing">
+            <h3 resource="#h-serializing" id="h-serializing"><span property="xhv:role" resource="xhv:heading"><span
+                        class="secno">4.2 </span>序列化</span></h3>
+            <p>以下步骤构成
+                <dfn id="dfn-concept-fragment-serializing-algorithm" data-dfn-type="dfn"
+                    data-lt="concept-fragment-serializing-algorithm">片段序列化算法</dfn>，
+                其参数是一个
+                <code><a href="https://www.w3.org/TR/dom/#node" title="node" class="externalDFN">Node</a></code>
+                <var>node</var> 和一个标志 <dfn id="dfn-concept-well-formed" data-dfn-type="dfn"
+                    data-lt="concept-well-formed">要求格式良好</dfn>：
+
+            </p>
+            <ol>
+                <li>令 <var>context document</var> 为 <var>node</var> 的
+                    <a href="https://www.w3.org/TR/dom/#concept-node-document" title="concept-node-document"
+                        class="externalDFN">节点文档</a>的值。
+                </li>
+                <li>如果 <var>context document</var> 是
+                    <a href="https://www.w3.org/TR/dom/#html-document" title="html-document" class="externalDFN">HTML
+                        文档</a>，
+                    则返回 <var>node</var> 的一次 <a data-link-type="dfn" class="internalDFN"
+                        href="#dfn-concept-serialize-html" title="concept-serialize-html">HTML 序列化</a>。
+                </li>
+                <li>否则，<var>context document</var> 是
+                    <a href="https://www.w3.org/TR/dom/#xml-document" title="xml-document" class="externalDFN">XML
+                        文档</a>；
+                    返回 <var>node</var> 的一次 <a data-link-type="dfn" class="internalDFN" href="#dfn-concept-serialize-xml"
+                        title="concept-serialize-xml">XML 序列化</a>，
+                    并传入标志 <var>require well-formed</var>。
+                    <div class="note">
+                        <div id="h-note2" role="heading" aria-level="4" class="note-title marker"><span>注</span>
+                        </div>
+                        <p class="">本文档中定义的 <a data-link-type="dfn" class="internalDFN"
+                                href="#dfn-concept-serialize-xml" title="concept-serialize-xml">XML 序列化</a>
+                            符合 [<cite><a href="#bib-HTML5" class="bibref">HTML5</a></cite>] 中定义的 <a
+                                href="https://www.w3.org/TR/html5/single-page.html#xml-fragment-serialization-algorithm"
+                                title="xml-fragment-serialization-algorithm" class="externalDFN">XML 片段
+                                序列化算法</a>的要求。</p>
+                    </div>
+                </li>
+            </ol>
+
+            <p>要产生一个
+                <code><a href="https://www.w3.org/TR/dom/#node" title="node" class="externalDFN">Node</a></code>
+                <var>node</var> 的 <dfn id="dfn-concept-serialize-html" data-dfn-type="dfn"
+                    data-lt="concept-serialize-html">HTML 序列化</dfn>，用户代理
+                必须在 <var>node</var> 上运行
+                <a href="https://www.w3.org/TR/html5/single-page.html#html-fragment-serialization-algorithm"
+                    title="html-fragment-serialization-algorithm" class="externalDFN">HTML
+                    片段序列化算法</a> [<cite><a href="#bib-HTML5" class="bibref">HTML5</a></cite>]，
+                并返回所产生的字符串。
+
+            </p>
+            <p>要在给定标志 <var>require well-formed</var> 的情况下，产生一个
+                <code><a href="https://www.w3.org/TR/dom/#node" title="node" class="externalDFN">Node</a></code>
+                <var>node</var> 的 <dfn id="dfn-concept-serialize-xml" data-dfn-type="dfn"
+                    data-lt="concept-serialize-xml">XML
+                    序列化</dfn>，
+                运行以下步骤：
+            </p>
+            <ol>
+                <li>令 <dfn id="dfn-concept-context-namespace" data-dfn-type="dfn"
+                        data-lt="concept-context-namespace">上下文命名空间</dfn>为 <code>null</code>。
+                    当一个
+                    <var>node</var> 序列化出不同于其父级的默认命名空间定义时，<a data-link-type="dfn" class="internalDFN"
+                        href="#dfn-concept-context-namespace" title="concept-context-namespace">上下文命名空间</a>会发生改变。该
+                    算法假定起始时没有命名空间。
+                </li>
+                <li>令 <dfn id="dfn-concept-namespace-prefix-map" data-dfn-type="dfn"
+                        data-lt="concept-namespace-prefix-map">命名空间前缀映射</dfn>为一个新的映射，
+                    用于关联 <code>namespaceURI</code> 与命名空间 <code>prefix</code> 对，其中
+                    <code>namespaceURI</code> 值是映射的键，<code>prefix</code> 值是
+                    映射的键值。该<a data-link-type="dfn" class="internalDFN" href="#dfn-concept-namespace-prefix-map"
+                        title="concept-namespace-prefix-map">命名空间前缀
+                        映射</a>
+                    将由此前见过的 namespaceURI 及其在子树中最近的前缀关联填充。
+                    <span class="note"><strong>注：</strong>
+                        <a data-link-type="dfn" class="internalDFN" href="#dfn-concept-namespace-prefix-map"
+                            title="concept-namespace-prefix-map">命名空间前缀映射</a>只会把单个
+                        前缀值与给定的 namespaceURI 关联起来。在序列化期间，如果发现不同命名空间前缀
+                        映射到同一 namespaceURI，则最后遇到的那个会通过用新的前缀值替换映射中
+                        现有键值的方式“胜出”。</span>
+                </li>
+                <li>用
+                    <a data-link-type="dfn" class="internalDFN" href="#dfn-xml-ns" title="xml-ns">XML 命名空间</a>键
+                    和字符串 "<code>xml</code>" 作为键值来初始化<a data-link-type="dfn" class="internalDFN"
+                        href="#dfn-concept-namespace-prefix-map" title="concept-namespace-prefix-map">命名空间前缀映射</a>。
+                </li>
+                <li>令 <dfn id="dfn-concept-generated-prefix" data-dfn-type="dfn"
+                        data-lt="concept-generated-prefix">生成的命名空间前缀索引</dfn>为一个值为
+                    <code>1</code> 的整数。当没有合适的现有
+                    命名空间前缀可用于序列化 <var>node</var> 的 namespaceURI（或
+                    <var>node</var> 的某个属性的 namespaceURI）时，<a data-link-type="dfn" class="internalDFN"
+                        href="#dfn-concept-generated-prefix" title="concept-generated-prefix">生成的命名空间
+                        前缀索引</a>用于生成一个新的唯一前缀值。<span class="note">参见
+                        <a data-link-type="dfn" class="internalDFN" href="#dfn-concept-generate-prefix"
+                            title="concept-generate-prefix">生成前缀</a>算法。</span>
+                </li>
+                <li>返回在 <var>node</var> 上运行<a data-link-type="dfn" class="internalDFN"
+                        href="#dfn-concept-xml-serialization-algorithm" title="concept-xml-serialization-algorithm">XML
+                        序列化
+                        算法</a>的结果，并传入<a data-link-type="dfn" class="internalDFN" href="#dfn-concept-context-namespace"
+                        title="concept-context-namespace">上下文
+                        命名空间</a>、<a data-link-type="dfn" class="internalDFN" href="#dfn-concept-namespace-prefix-map"
+                        title="concept-namespace-prefix-map">命名空间前缀
+                        映射</a>、
+                    <a data-link-type="dfn" class="internalDFN" href="#dfn-concept-generated-prefix"
+                        title="concept-generated-prefix">生成的命名空间前缀索引</a>引用，以及
+                    标志 <var>require well-formed</var>。如果在执行该算法期间发生
+                    <dfn id="dfn-concept-algorithm-exception" data-dfn-type="dfn"
+                        data-lt="concept-algorithm-exception">异常</dfn>，
+                    则捕获该异常，并抛出一个名称为
+                    "<code><a href="https://www.w3.org/TR/dom/#invalidstateerror" title="invalidstateerror" class="externalDFN">InvalidStateError</a></code>"
+                    的
+                    <code><a href="https://www.w3.org/TR/dom/#dfn-DOMException" title="domexception" class="externalDFN">DOMException</a></code>。
+                </li>
+            </ol>
+
+            <p><a data-link-type="dfn" class="internalDFN" href="#dfn-concept-serialize-xml"
+                    title="concept-serialize-xml">XML 序列化</a>与
+                <a data-link-type="dfn" class="internalDFN" href="#dfn-concept-serialize-html"
+                    title="concept-serialize-html">HTML 序列化</a>在以下方面不同：
+            </p>
+            <ul>
+                <li><a href="https://www.w3.org/TR/dom/#element" title="element" class="externalDFN">元素</a>和
+                    <a href="https://www.w3.org/TR/dom/#concept-attribute" title="concept-attribute"
+                        class="externalDFN">属性</a>
+                    始终会被序列化，使其 namespaceURI 得以保留。在某些情况下，
+                    这意味着现有前缀、前缀声明属性或默认命名空间
+                    声明属性可能会被丢弃、替换或改变。
+                    <a data-link-type="dfn" class="internalDFN" href="#dfn-concept-serialize-html"
+                        title="concept-serialize-html">HTML 序列化</a>不会尝试
+                    保留 namespaceURI。
+                </li>
+                <li>不在
+                    <a data-link-type="dfn" class="internalDFN" href="#dfn-html-ns" title="html-ns">HTML 命名空间</a>中且
+                    不包含<a href="https://www.w3.org/TR/dom/#concept-tree-child" title="concept-tree-child"
+                        class="externalDFN">子节点</a>的<a href="https://www.w3.org/TR/dom/#element" title="element"
+                        class="externalDFN">元素</a>
+                    会使用自闭合标签语法进行序列化
+                    （即按照 [<cite><a href="#bib-XML10" class="bibref">XML10</a></cite>] 的 <code>EmptyElemTag</code>
+                    产生式）。
+                </li>
+            </ul>
+
+            <p>除此之外，用于产生 <a data-link-type="dfn" class="internalDFN" href="#dfn-concept-serialize-xml"
+                    title="concept-serialize-xml">XML 序列化</a>的算法
+                被设计为产生与
+                <a href="https://www.w3.org/TR/html5/single-page.html#html-parser" title="html-parser"
+                    class="externalDFN">HTML 解析器</a>兼容的序列化。例如，
+                <a data-link-type="dfn" class="internalDFN" href="#dfn-html-ns" title="html-ns">HTML
+                    命名空间</a>中不包含子节点的元素会被序列化为
+                显式的开始标签和结束标签，而不是使用自闭合标签语法 [<cite><a href="#bib-XML10" class="bibref">XML10</a></cite>]。
+
+            </p>
+            <div class="note">
+                <div id="h-note3" role="heading" aria-level="4" class="note-title marker"><span>注</span></div>
+                <p class="">根据 [<cite><a href="#bib-DOM4" class="bibref">DOM4</a></cite>]，
+                    <code><a href="https://www.w3.org/TR/dom/#interface-attr" title="interface-attr" class="externalDFN">Attr</a></code>
+                    对象不继承自
+                    <code><a href="https://www.w3.org/TR/dom/#node" title="node" class="externalDFN">Node</a></code>，
+                    因此不能由<a data-link-type="dfn" class="internalDFN" href="#dfn-concept-xml-serialization-algorithm"
+                        title="concept-xml-serialization-algorithm">XML
+                        序列化算法</a>进行序列化。
+                    尝试序列化一个
+                    <code><a href="https://www.w3.org/TR/dom/#interface-attr" title="interface-attr" class="externalDFN">Attr</a></code>
+                    对象将导致一个 <code>TypeError</code> 异常 [<cite><a href="#bib-WEBIDL" class="bibref">WEBIDL</a></cite>]。
+
+                </p>
+            </div>
+            <p>要在给定<a data-link-type="dfn" class="internalDFN" href="#dfn-concept-context-namespace"
+                    title="concept-context-namespace">上下文命名空间</a>
+                <var>namespace</var>、<a data-link-type="dfn" class="internalDFN"
+                    href="#dfn-concept-namespace-prefix-map" title="concept-namespace-prefix-map">命名空间前缀
+                    映射</a>
+                <var>prefix map</var>、<a data-link-type="dfn" class="internalDFN" href="#dfn-concept-generated-prefix"
+                    title="concept-generated-prefix">生成的命名空间前缀
+                    索引</a>
+                <var>prefix index</var>，以及标志 <var>require well-formed</var> 的情况下，在
+                <var>node</var> 上运行 <dfn id="dfn-concept-xml-serialization-algorithm" data-dfn-type="dfn"
+                    data-lt="concept-xml-serialization-algorithm">XML 序列化算法</dfn>，用户代理必须根据
+                <var>node</var> 的接口运行相应步骤：
+            </p>
+
+            <dl class="switch">
+                <dt><code><a href="https://www.w3.org/TR/dom/#interface-element" title="interface-element" class="externalDFN">Element</a></code>
+                </dt>
+                <dd>
+                    <p>运行以下算法：
+                    </p>
+                    <ol>
+                        <!-- "namespace" was passed via the caller, it's the default namespace scope -->
+                        <!-- "prefix map" was passed via the caller, it's the namespace->prefix map -->
+                        <!-- "prefix index" was passed via the caller, it's a number for generating prefixes if necessary -->
+                        <!-- "require well-formed" was passed via the caller, it's a flag (true/false) for whether certain validation steps should be taken during serialization. -->
+                        <li>如果<a data-link-type="dfn" class="internalDFN" href="#dfn-concept-well-formed"
+                                title="concept-well-formed">require well-formed</a> 标志已设置（其值为
+                            <code>true</code>），且此 <var>node</var> 的
+                            <code><a href="https://www.w3.org/TR/dom/#dom-element-localname" title="dom-element-localname" class="externalDFN">localName</a></code>
+                            属性包含字符 "<code>:</code>"（U+003A COLON），或不匹配
+                            XML <code>Name</code> 产生式 [<cite><a href="#bib-XML10" class="bibref">XML10</a></cite>]，则<a
+                                data-link-type="dfn" class="internalDFN" href="#dfn-concept-algorithm-exception"
+                                title="concept-algorithm-exception">抛出
+                                异常</a>；此 <var>node</var> 的序列化将不是格式良好的
+                            元素。
+                        </li>
+                        <li>令 <var>markup</var> 为字符串 "<code>&lt;</code>"（U+003C LESS-THAN SIGN）。
+                        </li>
+                        <li>令 <var>qualified name</var> 为空字符串。
+                        </li>
+                        <li>令 <var>skip end tag</var> 标志的值为 <code>false</code>。
+                        </li>
+                        <li>令 <var>ignore namespace definition attribute</var> 标志的值为
+                            <code>false</code>。
+                        </li>
+                        <li>令 <var>map</var> 为 <var>prefix map</var> 的副本。
+                        </li>
+                        <li>令 <var>element prefixes list</var> 为空列表。<span class="note">此列表
+                                对每个元素是局部的。其目的是确保在需要生成新的命名空间前缀属性时
+                                不会有冲突的前缀。</span>
+                        </li>
+                        <li>令 <var>duplicate prefix definition</var> 为 <code>null</code>。
+                        </li>
+                        <li>令 <var>local default namespace</var> 为在给定
+                            <var>map</var>、<var>element prefixes list</var> 和
+                            <var>duplicate prefix definition</var> 的情况下，为
+                            <var>node</var> <a data-link-type="dfn" class="internalDFN"
+                                href="#dfn-concept-record-namespace-info"
+                                title="concept-record-namespace-info">记录命名空间信息</a>的结果。
+                            <div class="note">
+                                <div id="h-note4" role="heading" aria-level="4" class="note-title marker">
+                                    <span>注</span>
+                                </div>
+                                <p class="">上述步骤会用任何找到的命名空间
+                                    前缀
+                                    定义更新 <var>map</var>，将找到的前缀定义添加到 <var>element prefixes
+                                        list</var>，可选地
+                                    设置 <var>duplicate prefix definition</var> 值，并返回由默认命名空间属性定义的局部默认
+                                    命名空间
+                                    值（如果存在）。否则它返回
+                                    <code>null</code>。
+                                </p>
+                            </div>
+                        </li>
+                        <li>令 <var>inherited ns</var> 为 <var>namespace</var> 的副本。
+                        </li>
+                        <li>令 <var>ns</var> 为 <var>node</var> 的
+                            <code><a href="https://www.w3.org/TR/dom/#dom-element-namespaceuri" title="dom-element-namespaceuri" class="externalDFN">namespaceURI</a></code>
+                            属性的值。
+                        </li>
+                        <li>如果 <var>inherited ns</var> 等于 <var>ns</var>，则：
+                            <ol>
+                                <li>如果 <var>local default namespace</var> 不为 <code>null</code>，则将
+                                    <var>ignore namespace definition attribute</var> 设为 <code>true</code>。
+                                </li>
+                                <li>如果 <var>ns</var> 是 <a data-link-type="dfn" class="internalDFN" href="#dfn-xml-ns"
+                                        title="xml-ns">XML 命名空间</a>，则令 <var>qualified
+                                        name</var>
+                                    为字符串 "<code>xml:</code>" 与 <var>node</var> 的
+                                    <code><a href="https://www.w3.org/TR/dom/#dom-element-localname" title="dom-element-localname" class="externalDFN">localName</a></code>
+                                    的值的连接。
+                                </li>
+                                <li>否则，令 <var>qualified name</var> 为 <var>node</var> 的
+                                    <code><a href="https://www.w3.org/TR/dom/#dom-element-localname" title="dom-element-localname" class="externalDFN">localName</a></code>
+                                    的值。
+                                    <span class="note"><var>node</var> 的前缀始终会被丢弃。</span>
+                                </li>
+                                <li>将 <var>qualified name</var> 的值追加到 <var>markup</var>。
+                                </li>
+                            </ol>
+                        </li>
+                        <li>否则，<var>inherited ns</var> 不等于 <var>ns</var>（<var>node</var> 自身的
+                            命名空间不同于其父级的上下文命名空间）。运行这些子步骤：
+                            <!-- The serialization algorithm must differentiate this node's namespace from it's parent's default
+                        namespace. There are two ways to do this: (1) [preferred due to assumed minimum length] use a
+                        namespace prefix if one is available or (2) use a default namespace declaration. Both cases can
+                        run into conflicts with existing attributes on the element and are handled accordingly. -->
+                            <ol>
+                                <li>令 <var>prefix</var> 为 <var>node</var> 的
+                                    <code><a href="https://www.w3.org/TR/dom/#dom-element-prefix" title="dom-element-prefix" class="externalDFN">prefix</a></code>
+                                    属性的值。
+                                </li>
+                                <li>令 <var>candidate prefix</var> 为来自 <var>map</var> 的一个值，其中
+                                    <var>map</var> 中存在一个键
+                                    匹配 <var>ns</var> 的值；如果不存在这样的键，则令
+                                    <var>candidate prefix</var> 为 <code>null</code>。
+                                    <!-- Found a suitable prefix to use, either locally, or inherited through a parent node that
+                            matches the node's namespaceURI. This prefix will be used in serialization even if the node
+                            doesn't have a real prefix. -->
+                                </li>
+                                <li>如果 <var>candidate prefix</var> 不为 <code>null</code>（已定义一个映射到
+                                    <var>ns</var> 的合适命名空间前缀），则：
+                                    <ol>
+                                        <li>令 <var>qualified name</var> 为 <var>candidate
+                                                prefix</var>、
+                                            "<code>:</code>"（U+003A COLON）以及 <var>node</var> 的 <code>
+                                <a href="https://www.w3.org/TR/dom/#dom-element-localname" title="dom-element-localname" class="externalDFN">localName</a></code>
+                                            的连接。
+                                            <span class="note">在此 <var>node</var> 或该
+                                                <var>node</var> 的祖先上存在一个
+                                                命名空间前缀定义，该定义定义了 <var>node</var> 的
+                                                命名空间。</span>
+                                        </li>
+                                        <li>如果 <var>local default namespace</var> 不为 <code>null</code>（存在
+                                            一个局部定义的
+                                            默认命名空间声明属性），则令 <var>inherited ns</var>
+                                            取得
+                                            <var>ns</var> 的值。
+                                        </li>
+                                        <li>将 <var>qualified name</var> 的值追加到 <var>markup</var>。
+                                        </li>
+                                    </ol>
+                                    <!-- Now there's no existing namespace->prefix mapping to override; try to use a prefix: -->
+                                </li>
+                                <li>否则，如果 <var>prefix</var> 不为 <code>null</code> 且 <var>local default
+                                        namespace</var> 为
+                                    <code>null</code>，则：
+                                    <ol>
+                                        <li>如果 <var>element prefixes list</var> 包含
+                                            <var>prefix</var> 的值，则
+                                            令 <var>prefix</var> 为在提供以下输入的情况下
+                                            <a data-link-type="dfn" class="internalDFN"
+                                                href="#dfn-concept-generate-prefix"
+                                                title="concept-generate-prefix">生成前缀</a>的结果：
+                                            <a data-link-type="dfn" class="internalDFN"
+                                                href="#dfn-concept-namespace-prefix-map"
+                                                title="concept-namespace-prefix-map">命名空间前缀映射</a>
+                                            <var>map</var>、
+                                            <var>node</var> 的 <var>ns</var> 字符串，以及 <var>prefix index</var>
+                                            整数。
+                                        </li>
+                                        <li>否则，向 <var>map</var> 追加一个新键 <var>ns</var>，其键值
+                                            是
+                                            <var>prefix</var>。
+                                            <!-- Prefix is now either real or generated, and added to the map. -->
+                                        </li>
+                                        <li>令 <var>qualified name</var> 为
+                                            <var>prefix</var>、"<code>:</code>"（U+003A COLON）以及 <var>node</var> 的
+                                            <code><a href="https://www.w3.org/TR/dom/#dom-element-localname" title="dom-element-localname" class="externalDFN">localName</a></code>
+                                            的连接。
+                                        </li>
+                                        <li>将 <var>qualified name</var> 的值追加到 <var>markup</var>。
+                                        </li>
+                                        <li>按所列顺序将以下内容追加到 <var>markup</var>：<span class="note">以下步骤会
+                                                序列化刚添加到
+                                                <var>map</var> 的新命名空间/前缀关联。</span>
+                                            <ol>
+                                                <li>"<code> </code>"（U+0020 SPACE）；
+                                                </li>
+                                                <li>字符串 "<code>xmlns:</code>"；
+                                                </li>
+                                                <li><var>prefix</var> 的值；
+                                                </li>
+                                                <li>"<code>="</code>"（U+003D EQUALS SIGN, U+0022 QUOTATION MARK）；
+                                                </li>
+                                                <li>以 <var>ns</var> 和<a data-link-type="dfn" class="internalDFN"
+                                                        href="#dfn-concept-well-formed"
+                                                        title="concept-well-formed">require well-formed</a> 标志
+                                                    作为输入，<a data-link-type="dfn" class="internalDFN"
+                                                        href="#dfn-concept-serialize-attr-value"
+                                                        title="concept-serialize-attr-value">序列化属性
+                                                        值</a>的结果；
+                                                </li>
+                                                <li>"<code>"</code>"（U+0022 QUOTATION MARK）。
+                                                </li>
+                                            </ol>
+                                        </li>
+                                    </ol>
+                                    <!-- Giving up on the prefix route, try to use a default namespace instead (stomping on an existing
+                             one if necessary) and dropping the node's prefix -->
+                                </li>
+                                <li>否则，如果 <var>local default namespace</var> 为 <code>null</code>，或
+                                    <var>local
+                                        default namespace</var> 不为 <code>null</code> 且其值不等于
+                                    <var>ns</var>，则：
+                                    <ol>
+                                        <li>将 <var>ignore namespace definition attribute</var> 标志设为
+                                            <code>true</code>。
+                                        </li>
+                                        <li>令 <var>qualified name</var> 为 <var>node</var> 的
+                                            <code><a href="https://www.w3.org/TR/dom/#dom-element-localname" title="dom-element-localname" class="externalDFN">localName</a></code>
+                                            的值。
+                                        </li>
+                                        <li>令 <var>inherited ns</var> 的值为 <var>ns</var>。<span class="note">新的
+                                                默认命名空间将在序列化中用于定义此
+                                                <var>node</var> 的
+                                                命名空间，并作为其<a href="https://www.w3.org/TR/dom/#concept-tree-child"
+                                                    title="concept-tree-child"
+                                                    class="externalDFN">子节点</a>的上下文命名空间。</span>
+                                        </li>
+                                        <li>将 <var>qualified name</var> 的值追加到 <var>markup</var>。
+                                        </li>
+                                        <li>按所列顺序将以下内容追加到 <var>markup</var>：<span class="note">以下步骤会
+                                                序列化新的（或替换的）默认命名空间定义。</span>
+                                            <ol>
+                                                <li>"<code> </code>"（U+0020 SPACE）；
+                                                </li>
+                                                <li>字符串 "<code>xmlns</code>"；
+                                                </li>
+                                                <li>"<code>="</code>"（U+003D EQUALS SIGN, U+0022 QUOTATION MARK）；
+                                                </li>
+                                                <li>以 <var>ns</var> 和<a data-link-type="dfn" class="internalDFN"
+                                                        href="#dfn-concept-well-formed"
+                                                        title="concept-well-formed">require well-formed</a> 标志
+                                                    作为输入，<a data-link-type="dfn" class="internalDFN"
+                                                        href="#dfn-concept-serialize-attr-value"
+                                                        title="concept-serialize-attr-value">序列化属性
+                                                        值</a>的结果；
+                                                </li>
+                                                <li>"<code>"</code>"（U+0022 QUOTATION MARK）。
+                                                </li>
+                                            </ol>
+                                        </li>
+                                    </ol>
+                                    <!-- Finally, regardless of prefix, the node has a local default namespace that matches 'ns'.
+                            So, we'll just use that and drop the prefix -->
+                                </li>
+                                <li>否则，<var>node</var> 拥有一个匹配
+                                    <var>ns</var> 的 <var>local default namespace</var>。令
+                                    <var>qualified name</var> 为 <var>node</var> 的
+                                    <code><a href="https://www.w3.org/TR/dom/#dom-element-localname" title="dom-element-localname" class="externalDFN">localName</a></code>
+                                    的值，
+                                    令 <var>inherited ns</var> 的值为 <var>ns</var>，并将
+                                    <var>qualified name</var> 的值追加到 <var>markup</var>。
+                                </li>
+                            </ol>
+                        </li>
+                        <li>将
+                            在给定<a data-link-type="dfn" class="internalDFN" href="#dfn-concept-namespace-prefix-map"
+                                title="concept-namespace-prefix-map">命名空间前缀映射</a> <var>map</var>、
+                            <a data-link-type="dfn" class="internalDFN" href="#dfn-concept-generated-prefix"
+                                title="concept-generated-prefix">生成的前缀索引</a> <var>prefix index</var>、
+                            标志 <var>ignore namespace definition attribute</var> 以及 <var>duplicate
+                                prefix definition</var> 的值的情况下得到的
+                            <a data-link-type="dfn" class="internalDFN" href="#dfn-concept-serialize-xml-attributes"
+                                title="concept-serialize-xml-attributes"><var>node</var> 的
+                                属性的 XML 序列化</a>结果追加到 <var>markup</var>。
+                        </li>
+                        <li>如果 <var>ns</var> 是 <a data-link-type="dfn" class="internalDFN" href="#dfn-html-ns"
+                                title="html-ns">HTML 命名空间</a>，
+                            且 <var>node</var> 的
+                            <a href="https://www.w3.org/TR/dom/#concept-tree-child" title="concept-tree-child"
+                                class="externalDFN">子节点</a>
+                            列表为空，且 <var>node</var> 的
+                            <code><a href="https://www.w3.org/TR/dom/#dom-element-localname" title="dom-element-localname" class="externalDFN">localName</a></code>
+                            匹配以下任一
+                            <a href="https://www.w3.org/TR/html5/single-page.html#void-elements" title="void-elements"
+                                class="externalDFN">空元素</a>：
+                            "<code>area</code>"、
+                            "<code>base</code>"、
+                            "<code>basefont</code>"、
+                            "<code>bgsound</code>"、
+                            "<code>br</code>"、
+                            "<code>col</code>"、
+                            "<code>embed</code>"、
+                            "<code>frame</code>"、
+                            "<code>hr</code>"、
+                            "<code>img</code>"、
+                            "<code>input</code>"、
+                            "<code>keygen</code>"、
+                            "<code>link</code>"、
+                            "<code>menuitem</code>"、
+                            "<code>meta</code>"、
+                            "<code>param</code>"、
+                            "<code>source</code>"、
+                            "<code>track</code>"、
+                            "<code>wbr</code>"；
+                            则按所列顺序将以下内容追加到 <var>markup</var>：
+                            <ol>
+                                <li>"<code> </code>"（U+0020 SPACE）；
+                                </li>
+                                <li>"<code>/</code>"（U+002F SOLIDUS）。
+                                </li>
+                            </ol>
+                            并将 <var>skip end tag</var> 标志设为 <code>true</code>。
+                        </li>
+                        <li>如果 <var>ns</var> 不是 <a data-link-type="dfn" class="internalDFN" href="#dfn-html-ns"
+                                title="html-ns">HTML 命名空间</a>，
+                            且 <var>node</var> 的
+                            <a href="https://www.w3.org/TR/dom/#concept-tree-child" title="concept-tree-child"
+                                class="externalDFN">子节点</a>
+                            列表为空，则将 "<code>/</code>"（U+002F SOLIDUS）追加到 <var>markup</var>，
+                            并将 <var>skip end tag</var> 标志设为 <code>true</code>。
+                        </li>
+                        <li>将 "<code>&gt;</code>"（U+003E GREATER-THAN SIGN）追加到 <var>markup</var>。
+                        </li>
+                        <li>如果 <var>skip end tag</var> 的值为 <code>true</code>，则返回
+                            <var>markup</var> 的值，并跳过剩余步骤。该
+                            <var>node</var> 是一个叶节点。
+                        </li>
+                        <li>如果 <var>ns</var> 是 <a data-link-type="dfn" class="internalDFN" href="#dfn-html-ns"
+                                title="html-ns">HTML 命名空间</a>，且 <var>node</var> 的
+                            <code><a href="https://www.w3.org/TR/dom/#dom-element-localname" title="dom-element-localname" class="externalDFN">localName</a></code>
+                            匹配字符串 "<code>template</code>"，则这是一个
+                            <code><a href="https://www.w3.org/TR/html5/single-page.html#the-template-element" title="the-template-element" class="externalDFN">template</a></code>
+                            元素。
+                            将在
+                            <a href="https://www.w3.org/TR/html5/single-page.html#the-template-element"
+                                title="the-template-element" class="externalDFN">template</a> 元素的
+                            <a href="https://www.w3.org/TR/html5/single-page.html#template-contents"
+                                title="template-contents" class="externalDFN">template 内容</a>
+                            （一个
+                            <code><a href="https://www.w3.org/TR/dom/#interface-documentfragment" title="interface-documentfragment" class="externalDFN">DocumentFragment</a></code>）
+                            上运行
+                            <a data-link-type="dfn" class="internalDFN" href="#dfn-concept-xml-serialization-algorithm"
+                                title="concept-xml-serialization-algorithm">XML 序列化算法</a>的结果
+                            追加到 <var>markup</var>，
+                            并为
+                            <a data-link-type="dfn" class="internalDFN" href="#dfn-concept-context-namespace"
+                                title="concept-context-namespace">上下文命名空间</a>提供
+                            <var>inherited ns</var> 的值，
+                            为<a data-link-type="dfn" class="internalDFN" href="#dfn-concept-namespace-prefix-map"
+                                title="concept-namespace-prefix-map">命名空间
+                                前缀映射</a>提供 <var>map</var>，
+                            为
+                            <a data-link-type="dfn" class="internalDFN" href="#dfn-concept-generated-prefix"
+                                title="concept-generated-prefix">生成的命名空间前缀索引</a>提供
+                            <var>prefix index</var>，并提供 <var>require well-formed</var> 标志的值。
+                            <span class="note">在给定
+                                <a href="https://www.w3.org/TR/html5/single-page.html#parsing-xhtml-documents"
+                                    title="parsing-xhtml-documents" class="externalDFN">解析 XHTML 文档</a>
+                                规则的情况下，这允许
+                                <a href="https://www.w3.org/TR/html5/single-page.html#template-contents"
+                                    title="template-contents" class="externalDFN">template 内容</a>往返
+                                [<cite><a href="#bib-HTML5" class="bibref">HTML5</a></cite>]。</span>
+                        </li>
+                        <li>否则，将在 <var>node</var> 的每个
+                            <a href="https://www.w3.org/TR/dom/#concept-tree-child" title="concept-tree-child"
+                                class="externalDFN">子节点</a>上
+                            按<a href="https://www.w3.org/TR/dom/#concept-tree-order" title="concept-tree-order"
+                                class="externalDFN">树序</a>运行
+                            <a data-link-type="dfn" class="internalDFN" href="#dfn-concept-xml-serialization-algorithm"
+                                title="concept-xml-serialization-algorithm">XML 序列化算法</a>的结果追加到 <var>markup</var>，
+                            并为
+                            <a data-link-type="dfn" class="internalDFN" href="#dfn-concept-context-namespace"
+                                title="concept-context-namespace">上下文命名空间</a>提供
+                            <var>inherited ns</var> 的值，
+                            为<a data-link-type="dfn" class="internalDFN" href="#dfn-concept-namespace-prefix-map"
+                                title="concept-namespace-prefix-map">命名空间
+                                前缀映射</a>提供 <var>map</var>，
+                            为
+                            <a data-link-type="dfn" class="internalDFN" href="#dfn-concept-generated-prefix"
+                                title="concept-generated-prefix">生成的命名空间前缀索引</a>提供
+                            <var>prefix index</var>，并提供 <var>require well-formed</var> 标志的值。
+                        </li>
+                        <li>按所列顺序将以下内容追加到 <var>markup</var>：
+                            <ol>
+                                <li>"<code>&lt;/</code>"（U+003C LESS-THAN SIGN, U+002F SOLIDUS）；
+                                </li>
+                                <li><var>qualified name</var> 的值；
+                                </li>
+                                <li>"<code>&gt;</code>"（U+003E GREATER-THAN SIGN）。
+                                </li>
+                            </ol>
+                        </li>
+                        <li>返回 <var>markup</var> 的值。
+                        </li>
+                    </ol>
+
+                </dd>
+                <dt><code><a href="https://www.w3.org/TR/dom/#interface-document" title="interface-document" class="externalDFN">Document</a></code>
+                </dt>
+                <dd>
+                    <p>如果<a data-link-type="dfn" class="internalDFN" href="#dfn-concept-well-formed"
+                            title="concept-well-formed">require well-formed</a> 标志已设置（其值为
+                        <code>true</code>），且此 <var>node</var> 没有
+                        <code><a href="https://www.w3.org/TR/dom/#dom-document-documentelement" title="dom-document-documentelement" class="externalDFN">documentElement</a></code>
+                        （
+                        <code><a href="https://www.w3.org/TR/dom/#dom-document-documentelement" title="dom-document-documentelement" class="externalDFN">documentElement</a></code>
+                        属性的值为 <code>null</code>），则<a data-link-type="dfn" class="internalDFN"
+                            href="#dfn-concept-algorithm-exception" title="concept-algorithm-exception">抛出
+                            异常</a>；此 <var>node</var> 的序列化将不是格式良好的
+                        文档。
+                    </p>
+                    <p>否则，运行以下步骤：
+                    </p>
+                    <ol>
+                        <li>令 <var>serialized document</var> 为空字符串。
+                        </li>
+                        <li>如果 <var>node</var> 的
+                            <code><a href="https://www.w3.org/TR/dom/#dom-document-doctype" title="dom-document-doctype" class="externalDFN">doctype</a></code>
+                            属性不为 <code>null</code>，则在提供 <var>require well-formed</var> 标志的情况下，
+                            将为 <var>node</var> 的
+                            <code><a href="https://www.w3.org/TR/dom/#dom-document-doctype" title="dom-document-doctype" class="externalDFN">doctype</a></code>
+                            属性<a data-link-type="dfn" class="internalDFN" href="#dfn-concept-serialize-doctype"
+                                title="concept-serialize-doctype">产生 DocumentType 序列化</a>的步骤
+                            所产生的字符串追加到 <var>serialized document</var>。
+                        </li>
+                        <li>对于 <var>node</var> 的每个<a href="https://www.w3.org/TR/dom/#concept-tree-child"
+                                title="concept-tree-child" class="externalDFN">子节点</a>
+                            <var>child</var>，按
+                            <a href="https://www.w3.org/TR/dom/#concept-tree-order" title="concept-tree-order"
+                                class="externalDFN">树序</a>，在给定<a data-link-type="dfn" class="internalDFN"
+                                href="#dfn-concept-context-namespace" title="concept-context-namespace">上下文
+                                命名空间</a>
+                            <var>namespace</var>、<a data-link-type="dfn" class="internalDFN"
+                                href="#dfn-concept-namespace-prefix-map" title="concept-namespace-prefix-map">命名空间
+                                前缀映射</a>
+                            <var>prefix map</var>、对<a data-link-type="dfn" class="internalDFN"
+                                href="#dfn-concept-generated-prefix" title="concept-generated-prefix">生成的
+                                命名空间前缀索引</a> <var>prefix index</var> 的引用、标志
+                            <var>require well-formed</var> 的情况下，在 <var>child</var> 上运行
+                            <a data-link-type="dfn" class="internalDFN" href="#dfn-concept-xml-serialization-algorithm"
+                                title="concept-xml-serialization-algorithm">XML 序列化算法</a>，
+                            并将结果追加到 <var>serialized document</var>。
+                        </li>
+                        <li>返回 <var>serialized document</var> 的值。
+                        </li>
+                    </ol>
+
+                </dd>
+                <dt><code><a href="https://www.w3.org/TR/dom/#interface-comment" title="interface-comment" class="externalDFN">Comment</a></code>
+                </dt>
+                <dd>
+                    <p>如果<a data-link-type="dfn" class="internalDFN" href="#dfn-concept-well-formed"
+                            title="concept-well-formed">require well-formed</a> 标志已设置（其值为
+                        <code>true</code>），且 <var>node</var> 的
+                        <code><a href="https://www.w3.org/TR/dom/#dom-characterdata-data" title="dom-characterdata-data" class="externalDFN">data</a></code>
+                        包含不匹配 XML <code>Char</code> 产生式的字符 [<cite><a href="#bib-XML10"
+                                class="bibref">XML10</a></cite>]，或
+                        包含 "<code>--</code>"（两个相邻的 U+002D HYPHEN-MINUS 字符），或以
+                        "<code>-</code>"（U+002D HYPHEN-MINUS）字符结尾，则
+                        <a data-link-type="dfn" class="internalDFN" href="#dfn-concept-algorithm-exception"
+                            title="concept-algorithm-exception">抛出异常</a>；此
+                        <var>node</var> 的
+                        <code><a href="https://www.w3.org/TR/dom/#dom-characterdata-data" title="dom-characterdata-data" class="externalDFN">data</a></code>
+                        的序列化将不是格式良好的。
+                    </p>
+                    <p>返回 "<code>&lt;!--</code>"、<var>node</var> 的
+                        <code><a href="https://www.w3.org/TR/dom/#dom-characterdata-data" title="dom-characterdata-data" class="externalDFN">data</a></code>
+                        和
+                        "<code>--&gt;</code>" 的连接。
+
+                        <!-- Removing CDATA Serialization steps as this interface type is removed from DOM4:
+            <dt><code><a title="cdata" data-spec="DOML2" class="externalDFN">CDATASection</a></code>
+            <dd><ol>
+                <li>Let <var>markup</var> be the concatenation of "<code>&lt;![CDATA[</code>",
+                    <var>node</var>'s <code><a title="dom-characterdata-data" data-spec="DOM4"
+                    class="externalDFN">data</a></code>, and "<code>]]></code>".
+                <li>Return the value of <var>markup</var>.
+              </ol>
+
+              <p class=note>CDATASection objects may be created by the historical
+            <code>document.createCDATASection</code> API, or as a result of parsing an
+            <a title="xml-document" data-spec="DOM4" class="externalDFN">XML document</a>.
+            -->
+
+                    </p>
+                </dd>
+                <dt><code><a href="https://www.w3.org/TR/dom/#interface-text" title="interface-text" class="externalDFN">Text</a></code>
+                </dt>
+                <dd>
+                    <ol>
+                        <li>如果<a data-link-type="dfn" class="internalDFN" href="#dfn-concept-well-formed"
+                                title="concept-well-formed">require well-formed</a> 标志已设置（其值为
+                            <code>true</code>），且 <var>node</var> 的
+                            <code><a href="https://www.w3.org/TR/dom/#dom-characterdata-data" title="dom-characterdata-data" class="externalDFN">data</a></code>
+                            包含不匹配 XML <code>Char</code> 产生式的字符 [<cite><a href="#bib-XML10"
+                                    class="bibref">XML10</a></cite>]，
+                            则<a data-link-type="dfn" class="internalDFN" href="#dfn-concept-algorithm-exception"
+                                title="concept-algorithm-exception">抛出异常</a>；此
+                            <var>node</var> 的
+                            <code><a href="https://www.w3.org/TR/dom/#dom-characterdata-data" title="dom-characterdata-data" class="externalDFN">data</a></code>
+                            的序列化将不是格式良好的。
+                        </li>
+                        <li>令 <var>markup</var> 为 <var>node</var> 的
+                            <code><a href="https://www.w3.org/TR/dom/#dom-characterdata-data" title="dom-characterdata-data" class="externalDFN">data</a></code>
+                            的值。
+
+                        </li>
+                        <li>将 <var>markup</var> 中出现的任何 "<code>&amp;</code>" 替换为
+                            "<code>&amp;amp;</code>"。
+
+                        </li>
+                        <li>将 <var>markup</var> 中出现的任何 "<code>&lt;</code>" 替换为
+                            "<code>&amp;lt;</code>"。
+
+                        </li>
+                        <li>将 <var>markup</var> 中出现的任何 "<code>&gt;</code>" 替换为
+                            "<code>&amp;gt;</code>"。
+
+                        </li>
+                        <li>返回 <var>markup</var> 的值。
+                        </li>
+                    </ol>
+                </dd>
+                <dt><code><a href="https://www.w3.org/TR/dom/#interface-documentfragment" title="interface-documentfragment" class="externalDFN">DocumentFragment</a></code>
+                </dt>
+                <dd>
+                    <ol>
+                        <li>令 <var>markup</var> 为空字符串。
+
+                        </li>
+                        <li>对于 <var>node</var> 的每个<a href="https://www.w3.org/TR/dom/#concept-tree-child"
+                                title="concept-tree-child" class="externalDFN">子节点</a>
+                            <var>child</var>，按
+                            <a href="https://www.w3.org/TR/dom/#concept-tree-order" title="concept-tree-order"
+                                class="externalDFN">树序</a>，
+                            在给定<a data-link-type="dfn" class="internalDFN" href="#dfn-concept-context-namespace"
+                                title="concept-context-namespace">上下文命名空间</a> <var>namespace</var>、
+                            <a data-link-type="dfn" class="internalDFN" href="#dfn-concept-namespace-prefix-map"
+                                title="concept-namespace-prefix-map">命名空间前缀映射</a> <var>prefix map</var>、
+                            对<a data-link-type="dfn" class="internalDFN" href="#dfn-concept-generated-prefix"
+                                title="concept-generated-prefix">生成的
+                                命名空间前缀索引</a>
+                            <var>prefix index</var> 的引用，以及标志 <var>require well-formed</var> 的情况下，
+                            在 <var>child</var> 上运行<a data-link-type="dfn" class="internalDFN"
+                                href="#dfn-concept-xml-serialization-algorithm"
+                                title="concept-xml-serialization-algorithm">XML 序列化算法</a>。
+                            将结果连接到 <var>markup</var>。
+                        </li>
+                        <li>返回 <var>markup</var> 的值。
+                        </li>
+                    </ol>
+
+                </dd>
+                <dt><code><a href="https://www.w3.org/TR/dom/#interface-documenttype" title="interface-documenttype" class="externalDFN">DocumentType</a></code>
+                </dt>
+                <dd>运行在给定<a data-link-type="dfn" class="internalDFN" href="#dfn-concept-well-formed"
+                        title="concept-well-formed">require well-formed</a>
+                    标志的情况下，为 <var>node</var> <a data-link-type="dfn" class="internalDFN"
+                        href="#dfn-concept-serialize-doctype" title="concept-serialize-doctype">产生 DocumentType
+                        序列化</a>的步骤，并返回其所产生的字符串。
+
+                </dd>
+                <dt><code><a href="https://www.w3.org/TR/dom/#interface-processinginstruction" title="interface-processinginstruction" class="externalDFN">ProcessingInstruction</a></code>
+                </dt>
+                <dd>
+                    <ol>
+                        <li>如果<a data-link-type="dfn" class="internalDFN" href="#dfn-concept-well-formed"
+                                title="concept-well-formed">require well-formed</a> 标志已设置（其值为
+                            <code>true</code>），且 <var>node</var> 的
+                            <code><a href="https://www.w3.org/TR/dom/#dom-processinginstruction-target" title="dom-processinginstruction-target" class="externalDFN">target</a></code>
+                            包含一个 "<code>:</code>"（U+003A COLON）字符，或与字符串 "<code>xml</code>" 进行
+                            <a href="https://www.w3.org/TR/dom/#ascii-case-insensitive" class="externalDFN"
+                                title="ascii-case-insensitive">ASCII 不区分大小写</a>
+                            匹配，则<a data-link-type="dfn" class="internalDFN" href="#dfn-concept-algorithm-exception"
+                                title="concept-algorithm-exception">抛出
+                                异常</a>；此 <var>node</var> 的
+                            <code><a href="https://www.w3.org/TR/dom/#dom-processinginstruction-target" title="dom-processinginstruction-target" class="externalDFN">target</a></code>
+                            的序列化将不是格式良好的。
+                        </li>
+                        <li>如果<a data-link-type="dfn" class="internalDFN" href="#dfn-concept-well-formed"
+                                title="concept-well-formed">require well-formed</a> 标志已设置（其值为
+                            <code>true</code>），且 <var>node</var> 的
+                            <code><a href="https://www.w3.org/TR/dom/#dom-characterdata-data" title="dom-characterdata-data" class="externalDFN">data</a></code>
+                            包含不匹配 XML <code>Char</code> 产生式的字符 [<cite><a href="#bib-XML10"
+                                    class="bibref">XML10</a></cite>]，或
+                            包含字符串 "<code>?&gt;</code>"（U+003F QUESTION MARK, U+003E GREATER-THAN SIGN），
+                            则<a data-link-type="dfn" class="internalDFN" href="#dfn-concept-algorithm-exception"
+                                title="concept-algorithm-exception">抛出异常</a>；此
+                            <var>node</var> 的
+                            <code><a href="https://www.w3.org/TR/dom/#dom-characterdata-data" title="dom-characterdata-data" class="externalDFN">data</a></code>
+                            的序列化将不是格式良好的。
+                        </li>
+                        <li>令 <var>markup</var> 为按所列顺序连接以下内容所得的字符串：
+                            <ol>
+                                <li>"<code>&lt;?</code>"（U+003C LESS-THAN SIGN, U+003F QUESTION MARK）；
+                                </li>
+                                <li><var>node</var> 的
+                                    <code><a href="https://www.w3.org/TR/dom/#dom-processinginstruction-target" title="dom-processinginstruction-target" class="externalDFN">target</a></code>
+                                    的值；
+                                </li>
+                                <li>"<code> </code>"（U+0020 SPACE）；
+                                </li>
+                                <li><var>node</var> 的
+                                    <code><a href="https://www.w3.org/TR/dom/#dom-characterdata-data" title="dom-characterdata-data" class="externalDFN">data</a></code>
+                                    的值；
+                                </li>
+                                <li>"<code>?&gt;</code>"（U+003F QUESTION MARK, U+003E GREATER-THAN SIGN）。
+                                </li>
+                            </ol>
+                        </li>
+                        <li>返回 <var>markup</var> 的值。
+                        </li>
+                    </ol>
+
+                </dd>
+            </dl>
+
+            <p>要在给定
+                <a data-link-type="dfn" class="internalDFN" href="#dfn-concept-well-formed"
+                    title="concept-well-formed">require well-formed</a> 标志的情况下，为一个
+                <code><a href="https://www.w3.org/TR/dom/#node" title="node" class="externalDFN">Node</a></code>
+                <var>node</var> <dfn id="dfn-concept-serialize-doctype" data-dfn-type="dfn"
+                    data-lt="concept-serialize-doctype">产生 DocumentType 序列化</dfn>，
+                用户代理必须返回以下算法的结果：
+            </p>
+
+            <ol>
+                <li>如果<a data-link-type="dfn" class="internalDFN" href="#dfn-concept-well-formed"
+                        title="concept-well-formed">require well-formed</a> 标志为 <code>true</code>，
+                    且 <var>node</var> 的
+                    <code><a href="https://www.w3.org/TR/dom/#dom-documenttype-publicid" title="dom-documenttype-publicid" class="externalDFN">publicId</a></code>
+                    属性包含不匹配 XML <code>PubidChar</code> 产生式的字符
+                    [<cite><a href="#bib-XML10" class="bibref">XML10</a></cite>]，则<a data-link-type="dfn"
+                        class="internalDFN" href="#dfn-concept-algorithm-exception"
+                        title="concept-algorithm-exception">抛出异常</a>；此 <var>node</var>
+                    的序列化将不是格式良好的文档类型声明。
+                </li>
+                <li>如果<a data-link-type="dfn" class="internalDFN" href="#dfn-concept-well-formed"
+                        title="concept-well-formed">require well-formed</a> 标志为 <code>true</code>，
+                    且 <var>node</var> 的
+                    <code><a href="https://www.w3.org/TR/dom/#dom-documenttype-systemid" title="dom-documenttype-systemid" class="externalDFN">systemId</a></code>
+                    属性包含不匹配 XML <code>Char</code> 产生式的字符
+                    [<cite><a href="#bib-XML10" class="bibref">XML10</a></cite>]，或同时包含
+                    "<code>"</code>"（U+0022 QUOTATION MARK）和 "<code>'</code>"
+                    （U+0027 APOSTROPHE），则<a data-link-type="dfn" class="internalDFN"
+                        href="#dfn-concept-algorithm-exception" title="concept-algorithm-exception">抛出
+                        异常</a>；此
+                    <var>node</var> 的序列化将不是格式良好的文档类型声明。
+                </li>
+                <li>令 <var>markup</var> 为空字符串。
+                </li>
+                <li>将字符串 "<code>&lt;!DOCTYPE</code>" 追加到 <var>markup</var>。
+                </li>
+                <li>将 "<code> </code>"（U+0020 SPACE）追加到 <var>markup</var>。
+                </li>
+                <li>将 <var>node</var> 的
+                    <code><a href="https://www.w3.org/TR/dom/#dom-documenttype-name" title="dom-documenttype-name" class="externalDFN">name</a></code>
+                    属性的值追加到 <var>markup</var>。对于属于
+                    <a href="https://www.w3.org/TR/dom/#html-document" title="html-document" class="externalDFN">HTML
+                        文档</a>的 <var>node</var>，
+                    该值将全为小写。
+                </li>
+                <li>如果 <var>node</var> 的
+                    <code><a href="https://www.w3.org/TR/dom/#dom-documenttype-publicid" title="dom-documenttype-publicid" class="externalDFN">publicId</a></code>
+                    不是空字符串，则按所列顺序将以下内容追加到 <var>markup</var>：
+                    <ol>
+                        <li>"<code> </code>"（U+0020 SPACE）；
+                        </li>
+                        <li>字符串 "<code>PUBLIC</code>"；
+                        </li>
+                        <li>"<code> </code>"（U+0020 SPACE）；
+                        </li>
+                        <li>"<code>"</code>"（U+0022 QUOTATION MARK）；
+                        </li>
+                        <li><var>node</var> 的
+                            <code><a href="https://www.w3.org/TR/dom/#dom-documenttype-publicid" title="dom-documenttype-publicid" class="externalDFN">publicId</a></code>
+                            属性的值；
+                        </li>
+                        <li>"<code>"</code>"（U+0022 QUOTATION MARK）。
+                        </li>
+                    </ol>
+                </li>
+                <li>如果 <var>node</var> 的
+                    <code><a href="https://www.w3.org/TR/dom/#dom-documenttype-systemid" title="dom-documenttype-systemid" class="externalDFN">systemId</a></code>
+                    不是空字符串，且 <var>node</var> 的
+                    <code><a href="https://www.w3.org/TR/dom/#dom-documenttype-publicid" title="dom-documenttype-publicid" class="externalDFN">publicId</a></code>
+                    被设为空字符串，则按所列顺序将以下内容追加到 <var>markup</var>：
+                    <ol>
+                        <li>"<code> </code>"（U+0020 SPACE）；
+                        </li>
+                        <li>字符串 "<code>SYSTEM</code>"。
+                        </li>
+                    </ol>
+                </li>
+                <li>如果 <var>node</var> 的
+                    <code><a href="https://www.w3.org/TR/dom/#dom-documenttype-systemid" title="dom-documenttype-systemid" class="externalDFN">systemId</a></code>
+                    不是空字符串，则按所列顺序将以下内容追加到 <var>markup</var>：
+                    <ol>
+                        <li>"<code> </code>"（U+0020 SPACE）；
+                        </li>
+                        <li>"<code>"</code>"（U+0022 QUOTATION MARK）；
+                        </li>
+                        <li><var>node</var> 的
+                            <code><a href="https://www.w3.org/TR/dom/#dom-documenttype-systemid" title="dom-documenttype-systemid" class="externalDFN">systemId</a></code>
+                            属性的值；
+                        </li>
+                        <li>"<code>"</code>"（U+0022 QUOTATION MARK）。
+                        </li>
+                    </ol>
+                </li>
+                <!-- Removing internalSubset serialization steps as this property is not supported by DOM4. Also,
+                optional requirements don't help improve interoperability:
+            <li>Optional: if the <var>node</var> has an (historical)
+                <code><a title="ID-Core-DocType-internalSubset" data-spec="DOM3" class="externalDFN">internalSubset</a></code>
+                and the
+                <code><a title="ID-Core-DocType-internalSubset" data-spec="DOM3" class="externalDFN">internalSubset</a></code>
+                attribute's value is a non-empty string, then append the following,
+                in the order listed, to <var>markup</var>:
+                <ol>
+                    <li>"<code> </code>" (U+0020 SPACE);
+                    <li>"<code>[</code>" (U+005B LEFT SQUARE BRACKET);
+                    <li>The value of the <var>node</var>'s
+                        <code><a title="ID-Core-DocType-internalSubset" data-spec="DOM3" class="externalDFN">internalSubset</a></code>
+                        attribute;
+                    <li>"<code>]</code>" (U+005D RIGHT SQUARE BRACKET);
+                </ol>
+                <p class=note>A <var>node</var> belonging to an
+                   <a title="html-document" data-spec="DOM4" class="externalDFN">HTML document</a>
+                   will never have an
+                   <code><a title="ID-Core-DocType-internalSubset" data-spec="DOM3" class="externalDFN">internalSubset</a></code>
+                   because any <code><a title="ID-Core-DocType-internalSubset" data-spec="DOM3" class="externalDFN">internalSubset</a></code>
+                   markup is ignored by the parser.</p>
+            </li>
+            -->
+                <li>将 "<code>&gt;</code>"（U+003E GREATER-THAN SIGN）追加到 <var>markup</var>。
+                </li>
+                <li>返回 <var>markup</var> 的值。
+                </li>
+            </ol>
+
+            <p>要在给定
+                <a data-link-type="dfn" class="internalDFN" href="#dfn-concept-namespace-prefix-map"
+                    title="concept-namespace-prefix-map">命名空间前缀映射</a> <var>map</var>、一个
+                <var>element prefixes list</var>（初始为空）以及一个 <var>duplicate prefix
+                    definition</var> 引用的情况下，为一个
+                <code><a href="https://www.w3.org/TR/dom/#element" title="element" class="externalDFN">Element</a></code>
+                <var>element</var> <dfn id="dfn-concept-record-namespace-info" data-dfn-type="dfn"
+                    data-lt="concept-record-namespace-info">记录命名空间信息</dfn>，
+                用户代理必须运行以下步骤：
+            </p>
+            <ol>
+                <li>令 <var>default namespace attr value</var> 为 <code>null</code>。
+                </li>
+                <li><dfn id="dfn-record-namespace-loop" data-dfn-type="dfn" data-lt="record-namespace-loop">Main</dfn>：
+                    对 <var>element</var> 的
+                    <code><a href="https://www.w3.org/TR/dom/#dom-element-attributes" title="dom-element-attributes" class="externalDFN">attributes</a></code>
+                    中的每个<a href="https://www.w3.org/TR/dom/#concept-attribute" title="concept-attribute"
+                        class="externalDFN">属性</a>
+                    <var>attr</var>，
+                    按其在 <var>element</var> 的
+                    <a href="https://www.w3.org/TR/dom/#dom-element-attributes" title="dom-element-attributes"
+                        class="externalDFN">属性列表</a>中指定的顺序：
+
+                    <div class="note">
+                        <div id="h-note5" role="heading" aria-level="4" class="note-title marker"><span>注</span>
+                        </div>
+                        <p class="">以下条件步骤会将命名空间前缀
+                            添加到 <var>element prefixes list</var> 中，并在 <var>map</var> 中添加或替换它们。
+                            只考虑 <a data-link-type="dfn" class="internalDFN" href="#dfn-xmlns-ns" title="xmlns-ns">XMLNS
+                                命名空间</a>中的属性
+                            （例如，通过
+                            <code><a href="https://www.w3.org/TR/dom/#dom-element-setattribute" title="dom-element-setattribute" class="externalDFN">setAttribute</a>(<em>"xmlns:pretend-prefix"</em>,
+                    <em>"pretend-namespace"</em>)</code> 制作得看起来像命名空间声明的属性不会被包括在内）。
+                        </p>
+                    </div>
+                    <ol>
+                        <li>令 <var>attribute namespace</var> 为 <var>attr</var> 的
+                            <code><a href="https://www.w3.org/TR/dom/#dom-attr-namespaceuri" title="dom-attr-namespaceuri" class="externalDFN">namespaceURI</a></code>
+                            值。
+                        </li>
+                        <li>令 <var>attribute prefix</var> 为 <var>attr</var> 的
+                            <code><a href="https://www.w3.org/TR/dom/#dom-attr-prefix" title="dom-attr-prefix" class="externalDFN">prefix</a></code>
+                            的值。
+                        </li>
+                        <li>如果 <var>attribute namespace</var> 是 <a data-link-type="dfn" class="internalDFN"
+                                href="#dfn-xmlns-ns" title="xmlns-ns">XMLNS 命名空间</a>，则：
+                            <ol>
+                                <li>如果 <var>attribute prefix</var> 为 <code>null</code>，则 <var>attr</var> 是
+                                    一个默认命名空间声明。将 <var>default namespace attr value</var> 设为
+                                    <var>attr</var> 的
+                                    <code><a href="https://www.w3.org/TR/dom/#dom-attr-value" title="dom-attr-value" class="externalDFN">value</a></code>，
+                                    并停止运行这些步骤，返回到
+                                    <a data-link-type="dfn" class="internalDFN" href="#dfn-record-namespace-loop"
+                                        title="record-namespace-loop">Main</a> 以访问下一个属性。
+                                </li>
+                                <li>否则，<var>attribute prefix</var> 不为 <code>null</code>，且
+                                    <var>attr</var>
+                                    是一个命名空间前缀定义。运行以下步骤：
+                                    <ol>
+                                        <li>令 <var>prefix definition</var> 为 <var>attr</var> 的
+                                            <code><a href="https://www.w3.org/TR/dom/#dom-attr-localname" title="dom-attr-localname" class="externalDFN">localName</a></code>
+                                            的值。
+                                        </li>
+                                        <li>令 <var>namespace definition</var> 为 <var>attr</var> 的
+                                            <code><a href="https://www.w3.org/TR/dom/#dom-attr-value" title="dom-attr-value" class="externalDFN">value</a></code>
+                                            的值。
+                                        </li>
+                                        <li>如果 <var>map</var> 中已经存在一个匹配 <var>namespace definition</var>
+                                            值的键，
+                                            且该键的值匹配 <var>prefix definition</var>，
+                                            则
+                                            这是一个重复的命名空间前缀定义。将
+                                            <var>duplicate
+                                                prefix definition</var> 的值设为 <var>prefix definition</var>。
+                                        </li>
+                                        <li>否则，如果 <var>map</var> 中已经存在匹配 <var>namespace definition</var>
+                                            值的键，
+                                            但该键的值不匹配 <var>prefix
+                                                definition</var>，
+                                            则将该键的值更新为 <var>prefix definition</var>。
+                                        </li>
+                                        <li>否则，不存在匹配 <var>namespace definition</var> 值的键；
+                                            向 <var>map</var> 追加一个新键 <var>namespace definition</var>，
+                                            其键值为 <var>prefix definition</var>。
+                                        </li>
+                                        <li>将 <var>prefix definition</var> 的值追加到 <var>element prefixes
+                                                list</var>。
+                                        </li>
+                                    </ol>
+                                </li>
+                            </ol>
+                        </li>
+                    </ol>
+                </li>
+                <li>返回 <var>default namespace attr value</var> 的值。
+                </li>
+            </ol>
+
+            <p>要在给定
+                <a data-link-type="dfn" class="internalDFN" href="#dfn-concept-namespace-prefix-map"
+                    title="concept-namespace-prefix-map">命名空间前缀映射</a> <var>map</var>、一个
+                字符串 <var>new namespace</var>，以及对
+                <a data-link-type="dfn" class="internalDFN" href="#dfn-concept-generated-prefix"
+                    title="concept-generated-prefix">生成的命名空间前缀索引</a> <var>prefix
+                    index</var> 的引用的情况下，<dfn id="dfn-concept-generate-prefix" data-dfn-type="dfn"
+                    data-lt="concept-generate-prefix">生成
+                    前缀</dfn>，用户代理必须运行以下步骤：
+            </p>
+            <ol>
+                <li>令 <var>generated prefix</var> 为字符串 "<code>ns</code>" 与
+                    <var>prefix index</var> 的当前数值的连接。
+                </li>
+                <li>令 <var>prefix index</var> 的值递增一。
+                </li>
+                <li>向 <var>map</var> 追加一个新键 <var>new namespace</var>，其键值为
+                    <var>generated prefix</var>。
+                </li>
+                <li>返回 <var>generated prefix</var> 的值。
+                </li>
+            </ol>
+
+            <p>一个
+                <code><a href="https://www.w3.org/TR/dom/#concept-element" title="concept-element" class="externalDFN">Element</a></code>
+                <var>element</var> 的
+                <dfn id="dfn-concept-serialize-xml-attributes" data-dfn-type="dfn"
+                    data-lt="concept-serialize-xml-attributes">属性的 XML 序列化</dfn>，
+                连同一个<a data-link-type="dfn" class="internalDFN" href="#dfn-concept-namespace-prefix-map"
+                    title="concept-namespace-prefix-map">命名空间前缀
+                    映射</a> <var>map</var>、一个<a data-link-type="dfn" class="internalDFN"
+                    href="#dfn-concept-generated-prefix" title="concept-generated-prefix">生成的前缀索引</a>
+                <var>prefix index</var> 引用、一个标志 <var>ignore namespace definition attribute</var>、一个
+                <var>duplicate prefix definition</var> 值，以及一个标志 <var>require well-formed</var>，
+                是以下算法的结果：
+            </p>
+            <ol>
+                <li>令 <var>result</var> 为空字符串。
+                </li>
+                <li>令 <var>localname set</var> 为一个新的空
+                    <dfn id="dfn-concept-namespace-localname-set" data-dfn-type="dfn"
+                        data-lt="concept-namespace-localname-set">命名空间 localname 集</dfn>。此
+                    <var>localname set</var> 将包含唯一属性的
+                    <code><a href="https://www.w3.org/TR/dom/#dom-attr-namespaceuri" title="dom-attr-namespaceuri" class="externalDFN">namespaceURI</a></code>
+                    和
+                    <code><a href="https://www.w3.org/TR/dom/#dom-element-localname" title="dom-element-localname" class="externalDFN">localName</a></code>
+                    对的元组，并在处理每个 <var>attr</var> 时被填充。
+                    <span class="note">此集合用于[可选地]强制执行格式良好约束，即
+                        一个元素不能有两个具有相同
+                        <code><a href="https://www.w3.org/TR/dom/#dom-attr-namespaceuri" title="dom-attr-namespaceuri" class="externalDFN">namespaceURI</a></code>
+                        和
+                        <code><a href="https://www.w3.org/TR/dom/#dom-element-localname" title="dom-element-localname" class="externalDFN">localName</a></code>
+                        的属性。
+                        当同一元素上的两个本来相同的属性仅前缀值不同时，可能发生这种情况。</span>
+                </li>
+                <li><dfn id="dfn-serialize-attributes-loop" data-dfn-type="dfn"
+                        data-lt="serialize-attributes-loop">Main</dfn>：对
+                    <var>element</var> 的
+                    <code><a href="https://www.w3.org/TR/dom/#dom-element-attributes" title="dom-element-attributes" class="externalDFN">attributes</a></code>
+                    中的每个<a href="https://www.w3.org/TR/dom/#concept-attribute" title="concept-attribute"
+                        class="externalDFN">属性</a>
+                    <var>attr</var>，
+                    按其在 <var>element</var> 的
+                    <a href="https://www.w3.org/TR/dom/#dom-element-attributes" title="dom-element-attributes"
+                        class="externalDFN">属性列表</a>中指定的顺序：
+                    <ol>
+                        <li>如果<a data-link-type="dfn" class="internalDFN" href="#dfn-concept-well-formed"
+                                title="concept-well-formed">require well-formed</a> 标志已设置（其值为
+                            <code>true</code>），且 <var>localname set</var> 包含一个元组，其值匹配
+                            一个由 <var>attr</var> 的
+                            <code><a href="https://www.w3.org/TR/dom/#dom-attr-namespaceuri" title="dom-attr-namespaceuri" class="externalDFN">namespaceURI</a></code>
+                            属性和
+                            <code><a href="https://www.w3.org/TR/dom/#dom-element-localname" title="dom-element-localname" class="externalDFN">localName</a></code>
+                            属性组成的新元组的值，则<a data-link-type="dfn" class="internalDFN"
+                                href="#dfn-concept-algorithm-exception" title="concept-algorithm-exception">抛出
+                                异常</a>；此
+                            <var>attr</var> 的序列化将无法产生格式良好的元素序列化。
+                        </li>
+                        <li>创建一个由 <var>attr</var> 的
+                            <code><a href="https://www.w3.org/TR/dom/#dom-attr-namespaceuri" title="dom-attr-namespaceuri" class="externalDFN">namespaceURI</a></code>
+                            属性和
+                            <code><a href="https://www.w3.org/TR/dom/#dom-element-localname" title="dom-element-localname" class="externalDFN">localName</a></code>
+                            属性组成的新元组，并将其添加到 <var>localname set</var>。
+                        </li>
+                        <li>令 <var>attribute namespace</var> 为 <var>attr</var> 的
+                            <code><a href="https://www.w3.org/TR/dom/#dom-attr-namespaceuri" title="dom-attr-namespaceuri" class="externalDFN">namespaceURI</a></code>
+                            值。
+                            <!-- Check for an unregistered attribute namespace, and if so, serialize a definition for it -->
+                        </li>
+                        <li>令 <var>candidate prefix</var> 为 <code>null</code>。
+                        </li>
+                        <li>如果 <var>attribute namespace</var> 不为 <code>null</code>，则运行这些子步骤：
+                            <ol>
+                                <li>如果 <var>attribute namespace</var> 的值是
+                                    <a data-link-type="dfn" class="internalDFN" href="#dfn-xmlns-ns"
+                                        title="xmlns-ns">XMLNS 命名空间</a>，且满足以下任一条件：
+                                    <var>attr</var> 的
+                                    <code><a href="https://www.w3.org/TR/dom/#dom-attr-prefix" title="dom-attr-prefix" class="externalDFN">prefix</a></code>
+                                    为 <code>null</code> 且 <var>ignore namespace definition
+                                        attribute</var> 标志为 <code>true</code>，或 <var>attr</var> 的
+                                    <code><a href="https://www.w3.org/TR/dom/#dom-attr-prefix" title="dom-attr-prefix" class="externalDFN">prefix</a></code>
+                                    不为 <code>null</code> 且 <var>attr</var> 的
+                                    <code><a href="https://www.w3.org/TR/dom/#dom-attr-localname" title="dom-attr-localname" class="externalDFN">localName</a></code>
+                                    匹配 <var>duplicate prefix definition</var> 的值，则停止运行
+                                    这些步骤，并转到 <a data-link-type="dfn" class="internalDFN"
+                                        href="#dfn-serialize-attributes-loop" title="serialize-attributes-loop">Main</a>
+                                    以访问下一个属性。
+                                </li>
+                                <li>否则，如果 <var>map</var> 中存在一个匹配
+                                    <var>attribute
+                                        namespace</var> 值的键，则令 <var>candidate prefix</var> 为
+                                    <var>map</var> 中该键的值。
+                                </li>
+                                <li>否则，<var>map</var> 中没有匹配 <var>attribute namespace</var> 的键，
+                                    且
+                                    <var>attribute namespace</var> 不是 <a data-link-type="dfn" class="internalDFN"
+                                        href="#dfn-xmlns-ns" title="xmlns-ns">XMLNS 命名空间</a>。
+                                    运行这些步骤：
+                                    <ol>
+                                        <li>令 <var>candidate prefix</var> 为在提供
+                                            <var>map</var>、
+                                            <var>attribute namespace</var> 和 <var>prefix index</var> 作为输入的情况下
+                                            <a data-link-type="dfn" class="internalDFN"
+                                                href="#dfn-concept-generate-prefix"
+                                                title="concept-generate-prefix">生成前缀</a>的结果。
+                                        </li>
+                                        <li>按所列顺序将以下内容追加到 <var>result</var>：
+                                            <ol>
+                                                <li>"<code> </code>"（U+0020 SPACE）；
+                                                </li>
+                                                <li>字符串 "<code>xmlns:</code>"；
+                                                </li>
+                                                <li><var>candidate prefix</var> 的值；
+                                                </li>
+                                                <li>"<code>="</code>"（U+003D EQUALS SIGN, U+0022 QUOTATION MARK）；
+                                                </li>
+                                                <li>以 <var>attribute namespace</var> 和
+                                                    <a data-link-type="dfn" class="internalDFN"
+                                                        href="#dfn-concept-well-formed"
+                                                        title="concept-well-formed">require well-formed</a> 标志作为
+                                                    输入，<a data-link-type="dfn" class="internalDFN"
+                                                        href="#dfn-concept-serialize-attr-value"
+                                                        title="concept-serialize-attr-value">序列化属性
+                                                        值</a>的结果；
+                                                </li>
+                                                <li>"<code>"</code>"（U+0022 QUOTATION MARK）。
+                                                </li>
+                                            </ol>
+                                        </li>
+                                    </ol>
+                                </li>
+                            </ol>
+                            <!-- A namespace prefix has been set by this point if it needed to be set -->
+                        </li>
+                        <li>将一个 "<code> </code>"（U+0020 SPACE）追加到 <var>result</var>。
+                        </li>
+                        <li>如果 <var>candidate prefix</var> 不为 <code>null</code>，则将
+                            <var>candidate prefix</var> 与 "<code>:</code>"（U+003A COLON）的连接追加到
+                            <var>result</var>。
+                            <!-- Check for well-formed localName -->
+                        </li>
+                        <li>如果<a data-link-type="dfn" class="internalDFN" href="#dfn-concept-well-formed"
+                                title="concept-well-formed">require well-formed</a> 标志已设置（其值为
+                            <code>true</code>），且此 <var>attr</var> 的
+                            <code><a href="https://www.w3.org/TR/dom/#dom-element-localname" title="dom-element-localname" class="externalDFN">localName</a></code>
+                            属性包含字符 "<code>:</code>"（U+003A COLON），或不匹配 XML
+                            <code>Name</code> 产生式 [<cite><a href="#bib-XML10" class="bibref">XML10</a></cite>]，或
+                            等于 "<code>xmlns</code>" 且 <var>attribute
+                                namespace</var> 为 <code>null</code>，则<a data-link-type="dfn" class="internalDFN"
+                                href="#dfn-concept-algorithm-exception" title="concept-algorithm-exception">抛出
+                                异常</a>；此 <var>attr</var> 的序列化将不是格式良好的
+                            属性。
+                            <!-- Write out the standard attribute -->
+                        </li>
+                        <li>按所列顺序将以下字符串追加到 <var>result</var>：
+                            <ol>
+                                <li><var>attr</var> 的
+                                    <code><a href="https://www.w3.org/TR/dom/#dom-attr-localname" title="dom-attr-localname" class="externalDFN">localName</a></code>
+                                    的值；
+                                </li>
+                                <li>"<code>="</code>"（U+003D EQUALS SIGN, U+0022 QUOTATION MARK）；
+                                </li>
+                                <li>以 <var>attr</var> 的
+                                    <code><a href="https://www.w3.org/TR/dom/#concept-attribute-value" title="concept-attribute-value" class="externalDFN">value</a></code>
+                                    属性和<a data-link-type="dfn" class="internalDFN" href="#dfn-concept-well-formed"
+                                        title="concept-well-formed">require
+                                        well-formed</a> 标志作为输入，<a data-link-type="dfn" class="internalDFN"
+                                        href="#dfn-concept-serialize-attr-value"
+                                        title="concept-serialize-attr-value">序列化属性值</a>的结果；
+                                </li>
+                                <li>"<code>"</code>"（U+0022 QUOTATION MARK）。
+                                </li>
+                            </ol>
+                        </li>
+                    </ol>
+                </li>
+                <li>返回 <var>result</var> 的值。
+                </li>
+            </ol>
+
+            <p>要在给定一个
+                <var>attribute value</var> 和<a data-link-type="dfn" class="internalDFN" href="#dfn-concept-well-formed"
+                    title="concept-well-formed">require well-formed</a> 标志的情况下，
+                <dfn id="dfn-concept-serialize-attr-value" data-dfn-type="dfn"
+                    data-lt="concept-serialize-attr-value">序列化属性值</dfn>，
+                用户代理必须运行以下步骤：
+            </p>
+            <ol>
+                <li>如果<a data-link-type="dfn" class="internalDFN" href="#dfn-concept-well-formed"
+                        title="concept-well-formed">require well-formed</a> 标志已设置（其值为
+                    <code>true</code>），且 <var>attribute value</var> 包含不匹配
+                    XML <code>Char</code> 产生式的字符 [<cite><a href="#bib-XML10" class="bibref">XML10</a></cite>]，则
+                    <a data-link-type="dfn" class="internalDFN" href="#dfn-concept-algorithm-exception"
+                        title="concept-algorithm-exception">抛出异常</a>；此
+                    <var>attribute value</var> 的序列化将无法产生格式良好的元素序列化。
+                </li>
+                <li>如果 <var>attribute value</var> 为 <code>null</code>，则返回空字符串。
+                </li>
+                <li>否则，<var>attribute value</var> 是一个字符串。返回
+                    <var>attribute value</var> 的值，先将以下任何出现项替换：
+                    <ol>
+                        <li>将 "<code>"</code>" 替换为 "<code>&amp;quot;</code>"
+                        </li>
+                        <li>将 "<code>&amp;</code>" 替换为 "<code>&amp;amp;</code>"
+                        </li>
+                        <li>将 "<code>&lt;</code>" 替换为 "<code>&amp;lt;</code>"
+                        </li>
+                        <li>将 "<code>&gt;</code>" 替换为 "<code>&amp;gt;</code>"
+                        </li>
+                    </ol>
+                    <div class="note">
+                        <div id="h-note6" role="heading" aria-level="4" class="note-title marker"><span>注</span>
+                        </div>
+                        <p class="">这与浏览器中存在的行为相匹配，并且超出了
+                            XML 规范的 AttValue
+                            产生式 [<cite><a href="#bib-XML10" class="bibref">XML10</a></cite>] 中的语法要求，
+                            还会替换
+                            "<code>&gt;</code>" 字符。</p>
+                    </div>
+                </li>
+            </ol>
+        </section>
+    </section>
+
+    <section property="bibo:hasPart" resource="#the-domparser-interface" typeof="bibo:Chapter"
+        id="the-domparser-interface">
+        <!--OddPage-->
+        <h2 resource="#h-the-domparser-interface" id="h-the-domparser-interface"><span property="xhv:role"
+                resource="xhv:heading"><span class="secno">5. </span><code>DOMParser</code> 接口</span></h2>
+
+        <pre class="extraidl">enum <span class="idlInterfaceID">SupportedType</span> {
+    "text/html",
+    "text/xml",
+    "application/xml",
+    "application/xhtml+xml",
+    "image/svg+xml"
+};</pre>
+
+        <p><dfn id="dfn-dom-domparser" data-dfn-type="dfn" data-lt="dom-domparser"><code>DOMParser()</code></dfn>
+            构造函数
+            必须返回一个新的 <code>DOMParser</code> 对象。
+
+        </p>
+        <pre class="idl"><span class="idlInterface" id="idl-def-DOMParser">[<span class="extAttr">Constructor</span>]
+interface <span class="idlInterfaceID">DOMParser</span> {
+<span class="idlMethod">    [<span class="extAttr">NewObject</span>]
+    <span class="idlMethType">Document</span> <span class="idlMethName"><a href="#widl-DOMParser-parseFromString-Document-DOMString-str-SupportedType-type">parseFromString</a></span> (<span class="idlParam"><span class="idlParamType">DOMString</span> <span class="idlParamName">str</span></span>, <span class="idlParam"><span class="idlParamType">SupportedType</span> <span class="idlParamName">type</span></span>);</span>
+};</span></pre>
+        <section property="bibo:hasPart" resource="#methods" typeof="bibo:Chapter" id="methods">
+            <h3 resource="#h-methods" id="h-methods"><span property="xhv:role" resource="xhv:heading"><span
+                        class="secno">5.1 </span>方法</span></h3>
+            <dl class="methods">
+                <dt id="widl-DOMParser-parseFromString-Document-DOMString-str-SupportedType-type">
+                    <code>parseFromString</code>
+                </dt>
+                <dd>
+                    <p>
+                        <dfn id="dfn-dom-domparser-parsefromstring" data-dfn-type="dfn"
+                            data-lt="dom-domparser-parsefromstring"><code>parseFromString(<var>str</var>, <var>type</var>)</code></dfn>
+                        方法必须根据 <var>type</var> 运行以下步骤：
+
+                    </p>
+                    <dl class="switch">
+                        <dt>"<code>text/html</code>"
+                        </dt>
+                        <dd>
+                            <p>用一个
+                                <code><a href="https://www.w3.org/TR/html5/single-page.html#html-parser" title="html-parser" class="externalDFN">HTML 解析器</a></code>解析
+                                <var>str</var>，
+                                并返回新
+                                创建的<a href="https://www.w3.org/TR/dom/#concept-document" title="concept-document"
+                                    class="externalDFN">文档</a>。
+
+                            </p>
+                            <p><a href="https://www.w3.org/TR/html5/single-page.html#scripting-flag"
+                                    title="scripting-flag" class="externalDFN">脚本标志</a>必须设为
+                                "disabled"。
+
+                            </p>
+                            <div class="note">
+                                <div id="h-note7" role="heading" aria-level="4" class="note-title marker">
+                                    <span>注</span>
+                                </div>
+                                <p class="">
+                                    <code><a href="https://www.w3.org/TR/html5/single-page.html#meta" title="meta" class="externalDFN">meta</a></code>
+                                    元素不会被
+                                    纳入所用编码的考虑，因为传给
+                                    解析器的是 Unicode 流。
+
+                                </p>
+                            </div>
+                            <div class="note">
+                                <div id="h-note8" role="heading" aria-level="4" class="note-title marker">
+                                    <span>注</span>
+                                </div>
+                                <p class="">
+                                    <code><a href="https://www.w3.org/TR/html5/single-page.html#script" title="script" class="externalDFN">script</a></code>
+                                    元素会被标记为
+                                    不可执行，且
+                                    <code><a href="https://www.w3.org/TR/html5/single-page.html#the-noscript-element" title="the-noscript-element" class="externalDFN">noscript</a></code>
+                                    的内容会作为标记来解析。
+
+                                </p>
+                            </div>
+                        </dd>
+                        <dt>"<code>text/xml</code>"
+                        </dt>
+                        <dt>"<code>application/xml</code>"
+                        </dt>
+                        <dt>"<code>application/xhtml+xml</code>"
+                        </dt>
+                        <dt>"<code>image/svg+xml</code>"
+                        </dt>
+                        <dd>
+                            <ol>
+                                <li>用启用命名空间的
+                                    <code><a href="https://www.w3.org/TR/html5/single-page.html#xml-parser" title="xml-parser" class="externalDFN">XML 解析器</a></code>解析
+                                    <var>str</var>。
+
+                                    <div class="note">
+                                        <div id="h-note9" role="heading" aria-level="4" class="note-title marker">
+                                            <span>注</span>
+                                        </div>
+                                        <p class="">对于所有使用
+                                            <code><a href="https://www.w3.org/TR/html5/single-page.html#xml-parser" title="xml-parser" class="externalDFN">XML 解析器</a></code>
+                                            解析的 XHTML
+                                            <code><a href="https://www.w3.org/TR/html5/single-page.html#script" title="script" class="externalDFN">script</a></code>
+                                            元素，
+                                            等同于<a href="https://www.w3.org/TR/html5/single-page.html#scripting-flag"
+                                                title="scripting-flag" class="externalDFN">脚本标志</a>的内容必须
+                                            设为 "disabled"。
+                                        </p>
+                                    </div>
+
+                                </li>
+                                <li>如果上一步没有返回错误，则返回新
+                                    创建的<a href="https://www.w3.org/TR/dom/#concept-document" title="concept-document"
+                                        class="externalDFN">文档</a>。
+
+                                    <!-- This seemed like a good idea, but isn't web compatible, unfortunately.
+                    <li>Otherwise, throw a
+                    <code><a data-spec="DOM4" title="domexception" class="externalDFN">DOMException</a></code>
+                    with name <code>SyntaxError</code>. -->
+
+                                </li>
+                                <li>令 <var>document</var> 为一个新创建的
+                                    <a href="https://www.w3.org/TR/dom/#xml-document" title="xml-document"
+                                        class="externalDFN">XML Document</a>。
+                                    <span class="note"><var>document</var> 将使用
+                                        <code><a href="https://www.w3.org/TR/dom/#document" title="document" class="externalDFN">Document</a></code>
+                                        接口，
+                                        而不是
+                                        <code><a href="https://www.w3.org/TR/dom/#xmldocument" title="xmldocument" class="externalDFN">XMLDocument</a></code>
+                                        接口。</span>
+
+                                </li>
+                                <li>
+                                    <p>令 <var>root</var> 为一个新的
+                                        <code><a href="https://www.w3.org/TR/dom/#element" title="element" class="externalDFN">Element</a></code>，
+                                        其
+                                        <a href="https://www.w3.org/TR/dom/#concept-element-local-name"
+                                            title="concept-element-local-name" class="externalDFN">局部名</a>
+                                        设为 "<code>parsererror</code>"，并且其
+                                        <a href="https://www.w3.org/TR/dom/#concept-element-namespace"
+                                            title="concept-element-namespace" class="externalDFN">命名空间</a>
+                                        设为
+                                        "<code>http://www.mozilla.org/newlayout/xml/parsererror.xml</code>"。
+                                        <!-- see https://bugzilla.mozilla.org/show_bug.cgi?id=45566 -->
+                                    </p>
+                                    <p>此时，用户代理可以
+                                        向 <var>root</var>
+                                        <a href="https://www.w3.org/TR/dom/#concept-node-append"
+                                            title="concept-node-append" class="externalDFN">追加</a>节点，
+                                        例如用于描述错误的性质。
+
+                                    </p>
+                                </li>
+                                <li>将
+                                    <var>root</var> <a href="https://www.w3.org/TR/dom/#concept-node-append"
+                                        title="concept-node-append" class="externalDFN">追加</a>到 <var>document</var>。
+
+                                </li>
+                                <li>返回 <var>document</var> 的值。
+                                </li>
+                            </ol>
+                        </dd>
+                    </dl>
+
+                    <p>无论哪种情况，返回的
+                        <a href="https://www.w3.org/TR/dom/#concept-document" title="concept-document"
+                            class="externalDFN">文档</a>的
+                        <a href="https://www.w3.org/TR/dom/#concept-document-content-type"
+                            title="concept-document-content-type" class="externalDFN">内容类型</a>
+                        必须是 <var>type</var> 参数。此外，该
+                        <a href="https://www.w3.org/TR/dom/#concept-document" title="concept-document"
+                            class="externalDFN">文档</a>必须具有一个
+                        <a href="https://www.w3.org/TR/dom/#concept-document-url" title="concept-document-url"
+                            class="externalDFN">URL</a> 值，其等于
+                        <a href="https://www.w3.org/TR/html5/single-page.html#active-document" title="active-document"
+                            class="externalDFN">活动文档</a>的 URL，并且
+                        <a href="https://www.w3.org/TR/html5/single-page.html#location" title="location"
+                            class="externalDFN">location</a> 值为 <code>null</code>。
+
+                    </p>
+                    <div class="note">
+                        <div id="h-note10" role="heading" aria-level="4" class="note-title marker"><span>注</span>
+                        </div>
+                        <p class="">返回的
+                            <a href="https://www.w3.org/TR/dom/#concept-document" title="concept-document"
+                                class="externalDFN">文档</a>的
+                            <a href="https://www.w3.org/TR/dom/#concept-document-encoding"
+                                title="concept-document-encoding" class="externalDFN">编码</a>是
+                            默认值 UTF-8。
+                        </p>
+                    </div>
+                    <table class="parameters">
+                        <tbody>
+                            <tr>
+                                <th>参数</th>
+                                <th>类型</th>
+                                <th>可为空</th>
+                                <th>可选</th>
+                                <th>描述</th>
+                            </tr>
+                            <tr>
+                                <td class="prmName">str</td>
+                                <td class="prmType"><code>DOMString</code></td>
+                                <td class="prmNullFalse"><span role="img" aria-label="False">✘</span></td>
+                                <td class="prmOptFalse"><span role="img" aria-label="False">✘</span></td>
+                                <td class="prmDesc"></td>
+                            </tr>
+                            <tr>
+                                <td class="prmName">type</td>
+                                <td class="prmType"><code>SupportedType</code></td>
+                                <td class="prmNullFalse"><span role="img" aria-label="False">✘</span></td>
+                                <td class="prmOptFalse"><span role="img" aria-label="False">✘</span></td>
+                                <td class="prmDesc"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div><em>返回类型：</em><code>Document</code></div>
+                </dd>
+            </dl>
+        </section>
+    </section>
+
+    <section property="bibo:hasPart" resource="#the-xmlserializer-interface" typeof="bibo:Chapter"
+        id="the-xmlserializer-interface">
+        <!--OddPage-->
+        <h2 resource="#h-the-xmlserializer-interface" id="h-the-xmlserializer-interface"><span property="xhv:role"
+                resource="xhv:heading"><span class="secno">6. </span><code>XMLSerializer</code> 接口</span>
+        </h2>
+
+        <p><dfn id="dfn-dom-xmlserializer" data-dfn-type="dfn"
+                data-lt="dom-xmlserializer"><code>XMLSerializer()</code></dfn>
+            构造函数必须返回一个新的 <code>XMLSerializer</code> 对象。
+
+        </p>
+        <pre class="idl"><span class="idlInterface" id="idl-def-XMLSerializer">[<span class="extAttr">Constructor</span>]
+interface <span class="idlInterfaceID">XMLSerializer</span> {
+<span class="idlMethod">    <span class="idlMethType">DOMString</span> <span class="idlMethName"><a href="#widl-XMLSerializer-serializeToString-DOMString-Node-root">serializeToString</a></span> (<span class="idlParam"><span class="idlParamType">Node</span> <span class="idlParamName">root</span></span>);</span>
+};</span></pre>
+        <section property="bibo:hasPart" resource="#methods-1" typeof="bibo:Chapter" id="methods-1">
+            <h3 resource="#h-methods-1" id="h-methods-1"><span property="xhv:role" resource="xhv:heading"><span
+                        class="secno">6.1 </span>方法</span></h3>
+            <dl class="methods">
+                <dt id="widl-XMLSerializer-serializeToString-DOMString-Node-root"><code>serializeToString</code></dt>
+                <dd><dfn id="dfn-dom-xmlserializer-serializetostring" data-dfn-type="dfn"
+                        data-lt="dom-xmlserializer-serializetostring"><code>serializeToString(<var>root</var>)</code></dfn>
+                    方法必须在为
+                    <a data-link-type="dfn" class="internalDFN" href="#dfn-concept-well-formed"
+                        title="concept-well-formed">require well-formed</a> 参数传入值 <code>false</code> 的情况下，
+                    <a data-link-type="dfn" class="internalDFN" href="#dfn-concept-serialize-xml"
+                        title="concept-serialize-xml">产生 <var>root</var> 的 XML 序列化</a>，
+                    并返回结果。<table class="parameters">
+                        <tbody>
+                            <tr>
+                                <th>参数</th>
+                                <th>类型</th>
+                                <th>可为空</th>
+                                <th>可选</th>
+                                <th>描述</th>
+                            </tr>
+                            <tr>
+                                <td class="prmName">root</td>
+                                <td class="prmType"><code>Node</code></td>
+                                <td class="prmNullFalse"><span role="img" aria-label="False">✘</span></td>
+                                <td class="prmOptFalse"><span role="img" aria-label="False">✘</span></td>
+                                <td class="prmDesc"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div><em>返回类型：</em><code>DOMString</code></div>
+                </dd>
+            </dl>
+        </section>
+    </section>
+
+    <section property="bibo:hasPart" resource="#extensions-to-the-element-interface" typeof="bibo:Chapter"
+        id="extensions-to-the-element-interface">
+        <!--OddPage-->
+        <h2 resource="#h-extensions-to-the-element-interface" id="h-extensions-to-the-element-interface"><span
+                property="xhv:role" resource="xhv:heading"><span class="secno">7. </span>
+                <code><a href="https://www.w3.org/TR/dom/#element" title="element" class="externalDFN">Element</a></code>
+                接口扩展</span></h2>
+
+        <pre class="idl"><span class="idlInterface" id="idl-def-Element">partial interface <span class="idlInterfaceID">Element</span> {
+<span class="idlAttribute">    [<span class="extAttr">CEReactions, TreatNullAs=EmptyString</span>]
+                    attribute <span class="idlAttrType">DOMString</span> <span class="idlAttrName"><a href="#widl-Element-innerHTML">innerHTML</a></span>;</span>
+<span class="idlAttribute">    [<span class="extAttr">CEReactions, TreatNullAs=EmptyString</span>]
+                    attribute <span class="idlAttrType">DOMString</span> <span class="idlAttrName"><a href="#widl-Element-outerHTML">outerHTML</a></span>;</span>
+<span class="idlMethod">    [<span class="extAttr">CEReactions</span>]
+    <span class="idlMethType">void</span> <span class="idlMethName"><a href="#widl-Element-insertAdjacentHTML-void-DOMString-position-DOMString-text">insertAdjacentHTML</a></span> (<span class="idlParam"><span class="idlParamType">DOMString</span> <span class="idlParamName">position</span></span>, <span class="idlParam"><span class="idlParamType">DOMString</span> <span class="idlParamName">text</span></span>);</span>
+};</span></pre>
+        <section property="bibo:hasPart" resource="#attributes" typeof="bibo:Chapter" id="attributes">
+            <h3 resource="#h-attributes" id="h-attributes"><span property="xhv:role" resource="xhv:heading"><span
+                        class="secno">7.1 </span>属性</span></h3>
+            <dl class="attributes">
+                <dt id="widl-Element-innerHTML"><code>innerHTML</code>，类型为 <span class="idlAttrType">DOMString</span>
+                </dt>
+                <dd>
+                    <p><dfn id="dfn-dom-element-innerhtml" data-dfn-type="dfn"
+                            data-lt="dom-element-innerhtml"><code>innerHTML</code></dfn> IDL
+                        属性表示
+                        <code><a href="https://www.w3.org/TR/dom/#element" title="element" class="externalDFN">Element</a></code>
+                        内容的标记。
+
+                    </p>
+                    <dl class="domintro">
+                        <!--doc.ih
+                <dt><var>document</var> . <code title="dom-document-innerhtml">innerHTML</code> [ = <var>value</var> ]
+                <dd>
+                <p>Returns a fragment of HTML or XML that represents the
+                <code><a title="document" data-spec="DOM4" class="externalDFN">Document</a></code>.
+
+                <p>Can be set, to replace the
+                <code><a title="document" data-spec="DOM4" class="externalDFN">Document</a></code>'s contents with the result of
+                parsing the given string.
+
+                <p>In the case of an <a title="xml-document" data-spec="DOM4" class="externalDFN">XML document</a>,
+                will throw an
+                <code><a data-spec="DOM4" title="domexception" class="externalDFN">DOMException</a></code> with name <code>InvalidStateError</code>
+                if the <code><a title="document" data-spec="DOM4" class="externalDFN">Document</a></code> cannot be serialized
+                to XML, and a
+                <code><a data-spec="DOM4" title="domexception" class="externalDFN">DOMException</a></code> with name <code>SyntaxError</code>
+                if the given string is not well-formed.
+                -->
+
+                        <dt><var>element</var> . <code title="dom-element-innerhtml">innerHTML</code> [ =
+                            <var>value</var> ]
+                        </dt>
+                        <dd>
+                            <p>返回表示该元素
+                                内容的一段 HTML 或 XML 片段。
+
+                            </p>
+                            <p>可以设置，以用从给定字符串解析出的节点
+                                替换该元素的内容。
+
+                            </p>
+                            <p>在 <a href="https://www.w3.org/TR/dom/#xml-document" title="xml-document"
+                                    class="externalDFN">XML 文档</a>的情况下，
+                                如果
+                                <code><a href="https://www.w3.org/TR/dom/#element" title="element" class="externalDFN">Element</a></code>
+                                无法序列化
+                                为 XML，则会抛出一个名称为
+                                "<code><a href="https://www.w3.org/TR/dom/#invalidstateerror" title="invalidstateerror" class="externalDFN">InvalidStateError</a></code>"
+                                的
+                                <code><a href="https://www.w3.org/TR/dom/#dfn-DOMException" title="domexception" class="externalDFN">DOMException</a></code>；
+                                如果给定字符串不是格式良好的，则会抛出一个名称为
+                                "<code><a href="https://www.w3.org/TR/dom/#syntaxerror" title="syntaxerror" class="externalDFN">SyntaxError</a></code>"
+                                的
+                                <code><a href="https://www.w3.org/TR/dom/#dfn-DOMException" title="domexception" class="externalDFN">DOMException</a></code>。
+                            </p>
+                        </dd>
+                    </dl>
+
+                    <p>获取时，返回在
+                        <a data-link-type="dfn" class="internalDFN" href="#dfn-context-object"
+                            title="context object">上下文对象</a>上调用
+                        <a data-link-type="dfn" class="internalDFN" href="#dfn-concept-fragment-serializing-algorithm"
+                            title="concept-fragment-serializing-algorithm">片段序列化算法</a>的结果，并为
+                        <a data-link-type="dfn" class="internalDFN" href="#dfn-concept-well-formed"
+                            title="concept-well-formed">require well-formed</a> 标志提供 <code>true</code>
+                        （这可能会抛出异常，而不是返回字符串）。
+
+                    </p>
+                    <p>设置时，必须运行以下步骤：
+                    </p>
+                    <ol>
+                        <li>令 <var>fragment</var> 为调用
+                            <a data-link-type="dfn" class="internalDFN" href="#dfn-concept-parse-fragment"
+                                title="concept-parse-fragment">片段解析算法</a>的结果，其中
+                            新值作为 <var>markup</var>，并且
+                            <a data-link-type="dfn" class="internalDFN" href="#dfn-context-object"
+                                title="context object">上下文对象</a>作为 <var>context element</var>。
+
+                        </li>
+                        <li>在<a data-link-type="dfn" class="internalDFN" href="#dfn-context-object"
+                                title="context object">上下文对象</a>内
+                            用 <var>fragment</var> <a href="https://www.w3.org/TR/dom/#concept-node-replace-all"
+                                title="concept-node-replace-all" class="externalDFN">替换全部</a>。
+                        </li>
+                    </ol>
+                </dd>
+                <dt id="widl-Element-outerHTML"><code>outerHTML</code>，类型为 <span class="idlAttrType">DOMString</span>
+                </dt>
+                <dd>
+                    <p><dfn id="dfn-dom-element-outerhtml" data-dfn-type="dfn"
+                            data-lt="dom-element-outerhtml"><code>outerHTML</code></dfn> IDL
+                        属性表示
+                        <code><a href="https://www.w3.org/TR/dom/#element" title="element" class="externalDFN">Element</a></code>
+                        及其内容的标记。
+
+                    </p>
+                    <dl class="domintro">
+                        <dt><var>element</var> . <code title="dom-element-outerhtml">outerHTML</code> [ =
+                            <var>value</var> ]
+                        </dt>
+                        <dd>
+                            <p>返回表示该元素及其
+                                内容的一段 HTML 或 XML 片段。
+
+                            </p>
+                            <p>可以设置，以用从给定
+                                字符串解析出的节点替换该元素。
+
+                            </p>
+                            <p>在 <a href="https://www.w3.org/TR/dom/#xml-document" title="xml-document"
+                                    class="externalDFN">XML 文档</a>的情况下，
+                                如果该元素无法序列化为 XML，则会抛出一个名称为
+                                "<code><a href="https://www.w3.org/TR/dom/#invalidstateerror" title="invalidstateerror" class="externalDFN">InvalidStateError</a></code>"
+                                的
+                                <code><a href="https://www.w3.org/TR/dom/#dfn-DOMException" title="domexception" class="externalDFN">DOMException</a></code>；
+                                如果给定字符串不是格式良好的，则会抛出一个名称为
+                                "<code><a href="https://www.w3.org/TR/dom/#syntaxerror" title="syntaxerror" class="externalDFN">SyntaxError</a></code>"
+                                的
+                                <code><a href="https://www.w3.org/TR/dom/#dfn-DOMException" title="domexception" class="externalDFN">DOMException</a></code>。
+
+                            </p>
+                            <p>如果该元素的父节点是
+                                <code><a href="https://www.w3.org/TR/dom/#document" title="document" class="externalDFN">Document</a></code>
+                                节点，则抛出一个名称为
+                                "<code><a href="https://www.w3.org/TR/dom/#nomodificationallowederror" title="nomodificationallowederror" class="externalDFN">NoModificationAllowedError</a></code>"
+                                的
+                                <code><a href="https://www.w3.org/TR/dom/#dfn-DOMException" title="domexception" class="externalDFN">DOMException</a></code>。
+                            </p>
+                        </dd>
+                    </dl>
+
+                    <p>获取时，返回在一个虚构节点上调用
+                        <a data-link-type="dfn" class="internalDFN" href="#dfn-concept-fragment-serializing-algorithm"
+                            title="concept-fragment-serializing-algorithm">片段序列化算法</a>的结果，
+                        该虚构节点唯一的子节点是
+                        <a data-link-type="dfn" class="internalDFN" href="#dfn-context-object"
+                            title="context object">上下文对象</a>，
+                        并为
+                        <a data-link-type="dfn" class="internalDFN" href="#dfn-concept-well-formed"
+                            title="concept-well-formed">require well-formed</a>
+                        标志提供 <code>true</code>（这可能会抛出异常，而不是返回字符串）。
+
+                    </p>
+                    <p>设置时，必须运行以下步骤：
+
+                    </p>
+                    <ol>
+                        <li>令 <var>parent</var> 为<a data-link-type="dfn" class="internalDFN" href="#dfn-context-object"
+                                title="context object">上下文对象</a>的
+                            <a href="https://www.w3.org/TR/dom/#concept-tree-parent" title="concept-tree-parent"
+                                class="externalDFN">父节点</a>。
+
+                        </li>
+                        <li>如果 <var>parent</var> 为 null，则终止这些步骤。即使运行剩余步骤，
+                            也没有办法取得对所创建节点的引用。
+
+                        </li>
+                        <li>如果 <var>parent</var> 是一个
+                            <code><a href="https://www.w3.org/TR/dom/#document" title="document" class="externalDFN">Document</a></code>，
+                            则抛出一个名称为
+                            "<code><a href="https://www.w3.org/TR/dom/#nomodificationallowederror" title="nomodificationallowederror" class="externalDFN">NoModificationAllowedError</a></code>"
+                            的
+                            <code><a href="https://www.w3.org/TR/dom/#dfn-DOMException" title="domexception" class="externalDFN">DOMException</a></code>
+                            异常。
+
+                        </li>
+                        <li>如果 <var>parent</var> 是一个
+                            <code><a href="https://www.w3.org/TR/dom/#documentfragment" title="documentfragment" class="externalDFN">DocumentFragment</a></code>，
+                            则令
+                            <var>parent</var> 为一个新的
+                            <code><a href="https://www.w3.org/TR/dom/#element" title="element" class="externalDFN">Element</a></code>，
+                            并具有
+
+                            <ul>
+                                <li><code>body</code> 作为其
+                                    <a href="https://www.w3.org/TR/dom/#concept-element-local-name"
+                                        title="concept-element-local-name" class="externalDFN">局部名</a>，
+
+                                </li>
+                                <li><a data-link-type="dfn" class="internalDFN" href="#dfn-html-ns" title="html-ns">HTML
+                                        命名空间</a>作为其
+                                    <a href="https://www.w3.org/TR/dom/#concept-element-namespace"
+                                        title="concept-element-namespace" class="externalDFN">命名空间</a>，以及
+                                </li>
+                                <li><a data-link-type="dfn" class="internalDFN" href="#dfn-context-object"
+                                        title="context object">上下文对象</a>的
+                                    <a href="https://www.w3.org/TR/dom/#concept-node-document"
+                                        title="concept-node-document" class="externalDFN">节点文档</a>
+                                    作为其
+                                    <a href="https://www.w3.org/TR/dom/#concept-node-document"
+                                        title="concept-node-document" class="externalDFN">节点文档</a>。
+                                </li>
+                            </ul>
+
+                        </li>
+                        <li>令 <var>fragment</var> 为调用
+                            <a data-link-type="dfn" class="internalDFN" href="#dfn-concept-parse-fragment"
+                                title="concept-parse-fragment">片段解析算法</a>的结果，其中
+                            新值作为 <var>markup</var>，并且 <var>parent</var> 作为
+                            <var>context element</var>。
+
+                        </li>
+                        <li>在<a data-link-type="dfn" class="internalDFN" href="#dfn-context-object"
+                                title="context object">上下文对象</a>的
+                            <a href="https://www.w3.org/TR/dom/#concept-tree-parent" title="concept-tree-parent"
+                                class="externalDFN">父节点</a>内，
+                            用 <var>fragment</var> <a href="https://www.w3.org/TR/dom/#concept-node-replace"
+                                title="concept-node-replace" class="externalDFN">替换</a>
+                            <a data-link-type="dfn" class="internalDFN" href="#dfn-context-object"
+                                title="context object">上下文对象</a>。
+                        </li>
+                    </ol>
+                </dd>
+            </dl>
+        </section>
+        <section property="bibo:hasPart" resource="#methods-2" typeof="bibo:Chapter" id="methods-2">
+            <h3 resource="#h-methods-2" id="h-methods-2"><span property="xhv:role" resource="xhv:heading"><span
+                        class="secno">7.2 </span>方法</span></h3>
+            <dl class="methods">
+                <dt id="widl-Element-insertAdjacentHTML-void-DOMString-position-DOMString-text">
+                    <code>insertAdjacentHTML</code>
+                </dt>
+                <dd>
+                    <dl class="domintro">
+                        <dt><var>element</var> . <code
+                                title="dom-element-insertadjacenthtml">insertAdjacentHTML</code>(<var>position</var>,
+                            <var>text</var>)
+
+                        </dt>
+                        <dd>
+                            <p>将给定字符串 <var>text</var> 解析为 HTML 或 XML，并将
+                                所得节点插入树中由
+                                <var>position</var> 参数给定的位置，如下所示：
+
+                            </p>
+                            <dl>
+                                <dt>"beforebegin"
+                                </dt>
+                                <dd>在该元素自身之前。
+
+                                </dd>
+                                <dt>"afterbegin"
+                                </dt>
+                                <dd>刚好在该元素内部、其第一个子节点之前。
+
+                                </dd>
+                                <dt>"beforeend"
+                                </dt>
+                                <dd>刚好在该元素内部、其最后一个子节点之后。
+
+                                </dd>
+                                <dt>"afterend"
+                                </dt>
+                                <dd>在该元素自身之后。
+                                </dd>
+                            </dl>
+
+                            <p>如果参数具有无效值（例如，在
+                                <a href="https://www.w3.org/TR/dom/#xml-document" title="xml-document"
+                                    class="externalDFN">XML 文档</a>的情况下，给定字符串
+                                不是格式良好的），则抛出一个名称为
+                                "<code><a href="https://www.w3.org/TR/dom/#syntaxerror" title="syntaxerror" class="externalDFN">SyntaxError</a></code>"
+                                的
+                                <code><a href="https://www.w3.org/TR/dom/#dfn-DOMException" title="domexception" class="externalDFN">DOMException</a></code>。
+
+                            </p>
+                            <p>如果给定位置不可行（例如，在
+                                <code><a href="https://www.w3.org/TR/dom/#document" title="document" class="externalDFN">Document</a></code>
+                                的根元素之后插入元素），则抛出一个名称为
+                                "<code><a href="https://www.w3.org/TR/dom/#nomodificationallowederror" title="nomodificationallowederror" class="externalDFN">NoModificationAllowedError</a></code>"
+                                的
+                                <code><a href="https://www.w3.org/TR/dom/#dfn-DOMException" title="domexception" class="externalDFN">DOMException</a></code>。
+                            </p>
+                        </dd>
+                    </dl>
+
+                    <p>
+                        <dfn id="dfn-dom-element-insertadjacenthtml" data-dfn-type="dfn"
+                            data-lt="dom-element-insertadjacenthtml"><code>insertAdjacentHTML(<var>position</var>, <var>text</var>)</code></dfn>
+                        方法必须运行以下步骤：
+
+                    </p>
+                    <ol>
+                        <li>使用此列表中的第一个匹配项：
+
+                            <dl class="switch">
+                                <dt>如果 <var>position</var> 与
+                                    字符串 "beforebegin" 进行
+                                    <a href="https://www.w3.org/TR/dom/#ascii-case-insensitive" class="externalDFN"
+                                        title="ascii-case-insensitive">ASCII 不区分大小写</a>匹配
+
+                                </dt>
+                                <dt>如果 <var>position</var> 与
+                                    字符串 "afterend" 进行
+                                    <a href="https://www.w3.org/TR/dom/#ascii-case-insensitive" class="externalDFN"
+                                        title="ascii-case-insensitive">ASCII 不区分大小写</a>匹配
+
+                                </dt>
+                                <dd>
+                                    <p>令 <var>context</var> 为<a data-link-type="dfn" class="internalDFN"
+                                            href="#dfn-context-object" title="context object">上下文对象</a>的
+                                        <a href="https://www.w3.org/TR/dom/#concept-tree-parent"
+                                            title="concept-tree-parent" class="externalDFN">父节点</a>。
+
+                                    </p>
+                                    <p>如果 <var>context</var> 为 null 或是一个
+                                        <a href="https://www.w3.org/TR/dom/#concept-document" class="externalDFN"
+                                            title="concept-document">文档</a>，则抛出
+                                        一个名称为
+                                        "<code><a href="https://www.w3.org/TR/dom/#nomodificationallowederror" title="nomodificationallowederror" class="externalDFN">NoModificationAllowedError</a></code>"
+                                        的
+                                        <code><a href="https://www.w3.org/TR/dom/#dfn-DOMException" title="domexception" class="externalDFN">DOMException</a></code>。
+
+                                    </p>
+                                </dd>
+                                <dt>如果 <var>position</var> 与
+                                    字符串 "afterbegin" 进行
+                                    <a href="https://www.w3.org/TR/dom/#ascii-case-insensitive" class="externalDFN"
+                                        title="ascii-case-insensitive">ASCII 不区分大小写</a>匹配
+
+                                </dt>
+                                <dt>如果 <var>position</var> 与
+                                    字符串 "beforeend" 进行
+                                    <a href="https://www.w3.org/TR/dom/#ascii-case-insensitive" class="externalDFN"
+                                        title="ascii-case-insensitive">ASCII 不区分大小写</a>匹配
+
+                                </dt>
+                                <dd>令 <var>context</var> 为<a data-link-type="dfn" class="internalDFN"
+                                        href="#dfn-context-object" title="context object">上下文对象</a>。
+
+                                </dd>
+                                <dt>否则
+                                </dt>
+                                <dd>
+                                    <p>抛出一个名称为
+                                        "<code><a href="https://www.w3.org/TR/dom/#syntaxerror" title="syntaxerror" class="externalDFN">SyntaxError</a></code>"
+                                        的
+                                        <code><a href="https://www.w3.org/TR/dom/#dfn-DOMException" title="domexception" class="externalDFN">DOMException</a></code>。
+                                    </p>
+                                </dd>
+                            </dl>
+
+                        </li>
+                        <li>如果 <var>context</var> 不是
+                            <code><a href="https://www.w3.org/TR/dom/#element" title="element" class="externalDFN">Element</a></code>，
+                            或以下条件均为真：
+
+                            <ul>
+                                <li><var>context</var> 的
+                                    <a href="https://www.w3.org/TR/dom/#concept-node-document"
+                                        title="concept-node-document" class="externalDFN">节点文档</a>
+                                    是一个 <a href="https://www.w3.org/TR/dom/#html-document" title="html-document"
+                                        class="externalDFN">HTML 文档</a>，
+
+                                </li>
+                                <li><var>context</var> 的
+                                    <a href="https://www.w3.org/TR/dom/#concept-element-local-name"
+                                        title="concept-element-local-name" class="externalDFN">局部名</a>
+                                    是 "<code>html</code>"，并且
+
+                                </li>
+                                <li><var>context</var> 的
+                                    <a href="https://www.w3.org/TR/dom/#concept-element-namespace"
+                                        title="concept-element-namespace" class="externalDFN">命名空间</a>
+                                    是 <a data-link-type="dfn" class="internalDFN" href="#dfn-html-ns"
+                                        title="html-ns">HTML 命名空间</a>；
+                                </li>
+                            </ul>
+
+                            <p>则令 <var>context</var> 为一个新的
+                                <code><a href="https://www.w3.org/TR/dom/#element" title="element" class="externalDFN">Element</a></code>，
+                                并具有
+
+                            </p>
+                            <ul>
+                                <li><code>body</code> 作为其
+                                    <a href="https://www.w3.org/TR/dom/#concept-element-local-name"
+                                        title="concept-element-local-name" class="externalDFN">局部名</a>，
+
+                                </li>
+                                <li><a data-link-type="dfn" class="internalDFN" href="#dfn-html-ns" title="html-ns">HTML
+                                        命名空间</a>作为其
+                                    <a href="https://www.w3.org/TR/dom/#concept-element-namespace"
+                                        title="concept-element-namespace" class="externalDFN">命名空间</a>，以及
+
+                                </li>
+                                <li><a data-link-type="dfn" class="internalDFN" href="#dfn-context-object"
+                                        title="context object">上下文对象</a>的
+                                    <a href="https://www.w3.org/TR/dom/#concept-node-document"
+                                        title="concept-node-document" class="externalDFN">节点文档</a>
+                                    作为其
+                                    <a href="https://www.w3.org/TR/dom/#concept-node-document"
+                                        title="concept-node-document" class="externalDFN">节点文档</a>。
+                                </li>
+                            </ul>
+
+                        </li>
+                        <li>令 <var>fragment</var> 为调用
+                            <a data-link-type="dfn" class="internalDFN" href="#dfn-concept-parse-fragment"
+                                title="concept-parse-fragment">片段解析算法</a>的结果，其中 <var>text</var> 作为
+                            <var>markup</var>，并且 <var>context</var> 作为 <var>context element</var>。
+
+                        </li>
+                        <li>使用此列表中的第一个匹配项：
+
+                            <dl class="switch">
+                                <dt>如果 <var>position</var> 与
+                                    字符串 "beforebegin" 进行
+                                    <a href="https://www.w3.org/TR/dom/#ascii-case-insensitive" class="externalDFN"
+                                        title="ascii-case-insensitive">ASCII 不区分大小写</a>匹配
+
+                                </dt>
+                                <dd>将
+                                    <var>fragment</var> <a href="https://www.w3.org/TR/dom/#concept-node-insert"
+                                        title="concept-node-insert" class="externalDFN">插入</a>到<a data-link-type="dfn"
+                                        class="internalDFN" href="#dfn-context-object" title="context object">上下文对象</a>的
+                                    <a href="https://www.w3.org/TR/dom/#concept-tree-parent" title="concept-tree-parent"
+                                        class="externalDFN">父节点</a>中，
+                                    位于<a data-link-type="dfn" class="internalDFN" href="#dfn-context-object"
+                                        title="context object">上下文对象</a>之前。
+
+                                </dd>
+                                <dt>如果 <var>position</var> 与
+                                    字符串 "afterbegin" 进行
+                                    <a href="https://www.w3.org/TR/dom/#ascii-case-insensitive" class="externalDFN"
+                                        title="ascii-case-insensitive">ASCII 不区分大小写</a>匹配
+
+                                </dt>
+                                <dd>将
+                                    <var>fragment</var> <a href="https://www.w3.org/TR/dom/#concept-node-insert"
+                                        title="concept-node-insert" class="externalDFN">插入</a>到
+                                    <a data-link-type="dfn" class="internalDFN" href="#dfn-context-object"
+                                        title="context object">上下文对象</a>中，
+                                    位于其
+                                    <a href="https://www.w3.org/TR/dom/#concept-tree-first-child"
+                                        title="concept-tree-first-child" class="externalDFN">第一个子节点</a>之前。
+
+                                </dd>
+                                <dt>如果 <var>position</var> 与
+                                    字符串 "beforeend" 进行
+                                    <a href="https://www.w3.org/TR/dom/#ascii-case-insensitive" class="externalDFN"
+                                        title="ascii-case-insensitive">ASCII 不区分大小写</a>匹配
+
+                                </dt>
+                                <dd>将
+                                    <var>fragment</var> <a href="https://www.w3.org/TR/dom/#concept-node-append"
+                                        title="concept-node-append" class="externalDFN">追加</a>到
+                                    <a data-link-type="dfn" class="internalDFN" href="#dfn-context-object"
+                                        title="context object">上下文对象</a>。
+
+                                </dd>
+                                <dt>如果 <var>position</var> 与
+                                    字符串 "afterend" 进行
+                                    <a href="https://www.w3.org/TR/dom/#ascii-case-insensitive" class="externalDFN"
+                                        title="ascii-case-insensitive">ASCII 不区分大小写</a>匹配
+
+                                </dt>
+                                <dd>将
+                                    <var>fragment</var> <a href="https://www.w3.org/TR/dom/#concept-node-insert"
+                                        title="concept-node-insert" class="externalDFN">插入</a>到<a data-link-type="dfn"
+                                        class="internalDFN" href="#dfn-context-object" title="context object">上下文对象</a>的
+                                    <a href="https://www.w3.org/TR/dom/#concept-tree-parent" title="concept-tree-parent"
+                                        class="externalDFN">父节点</a>中，
+                                    位于<a data-link-type="dfn" class="internalDFN" href="#dfn-context-object"
+                                        title="context object">上下文对象</a>的
+                                    <a href="https://www.w3.org/TR/dom/#concept-tree-next-sibling"
+                                        title="concept-tree-next-sibling" class="externalDFN">下一个兄弟节点</a>之前。
+                                </dd>
+                            </dl>
+                        </li>
+                    </ol>
+                    <table class="parameters">
+                        <tbody>
+                            <tr>
+                                <th>参数</th>
+                                <th>类型</th>
+                                <th>可为空</th>
+                                <th>可选</th>
+                                <th>描述</th>
+                            </tr>
+                            <tr>
+                                <td class="prmName">position</td>
+                                <td class="prmType"><code>DOMString</code></td>
+                                <td class="prmNullFalse"><span role="img" aria-label="False">✘</span></td>
+                                <td class="prmOptFalse"><span role="img" aria-label="False">✘</span></td>
+                                <td class="prmDesc"></td>
+                            </tr>
+                            <tr>
+                                <td class="prmName">text</td>
+                                <td class="prmType"><code>DOMString</code></td>
+                                <td class="prmNullFalse"><span role="img" aria-label="False">✘</span></td>
+                                <td class="prmOptFalse"><span role="img" aria-label="False">✘</span></td>
+                                <td class="prmDesc"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div><em>返回类型：</em><code>void</code></div>
+                </dd>
+            </dl>
+        </section>
+    </section>
+
+    <!-- Dropping this extention as it is not implemented, nor does it appear that any browser
+     is currently interested in supporting it. Perhaps it can come back in a V2 of this spec
+     if browsers become interested.
+<section>
+    <h1>Extensions to the <code><a title="text" data-spec="DOM4" class="externalDFN">Text</a></code> interface</h1>
+
+    <dl class="idl" title="partial interface Text">
+        <dt>attribute boolean serializeAsCDATA</dt>
+        <dd>
+            <dl class=domintro>
+              <dt><var>text</var> .
+                  <code title="dom-text-serializeascdata">serializeAsCDATA</code> [ = <var>value</var> ]
+              <dd>Controls whether, in XML, this node is serialized as a CDATA section.
+            </dl>
+
+            <p><code><a title="text" data-spec="DOM4" class="externalDFN">Text</a></code> nodes have an additional
+            associated flag, the <dfn>serialize as CDATA flag</dfn>.
+
+            <p>The
+            <dfn title="dom-text-serializeascdata"><code>serializeAsCDATA</code></dfn>
+            attribute must return true if the <a title="context object">context object</a> has its
+            <a>serialize as CDATA flag</a> set, or false otherwise.
+
+            <p>Setting the <code title="dom-text-serializeascdata">serializeAsCDATA</code>
+            attribute must, if the new value is true, set the
+            <a title="context object">context object</a>'s <a>serialize as CDATA flag</a>, or unset
+            it otherwise.
+        </dd>
+    </dl>
+</section>
+-->
+
+    <section property="bibo:hasPart" resource="#extensions-to-the-range-interface" typeof="bibo:Chapter"
+        id="extensions-to-the-range-interface">
+        <!--OddPage-->
+        <h2 resource="#h-extensions-to-the-range-interface" id="h-extensions-to-the-range-interface"><span
+                property="xhv:role" resource="xhv:heading"><span class="secno">8. </span>
+                <code><a href="https://www.w3.org/TR/dom/#range" title="range" class="externalDFN">Range</a></code>
+                接口扩展</span></h2>
+
+        <pre class="idl"><span class="idlInterface" id="idl-def-Range">partial interface <span class="idlInterfaceID">Range</span> {
+<span class="idlMethod">    [<span class="extAttr">CEReactions, NewObject</span>]
+    <span class="idlMethType">DocumentFragment</span> <span class="idlMethName"><a href="#widl-Range-createContextualFragment-DocumentFragment-DOMString-fragment">createContextualFragment</a></span> (<span class="idlParam"><span class="idlParamType">DOMString</span> <span class="idlParamName">fragment</span></span>);</span>
+};</span></pre>
+        <section property="bibo:hasPart" resource="#methods-3" typeof="bibo:Chapter" id="methods-3">
+            <h3 resource="#h-methods-3" id="h-methods-3"><span property="xhv:role" resource="xhv:heading"><span
+                        class="secno">8.1 </span>方法</span></h3>
+            <dl class="methods">
+                <dt id="widl-Range-createContextualFragment-DocumentFragment-DOMString-fragment">
+                    <code>createContextualFragment</code>
+                </dt>
+                <dd>
+                    <dl class="domintro">
+                        <dt><var>docFragment</var> = <var>range</var> . <code
+                                title="dom-range-createcontextualfragment">createContextualFragment</code>(<var>markupString</var>)
+                        </dt>
+                        <dd>返回一个由给定标记字符串创建的
+                            <code><a href="https://www.w3.org/TR/dom/#documentfragment" title="documentfragment" class="externalDFN">DocumentFragment</a></code>。
+                        </dd>
+                    </dl>
+
+                    <p>
+                        <dfn id="dfn-dom-range-createcontextualfragment" data-dfn-type="dfn"
+                            data-lt="dom-range-createcontextualfragment"><code>createContextualFragment(<var>fragment</var>)</code></dfn>
+                        方法必须运行以下步骤：
+
+                    </p>
+                    <ol>
+                        <li>令 <var>node</var> 为<a data-link-type="dfn" class="internalDFN" href="#dfn-context-object"
+                                title="context object">上下文对象</a>的
+                            <a href="https://www.w3.org/TR/dom/#concept-range-start-node"
+                                title="concept-range-start-node" class="externalDFN">起始节点</a>。
+
+                            <p>根据 <var>node</var> 的接口，令 <var>element</var> 如下：
+
+                            </p>
+                            <dl class="switch">
+                                <dt><code><a href="https://www.w3.org/TR/dom/#document" title="document" class="externalDFN">Document</a></code>
+                                </dt>
+                                <dt><code><a href="https://www.w3.org/TR/dom/#documentfragment" title="documentfragment" class="externalDFN">DocumentFragment</a></code>
+                                </dt>
+                                <dd>null
+
+                                </dd>
+                                <dt><code><a href="https://www.w3.org/TR/dom/#element" title="element" class="externalDFN">Element</a></code>
+                                </dt>
+                                <dd><var>node</var>
+
+                                </dd>
+                                <dt><code><a href="https://www.w3.org/TR/dom/#text" title="text" class="externalDFN">Text</a></code>
+                                </dt>
+                                <dt><code><a href="https://www.w3.org/TR/dom/#comment" title="comment" class="externalDFN">Comment</a></code>
+                                </dt>
+                                <dd><var>node</var> 的
+                                    <a href="https://www.w3.org/TR/dom/#parent-element" class="externalDFN"
+                                        title="parent-element">父元素</a>
+
+                                </dd>
+                                <dt><code><a href="https://www.w3.org/TR/dom/#documenttype" title="documenttype" class="externalDFN">DocumentType</a></code>
+                                </dt>
+                                <dt><code><a href="https://www.w3.org/TR/dom/#processinginstruction" title="processinginstruction" class="externalDFN">ProcessingInstruction</a></code>
+                                </dt>
+                                <dd>[<cite><a href="#bib-DOM4" class="bibref">DOM4</a></cite>] 会防止这种情况发生。
+                                </dd>
+                            </dl>
+
+                        </li>
+                        <li>如果 <var>element</var> 为 null，或者以下条件均为真：
+
+                            <ul>
+                                <li><var>element</var> 的
+                                    <a href="https://www.w3.org/TR/dom/#concept-node-document"
+                                        title="concept-node-document" class="externalDFN">节点文档</a>
+                                    是一个 <a href="https://www.w3.org/TR/dom/#html-document" title="html-document"
+                                        class="externalDFN">HTML 文档</a>，
+
+                                </li>
+                                <li><var>element</var> 的
+                                    <a href="https://www.w3.org/TR/dom/#concept-element-local-name"
+                                        title="concept-element-local-name" class="externalDFN">局部名</a>
+                                    是 "<code>html</code>"，并且
+
+                                </li>
+                                <li><var>element</var> 的
+                                    <a href="https://www.w3.org/TR/dom/#concept-element-namespace"
+                                        title="concept-element-namespace" class="externalDFN">命名空间</a>
+                                    是 <a data-link-type="dfn" class="internalDFN" href="#dfn-html-ns"
+                                        title="html-ns">HTML 命名空间</a>；
+                                </li>
+                            </ul>
+
+                            <p>则令 <var>element</var> 为一个新的
+                                <a href="https://www.w3.org/TR/dom/#concept-element" title="concept-element"
+                                    class="externalDFN">元素</a>，并具有
+
+                            </p>
+                            <ul>
+                                <li>"<code>body</code>" 作为其
+                                    <a href="https://www.w3.org/TR/dom/#concept-element-local-name"
+                                        title="concept-element-local-name" class="externalDFN">局部名</a>，
+
+                                </li>
+                                <li><a data-link-type="dfn" class="internalDFN" href="#dfn-html-ns" title="html-ns">HTML
+                                        命名空间</a>作为其
+                                    <a href="https://www.w3.org/TR/dom/#concept-element-namespace"
+                                        title="concept-element-namespace" class="externalDFN">命名空间</a>，以及
+
+                                </li>
+                                <li><a data-link-type="dfn" class="internalDFN" href="#dfn-context-object"
+                                        title="context object">上下文对象</a>的
+                                    <a href="https://www.w3.org/TR/dom/#concept-node-document"
+                                        title="concept-node-document" class="externalDFN">节点文档</a>
+                                    作为其
+                                    <a href="https://www.w3.org/TR/dom/#concept-node-document"
+                                        title="concept-node-document" class="externalDFN">节点文档</a>。
+                                </li>
+                            </ul>
+
+                        </li>
+                        <li>令 <var>fragment node</var> 为调用
+                            <a data-link-type="dfn" class="internalDFN" href="#dfn-concept-parse-fragment"
+                                title="concept-parse-fragment">片段解析算法</a>的结果，其中 <var>fragment</var>
+                            作为
+                            <var>markup</var>，并且 <var>element</var> 作为 <var>context element</var>。
+
+                        </li>
+                        <li>取消 <var>fragment node</var> 中所有脚本的 "already started" 标记。
+
+                        </li>
+                        <li>返回 <var>fragment node</var> 的值。
+                        </li>
+                    </ol>
+                    <table class="parameters">
+                        <tbody>
+                            <tr>
+                                <th>参数</th>
+                                <th>类型</th>
+                                <th>可为空</th>
+                                <th>可选</th>
+                                <th>描述</th>
+                            </tr>
+                            <tr>
+                                <td class="prmName">fragment</td>
+                                <td class="prmType"><code>DOMString</code></td>
+                                <td class="prmNullFalse"><span role="img" aria-label="False">✘</span></td>
+                                <td class="prmOptFalse"><span role="img" aria-label="False">✘</span></td>
+                                <td class="prmDesc"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div><em>返回类型：</em><code>DocumentFragment</code></div>
+                </dd>
+            </dl>
+        </section>
+    </section>
+
+    <section property="bibo:hasPart" resource="#revision-history" typeof="bibo:Chapter" id="revision-history"
+        class="appendix">
+        <!--OddPage-->
+        <h2 resource="#h-revision-history" id="h-revision-history"><span property="xhv:role"
+                resource="xhv:heading"><span class="secno">A. </span>修订历史</span></h2>
+        <p>以下是自本规范上次发布以来所作更改的资料性摘要。
+            本规范编辑者草案的完整修订历史
+            可在<a href="https://dvcs.w3.org/hg/innerhtml/summary/">这里</a>找到。</p>
+
+        <ul>
+            <li><a href="https://dvcs.w3.org/hg/innerhtml/raw-file/tip/LC2_comments.html">纳入了
+                    来自前一版 Last Call 文档的非规范性更改。</a>
+            </li>
+        </ul>
+    </section>
+
+    <section property="bibo:hasPart" resource="#acknowledgements" typeof="bibo:Chapter" id="acknowledgements"
+        class="appendix">
+        <!--OddPage-->
+        <h2 resource="#h-acknowledgements" id="h-acknowledgements"><span property="xhv:role"
+                resource="xhv:heading"><span class="secno">B. </span>致谢</span></h2>
+        <p>感谢 Ms2ger [<a href="http://www.mozilla.org">Mozilla</a>] 维护本规范的初始
+            草案，并在
+            <a href="https://domparsing.spec.whatwg.org/">活标准</a>中持续改进它。
+
+        </p>
+        <p>感谢
+            Victor Costan、
+            Aryeh Gregor、
+            Anne van Kesteren、
+            Arkadiusz Michalski、
+            Simon Pieters、
+            Henri Sivonen、
+            Josh Soref
+            和 Boris Zbarsky
+            提供有用的评论。
+
+        </p>
+        <p>特别感谢 Ian Hickson 在
+            [<cite><a href="#bib-HTML5" class="bibref">HTML5</a></cite>] 中定义
+            <code title="dom-element-innerhtml">innerHTML</code> 和
+            <code title="dom-element-outerhtml">outerHTML</code> 属性，以及
+            <code title="dom-element-insertadjacenthtml">insertAdjacentHTML()</code> 方法，并感谢他提供有用的评论。
+        </p>
+    </section>
+
+    <section property="bibo:hasPart" resource="#references" typeof="bibo:Chapter" id="references" class="appendix">
+        <!--OddPage-->
+        <h2 resource="#h-references" id="h-references"><span property="xhv:role" resource="xhv:heading"><span
+                    class="secno">C. </span>参考文献</span></h2>
+        <section property="bibo:hasPart" resource="#normative-references" typeof="bibo:Chapter"
+            id="normative-references">
+            <h3 resource="#h-normative-references" id="h-normative-references"><span property="xhv:role"
+                    resource="xhv:heading"><span class="secno">C.1 </span>规范性参考文献</span></h3>
+            <dl resource="" class="bibliography">
+                <dt id="bib-HTML5">[HTML5]</dt>
+                <dd>Ian Hickson; Robin Berjon; Steve Faulkner; Travis Leithead; Erika Doyle Navara; Edward O'Connor;
+                    Silvia Pfeiffer. W3C. <a property="dc:requires"
+                        href="https://www.w3.org/TR/html5/"><cite>HTML5</cite></a>. 2014年10月28日。W3C 推荐标准。
+                    URL：<a property="dc:requires" href="https://www.w3.org/TR/html5/">http://www.w3.org/TR/html5/</a>
+                </dd>
+                <dt id="bib-RFC2119">[RFC2119]</dt>
+                <dd>S. Bradner. IETF. <a property="dc:requires" href="https://tools.ietf.org/html/rfc2119"><cite>RFC
+                            中用于表示要求级别的
+                            关键词</cite></a>. 1997年3月。最佳当前实践。
+                    URL：<a property="dc:requires"
+                        href="https://tools.ietf.org/html/rfc2119">https://tools.ietf.org/html/rfc2119</a>
+                </dd>
+                <dt id="bib-WEBIDL">[WEBIDL]</dt>
+                <dd>Cameron McCormack; Boris Zbarsky. W3C. <a property="dc:requires"
+                        href="https://www.w3.org/TR/WebIDL-1/"><cite>WebIDL Level 1</cite></a>. 2016年3月8日。W3C
+                    候选推荐标准。URL：<a property="dc:requires"
+                        href="https://www.w3.org/TR/WebIDL-1/">http://www.w3.org/TR/WebIDL-1/</a>
+                </dd>
+            </dl>
+        </section>
+        <section property="bibo:hasPart" resource="#informative-references" typeof="bibo:Chapter"
+            id="informative-references">
+            <h3 resource="#h-informative-references" id="h-informative-references"><span property="xhv:role"
+                    resource="xhv:heading"><span class="secno">C.2 </span>资料性参考文献</span></h3>
+            <dl resource="" class="bibliography">
+                <dt id="bib-DOM4">[DOM4]</dt>
+                <dd>Anne van Kesteren; Aryeh Gregor; Ms2ger; Alex Russell; Robin Berjon. W3C. <a
+                        property="dc:references" href="https://www.w3.org/TR/dom/"><cite>W3C DOM4</cite></a>.
+                    2015年11月19日。W3C 推荐标准。
+                    URL：<a property="dc:references" href="https://www.w3.org/TR/dom/">http://www.w3.org/TR/dom/</a>
+                </dd>
+                <dt id="bib-XML10">[XML10]</dt>
+                <dd>Tim Bray; Jean Paoli; Michael Sperberg-McQueen; Eve Maler; François Yergeau et al. W3C. <a
+                        property="dc:references" href="https://www.w3.org/TR/xml"><cite>可扩展标记语言（XML）
+                            1.0（第五版）</cite></a>. 2008年11月26日。W3C 推荐标准。URL：<a property="dc:references"
+                        href="https://www.w3.org/TR/xml">http://www.w3.org/TR/xml</a>
+                </dd>
+            </dl>
+        </section>
+    </section>
+    <p role="navigation" id="back-to-top"><a href="#toc"><abbr title="返回顶部">↑</abbr></a></p>
+    <script src="https://www.w3.org/scripts/TR/2016/fixup.js" defer="" async=""></script>
+    <script src="https://htmlspecs.com/dropdown.js"></script>
+</body>
+
+</html>

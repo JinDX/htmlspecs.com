@@ -91,14 +91,14 @@ const links = [
         lang: "cjk",
         state: "LS"
     },
-    // {
-    //     text: "DOM Parsing and Serialization",
-    //     href: "https://htmlspecs.com/dom-parsing/",
-    //     src: "https://www.w3.org/TR/2016/WD-DOM-Parsing-20160517/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "DOM Parsing and Serialization",
+        href: "https://htmlspecs.com/dom-parsing/",
+        src: "https://www.w3.org/TR/2016/WD-DOM-Parsing-20160517/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     {
         text: "EditContext API",
         href: "https://htmlspecs.com/edit-context/",
