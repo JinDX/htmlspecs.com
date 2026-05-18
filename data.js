@@ -1394,14 +1394,6 @@ const links = [
         lang: "cjk",
         state: "CRD"
     },
-    // {
-    //     text: "Web Cryptography Level 2",
-    //     href: "https://htmlspecs.com/webcrypto-2/",
-    //     src: "https://www.w3.org/TR/2025/WD-webcrypto-2-20250422/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
     {
         text: "HTML Sanitizer API",
         href: "https://htmlspecs.com/sanitizer-api/",
@@ -1506,14 +1498,6 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "Digital Credentials",
-    //     href: "https://htmlspecs.com/digital-credentials/",
-    //     src: "https://www.w3.org/TR/2026/WD-digital-credentials-20260514/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
     {
         text: "Federated Credential Management API (FedCM)",
         href: "https://htmlspecs.com/fedcm/",
@@ -1621,14 +1605,6 @@ const links = [
         lang: "cjk",
         state: "CRD"
     },
-    // {
-    //     text: "Web Neural Network API",
-    //     href: "https://htmlspecs.com/webnn/",
-    //     src: "https://www.w3.org/TR/2026/CRD-webnn-20260327/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "CRD"
-    // },
     {
         text: "Scalable Vector Graphics (SVG) 2",
         href: "https://htmlspecs.com/SVG2/",
