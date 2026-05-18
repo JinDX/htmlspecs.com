@@ -91,6 +91,14 @@ const links = [
         lang: "cjk",
         state: "LS"
     },
+    // {
+    //     text: "DOM Parsing and Serialization",
+    //     href: "https://htmlspecs.com/dom-parsing/",
+    //     src: "https://www.w3.org/TR/2016/WD-DOM-Parsing-20160517/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "EditContext API",
         href: "https://htmlspecs.com/edit-context/",
@@ -456,6 +464,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
+    // {
+    //     text: "Direct Sockets API",
+    //     href: "https://htmlspecs.com/direct-sockets/",
+    //     src: "https://wicg.github.io/direct-sockets/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
     {
         text: "Linked Data Notifications",
         href: "https://htmlspecs.com/ldn/",
@@ -901,6 +917,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
+    // {
+    //     text: "Keyboard Lock",
+    //     href: "https://htmlspecs.com/keyboard-lock/",
+    //     src: "https://wicg.github.io/keyboard-lock/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
     {
         text: "Contact Picker API",
         href: "https://htmlspecs.com/contact-picker/",
@@ -981,6 +1005,22 @@ const links = [
         lang: "cjk",
         state: "CRD"
     },
+    // {
+    //     text: "Motion Sensors Explainer",
+    //     href: "https://htmlspecs.com/motion-sensors/",
+    //     src: "https://www.w3.org/TR/2017/NOTE-motion-sensors-20170830/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "NOTE"
+    // },
+    // {
+    //     text: "Orientation Sensor",
+    //     href: "https://htmlspecs.com/orientation-sensor/",
+    //     src: "https://www.w3.org/TR/2026/WD-orientation-sensor-20260514/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "Pointer Lock 2.0",
         href: "https://htmlspecs.com/pointerlock/",
@@ -1362,6 +1402,14 @@ const links = [
         lang: "cjk",
         state: "CRD"
     },
+    // {
+    //     text: "Web Cryptography Level 2",
+    //     href: "https://htmlspecs.com/webcrypto-2/",
+    //     src: "https://www.w3.org/TR/2025/WD-webcrypto-2-20250422/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "HTML Sanitizer API",
         href: "https://htmlspecs.com/sanitizer-api/",
@@ -1466,6 +1514,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "Digital Credentials",
+    //     href: "https://htmlspecs.com/digital-credentials/",
+    //     src: "https://www.w3.org/TR/2026/WD-digital-credentials-20260514/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "Federated Credential Management API (FedCM)",
         href: "https://htmlspecs.com/fedcm/",
@@ -1573,6 +1629,14 @@ const links = [
         lang: "cjk",
         state: "CRD"
     },
+    // {
+    //     text: "Web Neural Network API",
+    //     href: "https://htmlspecs.com/webnn/",
+    //     src: "https://www.w3.org/TR/2026/CRD-webnn-20260327/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "CRD"
+    // },
     {
         text: "Scalable Vector Graphics (SVG) 2",
         href: "https://htmlspecs.com/SVG2/",
@@ -2128,6 +2192,14 @@ const cssLinks = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "CSS Table Module Level 3",
+    //     href: "https://htmlspecs.com/css/css-tables-3/",
+    //     src: "https://www.w3.org/TR/2025/WD-css-tables-3-20251216/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "CSS Inline Layout Module Level 3",
         href: "https://htmlspecs.com/css/css-inline-3/",
