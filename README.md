@@ -130,6 +130,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Web Audio API](https://htmlspecs.com/webaudio/)（[Source](https://www.w3.org/TR/2024/WD-webaudio-1.1-20241105/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Geolocation API](https://htmlspecs.com/geolocation/)（[Source](https://www.w3.org/TR/2026/CR-geolocation-20260326/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
 - [Device Orientation and Motion](https://htmlspecs.com/orientation-event/)（[Source](https://www.w3.org/TR/2025/CRD-orientation-event-20250212/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
+- [Motion Sensors Explainer](https://htmlspecs.com/motion-sensors/)（[Source](https://www.w3.org/TR/2017/NOTE-motion-sensors-20170830/) ![Note](https://img.shields.io/badge/NOTE-309c40)）
 - [Pointer Lock 2.0](https://htmlspecs.com/pointerlock/)（[Source](https://www.w3.org/TR/2026/WD-pointerlock-2-20260225/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Clipboard API and events](https://htmlspecs.com/clipboard-apis/)（[Source](https://www.w3.org/TR/2025/WD-clipboard-apis-20251124/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Selection API](https://htmlspecs.com/selection-api/)（[Source](https://www.w3.org/TR/2025/WD-selection-api-20250105/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
