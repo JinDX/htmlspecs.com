@@ -2160,14 +2160,14 @@ const cssLinks = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "CSS Table Module Level 3",
-    //     href: "https://htmlspecs.com/css/css-tables-3/",
-    //     src: "https://www.w3.org/TR/2025/WD-css-tables-3-20251216/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "CSS Table Module Level 3",
+        href: "https://htmlspecs.com/css/css-tables-3/",
+        src: "https://www.w3.org/TR/2025/WD-css-tables-3-20251216/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     {
         text: "CSS Inline Layout Module Level 3",
         href: "https://htmlspecs.com/css/css-inline-3/",
