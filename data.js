@@ -552,14 +552,14 @@ const links = [
         lang: "cjk",
         state: "CRD"
     },
-    // {
-    //     text: "WebRTC Encoded Transform",
-    //     href: "https://htmlspecs.com/webrtc-encoded-transform/",
-    //     src: "https://www.w3.org/TR/webrtc-encoded-transform/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "WebRTC Encoded Transform",
+        href: "https://htmlspecs.com/webrtc-encoded-transform/",
+        src: "https://www.w3.org/TR/2026/WD-webrtc-encoded-transform-20260416/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     {
         text: "Payment Request API",
         href: "https://htmlspecs.com/payment-request/",
