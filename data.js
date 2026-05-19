@@ -1013,14 +1013,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "Audio Output Devices API",
-    //     href: "https://htmlspecs.com/audio-output/",
-    //     src: "https://www.w3.org/TR/2025/CRD-audio-output-20251009/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "CRD"
-    // },
+    {
+        text: "Audio Output Devices API",
+        href: "https://htmlspecs.com/audio-output/",
+        src: "https://www.w3.org/TR/2025/CRD-audio-output-20251009/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "CRD"
+    },
     {
         text: "Geolocation API",
         href: "https://htmlspecs.com/geolocation/",
@@ -1459,7 +1459,7 @@ const links = [
         state: "REC"
     },
     // {
-    //     text: "Subresource Integrity Level 2",
+    //     text: "Subresource Integrity (SRI) 2",
     //     href: "https://htmlspecs.com/sri-2/",
     //     src: "https://www.w3.org/TR/2026/WD-sri-2-20260320/",
     //     "last-modified": "-",
