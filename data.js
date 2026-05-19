@@ -219,6 +219,14 @@ const links = [
         lang: "cjk",
         state: "NOTE"
     },
+    // {
+    //     text: "Get Installed Related Apps API",
+    //     href: "https://htmlspecs.com/get-installed-related-apps/",
+    //     src: "https://wicg.github.io/get-installed-related-apps/spec/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
     {
         text: "Compatibility",
         href: "https://htmlspecs.com/compat/",
@@ -536,6 +544,22 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
+    // {
+    //     text: "Identifiers for WebRTC's Statistics API",
+    //     href: "https://htmlspecs.com/webrtc-stats/",
+    //     src: "https://www.w3.org/TR/2025/CRD-webrtc-stats-20250925/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "CRD"
+    // },
+    // {
+    //     text: "WebRTC Encoded Transform",
+    //     href: "https://htmlspecs.com/webrtc-encoded-transform/",
+    //     src: "https://www.w3.org/TR/webrtc-encoded-transform/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "Payment Request API",
         href: "https://htmlspecs.com/payment-request/",
@@ -805,6 +829,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
+    // {
+    //     text: "Web Neural Network API",
+    //     href: "https://htmlspecs.com/webnn/",
+    //     src: "https://www.w3.org/TR/2026/CRD-webnn-20260327/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "CRD"
+    // },
     {
         text: "Screen Orientation",
         href: "https://htmlspecs.com/screen-orientation/",
@@ -981,6 +1013,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "Audio Output Devices API",
+    //     href: "https://htmlspecs.com/audio-output/",
+    //     src: "https://www.w3.org/TR/2025/CRD-audio-output-20251009/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "CRD"
+    // },
     {
         text: "Geolocation API",
         href: "https://htmlspecs.com/geolocation/",
@@ -1370,6 +1410,14 @@ const links = [
 
 
     //### 安全和认证|보안 및 인증|セキュリティと認証
+    // {
+    //     text: "Web Cryptography Level 2",
+    //     href: "https://htmlspecs.com/webcrypto-2/",
+    //     src: "https://www.w3.org/TR/2025/WD-webcrypto-2-20250422/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "Web Authentication: An API for accessing Public Key Credentials Level 2",
         href: "https://htmlspecs.com/webauthn-2/",
@@ -1410,6 +1458,14 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
+    // {
+    //     text: "Subresource Integrity Level 2",
+    //     href: "https://htmlspecs.com/sri-2/",
+    //     src: "https://www.w3.org/TR/2026/WD-sri-2-20260320/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "Content Security Policy Level 3",
         href: "https://htmlspecs.com/CSP3/",
@@ -1466,6 +1522,14 @@ const links = [
         lang: "cjk",
         state: "CRD"
     },
+    // {
+    //     text: "Isolated Contexts",
+    //     href: "https://htmlspecs.com/isolated-contexts/",
+    //     src: "https://wicg.github.io/isolated-web-apps/isolated-contexts.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
     {
         text: "Referrer Policy",
         href: "https://htmlspecs.com/referrer-policy/",
@@ -1506,6 +1570,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "Digital Credentials",
+    //     href: "https://htmlspecs.com/digital-credentials/",
+    //     src: "https://www.w3.org/TR/2026/WD-digital-credentials-20260514/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "Private State Token API",
         href: "https://htmlspecs.com/trust-token-api/",
@@ -1653,6 +1725,14 @@ const links = [
         lang: "cjk",
         state: "CRD"
     },
+    // {
+    //     text: "Media Capture from DOM Elements",
+    //     href: "https://htmlspecs.com/mediacapture-fromelement/",
+    //     src: "https://www.w3.org/TR/2025/WD-mediacapture-fromelement-20250212/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "MediaStreamTrack Content Hints",
         href: "https://htmlspecs.com/mst-content-hint/",
@@ -1661,6 +1741,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "MediaStreamTrack Insertable Media Processing using Streams",
+    //     href: "https://htmlspecs.com/mediacapture-transform/",
+    //     src: "https://www.w3.org/TR/2026/WD-mediacapture-transform-20260416/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "Autoplay Detection",
         href: "https://htmlspecs.com/autoplay-detection/",
@@ -2350,6 +2438,14 @@ const cssLinks = [
         lang: "cjk",
         state: "CR"
     },
+    // {
+    //     text: "CSS Fragmentation Module Level 4",
+    //     href: "https://htmlspecs.com/css-break-4/",
+    //     src: "https://www.w3.org/TR/2018/WD-css-break-4-20181218/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
 
     //### 伪元素|의사 요소|疑似要素
     {
@@ -2386,7 +2482,6 @@ const cssLinks = [
         lang: "cjk",
         state: "WD"
     },
-
     {
         text: "CSS Masking Module Level 1",
         href: "https://htmlspecs.com/css/css-masking-1/",
@@ -2395,6 +2490,14 @@ const cssLinks = [
         lang: "cjk",
         state: "CRD"
     },
+    // {
+    //     text: "CSS Fill and Stroke Module Level 3",
+    //     href: "https://htmlspecs.com/fill-stroke-3/",
+    //     src: "https://www.w3.org/TR/2017/WD-fill-stroke-3-20170413/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
 
     //### 变换和动画|변환 및 애니메이션|変換とアニメーション
     {
