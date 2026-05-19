@@ -27,6 +27,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Web App Launch Handler API](https://htmlspecs.com/web-app-launch/)（[Source](https://wicg.github.io/web-app-launch/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Manifest Incubations](https://htmlspecs.com/manifest-incubations/)（[Source](https://wicg.github.io/manifest-incubations/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Web App Manifest - Application Information](https://htmlspecs.com/manifest-app-info/)（[Source](https://www.w3.org/TR/2023/NOTE-manifest-app-info-20230821/) ![Note](https://img.shields.io/badge/NOTE-309c40)）
+- [Get Installed Related Apps API](https://htmlspecs.com/get-installed-related-apps/)（[Source](https://wicg.github.io/get-installed-related-apps/spec/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Compatibility](https://htmlspecs.com/compat/)（[Source](https://compat.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [Web Platform Design Principles](https://htmlspecs.com/design-principles/)（[Source](https://www.w3.org/TR/2026/NOTE-design-principles-20260224/) ![Note](https://img.shields.io/badge/NOTE-309c40)）
 - [Compression](https://htmlspecs.com/compression/)（[Source](https://compression.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）

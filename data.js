@@ -219,14 +219,14 @@ const links = [
         lang: "cjk",
         state: "NOTE"
     },
-    // {
-    //     text: "Get Installed Related Apps API",
-    //     href: "https://htmlspecs.com/get-installed-related-apps/",
-    //     src: "https://wicg.github.io/get-installed-related-apps/spec/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "Get Installed Related Apps API",
+        href: "https://htmlspecs.com/get-installed-related-apps/",
+        src: "https://wicg.github.io/get-installed-related-apps/spec/",
+        "last-modified": "Thu, 16 Sep 2021 12:20:48 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
     {
         text: "Compatibility",
         href: "https://htmlspecs.com/compat/",
