@@ -15,7 +15,7 @@ const links = [
         text: "ECMAScript® 2027 Language Specification",
         href: "https://ecma262.com/",
         src: "https://tc39.es/ecma262/",
-        "last-modified": "Sun, 17 May 2026 04:36:31 GMT",
+        "last-modified": "Mon, 18 May 2026 22:08:35 GMT",
         lang: "cjk",
         state: "Draft"
     },
@@ -695,7 +695,7 @@ const links = [
         text: "OpenAPI Specification v3.2.0",
         href: "https://htmlspecs.com/openapi/",
         src: "https://spec.openapis.org/oas/latest.html",
-        "last-modified": "Fri, 08 May 2026 09:27:27 GMT",
+        "last-modified": "Mon, 18 May 2026 10:48:16 GMT",
         lang: "cjk",
         state: "Draft"
     },
