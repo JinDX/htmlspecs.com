@@ -544,14 +544,14 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
-    // {
-    //     text: "Identifiers for WebRTC's Statistics API",
-    //     href: "https://htmlspecs.com/webrtc-stats/",
-    //     src: "https://www.w3.org/TR/2025/CRD-webrtc-stats-20250925/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "CRD"
-    // },
+    {
+        text: "Identifiers for WebRTC&#39;s Statistics API",
+        href: "https://htmlspecs.com/webrtc-stats/",
+        src: "https://www.w3.org/TR/2025/CRD-webrtc-stats-20250925/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "CRD"
+    },
     // {
     //     text: "WebRTC Encoded Transform",
     //     href: "https://htmlspecs.com/webrtc-encoded-transform/",
