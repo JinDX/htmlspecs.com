@@ -2406,14 +2406,6 @@ const cssLinks = [
         lang: "cjk",
         state: "CR"
     },
-    // {
-    //     text: "CSS Fragmentation Module Level 4",
-    //     href: "https://htmlspecs.com/css-break-4/",
-    //     src: "https://www.w3.org/TR/2018/WD-css-break-4-20181218/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
 
     //### 伪元素|의사 요소|疑似要素
     {
@@ -2458,14 +2450,6 @@ const cssLinks = [
         lang: "cjk",
         state: "CRD"
     },
-    // {
-    //     text: "CSS Fill and Stroke Module Level 3",
-    //     href: "https://htmlspecs.com/fill-stroke-3/",
-    //     src: "https://www.w3.org/TR/2017/WD-fill-stroke-3-20170413/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
 
     //### 变换和动画|변환 및 애니메이션|変換とアニメーション
     {
