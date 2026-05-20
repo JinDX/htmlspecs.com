@@ -1442,14 +1442,14 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
-    // {
-    //     text: "Subresource Integrity (SRI) 2",
-    //     href: "https://htmlspecs.com/sri-2/",
-    //     src: "https://www.w3.org/TR/2026/WD-sri-2-20260320/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "Subresource Integrity (SRI) 2",
+        href: "https://htmlspecs.com/sri-2/",
+        src: "https://www.w3.org/TR/2026/WD-sri-2-20260320/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     {
         text: "Content Security Policy Level 3",
         href: "https://htmlspecs.com/CSP3/",
