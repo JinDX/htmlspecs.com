@@ -1510,7 +1510,7 @@ const links = [
         text: "Isolated Contexts",
         href: "https://htmlspecs.com/isolated-contexts/",
         src: "https://wicg.github.io/isolated-web-apps/isolated-contexts.html",
-        "last-modified": "-",
+        "last-modified": "Wed, 19 Feb 2025 04:20:21 GMT",
         lang: "cjk",
         state: "Draft"
     },
@@ -1701,14 +1701,14 @@ const links = [
         lang: "cjk",
         state: "CRD"
     },
-    // {
-    //     text: "Media Capture from DOM Elements",
-    //     href: "https://htmlspecs.com/mediacapture-fromelement/",
-    //     src: "https://www.w3.org/TR/2025/WD-mediacapture-fromelement-20250212/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "Media Capture from DOM Elements",
+        href: "https://htmlspecs.com/mediacapture-fromelement/",
+        src: "https://www.w3.org/TR/2025/WD-mediacapture-fromelement-20250212/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     {
         text: "MediaStreamTrack Content Hints",
         href: "https://htmlspecs.com/mst-content-hint/",
