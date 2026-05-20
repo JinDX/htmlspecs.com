@@ -1554,14 +1554,6 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "Digital Credentials",
-    //     href: "https://htmlspecs.com/digital-credentials/",
-    //     src: "https://www.w3.org/TR/2026/WD-digital-credentials-20260514/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
     {
         text: "Private State Token API",
         href: "https://htmlspecs.com/trust-token-api/",
