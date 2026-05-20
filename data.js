@@ -1402,14 +1402,6 @@ const links = [
 
 
     //### 安全和认证|보안 및 인증|セキュリティと認証
-    // {
-    //     text: "Web Cryptography Level 2",
-    //     href: "https://htmlspecs.com/webcrypto-2/",
-    //     src: "https://www.w3.org/TR/2025/WD-webcrypto-2-20250422/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
     {
         text: "Web Authentication: An API for accessing Public Key Credentials Level 2",
         href: "https://htmlspecs.com/webauthn-2/",
