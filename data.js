@@ -1506,14 +1506,14 @@ const links = [
         lang: "cjk",
         state: "CRD"
     },
-    // {
-    //     text: "Isolated Contexts",
-    //     href: "https://htmlspecs.com/isolated-contexts/",
-    //     src: "https://wicg.github.io/isolated-web-apps/isolated-contexts.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "Isolated Contexts",
+        href: "https://htmlspecs.com/isolated-contexts/",
+        src: "https://wicg.github.io/isolated-web-apps/isolated-contexts.html",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "Draft"
+    },
     {
         text: "Referrer Policy",
         href: "https://htmlspecs.com/referrer-policy/",
