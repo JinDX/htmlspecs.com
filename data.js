@@ -1868,7 +1868,7 @@ const links = [
     {
         text: "WebDriver BiDi",
         href: "https://htmlspecs.com/webdriver-bidi/",
-        src: "https://www.w3.org/TR/2026/WD-webdriver-bidi-20260511/",
+        src: "https://www.w3.org/TR/2026/WD-webdriver-bidi-20260520/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
