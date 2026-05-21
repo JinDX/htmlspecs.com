@@ -1104,10 +1104,10 @@ const links = [
     {
         text: "Device Posture API",
         href: "https://htmlspecs.com/device-posture/",
-        src: "https://www.w3.org/TR/2024/CR-device-posture-20241126/",
+        src: "https://www.w3.org/TR/2026/CRD-device-posture-20260520/",
         "last-modified": "-",
         lang: "cjk",
-        state: "CR"
+        state: "CRD"
     },
     {
         text: "Ambient Light Sensor",
