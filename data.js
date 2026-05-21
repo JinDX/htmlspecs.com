@@ -1736,7 +1736,7 @@ const links = [
     {
         text: "WebVTT: The Web Video Text Tracks Format",
         href: "https://htmlspecs.com/webvtt1/",
-        src: "https://www.w3.org/TR/2019/CR-webvtt1-20190404/",
+        src: "https://www.w3.org/TR/2026/CRD-webvtt1-20260520/",
         "last-modified": "-",
         lang: "cjk",
         state: "CR"
