@@ -785,7 +785,7 @@ const links = [
         text: "WebUSB API",
         href: "https://htmlspecs.com/webusb/",
         src: "https://wicg.github.io/webusb/",
-        "last-modified": "Thu, 13 Feb 2025 19:01:51 GMT",
+        "last-modified": "Thu, 21 May 2026 00:51:24 GMT",
         lang: "cjk",
         state: "Draft"
     },
