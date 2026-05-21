@@ -344,7 +344,7 @@ const links = [
     {
         text: "HTML Accessibility API Mappings 1.0",
         href: "https://htmlspecs.com/html-aam-1.0/",
-        src: "https://www.w3.org/TR/2026/WD-html-aam-1.0-20260430/",
+        src: "https://www.w3.org/TR/2026/WD-html-aam-1.0-20260520/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
