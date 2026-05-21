@@ -143,7 +143,7 @@ const links = [
         text: "Encoding",
         href: "https://htmlspecs.com/encoding/",
         src: "https://encoding.spec.whatwg.org/",
-        "last-modified": "Sun, 15 Mar 2026 09:08:12 GMT",
+        "last-modified": "Thu, 21 May 2026 05:11:18 GMT",
         lang: "cjk",
         state: "LS"
     },
