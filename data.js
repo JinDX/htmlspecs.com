@@ -865,7 +865,7 @@ const links = [
         text: "Web Speech API",
         href: "https://htmlspecs.com/web-speech-api/",
         src: "https://webaudio.github.io/web-speech-api/",
-        "last-modified": "Fri, 08 May 2026 22:53:20 GMT",
+        "last-modified": "Thu, 21 May 2026 22:36:31 GMT",
         lang: "cjk",
         state: "Draft"
     },
