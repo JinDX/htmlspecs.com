@@ -169,6 +169,11 @@
             box-shadow: 0 0 0 .125em #0670b161
         }
 
+        .dfn-panel .marker.cddl-block {
+            background: #8ccbf2;
+            box-shadow: 0 0 0 .125em #0670b161
+        }
+
         .dfn-panel a:not(:hover) {
             text-decoration: none !important;
             border-bottom: none !important
@@ -257,6 +262,16 @@
             animation: pop .4s ease-in-out 0s 1
         }
 
+        @media (prefers-color-scheme:dark) {
+            #references :target {
+                background: color-mix(in srgb, #eaf3ff 15%, transparent)
+            }
+        }
+
+        body:has(input[name=color-scheme][value=dark]:checked) #references :target {
+            background: color-mix(in srgb, #eaf3ff 15%, transparent)
+        }
+
         cite .bibref {
             font-style: italic
         }
@@ -285,8 +300,7 @@
         }
 
         #issue-summary li {
-            list-style: none;
-            display: inline-block
+            list-style: none
         }
 
         details.respec-tests-details {
@@ -339,7 +353,7 @@
             align-items: baseline
         }
 
-        :is(h2, h3, h4, h5, h6):not(#toc>h2, #abstract>h2, #sotd>h2, .head>h2) {
+        :is(h2, h3, h4, h5, h6):not(#toc>h2, #abstract>h2, #sotd>h2, .head>h2):has(+a.self-link) {
             position: relative;
             left: -.5em
         }
@@ -377,6 +391,15 @@
             .removeOnSave {
                 display: none
             }
+        }
+
+        body:has(input[name=color-scheme][value=light]:checked),
+        head:not(:has(meta[name=color-scheme][content~=dark]))+body {
+            color-scheme: light
+        }
+
+        body:has(input[name=color-scheme][value=dark]:checked) {
+            color-scheme: dark
         }
     </style>
 
@@ -674,15 +697,6 @@
             border-radius: 50%;
         }
 
-        mrow.menclose-box {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            right: 0;
-            left: 0;
-            border: 0.067em solid;
-        }
-
         mrow.menclose-left {
             position: absolute;
             top: 0;
@@ -799,17 +813,41 @@
             border-bottom: 0.134em solid transparent;
         }
 
-        table.elem-math {
-            border-collapse: collapse;
-            border-spacing: 0px;
+        div.elem-math {
+            display: inline-grid;
+            grid-auto-flow: row;
+            /* Use baseline so plain-digit cells line up with merged-carry cells whose digit sits below the carry. */
+            align-items: baseline;
+            grid-auto-columns: max-content;
+            gap: 0;
         }
 
-        table.elem-math tr {
-            vertical-align: baseline;
+        .elem-math-cell {
+            display: inline-block;
+            /* IMPORTANT: do not set 'align-self: stretch' on every cell -- that overrides 'align-items: baseline'
+       from the grid. Exception: cells that only draw a vertical rule (border-left/right) must stretch to
+       the row height so the rule meets rows where neighbors use border-bottom (msline); otherwise the
+       rule ends short by the border-bottom width. */
+            position: relative;
+            overflow: visible;
         }
 
-        td.curved-line {
+        .elem-math-cell.elem-math-vrule-cell {
+            align-self: stretch;
+            box-sizing: border-box;
+        }
+
+        /* Empty rows added after underlines need explicit height (no content to give them one). */
+        .elem-math-spacer {
+            align-self: stretch;
+            height: .5ex;
+        }
+
+        /* Curved bracket: absolutely positioned child so placement is relative to the cell box, not the grid item. */
+        .elem-math-cell .curved-line {
             position: absolute;
+            top: 0;
+            left: 0;
             padding-top: 0em;
             width: 0.75em;
             border: 0.3ex solid;
@@ -822,17 +860,7 @@
             margin-right: 0.75em;
         }
 
-        mtd.precedes-separator {
-            padding-right: 0 !important;
-            /* override an inline style */
-        }
-
-        mtd.separator {
-            padding-left: 0 !important;
-            /* override an inline style */
-            padding-right: 0 !important;
-            /* override an inline style */
-        }
+        /* .precedes-separator / .separator / .follows-separator: horizontal padding set in JS (expandMStackElement). */
 
         .carry {
             font-size: 60%;
@@ -903,7 +931,9 @@
         content="本规范定义了数学标记语言（MathML）。MathML 是一种用于描述数学符号及其结构和内容的标记语言。MathML 的目标是让数学能够在万维网上被提供、接收和处理，就像 [HTML] 已经为文本实现了这些功能一样。">
     <link rel="canonical" href="https://www.w3.org/TR/mathml4/">
     <style>
-        .hljs {
+        .hljs,
+        body:has(input[name=color-scheme][value=light]:checked) .hljs,
+        head:not(:has(meta[name=color-scheme][content~=dark]))+body .hljs {
             --base: #fafafa;
             --mono-1: #383a42;
             --mono-2: #686b77;
@@ -931,8 +961,23 @@
                 --hue-5: #e06c75;
                 --hue-5-2: #be5046;
                 --hue-6: #d19a66;
-                --hue-6-2: #e6c07b
+                --hue-6-2: #e6c07b;
             }
+        }
+
+        body:has(input[name=color-scheme][value=dark]:checked) .hljs {
+            --base: #282c34;
+            --mono-1: #abb2bf;
+            --mono-2: #818896;
+            --mono-3: #5c6370;
+            --hue-1: #56b6c2;
+            --hue-2: #61aeee;
+            --hue-3: #c678dd;
+            --hue-4: #98c379;
+            --hue-5: #e06c75;
+            --hue-5-2: #be5046;
+            --hue-6: #d19a66;
+            --hue-6-2: #e6c07b;
         }
 
         .hljs {
@@ -1078,9 +1123,8 @@
         }
     </style>
     <style>
-        var {
-            position: relative;
-            cursor: pointer
+        var[data-type] {
+            position: relative
         }
 
         var[data-type]::after,
@@ -1307,12 +1351,12 @@
       "title": "Abramowitz1977"
     }
   },
-  "gitRevision": "9bd3bd5d469fe0eb8aee12b2a3f3f20c625c1117",
-  "publishDate": "2026-03-28",
+  "gitRevision": "429f013725933dddb5717e06ad65e6e8089b9e98",
+  "publishDate": "2026-05-21",
   "previousMaturity": "WD",
-  "previousPublishDate": "2026-03-18",
-  "publishISODate": "2026-03-28T00:00:00.000Z",
-  "generatedSubtitle": "W3C Working Draft 28 March 2026"
+  "previousPublishDate": "2026-03-28",
+  "publishISODate": "2026-05-21T00:00:00.000Z",
+  "generatedSubtitle": "W3C Working Draft 21 May 2026"
 }</script>
     <link rel="stylesheet" href="https://www.w3.org/StyleSheets/TR/2021/W3C-WD">
     <script>
@@ -1337,14 +1381,14 @@
             </a></p>
         <h1 id="title" class="title">数学标记语言（MathML）版本 4.0</h1>
         <p id="w3c-state"><a href="https://www.w3.org/standards/types#WD">W3C 工作草案</a> <time class="dt-published"
-                datetime="2026-03-28">2026年3月28日</time></p>
+                datetime="2026-05-21">2026年5月21日</time></p>
         <details open="">
             <summary>有关此文档的更多详细信息</summary>
             <dl>
                 <dt>本版本：</dt>
                 <dd>
                     <a class="u-url"
-                        href="https://www.w3.org/TR/2026/WD-mathml4-20260328/">https://www.w3.org/TR/2026/WD-mathml4-20260328/</a>
+                        href="https://www.w3.org/TR/2026/WD-mathml4-20260521/">https://www.w3.org/TR/2026/WD-mathml4-20260521/</a>
                 </dd>
                 <dt>最新发布版本：</dt>
                 <dd>
@@ -4719,7 +4763,7 @@ Theorem
                 <p>因此，MathML 3.0 识别两个不同的方向性：token 元素内文本和符号的方向性，以及由布局模板表示的整体方向性。下面将讨论这两方面。</p>
 
                 <div class="note" role="note" id="issue-container-generatedID">
-                    <div role="heading" class="note-title marker" id="h-note" aria-level="5"><span>注</span></div>
+                    <div class="note-title marker" id="h-note"><span>注</span></div>
                     <p class="">这里可能需要补充关于纵向语言（以及它们当前缺乏支持）的讨论</p>
                 </div>
 
@@ -5575,7 +5619,7 @@ Theorem
                     </div>
 
                     <div class="note" role="note" id="notcore-mglyph">
-                        <div role="heading" class="note-title marker" id="h-note-0" aria-level="6">
+                        <div class="note-title marker" id="h-note-0">
                             <span>注意</span><span class="issue-label">: mglyph 不属于 MathML-Core</span>
                         </div>
                         <div class="">
@@ -5871,30 +5915,71 @@ Theorem
                     主要用于阿拉伯字符。
                 </p>
 
-                <p>某些字符数据与 <code class="attribute">mathvariant</code> 的组合等价于直接编码数学字母数字符号的指定 Unicode 码位。这些码位参见
-                    <a href="http://www.unicode.org/charts/PDF/U1EE00.pdf">阿拉伯数学字母符号块</a> U+1EE00 至 U+1EEFF，
-                    <a href="http://www.unicode.org/charts/PDF/U1D400.pdf">数学字母数字符号块</a> U+1D400 至 U+1D7FF，
-                    以及 <a href="http://www.unicode.org/charts/PDF/U2100.pdf">字母类字符</a> 范围 U+2100 至 U+214F（代表 SMP
-                    内的“空洞”），见 <a href="#chars_BMP-SMP" class="sec-ref"><bdi class="secno">8.2
-                        </bdi>数学字母数字符号</a>。详见 <a href="http://www.unicode.org/reports/tr25/">UTR #25</a> 第 2.2 节。
-                    这些字符的 Unicode 标准描述为它们提供了一个未加样式的对等字符，除了字体变化（即 <code
-                        class="attribute">mathvariant</code>）以外应当等价。用未加样式字符配合对应 <code
-                        class="attribute">mathvariant</code> 的 token 元素，等价于单独使用数学字母数字符号字符的 token 元素。注意，周围的 <code
-                        class="attribute">mathvariant</code> 或样式声明不应更改数学字母数字符号字符的外观。
+                <p>字符数据和 <code class="attribute">mathvariant</code>
+                    值的某些组合等效于已分配的、用于编码
+                    数学字母数字符号的 Unicode 码点。这些 Unicode 码点是
+                    <a href="http://www.unicode.org/charts/PDF/U1EE00.pdf">阿拉伯数学字母符号</a>
+                    块 U+1EE00 到 U+1EEFF、
+                    <a href="http://www.unicode.org/charts/PDF/U1D400.pdf">数学字母数字符号</a>块
+                    U+1D400 到 U+1D7FF 中的码点，
+                    它们列在 Unicode 标准中；以及
+                    <a href="http://www.unicode.org/charts/PDF/U2100.pdf">类字母
+                        符号</a>范围 U+2100 到 U+214F 中表示 SMP 中
+                    字母表“空缺”的码点，它们列在 <a href="#chars_BMP-SMP" class="sec-ref"><bdi class="secno">8.2
+                        </bdi>数学字母数字符号</a>中。
+                    这些字符在
+                    <a href="http://www.unicode.org/reports/tr25/">UTR #25</a> 的第 2.2 节中有详细描述。
+                    Unicode 标准中每个此类字符的描述
+                    都提供了一个未设样式字符，除了对应于 <code class="attribute">mathvariant</code>
+                    值的字体变化外，它与该字符等效。
+                </p>
+                <p>使用未设样式字符并结合
+                    相应 <code class="attribute">mathvariant</code> 值的令牌元素，等效于一个
+                    使用数学字母数字符号字符
+                    且不带 <code class="attribute">mathvariant</code> 属性的令牌元素。
+                    请注意，<code class="attribute">mathvariant</code> 的
+                    <code>script</code> 值可能对应于 <q>Roundhand</q> 或
+                    <q>Chancery</q> 样式，具体取决于所用字体。参见 [<cite><a class="bibref" data-link-type="biblio"
+                            href="#bib-entities"
+                            title="XML Entity Definitions for Characters (3rd Edition)">Entities</a></cite>]
+                    <a href="https://www.w3.org/TR/xml-entity-names/script.html">花体字符表</a>。可以通过在数学字母数字字符后跟一个
+                    变体选择符字符来强制采用特定样式。
+                    变体选择符 U+FE00 可用于强制采用 Chancery/Calligraphic 样式，变体选择符
+                    U+FE01 可用于强制采用 Roundhand/Script 样式。
                 </p>
 
-                <p>渲染器应支持可对应于 Unicode 字符的字符数据与 <code class="attribute">mathvariant</code> 组合，并且这些组合可用现有字体区分。对于不能对应
-                    Unicode 码位的组合，渲染器可以选择支持或忽略；作者需知对无对应代码点的数学新符号支持情况在不同渲染器间差异很大。
+                <p>数学字母数字符号字符的外观
+                    不应被周围的 <code class="attribute">mathvariant</code> 或其他样式声明改变。</p>
+
+                <p>渲染器应支持那些字符数据和
+                    <code class="attribute">mathvariant</code> 值的组合，这些组合对应于 Unicode 字符，
+                    并且渲染器能够使用可用的字体字符从视觉上区分它们。
+                    对于那些不对应于已分配
+                    Unicode 码点的字符数据和
+                    <code class="attribute">mathvariant</code> 值组合，渲染器可以忽略或支持；作者应认识到，
+                    对不对应于已分配 Unicode 码
+                    点的数学符号的支持，在不同渲染器之间可能差异很大。
                 </p>
 
-                <p>由于 MathML 表达式通常嵌入如 HTML 等文本数据格式，周围文本和 MathML 必须共享诸如字体大小等渲染属性，以保证风格兼容。因此，大多数影响文本渲染的属性值按上表 <q>默认</q>
-                    列所示从渲染环境继承。（当文本和 MathML 由不同软件渲染时，例如浏览器与插件，还应让渲染环境向 MathML 渲染器额外提供基线位置等信息，MathML 属性并未规定这些信息。）但 MathML
-                    并不规定从渲染环境继承样式信息的机制。
+                <p>由于 MathML 表达式通常嵌入在诸如 HTML 之类的文本数据
+                    格式中，周围文本和 MathML 必须共享
+                    字体大小等渲染属性，以便渲染结果在样式上
+                    保持兼容。因此，影响文本渲染的大多数属性值
+                    都从渲染环境继承，如上表的 <q>default</q> 列所示。（在
+                    周围文本和 MathML 由不同软件渲染的情况下，
+                    例如浏览器和插件，渲染环境还必须向
+                    MathML 渲染器提供附加信息，例如周围
+                    文本的基线位置，而这些信息并未由任何 MathML 属性指定。）
+                    但是请注意，MathML 并未指定
+                    样式信息从渲染环境继承的机制。
                 </p>
 
-                <p>如果当前字体请求的 <code class="attribute">mathsize</code> 不可用，渲染器应设法以最清晰、最高质量的方式近似。许多 MathML
-                    元素会自动更改某些子元素的字体大小；详见 <a href="#presm_scriptlevel" class="sec-ref"><bdi class="secno">3.1.6
-                        </bdi>displaystyle 与 scriptlevel</a> 的讨论。</p>
+                <p>如果当前字体所请求的 <code class="attribute">mathsize</code> 不可用，
+                    渲染器应以可能带来
+                    最易理解、最高质量渲染的方式近似它。
+                    请注意，许多 MathML 元素会自动改变其某些子元素中的字体大小；
+                    参见 <a href="#presm_scriptlevel" class="sec-ref"><bdi class="secno">3.1.6 </bdi>displaystyle 和
+                        scriptlevel</a> 中的讨论。</p>
 
                 <section id="embedding-html-in-mathml">
                     <div class="header-wrapper">
@@ -9202,7 +9287,7 @@ depth =max(maxheight-axis, maxdepth+axis) - axis</code></pre>
                         </tbody>
                     </table>
                     <div class="note" role="note" id="mpadded-lengths">
-                        <div role="heading" class="note-title marker" id="h-note-1" aria-level="6">
+                        <div class="note-title marker" id="h-note-1">
                             <span>注意</span><span class="issue-label">: MathML 3 中的 mpadded 长度</span>
                         </div>
                         <div class="">
@@ -11999,8 +12084,8 @@ mtd<span class="hljs-selector-class">.eqnum</span><span class="hljs-selector-pse
 
 
                 <div class="note" role="note" id="notcore-malign">
-                    <div role="heading" class="note-title marker" id="h-note-2" aria-level="5"><span>注意</span><span
-                            class="issue-label">：malignmark 和 maligngroup 不属于 MathML-Core</span></div>
+                    <div class="note-title marker" id="h-note-2"><span>注意</span><span class="issue-label">：malignmark 和
+                            maligngroup 不属于 MathML-Core</span></div>
                     <div class="">
                         <p><code class="element">malignmark</code> 和 <code class="element">maligngroup</code> 在
                             [<cite><a class="bibref" data-link-type="biblio" href="#bib-mathml-core"
@@ -14875,12 +14960,23 @@ mtd<span class="hljs-selector-class">.eqnum</span><span class="hljs-selector-pse
 
                     <p>生成的 URI 被作为 <code class="attribute">definitionURL</code> 属性的值。</p>
 
-                    <p>这种引用形式对于与 MathML2 的向后兼容以及在基于 URI 的框架（例如语义网中的 RDF 或 OMDoc）中使用 Content MathML 很有用。另一个好处是 CD
-                        中的符号名不必与 <code class="element">csymbol</code> 元素的内容对应。不过通常此方法会使 MathML 实例变得更长。并且在 CD 正在开发的情况下，使用
-                        CD Group 文件可以在不修改标记的情况下改变 CD 的位置。第三个缺点是与 <code class="attribute">cd</code> 属性不同，<code
-                            class="attribute">definitionURL</code> 不限于引用 OpenMath
-                        内容词典中的符号定义。因此在一般情况下，用户代理无法在没有关于上下文与实践社区的额外信息时自动确定 <code class="attribute">definitionURL</code>
-                        值的正确解释。</p>
+                    <p>这种引用形式有利于与 MathML2 保持向后兼容，并且有助于
+                        在基于 URI 的框架中使用 Content MathML（例如语义 Web 中的 RDF [<cite><a class="bibref" data-link-type="biblio"
+                                href="#bib-rdf"
+                                title="Resource Description Framework (RDF): Concepts and Abstract Syntax">RDF</a></cite>]
+                        或 OMDoc [<cite><a class="bibref" data-link-type="biblio" href="#bib-omdoc1-2"
+                                title="OMDoc1.2">OMDoc1.2</a></cite>]）。另一个好处是
+                        CD 中的符号名称不需要对应于
+                        <code class="element">csymbol</code> 元素的内容。但是，一般来说，这种方法会导致
+                        MathML
+                        实例长得多。此外，在 CD 正在开发的情况下，使用 CD Group
+                        文件可允许 CD 的位置发生变化，而无需更改标记。<code class="attribute">definitionURL</code>
+                        的第三个缺点是，与 <code class="attribute">cd</code> 属性不同，它并不
+                        局限于引用 OpenMath 内容字典中的符号定义。因此，
+                        一般来说，如果没有关于 MathML 实例出现的
+                        上下文和实践共同体的进一步信息，用户代理不可能自动确定
+                        <code class="attribute">definitionURL</code> 值的正确解释。
+                    </p>
 
                     <p>在同一个 MathML 实例中可以同时使用 <code class="attribute">cd</code> 与 <code
                             class="attribute">definitionURL</code> 机制。然而，当在一个 <code class="element">csymbol</code>
@@ -26357,9 +26453,9 @@ mtext = element mtext {mtext.<span class="hljs-property">attributes</span>, (tok
         </div>
 
         <div class="issue" id="issue-container-number-247">
-            <div role="heading" class="issue-title marker" id="h-issue" aria-level="3"><a
-                    href="https://github.com/w3c/mathml/issues/247"><span class="issue-number">Issue 247</span></a><span
-                    class="issue-label">: 规范应指明用于重音/线条的字符<a class="respec-gh-label"
+            <div class="issue-title marker" id="h-issue"><a href="https://github.com/w3c/mathml/issues/247"><span
+                        class="issue-number">Issue 247</span></a><span class="issue-label">: 规范应指明用于重音/线条的字符<a
+                        class="respec-gh-label"
                         href="https://github.com/w3c/mathml/issues/?q=is%3Aissue+is%3Aopen+label%3A%22need+specification+update%22"
                         style="background-color: rgb(170, 255, 170); color: rgb(0, 0, 0);"
                         aria-label="GitHub label: need specification update">需要规范更新</a></span></div>
@@ -26919,9 +27015,9 @@ mtext = element mtext {mtext.<span class="hljs-property">attributes</span>, (tok
 
 
         <div class="issue closed" id="issue-container-number-178">
-            <div role="heading" class="issue-title marker" id="h-issue-0" aria-level="3"><a
-                    href="https://github.com/w3c/mathml/issues/178"><span class="issue-number">Issue 178</span></a><span
-                    class="issue-label">: Make MathML attributes ASCII case-insensitive <a class="respec-gh-label"
+            <div class="issue-title marker" id="h-issue-0"><a href="https://github.com/w3c/mathml/issues/178"><span
+                        class="issue-number">Issue 178</span></a><span class="issue-label">: Make MathML attributes
+                    ASCII case-insensitive <a class="respec-gh-label"
                         href="https://github.com/w3c/mathml/issues/?q=is%3Aissue+is%3Aopen+label%3A%22MathML+4%22"
                         style="background-color: rgb(255, 170, 51); color: rgb(0, 0, 0);"
                         aria-label="GitHub label: MathML 4">MathML 4</a><a class="respec-gh-label"
@@ -26990,7 +27086,7 @@ mtext = element mtext {mtext.<span class="hljs-property">attributes</span>, (tok
                     的模式是一起开发并在此处呈现的，也可在 <a
                         href="https://www.w3.org/Math/RelaxNG/mathml4/mathml4-core.rnc">https://www.w3.org/Math/RelaxNG/mathml4/mathml4-core.rnc</a>
                     找到。</p>
-                <pre class="nohighlight nonumexample" style="white-space:pre-wrap" data-oninclude="relaxhl"><span style="color:brown"># MathML 4 (Core Level 1)</span>
+                <pre class="nohighlight nonumexample" style="white-space:pre-wrap"><span style="color:brown"># MathML 4 (Core Level 1)</span>
 <span style="color:brown"># #######################</span>
 
 <span style="color:brown">#     Copyright 1998-2024 W3C (MIT, ERCIM, Keio, Beihang)</span>
@@ -27365,8 +27461,8 @@ start |= math
                         href="https://www.w3.org/Math/RelaxNG/mathml4/mathml4-presentation.rnc">https://www.w3.org/Math/RelaxNG/mathml4/mathml4-presentation.rnc</a>
                     找到。</p>
 
-                <pre class="nohighlight nonumexample" style="white-space:pre-wrap"
-                    data-oninclude="relaxhl"><span style="color:brown"># MathML 4 (Presentation)</span>
+                <pre class="nohighlight nonumexample" style="white-space:pre-wrap"><span style="
+                    color:brown"># MathML 4 (Presentation)</span>
 <span style="color:brown"># #######################</span>
 
 <span style="color:brown">#     Copyright 1998-2024 W3C (MIT, ERCIM, Keio, Beihang)</span>
@@ -27740,7 +27836,7 @@ mtd.attributes &amp;=
                         href="https://www.w3.org/Math/RelaxNG/mathml4/mathml4-strict-content.rnc">https://www.w3.org/Math/RelaxNG/mathml4/mathml4-strict-content.rnc</a>
                     找到。</p>
 
-                <pre class="nohighlight nonumexample" style="white-space:pre-wrap" data-oninclude="relaxhl"><span style="color:brown"># MathML 4 (Strict Content)</span>
+                <pre class="nohighlight nonumexample" style="white-space:pre-wrap"><span style=" color:brown"># MathML 4 (Strict Content)</span>
 <span style="color:brown"># #########################</span>
 
 <span style="color:brown">#     Copyright 1998-2024 W3C (MIT, ERCIM, Keio, Beihang)</span>
@@ -27840,7 +27936,7 @@ MathExpression |= ContExp</pre>
                         href="https://www.w3.org/Math/RelaxNG/mathml4/mathml4-content.rnc">https://www.w3.org/Math/RelaxNG/mathml4/mathml4-content.rnc</a>
                     找到。</p>
 
-                <pre class="nohighlight nonumexample" style="white-space:pre-wrap" data-oninclude="relaxhl"><span style="color:brown"># MathML 4 (Content)</span>
+                <pre class="nohighlight nonumexample" style="white-space:pre-wrap"><span style=" color:brown"># MathML 4 (Content)</span>
 <span style="color:brown"># ##################</span>
 
 <span style="color:brown">#     Copyright 1998-2024 W3C (MIT, ERCIM, Keio, Beihang)</span>
@@ -28236,7 +28332,7 @@ ContExp |= constant-arith.class
                         href="https://www.w3.org/Math/RelaxNG/mathml4/mathml4.rnc">https://www.w3.org/Math/RelaxNG/mathml4/mathml4.rnc</a>
                     找到。</p>
 
-                <pre class="nohighlight nonumexample" style="white-space:pre-wrap" data-oninclude="relaxhl"><span style="color:brown"># MathML 4 (full)</span>
+                <pre class="nohighlight nonumexample" style="white-space:pre-wrap"><span style=" color:brown"># MathML 4 (full)</span>
 <span style="color:brown"># ##############</span>
 
 <span style="color:brown">#     Copyright 1998-2024 W3C (MIT, ERCIM, Keio)</span>
@@ -28271,7 +28367,7 @@ default namespace <b>m</b> = "http://www.w3.org/1998/Math/MathML"
                         href="https://www.w3.org/Math/RelaxNG/mathml4/mathml4-legacy.rnc">https://www.w3.org/Math/RelaxNG/mathml4/mathml4-legacy.rnc</a>
                     找到。</p>
 
-                <pre class="nohighlight nonumexample" style="white-space:pre-wrap" data-oninclude="relaxhl"><span style="color:brown"># MathML 4 (legacy)</span>
+                <pre class="nohighlight nonumexample" style="white-space:pre-wrap"><span style=" color:brown"># MathML 4 (legacy)</span>
 <span style="color:brown"># ################</span>
 
 <span style="color:brown">#     Copyright 1998-2024 W3C (MIT, ERCIM, Keio)</span>
@@ -52028,7 +52124,7 @@ n-ary coproduct">∐</span></dd>
                     Mark Birbeck 等。W3C。2008 年 10 月 8 日。W3C 推荐。URL: <a
                         href="https://www.w3.org/TR/2008/REC-xhtml-modularization-20081008/">https://www.w3.org/TR/2008/REC-xhtml-modularization-20081008/</a>
                 </dd>
-                <dt id="bib-omdoc1.2">[OMDoc1.2]</dt>
+                <dt id="bib-omdoc1-2">[OMDoc1.2]</dt>
                 <dd>
                     <cite>OMDoc1.2</cite>.
                 </dd>
@@ -55993,9 +56089,12 @@ n-ary coproduct">∐</span></dd>
                     .forEach(varElem => varElem.addEventListener("click", highlightListener));
             }
 
+            /**
+             * @param {MouseEvent} ev
+             */
             function highlightListener(ev) {
                 ev.stopPropagation();
-                const { target: varElem } = ev;
+                const varElem = /** @type {HTMLElement} */ (ev.target);
                 const hightligtedElems = highlightVars(varElem);
                 const resetListener = () => {
                     const hlColor = getHighlightColor(varElem);
@@ -56018,6 +56117,9 @@ n-ary coproduct">∐</span></dd>
                 ["respec-hl-c7", true],
             ]);
 
+            /**
+             * @param {HTMLElement} target
+             */
             function getHighlightColor(target) {
                 // return current colors if applicable
                 const { value } = target.classList;
@@ -56032,9 +56134,15 @@ n-ary coproduct">∐</span></dd>
                 return [...HL_COLORS.keys()].find(c => HL_COLORS.get(c)) || "respec-hl-c1";
             }
 
+            /**
+             * @param {HTMLElement} varElem
+             */
             function highlightVars(varElem) {
                 const textContent = norm(varElem.textContent);
-                const parent = varElem.closest(".algorithm, section");
+                const parent = /** @type {HTMLElement} */ (
+                    varElem.closest(".algorithm, section")
+                );
+                if (!parent) return [];
                 const highlightColor = getHighlightColor(varElem);
 
                 const varsToHighlight = [...parent.querySelectorAll("var")].filter(
@@ -56057,12 +56165,20 @@ n-ary coproduct">∐</span></dd>
                 return varsToHighlight;
             }
 
+            /**
+             * @param {HTMLElement} el
+             * @param {string} highlightColor
+             */
             function removeHighlight(el, highlightColor) {
                 el.classList.remove("respec-hl", highlightColor);
                 // clean up empty class attributes so they don't come in export
                 if (!el.classList.length) el.removeAttribute("class");
             }
 
+            /**
+             * @param {HTMLElement} elem
+             * @param {string} highlightColor
+             */
             function addHighlight(elem, highlightColor) {
                 elem.classList.add("respec-hl", highlightColor);
             }
@@ -56091,8 +56207,11 @@ n-ary coproduct">∐</span></dd>
                                                }
 
                                                function panelListener() {
-                                                   /** @type {HTMLElement} */
+                                                   /** @type {HTMLElement | null} */
                                                    let panel = null;
+                                                   /**
+                                                    * @param {KeyboardEvent|MouseEvent} event
+                                                    */
                                                    return event => {
                                                        const { target, type } = event;
 
@@ -56100,24 +56219,34 @@ n-ary coproduct">∐</span></dd>
 
                                                        // For keys, we only care about Enter key to activate the panel
                                                        // otherwise it's activated via a click.
-                                                       if (type === "keydown" && event.key !== "Enter") return;
+                                                       if (
+                                                           type === "keydown" &&
+      /** @type {KeyboardEvent} */ (event).key !== "Enter"
+                                                       )
+                                                           return;
 
                                                        const action = deriveAction(event);
 
                                                        switch (action) {
                                                            case "show": {
                                                                hidePanel(panel);
-                                                               /** @type {HTMLElement} */
+                                                               /** @type {HTMLElement | null} */
                                                                const dfn = target.closest("dfn, .index-term");
+                                                               if (!dfn?.id) break;
                                                                panel = document.getElementById(`dfn-panel-for-${dfn.id}`);
-                                                               const coords = deriveCoordinates(event);
+                                                               if (!panel) break;
+                                                               const coords = deriveCoordinates(
+          /** @type {MouseEvent|KeyboardEvent} */(event)
+                                                               );
                                                                displayPanel(dfn, panel, coords);
                                                                break;
                                                            }
                                                            case "dock": {
-                                                               panel.style.left = null;
-                                                               panel.style.top = null;
-                                                               panel.classList.add("docked");
+                                                               if (panel) {
+                                                                   panel.style.left = "";
+                                                                   panel.style.top = "";
+                                                                   panel.classList.add("docked");
+                                                               }
                                                                break;
                                                            }
                                                            case "hide": {
@@ -56168,7 +56297,8 @@ n-ary coproduct">∐</span></dd>
                                                        if (hitALink) {
                                                            return target.classList.contains("self-link") ? "hide" : "dock";
                                                        }
-                                                       const panel = target.closest(".dfn-panel");
+
+                                                       const panel = /** @type {HTMLElement} */ (target.closest(".dfn-panel"));
                                                        return panel.classList.contains("docked") ? "hide" : "none";
                                                    }
                                                    if (document.querySelector(".dfn-panel:not([hidden])")) {
@@ -56212,9 +56342,9 @@ n-ary coproduct">∐</span></dd>
                                                        const newLeft = Math.max(MARGIN, x + MARGIN - panelRect.width);
                                                        const newCaretOffset = left - newLeft;
                                                        panel.style.left = `${newLeft}px`;
-                                                       /** @type {HTMLElement} */
+                                                       /** @type {HTMLElement | null} */
                                                        const caret = panel.querySelector(".caret");
-                                                       caret.style.left = `${newCaretOffset}px`;
+                                                       if (caret) caret.style.left = `${newCaretOffset}px`;
                                                    }
 
                                                    // As it's a dialog, we trap focus.
@@ -56263,6 +56393,9 @@ n-ary coproduct">∐</span></dd>
                                                function createTrapListener(anchors, panel, dfn) {
                                                    const lastIndex = anchors.length - 1;
                                                    let currentIndex = 0;
+                                                   /**
+                                                    * @param {KeyboardEvent} event
+                                                    */
                                                    return event => {
                                                        switch (event.key) {
                                                            // Hitting "Tab" traps us in a nice loop around elements.
@@ -56292,7 +56425,7 @@ n-ary coproduct">∐</span></dd>
                                                    };
                                                }
 
-                                               /** @param {HTMLElement} panel */
+                                               /** @param {HTMLElement | null} panel */
                                                function hidePanel(panel) {
                                                    if (!panel) return;
                                                    panel.hidden = true;
