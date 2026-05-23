@@ -101,7 +101,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 ### 设备和硬件访问
 - [Pointer Events Level 2](https://htmlspecs.com/pointerevents2/)（[Source](https://www.w3.org/TR/2019/REC-pointerevents2-20190404/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Pointer Events Level 3](https://htmlspecs.com/pointerevents3/)（[Source](https://www.w3.org/TR/2026/CRD-pointerevents3-20260522/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
-- [Pointer Events Level 4](https://htmlspecs.com/pointerevents4/)（[Source](https://www.w3.org/TR/2026/WD-pointerevents4-20260225/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Pointer Events Level 4](https://htmlspecs.com/pointerevents4/)（[Source](https://www.w3.org/TR/2026/WD-pointerevents4-20260522/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Web Serial API](https://htmlspecs.com/serial/)（[Source](https://wicg.github.io/serial/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [WebHID API](https://htmlspecs.com/webhid/)（[Source](https://wicg.github.io/webhid/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [WebUSB API](https://htmlspecs.com/webusb/)（[Source](https://wicg.github.io/webusb/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
