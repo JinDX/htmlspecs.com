@@ -727,7 +727,7 @@ const links = [
         text: "Storage Access API",
         href: "https://htmlspecs.com/storage-access/",
         src: "https://privacycg.github.io/storage-access/",
-        "last-modified": "Sat, 18 Oct 2025 13:57:57 GMT",
+        "last-modified": "Fri, 22 May 2026 14:44:34 GMT",
         lang: "cjk",
         state: "Draft"
     },
