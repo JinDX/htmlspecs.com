@@ -760,7 +760,7 @@ const links = [
     {
         text: "Pointer Events Level 4",
         href: "https://htmlspecs.com/pointerevents4/",
-        src: "https://www.w3.org/TR/2026/WD-pointerevents4-20260225/",
+        src: "https://www.w3.org/TR/2026/WD-pointerevents4-20260522/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
