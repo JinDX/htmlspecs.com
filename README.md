@@ -118,6 +118,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [EyeDropper API](https://htmlspecs.com/eyedropper-api/)（[Source](https://wicg.github.io/eyedropper-api/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Fullscreen](https://htmlspecs.com/fullscreen/)（[Source](https://fullscreen.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [Screen Capture](https://htmlspecs.com/screen-capture/)（[Source](https://www.w3.org/TR/2025/WD-screen-capture-20250717/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Viewport Capture](https://htmlspecs.com/mediacapture-viewport/)（[Source](https://www.w3.org/TR/2024/WD-mediacapture-viewport-20241009/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Region Capture](https://htmlspecs.com/mediacapture-region/)（[Source](https://www.w3.org/TR/2023/WD-mediacapture-region-20230712/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Capture Handle - Bootstrapping Collaboration when Screensharing](https://htmlspecs.com/capture-handle-identity/)（[Source](https://www.w3.org/TR/2025/WD-capture-handle-identity-20250306/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [UI Events](https://htmlspecs.com/uievents/)（[Source](https://www.w3.org/TR/2026/WD-uievents-20260221/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
@@ -294,7 +295,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 ### 布局
 - [CSS Box Model Level 3](https://htmlspecs.com/css/css-box-3/)（[Source](https://www.w3.org/TR/2024/REC-css-box-3-20240411/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [CSS Box Model Level 4](https://htmlspecs.com/css/css-box-4/)（[Source](https://www.w3.org/TR/2024/WD-css-box-4-20240804/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
-- [CSS Geometry Module Level 1](https://htmlspecs.com/css/geometry-1/)（[Source](https://www.w3.org/TR/2025/CRD-geometry-1-20251204/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
+- [Geometry Interfaces Module Level 1](https://htmlspecs.com/css/geometry-1/)（[Source](https://www.w3.org/TR/2025/CRD-geometry-1-20251204/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [CSS Display Module Level 3](https://htmlspecs.com/css/css-display-3/)（[Source](https://www.w3.org/TR/2023/CR-css-display-3-20230330/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
 - [CSS Display Module Level 4](https://htmlspecs.com/css/css-display-4/)（[Source](https://www.w3.org/TR/2025/WD-css-display-4-20251106/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Flexible Box Layout Module Level 1](https://htmlspecs.com/css/css-flexbox-1/)（[Source](https://www.w3.org/TR/2025/CRD-css-flexbox-1-20251014/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）

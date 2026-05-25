@@ -893,14 +893,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "Viewport Capture",
-    //     href: "https://htmlspecs.com/mediacapture-viewport/",
-    //     src: "https://www.w3.org/TR/2024/WD-mediacapture-viewport-20241009/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "Viewport Capture",
+        href: "https://htmlspecs.com/mediacapture-viewport/",
+        src: "https://www.w3.org/TR/2024/WD-mediacapture-viewport-20241009/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     {
         text: "Region Capture",
         href: "https://htmlspecs.com/mediacapture-region/",
