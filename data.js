@@ -893,6 +893,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "Viewport Capture",
+    //     href: "https://htmlspecs.com/mediacapture-viewport/",
+    //     src: "https://www.w3.org/TR/2024/WD-mediacapture-viewport-20241009/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "Region Capture",
         href: "https://htmlspecs.com/mediacapture-region/",
@@ -1402,6 +1410,14 @@ const links = [
 
 
     //### 安全和认证|보안 및 인증|セキュリティと認証
+    // {
+    //     text: "Web Cryptography Level 2",
+    //     href: "https://htmlspecs.com/webcrypto-2/",
+    //     src: "https://www.w3.org/TR/2025/WD-webcrypto-2-20250422/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "Web Authentication: An API for accessing Public Key Credentials Level 2",
         href: "https://htmlspecs.com/webauthn-2/",
@@ -1653,6 +1669,14 @@ const links = [
         lang: "cjk",
         state: "CRD"
     },
+    // {
+    //     text: "Web Neural Network API",
+    //     href: "https://htmlspecs.com/webnn/",
+    //     src: "https://www.w3.org/TR/2026/CRD-webnn-20260521/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "CRD"
+    // },
     {
         text: "Scalable Vector Graphics (SVG) 2",
         href: "https://htmlspecs.com/SVG2/",
@@ -1693,6 +1717,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "HTML Media Capture",
+    //     href: "https://htmlspecs.com/html-media-capture/",
+    //     src: "https://www.w3.org/TR/2018/REC-html-media-capture-20180201/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "REC"
+    // },
     {
         text: "Media Capture and Streams",
         href: "https://htmlspecs.com/mediacapture-streams/",
@@ -2161,7 +2193,7 @@ const cssLinks = [
         state: "WD"
     },
     {
-        text: "CSS Geometry Module Level 1",
+        text: "Geometry Interfaces Module Level 1",
         href: "https://htmlspecs.com/css/geometry-1/",
         src: "https://www.w3.org/TR/2025/CRD-geometry-1-20251204/",
         "last-modified": "-",
