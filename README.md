@@ -186,6 +186,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Layout Instability API](https://htmlspecs.com/layout-instability/)（[Source](https://wicg.github.io/layout-instability/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 
 ### 安全和认证
+- [Web Cryptography Level 2](https://htmlspecs.com/webcrypto-2/)（[Source](https://www.w3.org/TR/2025/WD-webcrypto-2-20250422/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Web Authentication: An API for accessing Public Key Credentials Level 2](https://htmlspecs.com/webauthn-2/)（[Source](https://www.w3.org/TR/2021/REC-webauthn-2-20210408/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Web Authentication: An API for accessing Public Key Credentials Level 3](https://htmlspecs.com/webauthn-3/)（[Source](https://www.w3.org/TR/2026/CR-webauthn-3-20260113/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
 - [Secure Payment Confirmation](https://htmlspecs.com/secure-payment-confirmation/)（[Source](https://www.w3.org/TR/2026/CRD-secure-payment-confirmation-20260319/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
