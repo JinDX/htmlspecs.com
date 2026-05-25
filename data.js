@@ -1669,14 +1669,6 @@ const links = [
         lang: "cjk",
         state: "CRD"
     },
-    // {
-    //     text: "Web Neural Network API",
-    //     href: "https://htmlspecs.com/webnn/",
-    //     src: "https://www.w3.org/TR/2026/CRD-webnn-20260521/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "CRD"
-    // },
     {
         text: "Scalable Vector Graphics (SVG) 2",
         href: "https://htmlspecs.com/SVG2/",
