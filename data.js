@@ -1717,14 +1717,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "HTML Media Capture",
-    //     href: "https://htmlspecs.com/html-media-capture/",
-    //     src: "https://www.w3.org/TR/2018/REC-html-media-capture-20180201/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "REC"
-    // },
+    {
+        text: "HTML Media Capture",
+        href: "https://htmlspecs.com/html-media-capture/",
+        src: "https://www.w3.org/TR/2018/REC-html-media-capture-20180201/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "REC"
+    },
     {
         text: "Media Capture and Streams",
         href: "https://htmlspecs.com/mediacapture-streams/",
