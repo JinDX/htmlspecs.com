@@ -224,6 +224,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Document Picture-in-Picture](https://htmlspecs.com/document-picture-in-picture/)（[Source](https://wicg.github.io/document-picture-in-picture/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Presentation API](https://htmlspecs.com/presentation-api/)（[Source](https://www.w3.org/TR/2025/CRD-presentation-api-20250212/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [Scroll-driven Animations](https://htmlspecs.com/scroll-animations-1/)（[Source](https://www.w3.org/TR/2023/WD-scroll-animations-1-20230606/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [HTML Media Capture](https://htmlspecs.com/html-media-capture/)（[Source](https://www.w3.org/TR/2018/REC-html-media-capture-20180201/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Media Capture and Streams](https://htmlspecs.com/mediacapture-streams/)（[Source](https://www.w3.org/TR/2025/CRD-mediacapture-streams-20251009/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [Media Capture from DOM Elements](https://htmlspecs.com/mediacapture-fromelement/)（[Source](https://www.w3.org/TR/2025/WD-mediacapture-fromelement-20250212/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [MediaStreamTrack Content Hints](https://htmlspecs.com/mst-content-hint/)（[Source](https://www.w3.org/TR/2025/WD-mst-content-hint-20250919/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
