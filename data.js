@@ -203,14 +203,6 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
-    // {
-    //     text: "Web Share Target API",
-    //     href: "https://htmlspecs.com/web-share-target/",
-    //     src: "https://w3c.github.io/web-share-target/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
     {
         text: "Manifest Incubations",
         href: "https://htmlspecs.com/manifest-incubations/",
