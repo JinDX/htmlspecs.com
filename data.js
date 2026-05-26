@@ -608,14 +608,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
-    // {
-    //     text: "Trace Context Level 2",
-    //     href: "https://htmlspecs.com/trace-context-2/",
-    //     src: "https://www.w3.org/TR/2024/CRD-trace-context-2-20240328/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "CRD"
-    // },
+    {
+        text: "Trace Context Level 2",
+        href: "https://htmlspecs.com/trace-context-2/",
+        src: "https://www.w3.org/TR/2024/CRD-trace-context-2-20240328/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "CRD"
+    },
     // {
     //     text: "Baggage",
     //     href: "https://htmlspecs.com/baggage/",
