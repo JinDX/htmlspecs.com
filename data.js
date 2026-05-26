@@ -616,14 +616,14 @@ const links = [
         lang: "cjk",
         state: "CRD"
     },
-    // {
-    //     text: "Baggage",
-    //     href: "https://htmlspecs.com/baggage/",
-    //     src: "https://www.w3.org/TR/2024/CR-baggage-20240530/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "CR"
-    // },
+    {
+        text: "Baggage",
+        href: "https://htmlspecs.com/baggage/",
+        src: "https://www.w3.org/TR/2024/CR-baggage-20240530/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "CR"
+    },
     {
         text: "Beacon",
         href: "https://htmlspecs.com/beacon/",
