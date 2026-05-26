@@ -203,6 +203,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
+    // {
+    //     text: "Web Share Target API",
+    //     href: "https://htmlspecs.com/web-share-target/",
+    //     src: "https://w3c.github.io/web-share-target/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
     {
         text: "Manifest Incubations",
         href: "https://htmlspecs.com/manifest-incubations/",
@@ -608,6 +616,30 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
+    // {
+    //     text: "Network Information API",
+    //     href: "https://htmlspecs.com/netinfo/",
+    //     src: "https://wicg.github.io/netinfo/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
+    // {
+    //     text: "Trace Context Level 2",
+    //     href: "https://htmlspecs.com/trace-context-2/",
+    //     src: "https://www.w3.org/TR/2024/CRD-trace-context-2-20240328/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "CRD"
+    // },
+    // {
+    //     text: "Baggage",
+    //     href: "https://htmlspecs.com/baggage/",
+    //     src: "https://www.w3.org/TR/2024/CR-baggage-20240530/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "CR"
+    // },
     {
         text: "Beacon",
         href: "https://htmlspecs.com/beacon/",
@@ -1530,6 +1562,22 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
+    // {
+    //     text: "Controlled Frame API",
+    //     href: "https://htmlspecs.com/controlled-frame/",
+    //     src: "https://wicg.github.io/controlled-frame/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
+    // {
+    //     text: "Fenced Frame",
+    //     href: "https://htmlspecs.com/fenced-frame/",
+    //     src: "https://wicg.github.io/fenced-frame/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
     {
         text: "Referrer Policy",
         href: "https://htmlspecs.com/referrer-policy/",
