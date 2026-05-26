@@ -1546,14 +1546,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
-    // {
-    //     text: "Controlled Frame API",
-    //     href: "https://htmlspecs.com/controlled-frame/",
-    //     src: "https://wicg.github.io/controlled-frame/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "Controlled Frame API",
+        href: "https://htmlspecs.com/controlled-frame/",
+        src: "https://wicg.github.io/controlled-frame/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "Draft"
+    },
     // {
     //     text: "Fenced Frame",
     //     href: "https://htmlspecs.com/fenced-frame/",
