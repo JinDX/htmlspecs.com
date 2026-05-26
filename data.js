@@ -609,14 +609,6 @@ const links = [
         state: "Draft"
     },
     // {
-    //     text: "Network Information API",
-    //     href: "https://htmlspecs.com/netinfo/",
-    //     src: "https://wicg.github.io/netinfo/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
-    // {
     //     text: "Trace Context Level 2",
     //     href: "https://htmlspecs.com/trace-context-2/",
     //     src: "https://www.w3.org/TR/2024/CRD-trace-context-2-20240328/",
