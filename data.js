@@ -1550,7 +1550,7 @@ const links = [
         text: "Controlled Frame API",
         href: "https://htmlspecs.com/controlled-frame/",
         src: "https://wicg.github.io/controlled-frame/",
-        "last-modified": "-",
+        "last-modified": "Wed, 10 Dec 2025 18:08:30 GMT·",
         lang: "cjk",
         state: "Draft"
     },
