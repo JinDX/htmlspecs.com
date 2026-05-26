@@ -1554,14 +1554,6 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
-    // {
-    //     text: "Fenced Frame",
-    //     href: "https://htmlspecs.com/fenced-frame/",
-    //     src: "https://wicg.github.io/fenced-frame/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
     {
         text: "Referrer Policy",
         href: "https://htmlspecs.com/referrer-policy/",
