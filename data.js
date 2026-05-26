@@ -1445,7 +1445,7 @@ const links = [
     {
         text: "Web Authentication: An API for accessing Public Key Credentials Level 3",
         href: "https://htmlspecs.com/webauthn-3/",
-        src: "https://www.w3.org/TR/2026/CR-webauthn-3-20260113/",
+        src: "https://www.w3.org/TR/2026/CR-webauthn-3-20260526/",
         "last-modified": "-",
         lang: "cjk",
         state: "CR"
