@@ -203,6 +203,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Privacy Principles](https://htmlspecs.com/privacy-principles/)（[Source](https://www.w3.org/TR/2025/STMT-privacy-principles-20250515/) ![Statement](https://img.shields.io/badge/STMT-6c757d)）
 - [Secure Contexts](https://htmlspecs.com/secure-contexts/)（[Source](https://www.w3.org/TR/2023/CRD-secure-contexts-20231110/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [Isolated Contexts](https://htmlspecs.com/isolated-contexts/)（[Source](https://wicg.github.io/isolated-web-apps/isolated-contexts.html) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
+- [Controlled Frame API](https://htmlspecs.com/controlled-frame/)（[Source](https://wicg.github.io/controlled-frame/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Referrer Policy](https://htmlspecs.com/referrer-policy/)（[Source](https://www.w3.org/TR/2017/CR-referrer-policy-20170126/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
 - [Fetch Metadata Request Headers](https://htmlspecs.com/fetch-metadata/)（[Source](https://www.w3.org/TR/2025/WD-fetch-metadata-20250401/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Mixed Content](https://htmlspecs.com/mixed-content/)（[Source](https://www.w3.org/TR/2023/CRD-mixed-content-20230223/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
