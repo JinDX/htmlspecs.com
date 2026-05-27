@@ -1037,6 +1037,14 @@ const links = [
         lang: "cjk",
         state: "CRD"
     },
+    // {
+    //     text: "Audio Session",
+    //     href: "https://htmlspecs.com/audio-session/",
+    //     src: "https://www.w3.org/TR/2024/WD-audio-session-20241113/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "Geolocation API",
         href: "https://htmlspecs.com/geolocation/",
@@ -1693,6 +1701,22 @@ const links = [
         lang: "cjk",
         state: "CRD"
     },
+    // {
+    //     text: "Web Neural Network API",
+    //     href: "https://htmlspecs.com/webnn/",
+    //     src: "https://www.w3.org/TR/2026/CRD-webnn-20260521/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "CRD"
+    // },
+    // {
+    //     text: "Model Loader API",
+    //     href: "https://htmlspecs.com/model-loader/",
+    //     src: "https://webmachinelearning.github.io/model-loader/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
     {
         text: "Scalable Vector Graphics (SVG) 2",
         href: "https://htmlspecs.com/SVG2/",
@@ -1805,6 +1829,22 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "WebCodecs Codec Registry",
+    //     href: "https://htmlspecs.com/webcodecs-codec-registry/",
+    //     src: "https://www.w3.org/TR/2026/DRY-webcodecs-codec-registry-20260212/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
+    // {
+    //     text: "MP3 WebCodecs Registration",
+    //     href: "https://htmlspecs.com/webcodecs-mp3-codec-registration/",
+    //     src: "https://www.w3.org/TR/2025/DNOTE-webcodecs-mp3-codec-registration-20250514/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "NOTE"
+    // },
     {
         text: "Media Session",
         href: "https://htmlspecs.com/mediasession/",
