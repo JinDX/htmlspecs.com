@@ -1037,14 +1037,14 @@ const links = [
         lang: "cjk",
         state: "CRD"
     },
-    // {
-    //     text: "Audio Session",
-    //     href: "https://htmlspecs.com/audio-session/",
-    //     src: "https://www.w3.org/TR/2024/WD-audio-session-20241113/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "Audio Session",
+        href: "https://htmlspecs.com/audio-session/",
+        src: "https://www.w3.org/TR/2024/WD-audio-session-20241113/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     {
         text: "Geolocation API",
         href: "https://htmlspecs.com/geolocation/",
