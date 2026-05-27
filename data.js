@@ -1709,14 +1709,14 @@ const links = [
     //     lang: "cjk",
     //     state: "CRD"
     // },
-    // {
-    //     text: "Model Loader API",
-    //     href: "https://htmlspecs.com/model-loader/",
-    //     src: "https://webmachinelearning.github.io/model-loader/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "Model Loader API",
+        href: "https://htmlspecs.com/model-loader/",
+        src: "https://webmachinelearning.github.io/model-loader/",
+        "last-modified": "Mon, 26 Feb 2024 14:26:59 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
     {
         text: "Scalable Vector Graphics (SVG) 2",
         href: "https://htmlspecs.com/SVG2/",
