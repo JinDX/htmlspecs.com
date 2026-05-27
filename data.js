@@ -1683,6 +1683,23 @@ const links = [
         state: "RFC"
     },
 
+    //### AI 和机器学习|AI 및 머신러닝|AI と機械学習
+    // {
+    //     text: "Web Neural Network API",
+    //     href: "https://htmlspecs.com/webnn/",
+    //     src: "https://www.w3.org/TR/2026/CRD-webnn-20260521/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "CRD"
+    // },
+    {
+        text: "Model Loader API",
+        href: "https://htmlspecs.com/model-loader/",
+        src: "https://webmachinelearning.github.io/model-loader/",
+        "last-modified": "Mon, 26 Feb 2024 14:26:59 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
 
     //### 媒体和图形|미디어 및 그래픽|メディアとグラフィックス
     {
@@ -1700,22 +1717,6 @@ const links = [
         "last-modified": "-",
         lang: "cjk",
         state: "CRD"
-    },
-    // {
-    //     text: "Web Neural Network API",
-    //     href: "https://htmlspecs.com/webnn/",
-    //     src: "https://www.w3.org/TR/2026/CRD-webnn-20260521/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "CRD"
-    // },
-    {
-        text: "Model Loader API",
-        href: "https://htmlspecs.com/model-loader/",
-        src: "https://webmachinelearning.github.io/model-loader/",
-        "last-modified": "Mon, 26 Feb 2024 14:26:59 GMT",
-        lang: "cjk",
-        state: "Draft"
     },
     {
         text: "Scalable Vector Graphics (SVG) 2",
