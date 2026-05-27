@@ -70,7 +70,7 @@ const links = [
     {
         text: "WebAssembly JavaScript Interface",
         href: "https://htmlspecs.com/wasm-js-api-2/",
-        src: "https://www.w3.org/TR/2026/CRD-wasm-js-api-2-20260514/",
+        src: "https://www.w3.org/TR/2026/CRD-wasm-js-api-2-20260526/",
         "last-modified": "-",
         lang: "cjk",
         state: "CRD"
@@ -78,7 +78,7 @@ const links = [
     {
         text: "WebAssembly Web API",
         href: "https://htmlspecs.com/wasm-web-api-2/",
-        src: "https://www.w3.org/TR/2026/CRD-wasm-web-api-2-20260514/",
+        src: "https://www.w3.org/TR/2026/CRD-wasm-web-api-2-20260526/",
         "last-modified": "-",
         lang: "cjk",
         state: "CRD"
@@ -515,7 +515,7 @@ const links = [
     {
         text: "Service Workers Nightly",
         href: "https://htmlspecs.com/service-workers/",
-        src: "https://www.w3.org/TR/2026/CRD-service-workers-20260409/",
+        src: "https://www.w3.org/TR/2026/CRD-service-workers-20260526/",
         "last-modified": "-",
         lang: "cjk",
         state: "CRD"
@@ -1613,7 +1613,7 @@ const links = [
     {
         text: "Attribution Level 1",
         href: "https://htmlspecs.com/attribution/",
-        src: "https://www.w3.org/TR/2026/WD-attribution-20260525/",
+        src: "https://www.w3.org/TR/2026/WD-attribution-20260527/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
@@ -1948,7 +1948,7 @@ const links = [
     {
         text: "WebDriver",
         href: "https://htmlspecs.com/webdriver2/",
-        src: "https://www.w3.org/TR/2026/WD-webdriver2-20260511/",
+        src: "https://www.w3.org/TR/2026/WD-webdriver2-20260526/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
