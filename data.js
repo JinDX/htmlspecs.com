@@ -942,6 +942,14 @@ const links = [
         state: "WD"
     },
     {
+        text: "UI Events KeyboardEvent key Values",
+        href: "https://htmlspecs.com/uievents-key/",
+        src: "https://www.w3.org/TR/2025/REC-uievents-key-20250422/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "REC"
+    },
+    {
         text: "UI Events KeyboardEvent code Values",
         href: "https://htmlspecs.com/uievents-code/",
         src: "https://www.w3.org/TR/2025/REC-uievents-code-20250422/",
