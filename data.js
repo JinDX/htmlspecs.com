@@ -1684,14 +1684,14 @@ const links = [
     },
 
     //### AI 和机器学习|AI 및 머신러닝|AI と機械学習
-    // {
-    //     text: "Web Neural Network API",
-    //     href: "https://htmlspecs.com/webnn/",
-    //     src: "https://www.w3.org/TR/2026/CRD-webnn-20260521/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "CRD"
-    // },
+    {
+        text: "Web Neural Network API",
+        href: "https://htmlspecs.com/webnn/",
+        src: "https://www.w3.org/TR/2026/CRD-webnn-20260521/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "CRD"
+    },
     {
         text: "Model Loader API",
         href: "https://htmlspecs.com/model-loader/",

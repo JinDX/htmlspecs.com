@@ -222,6 +222,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [JWT Best Current Practices](https://htmlspecs.com/jwt-bcp/)（[Source](https://www.rfc-editor.org/rfc/rfc8725) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 
 ### AI 和机器学习
+- [Web Neural Network API](https://htmlspecs.com/webnn/)（[Source](https://www.w3.org/TR/2026/CRD-webnn-20260521/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [Model Loader API](https://htmlspecs.com/model-loader/)（[Source](https://webmachinelearning.github.io/model-loader/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 
 ### 媒体和图形
