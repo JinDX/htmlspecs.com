@@ -560,6 +560,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "Scalable Video Coding (SVC) Extension for WebRTC",
+    //     href: "https://htmlspecs.com/webrtc-svc/",
+    //     src: "https://www.w3.org/TR/2024/WD-webrtc-svc-20240817/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "Payment Request API",
         href: "https://htmlspecs.com/payment-request/",
@@ -600,6 +608,22 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
+    // {
+    //     text: "Content Index",
+    //     href: "https://htmlspecs.com/content-index/",
+    //     src: "https://wicg.github.io/content-index/spec/",
+    //     "last-modified": "Tue, 13 Apr 2021 00:00:00 GMT",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
+    // {
+    //     text: "Web Share Target API",
+    //     href: "https://htmlspecs.com/web-share-target/",
+    //     src: "https://wicg.github.io/web-share-target/",
+    //     "last-modified": "Thu, 22 Dec 2022 00:00:00 GMT",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
     {
         text: "User-Agent Client Hints",
         href: "https://htmlspecs.com/ua-client-hints/",
@@ -1287,6 +1311,14 @@ const links = [
         lang: "cjk",
         state: "CRD"
     },
+    // {
+    //     text: "Element Timing API",
+    //     href: "https://htmlspecs.com/element-timing/",
+    //     src: "https://wicg.github.io/element-timing/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
     {
         text: "User Timing Level 2",
         href: "https://htmlspecs.com/user-timing-2/",
@@ -1726,6 +1758,22 @@ const links = [
         lang: "cjk",
         state: "CRD"
     },
+    // {
+    //     text: "WebGL Specification",
+    //     href: "https://htmlspecs.com/webgl/",
+    //     src: "https://registry.khronos.org/webgl/specs/latest/1.0/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
+    // {
+    //     text: "WebGL 2.0 Specification",
+    //     href: "https://htmlspecs.com/webgl2/",
+    //     src: "https://registry.khronos.org/webgl/specs/latest/2.0/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
     {
         text: "Scalable Vector Graphics (SVG) 2",
         href: "https://htmlspecs.com/SVG2/",
@@ -1798,6 +1846,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "MediaStreamTrack Insertable Media Processing using Streams",
+    //     href: "https://htmlspecs.com/mediacapture-transform/",
+    //     src: "https://www.w3.org/TR/2026/WD-mediacapture-transform-20260416/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "Autoplay Detection",
         href: "https://htmlspecs.com/autoplay-detection/",
@@ -1852,7 +1908,79 @@ const links = [
     //     src: "https://www.w3.org/TR/2025/DNOTE-webcodecs-mp3-codec-registration-20250514/",
     //     "last-modified": "-",
     //     lang: "cjk",
-    //     state: "NOTE"
+    //     state: "DNOTE"
+    // },
+    // {
+    //     text: "AAC WebCodecs Registration",
+    //     href: "https://htmlspecs.com/webcodecs-aac-codec-registration/",
+    //     src: "https://www.w3.org/TR/2026/DNOTE-webcodecs-aac-codec-registration-20260319/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "DNOTE"
+    // },
+    // {
+    //     text: "Opus WebCodecs Registration",
+    //     href: "https://htmlspecs.com/webcodecs-opus-codec-registration/",
+    //     src: "https://www.w3.org/TR/2025/DNOTE-webcodecs-opus-codec-registration-20250514/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "DNOTE"
+    // },
+    // {
+    //     text: "FLAC WebCodecs Registration",
+    //     href: "https://htmlspecs.com/webcodecs-flac-codec-registration/",
+    //     src: "https://www.w3.org/TR/2025/DNOTE-webcodecs-flac-codec-registration-20250514/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "DNOTE"
+    // },
+    // {
+    //     text: "Vorbis WebCodecs Registration",
+    //     href: "https://htmlspecs.com/webcodecs-vorbis-codec-registration/",
+    //     src: "https://www.w3.org/TR/2025/DNOTE-webcodecs-vorbis-codec-registration-20250514/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "DNOTE"
+    // },
+    // {
+    //     text: "Linear PCM WebCodecs Registration",
+    //     href: "https://htmlspecs.com/webcodecs-pcm-codec-registration/",
+    //     src: "https://www.w3.org/TR/2025/DNOTE-webcodecs-pcm-codec-registration-20250514/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "DNOTE"
+    // },
+    // {
+    //     text: "AV1 WebCodecs Registration",
+    //     href: "https://htmlspecs.com/webcodecs-av1-codec-registration/",
+    //     src: "https://www.w3.org/TR/2025/DNOTE-webcodecs-av1-codec-registration-20250514/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "DNOTE"
+    // },
+    // {
+    //     text: "AVC (H.264) WebCodecs Registration",
+    //     href: "https://htmlspecs.com/webcodecs-avc-codec-registration/",
+    //     src: "https://www.w3.org/TR/2025/DNOTE-webcodecs-avc-codec-registration-20250514/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "DNOTE"
+    // },
+    // {
+    //     text: "HEVC (H.265) WebCodecs Registration",
+    //     href: "https://htmlspecs.com/webcodecs-hevc-codec-registration/",
+    //     src: "https://www.w3.org/TR/2025/DNOTE-webcodecs-hevc-codec-registration-20250514/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "DNOTE"
+    // },
+    // {
+    //     text: "VP9 WebCodecs Registration",
+    //     href: "https://htmlspecs.com/webcodecs-vp9-codec-registration/",
+    //     src: "https://www.w3.org/TR/2025/DNOTE-webcodecs-vp9-codec-registration-20250514/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "DNOTE"
     // },
     {
         text: "Media Session",
@@ -1894,6 +2022,30 @@ const links = [
         lang: "cjk",
         state: "CRD"
     },
+    // {
+    //     text: "Open Screen Application Protocol",
+    //     href: "https://htmlspecs.com/openscreen-application/",
+    //     src: "https://www.w3.org/TR/2026/WD-openscreen-application-20260210/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
+    // {
+    //     text: "Requirements for Media Timed Events",
+    //     href: "https://htmlspecs.com/media-timed-events/",
+    //     src: "https://www.w3.org/TR/2020/NOTE-media-timed-events-20200625/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "NOTE"
+    // },
+    // {
+    //     text: "Media Playback Quality",
+    //     href: "https://htmlspecs.com/media-playback-quality/",
+    //     src: "https://w3c.github.io/media-playback-quality/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
     {
         text: "WebXR Device API",
         href: "https://htmlspecs.com/webxr/",
@@ -1926,6 +2078,62 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "WebXR Hit Test Module",
+    //     href: "https://htmlspecs.com/webxr-hit-test-1/",
+    //     src: "https://www.w3.org/TR/2025/WD-webxr-hit-test-1-20251211/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
+    // {
+    //     text: "WebXR DOM Overlays Module",
+    //     href: "https://htmlspecs.com/webxr-dom-overlays-1/",
+    //     src: "https://www.w3.org/TR/2024/WD-webxr-dom-overlays-1-20240924/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
+    // {
+    //     text: "WebXR Layers API Level 1",
+    //     href: "https://htmlspecs.com/webxrlayers-1/",
+    //     src: "https://www.w3.org/TR/2026/WD-webxrlayers-1-20260122/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
+    // {
+    //     text: "WebXR Depth Sensing Module",
+    //     href: "https://htmlspecs.com/webxr-depth-sensing-1/",
+    //     src: "https://www.w3.org/TR/2025/WD-webxr-depth-sensing-1-20251210/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
+    // {
+    //     text: "WebXR Anchors Module",
+    //     href: "https://htmlspecs.com/webxr-anchors/",
+    //     src: "https://immersive-web.github.io/anchors/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
+    // {
+    //     text: "WebXR Lighting Estimation API Level 1",
+    //     href: "https://htmlspecs.com/webxr-lighting-estimation/",
+    //     src: "https://www.w3.org/TR/webxr-lighting-estimation-1/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
+    // {
+    //     text: "WebXR Raw Camera Access Module",
+    //     href: "https://htmlspecs.com/webxr-raw-camera-access/",
+    //     src: "https://immersive-web.github.io/raw-camera-access/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
     {
         text: "Portable Network Graphics (PNG) 3",
         href: "https://htmlspecs.com/png-3/",
@@ -2057,6 +2265,14 @@ const cssLinks = [
         lang: "cjk",
         state: "CRD"
     },
+    // {
+    //     text: "CSS Fill and Stroke Module Level 3",
+    //     href: "https://htmlspecs.com/fill-stroke-3/",
+    //     src: "https://www.w3.org/TR/2017/WD-fill-stroke-3-20170413/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "CSS Conditional Rules Module Level 3",
         href: "https://htmlspecs.com/css/css-conditional-3/",
@@ -2239,6 +2455,14 @@ const cssLinks = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "CSS Round Display Level 1",
+    //     href: "https://htmlspecs.com/css-round-display-1/",
+    //     src: "https://www.w3.org/TR/2016/WD-css-round-display-1-20161222/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
 
     //### 布局|레이아웃|レイアウト
     {
@@ -2465,6 +2689,14 @@ const cssLinks = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "CSS Page Floats",
+    //     href: "https://htmlspecs.com/css-page-floats-3/",
+    //     src: "https://www.w3.org/TR/2015/WD-css-page-floats-3-20150915/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
 
     //### 导航|내비게이션|ナビゲーション
     {
