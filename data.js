@@ -616,14 +616,6 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
-    // {
-    //     text: "Web Share Target API",
-    //     href: "https://htmlspecs.com/web-share-target/",
-    //     src: "https://wicg.github.io/web-share-target/",
-    //     "last-modified": "Thu, 22 Dec 2022 00:00:00 GMT",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
     {
         text: "User-Agent Client Hints",
         href: "https://htmlspecs.com/ua-client-hints/",
