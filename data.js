@@ -2030,14 +2030,6 @@ const links = [
     //     lang: "cjk",
     //     state: "NOTE"
     // },
-    // {
-    //     text: "Media Playback Quality",
-    //     href: "https://htmlspecs.com/media-playback-quality/",
-    //     src: "https://w3c.github.io/media-playback-quality/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
     {
         text: "WebXR Device API",
         href: "https://htmlspecs.com/webxr/",
