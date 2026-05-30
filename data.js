@@ -1306,7 +1306,7 @@ const links = [
     {
         text: "Element Timing API",
         href: "https://htmlspecs.com/element-timing/",
-        src: "https://wicg.github.io/element-timing/",
+        src: "https://w3c.github.io/element-timing/",
         "last-modified": "Thu, 19 Mar 2026 18:29:54 GMT",
         lang: "cjk",
         state: "Draft"
