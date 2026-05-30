@@ -608,14 +608,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
-    // {
-    //     text: "Content Index",
-    //     href: "https://htmlspecs.com/content-index/",
-    //     src: "https://wicg.github.io/content-index/spec/",
-    //     "last-modified": "Tue, 13 Apr 2021 00:00:00 GMT",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "Content Index",
+        href: "https://htmlspecs.com/content-index/",
+        src: "https://wicg.github.io/content-index/spec/",
+        "last-modified": "Tue, 13 Apr 2021 08:37:29 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
     // {
     //     text: "Web Share Target API",
     //     href: "https://htmlspecs.com/web-share-target/",
