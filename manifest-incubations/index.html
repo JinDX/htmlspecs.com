@@ -30,6 +30,14 @@
                 ],
                 profile: "web-platform",
             },
+            localBiblio: {
+                "isolated-web-apps": {
+                    title: "Isolated Web Applications",
+                    href: "https://github.com/WICG/isolated-web-apps",
+                    authors: ["Robbie McElrath"],
+                    publisher: "WICG"
+                }
+            },
         };
     </script>
 </head>
@@ -54,57 +62,188 @@
         "manifest">display_override</dfn></code> 成员
         </h2>
         <p>
-            对于高级用法，可以使用 [=manifest/display_override=] 成员来
-            指定 <a data-cite="appmanifest#dfn-display-modes-list">显示模式
-                列表值</a> 的自定义后备顺序，以便
-            开发者为 Web 应用程序选择其首选的
-            <a data-cite="appmanifest#dfn-display">显示模式</a>。其
-            值是一个 [=display mode=]。
+            对于高级用法，可以使用 [=manifest/display_override=] 成员来指定
+            自定义的 <a data-cite="appmanifest#dfn-display-modes-list">显示模式列表值</a> 回退顺序，
+            供开发者为 Web 应用程序选择其首选的
+            <a data-cite="appmanifest#dfn-display">显示模式</a>。
         </p>
         <p>
-            [=application
-            manifest=] 的 [=manifest/display_override=] 成员是
-            <a>序列</a>，由 <a data-cite="appmanifest#dfn-display-modes-list">显示模式列表
-                值</a> 组成，
-            包括 [=display mode/window-controls-overlay=] 和
-            [=display mode/unframed=] 等扩展。此成员表示开发者
-            对 [=display mode=] 的首选后备链。此字段会覆盖
-            [=manifest/display=] 成员。如果用户代理不支持此处指定的任何
-            [=display mode=]，则会回退到考虑 [=manifest/display=] 成员。
-            算法步骤见<a data-cite="appmanifest#dfn-process-the-display-member">处理 display
-                成员</a>。
+            [=application manifest=] 的 [=manifest/display_override=] 成员是一个
+            [=display override entries=] 的 [=list=]。
+            <dfn>display override entry</dfn> 要么是一个
+            <a data-cite="appmanifest#dfn-display-modes-list">显示模式列表值</a>
+            （包括 [=display mode extensions|extensions=]，例如
+            [=display mode/window-controls-overlay=]、[=display mode/tabbed=] 和
+            [=display mode/unframed=]），要么是一个 [=DisplayOverrideEntryObject=]。
         </p>
         <p>
-            以下步骤会添加到 <a data-cite="appmanifest#dfn-steps-for-determining-the-web-app-s-chosen-display-mode">
-                确定 Web 应用的选定显示模式</a> 中的 [=application manifest/processing
-            extension-point=]：
+            此成员表示开发者针对 [=display modes=] 的首选回退链。
+            此字段会覆盖 [=manifest/display=] 成员。如果用户代理不支持这里指定的任何
+            [=display modes=]，则会回退到考虑 [=manifest/display=] 成员。
+            有关算法步骤，请参见<a data-cite="appmanifest#dfn-process-the-display-member">处理
+                display
+                成员</a>。</p>
+        <p>
+            <dfn>DisplayOverrideEntryObject</dfn> 是一个具有以下成员的 [=ordered map=]：
         </p>
-        <ol>
-            <li>[=list/For each=] |candidate_display_mode:DisplayModeType|，其属于
-                |manifest:ordered map|.[=manifest/display_override=] 成员：
-                <ol class="algorithm">
-                    <li>如果 <a data-cite="appmanifest/#dfn-display-modes-list">显示
-                            模式列表</a> 包含 |candidate_display_mode:DisplayModeType|，
-                        则返回该 |candidate_display_mode:DisplayModeType|
-                    </li>
-                    <li>如果 |candidate_display_mode:DisplayModeType| 是 [=display
-                        mode/window-controls-overlay=] 且用户代理支持它，
-                        则返回该 |candidate_display_mode:DisplayModeType|。
-                    </li>
-                    <li>如果 |candidate_display_mode:DisplayModeType| 是 [=display
-                        mode/tabbed=] 且用户代理支持它，则返回该
-                        |candidate_display_mode:DisplayModeType|。
-                    </li>
-                </ol>
+        <ul>
+            <li>
+                <dfn data-dfn-for="DisplayOverrideEntryObject">display</dfn>：一个
+                <a data-cite="appmanifest#dfn-display-modes-list">显示模式列表值</a>，
+                包括 [=display mode extensions|extensions=]。
             </li>
-        </ol>
-        <p class="note">
-            此成员旨在仅用于高级场景，在这些场景中，
-            开发者希望显式控制其显示模式的后备顺序，或者用于基本
-            <a data-cite="appmanifest/#dfn-display-modes-list">显示模式
-                列表</a> 中不可用的模式。否则，对于
-            大多数用例，[=manifest/display=] 成员已足够。
-        </p>
+            <li>
+                <dfn data-dfn-for="DisplayOverrideEntryObject">url_patterns</dfn>
+                （可选）：[=URL patterns=] 的 [=list=]。如果省略，则默认为一个
+                [=list/is empty|空列表=]。
+            </li>
+        </ul>
+        <aside class="note">
+            此成员旨在仅用于高级场景，在这些场景中，开发者希望对其显示模式的
+            回退顺序进行显式控制，或者用于基本
+            <a data-cite="appmanifest/#dfn-display-modes-list">显示模式列表</a>中
+            不可用的模式。否则，[=manifest/display=] 成员对于大多数用例已经足够。
+        </aside>
+        <section>
+            <h3>
+                确定所选显示模式
+            </h3>
+            <p>
+                以下步骤被添加到<a data-cite="appmanifest#dfn-steps-for-determining-the-web-app-s-chosen-display-mode">
+                    确定 Web 应用程序的所选显示模式</a>中的
+                [=application manifest/processing extension-point=]，该过程现在还会
+                接受一个可选的 [=URL=] |document URL|：
+            </p>
+            <ol>
+                <li>对于 |manifest:ordered map| 的 [=manifest/display_override=] 成员中的
+                    每个 |entry:display override entry| 执行 [=list/For each=]：
+                    <ol class="algorithm">
+                        <li>令 |candidate display mode| 为 null。
+                        </li>
+                        <li>如果 |entry| 是一个 [=display mode=]：
+                            <ol>
+                                <li>将 |candidate display mode| 设置为 |entry|。
+                                </li>
+                            </ol>
+                        </li>
+                        <li>否则，如果 |entry| 是一个 [=DisplayOverrideEntryObject=]：
+                            <ol>
+                                <li>如果 |entry| 的 [=DisplayOverrideEntryObject/url_patterns=] [=list/is empty=]：
+                                    <ol>
+                                        <li>将 |candidate display mode| 设置为 |entry| 的
+                                            [=DisplayOverrideEntryObject/display=]。
+                                        </li>
+                                    </ol>
+                                </li>
+                                <li>否则，如果 |document URL| 不为 null：
+                                    <ol>
+                                        <li>对于 |entry| 的 [=DisplayOverrideEntryObject/url_patterns=] 中的
+                                            每个 |pattern| 执行 [=list/For each=]：
+                                            <ol>
+                                                <li>如果 |pattern| [=URL pattern/matches=] |document URL|，则将
+                                                    |candidate display mode| 设置为 |entry| 的
+                                                    [=DisplayOverrideEntryObject/display=]
+                                                    并 [=iteration/break=]。
+                                                </li>
+                                            </ol>
+                                        </li>
+                                    </ol>
+                                </li>
+                            </ol>
+                        </li>
+                        <li>如果 |candidate display mode| 为 null，则 [=iteration/continue=]。
+                        </li>
+                        <li>如果 <a data-cite="appmanifest/#dfn-display-modes-list">显示模式列表</a>包含
+                            |candidate display mode|，则返回该 |candidate display mode|。
+                        </li>
+                        <li>如果 |candidate display mode| 是 [=display mode/window-controls-overlay=]，且
+                            [=user agent=] 支持此模式，则返回该 |candidate display mode|。
+                        </li>
+                        <li>如果 |candidate display mode| 是 [=display mode/tabbed=]，且 [=user agent=] 支持此模式，
+                            则返回该 |candidate display mode|。
+                        </li>
+                        <li>如果 |candidate display mode| 是 [=display mode/unframed=]，[=user agent=] 支持此模式，
+                            且应用程序是一个 Isolated Web Application [[isolated-web-apps]]，则返回该
+                            |candidate display mode|。
+                        </li>
+                    </ol>
+                </li>
+            </ol>
+        </section>
+        <section>
+            <h3>
+                处理 `display_override` 成员
+            </h3>
+            <p>
+                要<dfn>处理 `display_override` 成员</dfn>，给定 [=ordered map=]
+                |json:ordered map|、[=ordered map=] |manifest:ordered map| 和 [=URL=]
+                |manifest URL:URL|，运行以下步骤：
+            </p>
+            <ol class="algorithm">
+                <li>将 |manifest|["display_override"] 设置为一个新的 [=list=]。
+                </li>
+                <li>如果 |json|["display_override"] 不 [=map/exist=]，则返回。
+                </li>
+                <li>如果 |json|["display_override"] 不是一个 [=list=]，则返回。
+                </li>
+                <li>令 |processed display override:list| 为一个新的 [=list=]。
+                </li>
+                <li>对于 |json|["display_override"] 的每个 |entry| 执行 [=list/For each=]：
+                    <ol>
+                        <li>如果 |entry| 是一个 [=string=]：
+                            <ol>
+                                <li>如果 <a data-cite="appmanifest#dfn-display-modes-list">显示模式列表</a>
+                                    （包括 [=display mode extensions|extensions=]）包含 |entry|，则将
+                                    |entry| [=list/append=] 到 |processed display override|。
+                                </li>
+                            </ol>
+                        </li>
+                        <li>否则，如果 |entry| 是一个 [=ordered map=]：
+                            <ol>
+                                <li>如果 |entry|["display"] 不 [=map/exist=] 或不是一个 [=string=]，
+                                    则 [=iteration/continue=]。
+                                </li>
+                                <li>如果 <a data-cite="appmanifest#dfn-display-modes-list">显示模式列表</a>
+                                    （包括 [=display mode extensions|extensions=]）不包含
+                                    |entry|["display"]，则 [=iteration/continue=]。
+                                </li>
+                                <li>如果 [=user agent=] 不支持 |entry|["display"] 的 URL patterns，
+                                    则 [=iteration/continue=]。
+                                </li>
+                                <li>令 |override object| 为一个新的 [=DisplayOverrideEntryObject=]，其
+                                    [=DisplayOverrideEntryObject/display=] 被设置为 |entry|["display"]。
+                                </li>
+                                <li>如果 |entry|["url_patterns"] [=map/exists=]：
+                                    <ol>
+                                        <li>如果 |entry|["url_patterns"] 不是一个 [=list=]，则 [=iteration/continue=]。
+                                        </li>
+                                        <li>对于 |entry|["url_patterns"] 的每个 |pattern entry| 执行 [=list/For each=]：
+                                            <ol>
+                                                <li>令 |pattern:URL pattern| 为给定 |pattern entry| 和 |manifest URL| 后
+                                                    [=build a URL pattern from an infra value=] 的结果。
+                                                    如果此过程抛出异常或返回 null，则 [=iteration/continue=]。
+                                                </li>
+                                                <li>将 |pattern| [=list/append=] 到 |override object| 的
+                                                    [=DisplayOverrideEntryObject/url_patterns=]。
+                                                </li>
+                                            </ol>
+                                        </li>
+                                    </ol>
+                                </li>
+                                <li>将 |override object| [=list/append=] 到 |processed display override|。
+                                </li>
+                            </ol>
+                        </li>
+                    </ol>
+                </li>
+                <li>将 |manifest|["display_override"] 设置为 |processed display override|。
+                </li>
+            </ol>
+            <aside class="note">
+                处理后，清单的 `display_override` 中唯一能够存在的字典条目，
+                是那些 [=user agent=] 支持 URL patterns 的显示模式对应的条目。
+            </aside>
+        </section>
         <section>
             <h3>
                 概念
@@ -112,10 +251,13 @@
             <ul>
                 <li>
                     <dfn data-lt="controls of the window">窗口控件</dfn>：
-                    操作系统在各应用程序中一致使用的界面元素，
-                    使用户能够执行某些操作来控制应用程序。
-                    [=window
-                    controls=] 中的常见操作包括最小化、最大化/还原和关闭按钮。
+                    操作系统在各个应用程序中一致使用的界面元素，用于让用户执行某些
+                    操作来控制应用程序。[=window controls=] 中的常见操作包括最小化、
+                    最大化/还原和关闭按钮。
+                </li>
+                <li>
+                    <dfn>窗口框架</dfn>：
+                    围绕应用程序窗口中 Web 内容的宿主原生装饰，包括边框、标题栏和窗口控件。
                 </li>
             </ul>
         </section>
@@ -124,29 +266,33 @@
                 显示模式扩展
             </h3>
             <p>
-                除了普通的 <a data-cite="appmanifest#dfn-display-modes-list">显示模式</a> 之外，
-                [=manifest/display_override=] 还支持其某些扩展。
+                除了普通的 <a data-cite="appmanifest#dfn-display-modes-list">显示模式</a>之外，
+                [=manifest/display_override=] 还支持某些 <dfn>显示模式扩展</dfn>。
             </p>
             <dl>
                 <dt>
-                    <dfn data-export="" data-dfn-for="display mode">unframed</dfn>
+                    [=display mode/unframed=]
                 </dt>
                 <dd>
-                    隔离的 Web 应用程序没有任何可见的宿主原生标题栏
-                    或 [=window controls=]，且 Web 内容扩展到整个标题栏区域。
-                    应用可以在 Web 内容中指定 [=draggable region=]，
-                    以创建自定义标题栏。
+                    应用窗口处于 [=display mode/unframed=]，这意味着它没有 [=Window frame=]。
+                    它没有任何宿主原生标题栏，并且 [=window controls=] 不可见。
+                    Web 内容会扩展到整个窗口区域。[=display mode/Unframed=] 被限制为
+                    仅用于 [[[isolated-web-apps]]]。
                 </dd>
                 <dt>
                     [=display mode/window-controls-overlay=]
                 </dt>
+                <dd>
+                    应用窗口具有 [=display mode/window-controls-overlay=]，而不是常规的
+                    [=window controls=]。
+                </dd>
                 <dt>
                     <dfn data-export="" data-dfn-for="display mode">tabbed</dfn>
                 </dt>
                 <dd>
-                    Web 应用程序可以在单个操作系统级窗口中组合多个
-                    [=application contexts=]。例如，这可能意味着用户代理显示
-                    一个标签栏 UI，以允许用户在这些应用程序上下文之间切换。
+                    Web 应用程序可以拥有多个 [=application contexts=]，并将它们组合在一个
+                    操作系统级别的窗口中。例如，这可能意味着用户代理显示一个标签栏 UI，
+                    以允许用户在应用程序上下文之间切换。
                 </dd>
             </dl>
             <section class="informative">
@@ -154,14 +300,13 @@
                     [=manifest/display_override=] 使用示例
                 </h4>
                 <p>
-                    下面展示了一个 [=manifest=]，它相比
-                    <code>standalone</code> 更偏好
-                    <code>minimal-ui</code> <a data-cite="appmanifest#dfn-display-mode">显示模式</a>，
-                    但如果不支持 <code>minimal-ui</code>，
+                    以下展示了一个 [=manifest=]，它优先选择
+                    <code>minimal-ui</code> <a data-cite="appmanifest#dfn-display-mode">显示模式</a>而不是
+                    <code>standalone</code>，但如果不支持 <code>minimal-ui</code>，
                     则回退到 <code>standalone</code>，而不是
                     <code>browser</code>。
                 </p>
-                <pre class="example json" title="display_override usage manifest">
+                <pre class="example json" title="display_override 使用清单">
             {
               "name": "Recipe Zone",
               "description": "All of the recipes!",
@@ -180,41 +325,126 @@
         </section>
         <section>
             <h3>
-                定义 <dfn data-export="" data-lt="draggable region">可拖动
+                <code><dfn data-export="" data-dfn-for="display mode">unframed</dfn></code> 显示模式
+            </h3>
+            <p>
+                [=display mode/unframed=] 显示模式使 [[[isolated-web-apps]]] 能够完全
+                控制应用窗口的外观，包括标题栏区域。
+            </p>
+            <p>
+                处于 [=display mode/unframed=] 的窗口没有任何宿主原生标题栏或
+                [=window controls=] 可见，并且 Web 内容会扩展到整个窗口区域。
+                应用可以在 Web 内容中指定 [=draggable regions=] 来创建自定义标题栏。
+            </p>
+            <p>
+                [=User agents=] MUST 将 [=display mode/unframed=] 的使用限制为
+                仅用于 [[[isolated-web-apps]]]。
+            </p>
+            <p>
+                一旦创建了 [=display mode/unframed=] 窗口，其显示模式在该窗口的
+                生命周期内就是固定的。[=user agent=] MUST NOT 允许在无框架窗口内
+                导航到范围外 URL。
+            </p>
+            <section class="informative">
+                <h3>
+                    视觉示例
+                </h3>
+                <p>
+                    以下图示说明了标准 Web 应用程序窗口与使用
+                    [=display mode/unframed=] 显示模式的窗口之间的视觉差异。
+                    普通应用窗口（左）包含宿主原生标题栏和标准窗口控件。
+                    相比之下，无框架应用窗口（右）移除了这些宿主提供的框架装饰，
+                    允许 Web 内容占据整个窗口区域。
+                </p>
+                <div style="display: flex; gap: 20px; margin-top: 15px;">
+                    <figure style="margin: 0;">
+                        <img src="images/example-non-unframed-window.png" alt="普通应用窗口示例"
+                            style="max-width: 100%; height: auto;">
+                        <figcaption style="text-align: center; font-size: 0.9em; color: #555;">处于
+                            standalone 模式的普通应用窗口</figcaption>
+                    </figure>
+                    <figure style="margin: 0;">
+                        <img src="images/example-unframed-window.png" alt="无框架应用窗口示例"
+                            style="max-width: 100%; height: auto;">
+                        <figcaption style="text-align: center; font-size: 0.9em; color: #555;">处于 unframed
+                            模式的应用窗口</figcaption>
+                    </figure>
+                </div>
+            </section>
+            <section>
+                <h3>
+                    CSS 媒体查询
+                </h3>
+                <p>
+                    可以使用
+                    <a data-cite="MEDIAQUERIES-5#descdef-media-display-mode">`display-mode` 媒体
+                        特性</a>来查询 [=display mode/unframed=] 显示模式。
+                </p>
+                <pre class="example css" title="查询 unframed 显示模式">
+            @media (display-mode: unframed) {
+              /* styles for unframed mode */
+            }
+          </pre>
+            </section>
+            <section>
+                <h3>
+                    安全和隐私考虑事项
+                </h3>
+                <p>
+                    允许开发者控制标题栏会使他们能够在以前由用户代理控制的可信区域中
+                    伪装内容。为了缓解此威胁，该特性必须仅可用于 [[[isolated-web-apps]]]，
+                    并且受窗口管理权限保护。
+                </p>
+                <p>
+                    由于 [=display mode/unframed=] 窗口中没有标题栏，像应用来源或隐私指示器
+                    （例如摄像头和麦克风访问的指示器）这类 [=user agent=] 通常在标题栏中显示的
+                    重要指示器，将需要在其他位置显示。显示这些指示器的具体位置取决于平台，
+                    并由用户代理决定。
+                </p>
+            </section>
+        </section>
+        <section>
+            <h3>
+                定义<dfn data-export="" data-lt="draggable region">可拖拽
                     区域</dfn>
             </h3>
-            <p class="issue" title="At risk feature">
-                [=app-region=] CSS 属性尚未在任何用户代理中实现，
-                因此它处于风险中。请注意，一些用户代理会将非标准 CSS 属性
-                <dfn data-export="" data-lt="-webkit-app-region">`-webkit-app-region`</dfn>
-                用于相同目的。
-            </p>
             <p>
                 <dfn data-export="" data-lt="app-region">`app-region`</dfn>
                 属性可用于通过 CSS 定义哪些区域或元素（例如标题栏中的区域或元素）
-                是可拖动的。
+                是可拖拽的。
             </p>
             <ul>
-                <li>要启用元素拖动，应设置为 `drag`。
+                <li>要启用某个元素的拖拽，应设置为 `drag`。
                 </li>
-                <li>要禁用元素拖动，应设置为 `no-drag`。
+                <li>要禁用某个元素的拖拽，应设置为 `no-drag`。
                 </li>
             </ul>
+            <p>
+                `app-region` 属性 MUST 仅在窗口的已应用 [=display mode=] 为
+                [=display mode/unframed=] 或 [=display mode/window-controls-overlay=] 时生效。
+            </p>
+            <aside class="note">
+                一些 [=user agents=] 出于相同目的使用非标准 CSS 属性 <dfn data-export=""
+                    data-lt="-webkit-app-region">`-webkit-app-region`</dfn>。
+            </aside>
         </section>
     </section>
     <section>
         <h2>
-            对处理清单的扩展
+            对清单处理的扩展
         </h2>
         <p>
-            为了便于使用本规范添加的所有新扩展和孵化功能，
-            用户代理应在 [=processing a manifest=] 中的
+            为了便于本规范添加的所有新扩展和孵化特性，用户代理 SHOULD 在
+            [=processing a manifest=] 中的
             <a data-cite="appmanifest#dfn-processing-extension-point-of-web-manifest">扩展
-                点</a> 期间运行以下内容（可访问 [=URL=]
+                点</a>期间运行以下内容（可访问 [=URL=]
             |document URL:URL|、[=URL=] |manifest URL:URL|、[=ordered map=]
             |json:ordered map| 和 [=ordered map=] |manifest:ordered map|）：
         </p>
         <ol>
+            <li>[=Process the `display_override` member=]，传入 |json|、|manifest| 和
+                |manifest URL|。
+            </li>
             <li>[=Process the `tab_strip` member=]，传入 |json|、|manifest| 和
                 |manifest URL|。
             </li>
@@ -246,11 +476,10 @@
             <code><dfn>tab_strip</dfn></code> 成员
         </h2>
         <p>
-            <a data-cite="appmanifest#web-application-manifest">Web Application
-                Manifest</a> 的 `tab_strip` 成员是一个
-            <a data-cite="appmanifest#dfn-object">对象</a>，其中包含关于
-            应用程序在 [=display mode/tabbed=] 显示模式中预期如何行为的信息。
-            它具有以下成员：
+            <a data-cite="appmanifest#web-application-manifest">Web 应用程序清单</a>的
+            `tab_strip` 成员是一个
+            <a data-cite="appmanifest#dfn-object">对象</a>，它包含有关应用程序预期如何在
+            [=display mode/tabbed=] 显示模式中行为的信息。它具有以下成员：
         </p>
         <ul>
             <li>[=tab_strip/home_tab=]
@@ -263,9 +492,9 @@
                 <code><dfn>home_tab</dfn></code> 成员
             </h3>
             <p>
-                [=tab_strip=] 对象的 `home_tab` 成员是一个有序映射，
-                其中包含关于一个特殊“主页标签页”的信息，该主页标签页
-                旨在作为应用程序的顶级菜单。它包含以下成员：
+                [=tab_strip=] 对象的 `home_tab` 成员是一个 ordered map，
+                其中包含关于一个特殊“home tab”的信息，该标签预期用作应用程序的
+                顶级菜单。它包含以下成员：
             </p>
             <ul>
                 <li>[=home_tab/scope_patterns=]
@@ -273,179 +502,168 @@
             </ul>
             <p>
                 <code><dfn>scope_patterns</dfn></code> 成员是一个
-                {{URLPatternInput}} 列表，用于定义相对于 [=manifest URL=] 的
-                [=within home tab scope|主页标签页的作用域=]。
+                {{URLPatternInput}} 的列表，它定义相对于 [=manifest URL=] 的
+                [=within home tab scope|home tab 的作用域=]。
             </p>
             <aside class="note">
-                每个作用域模式要么是一个看起来像 URL 但以
-                "<code>*</code>" 作为通配符的字符串，要么是一个
-                包含独立 URL 组件并带有 "<code>*</code>" 通配符的字典。
-                详见 [[urlpattern]]。
+                每个 scope pattern 要么是一个看起来像 URL 但使用
+                "<code>*</code>" 作为通配符的字符串，要么是一个包含
+                带有 "<code>*</code>" 通配符的独立 URL 组件的字典。更多信息见
+                [[urlpattern]]。
             </aside>
             <p>
-                如果应用程序所应用的 [=display
-                mode=] 是 [=display mode/tabbed=]，且
-                [=Document/processed manifest=] 包含 [=tab_strip=] 成员的非 null
-                [=home_tab=] 成员，则称该应用程序<dfn>具有主页标签页</dfn>。
+                如果应用程序的已应用 [=display mode=] 是 [=display mode/tabbed=]，
+                且 [=Document/processed manifest=] 在 [=tab_strip=] 成员中包含一个非 null 的
+                [=home_tab=] 成员，则称该应用程序<dfn>具有 home tab</dfn>。
             </p>
             <p>
-                <dfn>主页标签页上下文</dfn>是一个可选的 [=application
-                context=]，与其他应用程序上下文相比具有特殊属性。
-                如果应用程序 [=has a home tab=]，每个应用程序窗口都应具有一个
-                [=home tab context=]。否则，应用程序窗口不应具有
+                <dfn>home tab context</dfn> 是一个可选的 [=application
+                context=]，与其他 application contexts 相比具有特殊属性。
+                如果应用程序 [=has a home tab=]，则每个应用程序窗口 SHOULD 具有一个
+                [=home tab context=]。如果不是，则应用程序窗口 SHOULD NOT 具有
                 [=home tab context=]。
             </p>
             <p>
-                [=home tab context=] 如何呈现由用户代理决定，但它应具有
-                不同于普通应用程序上下文的外观。
+                [=home tab context=] 的呈现方式由用户代理自行决定，但它 SHOULD
+                具有不同于普通 application contexts 的外观。
             </p>
             <p>
-                当且仅当满足以下条件时，称 [=URL=] |url:URL| <dfn>在主页标签页作用域内</dfn>：
+                当且仅当满足以下条件时，称一个 [=URL=] |url:URL| <dfn>位于 home tab 作用域内</dfn>：
             </p>
             <ul>
-                <li>应用程序 [=has a home tab=]，且
+                <li>应用程序 [=has a home tab=]，并且
                 </li>
-                <li>|url| 是清单的 [=manifest/within scope=]，且
+                <li>|url| 是清单的 [=manifest/within scope=]，并且
                 </li>
                 <li>至少满足以下之一：
                     <ul>
-                        <li>|url| 与 [=start URL=] [=URL/equals=]，并且
+                        <li>|url| 与 [=start URL=] [=URL/equals=]，其中
                             [=URL/equals/exclude fragments=] 设置为 true，或者
                         </li>
-                        <li>给定 [=Document/processed manifest=] 的 [=tab_strip=]
-                            成员的 [=home_tab=] 成员的 [=scope_patterns=] 成员中的任一元素
-                            和 |url|，应用 [=URL pattern/match=] 返回一个
-                            {{URLPatternResult}}。
+                        <li>给定 [=Document/processed manifest=] 的 [=tab_strip=] 成员的
+                            [=home_tab=] 成员的 [=scope_patterns=] 成员中的任意元素以及
+                            |url|，应用 [=URL pattern/match=] 会返回一个 {{URLPatternResult}}。
                         </li>
                     </ul>
                 </li>
             </ul>
             <p>
-                如果某 URL 不 [=within home tab scope=]，则该 URL <dfn>在主页标签页作用域外</dfn>。
+                如果一个 URL 不 [=within home tab scope=]，则称它<dfn>位于 home tab 作用域外</dfn>。
             </p>
             <aside class="note">
                 <p>
-                    “主页标签页作用域”（即 [=within
-                    home tab scope=] 的 [=URLs=] 集合）是
-                    [=home tab
-                    context=] 可以导航到的 URL 集合。应用程序内所有到
-                    [=within home tab scope=] 的 URL 的导航都将在 [=home
-                    tab context=] 中执行，而所有到 [=outside of home tab
-                    scope=] 的 URL 的导航都将在不同的 [=application context=]
-                    （即另一个标签页）中执行，并在必要时创建一个。应用程序的
-                    [=start URL=] 始终是主页标签页作用域的一部分（如果该应用程序
-                    [=has a home tab=]）。
+                    “home tab 作用域”（即 [=within home tab scope=] 的 [=URLs=] 集合）
+                    是 [=home tab context=] 能够导航到的 URL 集合。
+                    应用程序中到某个 [=within home tab scope=] URL 的所有导航都会在
+                    [=home tab context=] 中执行，而到某个 [=outside of home tab
+                    scope=] URL 的所有导航都会在另一个 [=application context=] 中执行
+                    （即另一个标签），必要时会创建一个新的标签。应用程序的 [=start URL=]
+                    始终是 home tab 作用域的一部分（如果应用程序 [=has a home tab=]）。
                 </p>
                 <p>
-                    为了与 [=start URL=] 进行匹配，
-                    [=URL/fragment=] 会被忽略，但 [=URL/query=] 必须完全匹配。
+                    为了与 [=start URL=] 进行匹配，[=URL/fragment=] 会被忽略，
+                    但 [=URL/query=] 必须完全匹配。
                 </p>
                 <p>
-                    如果应用程序不 [=has a home tab|具有主页标签页=]，
-                    则主页标签页作用域为空集，所有 URL 都
+                    如果应用程序不 [=has a home tab|have a home tab=]，
+                    则 home tab 作用域是空集，并且所有 URL 都
                     [=outside of home tab scope=]。
                 </p>
             </aside>
             <section>
                 <h3>
-                    每个窗口都有一个主页标签页
+                    每个窗口都有一个 home tab
                 </h3>
                 <p>
-                    如果应用程序 [=has a home tab=]，则每当创建新的应用程序
-                    窗口时（例如启动应用程序时，或将标签页移动到新窗口时），
-                    用户代理必须在该窗口中创建一个新的 [=home tab context=]。
-                    新创建的 [=home tab
-                    context=] 应被导航到 [=start URL=]，该 URL 根据定义
+                    如果应用程序 [=has a home tab=]，则每当创建一个新的应用程序窗口时
+                    （例如启动应用程序时，或将某个标签移动到新窗口时），用户代理 MUST 在该窗口中
+                    创建一个新的 [=home tab context=]。新创建的 [=home tab
+                    context=] SHOULD 导航到 [=start URL=]，根据定义，该 URL
                     [=within home tab scope=]。
                 </p>
             </section>
             <section>
                 <h3>
-                    与主页标签页作用域相关的导航
+                    关于 home tab 作用域的导航
                 </h3>
                 <p>
                     当将与 [=home tab context=] 关联的 [=top-level traversable=]
-                    [=navigate|导航=] 到 [=outside of home tab scope=] 的
-                    [=URL=] |url:URL| 时，运行以下步骤：
+                    [=navigate|导航=] 到一个 [=outside of home tab scope=] 的 [=URL=]
+                    |url:URL| 时，运行以下步骤：
                 </p>
                 <ol>
                     <li>令 [=top-level traversable=] |tab:toplevel traversable| 为
-                        选择目标为
-                        <code>"_blank"</code> 且 noopener 为 true 的可导航对象所得的结果。
+                        选择一个 target 为
+                        <code>"_blank"</code> 且 noopener 为 true 的 navigable 的结果。
                     </li>
-                    <li>不要 [=navigating=] 主页标签页 traversable，
-                        而是以相同参数 [=navigate=] |tab|。
+                    <li>不 [=navigating=] home-tab traversable，而是使用相同参数
+                        [=navigate=] |tab|。
                     </li>
-                    <li>将当前 [=application manifest=] [=applied|应用=] 到
+                    <li>将当前 [=application manifest=] 应用到
                         |tab| 的 [=top-level browsing context=]。
                     </li>
-                    <li>用户代理应将 |tab| 放置在与主页标签页可导航对象相同的窗口中。
+                    <li>用户代理 SHOULD 将 |tab| 放置在与 home-tab navigable 相同的窗口中。
                     </li>
                     <li>聚焦 |tab|。
                     </li>
                 </ol>
                 <p class="issue" data-number="98"></p>
                 <p>
-                    当将具有 [=display mode/tabbed=] [=display mode=] 且不与
-                    [=home tab context=] 关联的 [=top-level traversable=]
-                    （即非主页标签页）[=navigate|导航=] 到
-                    [=within home tab scope=] 的 [=URL=]
+                    当将一个 [=display mode=] 为 [=display mode/tabbed=] 且不与
+                    [=home tab context=] 关联（即非 home tab）的 [=top-level traversable=]
+                    [=navigate|导航=] 到一个 [=within home tab scope=] 的 [=URL=]
                     |url:URL| 时，运行以下步骤：
                 </p>
                 <ol>
                     <li>令 |hometab:toplevel traversable| 为与当前窗口关联的
-                        [=home tab context=] 的 [=top-level
-                        traversable=]。
+                        [=home tab context=] 的 [=top-level traversable=]。
                     </li>
-                    <li>不要 [=navigating=] 该顶级 traversable，
-                        而是以相同参数 [=navigate=] |hometab|。
+                    <li>不 [=navigating=] 该 top-level traversable，而是使用相同参数
+                        [=navigate=] |hometab|。
                     </li>
                     <li>聚焦 |hometab|。
                     </li>
                 </ol>
                 <aside class="note">
-                    从主页标签页导航到 [=outside of home tab scope=] 的 URL
-                    会打开一个新的普通标签页，使现有文档仍保留在
-                    主页标签页中。类似地，从普通标签页导航到
-                    [=within home tab scope=] 的 URL 会在主页标签页中打开，
-                    使发起该导航的标签页中的现有文档保持打开。
-                    开发者应确保在这两种情况下，被留下的文档不会最终处于
-                    意外状态。
+                    从 home tab 导航到一个 [=outside of home tab scope=] 的 URL
+                    将打开一个新的普通标签，并使现有文档继续在 home tab 中打开。
+                    类似地，从普通标签导航到一个 [=within home tab scope=] 的 URL
+                    将在 home tab 中打开，并使发起该导航的标签中的现有文档保持打开。
+                    开发者应确保在这两种情况下，留下的文档不会进入意外状态。
                 </aside>
             </section>
             <section class="informative">
                 <h3>
-                    主页标签页不变量
+                    Home tab 不变量
                 </h3>
                 <p>
-                    上述规则旨在确保以下不变量对于 [=has a home
-                    tab|具有主页标签页=] 的应用程序始终为真：
+                    上述规则旨在确保对于 [=has a home tab|具有 home tab=] 的应用程序，
+                    以下不变量始终为真：
                 </p>
                 <ul>
-                    <li>每个应用程序窗口恰好有一个 [=home tab context=]，
-                        且
+                    <li>每个应用程序窗口恰好具有一个 [=home tab context=]，
+                        并且
                     </li>
                     <li>每个 [=home tab context=] 的活动文档的 [=Document/URL=]
-                        是 [=within home tab scope=]（除非该文档的 URL 自创建以来已更改），且
+                        都 [=within home tab scope=]（除非该文档的 URL 自创建以来发生了变化），并且
                     </li>
-                    <li>每个非主页标签页 [=application context=] 的活动文档的
-                        [=Document/URL=] 是 [=outside of home tab scope=]
-                        （除非该文档的 URL 自创建以来已更改）。
+                    <li>每个非 home-tab [=application context=] 的活动文档的
+                        [=Document/URL=] 都 [=outside of home tab scope=]（除非该文档的 URL
+                        自创建以来发生了变化）。
                     </li>
                 </ul>
                 <p>
                     如果文档更改其 [=URL/fragment=]，或使用 {{History}} API
-                    将其显示 URL 修改为进入或离开主页标签页作用域，用户代理不会
-                    在主页标签页和非主页标签页上下文之间动态移动文档，因为没有发生导航。
-                    因此，上述不变量只关注文档创建时所具有的 [=Document/URLs=]。
+                    将其显示 URL 修改到 home tab 作用域内或作用域外，用户代理不会在
+                    home-tab 和非 home-tab 上下文之间动态移动文档，因为并未发生导航。
+                    因此，上述不变量只关心文档创建时所具有的 [=Document/URLs=]。
                 </p>
                 <p>
-                    对于通过修改其 URL 来“假装”导航的单页应用程序，
-                    这可能导致不希望出现的行为，从而破坏上述不变量
-                    （例如，如果用户在主页标签页中点击链接，将 URL 动态更改为非主页页面，
-                    他们仍会停留在主页标签页内，因为实际上并没有导航）。
-                    为避免这种情况，应用程序可以检测自己是否处于标签式应用程序模式，
-                    并改变其行为，以执行真正进入和离开主页标签页作用域的导航，
+                    对于通过修改 URL 来“假装”导航的单页应用程序，这可能导致不理想的行为，
+                    从而破坏上述不变量（例如，如果用户从 home tab 点击链接，动态将 URL
+                    更改为非主页，他们仍将停留在 home tab 中，因为实际上没有发生导航）。
+                    为了避免这种情况，应用程序可以检测自己是否处于 tabbed application mode，
+                    并改变其行为，以执行真正进入和离开 home tab 作用域的导航，
                     而不是修改 URL。
                 </p>
             </section>
@@ -455,10 +673,10 @@
                 <code><dfn>new_tab_button</dfn></code> 成员
             </h3>
             <p>
-                [=tab_strip/new_tab_button=] 成员是一个有序映射，
-                用于描述一个 UI 便利项（例如按钮）的行为；
-                当该便利项被点击/激活时，会在应用程序窗口内打开一个新的
-                [=application context=]。它具有以下成员：
+                [=tab_strip/new_tab_button=] 成员是一个 ordered map，
+                它描述一个 UI affordance（例如按钮）的行为；当该 UI affordance
+                被点击/激活时，会在应用程序窗口内打开一个新的 [=application context=]。
+                它具有以下成员：
             </p>
             <ul>
                 <li>[=new_tab_button/url=]
@@ -466,41 +684,36 @@
             </ul>
             <p>
                 <code><dfn data-dfn-for="new_tab_button">url</dfn></code> 成员
-                是一个字符串，表示相对于 [=manifest URL=] 的 URL，
-                该 URL 是某个 [=Document/processed
-                manifest=] 的 [=manifest/within scope=]。
+                是一个表示相对于 [=manifest URL=] 的 URL 的字符串，
+                该 URL 是 [=Document/processed manifest=] 的 [=manifest/within
+                scope=]。
             </p>
             <p>
                 如果 [=Document/processed manifest=] 的 [=new_tab_button=] 的
                 [=new_tab_button/url=] 成员 [=outside of home tab scope=]，
-                则应用程序<dfn>具有新标签页按钮</dfn>。如果应用程序不
-                [=has a new tab button|具有新标签页
-                按钮=]，用户代理不应向最终用户提供“新建标签页”便利项。
+                则称应用程序<dfn>具有 new tab button</dfn>。如果应用程序不
+                [=has a new tab button|have a new tab button=]，则用户代理 SHOULD NOT
+                向最终用户提供“new tab” affordance。
             </p>
             <aside class="note">
                 <p>
-                    如果新标签页按钮的 URL [=within home
-                    tab scope=]，则该按钮将不可用。此规则是必要的，
-                    因为否则它将意味着：a) 新标签页按钮会打开一个
-                    [=within home tab scope=] 的非主页标签页，从而违反上面的第三个
-                    主页标签页不变量；或者 b) 新标签页按钮只会聚焦主页标签页，
-                    这会是冗余且令人困惑的 UI。
+                    如果 new tab button 的 URL [=within home tab scope=]，则该按钮将不可用。
+                    此规则是必要的，因为否则这将意味着：a) new tab button 会打开一个
+                    [=within home tab scope=] 的非 home tab，违反上面的第三个 home tab
+                    不变量，或者 b) new tab button 只会聚焦 home tab，这会是多余且令人困惑的 UI。
                 </p>
                 <p>
                     [=new_tab_button/url=] 的默认值是 [=start URL=]。
-                    这意味着如果应用程序 [=has a home tab=]，
-                    则该按钮默认不可用。
+                    这意味着如果应用程序 [=has a home tab=]，该按钮默认将不可用。
                 </p>
             </aside>
             <p>
-                当最终用户激活新标签页按钮时，运行以下步骤：
+                当最终用户激活 new tab button 时，运行以下步骤：
             </p>
             <ol>
-                <li>在当前窗口中 [=Create a new application context=] 并
-                    聚焦它。
+                <li>在当前窗口中 [=Create a new application context=] 并聚焦它。
                 </li>
-                <li>将其导航到 [=new_tab_button=] 的 [=new_tab_button/url=]
-                    成员的值。
+                <li>将其导航到 [=new_tab_button=] 的 [=new_tab_button/url=] 成员值。
                 </li>
             </ol>
         </section>
@@ -518,7 +731,7 @@
             <ol>
                 <li>将 |manifest|["tab_strip"] 设置为一个新的 [=ordered map=]。
                 </li>
-                <li>如果 |json|["tab_strip"] 不存在，或 |json|["tab_strip"] 不是
+                <li>如果 |json|["tab_strip"] 不存在，或 |json|["tab_strip"] 不是一个
                     [=ordered map=]：
                     <ol>
                         <li>将 |manifest|["tab_strip"]["new_tab_button"]["url"] 设置为
@@ -543,12 +756,11 @@
                 <p>
                     要<dfn>处理 `home_tab` 成员</dfn>，给定 [=ordered map=]
                     |json tab strip:ordered map|、[=ordered map=] |manifest tab
-                    strip:ordered map| 和 [=URL=] |manifest URL:URL|，运行
-                    以下步骤：
+                    strip:ordered map| 和 [=URL=] |manifest URL:URL|，运行以下步骤：
                 </p>
                 <ol>
                     <li>如果 |json tab strip|["home_tab"] 不存在，或 |json tab
-                        strip|["home_tab"] 不是 [=ordered map=]，返回。
+                        strip|["home_tab"] 不是一个 [=ordered map=]，则返回。
                     </li>
                     <li>令 |home tab:ordered map| 为一个新的 [=ordered map=]。
                     </li>
@@ -575,15 +787,14 @@
                         URL|。
                     </li>
                     <li>如果 |json tab strip|["new_tab_button"] 不存在，或 |json
-                        tab strip|["new_tab_button"] 不是 [=ordered map=]，返回。
+                        tab strip|["new_tab_button"] 不是一个 [=ordered map=]，则返回。
                     </li>
-                    <li>令 |url:URL| 为以 |manifest URL| 作为基准 URL
-                        [=URL Parser|解析=] |json tab
-                        strip|["new_tab_button"]["url"] 所得的结果。
+                    <li>令 |url:URL| 为使用 |manifest URL| 作为 base URL 对 |json tab
+                        strip|["new_tab_button"]["url"] 进行 [=URL Parser|parsing=] 的结果。
                     </li>
-                    <li>如果 |url| 是失败，返回。
+                    <li>如果 |url| 是 failure，则返回。
                     </li>
-                    <li>如果 |url| 不是 |manifest URL| 的 [=URL/within scope=]，返回。
+                    <li>如果 |url| 不是 |manifest URL| 的 [=URL/within scope=]，则返回。
                     </li>
                     <li>将 |manifest tab strip|["new_tab_button"]["url"] 设置为 |url|。
                     </li>
@@ -605,17 +816,16 @@
                         patterns|。
                     </li>
                     <li>如果 |json home tab|["scope_patterns"] 不存在，或 |json
-                        home tab|["scope_patterns"] 不是 [=list=]，返回。
+                        home tab|["scope_patterns"] 不是一个 [=list=]，则返回。
                     </li>
                     <li>对于 |json home
                         tab|["scope_patterns"] 的每个 |entry:URLPatternInit|：
                         <ol>
-                            <li>令 |pattern:URL pattern| 为给定 |manifest URL| 时，
-                                根据 |entry| [=build a URL
-                                pattern from an infra value|从 infra 值构建 URL 模式=]
-                                所得的结果。如果此过程抛出或返回 null，则继续。
+                            <li>令 |pattern:URL pattern| 为给定 |entry| 和 |manifest URL| 后
+                                [=build a URL pattern from an infra value=] 的结果。
+                                如果此过程抛出异常或返回 null，则 continue。
                             </li>
-                            <li>将 |pattern| 追加到 |processed scope patterns|。
+                            <li>将 |pattern| append 到 |processed scope patterns|。
                             </li>
                         </ol>
                     </li>
@@ -647,19 +857,19 @@
         }
         </pre>
             <p>
-                此示例是一个标签式 Web 应用；如果不支持标签式模式，
-                它会回退到单文档 standalone 窗口。任何到主索引页的导航
-                （即 <code>/</code> 或 <code>/index.html</code>）都会在
-                [=home tab context=] 中打开。新标签页按钮会在
-                <code>/create</code> 打开一个新标签页。
+                此示例是一个 tabbed Web 应用，如果不支持 tabbed mode，
+                则会回退到单文档 standalone 窗口。任何导航到主索引页
+                （<code>/</code> 或
+                <code>/index.html</code>）的操作都会在 [=home tab context=] 中打开。
+                new tab button 将在 <code>/create</code> 打开一个新标签。
             </p>
             <p>
-                请注意，当与 [=tab_strip/home_tab/scope_patterns=] 进行匹配时，
-                URL 的 [=URL/query=] 部分默认会被忽略（因此到
-                <code>/index.html?utm_source=foo</code> 的导航会在
-                主页标签页中打开）。但是，当与 [=start URL=] 匹配时，
-                [=URL/query=] 必须完全匹配，因此希望忽略查询的站点
-                建议显式包含 [=start URL=] 的 [=URL/path=] 作为作用域模式。
+                请注意，在与 [=tab_strip/home_tab/scope_patterns=] 匹配时，
+                默认会忽略 URL 的 [=URL/query=] 部分（因此导航到
+                <code>/index.html?utm_source=foo</code> 会在 home tab 中打开）。
+                然而，在与 [=start URL=] 匹配时，[=URL/query=] 必须完全匹配，
+                因此希望忽略 query 的站点，建议显式地将 [=start URL=] 的
+                [=URL/path=] 作为 scope pattern 包含进去。
             </p>
         </section>
     </section>
@@ -828,9 +1038,9 @@
             `protocol_handlers` 成员
         </h2>
         <p>
-            [=manifest's=] <code><dfn data-dfn-for=
+            [=manifest=] 的 <code><dfn data-dfn-for=
         "manifest">protocol_handlers</dfn></code> 成员是一个
-            <a>协议处理器描述</a>数组，允许 Web 应用程序处理 URL 协议。
+            <a>协议处理器描述</a>数组，它允许 Web 应用程序处理 URL 协议。
         </p>
         <p>
             在安装时，用户代理应通过符合以下内容的交互，
@@ -954,7 +1164,7 @@
                 当用户激活协议处理器 URL 时，用户代理应运行
                 <a>处理协议启动</a>。
             </p>
-            <p class="note">
+            <aside class="note">
                 [[HTML]] 的 {{NavigatorContentUtils/registerProtocolHandler()}} 允许
                 Web 站点将自身注册为特定协议的可能处理器。
                 对 <a>协议处理器描述</a> 而言，什么构成有效的
@@ -963,7 +1173,7 @@
                 值由该 API 定义。还请注意，[[HTML]] API 使用
                 <code>scheme</code>，而这里使用 [=protocol handler description/protocol=]，
                 但适用相同的限制。
-            </p>
+            </aside>
             <section>
                 <h3>
                     `protocol` 成员
@@ -1049,9 +1259,9 @@
             `file_handlers` 成员
         </h3>
         <p>
-            [=manifest's=] <code><dfn data-export="" data-dfn-for=
+            [=manifest=] 的 <code><dfn data-export="" data-dfn-for=
         "manifest">file_handlers</dfn></code> 成员是一个 [=list=]，
-            它提供关于应用如何处理源自应用自身之外的文件打开操作的指令。
+            它提供有关应用如何处理源自应用本身之外的文件打开操作的指令。
         </p>
         <p>
             已注册文件处理应用程序的管理、呈现和选择由操作系统决定。
@@ -1508,11 +1718,11 @@
             它与 Web 应用程序存在某种关系。
         </p>
         <p>
-            [=manifest's=] <code><dfn data-export="" data-dfn-for=
+            [=manifest=] 的 <code><dfn data-export="" data-dfn-for=
         "manifest">related_applications</dfn></code> 成员列出<a>相关
-                应用程序</a>，并作为 Web 应用程序与<a>相关应用程序</a>之间
-            存在这种关系的指示。此关系是单向的，除非所列应用程序声称
-            存在相同关系，否则<a>用户代理</a>不得假定存在双向认可。
+                应用程序</a>，并作为 Web 应用程序与<a>相关应用程序</a>之间存在此类关系的指示。
+            此关系是单向的，除非列出的应用程序声明相同关系，否则
+            <a>用户代理</a> MUST NOT 假定存在双向认可。
         </p>
         <p>
             `related_applications` 的使用示例可以是爬虫利用该信息收集
@@ -1556,12 +1766,13 @@
             `prefer_related_applications` 成员
         </h3>
         <p>
-            [=manifest's=] <code><dfn data-export="" data-dfn-for=
+            [=manifest=] 的 <code><dfn data-export="" data-dfn-for=
         "manifest">`prefer_related_applications`</dfn></code> 成员是一个
-            [=boolean=]，用作给用户代理的提示，表示应优先使用
-            <a>相关应用程序</a>而不是 Web 应用程序。如果
-            `prefer_related_applications` 成员设置为 `true`，且用户代理想要
-            建议安装该 Web 应用程序，则用户代理可能想要改为建议安装其中一个
+            [=boolean=]，用作给用户代理的提示，表示相比 Web
+            应用程序，应优先选择<a>相关应用程序</a>。如果
+            `prefer_related_applications` 成员被设置为
+            `true`，并且用户代理想要建议安装 Web
+            应用程序，则用户代理可能会改为建议安装其中一个
             <a>相关应用程序</a>。
         </p>
     </section>
@@ -1570,8 +1781,8 @@
             `scope_extensions` 成员
         </h3>
         <p>
-            [=manifest's=] <code><dfn data-export="" data-dfn-for=
-        "manifest">scope_extensions</dfn></code> 成员表示应用程序期望的
+            [=manifest=] 的 <code><dfn data-export="" data-dfn-for=
+        "manifest">scope_extensions</dfn></code> 成员表示应用程序所期望的
             [=scope extensions=] 列表。
         </p>
         <p>
@@ -1615,9 +1826,9 @@
             </li>
         </ol>
         <aside class="note">
-            [=manifest's=] `scope` 成员只允许将来自单个 [=origin=] 的 URL
-            视为在作用域内。`scope_extensions` 成员允许将来自多个
-            [=origins=] 的 URL 视为在作用域内。
+            [=manifest=] 的 `scope` 成员只允许将来自单个 [=origin=] 的 URL
+            视为处于作用域内。`scope_extensions` 成员允许将来自多个
+            [=origins=] 的 URL 视为处于作用域内。
         </aside>
         <section class="informative">
             <h2>
@@ -1896,11 +2107,11 @@
                     提示，可能影响用户代理向用户呈现迁移相关 UI 的强制程度。
                 </li>
             </ul>
-            <div class="note">
+            <aside class="note">
                 为了让用户代理处理 [=manifest/migrate_from=] 成员，
                 清单还需要在其 JSON 中包含有效的显式
                 <a data-cite="appmanifest#dfn-id">id</a> 成员。
-            </div>
+            </aside>
         </section>
         <section>
             <h3>
@@ -1973,76 +2184,74 @@
                 [=URL=] |manifest URL:URL|：
             </p>
             <ol class="algorithm">
-                <li>如果 |json|["id"] 不 [=map/exist=] 或不是 [=string=]，
-                    返回。
+                <li>如果 |json|["id"] 不 [=map/exist=]，或者不是一个 [=string=]，
+                    则返回。
                 </li>
-                <li>如果 |json|["id"] 是空字符串，返回。
+                <li>如果 |json|["id"] 是空字符串，则返回。
                 </li>
                 <li>令 |base_origin:origin| 为 |manifest|["start_url"] 的
                     [=URL/origin=]。
                 </li>
-                <li>令 |id_url:URL| 为以 |base_origin| 作为基准 URL
-                    [=URL Parser|解析=]
-                    |json|["id"] 所得的结果。
+                <li>令 |id_url:URL| 为使用 |base_origin| 作为 base URL 对
+                    |json|["id"] 进行 [=URL Parser|parsing=] 的结果。
                 </li>
-                <li>如果 |id_url| 是 failure，返回。
+                <li>如果 |id_url| 是 failure，则返回。
                 </li>
-                <li>如果 |id_url| 与 |manifest|["start_url"] 不是
-                    [=same origin=]，返回。
+                <li>如果 |id_url| 与 |manifest|["start_url"] 不是 [=same origin=]，
+                    则返回。
                 </li>
                 <li>令 |processed_migrate_from:list| 为一个新的 [=list=]。
                 </li>
                 <li>将 |manifest|["migrate_from"] 设置为 |processed_migrate_from|。
                 </li>
-                <li>如果 |json|["migrate_from"] 不 [=map/exist=] 或不是
-                    [=list=]，返回。
+                <li>如果 |json|["migrate_from"] 不 [=map/exist=]，或者不是一个
+                    [=list=]，则返回。
                 </li>
-                <li>[=list/For each=] |entry|，其属于 |json|["migrate_from"]：
+                <li>对 |json|["migrate_from"] 的每个 |entry| 执行 [=list/For each=]：
                     <ol>
                         <li>令 |processed_entry:ordered map| 为一个新的 [=ordered map=]。
                         </li>
-                        <li>如果 |entry| 是 [=string=]：
+                        <li>如果 |entry| 是一个 [=string=]：
                             <ol>
-                                <li>令 |id:URL| 为以 |manifest URL| 作为基准 URL
-                                    [=URL Parser|解析=]
-                                    |entry| 所得的结果。
+                                <li>令 |id:URL| 为使用 |manifest URL| 作为 base URL 对
+                                    |entry| 进行 [=URL Parser|parsing=] 的结果。
                                 </li>
                                 <li>如果 |id| 是 failure，则 [=iteration/continue=]。
                                 </li>
-                                <li>将 |processed_entry|["id"] 设置为 |id|。
+                                <li>将 |processed_entry| 的 [=migrate_from_item/id=] 设置为 |id|。
                                 </li>
                             </ol>
                         </li>
-                        <li>否则，如果 |entry| 是 [=ordered map=]：
+                        <li>否则，如果 |entry| 是一个 [=ordered map=]：
                             <ol>
-                                <li>如果 |entry|["id"] 不 [=map/exist=] 或不是
+                                <li>如果 |entry| 的 [=migrate_from_item/id=] 不 [=map/exist=]，或者不是一个
                                     [=string=]，则 [=iteration/continue=]。
                                 </li>
-                                <li>令 |id:URL| 为以 |manifest URL| 作为基准 URL
-                                    [=URL Parser|解析=]
-                                    |entry|["id"] 所得的结果。
+                                <li>令 |id:URL| 为使用 |manifest URL| 作为 base URL 对
+                                    |entry| 的 [=migrate_from_item/id=] 进行 [=URL Parser|parsing=] 的结果。
                                 </li>
                                 <li>如果 |id| 是 failure，则 [=iteration/continue=]。
                                 </li>
-                                <li>将 |processed_entry|["id"] 设置为 |id|。
+                                <li>将 |processed_entry| 的 [=migrate_from_item/id=] 设置为 |id|。
                                 </li>
-                                <li>如果 |entry|["install_url"] [=map/exists=] 且是
+                                <li>如果 |entry| 的 [=migrate_from_item/install_url=] [=map/exists=]，并且是一个
                                     [=string=]：
                                     <ol>
-                                        <li>令 |install_url:URL| 为以 |manifest
-                                            URL| 作为基准 URL [=URL
-                                            Parser|解析=] |entry|["install_url"] 所得的结果。
+                                        <li>令 |install_url:URL| 为使用 |manifest
+                                            URL| 作为 base URL 对 |entry| 的 [=migrate_from_item/install_url=] 进行 [=URL
+                                            Parser|parsing=] 的结果。
                                         </li>
                                         <li>如果 |install_url| 不是 failure，则将
-                                            |processed_entry|["install_url"] 设置为 |install_url|。
+                                            |processed_entry| 的 [=migrate_from_item/install_url=] 设置为 |install_url|。
                                         </li>
                                     </ol>
                                 </li>
-                                <li>如果 |entry|["behavior"] [=map/exists=] 且是
+                                <li>如果 |entry| 的 [=migrate_from_item/behavior=] [=map/exists=]，并且是一个
                                     [=string=]：
                                     <ol>
-                                        <li>如果 |entry|["behavior"] 是 "suggest" 或 "force"，
-                                            则将 |processed_entry|["behavior"] 设置为 |entry|["behavior"]。
+                                        <li>如果 |entry| 的 [=migrate_from_item/behavior=] 是 "suggest" 或 "force"，则将
+                                            |processed_entry| 的 [=migrate_from_item/behavior=] 设置为 |entry| 的
+                                            [=migrate_from_item/behavior=]。
                                         </li>
                                     </ol>
                                 </li>
@@ -2050,14 +2259,14 @@
                         </li>
                         <li>否则，[=iteration/continue=]。
                         </li>
-                        <li>使用 [=validate origin migration=] 中的算法验证
-                            |processed_entry|["id"]，给定 [=URL=]
-                            |processed_entry|["id"] 和 [=URL=] |id_url|。
+                        <li>使用 [=validate origin migration=] 的算法，给定 [=URL=]
+                            |processed_entry| 的 [=migrate_from_item/id=] 和 [=URL=] |id_url|，
+                            验证 |processed_entry| 的 [=migrate_from_item/id=]。
                         </li>
-                        <li>如果上一步返回错误，
+                        <li>如果上一步返回了 error，
                             则 [=iteration/continue=]。
                         </li>
-                        <li>[=list/Append=] |processed_entry| 到
+                        <li>将 |processed_entry| [=list/Append=] 到
                             |processed_migrate_from|。
                         </li>
                     </ol>
@@ -2074,32 +2283,31 @@
                 [=URL=] |manifest URL:URL|：
             </p>
             <ol class="algorithm">
-                <li>如果 |json|["migrate_to"] 不 [=map/exist=] 或不是
-                    [=ordered map=]，返回。
+                <li>如果 |json|["migrate_to"] 不 [=map/exist=]，或者不是一个
+                    [=ordered map=]，则返回。
                 </li>
                 <li>令 |entry:ordered map| 为 |json|["migrate_to"]。
                 </li>
-                <li>如果 |entry|["id"] 不 [=map/exist=] 或不是 [=string=]，
-                    返回。
+                <li>如果 |entry| 的 [=migrate_to_item/id=] 不 [=map/exist=]，或者不是一个 [=string=]，
+                    则返回。
                 </li>
-                <li>令 |id:URL| 为以 |manifest URL| 作为基准 URL
-                    [=URL Parser|解析=]
-                    |entry|["id"] 所得的结果。
+                <li>令 |id:URL| 为使用 |manifest URL| 作为 base URL 对
+                    |entry| 的 [=migrate_to_item/id=] 进行 [=URL Parser|parsing=] 的结果。
                 </li>
-                <li>如果 |id| 是 failure，返回。
+                <li>如果 |id| 是 failure，则返回。
                 </li>
                 <li>令 |processed_migrate_to:ordered map| 为一个新的 [=ordered map=]。
                 </li>
-                <li>将 |processed_migrate_to|["id"] 设置为 |id|。
+                <li>将 |processed_migrate_to| 的 [=migrate_to_item/id=] 设置为 |id|。
                 </li>
-                <li>如果 |entry|["install_url"] [=map/exists=] 且是 [=string=]：
+                <li>如果 |entry| 的 [=migrate_to_item/install_url=] [=map/exists=]，并且是一个 [=string=]：
                     <ol>
-                        <li>令 |install_url:URL| 为以 |manifest URL| 作为
-                            基准 URL [=URL
-                            Parser|解析=] |entry|["install_url"] 所得的结果。
+                        <li>令 |install_url:URL| 为使用 |manifest URL| 作为
+                            base URL 对 |entry| 的 [=migrate_to_item/install_url=] 进行 [=URL
+                            Parser|parsing=] 的结果。
                         </li>
                         <li>如果 |install_url| 不是 failure，则将
-                            |processed_migrate_to|["install_url"] 设置为 |install_url|。
+                            |processed_migrate_to| 的 [=migrate_to_item/install_url=] 设置为 |install_url|。
                         </li>
                     </ol>
                 </li>
@@ -2252,15 +2460,15 @@
                 `fingerprints` 成员
             </h3>
             <p>
-                [=external application resource's=] <code><dfn data-dfn-for=
+                [=external application resource's=] 的 <code><dfn data-dfn-for=
           "external application resource">fingerprints</dfn></code> 成员
-                表示一个 [=fingerprints=] [=list=]。
+                表示一个 [=fingerprints=] 的 [=list=]。
             </p>
             <p>
-                <dfn data-local-lt="fingerprints">指纹</dfn> 表示一组用于验证
-                应用程序的加密指纹。指纹具有以下两个成员：
-                <dfn data-dfn-for="fingerprint">type</dfn> 和 <dfn data-dfn-for="fingerprint">value</dfn>。二者都是
-                <a>字符串</a>，但其语法和语义由平台定义。
+                <dfn data-local-lt="fingerprints">fingerprint</dfn> 表示一组用于
+                验证应用程序的密码学指纹。fingerprint 具有以下两个成员：<dfn class="lint-ignore" data-dfn-for="fingerprint">type</dfn> 和 <dfn
+                    class="lint-ignore" data-dfn-for="fingerprint">value</dfn>。它们各自都是 <a>string</a>，
+                但其语法和语义由平台定义。
             </p>
         </section>
     </section>
@@ -2428,12 +2636,12 @@
             <h3>
                 <dfn>BeforeInstallPromptEvent</dfn> 接口
             </h3>
-            <div class="note">
+            <aside class="note">
                 <a>beforeinstallprompt</a> 事件的命名有些不准确，
                 因为它不一定表示随后会发生<a>手动安装</a>
                 （取决于用户代理，它可能只是赋予站点触发安装提示的能力）。
                 该名称出于历史原因而保留。
-            </div>
+            </aside>
             <pre class="idl" data-cite="DOM">
           [Exposed=Window]
           interface BeforeInstallPromptEvent : Event {
@@ -2457,14 +2665,14 @@
                 <a>自动安装提示</a>，并手动呈现
                 <a>站点触发的安装提示</a>。
             </p>
-            <div class="note">
+            <aside class="note">
                 如果 {{BeforeInstallPromptEvent}} <em>未</em>被取消，
                 用户代理则被允许向最终用户<a>呈现安装提示</a>
                 （具体而言，是<a>自动安装提示</a>）。取消默认动作
                 （通过 {{Event/preventDefault()}}）会阻止用户代理
                 <a>呈现安装提示</a>。用户代理可在稍后时间再次运行
                 <a>通知安装提示可用的步骤</a>。
-            </div>
+            </aside>
             <p>
                 <dfn>PromptResponseObject</dfn> 包含调用
                 {{BeforeInstallPromptEvent/prompt()}} 的结果。它包含一个成员，
