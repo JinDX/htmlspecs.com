@@ -1303,14 +1303,14 @@ const links = [
         lang: "cjk",
         state: "CRD"
     },
-    // {
-    //     text: "Element Timing API",
-    //     href: "https://htmlspecs.com/element-timing/",
-    //     src: "https://wicg.github.io/element-timing/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "Element Timing API",
+        href: "https://htmlspecs.com/element-timing/",
+        src: "https://wicg.github.io/element-timing/",
+        "last-modified": "Thu, 19 Mar 2026 18:29:54 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
     {
         text: "User Timing Level 2",
         href: "https://htmlspecs.com/user-timing-2/",
