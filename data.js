@@ -2078,14 +2078,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "WebXR Hit Test Module",
-    //     href: "https://htmlspecs.com/webxr-hit-test-1/",
-    //     src: "https://www.w3.org/TR/2025/WD-webxr-hit-test-1-20251211/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "WebXR Hit Test Module",
+        href: "https://htmlspecs.com/webxr-hit-test-1/",
+        src: "https://www.w3.org/TR/2025/WD-webxr-hit-test-1-20251211/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     // {
     //     text: "WebXR DOM Overlays Module",
     //     href: "https://htmlspecs.com/webxr-dom-overlays-1/",
