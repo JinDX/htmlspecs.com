@@ -2038,14 +2038,14 @@ const links = [
         lang: "cjk",
         state: "CRD"
     },
-    // {
-    //     text: "Open Screen Application Protocol",
-    //     href: "https://htmlspecs.com/openscreen-application/",
-    //     src: "https://www.w3.org/TR/2026/WD-openscreen-application-20260210/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "Open Screen Application Protocol",
+        href: "https://htmlspecs.com/openscreen-application/",
+        src: "https://www.w3.org/TR/2026/WD-openscreen-application-20260210/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     // {
     //     text: "Requirements for Media Timed Events",
     //     href: "https://htmlspecs.com/media-timed-events/",
