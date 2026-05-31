@@ -1838,14 +1838,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "MediaStreamTrack Insertable Media Processing using Streams",
-    //     href: "https://htmlspecs.com/mediacapture-transform/",
-    //     src: "https://www.w3.org/TR/2026/WD-mediacapture-transform-20260416/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "MediaStreamTrack Insertable Media Processing using Streams",
+        href: "https://htmlspecs.com/mediacapture-transform/",
+        src: "https://www.w3.org/TR/2026/WD-mediacapture-transform-20260416/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     {
         text: "Autoplay Detection",
         href: "https://htmlspecs.com/autoplay-detection/",
