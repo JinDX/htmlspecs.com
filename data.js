@@ -1895,14 +1895,6 @@ const links = [
     //     state: "Draft"
     // },
     // {
-    //     text: "MP3 WebCodecs Registration",
-    //     href: "https://htmlspecs.com/webcodecs-mp3-codec-registration/",
-    //     src: "https://www.w3.org/TR/2025/DNOTE-webcodecs-mp3-codec-registration-20250514/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "DNOTE"
-    // },
-    // {
     //     text: "AAC WebCodecs Registration",
     //     href: "https://htmlspecs.com/webcodecs-aac-codec-registration/",
     //     src: "https://www.w3.org/TR/2026/DNOTE-webcodecs-aac-codec-registration-20260319/",
@@ -1911,33 +1903,9 @@ const links = [
     //     state: "DNOTE"
     // },
     // {
-    //     text: "Opus WebCodecs Registration",
-    //     href: "https://htmlspecs.com/webcodecs-opus-codec-registration/",
-    //     src: "https://www.w3.org/TR/2025/DNOTE-webcodecs-opus-codec-registration-20250514/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "DNOTE"
-    // },
-    // {
-    //     text: "FLAC WebCodecs Registration",
-    //     href: "https://htmlspecs.com/webcodecs-flac-codec-registration/",
-    //     src: "https://www.w3.org/TR/2025/DNOTE-webcodecs-flac-codec-registration-20250514/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "DNOTE"
-    // },
-    // {
-    //     text: "Vorbis WebCodecs Registration",
-    //     href: "https://htmlspecs.com/webcodecs-vorbis-codec-registration/",
-    //     src: "https://www.w3.org/TR/2025/DNOTE-webcodecs-vorbis-codec-registration-20250514/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "DNOTE"
-    // },
-    // {
-    //     text: "Linear PCM WebCodecs Registration",
-    //     href: "https://htmlspecs.com/webcodecs-pcm-codec-registration/",
-    //     src: "https://www.w3.org/TR/2025/DNOTE-webcodecs-pcm-codec-registration-20250514/",
+    //     text: "A-law PCM WebCodecs Registration.",
+    //     href: "https://htmlspecs.com/webcodecs-aac-codec-registration/",
+    //     src: "https://www.w3.org/TR/2025/DNOTE-webcodecs-alaw-codec-registration-20250514/",
     //     "last-modified": "-",
     //     lang: "cjk",
     //     state: "DNOTE"
@@ -1959,9 +1927,65 @@ const links = [
     //     state: "DNOTE"
     // },
     // {
+    //     text: "FLAC WebCodecs Registration",
+    //     href: "https://htmlspecs.com/webcodecs-flac-codec-registration/",
+    //     src: "https://www.w3.org/TR/2025/DNOTE-webcodecs-flac-codec-registration-20250514/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "DNOTE"
+    // },
+    // {
     //     text: "HEVC (H.265) WebCodecs Registration",
     //     href: "https://htmlspecs.com/webcodecs-hevc-codec-registration/",
     //     src: "https://www.w3.org/TR/2025/DNOTE-webcodecs-hevc-codec-registration-20250514/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "DNOTE"
+    // },
+    // {
+    //     text: "MP3 WebCodecs Registration",
+    //     href: "https://htmlspecs.com/webcodecs-mp3-codec-registration/",
+    //     src: "https://www.w3.org/TR/2025/DNOTE-webcodecs-mp3-codec-registration-20250514/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "DNOTE"
+    // },
+    // {
+    //     text: "Opus WebCodecs Registration",
+    //     href: "https://htmlspecs.com/webcodecs-opus-codec-registration/",
+    //     src: "https://www.w3.org/TR/2025/DNOTE-webcodecs-opus-codec-registration-20250514/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "DNOTE"
+    // },
+    // {
+    //     text: "Linear PCM WebCodecs Registration",
+    //     href: "https://htmlspecs.com/webcodecs-pcm-codec-registration/",
+    //     src: "https://www.w3.org/TR/2025/DNOTE-webcodecs-pcm-codec-registration-20250514/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "DNOTE"
+    // },
+    // {
+    //     text: "u-law PCM WebCodecs Registration",
+    //     href: "https://htmlspecs.com/webcodecs-ulaw-codec-registration/",
+    //     src: "https://www.w3.org/TR/2025/DNOTE-webcodecs-ulaw-codec-registration-20250514/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "DNOTE"
+    // },
+    // {
+    //     text: "Vorbis WebCodecs Registration",
+    //     href: "https://htmlspecs.com/webcodecs-vorbis-codec-registration/",
+    //     src: "https://www.w3.org/TR/2025/DNOTE-webcodecs-vorbis-codec-registration-20250514/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "DNOTE"
+    // },
+    // {
+    //     text: "VP8 WebCodecs Registration",
+    //     href: "https://htmlspecs.com/webcodecs-vp8-codec-registration/",
+    //     src: "https://www.w3.org/TR/2024/DNOTE-webcodecs-vp8-codec-registration-20240909/",
     //     "last-modified": "-",
     //     lang: "cjk",
     //     state: "DNOTE"
