@@ -2455,14 +2455,6 @@ const cssLinks = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "CSS Round Display Level 1",
-    //     href: "https://htmlspecs.com/css-round-display-1/",
-    //     src: "https://www.w3.org/TR/2016/WD-css-round-display-1-20161222/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
 
     //### 布局|레이아웃|レイアウト
     {
