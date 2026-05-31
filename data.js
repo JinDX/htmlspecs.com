@@ -2046,14 +2046,6 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "Requirements for Media Timed Events",
-    //     href: "https://htmlspecs.com/media-timed-events/",
-    //     src: "https://www.w3.org/TR/2020/NOTE-media-timed-events-20200625/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "NOTE"
-    // },
     {
         text: "WebXR Device API",
         href: "https://htmlspecs.com/webxr/",
