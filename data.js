@@ -2681,14 +2681,6 @@ const cssLinks = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "CSS Page Floats",
-    //     href: "https://htmlspecs.com/css-page-floats-3/",
-    //     src: "https://www.w3.org/TR/2015/WD-css-page-floats-3-20150915/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
 
     //### 导航|내비게이션|ナビゲーション
     {
