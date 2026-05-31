@@ -2086,14 +2086,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "WebXR DOM Overlays Module",
-    //     href: "https://htmlspecs.com/webxr-dom-overlays-1/",
-    //     src: "https://www.w3.org/TR/2024/WD-webxr-dom-overlays-1-20240924/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "WebXR DOM Overlays Module",
+        href: "https://htmlspecs.com/webxr-dom-overlays-1/",
+        src: "https://www.w3.org/TR/2024/WD-webxr-dom-overlays-1-20240924/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     // {
     //     text: "WebXR Layers API Level 1",
     //     href: "https://htmlspecs.com/webxrlayers-1/",
