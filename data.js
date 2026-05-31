@@ -2094,14 +2094,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "WebXR Layers API Level 1",
-    //     href: "https://htmlspecs.com/webxrlayers-1/",
-    //     src: "https://www.w3.org/TR/2026/WD-webxrlayers-1-20260122/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "WebXR Layers API Level 1",
+        href: "https://htmlspecs.com/webxrlayers-1/",
+        src: "https://www.w3.org/TR/2026/WD-webxrlayers-1-20260122/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     // {
     //     text: "WebXR Depth Sensing Module",
     //     href: "https://htmlspecs.com/webxr-depth-sensing-1/",
