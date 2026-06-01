@@ -277,6 +277,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [WebXR DOM Overlays Module](https://htmlspecs.com/webxr-dom-overlays-1/)（[Source](https://www.w3.org/TR/2024/WD-webxr-dom-overlays-1-20240924/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [WebXR Layers API Level 1](https://htmlspecs.com/webxrlayers-1/)（[Source](https://www.w3.org/TR/2026/WD-webxrlayers-1-20260122/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [WebXR Depth Sensing Module](https://htmlspecs.com/webxr-depth-sensing-1/)（[Source](https://www.w3.org/TR/2025/WD-webxr-depth-sensing-1-20251210/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [WebXR Anchors Module](https://htmlspecs.com/webxr-anchors/)（[Source](https://immersive-web.github.io/anchors/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Portable Network Graphics (PNG) 3](https://htmlspecs.com/png-3/)（[Source](https://www.w3.org/TR/2025/REC-png-3-20250624/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Image Resource](https://htmlspecs.com/image-resource/)（[Source](https://www.w3.org/TR/2021/WD-image-resource-20210604/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 
