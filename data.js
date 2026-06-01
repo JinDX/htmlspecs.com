@@ -2118,14 +2118,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
-    // {
-    //     text: "WebXR Lighting Estimation API Level 1",
-    //     href: "https://htmlspecs.com/webxr-lighting-estimation/",
-    //     src: "https://www.w3.org/TR/webxr-lighting-estimation-1/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "WebXR Lighting Estimation API Level 1",
+        href: "https://htmlspecs.com/webxr-lighting-estimation/",
+        src: "https://www.w3.org/TR/2025/WD-webxr-lighting-estimation-1-20251211/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     // {
     //     text: "WebXR Raw Camera Access Module",
     //     href: "https://htmlspecs.com/webxr-raw-camera-access/",
