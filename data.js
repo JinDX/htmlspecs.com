@@ -1740,14 +1740,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
-    // {
-    //     text: "Prompt API",
-    //     href: "https://htmlspecs.com/prompt-api/",
-    //     src: "https://webmachinelearning.github.io/prompt-api",
-    //     "last-modified": "Fri, 10 Apr 2026 00:30:40 GMT",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "Prompt API",
+        href: "https://htmlspecs.com/prompt-api/",
+        src: "https://webmachinelearning.github.io/prompt-api/",
+        "last-modified": "Fri, 10 Apr 2026 00:30:40 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
 
     //### 媒体和图形|미디어 및 그래픽|メディアとグラフィックス
     {
