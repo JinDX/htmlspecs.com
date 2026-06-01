@@ -1732,6 +1732,22 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
+    // {
+    //     text: "Translator and Language Detector APIs",
+    //     href: "https://htmlspecs.com/translation-api/",
+    //     src: "https://webmachinelearning.github.io/translation-api",
+    //     "last-modified": "Thu, 22 Jan 2026 15:56:28 GMT",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
+    // {
+    //     text: "Prompt API",
+    //     href: "https://htmlspecs.com/prompt-api/",
+    //     src: "https://webmachinelearning.github.io/prompt-api",
+    //     "last-modified": "Fri, 10 Apr 2026 00:30:40 GMT",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
 
     //### 媒体和图形|미디어 및 그래픽|メディアとグラフィックス
     {
