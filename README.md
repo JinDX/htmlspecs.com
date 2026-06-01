@@ -228,6 +228,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 ### AI 和机器学习
 - [Web Neural Network API](https://htmlspecs.com/webnn/)（[Source](https://www.w3.org/TR/2026/CRD-webnn-20260521/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [Model Loader API](https://htmlspecs.com/model-loader/)（[Source](https://webmachinelearning.github.io/model-loader/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
+- [Translator and Language Detector APIs](https://htmlspecs.com/translation-api/)（[Source](https://webmachinelearning.github.io/translation-api/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 
 ### 媒体和图形
 - [WebGPU](https://htmlspecs.com/webgpu/)（[Source](https://www.w3.org/TR/2026/CRD-webgpu-20260521/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
