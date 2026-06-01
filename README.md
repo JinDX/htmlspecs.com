@@ -302,6 +302,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [CSS Color HDR Module Level 1](https://htmlspecs.com/css/css-color-hdr-1/)（[Source](https://www.w3.org/TR/2026/WD-css-color-hdr-1-20260303/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Filter Effects Module Level 1](https://htmlspecs.com/css/filter-effects-1/)（[Source](https://www.w3.org/TR/2018/WD-filter-effects-1-20181218/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Compositing and Blending Level 1](https://htmlspecs.com/css/compositing-1/)（[Source](https://www.w3.org/TR/2024/CRD-compositing-1-20240321/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
+- [CSS Fill and Stroke Module Level 3](https://htmlspecs.com/css/fill-stroke-3/)（[Source](https://www.w3.org/TR/2017/WD-fill-stroke-3-20170413/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Conditional Rules Module Level 3](https://htmlspecs.com/css/css-conditional-3/)（[Source](https://www.w3.org/TR/2024/CRD-css-conditional-3-20240815/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [CSS Conditional Rules Module Level 4](https://htmlspecs.com/css/css-conditional-4/)（[Source](https://www.w3.org/TR/2025/CRD-css-conditional-4-20250904/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [CSS Conditional Rules Module Level 5](https://htmlspecs.com/css/css-conditional-5/)（[Source](https://www.w3.org/TR/2025/WD-css-conditional-5-20251030/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
