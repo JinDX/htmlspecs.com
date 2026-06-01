@@ -1732,14 +1732,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
-    // {
-    //     text: "Translator and Language Detector APIs",
-    //     href: "https://htmlspecs.com/translation-api/",
-    //     src: "https://webmachinelearning.github.io/translation-api",
-    //     "last-modified": "Thu, 22 Jan 2026 15:56:28 GMT",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "Translator and Language Detector APIs",
+        href: "https://htmlspecs.com/translation-api/",
+        src: "https://webmachinelearning.github.io/translation-api/",
+        "last-modified": "Thu, 22 Jan 2026 15:56:28 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
     // {
     //     text: "Prompt API",
     //     href: "https://htmlspecs.com/prompt-api/",
