@@ -2126,14 +2126,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "WebXR Raw Camera Access Module",
-    //     href: "https://htmlspecs.com/webxr-raw-camera-access/",
-    //     src: "https://immersive-web.github.io/raw-camera-access/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "WebXR Raw Camera Access Module",
+        href: "https://htmlspecs.com/webxr-raw-camera-access/",
+        src: "https://immersive-web.github.io/raw-camera-access/",
+        "last-modified": "Thu, 11 Dec 2025 23:07:05 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
     {
         text: "Portable Network Graphics (PNG) 3",
         href: "https://htmlspecs.com/png-3/",
