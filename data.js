@@ -2110,14 +2110,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "WebXR Anchors Module",
-    //     href: "https://htmlspecs.com/webxr-anchors/",
-    //     src: "https://immersive-web.github.io/anchors/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "WebXR Anchors Module",
+        href: "https://htmlspecs.com/webxr-anchors/",
+        src: "https://immersive-web.github.io/anchors/",
+        "last-modified": "Mon, 27 Apr 2026 16:42:54 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
     // {
     //     text: "WebXR Lighting Estimation API Level 1",
     //     href: "https://htmlspecs.com/webxr-lighting-estimation/",
