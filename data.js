@@ -2265,14 +2265,14 @@ const cssLinks = [
         lang: "cjk",
         state: "CRD"
     },
-    // {
-    //     text: "CSS Fill and Stroke Module Level 3",
-    //     href: "https://htmlspecs.com/fill-stroke-3/",
-    //     src: "https://www.w3.org/TR/2017/WD-fill-stroke-3-20170413/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "CSS Fill and Stroke Module Level 3",
+        href: "https://htmlspecs.com/css/fill-stroke-3/",
+        src: "https://www.w3.org/TR/2017/WD-fill-stroke-3-20170413/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     {
         text: "CSS Conditional Rules Module Level 3",
         href: "https://htmlspecs.com/css/css-conditional-3/",
