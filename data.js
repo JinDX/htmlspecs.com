@@ -472,6 +472,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
+    // {
+    //     text: "Local Network Access",
+    //     href: "https://htmlspecs.com/local-network-access/",
+    //     src: "https://wicg.github.io/local-network-access/",
+    //     "last-modified": "Wed, 06 May 2026 20:00:43 GMT",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
     {
         text: "Linked Data Notifications",
         href: "https://htmlspecs.com/ldn/",
@@ -584,6 +592,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "Payment Method Manifest",
+    //     href: "https://htmlspecs.com/payment-method-manifest/",
+    //     src: "https://www.w3.org/TR/2017/WD-payment-method-manifest-20171212/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "Digital Goods API",
         href: "https://htmlspecs.com/digital-goods/",
@@ -763,6 +779,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
+    // {
+    //     text: "Shared Storage API",
+    //     href: "https://htmlspecs.com/shared-storage/",
+    //     src: "https://wicg.github.io/shared-storage/",
+    //     "last-modified": "Fri, 21 Mar 2025 20:49:40 GMT",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
     {
         text: "Subresource Loading with Web Bundles",
         href: "https://htmlspecs.com/webpackage-subresource-loading/",
@@ -1149,6 +1173,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "Requesting Permissions",
+    //     href: "https://htmlspecs.com/permissions-request/",
+    //     src: "https://wicg.github.io/permissions-request/",
+    //     "last-modified": "Mon, 09 May 2022 16:47:47 GMT",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
     {
         text: "WebOTP API",
         href: "https://htmlspecs.com/web-otp/",
@@ -1490,6 +1522,22 @@ const links = [
         lang: "cjk",
         state: "CR"
     },
+    // {
+    //     text: "A Well-Known URL for Relying Party Passkey Endpoints",
+    //     href: "https://htmlspecs.com/passkey-endpoints/",
+    //     src: "https://www.w3.org/TR/2026/WD-passkey-endpoints-1-20260114/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
+    // {
+    //     text: "A Well-Known URL for Changing Passwords",
+    //     href: "https://htmlspecs.com/change-password-url/",
+    //     src: "https://www.w3.org/TR/2024/WD-change-password-url-20240603/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "Secure Payment Confirmation",
         href: "https://htmlspecs.com/secure-payment-confirmation/",
@@ -1554,6 +1602,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
+    // {
+    //     text: "Capability Delegation",
+    //     href: "https://htmlspecs.com/capability-delegation/",
+    //     src: "https://wicg.github.io/capability-delegation/spec.html",
+    //     "last-modified": "Fri, 17 Feb 2023 20:15:54 GMT",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
     {
         text: "Global Privacy Control (GPC)",
         href: "https://htmlspecs.com/gpc/",
@@ -1650,6 +1706,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "Fenced Frame",
+    //     href: "https://htmlspecs.com/fenced-frame/",
+    //     src: "https://wicg.github.io/fenced-frame/",
+    //     "last-modified": "Mon, 16 Jun 2025 12:09:52 GMT",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
     {
         text: "Trusted Types",
         href: "https://htmlspecs.com/trusted-types/",
@@ -1748,6 +1812,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
+    // {
+    //     text: "Writing Assistance APIs",
+    //     href: "https://htmlspecs.com/writing-assistance-apis/",
+    //     src: "https://webmachinelearning.github.io/writing-assistance-apis/",
+    //     "last-modified": "Fri, 17 Apr 2026 17:03:58 GMT",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
 
     //### 媒体和图形|미디어 및 그래픽|メディアとグラフィックス
     {
@@ -2176,6 +2248,14 @@ const links = [
         lang: "cjk",
         state: "LS"
     },
+    // {
+    //     text: "Web Extensions",
+    //     href: "https://htmlspecs.com/webextensions/",
+    //     src: "https://w3c.github.io/webextensions/specification/",
+    //     "last-modified": "Thu, 21 May 2026 17:15:23 GMT",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
 
     //### 测试与自动化|테스트와 자동화|テストと自動化
     {
