@@ -1706,14 +1706,6 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "Fenced Frame",
-    //     href: "https://htmlspecs.com/fenced-frame/",
-    //     src: "https://wicg.github.io/fenced-frame/",
-    //     "last-modified": "Mon, 16 Jun 2025 12:09:52 GMT",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
     {
         text: "Trusted Types",
         href: "https://htmlspecs.com/trusted-types/",
