@@ -1173,14 +1173,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "Requesting Permissions",
-    //     href: "https://htmlspecs.com/permissions-request/",
-    //     src: "https://wicg.github.io/permissions-request/",
-    //     "last-modified": "Mon, 09 May 2022 16:47:47 GMT",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "Requesting Permissions",
+        href: "https://htmlspecs.com/permissions-request/",
+        src: "https://wicg.github.io/permissions-request/",
+        "last-modified": "Mon, 09 May 2022 16:47:47 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
     {
         text: "WebOTP API",
         href: "https://htmlspecs.com/web-otp/",
