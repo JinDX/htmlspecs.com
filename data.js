@@ -1522,14 +1522,14 @@ const links = [
         lang: "cjk",
         state: "CR"
     },
-    // {
-    //     text: "A Well-Known URL for Relying Party Passkey Endpoints",
-    //     href: "https://htmlspecs.com/passkey-endpoints/",
-    //     src: "https://www.w3.org/TR/2026/WD-passkey-endpoints-1-20260114/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "A Well-Known URL for Relying Party Passkey Endpoints",
+        href: "https://htmlspecs.com/passkey-endpoints/",
+        src: "https://www.w3.org/TR/2026/WD-passkey-endpoints-1-20260114/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     // {
     //     text: "A Well-Known URL for Changing Passwords",
     //     href: "https://htmlspecs.com/change-password-url/",
