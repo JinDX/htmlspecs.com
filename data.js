@@ -1804,14 +1804,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
-    // {
-    //     text: "Writing Assistance APIs",
-    //     href: "https://htmlspecs.com/writing-assistance-apis/",
-    //     src: "https://webmachinelearning.github.io/writing-assistance-apis/",
-    //     "last-modified": "Fri, 17 Apr 2026 17:03:58 GMT",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "Writing Assistance APIs",
+        href: "https://htmlspecs.com/writing-assistance-apis/",
+        src: "https://webmachinelearning.github.io/writing-assistance-apis/",
+        "last-modified": "Fri, 17 Apr 2026 17:03:58 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
 
     //### 媒体和图形|미디어 및 그래픽|メディアとグラフィックス
     {

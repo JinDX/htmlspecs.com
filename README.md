@@ -237,6 +237,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Model Loader API](https://htmlspecs.com/model-loader/)（[Source](https://webmachinelearning.github.io/model-loader/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Translator and Language Detector APIs](https://htmlspecs.com/translation-api/)（[Source](https://webmachinelearning.github.io/translation-api/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Prompt API](https://htmlspecs.com/prompt-api/)（[Source](https://webmachinelearning.github.io/prompt-api/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
+- [Writing Assistance APIs](https://htmlspecs.com/writing-assistance-apis/)（[Source](https://webmachinelearning.github.io/writing-assistance-apis/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 
 ### 媒体和图形
 - [WebGPU](https://htmlspecs.com/webgpu/)（[Source](https://www.w3.org/TR/2026/CRD-webgpu-20260521/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
