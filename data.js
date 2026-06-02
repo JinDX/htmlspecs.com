@@ -1602,14 +1602,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
-    // {
-    //     text: "Capability Delegation",
-    //     href: "https://htmlspecs.com/capability-delegation/",
-    //     src: "https://wicg.github.io/capability-delegation/spec.html",
-    //     "last-modified": "Fri, 17 Feb 2023 20:15:54 GMT",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "Capability Delegation",
+        href: "https://htmlspecs.com/capability-delegation/",
+        src: "https://wicg.github.io/capability-delegation/spec.html",
+        "last-modified": "Fri, 17 Feb 2023 20:15:54 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
     {
         text: "Global Privacy Control (GPC)",
         href: "https://htmlspecs.com/gpc/",
