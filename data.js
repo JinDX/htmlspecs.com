@@ -1530,14 +1530,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "A Well-Known URL for Changing Passwords",
-    //     href: "https://htmlspecs.com/change-password-url/",
-    //     src: "https://www.w3.org/TR/2024/WD-change-password-url-20240603/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "A Well-Known URL for Changing Passwords",
+        href: "https://htmlspecs.com/change-password-url/",
+        src: "https://www.w3.org/TR/2024/WD-change-password-url-20240603/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     {
         text: "Secure Payment Confirmation",
         href: "https://htmlspecs.com/secure-payment-confirmation/",
