@@ -2240,14 +2240,6 @@ const links = [
         lang: "cjk",
         state: "LS"
     },
-    // {
-    //     text: "Web Extensions",
-    //     href: "https://htmlspecs.com/webextensions/",
-    //     src: "https://w3c.github.io/webextensions/specification/",
-    //     "last-modified": "Thu, 21 May 2026 17:15:23 GMT",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
 
     //### 测试与自动化|테스트와 자동화|テストと自動化
     {
