@@ -779,14 +779,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
-    // {
-    //     text: "Shared Storage API",
-    //     href: "https://htmlspecs.com/shared-storage/",
-    //     src: "https://wicg.github.io/shared-storage/",
-    //     "last-modified": "Fri, 21 Mar 2025 20:49:40 GMT",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "Shared Storage API",
+        href: "https://htmlspecs.com/shared-storage/",
+        src: "https://wicg.github.io/shared-storage/",
+        "last-modified": "Fri, 21 Mar 2025 20:49:40 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
     {
         text: "Subresource Loading with Web Bundles",
         href: "https://htmlspecs.com/webpackage-subresource-loading/",
