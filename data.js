@@ -443,7 +443,7 @@ const links = [
     {
         text: "WebSub",
         href: "https://htmlspecs.com/websub/",
-        src: "https://www.w3.org/TR/2018/REC-websub-20180123/",
+        src: "https://www.w3.org/TR/2026/REC-websub-20260602/",
         "last-modified": "-",
         lang: "cjk",
         state: "REC"
