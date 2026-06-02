@@ -592,14 +592,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "Payment Method Manifest",
-    //     href: "https://htmlspecs.com/payment-method-manifest/",
-    //     src: "https://www.w3.org/TR/2017/WD-payment-method-manifest-20171212/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "Payment Method Manifest",
+        href: "https://htmlspecs.com/payment-method-manifest/",
+        src: "https://www.w3.org/TR/2017/WD-payment-method-manifest-20171212/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     {
         text: "Digital Goods API",
         href: "https://htmlspecs.com/digital-goods/",
