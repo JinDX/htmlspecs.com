@@ -1323,7 +1323,7 @@ const links = [
         text: "Soft Navigations and Interaction Contentful Paint",
         href: "https://htmlspecs.com/soft-navigations/",
         src: "https://wicg.github.io/soft-navigations/",
-        "last-modified": "Tue, 02 Jun 2026 19:03:13 GMT",
+        "last-modified": "Wed, 03 Jun 2026 17:00:50 GMT",
         lang: "cjk",
         state: "Draft"
     },
