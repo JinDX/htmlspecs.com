@@ -2564,10 +2564,10 @@ const cssLinks = [
     {
         text: "CSS Display Module Level 3",
         href: "https://htmlspecs.com/css/css-display-3/",
-        src: "https://www.w3.org/TR/2023/CR-css-display-3-20230330/",
+        src: "https://www.w3.org/TR/2026/CRD-css-display-3-20260605/",
         "last-modified": "-",
         lang: "cjk",
-        state: "CR"
+        state: "CRD"
     },
     {
         text: "CSS Display Module Level 4",
