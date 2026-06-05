@@ -1144,7 +1144,7 @@ const links = [
     {
         text: "Selection API",
         href: "https://htmlspecs.com/selection-api/",
-        src: "https://www.w3.org/TR/2025/WD-selection-api-20250105/",
+        src: "https://www.w3.org/TR/2026/WD-selection-api-20260605/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
