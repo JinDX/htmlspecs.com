@@ -821,6 +821,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "Ink API",
+    //     href: "https://htmlspecs.com/ink-api/",
+    //     src: "https://wicg.github.io/ink-enhancement/",
+    //     "last-modified": "Mon, 16 Sep 2024 07:54:59 GMT",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
     {
         text: "Web Serial API",
         href: "https://htmlspecs.com/serial/",
@@ -1682,6 +1690,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "Device Bound Session Credentials",
+    //     href: "https://htmlspecs.com/dbsc/",
+    //     src: "https://www.w3.org/TR/2025/WD-dbsc-1-20250821/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "Federated Credential Management API (FedCM)",
         href: "https://htmlspecs.com/fedcm/",
@@ -1812,6 +1828,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
+    // {
+    //     text: "Proofreader API",
+    //     href: "https://htmlspecs.com/proofreader-api/",
+    //     src: "https://webmachinelearning.github.io/proofreader-api/",
+    //     "last-modified": "Thu, 05 Mar 2026 20:55:32 GMT",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
 
     //### 媒体和图形|미디어 및 그래픽|メディアとグラフィックス
     {
