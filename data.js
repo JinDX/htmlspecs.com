@@ -1820,14 +1820,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
-    // {
-    //     text: "Proofreader API",
-    //     href: "https://htmlspecs.com/proofreader-api/",
-    //     src: "https://webmachinelearning.github.io/proofreader-api/",
-    //     "last-modified": "Thu, 05 Mar 2026 20:55:32 GMT",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "Proofreader API",
+        href: "https://htmlspecs.com/proofreader-api/",
+        src: "https://webmachinelearning.github.io/proofreader-api/",
+        "last-modified": "Thu, 05 Mar 2026 20:55:32 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
 
     //### 媒体和图形|미디어 및 그래픽|メディアとグラフィックス
     {
