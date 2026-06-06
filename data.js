@@ -2081,7 +2081,7 @@ const links = [
     {
         text: "Media Session",
         href: "https://htmlspecs.com/mediasession/",
-        src: "https://www.w3.org/TR/2026/WD-mediasession-20260316/",
+        src: "https://www.w3.org/TR/2026/WD-mediasession-20260605/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
