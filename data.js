@@ -1690,14 +1690,6 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "Device Bound Session Credentials",
-    //     href: "https://htmlspecs.com/dbsc/",
-    //     src: "https://www.w3.org/TR/2025/WD-dbsc-1-20250821/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
     {
         text: "Federated Credential Management API (FedCM)",
         href: "https://htmlspecs.com/fedcm/",
