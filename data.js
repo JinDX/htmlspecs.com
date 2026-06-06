@@ -821,14 +821,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "Ink API",
-    //     href: "https://htmlspecs.com/ink-api/",
-    //     src: "https://wicg.github.io/ink-enhancement/",
-    //     "last-modified": "Mon, 16 Sep 2024 07:54:59 GMT",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "Ink API",
+        href: "https://htmlspecs.com/ink-api/",
+        src: "https://wicg.github.io/ink-enhancement/",
+        "last-modified": "Mon, 16 Sep 2024 07:54:59 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
     {
         text: "Web Serial API",
         href: "https://htmlspecs.com/serial/",
