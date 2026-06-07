@@ -15,7 +15,7 @@ const links = [
         text: "ECMAScript® 2027 Language Specification",
         href: "https://ecma262.com/",
         src: "https://tc39.es/ecma262/",
-        "last-modified": "Sat, 06 Jun 2026 00:48:37 GMT",
+        "last-modified": "Sat, 06 Jun 2026 23:01:25 GMT",
         lang: "cjk",
         state: "Draft"
     },
@@ -1069,6 +1069,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "Web Printing API",
+    //     href: "https://htmlspecs.com/web-printing/",
+    //     src: "https://wicg.github.io/web-printing/",
+    //     "last-modified": "Sun, 01 Feb 2026 22:06:41 GMT",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
     {
         text: "Web Share API",
         href: "https://htmlspecs.com/web-share/",
@@ -1658,6 +1666,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
+    // {
+    //     text: "Fenced Frame",
+    //     href: "https://htmlspecs.com/fenced-frame/",
+    //     src: "https://wicg.github.io/fenced-frame/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
     {
         text: "Referrer Policy",
         href: "https://htmlspecs.com/referrer-policy/",
@@ -1682,6 +1698,14 @@ const links = [
         lang: "cjk",
         state: "CRD"
     },
+    // {
+    //     text: "Upgrade Insecure Requests",
+    //     href: "https://htmlspecs.com/upgrade-insecure-requests/",
+    //     src: "https://www.w3.org/TR/upgrade-insecure-requests/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "CR"
+    // },
     {
         text: "Credential Management Level 1",
         href: "https://htmlspecs.com/credential-management-1/",
@@ -1918,6 +1942,14 @@ const links = [
         lang: "cjk",
         state: "CRD"
     },
+    // {
+    //     text: "MediaStream Recording",
+    //     href: "https://htmlspecs.com/mediastream-recording/",
+    //     src: "https://www.w3.org/TR/2026/WD-mediastream-recording-20260316/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "Media Capture from DOM Elements",
         href: "https://htmlspecs.com/mediacapture-fromelement/",
