@@ -2504,7 +2504,7 @@ const cssLinks = [
     {
         text: "CSS Text Module Level 4",
         href: "https://htmlspecs.com/css/css-text-4/",
-        src: "https://www.w3.org/TR/2024/WD-css-text-4-20240529/",
+        src: "https://www.w3.org/TR/2026/WD-css-text-4-20260608/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
