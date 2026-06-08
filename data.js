@@ -2345,14 +2345,14 @@ const cssLinks = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "CSS Color Module Level 6",
-    //     href: "https://htmlspecs.com/css/css-color-6/",
-    //     src: "https://drafts.csswg.org/css-color-6/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "CSS Color Module Level 6",
+        href: "https://htmlspecs.com/css/css-color-6/",
+        src: "https://drafts.csswg.org/css-color-6/",
+        "last-modified": "Mon, 08 Jun 2026 03:45:13 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
     {
         text: "CSS Color Adjustment Module Level 1",
         href: "https://htmlspecs.com/css/css-color-adjust-1/",
