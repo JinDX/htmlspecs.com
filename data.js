@@ -1934,14 +1934,6 @@ const links = [
         lang: "cjk",
         state: "CRD"
     },
-    // {
-    //     text: "MediaStream Recording",
-    //     href: "https://htmlspecs.com/mediastream-recording/",
-    //     src: "https://www.w3.org/TR/2026/WD-mediastream-recording-20260316/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
     {
         text: "Media Capture from DOM Elements",
         href: "https://htmlspecs.com/mediacapture-fromelement/",
@@ -1975,8 +1967,8 @@ const links = [
         state: "WD"
     },
     {
-        text: "Media Stream Recording",
-        href: "https://htmlspecs.com/media-stream-recording/",
+        text: "MediaStream Recording",
+        href: "https://htmlspecs.com/mediastream-recording/",
         src: "https://www.w3.org/TR/2026/WD-mediastream-recording-20260316/",
         "last-modified": "-",
         lang: "cjk",
