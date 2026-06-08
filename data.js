@@ -1670,7 +1670,7 @@ const links = [
         text: "Fenced Frame",
         href: "https://htmlspecs.com/fenced-frame/",
         src: "https://wicg.github.io/fenced-frame/",
-        "last-modified": "-",
+        "last-modified": "Mon, 16 Jun 2025 12:09:52 GMT",
         lang: "cjk",
         state: "Draft"
     },
