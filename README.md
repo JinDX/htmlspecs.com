@@ -334,7 +334,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 
 ### 文本和排版
 - [CSS Text Module Level 3](https://htmlspecs.com/css/css-text-3/)（[Source](https://www.w3.org/TR/2026/CRD-css-text-3-20260608/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
-- [CSS Text Module Level 4](https://htmlspecs.com/css/css-text-4/)（[Source](https://www.w3.org/TR/2024/WD-css-text-4-20240529/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [CSS Text Module Level 4](https://htmlspecs.com/css/css-text-4/)（[Source](https://www.w3.org/TR/2026/WD-css-text-4-20260608/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Counter Styles Level 3](https://htmlspecs.com/css/css-counter-styles-3/)（[Source](https://www.w3.org/TR/2021/CR-css-counter-styles-3-20210727/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
 - [CSS Lists and Counters Module Level 3](https://htmlspecs.com/css/css-lists-3/)（[Source](https://www.w3.org/TR/2020/WD-css-lists-3-20201117/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Text Decoration Level 3](https://htmlspecs.com/css/css-text-decor-3/)（[Source](https://www.w3.org/TR/2022/CRD-css-text-decor-3-20220505/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
