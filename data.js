@@ -1069,14 +1069,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "Web Printing API",
-    //     href: "https://htmlspecs.com/web-printing/",
-    //     src: "https://wicg.github.io/web-printing/",
-    //     "last-modified": "Sun, 01 Feb 2026 22:06:41 GMT",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "Web Printing API",
+        href: "https://htmlspecs.com/web-printing/",
+        src: "https://wicg.github.io/web-printing/",
+        "last-modified": "Sun, 01 Feb 2026 22:06:41 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
     {
         text: "Web Share API",
         href: "https://htmlspecs.com/web-share/",
