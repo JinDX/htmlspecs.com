@@ -2346,14 +2346,6 @@ const cssLinks = [
         state: "WD"
     },
     {
-        text: "CSS Color Module Level 6",
-        href: "https://htmlspecs.com/css/css-color-6/",
-        src: "https://drafts.csswg.org/css-color-6/",
-        "last-modified": "Mon, 08 Jun 2026 03:45:13 GMT",
-        lang: "cjk",
-        state: "Draft"
-    },
-    {
         text: "CSS Color Adjustment Module Level 1",
         href: "https://htmlspecs.com/css/css-color-adjust-1/",
         src: "https://www.w3.org/TR/2025/CR-css-color-adjust-1-20251216/",
@@ -2385,14 +2377,6 @@ const cssLinks = [
         lang: "cjk",
         state: "CRD"
     },
-    // {
-    //     text: "Compositing and Blending Level 2",
-    //     href: "https://htmlspecs.com/css/compositing-2/",
-    //     src: "https://drafts.csswg.org/compositing-2/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
     {
         text: "CSS Fill and Stroke Module Level 3",
         href: "https://htmlspecs.com/css/fill-stroke-3/",
@@ -2557,14 +2541,6 @@ const cssLinks = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "CSS Line Grid Module Level 1",
-    //     href: "https://htmlspecs.com/css/css-line-grid-1/",
-    //     src: "https://drafts.csswg.org/css-line-grid-1/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
 
     //### 媒体查询|미디어 쿼리|メディアクエリ
     {
@@ -2591,14 +2567,6 @@ const cssLinks = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "CSS Round Display Module Level 1",
-    //     href: "https://htmlspecs.com/css/css-round-display-1/",
-    //     src: "https://drafts.csswg.org/css-round-display-1/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
 
     //### 布局|레이아웃|レイアウト
     {
@@ -2825,22 +2793,6 @@ const cssLinks = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "CSS Shapes Module Level 2",
-    //     href: "https://htmlspecs.com/css/css-shapes-2/",
-    //     src: "https://drafts.csswg.org/css-shapes-2/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
-    // {
-    //     text: "CSS Regions Module Level 1",
-    //     href: "https://htmlspecs.com/css/css-regions-1/",
-    //     src: "https://drafts.csswg.org/css-regions-1/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
 
     //### 导航|내비게이션|ナビゲーション
     {
@@ -2907,14 +2859,6 @@ const cssLinks = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "CSS Images Module Level 5",
-    //     href: "https://htmlspecs.com/css/css-images-5/",
-    //     src: "https://drafts.csswg.org/css-images-5/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
     {
         text: "CSS Image Animation Module Level 1",
         href: "https://htmlspecs.com/css/css-image-animation-1/",
@@ -3037,14 +2981,6 @@ const cssLinks = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "Pointer-driven Animations Module Level 1",
-    //     href: "https://htmlspecs.com/css/pointer-animations-1/",
-    //     src: "https://drafts.csswg.org/pointer-animations-1/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
     {
         text: "CSS Animation Worklet API",
         href: "https://htmlspecs.com/css/css-animation-worklet-1/",
@@ -3339,14 +3275,6 @@ const cssLinks = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "CSS Conditional Values Module Level 1",
-    //     href: "https://htmlspecs.com/css/css-conditional-values-1/",
-    //     src: "https://drafts.csswg.org/css-conditional-values-1/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
     {
         text: "CSS Environment Variables Module Level 1",
         href: "https://htmlspecs.com/css/css-env-1/",
