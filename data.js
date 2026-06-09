@@ -2033,7 +2033,7 @@ const links = [
     {
         text: "AVC (H.264) WebCodecs Registration",
         href: "https://htmlspecs.com/webcodecs-avc-codec-registration/",
-        src: "https://www.w3.org/TR/2025/DNOTE-webcodecs-avc-codec-registration-20250514/",
+        src: "https://www.w3.org/TR/2026/DNOTE-webcodecs-avc-codec-registration-20260608/",
         "last-modified": "-",
         lang: "cjk",
         state: "DNOTE"
