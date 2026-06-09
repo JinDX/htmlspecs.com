@@ -2025,7 +2025,7 @@ const links = [
     {
         text: "AV1 WebCodecs Registration",
         href: "https://htmlspecs.com/webcodecs-av1-codec-registration/",
-        src: "https://www.w3.org/TR/2025/DNOTE-webcodecs-av1-codec-registration-20250514/",
+        src: "https://www.w3.org/TR/2026/DNOTE-webcodecs-av1-codec-registration-20260608/",
         "last-modified": "-",
         lang: "cjk",
         state: "DNOTE"
