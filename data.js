@@ -7,7 +7,7 @@ const links = [
         text: "HTML",
         href: "https://htmlspecs.com/",
         src: "https://html.spec.whatwg.org/",
-        "last-modified": "Mon, 08 Jun 2026 08:00:29 GMT",
+        "last-modified": "Mon, 08 Jun 2026 18:48:27 GMT",
         lang: "cjk",
         state: "LS"
     },
@@ -15,7 +15,7 @@ const links = [
         text: "ECMAScript® 2027 Language Specification",
         href: "https://ecma262.com/",
         src: "https://tc39.es/ecma262/",
-        "last-modified": "Mon, 08 Jun 2026 12:42:15 GMT",
+        "last-modified": "Mon, 08 Jun 2026 12:59:13 GMT",
         lang: "cjk",
         state: "Draft"
     },
@@ -523,7 +523,7 @@ const links = [
     {
         text: "Service Workers Nightly",
         href: "https://htmlspecs.com/service-workers/",
-        src: "https://www.w3.org/TR/2026/CRD-service-workers-20260526/",
+        src: "https://www.w3.org/TR/2026/CRD-service-workers-20260608/",
         "last-modified": "-",
         lang: "cjk",
         state: "CRD"
