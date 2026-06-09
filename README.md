@@ -280,7 +280,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Media Session](https://htmlspecs.com/mediasession/)（[Source](https://www.w3.org/TR/2026/WD-mediasession-20260605/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Media Capabilities](https://htmlspecs.com/media-capabilities/)（[Source](https://www.w3.org/TR/2026/WD-media-capabilities-20260609/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [MediaStream Image Capture](https://htmlspecs.com/image-capture/)（[Source](https://www.w3.org/TR/2025/WD-image-capture-20250423/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
-- [Encrypted Media Extensions](https://htmlspecs.com/encrypted-media-2/)（[Source](https://www.w3.org/TR/2026/WD-encrypted-media-2-20260604/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Encrypted Media Extensions](https://htmlspecs.com/encrypted-media-2/)（[Source](https://www.w3.org/TR/2026/WD-encrypted-media-2-20260609/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Remote Playback](https://htmlspecs.com/remote-playback/)（[Source](https://www.w3.org/TR/2024/CRD-remote-playback-20240430/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [Open Screen Application Protocol](https://htmlspecs.com/openscreen-application/)（[Source](https://www.w3.org/TR/2026/WD-openscreen-application-20260210/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [WebXR Device API](https://htmlspecs.com/webxr/)（[Source](https://www.w3.org/TR/2026/CRD-webxr-20260316/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
