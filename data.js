@@ -2049,7 +2049,7 @@ const links = [
     {
         text: "HEVC (H.265) WebCodecs Registration",
         href: "https://htmlspecs.com/webcodecs-hevc-codec-registration/",
-        src: "https://www.w3.org/TR/2025/DNOTE-webcodecs-hevc-codec-registration-20250514/",
+        src: "https://www.w3.org/TR/2026/DNOTE-webcodecs-hevc-codec-registration-20260608/",
         "last-modified": "-",
         lang: "cjk",
         state: "DNOTE"
