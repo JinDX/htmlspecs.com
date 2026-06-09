@@ -2089,7 +2089,7 @@ const links = [
     {
         text: "Vorbis WebCodecs Registration",
         href: "https://htmlspecs.com/webcodecs-vorbis-codec-registration/",
-        src: "https://www.w3.org/TR/2025/DNOTE-webcodecs-vorbis-codec-registration-20250514/",
+        src: "https://www.w3.org/TR/2026/DNOTE-webcodecs-vorbis-codec-registration-20260608/",
         "last-modified": "-",
         lang: "cjk",
         state: "DNOTE"
