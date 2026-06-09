@@ -2073,7 +2073,7 @@ const links = [
     {
         text: "Linear PCM WebCodecs Registration",
         href: "https://htmlspecs.com/webcodecs-pcm-codec-registration/",
-        src: "https://www.w3.org/TR/2025/DNOTE-webcodecs-pcm-codec-registration-20250514/",
+        src: "https://www.w3.org/TR/2026/DNOTE-webcodecs-pcm-codec-registration-20260608/",
         "last-modified": "-",
         lang: "cjk",
         state: "DNOTE"
