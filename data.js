@@ -2161,7 +2161,7 @@ const links = [
     {
         text: "WebXR Device API",
         href: "https://htmlspecs.com/webxr/",
-        src: "https://www.w3.org/TR/2026/CRD-webxr-20260316/",
+        src: "https://www.w3.org/TR/2026/CRD-webxr-20260609/",
         "last-modified": "-",
         lang: "cjk",
         state: "CRD"
