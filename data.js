@@ -2065,7 +2065,7 @@ const links = [
     {
         text: "Opus WebCodecs Registration",
         href: "https://htmlspecs.com/webcodecs-opus-codec-registration/",
-        src: "shttps://www.w3.org/TR/2026/DNOTE-webcodecs-opus-codec-registration-20260608/",
+        src: "https://www.w3.org/TR/2026/DNOTE-webcodecs-opus-codec-registration-20260608/",
         "last-modified": "-",
         lang: "cjk",
         state: "DNOTE"
