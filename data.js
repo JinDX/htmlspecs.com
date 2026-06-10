@@ -102,7 +102,7 @@ const links = [
     {
         text: "EditContext API",
         href: "https://htmlspecs.com/edit-context/",
-        src: "https://www.w3.org/TR/2026/WD-edit-context-20260430/",
+        src: "https://www.w3.org/TR/2026/WD-edit-context-20260609/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
