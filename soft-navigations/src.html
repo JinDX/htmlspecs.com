@@ -8,7 +8,7 @@
     <link href="https://www.w3.org/StyleSheets/TR/2021/cg-draft" rel="stylesheet">
     <meta content="Bikeshed version d113b2e81, updated Tue Jun 9 14:57:55 2026 -0700" name="generator">
     <link href="https://wicg.github.io/soft-navigations/" rel="canonical">
-    <meta content="6a4af6adeb4795f3e4c9f212bc1641803372f11e" name="revision">
+    <meta content="5b0c0e41d30d94480f6248944bb589b1965aed9c" name="revision">
     <meta content="dark light" name="color-scheme">
     <link href="https://www.w3.org/StyleSheets/TR/2021/dark.css" media="(prefers-color-scheme: dark)" rel="stylesheet"
         type="text/css">
@@ -1464,7 +1464,7 @@ For darkmode:
     <div class="head">
         <h1 class="no-ref p-name" id="title">Soft Navigations and Interaction Contentful Paint</h1>
         <p id="w3c-state"><a href="https://www.w3.org/standards/types/#CG-DRAFT">Draft Community Group Report</a>,
-            <time class="dt-updated" datetime="2026-06-09">9 June 2026</time>
+            <time class="dt-updated" datetime="2026-06-10">10 June 2026</time>
         </p>
         <div data-fill-with="spec-metadata">
             <dl>
@@ -1503,7 +1503,7 @@ For darkmode:
     <div class="p-summary" data-fill-with="abstract">
         <h2 class="heading no-num no-ref no-toc settled" id="abstract"><span class="content">Abstract</span></h2>
         <p>This document defines a set of APIs that web page authors can use to detect same-document ("soft")
-            navigations, and attribute subsequent page modifications and contentful paints back to the user interactions
+            navigations and attribute subsequent page modifications and contentful paints back to the user interactions
             that triggered them.</p>
     </div>
     <div data-fill-with="at-risk"></div>
@@ -1672,7 +1672,9 @@ For darkmode:
 
             <p>To attribute performance metrics (such as event timings, layout shifts, resource loads, or
                 long animation frames) to their initiating navigation, the performance timeline is sliced into
-                segments using a <code class="highlight">navigationId</code> attribute on <code
+                segments using a <code
+                    class="idl"><a data-link-type="idl" href="#dom-performanceentry-navigationid" id="ref-for-dom-performanceentry-navigationid">navigationId</a></code>
+                attribute on <code
                     class="idl"><a data-link-type="idl" href="https://w3c.github.io/performance-timeline/#performanceentry" id="ref-for-performanceentry">PerformanceEntry</a></code>.
             </p>
             <p>Determining the exact slice point for a transition that spans time is complex. To ensure
@@ -1731,7 +1733,7 @@ For darkmode:
                 navigation id value</a> and <a data-link-type="dfn" href="#window-navigation-id-increment"
                 id="ref-for-window-navigation-id-increment">navigation id increment</a> are
             used to calculate <code
-                class="idl"><a data-link-type="idl" href="#dom-performanceentry-navigationid" id="ref-for-dom-performanceentry-navigationid">navigationId</a></code>
+                class="idl"><a data-link-type="idl" href="#dom-performanceentry-navigationid" id="ref-for-dom-performanceentry-navigationid①">navigationId</a></code>
             values (see
             <a data-link-type="dfn" href="#increment-the-current-navigation-id"
                 id="ref-for-increment-the-current-navigation-id">increment the current navigation id</a>).
@@ -1789,7 +1791,7 @@ For darkmode:
 
 
             <p>The <code
-                    class="idl"><a data-link-type="idl" href="#dom-performanceentry-navigationid" id="ref-for-dom-performanceentry-navigationid①">navigationId</a></code>
+                    class="idl"><a data-link-type="idl" href="#dom-performanceentry-navigationid" id="ref-for-dom-performanceentry-navigationid②">navigationId</a></code>
                 attribute’s getter must return <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this"
                     id="ref-for-this">this</a>’s <a data-link-type="dfn" href="#performanceentry-navigation-id"
                     id="ref-for-performanceentry-navigation-id">navigation id</a>.</p>
@@ -1845,11 +1847,12 @@ For darkmode:
                 browser
                 to attribute later effects back to the original interaction.</p>
             <p>In addition to script propagation, this specification defines how user interactions that modify the
-                DOM establish <strong>container roots</strong> (via <a data-link-type="biblio"
-                    href="#biblio-container-timing" title="Container Timing API">[CONTAINER-TIMING]</a>). These roots
-                allow subsequent rendering
-                effects, like contentful paints, to be traced back to the initiating interaction context even when
-                no asynchronous script is currently active.</p>
+                DOM <a data-link-type="dfn" href="#record-a-node-as-modified-for-interaction-paint-timing"
+                    id="ref-for-record-a-node-as-modified-for-interaction-paint-timing">establish</a> a set of modified
+                nodes
+                associated with the interaction, allowing subsequent rendering effects, like contentful paints, to
+                be traced back to the initiating interaction context even when no asynchronous script is currently
+                running.</p>
         </div>
         <h3 class="heading settled" data-level="3.2" id="sec-interaction"><span class="secno">3.2. </span><span
                 class="content">The InteractionContext struct</span><a class="self-link" href="#sec-interaction"></a>
@@ -1867,78 +1870,64 @@ For darkmode:
             <ul>
                 <li data-md>
                     <p><dfn class="dfn-paneled" data-dfn-for="InteractionContext" data-dfn-type="dfn" data-noexport
-                            id="interactioncontext-id">id</dfn>, initially unset - The <a data-link-type="dfn"
-                            href="https://w3c.github.io/event-timing/#interaction-id"
-                            id="ref-for-interaction-id">interaction id</a> associated with this context.</p>
+                            id="interactioncontext-id">id</dfn>, a <a data-link-type="dfn"
+                            href="https://infra.spec.whatwg.org/#64-bit-unsigned-integer"
+                            id="ref-for-64-bit-unsigned-integer⑤">64-bit unsigned integer</a> respresenting the <code
+                            class="idl"><a data-link-type="idl" href="https://w3c.github.io/event-timing/#dom-performanceeventtiming-interactionid" id="ref-for-dom-performanceeventtiming-interactionid">interactionId</a></code>
+                        associated with this context.</p>
                 <li data-md>
                     <p><dfn class="dfn-paneled" data-dfn-for="InteractionContext" data-dfn-type="dfn" data-noexport
                             id="interactioncontext-context-document">context document</dfn>, a <a data-link-type="dfn"
                             href="https://dom.spec.whatwg.org/#concept-document"
-                            id="ref-for-concept-document">Document</a> - The <a data-link-type="dfn"
-                            href="https://dom.spec.whatwg.org/#concept-document"
-                            id="ref-for-concept-document①">Document</a> associated with this context.</p>
+                            id="ref-for-concept-document">Document</a>.</p>
                 <li data-md>
                     <p><dfn class="dfn-paneled" data-dfn-for="InteractionContext" data-dfn-type="dfn" data-noexport
-                            id="interactioncontext-start-time">start time</dfn>, initially unset - Represents the start
-                        time of the interaction.</p>
+                            id="interactioncontext-start-time">start time</dfn>, a number.</p>
                 <li data-md>
                     <p><dfn class="dfn-paneled" data-dfn-for="InteractionContext" data-dfn-type="dfn" data-noexport
-                            id="interactioncontext-navigation-type">navigation type</dfn>, initially unset - Represents
-                        the type of navigation (e.g., "push",
-                        "replace").</p>
+                            id="interactioncontext-navigation-type">navigation type</dfn>, a <code
+                            class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/nav-history-apis.html#navigationtype" id="ref-for-navigationtype">NavigationType</a></code>
+                        or null, initially null.</p>
                 <li data-md>
                     <p><dfn class="dfn-paneled" data-dfn-for="InteractionContext" data-dfn-type="dfn" data-noexport
-                            id="interactioncontext-first-url-value">first URL value</dfn>, initially unset - Represents
-                        the value of the URL at the first
-                        modification.</p>
+                            id="interactioncontext-first-url-value">first URL value</dfn>, a string or null, initially
+                        null.</p>
                 <li data-md>
                     <p><dfn class="dfn-paneled" data-dfn-for="InteractionContext" data-dfn-type="dfn" data-noexport
-                            id="interactioncontext-first-url-update-timestamp">first URL update timestamp</dfn>,
-                        initially unset - Represents the time of the first URL
-                        modification during this interaction.</p>
+                            id="interactioncontext-first-url-update-timestamp">first URL update timestamp</dfn>, a
+                        number, initially 0.</p>
                 <li data-md>
                     <p><dfn class="dfn-paneled" data-dfn-for="InteractionContext" data-dfn-type="dfn" data-noexport
-                            id="interactioncontext-first-scroll-timestamp">first scroll timestamp</dfn>, initially unset
-                        - Represents the time of the first scroll
-                        event during this interaction.</p>
+                            id="interactioncontext-first-scroll-timestamp">first scroll timestamp</dfn>, a number,
+                        initially 0.</p>
                 <li data-md>
                     <p><dfn class="dfn-paneled" data-dfn-for="InteractionContext" data-dfn-type="dfn" data-noexport
-                            id="interactioncontext-first-input-timestamp">first input timestamp</dfn>, initially unset -
-                        Represents the time of the first input event
-                        during this interaction.</p>
+                            id="interactioncontext-first-input-timestamp">first input timestamp</dfn>, a number,
+                        initially 0.</p>
                 <li data-md>
                     <p><dfn class="dfn-paneled" data-dfn-for="InteractionContext" data-dfn-type="dfn" data-noexport
-                            id="interactioncontext-first-contentful-paint">first contentful paint</dfn>, initially null
-                        - The first <code
+                            id="interactioncontext-first-contentful-paint">first contentful paint</dfn>, an <code
                             class="idl"><a data-link-type="idl" href="#interactioncontentfulpaint" id="ref-for-interactioncontentfulpaint">InteractionContentfulPaint</a></code>
-                        entry for this interaction.</p>
+                        or null, initially null.</p>
                 <li data-md>
                     <p><dfn class="dfn-paneled" data-dfn-for="InteractionContext" data-dfn-type="dfn" data-noexport
-                            id="interactioncontext-largest-contentful-paint">largest contentful paint</dfn>, initially
-                        null - The largest <code
+                            id="interactioncontext-largest-contentful-paint">largest contentful paint</dfn>, an <code
                             class="idl"><a data-link-type="idl" href="#interactioncontentfulpaint" id="ref-for-interactioncontentfulpaint①">InteractionContentfulPaint</a></code>
-                        entry for this interaction so far.</p>
+                        or null, initially null.</p>
                 <li data-md>
                     <p><dfn class="dfn-paneled" data-dfn-for="InteractionContext" data-dfn-type="dfn" data-noexport
                             id="interactioncontext-current-largest-contentful-paint-candidate">current largest
-                            contentful paint candidate</dfn>, initially null - The
-                        <a data-link-type="dfn"
+                            contentful paint candidate</dfn>, a <a data-link-type="dfn"
                             href="https://pr-preview.s3.amazonaws.com/shaseley/largest-contentful-paint/pull/171.html#largest-contentful-paint-candidate"
                             id="ref-for-largest-contentful-paint-candidate">largest contentful paint candidate</a>
-                        associated with the
-                        <a data-link-type="dfn" href="#interactioncontext-largest-contentful-paint"
-                            id="ref-for-interactioncontext-largest-contentful-paint">largest contentful paint</a>.
-                    </p>
+                        or null, initially null.</p>
                 <li data-md>
                     <p><dfn class="dfn-paneled" data-dfn-for="InteractionContext" data-dfn-type="dfn" data-noexport
-                            id="interactioncontext-last-url-value">last URL value</dfn>, initially unset - Represents
-                        the value of the most recent URL
-                        modification during this interaction.</p>
+                            id="interactioncontext-last-url-value">last URL value</dfn>, a string or null, initially
+                        null.</p>
                 <li data-md>
                     <p><dfn class="dfn-paneled" data-dfn-for="InteractionContext" data-dfn-type="dfn" data-noexport
-                            id="interactioncontext-emitted">emitted</dfn> flag, initially false - Indicates that a soft
-                        navigation entry was emitted
-                        by the interaction.</p>
+                            id="interactioncontext-emitted">emitted</dfn>, a boolean, initially false.</p>
             </ul>
         </div>
         <p class="note" role="note"><span class="marker">Note:</span> Future versions of this specification might track
@@ -1957,7 +1946,7 @@ For darkmode:
 
             To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="get-the-current-interaction-context">get
                 the current interaction context</dfn> given a <a data-link-type="dfn"
-                href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document②">Document</a>
+                href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document①">Document</a>
             <var>document</var>:
 
 
@@ -1976,17 +1965,25 @@ For darkmode:
                     <p>Return <var>context</var>.</p>
             </ol>
         </div>
-        <div class="algorithm" data-algorithm="get the context for an interaction">
+        <div class="algorithm" data-algorithm="get or create the context for an interaction">
 
-            To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="get-the-context-for-an-interaction">get
-                the context for an interaction</dfn> given a <a data-link-type="dfn"
-                href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document③">Document</a>
-            <var>document</var>, an
-            <var>interaction id</var>, and an <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-event"
-                id="ref-for-concept-event">Event</a> <var>event</var>:
+            To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport
+                id="get-or-create-the-context-for-an-interaction">get or create the context for an interaction</dfn>
+            given a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document"
+                id="ref-for-concept-document②">Document</a> <var>document</var> and a
+            <code
+                class="idl"><a data-link-type="idl" href="https://w3c.github.io/event-timing/#performanceeventtiming" id="ref-for-performanceeventtiming">PerformanceEventTiming</a></code>
+            <var>timing entry</var>:
 
 
             <ol>
+                <li data-md>
+                    <p>Let <var>interaction id</var> be <var>timing entry</var>’s <code
+                            class="idl"><a data-link-type="idl" href="https://w3c.github.io/event-timing/#dom-performanceeventtiming-interactionid" id="ref-for-dom-performanceeventtiming-interactionid①">interactionId</a></code>.
+                    </p>
+                <li data-md>
+                    <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#assert"
+                            id="ref-for-assert">Assert</a> <var>interaction id</var> is greater than 0.</p>
                 <li data-md>
                     <p>If <var>document</var>’s <a data-link-type="dfn"
                             href="#document-interaction-id-to-interaction-context"
@@ -2013,7 +2010,10 @@ For darkmode:
                 <li data-md>
                     <p>Set <var>interaction context</var>’s <a data-link-type="dfn"
                             href="#interactioncontext-start-time" id="ref-for-interactioncontext-start-time">start
-                            time</a> to <var>event</var>’s <code class="highlight">startTime</code>.</p>
+                            time</a> to <var>timing entry</var>’s
+                        <code
+                            class="idl"><a data-link-type="idl" href="https://w3c.github.io/performance-timeline/#dom-performanceentry-starttime" id="ref-for-dom-performanceentry-starttime">startTime</a></code>.
+                    </p>
                 <li data-md>
                     <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#map-set"
                             id="ref-for-map-set">Set</a> <var>document</var>’s <a data-link-type="dfn"
@@ -2031,9 +2031,9 @@ For darkmode:
             To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport
                 id="update-the-interaction-contexts-for-an-event">update the interaction contexts for an event</dfn>
             given a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document"
-                id="ref-for-concept-document④">Document</a> <var>document</var> and an
+                id="ref-for-concept-document③">Document</a> <var>document</var> and an
             <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-event"
-                id="ref-for-concept-event①">Event</a> <var>event</var>:
+                id="ref-for-concept-event">Event</a> <var>event</var>:
 
 
             <ol>
@@ -2049,7 +2049,8 @@ For darkmode:
                     <p>Let <var>is scroll</var> be true if <var>event</var>’s type is "scroll", and false otherwise.</p>
                 <li data-md>
                     <p>Let <var>is input</var> be true if <var>event</var>’s type is an event type that would trigger
-                        <a data-link-type="dfn" href="https://w3c.github.io/event-timing/#has-dispatched-input-event"
+                        <a data-link-type="dfn"
+                            href="https://pr-preview.s3.amazonaws.com/mmocny/event-timing/pull/165.html#has-dispatched-input-event"
                             id="ref-for-has-dispatched-input-event">has dispatched input event</a> (as defined in <a
                             data-link-type="biblio" href="#biblio-event-timing"
                             title="Event Timing API">[EVENT-TIMING]</a>), and false otherwise.
@@ -2067,7 +2068,7 @@ For darkmode:
                             <p>If <var>is scroll</var> is true and <var>interaction context</var>’s <a
                                     data-link-type="dfn" href="#interactioncontext-first-scroll-timestamp"
                                     id="ref-for-interactioncontext-first-scroll-timestamp">first scroll timestamp</a>
-                                is unset:</p>
+                                is 0:</p>
                             <ol>
                                 <li data-md>
                                     <p>Set <var>interaction context</var>’s <a data-link-type="dfn"
@@ -2079,7 +2080,7 @@ For darkmode:
                             <p>If <var>is input</var> is true and <var>interaction context</var>’s <a
                                     data-link-type="dfn" href="#interactioncontext-first-input-timestamp"
                                     id="ref-for-interactioncontext-first-input-timestamp">first input timestamp</a>
-                                is unset:</p>
+                                is 0:</p>
                             <ol>
                                 <li data-md>
                                     <p>Set <var>interaction context</var>’s <a data-link-type="dfn"
@@ -2096,23 +2097,23 @@ For darkmode:
                 id="set-the-current-interaction-context-for-event-dispatch">set the current interaction context for
                 event dispatch</dfn> given null or a
             <code
-                class="idl"><a data-link-type="idl" href="https://w3c.github.io/event-timing/#performanceeventtiming" id="ref-for-performanceeventtiming">PerformanceEventTiming</a></code>
-            object <var>timingEntry</var>:
+                class="idl"><a data-link-type="idl" href="https://w3c.github.io/event-timing/#performanceeventtiming" id="ref-for-performanceeventtiming①">PerformanceEventTiming</a></code>
+            object <var>timing entry</var>:
 
 
             <ol>
                 <li data-md>
-                    <p>If <var>timingEntry</var> is null, return null.</p>
+                    <p>If <var>timing entry</var> is null, return null.</p>
                 <li data-md>
-                    <p>Let <var>event</var> be <var>timingEntry</var>’s <a data-link-type="dfn"
-                            href="https://pr-preview.s3.amazonaws.com/mmocny/event-timing/pull/165.html#performanceeventtiming-associated-event"
-                            id="ref-for-performanceeventtiming-associated-event">associated event</a>.</p>
-                <li data-md>
-                    <p>Let <var>interaction id</var> be <var>timingEntry</var>’s <code
-                            class="idl"><a data-link-type="idl" href="https://w3c.github.io/event-timing/#dom-performanceeventtiming-interactionid" id="ref-for-dom-performanceeventtiming-interactionid">interactionId</a></code>.
+                    <p>Let <var>interaction id</var> be <var>timing entry</var>’s <code
+                            class="idl"><a data-link-type="idl" href="https://w3c.github.io/event-timing/#dom-performanceeventtiming-interactionid" id="ref-for-dom-performanceeventtiming-interactionid②">interactionId</a></code>.
                     </p>
                 <li data-md>
-                    <p>If <var>interaction id</var> is null or 0, return null.</p>
+                    <p>If <var>interaction id</var> is 0, return null.</p>
+                <li data-md>
+                    <p>Let <var>event</var> be <var>timing entry</var>’s <a data-link-type="dfn"
+                            href="https://pr-preview.s3.amazonaws.com/mmocny/event-timing/pull/165.html#performanceeventtiming-associated-event"
+                            id="ref-for-performanceeventtiming-associated-event">associated event</a>.</p>
                 <li data-md>
                     <p>Let <var>document</var> be <var>event</var>’s <a data-link-type="dfn"
                             href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-relevant-global"
@@ -2125,10 +2126,10 @@ For darkmode:
                             for an event</a> given <var>document</var> and <var>event</var>.</p>
                 <li data-md>
                     <p>Let <var>interaction context</var> be the result of <a data-link-type="dfn"
-                            href="#get-the-context-for-an-interaction"
-                            id="ref-for-get-the-context-for-an-interaction">geting the context for an interaction</a>
-                        given
-                        <var>document</var>, <var>interaction id</var>, and <var>event</var>.
+                            href="#get-or-create-the-context-for-an-interaction"
+                            id="ref-for-get-or-create-the-context-for-an-interaction">getting or createing the context
+                            for an interaction</a> given <var>document</var> and
+                        <var>timing entry</var>.
                     </p>
                 <li data-md>
                     <p>Set the value of the internal <code class="highlight">AsyncContext<c- p>.</c->Variable</code>
@@ -2214,9 +2215,10 @@ For darkmode:
                 attribute’s getter must return the empty string.</p>
             <p>The <code
                     class="idl"><a data-link-type="idl" href="https://w3c.github.io/performance-timeline/#dom-performanceentry-entrytype" id="ref-for-dom-performanceentry-entrytype">entryType</a></code>
-                attribute’s getter must return "interaction-contentful-paint".</p>
+                attribute’s getter must return <code class="highlight"><c- u>"interaction-contentful-paint"</c-></code>.
+            </p>
             <p>The <code
-                    class="idl"><a data-link-type="idl" href="https://w3c.github.io/performance-timeline/#dom-performanceentry-starttime" id="ref-for-dom-performanceentry-starttime">startTime</a></code>
+                    class="idl"><a data-link-type="idl" href="https://w3c.github.io/performance-timeline/#dom-performanceentry-starttime" id="ref-for-dom-performanceentry-starttime①">startTime</a></code>
                 attribute’s getter must return <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this"
                     id="ref-for-this③">this</a>’s
                 <a data-link-type="dfn" href="#interactioncontentfulpaint-context"
@@ -2303,7 +2305,7 @@ For darkmode:
                 href="https://pr-preview.s3.amazonaws.com/shaseley/largest-contentful-paint/pull/171.html#largest-contentful-paint-candidate"
                 id="ref-for-largest-contentful-paint-candidate①">largest contentful paint candidate</a>
             <var>lcpCandidate</var>, a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document"
-                id="ref-for-concept-document⑤">Document</a> <var>document</var>, an
+                id="ref-for-concept-document④">Document</a> <var>document</var>, an
             <a data-link-type="dfn" href="#interactioncontext-interactioncontext"
                 id="ref-for-interactioncontext-interactioncontext④">InteractionContext</a> <var>interaction
                 context</var>, and a <a data-link-type="dfn"
@@ -2315,8 +2317,8 @@ For darkmode:
                 <li data-md>
                     <p>If <var>interaction context</var>’s <a data-link-type="dfn"
                             href="#interactioncontext-first-scroll-timestamp"
-                            id="ref-for-interactioncontext-first-scroll-timestamp②">first scroll timestamp</a> is set
-                        and
+                            id="ref-for-interactioncontext-first-scroll-timestamp②">first scroll timestamp</a> is
+                        greater than 0 and
                         <var>lcpEntry</var>’s <code
                             class="idl"><a data-link-type="idl" href="https://w3c.github.io/largest-contentful-paint/#dom-largestcontentfulpaint-rendertime" id="ref-for-dom-largestcontentfulpaint-rendertime">renderTime</a></code>
                         is greater than <var>interaction context</var>’s
@@ -2326,9 +2328,9 @@ For darkmode:
                 <li data-md>
                     <p>If <var>interaction context</var>’s <a data-link-type="dfn"
                             href="#interactioncontext-first-input-timestamp"
-                            id="ref-for-interactioncontext-first-input-timestamp②">first input timestamp</a> is set and
-                        <var>lcpEntry</var>’s
-                        <code
+                            id="ref-for-interactioncontext-first-input-timestamp②">first input timestamp</a> is greater
+                        than 0 and
+                        <var>lcpEntry</var>’s <code
                             class="idl"><a data-link-type="idl" href="https://w3c.github.io/largest-contentful-paint/#dom-largestcontentfulpaint-rendertime" id="ref-for-dom-largestcontentfulpaint-rendertime①">renderTime</a></code>
                         is greater than <var>interaction context</var>’s
                         <a data-link-type="dfn" href="#interactioncontext-first-input-timestamp"
@@ -2352,7 +2354,7 @@ For darkmode:
                 <li data-md>
                     <p>Let <var>icpEntry</var> be the result of <a data-link-type="dfn"
                             href="#create-an-interaction-contentful-paint-entry"
-                            id="ref-for-create-an-interaction-contentful-paint-entry">create an interaction contentful
+                            id="ref-for-create-an-interaction-contentful-paint-entry">creating an interaction contentful
                             paint entry</a> given
                         <var>global</var>, <var>interaction context</var>, <var>lcpEntry</var>, and <var>paint timing
                             info</var>.
@@ -2380,7 +2382,7 @@ For darkmode:
                 <li data-md>
                     <p>Set <var>interaction context</var>’s <a data-link-type="dfn"
                             href="#interactioncontext-largest-contentful-paint"
-                            id="ref-for-interactioncontext-largest-contentful-paint①">largest contentful paint</a> to
+                            id="ref-for-interactioncontext-largest-contentful-paint">largest contentful paint</a> to
                         <var>icpEntry</var>.
                     </p>
                 <li data-md>
@@ -2538,7 +2540,7 @@ For darkmode:
                     <p><dfn class="dfn-paneled" data-dfn-for="InteractionPaintTimingNodeState" data-dfn-type="dfn"
                             data-noexport id="interactionpainttimingnodestate-modification-id">modification id</dfn>, a
                         <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#64-bit-unsigned-integer"
-                            id="ref-for-64-bit-unsigned-integer⑤">64-bit unsigned integer</a>, initially 0.
+                            id="ref-for-64-bit-unsigned-integer⑥">64-bit unsigned integer</a>, initially 0.
                     </p>
             </ul>
         </div>
@@ -2693,7 +2695,7 @@ For darkmode:
                 id="update-the-interaction-context-for-a-document-and-its-descendants">update the interaction context
                 for a document and its descendants</dfn> given a
             <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document"
-                id="ref-for-concept-document⑥">Document</a> <var>document</var>:
+                id="ref-for-concept-document⑤">Document</a> <var>document</var>:
 
 
             <ol>
@@ -2753,7 +2755,7 @@ For darkmode:
                                         <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-node"
                                             id="ref-for-concept-node③">node</a>, then <a data-link-type="dfn"
                                             href="https://infra.spec.whatwg.org/#map-remove"
-                                            id="ref-for-map-remove">Remove</a> <var>document</var>’s
+                                            id="ref-for-map-remove">remove</a> <var>document</var>’s
                                         <a data-link-type="dfn" href="#document-marked-node-state"
                                             id="ref-for-document-marked-node-state③">marked node
                                             state</a>[<var>node</var>].
@@ -2761,7 +2763,7 @@ For darkmode:
                             </ol>
                         <li data-md>
                             <p>Otherwise, <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#map-remove"
-                                    id="ref-for-map-remove①">Remove</a> <var>document</var>’s <a data-link-type="dfn"
+                                    id="ref-for-map-remove①">remove</a> <var>document</var>’s <a data-link-type="dfn"
                                     href="#document-marked-node-state" id="ref-for-document-marked-node-state④">marked
                                     node state</a>[<var>node</var>].</p>
                     </ol>
@@ -2836,7 +2838,7 @@ For darkmode:
             single container (i.e. the global "containertiming" attribute and per-interaction timing) to allow
             implementing interaction paint timing in terms of Container Timing. Each <a data-link-type="dfn"
                 href="#record-a-node-as-modified-for-interaction-paint-timing"
-                id="ref-for-record-a-node-as-modified-for-interaction-paint-timing">recorded</a> node would be
+                id="ref-for-record-a-node-as-modified-for-interaction-paint-timing①">recorded</a> node would be
             considered a container for the interaction
             that modified it, so that each interaction is associated with a set of containers. Then, this
             specification would track the largest contentful paint that occurs in a marked container, for each
@@ -2849,7 +2851,7 @@ For darkmode:
                 class="self-link" href="#sec-interface"></a></h3>
         <pre class="def highlight idl">[<a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#Exposed" id="ref-for-Exposed②"><c- g>Exposed</c-></a>=<c- n>Window</c->]
 <c- b>interface</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="interface" data-export id="performancesoftnavigation"><code class="highlight"><c- g>PerformanceSoftNavigation</c-></code></dfn> : <a data-link-type="idl-name" href="https://w3c.github.io/performance-timeline/#performanceentry" id="ref-for-performanceentry④"><c- n>PerformanceEntry</c-></a> {
-    <c- b>readonly</c-> <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString" id="ref-for-idl-DOMString"><c- b>DOMString</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="PerformanceSoftNavigation" data-dfn-type="attribute" data-export data-readonly data-type="DOMString" id="dom-performancesoftnavigation-navigationtype"><code class="highlight"><c- g>navigationType</c-></code></dfn>;
+    <c- b>readonly</c-> <c- b>attribute</c-> <a data-link-type="idl-name" href="https://html.spec.whatwg.org/multipage/nav-history-apis.html#navigationtype" id="ref-for-navigationtype①"><c- n>NavigationType</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="PerformanceSoftNavigation" data-dfn-type="attribute" data-export data-readonly data-type="NavigationType" id="dom-performancesoftnavigation-navigationtype"><code class="highlight"><c- g>navigationType</c-></code></dfn>;
     <c- b>readonly</c-> <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-unsigned-long-long" id="ref-for-idl-unsigned-long-long②"><c- b>unsigned</c-> <c- b>long</c-> <c- b>long</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="PerformanceSoftNavigation" data-dfn-type="attribute" data-export data-readonly data-type="unsigned long long" id="dom-performancesoftnavigation-interactionid"><code class="highlight"><c- g>interactionId</c-></code></dfn>;
     <a data-link-type="idl-name" href="#interactioncontentfulpaint" id="ref-for-interactioncontentfulpaint⑤"><c- n>InteractionContentfulPaint</c-></a>? <dfn class="dfn-paneled idl-code" data-dfn-for="PerformanceSoftNavigation" data-dfn-type="method" data-export data-lt="getLargestInteractionContentfulPaint()" id="dom-performancesoftnavigation-getlargestinteractioncontentfulpaint"><code class="highlight"><c- g>getLargestInteractionContentfulPaint</c-></code></dfn>();
 };
@@ -2896,7 +2898,7 @@ For darkmode:
                 <a data-link-type="dfn" href="#performancesoftnavigation-context"
                     id="ref-for-performancesoftnavigation-context②">context</a>’s <a data-link-type="dfn"
                     href="#interactioncontext-largest-contentful-paint"
-                    id="ref-for-interactioncontext-largest-contentful-paint②">largest contentful paint</a>.
+                    id="ref-for-interactioncontext-largest-contentful-paint①">largest contentful paint</a>.
             </p>
             <p>The <code
                     class="idl"><a data-link-type="idl" href="https://w3c.github.io/performance-timeline/#dom-performanceentry-name" id="ref-for-dom-performanceentry-name①">name</a></code>
@@ -2909,9 +2911,9 @@ For darkmode:
             </p>
             <p>The <code
                     class="idl"><a data-link-type="idl" href="https://w3c.github.io/performance-timeline/#dom-performanceentry-entrytype" id="ref-for-dom-performanceentry-entrytype①">entryType</a></code>
-                attribute’s getter must return "soft-navigation".</p>
+                attribute’s getter must return <code class="highlight"><c- u>"soft-navigation"</c-></code>.</p>
             <p>The <code
-                    class="idl"><a data-link-type="idl" href="https://w3c.github.io/performance-timeline/#dom-performanceentry-starttime" id="ref-for-dom-performanceentry-starttime①">startTime</a></code>
+                    class="idl"><a data-link-type="idl" href="https://w3c.github.io/performance-timeline/#dom-performanceentry-starttime" id="ref-for-dom-performanceentry-starttime②">startTime</a></code>
                 attribute’s getter must return <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this"
                     id="ref-for-this①⓪">this</a>’s
                 <a data-link-type="dfn" href="#performancesoftnavigation-context"
@@ -2970,7 +2972,7 @@ For darkmode:
             To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport
                 id="evaluate-soft-navigation-emission">evaluate soft navigation emission</dfn> given a <a
                 data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document"
-                id="ref-for-concept-document⑦">Document</a> <var>document</var> and an
+                id="ref-for-concept-document⑥">Document</a> <var>document</var> and an
             <a data-link-type="dfn" href="#interactioncontext-interactioncontext"
                 id="ref-for-interactioncontext-interactioncontext⑨">InteractionContext</a> <var>interaction
                 context</var>:
@@ -2988,7 +2990,7 @@ For darkmode:
                 <li data-md>
                     <p>If <var>interaction context</var>’s <a data-link-type="dfn"
                             href="#interactioncontext-first-url-value"
-                            id="ref-for-interactioncontext-first-url-value①">first URL value</a> is unset, return.</p>
+                            id="ref-for-interactioncontext-first-url-value①">first URL value</a> is null, return.</p>
                 <li data-md>
                     <p>If <var>interaction context</var>’s <a data-link-type="dfn"
                             href="#interactioncontext-first-contentful-paint"
@@ -3000,8 +3002,8 @@ For darkmode:
                             id="ref-for-concept-relevant-global③">relevant global object</a>.</p>
                 <li data-md>
                     <p>Let <var>entry</var> be the result of <a data-link-type="dfn"
-                            href="#create-a-soft-navigation-entry" id="ref-for-create-a-soft-navigation-entry">create a
-                            soft navigation entry</a> given <var>window</var> and
+                            href="#create-a-soft-navigation-entry" id="ref-for-create-a-soft-navigation-entry">creating
+                            a soft navigation entry</a> given <var>window</var> and
                         <var>interaction context</var>.
                     </p>
                 <li data-md>
@@ -3043,16 +3045,15 @@ For darkmode:
                             href="#interactioncontext-first-contentful-paint"
                             id="ref-for-interactioncontext-first-contentful-paint③">first contentful paint</a>.</p>
                 <li data-md>
-                    <p>If <var>first paint</var> is not null:</p>
-                    <ol>
-                        <li data-md>
-                            <p>Set <var>entry</var>’s associated <a data-link-type="dfn"
-                                    href="https://w3c.github.io/paint-timing/#paint-timing-info"
-                                    id="ref-for-paint-timing-info⑨">paint timing info</a> to <var>first paint</var>’s
-                                associated <a data-link-type="dfn"
-                                    href="https://w3c.github.io/paint-timing/#paint-timing-info"
-                                    id="ref-for-paint-timing-info①⓪">paint timing info</a>.</p>
-                    </ol>
+                    <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#assert"
+                            id="ref-for-assert①">Assert</a> <var>first paint</var> is not null.</p>
+                <li data-md>
+                    <p>Set <var>entry</var>’s associated <a data-link-type="dfn"
+                            href="https://w3c.github.io/paint-timing/#paint-timing-info"
+                            id="ref-for-paint-timing-info⑨">paint timing info</a> to <var>first paint</var>’s associated
+                        <a data-link-type="dfn" href="https://w3c.github.io/paint-timing/#paint-timing-info"
+                            id="ref-for-paint-timing-info①⓪">paint timing info</a>.
+                    </p>
                 <li data-md>
                     <p>Return <var>entry</var>.</p>
             </ol>
@@ -3096,10 +3097,11 @@ For darkmode:
 
             To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="process-a-same-document-commit">process a
                 same document commit</dfn> given a <a data-link-type="dfn"
-                href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document⑧">Document</a>
+                href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document⑦">Document</a>
             <var>document</var>, <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string"
                 id="ref-for-string">string</a> <var>url</var>,
-            and <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string" id="ref-for-string①">string</a>
+            and <code
+                class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/nav-history-apis.html#navigationtype" id="ref-for-navigationtype②">NavigationType</a></code>
             <var>navigation type</var>:
 
 
@@ -3125,7 +3127,7 @@ For darkmode:
                     <p>If <var>interaction context</var>’s <a data-link-type="dfn"
                             href="#interactioncontext-first-url-update-timestamp"
                             id="ref-for-interactioncontext-first-url-update-timestamp">first URL update timestamp</a> is
-                        unset:</p>
+                        null:</p>
                     <ol>
                         <li data-md>
                             <p>Set <var>interaction context</var>’s <a data-link-type="dfn"
@@ -3171,24 +3173,24 @@ For darkmode:
         <h4 class="heading settled" data-level="6.1.1" id="sec-html-document"><span class="secno">6.1.1. </span><span
                 class="content">Document</span><a class="self-link" href="#sec-html-document"></a></h4>
         <p>Each <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document"
-                id="ref-for-concept-document⑨">document</a> has an <dfn class="dfn-paneled" data-dfn-for="document"
+                id="ref-for-concept-document⑧">document</a> has an <dfn class="dfn-paneled" data-dfn-for="document"
                 data-dfn-type="dfn" data-noexport id="document-interaction-id-to-interaction-context">interaction id to
                 interaction context</dfn>, a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#ordered-map"
                 id="ref-for-ordered-map①">map</a>,
             initially empty.</p>
         <p>Each <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document"
-                id="ref-for-concept-document①⓪">document</a> has an <dfn class="dfn-paneled" data-dfn-for="document"
+                id="ref-for-concept-document⑨">document</a> has an <dfn class="dfn-paneled" data-dfn-for="document"
                 data-dfn-type="dfn" data-noexport id="document-active-soft-navigation-candidate">active soft navigation
                 candidate</dfn>, an
             <a data-link-type="dfn" href="#interactioncontext-interactioncontext"
                 id="ref-for-interactioncontext-interactioncontext①①">InteractionContext</a> or null, initially null.
         </p>
         <p>Each <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document"
-                id="ref-for-concept-document①①">document</a> has a <dfn class="dfn-paneled" data-dfn-for="document"
+                id="ref-for-concept-document①⓪">document</a> has a <dfn class="dfn-paneled" data-dfn-for="document"
                 data-dfn-type="dfn" data-noexport id="document-current-modification-generation-id">current modification
                 generation id</dfn>, a
             <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#64-bit-unsigned-integer"
-                id="ref-for-64-bit-unsigned-integer⑥">64-bit unsigned integer</a> initilized to 0.
+                id="ref-for-64-bit-unsigned-integer⑦">64-bit unsigned integer</a> initilized to 0.
         </p>
         <p class="note" role="note"><span class="marker">Note:</span> The <a data-link-type="dfn"
                 href="#document-current-modification-generation-id"
@@ -3203,13 +3205,13 @@ For darkmode:
             objects
             in terms of recency and optimizing which nodes need to be tracked.</p>
         <p>Each <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document"
-                id="ref-for-concept-document①②">document</a> has a <dfn class="dfn-paneled" data-dfn-for="document"
+                id="ref-for-concept-document①①">document</a> has a <dfn class="dfn-paneled" data-dfn-for="document"
                 data-dfn-type="dfn" data-noexport id="document-last-modification-context">last modification
                 context</dfn>, an <a data-link-type="dfn" href="#interactioncontext-interactioncontext"
                 id="ref-for-interactioncontext-interactioncontext①③">InteractionContext</a>
             or null, initially null.</p>
         <p>Each <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document"
-                id="ref-for-concept-document①③">document</a> has a <dfn class="dfn-paneled" data-dfn-for="document"
+                id="ref-for-concept-document①②">document</a> has a <dfn class="dfn-paneled" data-dfn-for="document"
                 data-dfn-type="dfn" data-noexport id="document-marked-node-state">marked node state</dfn>, a <a
                 data-link-type="dfn" href="https://infra.spec.whatwg.org/#ordered-map" id="ref-for-ordered-map②">map</a>
             of <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-node"
@@ -3219,7 +3221,7 @@ For darkmode:
             initially empty.
         </p>
         <p>Each <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document"
-                id="ref-for-concept-document①④">document</a> has a <dfn class="dfn-paneled" data-dfn-for="document"
+                id="ref-for-concept-document①③">document</a> has a <dfn class="dfn-paneled" data-dfn-for="document"
                 data-dfn-type="dfn" data-noexport id="document-propagated-node-state">propagated node state</dfn>, a <a
                 data-link-type="dfn" href="https://infra.spec.whatwg.org/#ordered-map" id="ref-for-ordered-map③">map</a>
             of <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-node"
@@ -3229,7 +3231,7 @@ For darkmode:
             initially empty.
         </p>
         <p>Each <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document"
-                id="ref-for-concept-document①⑤">document</a> has an <dfn class="dfn-paneled" data-dfn-for="document"
+                id="ref-for-concept-document①④">document</a> has an <dfn class="dfn-paneled" data-dfn-for="document"
                 data-dfn-type="dfn" data-noexport id="document-is-interaction-paint-timing-dirty">is interaction paint
                 timing dirty</dfn>, a boolean,
             initially false.</p>
@@ -3256,16 +3258,10 @@ For darkmode:
             <ol>
                 <li data-md>
                     <p><a data-link-type="dfn" href="#record-a-node-as-modified-for-interaction-paint-timing"
-                            id="ref-for-record-a-node-as-modified-for-interaction-paint-timing①">Record a node as
+                            id="ref-for-record-a-node-as-modified-for-interaction-paint-timing②">Record a node as
                             modified for interaction paint timing</a> given <var>node</var>.</p>
             </ol>
         </div>
-        <p class="note" role="note"><span class="marker">Note:</span> The reference to "node insert" is a high-level
-            description covering all operations that add
-            new elements to the document structure (e.g., <code class="highlight">appendChild</code>, <code
-                class="highlight">innerHTML</code> updates, etc.). It is up
-            to the user agent to map these to internal implementation hooks that track document structure
-            modifications.</p>
         <h3 class="heading settled" data-level="6.2" id="sec-html"><span class="secno">6.2. </span><span
                 class="content">HTML integration</span><a class="self-link" href="#sec-html"></a></h3>
         <h4 class="heading settled" data-level="6.2.1" id="sec-html-history"><span class="secno">6.2.1. </span><span
@@ -3278,11 +3274,15 @@ For darkmode:
             true and if <code class="highlight">documentIsNew</code> is false), <a data-link-type="dfn"
                 href="#process-a-same-document-commit" id="ref-for-process-a-same-document-commit">process a same
                 document commit</a> given the <a data-link-type="dfn"
-                href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document①⑥">Document</a>,
+                href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document①⑤">Document</a>,
             the target entry’s <a data-link-type="dfn"
                 href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#she-url"
-                id="ref-for-she-url">url</a>, and "traverse".
+                id="ref-for-she-url">url</a>, and "<code
+                class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/nav-history-apis.html#dom-navigationtype-traverse" id="ref-for-dom-navigationtype-traverse">traverse</a></code>".
         </div>
+
+        <br>
+
         <div class="algorithm" data-algorithm="additions to shared history push/replace steps">
             In the <a
                 href="https://html.spec.whatwg.org/multipage/nav-history-apis.html#shared-history-push/replace-steps">shared
@@ -3291,8 +3291,11 @@ For darkmode:
             URL is updated, <a data-link-type="dfn" href="#process-a-same-document-commit"
                 id="ref-for-process-a-same-document-commit①">process a same document commit</a> given the
             <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document"
-                id="ref-for-concept-document①⑦">Document</a>, the new URL, and the operation type (either "push" or
-            "replace").
+                id="ref-for-concept-document①⑥">Document</a>, the new URL, and the operation type (either "<code
+                class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/nav-history-apis.html#dom-navigationtype-push" id="ref-for-dom-navigationtype-push">push</a></code>"
+            or
+            "<code
+                class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/nav-history-apis.html#dom-navigationtype-replace" id="ref-for-dom-navigationtype-replace">replace</a></code>").
         </div>
         <h4 class="heading settled" data-level="6.2.2" id="sec-html-hard-nav"><span class="secno">6.2.2. </span><span
                 class="content">Hard Navigation</span><a class="self-link" href="#sec-html-hard-nav"></a></h4>
@@ -3320,9 +3323,9 @@ For darkmode:
                 title="Event Timing API">[EVENT-TIMING]</a> definition of interactions to include additional
             event types that are relevant for modern web applications and Single Page Applications.</p>
         <p>The following event types are considered to be part of an <a data-link-type="dfn"
-                href="https://w3c.github.io/event-timing/#dfn-interaction" id="ref-for-dfn-interaction">interaction</a>
-            (as defined in <a data-link-type="biblio" href="#biblio-event-timing"
-                title="Event Timing API">[EVENT-TIMING]</a>):</p>
+                href="https://pr-preview.s3.amazonaws.com/mmocny/event-timing/pull/165.html#dfn-interaction"
+                id="ref-for-dfn-interaction">interaction</a> (as defined in <a data-link-type="biblio"
+                href="#biblio-event-timing" title="Event Timing API">[EVENT-TIMING]</a>):</p>
         <ul>
             <li data-md>
                 <p><code class="highlight">navigate</code></p>
@@ -3332,17 +3335,18 @@ For darkmode:
                 <p><code class="highlight">hashchange</code></p>
         </ul>
         <p>When these events are dispatched as a result of a user interaction, the user agent must assign them
-            a unique <a data-link-type="dfn" href="https://w3c.github.io/event-timing/#interaction-id"
-                id="ref-for-interaction-id①">interaction id</a> obtained by <a data-link-type="dfn"
-                href="#get-the-next-interactionid" id="ref-for-get-the-next-interactionid">getting the next
-                interactionId</a> for the document’s
-            <a data-link-type="dfn"
+            a unique <code
+                class="idl"><a data-link-type="idl" href="https://w3c.github.io/event-timing/#dom-performanceeventtiming-interactionid" id="ref-for-dom-performanceeventtiming-interactionid③">interactionId</a></code>
+            obtained by <a data-link-type="dfn" href="#get-the-next-interactionid"
+                id="ref-for-get-the-next-interactionid">getting the next interactionId</a>
+            for the document’s <a data-link-type="dfn"
                 href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-relevant-global"
                 id="ref-for-concept-relevant-global⑤">relevant global object</a>. If an event is triggered by a previous
-            interaction that already has an
-            assigned <a data-link-type="dfn" href="https://w3c.github.io/event-timing/#interaction-id"
-                id="ref-for-interaction-id②">interaction id</a>, the user agent should reuse that same identifier.
-        </p>
+            interaction
+            that already has an assigned <code
+                class="idl"><a data-link-type="idl" href="https://w3c.github.io/event-timing/#dom-performanceeventtiming-interactionid" id="ref-for-dom-performanceeventtiming-interactionid④">interactionId</a></code>,
+            the user agent should reuse
+            that same identifier.</p>
         <p class="note" role="note"><span class="marker">Note:</span>These events are only reported as primary
             interactions when they are the initiating event from
             a user action (e.g., clicking the browser UI’s back button). In most other scenarios—such as a
@@ -3581,7 +3585,7 @@ For darkmode:
                 <li data-md>
                     <p><strong>Active Candidate Singleton</strong>: While many interactions can be active, the <a
                             data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document"
-                            id="ref-for-concept-document①⑧">Document</a>
+                            id="ref-for-concept-document①⑦">Document</a>
                         recognizes only one <a data-link-type="dfn" href="#document-active-soft-navigation-candidate"
                             id="ref-for-document-active-soft-navigation-candidate②">active soft navigation candidate</a>
                         at any given time.</p>
@@ -3651,8 +3655,9 @@ For darkmode:
         <li><a
                 href="#dom-performancesoftnavigation-getlargestinteractioncontentfulpaint">getLargestInteractionContentfulPaint()</a><span>,
                 in § 5.1</span>
+        <li><a href="#get-or-create-the-context-for-an-interaction">get or create the context for an
+                interaction</a><span>, in § 3.3</span>
         <li><a href="#get-the-attribution-element">get the attribution element</a><span>, in § 6.4</span>
-        <li><a href="#get-the-context-for-an-interaction">get the context for an interaction</a><span>, in § 3.3</span>
         <li><a href="#get-the-current-interaction-context">get the current interaction context</a><span>, in
                 § 3.3</span>
         <li><a href="#get-the-next-interactionid">get the next interactionId</a><span>, in § 6.3</span>
@@ -3737,9 +3742,6 @@ For darkmode:
             <ul>
                 <li><span class="dfn-paneled" id="5390e522">PaintTimingMixin</span>
                 <li><span class="dfn-paneled" id="cf22a135">default paint timestamp</span>
-                <li><span class="dfn-paneled" id="bc2342f0">has dispatched input event</span>
-                <li><span class="dfn-paneled" id="9ca77ab8">interaction</span>
-                <li><span class="dfn-paneled" id="2e38edd1">interaction id</span>
                 <li><span class="dfn-paneled" id="0d1464b6">paint timing info</span>
                 <li><span class="dfn-paneled" id="a2de40e9">pending image record</span>
                 <li><span class="dfn-paneled" id="24f32f51">pending image record element</span>
@@ -3771,8 +3773,10 @@ For darkmode:
             <ul>
                 <li><span class="dfn-paneled" id="6d8bccc7">PerformanceEventTiming</span>
                 <li><span class="dfn-paneled" id="925b5984">associated event</span>
+                <li><span class="dfn-paneled" id="d51946bf">has dispatched input event</span>
                 <li><span class="dfn-paneled" id="ce6f454c">initial interactionId value</span>
                 <li><span class="dfn-paneled" id="8a1f6229">initialize and record event timing processing start</span>
+                <li><span class="dfn-paneled" id="62287cfd">interaction</span>
                 <li><span class="dfn-paneled" id="02c65a0e">interaction count</span>
                 <li><span class="dfn-paneled" id="35922c9d">interactionId</span>
                 <li><span class="dfn-paneled" id="ba6dc3e0">interactionId increment</span>
@@ -3786,12 +3790,16 @@ For darkmode:
         <li>
             <a data-link-type="biblio">[HTML]</a> defines the following terms:
             <ul>
+                <li><span class="dfn-paneled" id="a4c36929">NavigationType</span>
                 <li><span class="dfn-paneled" id="5d7209e9">Window</span>
                 <li><span class="dfn-paneled" id="3349d69f">associated Document</span>
                 <li><span class="dfn-paneled" id="4b6086d7">global object</span>
+                <li><span class="dfn-paneled" id="c9ff317b">push</span>
                 <li><span class="dfn-paneled" id="b75a7d23">realm</span>
                 <li><span class="dfn-paneled" id="e99bd18e">relevant global object</span>
+                <li><span class="dfn-paneled" id="6d273060">replace</span>
                 <li><span class="dfn-paneled" id="f710aefb">session history entry url</span>
+                <li><span class="dfn-paneled" id="fa3348cc">traverse</span>
                 <li><span class="dfn-paneled" id="5c1d019b">update document for history step application</span>
             </ul>
         <li>
@@ -3799,6 +3807,7 @@ For darkmode:
             <ul>
                 <li><span class="dfn-paneled" id="42db82d0">64-bit unsigned integer</span>
                 <li><span class="dfn-paneled" id="a3b18719">append</span>
+                <li><span class="dfn-paneled" id="77b4c09a">assert</span>
                 <li><span class="dfn-paneled" id="a326add7">contain</span>
                 <li><span class="dfn-paneled" id="1243a891">exist</span>
                 <li><span class="dfn-paneled" id="16d07e10">for each <small>(for list)</small></span>
@@ -3848,7 +3857,6 @@ For darkmode:
         <li>
             <a data-link-type="biblio">[WEBIDL]</a> defines the following terms:
             <ul>
-                <li><span class="dfn-paneled" id="8855a9aa">DOMString</span>
                 <li><span class="dfn-paneled" id="889e932f">Exposed</span>
                 <li><span class="dfn-paneled" id="efd1ec5d">object</span>
                 <li><span class="dfn-paneled" id="4013a022">this</span>
@@ -3933,7 +3941,7 @@ For darkmode:
 
 [<a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#Exposed"><c- g>Exposed</c-></a>=<c- n>Window</c->]
 <c- b>interface</c-> <a href="#performancesoftnavigation"><code class="highlight"><c- g>PerformanceSoftNavigation</c-></code></a> : <a data-link-type="idl-name" href="https://w3c.github.io/performance-timeline/#performanceentry"><c- n>PerformanceEntry</c-></a> {
-    <c- b>readonly</c-> <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString"><c- b>DOMString</c-></a> <a data-readonly data-type="DOMString" href="#dom-performancesoftnavigation-navigationtype"><code class="highlight"><c- g>navigationType</c-></code></a>;
+    <c- b>readonly</c-> <c- b>attribute</c-> <a data-link-type="idl-name" href="https://html.spec.whatwg.org/multipage/nav-history-apis.html#navigationtype"><c- n>NavigationType</c-></a> <a data-readonly data-type="NavigationType" href="#dom-performancesoftnavigation-navigationtype"><code class="highlight"><c- g>navigationType</c-></code></a>;
     <c- b>readonly</c-> <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-unsigned-long-long"><c- b>unsigned</c-> <c- b>long</c-> <c- b>long</c-></a> <a data-readonly data-type="unsigned long long" href="#dom-performancesoftnavigation-interactionid"><code class="highlight"><c- g>interactionId</c-></code></a>;
     <a data-link-type="idl-name" href="#interactioncontentfulpaint"><c- n>InteractionContentfulPaint</c-></a>? <a href="#dom-performancesoftnavigation-getlargestinteractioncontentfulpaint"><code class="highlight"><c- g>getLargestInteractionContentfulPaint</c-></code></a>();
 };
@@ -4164,7 +4172,7 @@ For darkmode:
             let dfnPanelData = {
                 "02c65a0e": { "dfnID": "02c65a0e", "dfnText": "interaction count", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-window-interaction-count" }, { "id": "ref-for-window-interaction-count\u2460" }, { "id": "ref-for-window-interaction-count\u2461" }], "title": "6.3. Event Timing integration" }], "url": "https://pr-preview.s3.amazonaws.com/mmocny/event-timing/pull/165.html#window-interaction-count" },
                 "03f41c8b": { "dfnID": "03f41c8b", "dfnText": "timing-eligible", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-timing-eligible" }], "title": "4.3. Interaction Contentful Paint Attribution" }], "url": "https://w3c.github.io/paint-timing/#timing-eligible" },
-                "0698d556": { "dfnID": "0698d556", "dfnText": "string", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-string" }, { "id": "ref-for-string\u2460" }], "title": "5.2. Soft Navigation Algorithms" }], "url": "https://infra.spec.whatwg.org/#string" },
+                "0698d556": { "dfnID": "0698d556", "dfnText": "string", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-string" }], "title": "5.2. Soft Navigation Algorithms" }], "url": "https://infra.spec.whatwg.org/#string" },
                 "08a90f22": { "dfnID": "08a90f22", "dfnText": "entryType", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-dom-performanceentry-entrytype" }], "title": "4.1. The InteractionContentfulPaint interface" }, { "refs": [{ "id": "ref-for-dom-performanceentry-entrytype\u2460" }], "title": "5.1. The PerformanceSoftNavigation interface" }], "url": "https://w3c.github.io/performance-timeline/#dom-performanceentry-entrytype" },
                 "09c54b53": { "dfnID": "09c54b53", "dfnText": "name", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-dom-performanceentry-name" }], "title": "4.1. The InteractionContentfulPaint interface" }, { "refs": [{ "id": "ref-for-dom-performanceentry-name\u2460" }], "title": "5.1. The PerformanceSoftNavigation interface" }], "url": "https://w3c.github.io/performance-timeline/#dom-performanceentry-name" },
                 "0d1464b6": { "dfnID": "0d1464b6", "dfnText": "paint timing info", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-paint-timing-info" }, { "id": "ref-for-paint-timing-info\u2460" }, { "id": "ref-for-paint-timing-info\u2461" }], "title": "4.1. The InteractionContentfulPaint interface" }, { "refs": [{ "id": "ref-for-paint-timing-info\u2462" }, { "id": "ref-for-paint-timing-info\u2463" }, { "id": "ref-for-paint-timing-info\u2464" }, { "id": "ref-for-paint-timing-info\u2465" }, { "id": "ref-for-paint-timing-info\u2466" }], "title": "4.2. Interaction Contentful Paint Algorithms" }, { "refs": [{ "id": "ref-for-paint-timing-info\u2467" }], "title": "5.1. The PerformanceSoftNavigation interface" }, { "refs": [{ "id": "ref-for-paint-timing-info\u2468" }, { "id": "ref-for-paint-timing-info\u2460\u24ea" }], "title": "5.2. Soft Navigation Algorithms" }, { "refs": [{ "id": "ref-for-paint-timing-info\u2460\u2460" }], "title": "6.4. Paint Timing integration" }], "url": "https://w3c.github.io/paint-timing/#paint-timing-info" },
@@ -4172,18 +4180,17 @@ For darkmode:
                 "1243a891": { "dfnID": "1243a891", "dfnText": "exist", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-map-exists" }], "title": "3.3. Infrastructure Algorithms" }, { "refs": [{ "id": "ref-for-map-exists\u2460" }, { "id": "ref-for-map-exists\u2461" }], "title": "4.2. Interaction Contentful Paint Algorithms" }], "url": "https://infra.spec.whatwg.org/#map-exists" },
                 "16d07e10": { "dfnID": "16d07e10", "dfnText": "for each (for list)", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-list-iterate" }, { "id": "ref-for-list-iterate\u2460" }], "title": "4.2. Interaction Contentful Paint Algorithms" }, { "refs": [{ "id": "ref-for-list-iterate\u2461" }], "title": "4.3. Interaction Contentful Paint Attribution" }], "url": "https://infra.spec.whatwg.org/#list-iterate" },
                 "24f32f51": { "dfnID": "24f32f51", "dfnText": "pending image record element", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-pending-image-record-element" }], "title": "4.2. Interaction Contentful Paint Algorithms" }], "url": "https://w3c.github.io/paint-timing/#pending-image-record-element" },
-                "26b82890": { "dfnID": "26b82890", "dfnText": "event", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-concept-event" }, { "id": "ref-for-concept-event\u2460" }], "title": "3.3. Infrastructure Algorithms" }], "url": "https://dom.spec.whatwg.org/#concept-event" },
+                "26b82890": { "dfnID": "26b82890", "dfnText": "event", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-concept-event" }], "title": "3.3. Infrastructure Algorithms" }], "url": "https://dom.spec.whatwg.org/#concept-event" },
                 "27d9b7ea": { "dfnID": "27d9b7ea", "dfnText": "element", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-concept-element" }], "title": "4.2. Interaction Contentful Paint Algorithms" }, { "refs": [{ "id": "ref-for-concept-element\u2460" }], "title": "6.4. Paint Timing integration" }], "url": "https://dom.spec.whatwg.org/#concept-element" },
                 "296f3551": { "dfnID": "296f3551", "dfnText": "Element", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-element" }], "title": "6.4. Paint Timing integration" }], "url": "https://dom.spec.whatwg.org/#element" },
-                "2e38edd1": { "dfnID": "2e38edd1", "dfnText": "interaction id", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-interaction-id" }], "title": "3.2. The InteractionContext struct" }, { "refs": [{ "id": "ref-for-interaction-id\u2460" }, { "id": "ref-for-interaction-id\u2461" }], "title": "6.3. Event Timing integration" }], "url": "https://w3c.github.io/event-timing/#interaction-id" },
                 "3349d69f": { "dfnID": "3349d69f", "dfnText": "associated Document", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-concept-document-window" }], "title": "3.3. Infrastructure Algorithms" }], "url": "https://html.spec.whatwg.org/multipage/nav-history-apis.html#concept-document-window" },
                 "347e8fe9": { "dfnID": "347e8fe9", "dfnText": "URL", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-concept-document-url" }], "title": "5.2. Soft Navigation Algorithms" }], "url": "https://dom.spec.whatwg.org/#concept-document-url" },
                 "352e4f4f": { "dfnID": "352e4f4f", "dfnText": "node", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-concept-node" }, { "id": "ref-for-concept-node\u2460" }, { "id": "ref-for-concept-node\u2461" }, { "id": "ref-for-concept-node\u2462" }], "title": "4.3. Interaction Contentful Paint Attribution" }, { "refs": [{ "id": "ref-for-concept-node\u2463" }, { "id": "ref-for-concept-node\u2464" }], "title": "6.1.1. Document" }, { "refs": [{ "id": "ref-for-concept-node\u2465" }], "title": "6.1.2. Node" }, { "refs": [{ "id": "ref-for-concept-node\u2466" }, { "id": "ref-for-concept-node\u2467" }, { "id": "ref-for-concept-node\u2468" }, { "id": "ref-for-concept-node\u2460\u24ea" }], "title": "6.4. Paint Timing integration" }], "url": "https://dom.spec.whatwg.org/#concept-node" },
-                "35922c9d": { "dfnID": "35922c9d", "dfnText": "interactionId", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-dom-performanceeventtiming-interactionid" }], "title": "3.3. Infrastructure Algorithms" }], "url": "https://w3c.github.io/event-timing/#dom-performanceeventtiming-interactionid" },
+                "35922c9d": { "dfnID": "35922c9d", "dfnText": "interactionId", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-dom-performanceeventtiming-interactionid" }], "title": "3.2. The InteractionContext struct" }, { "refs": [{ "id": "ref-for-dom-performanceeventtiming-interactionid\u2460" }, { "id": "ref-for-dom-performanceeventtiming-interactionid\u2461" }], "title": "3.3. Infrastructure Algorithms" }, { "refs": [{ "id": "ref-for-dom-performanceeventtiming-interactionid\u2462" }, { "id": "ref-for-dom-performanceeventtiming-interactionid\u2463" }], "title": "6.3. Event Timing integration" }], "url": "https://w3c.github.io/event-timing/#dom-performanceeventtiming-interactionid" },
                 "3b786c72": { "dfnID": "3b786c72", "dfnText": "exposed for paint timing", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-exposed-for-paint-timing" }], "title": "4.3. Interaction Contentful Paint Attribution" }], "url": "https://w3c.github.io/paint-timing/#exposed-for-paint-timing" },
                 "3fca5a9e": { "dfnID": "3fca5a9e", "dfnText": "map", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-ordered-map" }], "title": "4.2. Interaction Contentful Paint Algorithms" }, { "refs": [{ "id": "ref-for-ordered-map\u2460" }, { "id": "ref-for-ordered-map\u2461" }, { "id": "ref-for-ordered-map\u2462" }], "title": "6.1.1. Document" }], "url": "https://infra.spec.whatwg.org/#ordered-map" },
                 "4013a022": { "dfnID": "4013a022", "dfnText": "this", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-this" }], "title": "2.2. The PerformanceEntry extension" }, { "refs": [{ "id": "ref-for-this\u2460" }, { "id": "ref-for-this\u2461" }, { "id": "ref-for-this\u2462" }, { "id": "ref-for-this\u2463" }, { "id": "ref-for-this\u2464" }], "title": "4.1. The InteractionContentfulPaint interface" }, { "refs": [{ "id": "ref-for-this\u2465" }, { "id": "ref-for-this\u2466" }, { "id": "ref-for-this\u2467" }, { "id": "ref-for-this\u2468" }, { "id": "ref-for-this\u2460\u24ea" }, { "id": "ref-for-this\u2460\u2460" }, { "id": "ref-for-this\u2460\u2461" }], "title": "5.1. The PerformanceSoftNavigation interface" }], "url": "https://webidl.spec.whatwg.org/#this" },
-                "42db82d0": { "dfnID": "42db82d0", "dfnText": "64-bit unsigned integer", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-64-bit-unsigned-integer" }, { "id": "ref-for-64-bit-unsigned-integer\u2460" }, { "id": "ref-for-64-bit-unsigned-integer\u2461" }, { "id": "ref-for-64-bit-unsigned-integer\u2462" }], "title": "2.1. Navigation ID" }, { "refs": [{ "id": "ref-for-64-bit-unsigned-integer\u2463" }], "title": "2.2. The PerformanceEntry extension" }, { "refs": [{ "id": "ref-for-64-bit-unsigned-integer\u2464" }], "title": "4.3. Interaction Contentful Paint Attribution" }, { "refs": [{ "id": "ref-for-64-bit-unsigned-integer\u2465" }], "title": "6.1.1. Document" }], "url": "https://infra.spec.whatwg.org/#64-bit-unsigned-integer" },
+                "42db82d0": { "dfnID": "42db82d0", "dfnText": "64-bit unsigned integer", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-64-bit-unsigned-integer" }, { "id": "ref-for-64-bit-unsigned-integer\u2460" }, { "id": "ref-for-64-bit-unsigned-integer\u2461" }, { "id": "ref-for-64-bit-unsigned-integer\u2462" }], "title": "2.1. Navigation ID" }, { "refs": [{ "id": "ref-for-64-bit-unsigned-integer\u2463" }], "title": "2.2. The PerformanceEntry extension" }, { "refs": [{ "id": "ref-for-64-bit-unsigned-integer\u2464" }], "title": "3.2. The InteractionContext struct" }, { "refs": [{ "id": "ref-for-64-bit-unsigned-integer\u2465" }], "title": "4.3. Interaction Contentful Paint Attribution" }, { "refs": [{ "id": "ref-for-64-bit-unsigned-integer\u2466" }], "title": "6.1.1. Document" }], "url": "https://infra.spec.whatwg.org/#64-bit-unsigned-integer" },
                 "45209803": { "dfnID": "45209803", "dfnText": "for each (for map)", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-map-iterate" }], "title": "4.2. Interaction Contentful Paint Algorithms" }], "url": "https://infra.spec.whatwg.org/#map-iterate" },
                 "4523ab1a": { "dfnID": "4523ab1a", "dfnText": "event dispatch", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-concept-event-dispatch" }], "title": "6.3. Event Timing integration" }], "url": "https://dom.spec.whatwg.org/#concept-event-dispatch" },
                 "4b6086d7": { "dfnID": "4b6086d7", "dfnText": "global object", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-global-object" }], "title": "2.1. Navigation ID" }], "url": "https://html.spec.whatwg.org/multipage/webappapis.html#global-object" },
@@ -4195,38 +4202,41 @@ For darkmode:
                 "5c2fe3bf": { "dfnID": "5c2fe3bf", "dfnText": "presentationTime", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-dom-painttimingmixin-presentationtime" }], "title": "5.1. The PerformanceSoftNavigation interface" }], "url": "https://w3c.github.io/paint-timing/#dom-painttimingmixin-presentationtime" },
                 "5d7209e9": { "dfnID": "5d7209e9", "dfnText": "Window", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-window" }, { "id": "ref-for-window\u2460" }, { "id": "ref-for-window\u2461" }, { "id": "ref-for-window\u2462" }], "title": "2.1. Navigation ID" }, { "refs": [{ "id": "ref-for-window\u2463" }], "title": "2.3. Performance Timeline Integration" }, { "refs": [{ "id": "ref-for-window\u2464" }], "title": "4.2. Interaction Contentful Paint Algorithms" }, { "refs": [{ "id": "ref-for-window\u2465" }, { "id": "ref-for-window\u2466" }], "title": "5.2. Soft Navigation Algorithms" }, { "refs": [{ "id": "ref-for-window\u2467" }, { "id": "ref-for-window\u2468" }], "title": "6.2.2. Hard Navigation" }, { "refs": [{ "id": "ref-for-window\u2460\u24ea" }], "title": "6.3. Event Timing integration" }], "url": "https://html.spec.whatwg.org/multipage/nav-history-apis.html#window" },
                 "61f06c86": { "dfnID": "61f06c86", "dfnText": "PerformanceEntry", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-performanceentry" }], "title": "2. Performance Timeline Slicing" }, { "refs": [{ "id": "ref-for-performanceentry\u2460" }, { "id": "ref-for-performanceentry\u2461" }], "title": "2.2. The PerformanceEntry extension" }, { "refs": [{ "id": "ref-for-performanceentry\u2462" }], "title": "4.1. The InteractionContentfulPaint interface" }, { "refs": [{ "id": "ref-for-performanceentry\u2463" }], "title": "5.1. The PerformanceSoftNavigation interface" }, { "refs": [{ "id": "ref-for-performanceentry\u2464" }], "title": "5.2. Soft Navigation Algorithms" }], "url": "https://w3c.github.io/performance-timeline/#performanceentry" },
+                "62287cfd": { "dfnID": "62287cfd", "dfnText": "interaction", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-dfn-interaction" }], "title": "6.3. Event Timing integration" }], "url": "https://pr-preview.s3.amazonaws.com/mmocny/event-timing/pull/165.html#dfn-interaction" },
                 "692595fe": { "dfnID": "692595fe", "dfnText": "ordered set", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-ordered-set" }, { "id": "ref-for-ordered-set\u2460" }], "title": "4.2. Interaction Contentful Paint Algorithms" }, { "refs": [{ "id": "ref-for-ordered-set\u2461" }, { "id": "ref-for-ordered-set\u2462" }], "title": "6.4. Paint Timing integration" }], "url": "https://infra.spec.whatwg.org/#ordered-set" },
-                "6d8bccc7": { "dfnID": "6d8bccc7", "dfnText": "PerformanceEventTiming", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-performanceeventtiming" }], "title": "3.3. Infrastructure Algorithms" }], "url": "https://w3c.github.io/event-timing/#performanceeventtiming" },
+                "6d273060": { "dfnID": "6d273060", "dfnText": "replace", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-dom-navigationtype-replace" }], "title": "6.2.1. History" }], "url": "https://html.spec.whatwg.org/multipage/nav-history-apis.html#dom-navigationtype-replace" },
+                "6d8bccc7": { "dfnID": "6d8bccc7", "dfnText": "PerformanceEventTiming", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-performanceeventtiming" }, { "id": "ref-for-performanceeventtiming\u2460" }], "title": "3.3. Infrastructure Algorithms" }], "url": "https://w3c.github.io/event-timing/#performanceeventtiming" },
                 "6f0c9044": { "dfnID": "6f0c9044", "dfnText": "performance entry buffer", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-performance-entry-buffer" }], "title": "4.2. Interaction Contentful Paint Algorithms" }, { "refs": [{ "id": "ref-for-performance-entry-buffer\u2460" }], "title": "5.2. Soft Navigation Algorithms" }], "url": "https://w3c.github.io/performance-timeline/#performance-entry-buffer" },
                 "77a05ba3": { "dfnID": "77a05ba3", "dfnText": "mark paint timing", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-mark-paint-timing" }, { "id": "ref-for-mark-paint-timing\u2460" }, { "id": "ref-for-mark-paint-timing\u2461" }], "title": "6.4. Paint Timing integration" }], "url": "https://w3c.github.io/paint-timing/#mark-paint-timing" },
+                "77b4c09a": { "dfnID": "77b4c09a", "dfnText": "assert", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-assert" }], "title": "3.3. Infrastructure Algorithms" }, { "refs": [{ "id": "ref-for-assert\u2460" }], "title": "5.2. Soft Navigation Algorithms" }], "url": "https://infra.spec.whatwg.org/#assert" },
                 "7d4424b2": { "dfnID": "7d4424b2", "dfnText": "remove", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-map-remove" }, { "id": "ref-for-map-remove\u2460" }], "title": "4.3. Interaction Contentful Paint Attribution" }], "url": "https://infra.spec.whatwg.org/#map-remove" },
                 "7e7cc1d8": { "dfnID": "7e7cc1d8", "dfnText": "current high resolution time", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-dfn-current-high-resolution-time" }], "title": "3.3. Infrastructure Algorithms" }, { "refs": [{ "id": "ref-for-dfn-current-high-resolution-time\u2460" }], "title": "5.2. Soft Navigation Algorithms" }], "url": "https://w3c.github.io/hr-time/#dfn-current-high-resolution-time" },
                 "84f47c16": { "dfnID": "84f47c16", "dfnText": "child", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-concept-tree-child" }], "title": "4.3. Interaction Contentful Paint Attribution" }], "url": "https://dom.spec.whatwg.org/#concept-tree-child" },
                 "85394472": { "dfnID": "85394472", "dfnText": "Document", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-document" }], "title": "4.2. Interaction Contentful Paint Algorithms" }, { "refs": [{ "id": "ref-for-document\u2460" }, { "id": "ref-for-document\u2461" }], "title": "6.4. Paint Timing integration" }], "url": "https://dom.spec.whatwg.org/#document" },
-                "8855a9aa": { "dfnID": "8855a9aa", "dfnText": "DOMString", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-idl-DOMString" }], "title": "5.1. The PerformanceSoftNavigation interface" }], "url": "https://webidl.spec.whatwg.org/#idl-DOMString" },
                 "889e932f": { "dfnID": "889e932f", "dfnText": "Exposed", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-Exposed" }], "title": "2.2. The PerformanceEntry extension" }, { "refs": [{ "id": "ref-for-Exposed\u2460" }], "title": "4.1. The InteractionContentfulPaint interface" }, { "refs": [{ "id": "ref-for-Exposed\u2461" }], "title": "5.1. The PerformanceSoftNavigation interface" }], "url": "https://webidl.spec.whatwg.org/#Exposed" },
                 "8a1f6229": { "dfnID": "8a1f6229", "dfnText": "initialize and record event timing processing start", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-initialize-and-record-event-timing-processing-start" }], "title": "6.3. Event Timing integration" }], "url": "https://pr-preview.s3.amazonaws.com/mmocny/event-timing/pull/165.html#initialize-and-record-event-timing-processing-start" },
                 "925b5984": { "dfnID": "925b5984", "dfnText": "associated event", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-performanceeventtiming-associated-event" }], "title": "3.3. Infrastructure Algorithms" }], "url": "https://pr-preview.s3.amazonaws.com/mmocny/event-timing/pull/165.html#performanceeventtiming-associated-event" },
                 "984221ca": { "dfnID": "984221ca", "dfnText": "struct", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-struct" }], "title": "3.2. The InteractionContext struct" }, { "refs": [{ "id": "ref-for-struct\u2460" }], "title": "4.3. Interaction Contentful Paint Attribution" }], "url": "https://infra.spec.whatwg.org/#struct" },
                 "9b804b5d": { "dfnID": "9b804b5d", "dfnText": "largest contentful paint candidate", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-largest-contentful-paint-candidate" }], "title": "3.2. The InteractionContext struct" }, { "refs": [{ "id": "ref-for-largest-contentful-paint-candidate\u2460" }], "title": "4.2. Interaction Contentful Paint Algorithms" }], "url": "https://pr-preview.s3.amazonaws.com/shaseley/largest-contentful-paint/pull/171.html#largest-contentful-paint-candidate" },
-                "9ca77ab8": { "dfnID": "9ca77ab8", "dfnText": "interaction", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-dfn-interaction" }], "title": "6.3. Event Timing integration" }], "url": "https://w3c.github.io/event-timing/#dfn-interaction" },
                 "a2de40e9": { "dfnID": "a2de40e9", "dfnText": "pending image record", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-pending-image-record" }], "title": "4.2. Interaction Contentful Paint Algorithms" }, { "refs": [{ "id": "ref-for-pending-image-record\u2460" }], "title": "6.4. Paint Timing integration" }], "url": "https://w3c.github.io/paint-timing/#pending-image-record" },
                 "a326add7": { "dfnID": "a326add7", "dfnText": "contain", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-map-exists" }], "title": "3.3. Infrastructure Algorithms" }, { "refs": [{ "id": "ref-for-map-exists\u2460" }, { "id": "ref-for-map-exists\u2461" }], "title": "4.2. Interaction Contentful Paint Algorithms" }], "url": "https://infra.spec.whatwg.org/#map-exists" },
                 "a3b18719": { "dfnID": "a3b18719", "dfnText": "append", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-set-append" }, { "id": "ref-for-set-append\u2460" }], "title": "4.2. Interaction Contentful Paint Algorithms" }], "url": "https://infra.spec.whatwg.org/#set-append" },
+                "a4c36929": { "dfnID": "a4c36929", "dfnText": "NavigationType", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-navigationtype" }], "title": "3.2. The InteractionContext struct" }, { "refs": [{ "id": "ref-for-navigationtype\u2460" }], "title": "5.1. The PerformanceSoftNavigation interface" }, { "refs": [{ "id": "ref-for-navigationtype\u2461" }], "title": "5.2. Soft Navigation Algorithms" }], "url": "https://html.spec.whatwg.org/multipage/nav-history-apis.html#navigationtype" },
                 "a67e9838": { "dfnID": "a67e9838", "dfnText": "report largest contentful paint", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-report-largest-contentful-paint" }], "title": "6.4. Paint Timing integration" }], "url": "https://pr-preview.s3.amazonaws.com/shaseley/largest-contentful-paint/pull/171.html#report-largest-contentful-paint" },
-                "a973e0fe": { "dfnID": "a973e0fe", "dfnText": "document", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-concept-document" }, { "id": "ref-for-concept-document\u2460" }], "title": "3.2. The InteractionContext struct" }, { "refs": [{ "id": "ref-for-concept-document\u2461" }, { "id": "ref-for-concept-document\u2462" }, { "id": "ref-for-concept-document\u2463" }], "title": "3.3. Infrastructure Algorithms" }, { "refs": [{ "id": "ref-for-concept-document\u2464" }], "title": "4.2. Interaction Contentful Paint Algorithms" }, { "refs": [{ "id": "ref-for-concept-document\u2465" }], "title": "4.3. Interaction Contentful Paint Attribution" }, { "refs": [{ "id": "ref-for-concept-document\u2466" }, { "id": "ref-for-concept-document\u2467" }], "title": "5.2. Soft Navigation Algorithms" }, { "refs": [{ "id": "ref-for-concept-document\u2468" }, { "id": "ref-for-concept-document\u2460\u24ea" }, { "id": "ref-for-concept-document\u2460\u2460" }, { "id": "ref-for-concept-document\u2460\u2461" }, { "id": "ref-for-concept-document\u2460\u2462" }, { "id": "ref-for-concept-document\u2460\u2463" }, { "id": "ref-for-concept-document\u2460\u2464" }], "title": "6.1.1. Document" }, { "refs": [{ "id": "ref-for-concept-document\u2460\u2465" }, { "id": "ref-for-concept-document\u2460\u2466" }], "title": "6.2.1. History" }, { "refs": [{ "id": "ref-for-concept-document\u2460\u2467" }], "title": "8. Appendix: Overlapping Interactions and Race Conditions" }], "url": "https://dom.spec.whatwg.org/#concept-document" },
+                "a973e0fe": { "dfnID": "a973e0fe", "dfnText": "document", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-concept-document" }], "title": "3.2. The InteractionContext struct" }, { "refs": [{ "id": "ref-for-concept-document\u2460" }, { "id": "ref-for-concept-document\u2461" }, { "id": "ref-for-concept-document\u2462" }], "title": "3.3. Infrastructure Algorithms" }, { "refs": [{ "id": "ref-for-concept-document\u2463" }], "title": "4.2. Interaction Contentful Paint Algorithms" }, { "refs": [{ "id": "ref-for-concept-document\u2464" }], "title": "4.3. Interaction Contentful Paint Attribution" }, { "refs": [{ "id": "ref-for-concept-document\u2465" }, { "id": "ref-for-concept-document\u2466" }], "title": "5.2. Soft Navigation Algorithms" }, { "refs": [{ "id": "ref-for-concept-document\u2467" }, { "id": "ref-for-concept-document\u2468" }, { "id": "ref-for-concept-document\u2460\u24ea" }, { "id": "ref-for-concept-document\u2460\u2460" }, { "id": "ref-for-concept-document\u2460\u2461" }, { "id": "ref-for-concept-document\u2460\u2462" }, { "id": "ref-for-concept-document\u2460\u2463" }], "title": "6.1.1. Document" }, { "refs": [{ "id": "ref-for-concept-document\u2460\u2464" }, { "id": "ref-for-concept-document\u2460\u2465" }], "title": "6.2.1. History" }, { "refs": [{ "id": "ref-for-concept-document\u2460\u2466" }], "title": "8. Appendix: Overlapping Interactions and Race Conditions" }], "url": "https://dom.spec.whatwg.org/#concept-document" },
                 "a9ea380f": { "dfnID": "a9ea380f", "dfnText": "queue a PerformanceEntry", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-dfn-queue-a-performanceentry" }], "title": "2.3. Performance Timeline Integration" }, { "refs": [{ "id": "ref-for-dfn-queue-a-performanceentry\u2460" }], "title": "4.2. Interaction Contentful Paint Algorithms" }, { "refs": [{ "id": "ref-for-dfn-queue-a-performanceentry\u2461" }], "title": "5.2. Soft Navigation Algorithms" }], "url": "https://w3c.github.io/performance-timeline/#dfn-queue-a-performanceentry" },
                 "b2bb4403": { "dfnID": "b2bb4403", "dfnText": "renderTime", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-dom-largestcontentfulpaint-rendertime" }, { "id": "ref-for-dom-largestcontentfulpaint-rendertime\u2460" }], "title": "4.2. Interaction Contentful Paint Algorithms" }], "url": "https://w3c.github.io/largest-contentful-paint/#dom-largestcontentfulpaint-rendertime" },
                 "b75a7d23": { "dfnID": "b75a7d23", "dfnText": "realm", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-concept-global-object-realm" }], "title": "4.2. Interaction Contentful Paint Algorithms" }, { "refs": [{ "id": "ref-for-concept-global-object-realm\u2460" }], "title": "5.2. Soft Navigation Algorithms" }], "url": "https://html.spec.whatwg.org/multipage/webappapis.html#concept-global-object-realm" },
                 "ba6dc3e0": { "dfnID": "ba6dc3e0", "dfnText": "interactionId increment", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-window-interactionid-increment" }], "title": "6.3. Event Timing integration" }], "url": "https://pr-preview.s3.amazonaws.com/mmocny/event-timing/pull/165.html#window-interactionid-increment" },
-                "bc2342f0": { "dfnID": "bc2342f0", "dfnText": "has dispatched input event", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-has-dispatched-input-event" }], "title": "3.3. Infrastructure Algorithms" }], "url": "https://w3c.github.io/event-timing/#has-dispatched-input-event" },
                 "c88f3887": { "dfnID": "c88f3887", "dfnText": "item", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-struct-item" }], "title": "3.2. The InteractionContext struct" }, { "refs": [{ "id": "ref-for-struct-item\u2460" }], "title": "4.3. Interaction Contentful Paint Attribution" }], "url": "https://infra.spec.whatwg.org/#struct-item" },
+                "c9ff317b": { "dfnID": "c9ff317b", "dfnText": "push", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-dom-navigationtype-push" }], "title": "6.2.1. History" }], "url": "https://html.spec.whatwg.org/multipage/nav-history-apis.html#dom-navigationtype-push" },
                 "cc02d9f1": { "dfnID": "cc02d9f1", "dfnText": "compute a new largest contentful paint candidate", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-compute-a-new-largest-contentful-paint-candidate" }], "title": "4.2. Interaction Contentful Paint Algorithms" }], "url": "https://pr-preview.s3.amazonaws.com/shaseley/largest-contentful-paint/pull/171.html#compute-a-new-largest-contentful-paint-candidate" },
-                "cc7c9b78": { "dfnID": "cc7c9b78", "dfnText": "startTime", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-dom-performanceentry-starttime" }], "title": "4.1. The InteractionContentfulPaint interface" }, { "refs": [{ "id": "ref-for-dom-performanceentry-starttime\u2460" }], "title": "5.1. The PerformanceSoftNavigation interface" }], "url": "https://w3c.github.io/performance-timeline/#dom-performanceentry-starttime" },
+                "cc7c9b78": { "dfnID": "cc7c9b78", "dfnText": "startTime", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-dom-performanceentry-starttime" }], "title": "3.3. Infrastructure Algorithms" }, { "refs": [{ "id": "ref-for-dom-performanceentry-starttime\u2460" }], "title": "4.1. The InteractionContentfulPaint interface" }, { "refs": [{ "id": "ref-for-dom-performanceentry-starttime\u2461" }], "title": "5.1. The PerformanceSoftNavigation interface" }], "url": "https://w3c.github.io/performance-timeline/#dom-performanceentry-starttime" },
                 "ce6f454c": { "dfnID": "ce6f454c", "dfnText": "initial interactionId value", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-window-initial-interactionid-value" }], "title": "6.3. Event Timing integration" }], "url": "https://pr-preview.s3.amazonaws.com/mmocny/event-timing/pull/165.html#window-initial-interactionid-value" },
                 "cf22a135": { "dfnID": "cf22a135", "dfnText": "default paint timestamp", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-default-paint-timestamp" }], "title": "4.1. The InteractionContentfulPaint interface" }], "url": "https://w3c.github.io/paint-timing/#default-paint-timestamp" },
                 "create-a-soft-navigation-entry": { "dfnID": "create-a-soft-navigation-entry", "dfnText": "create a soft navigation entry", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-create-a-soft-navigation-entry" }], "title": "5.2. Soft Navigation Algorithms" }], "url": "#create-a-soft-navigation-entry" },
                 "create-an-interaction-contentful-paint-entry": { "dfnID": "create-an-interaction-contentful-paint-entry", "dfnText": "create an interaction contentful paint entry", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-create-an-interaction-contentful-paint-entry" }], "title": "4.2. Interaction Contentful Paint Algorithms" }], "url": "#create-an-interaction-contentful-paint-entry" },
+                "d51946bf": { "dfnID": "d51946bf", "dfnText": "has dispatched input event", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-has-dispatched-input-event" }], "title": "3.3. Infrastructure Algorithms" }], "url": "https://pr-preview.s3.amazonaws.com/mmocny/event-timing/pull/165.html#has-dispatched-input-event" },
                 "document-active-soft-navigation-candidate": { "dfnID": "document-active-soft-navigation-candidate", "dfnText": "active soft navigation candidate", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-document-active-soft-navigation-candidate" }, { "id": "ref-for-document-active-soft-navigation-candidate\u2460" }], "title": "5.2. Soft Navigation Algorithms" }, { "refs": [{ "id": "ref-for-document-active-soft-navigation-candidate\u2461" }, { "id": "ref-for-document-active-soft-navigation-candidate\u2462" }, { "id": "ref-for-document-active-soft-navigation-candidate\u2463" }], "title": "8. Appendix: Overlapping Interactions and Race Conditions" }], "url": "#document-active-soft-navigation-candidate" },
                 "document-current-modification-generation-id": { "dfnID": "document-current-modification-generation-id", "dfnText": "current modification generation id", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-document-current-modification-generation-id" }, { "id": "ref-for-document-current-modification-generation-id\u2460" }, { "id": "ref-for-document-current-modification-generation-id\u2461" }], "title": "4.3. Interaction Contentful Paint Attribution" }, { "refs": [{ "id": "ref-for-document-current-modification-generation-id\u2462" }], "title": "6.1.1. Document" }], "url": "#document-current-modification-generation-id" },
                 "document-interaction-id-to-interaction-context": { "dfnID": "document-interaction-id-to-interaction-context", "dfnText": "interaction id to interaction context", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-document-interaction-id-to-interaction-context" }, { "id": "ref-for-document-interaction-id-to-interaction-context\u2460" }, { "id": "ref-for-document-interaction-id-to-interaction-context\u2461" }, { "id": "ref-for-document-interaction-id-to-interaction-context\u2462" }], "title": "3.3. Infrastructure Algorithms" }], "url": "#document-interaction-id-to-interaction-context" },
@@ -4237,7 +4247,7 @@ For darkmode:
                 "dom-interactioncontentfulpaint-interactionid": { "dfnID": "dom-interactioncontentfulpaint-interactionid", "dfnText": "interactionId", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-dom-interactioncontentfulpaint-interactionid" }], "title": "4.1. The InteractionContentfulPaint interface" }], "url": "#dom-interactioncontentfulpaint-interactionid" },
                 "dom-interactioncontentfulpaint-largestcontentfulpaint": { "dfnID": "dom-interactioncontentfulpaint-largestcontentfulpaint", "dfnText": "largestContentfulPaint", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-dom-interactioncontentfulpaint-largestcontentfulpaint" }], "title": "4.1. The InteractionContentfulPaint interface" }], "url": "#dom-interactioncontentfulpaint-largestcontentfulpaint" },
                 "dom-interactioncontentfulpaint-tojson": { "dfnID": "dom-interactioncontentfulpaint-tojson", "dfnText": "toJSON", "external": false, "refSections": [], "url": "#dom-interactioncontentfulpaint-tojson" },
-                "dom-performanceentry-navigationid": { "dfnID": "dom-performanceentry-navigationid", "dfnText": "navigationId", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-dom-performanceentry-navigationid" }], "title": "2.1. Navigation ID" }, { "refs": [{ "id": "ref-for-dom-performanceentry-navigationid\u2460" }], "title": "2.2. The PerformanceEntry extension" }], "url": "#dom-performanceentry-navigationid" },
+                "dom-performanceentry-navigationid": { "dfnID": "dom-performanceentry-navigationid", "dfnText": "navigationId", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-dom-performanceentry-navigationid" }], "title": "2. Performance Timeline Slicing" }, { "refs": [{ "id": "ref-for-dom-performanceentry-navigationid\u2460" }], "title": "2.1. Navigation ID" }, { "refs": [{ "id": "ref-for-dom-performanceentry-navigationid\u2461" }], "title": "2.2. The PerformanceEntry extension" }], "url": "#dom-performanceentry-navigationid" },
                 "dom-performancesoftnavigation-getlargestinteractioncontentfulpaint": { "dfnID": "dom-performancesoftnavigation-getlargestinteractioncontentfulpaint", "dfnText": "getLargestInteractionContentfulPaint", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-dom-performancesoftnavigation-getlargestinteractioncontentfulpaint" }, { "id": "ref-for-dom-performancesoftnavigation-getlargestinteractioncontentfulpaint\u2460" }], "title": "5.1. The PerformanceSoftNavigation interface" }], "url": "#dom-performancesoftnavigation-getlargestinteractioncontentfulpaint" },
                 "dom-performancesoftnavigation-interactionid": { "dfnID": "dom-performancesoftnavigation-interactionid", "dfnText": "interactionId", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-dom-performancesoftnavigation-interactionid" }], "title": "5.1. The PerformanceSoftNavigation interface" }], "url": "#dom-performancesoftnavigation-interactionid" },
                 "dom-performancesoftnavigation-navigationtype": { "dfnID": "dom-performancesoftnavigation-navigationtype", "dfnText": "navigationType", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-dom-performancesoftnavigation-navigationtype" }], "title": "5.1. The PerformanceSoftNavigation interface" }], "url": "#dom-performancesoftnavigation-navigationtype" },
@@ -4253,9 +4263,10 @@ For darkmode:
                 "f05d368d": { "dfnID": "f05d368d", "dfnText": "PerformanceNavigationTiming", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-performancenavigationtiming" }], "title": "6.2.2. Hard Navigation" }], "url": "https://w3c.github.io/navigation-timing/#performancenavigationtiming" },
                 "f14b47b8": { "dfnID": "f14b47b8", "dfnText": "unsigned long long", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-idl-unsigned-long-long" }], "title": "2.2. The PerformanceEntry extension" }, { "refs": [{ "id": "ref-for-idl-unsigned-long-long\u2460" }], "title": "4.1. The InteractionContentfulPaint interface" }, { "refs": [{ "id": "ref-for-idl-unsigned-long-long\u2461" }], "title": "5.1. The PerformanceSoftNavigation interface" }], "url": "https://webidl.spec.whatwg.org/#idl-unsigned-long-long" },
                 "f710aefb": { "dfnID": "f710aefb", "dfnText": "session history entry url", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-she-url" }], "title": "6.2.1. History" }], "url": "https://html.spec.whatwg.org/multipage/browsing-the-web.html#she-url" },
+                "fa3348cc": { "dfnID": "fa3348cc", "dfnText": "traverse", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-dom-navigationtype-traverse" }], "title": "6.2.1. History" }], "url": "https://html.spec.whatwg.org/multipage/nav-history-apis.html#dom-navigationtype-traverse" },
                 "fabd3046": { "dfnID": "fabd3046", "dfnText": "duration", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-dom-performanceentry-duration" }], "title": "4.1. The InteractionContentfulPaint interface" }, { "refs": [{ "id": "ref-for-dom-performanceentry-duration\u2460" }], "title": "5.1. The PerformanceSoftNavigation interface" }], "url": "https://w3c.github.io/performance-timeline/#dom-performanceentry-duration" },
+                "get-or-create-the-context-for-an-interaction": { "dfnID": "get-or-create-the-context-for-an-interaction", "dfnText": "get or create the context for an interaction", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-get-or-create-the-context-for-an-interaction" }], "title": "3.3. Infrastructure Algorithms" }], "url": "#get-or-create-the-context-for-an-interaction" },
                 "get-the-attribution-element": { "dfnID": "get-the-attribution-element", "dfnText": "get the attribution element", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-get-the-attribution-element" }], "title": "4.3. Interaction Contentful Paint Attribution" }], "url": "#get-the-attribution-element" },
-                "get-the-context-for-an-interaction": { "dfnID": "get-the-context-for-an-interaction", "dfnText": "get the context for an interaction", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-get-the-context-for-an-interaction" }], "title": "3.3. Infrastructure Algorithms" }], "url": "#get-the-context-for-an-interaction" },
                 "get-the-current-interaction-context": { "dfnID": "get-the-current-interaction-context", "dfnText": "get the current interaction context", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-get-the-current-interaction-context" }], "title": "4.3. Interaction Contentful Paint Attribution" }, { "refs": [{ "id": "ref-for-get-the-current-interaction-context\u2460" }], "title": "5.2. Soft Navigation Algorithms" }], "url": "#get-the-current-interaction-context" },
                 "get-the-next-interactionid": { "dfnID": "get-the-next-interactionid", "dfnText": "get the next interactionId", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-get-the-next-interactionid" }], "title": "6.3. Event Timing integration" }], "url": "#get-the-next-interactionid" },
                 "get-the-paint-attribution-interaction-context": { "dfnID": "get-the-paint-attribution-interaction-context", "dfnText": "get the paint attribution interaction context", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-get-the-paint-attribution-interaction-context" }, { "id": "ref-for-get-the-paint-attribution-interaction-context\u2460" }], "title": "4.2. Interaction Contentful Paint Algorithms" }], "url": "#get-the-paint-attribution-interaction-context" },
@@ -4273,7 +4284,7 @@ For darkmode:
                 "interactioncontext-first-url-value": { "dfnID": "interactioncontext-first-url-value", "dfnText": "first URL value", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-interactioncontext-first-url-value" }], "title": "5.1. The PerformanceSoftNavigation interface" }, { "refs": [{ "id": "ref-for-interactioncontext-first-url-value\u2460" }, { "id": "ref-for-interactioncontext-first-url-value\u2461" }], "title": "5.2. Soft Navigation Algorithms" }], "url": "#interactioncontext-first-url-value" },
                 "interactioncontext-id": { "dfnID": "interactioncontext-id", "dfnText": "id", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-interactioncontext-id" }], "title": "3.3. Infrastructure Algorithms" }, { "refs": [{ "id": "ref-for-interactioncontext-id\u2460" }], "title": "4.1. The InteractionContentfulPaint interface" }, { "refs": [{ "id": "ref-for-interactioncontext-id\u2461" }], "title": "5.1. The PerformanceSoftNavigation interface" }], "url": "#interactioncontext-id" },
                 "interactioncontext-interactioncontext": { "dfnID": "interactioncontext-interactioncontext", "dfnText": "InteractionContext", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-interactioncontext-interactioncontext" }], "title": "3.3. Infrastructure Algorithms" }, { "refs": [{ "id": "ref-for-interactioncontext-interactioncontext\u2460" }, { "id": "ref-for-interactioncontext-interactioncontext\u2461" }], "title": "4.1. The InteractionContentfulPaint interface" }, { "refs": [{ "id": "ref-for-interactioncontext-interactioncontext\u2462" }, { "id": "ref-for-interactioncontext-interactioncontext\u2463" }], "title": "4.2. Interaction Contentful Paint Algorithms" }, { "refs": [{ "id": "ref-for-interactioncontext-interactioncontext\u2464" }], "title": "4.3. Interaction Contentful Paint Attribution" }, { "refs": [{ "id": "ref-for-interactioncontext-interactioncontext\u2465" }], "title": "5.1. The PerformanceSoftNavigation interface" }, { "refs": [{ "id": "ref-for-interactioncontext-interactioncontext\u2466" }, { "id": "ref-for-interactioncontext-interactioncontext\u2467" }, { "id": "ref-for-interactioncontext-interactioncontext\u2468" }, { "id": "ref-for-interactioncontext-interactioncontext\u2460\u24ea" }], "title": "5.2. Soft Navigation Algorithms" }, { "refs": [{ "id": "ref-for-interactioncontext-interactioncontext\u2460\u2460" }, { "id": "ref-for-interactioncontext-interactioncontext\u2460\u2461" }, { "id": "ref-for-interactioncontext-interactioncontext\u2460\u2462" }], "title": "6.1.1. Document" }, { "refs": [{ "id": "ref-for-interactioncontext-interactioncontext\u2460\u2463" }], "title": "8. Appendix: Overlapping Interactions and Race Conditions" }], "url": "#interactioncontext-interactioncontext" },
-                "interactioncontext-largest-contentful-paint": { "dfnID": "interactioncontext-largest-contentful-paint", "dfnText": "largest contentful paint", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-interactioncontext-largest-contentful-paint" }], "title": "3.2. The InteractionContext struct" }, { "refs": [{ "id": "ref-for-interactioncontext-largest-contentful-paint\u2460" }], "title": "4.2. Interaction Contentful Paint Algorithms" }, { "refs": [{ "id": "ref-for-interactioncontext-largest-contentful-paint\u2461" }], "title": "5.1. The PerformanceSoftNavigation interface" }], "url": "#interactioncontext-largest-contentful-paint" },
+                "interactioncontext-largest-contentful-paint": { "dfnID": "interactioncontext-largest-contentful-paint", "dfnText": "largest contentful paint", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-interactioncontext-largest-contentful-paint" }], "title": "4.2. Interaction Contentful Paint Algorithms" }, { "refs": [{ "id": "ref-for-interactioncontext-largest-contentful-paint\u2460" }], "title": "5.1. The PerformanceSoftNavigation interface" }], "url": "#interactioncontext-largest-contentful-paint" },
                 "interactioncontext-last-url-value": { "dfnID": "interactioncontext-last-url-value", "dfnText": "last URL value", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-interactioncontext-last-url-value" }], "title": "5.2. Soft Navigation Algorithms" }], "url": "#interactioncontext-last-url-value" },
                 "interactioncontext-navigation-type": { "dfnID": "interactioncontext-navigation-type", "dfnText": "navigation type", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-interactioncontext-navigation-type" }], "title": "5.1. The PerformanceSoftNavigation interface" }, { "refs": [{ "id": "ref-for-interactioncontext-navigation-type\u2460" }], "title": "5.2. Soft Navigation Algorithms" }], "url": "#interactioncontext-navigation-type" },
                 "interactioncontext-start-time": { "dfnID": "interactioncontext-start-time", "dfnText": "start time", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-interactioncontext-start-time" }], "title": "3.3. Infrastructure Algorithms" }, { "refs": [{ "id": "ref-for-interactioncontext-start-time\u2460" }, { "id": "ref-for-interactioncontext-start-time\u2461" }], "title": "4.1. The InteractionContentfulPaint interface" }, { "refs": [{ "id": "ref-for-interactioncontext-start-time\u2462" }, { "id": "ref-for-interactioncontext-start-time\u2463" }], "title": "5.1. The PerformanceSoftNavigation interface" }], "url": "#interactioncontext-start-time" },
@@ -4287,7 +4298,7 @@ For darkmode:
                 "performancesoftnavigation-context": { "dfnID": "performancesoftnavigation-context", "dfnText": "context", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-performancesoftnavigation-context" }, { "id": "ref-for-performancesoftnavigation-context\u2460" }, { "id": "ref-for-performancesoftnavigation-context\u2461" }, { "id": "ref-for-performancesoftnavigation-context\u2462" }, { "id": "ref-for-performancesoftnavigation-context\u2463" }, { "id": "ref-for-performancesoftnavigation-context\u2464" }], "title": "5.1. The PerformanceSoftNavigation interface" }, { "refs": [{ "id": "ref-for-performancesoftnavigation-context\u2465" }], "title": "5.2. Soft Navigation Algorithms" }], "url": "#performancesoftnavigation-context" },
                 "process-a-new-attributed-contentful-paint-candidate": { "dfnID": "process-a-new-attributed-contentful-paint-candidate", "dfnText": "process a new attributed contentful paint candidate", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-process-a-new-attributed-contentful-paint-candidate" }], "title": "4.2. Interaction Contentful Paint Algorithms" }], "url": "#process-a-new-attributed-contentful-paint-candidate" },
                 "process-a-same-document-commit": { "dfnID": "process-a-same-document-commit", "dfnText": "process a same document commit", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-process-a-same-document-commit" }, { "id": "ref-for-process-a-same-document-commit\u2460" }], "title": "6.2.1. History" }], "url": "#process-a-same-document-commit" },
-                "record-a-node-as-modified-for-interaction-paint-timing": { "dfnID": "record-a-node-as-modified-for-interaction-paint-timing", "dfnText": "record a node as modified for interaction paint timing", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-record-a-node-as-modified-for-interaction-paint-timing" }], "title": "4.3. Interaction Contentful Paint Attribution" }, { "refs": [{ "id": "ref-for-record-a-node-as-modified-for-interaction-paint-timing\u2460" }], "title": "6.1.2. Node" }], "url": "#record-a-node-as-modified-for-interaction-paint-timing" },
+                "record-a-node-as-modified-for-interaction-paint-timing": { "dfnID": "record-a-node-as-modified-for-interaction-paint-timing", "dfnText": "record a node as modified for interaction paint timing", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-record-a-node-as-modified-for-interaction-paint-timing" }], "title": "3.1. Interaction Context Intro" }, { "refs": [{ "id": "ref-for-record-a-node-as-modified-for-interaction-paint-timing\u2460" }], "title": "4.3. Interaction Contentful Paint Attribution" }, { "refs": [{ "id": "ref-for-record-a-node-as-modified-for-interaction-paint-timing\u2461" }], "title": "6.1.2. Node" }], "url": "#record-a-node-as-modified-for-interaction-paint-timing" },
                 "report-interaction-contentful-paints-and-soft-navigations": { "dfnID": "report-interaction-contentful-paints-and-soft-navigations", "dfnText": "report interaction contentful paints and soft navigations", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-report-interaction-contentful-paints-and-soft-navigations" }], "title": "6.4. Paint Timing integration" }], "url": "#report-interaction-contentful-paints-and-soft-navigations" },
                 "reset-paint-tracking": { "dfnID": "reset-paint-tracking", "dfnText": "reset paint tracking", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-reset-paint-tracking" }], "title": "4.3. Interaction Contentful Paint Attribution" }], "url": "#reset-paint-tracking" },
                 "set-the-current-interaction-context-for-event-dispatch": { "dfnID": "set-the-current-interaction-context-for-event-dispatch", "dfnText": "set the current interaction context for event dispatch", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-set-the-current-interaction-context-for-event-dispatch" }], "title": "6.3. Event Timing integration" }], "url": "#set-the-current-interaction-context-for-event-dispatch" },
@@ -4705,8 +4716,8 @@ For darkmode:
                 "#dom-performancesoftnavigation-navigationtype": { "displayText": "navigationType", "export": true, "for_": ["PerformanceSoftNavigation"], "level": "", "normative": true, "shortname": "soft-navigations", "spec": "soft-navigations", "status": "local", "text": "navigationType", "type": "attribute", "url": "#dom-performancesoftnavigation-navigationtype" },
                 "#emit-a-soft-navigation-entry": { "displayText": "emit a soft navigation entry", "export": true, "for_": [], "level": "", "normative": true, "shortname": "soft-navigations", "spec": "soft-navigations", "status": "local", "text": "emit a soft navigation entry", "type": "dfn", "url": "#emit-a-soft-navigation-entry" },
                 "#evaluate-soft-navigation-emission": { "displayText": "evaluate soft navigation emission", "export": true, "for_": [], "level": "", "normative": true, "shortname": "soft-navigations", "spec": "soft-navigations", "status": "local", "text": "evaluate soft navigation emission", "type": "dfn", "url": "#evaluate-soft-navigation-emission" },
+                "#get-or-create-the-context-for-an-interaction": { "displayText": "get or create the context for an interaction", "export": true, "for_": [], "level": "", "normative": true, "shortname": "soft-navigations", "spec": "soft-navigations", "status": "local", "text": "get or create the context for an interaction", "type": "dfn", "url": "#get-or-create-the-context-for-an-interaction" },
                 "#get-the-attribution-element": { "displayText": "get the attribution element", "export": true, "for_": [], "level": "", "normative": true, "shortname": "soft-navigations", "spec": "soft-navigations", "status": "local", "text": "get the attribution element", "type": "dfn", "url": "#get-the-attribution-element" },
-                "#get-the-context-for-an-interaction": { "displayText": "get the context for an interaction", "export": true, "for_": [], "level": "", "normative": true, "shortname": "soft-navigations", "spec": "soft-navigations", "status": "local", "text": "get the context for an interaction", "type": "dfn", "url": "#get-the-context-for-an-interaction" },
                 "#get-the-current-interaction-context": { "displayText": "get the current interaction context", "export": true, "for_": [], "level": "", "normative": true, "shortname": "soft-navigations", "spec": "soft-navigations", "status": "local", "text": "get the current interaction context", "type": "dfn", "url": "#get-the-current-interaction-context" },
                 "#get-the-next-interactionid": { "displayText": "get the next interactionid", "export": true, "for_": [], "level": "", "normative": true, "shortname": "soft-navigations", "spec": "soft-navigations", "status": "local", "text": "get the next interactionid", "type": "dfn", "url": "#get-the-next-interactionid" },
                 "#get-the-paint-attribution-interaction-context": { "displayText": "get the paint attribution interaction context", "export": true, "for_": [], "level": "", "normative": true, "shortname": "soft-navigations", "spec": "soft-navigations", "status": "local", "text": "get the paint attribution interaction context", "type": "dfn", "url": "#get-the-paint-attribution-interaction-context" },
@@ -4766,11 +4777,16 @@ For darkmode:
                 "https://html.spec.whatwg.org/multipage/browsing-the-web.html#she-url": { "displayText": "session history entry url", "export": true, "for_": [], "level": "", "normative": true, "shortname": "html", "spec": "html", "status": "anchor-block", "text": "session history entry url", "type": "dfn", "url": "https://html.spec.whatwg.org/multipage/browsing-the-web.html#she-url" },
                 "https://html.spec.whatwg.org/multipage/browsing-the-web.html#update-document-for-history-step-application": { "displayText": "update document for history step application", "export": true, "for_": [], "level": "", "normative": true, "shortname": "html", "spec": "html", "status": "anchor-block", "text": "update document for history step application", "type": "dfn", "url": "https://html.spec.whatwg.org/multipage/browsing-the-web.html#update-document-for-history-step-application" },
                 "https://html.spec.whatwg.org/multipage/nav-history-apis.html#concept-document-window": { "displayText": "associated Document", "export": true, "for_": [], "level": "1", "normative": true, "shortname": "html", "spec": "html", "status": "current", "text": "associated document", "type": "dfn", "url": "https://html.spec.whatwg.org/multipage/nav-history-apis.html#concept-document-window" },
+                "https://html.spec.whatwg.org/multipage/nav-history-apis.html#dom-navigationtype-push": { "displayText": "push", "export": true, "for_": ["NavigationType"], "level": "1", "normative": true, "shortname": "html", "spec": "html", "status": "current", "text": "push", "type": "enum-value", "url": "https://html.spec.whatwg.org/multipage/nav-history-apis.html#dom-navigationtype-push" },
+                "https://html.spec.whatwg.org/multipage/nav-history-apis.html#dom-navigationtype-replace": { "displayText": "replace", "export": true, "for_": ["NavigationType"], "level": "1", "normative": true, "shortname": "html", "spec": "html", "status": "current", "text": "replace", "type": "enum-value", "url": "https://html.spec.whatwg.org/multipage/nav-history-apis.html#dom-navigationtype-replace" },
+                "https://html.spec.whatwg.org/multipage/nav-history-apis.html#dom-navigationtype-traverse": { "displayText": "traverse", "export": true, "for_": ["NavigationType"], "level": "1", "normative": true, "shortname": "html", "spec": "html", "status": "current", "text": "traverse", "type": "enum-value", "url": "https://html.spec.whatwg.org/multipage/nav-history-apis.html#dom-navigationtype-traverse" },
+                "https://html.spec.whatwg.org/multipage/nav-history-apis.html#navigationtype": { "displayText": "NavigationType", "export": true, "for_": [], "level": "1", "normative": true, "shortname": "html", "spec": "html", "status": "current", "text": "NavigationType", "type": "enum", "url": "https://html.spec.whatwg.org/multipage/nav-history-apis.html#navigationtype" },
                 "https://html.spec.whatwg.org/multipage/nav-history-apis.html#window": { "displayText": "Window", "export": true, "for_": [], "level": "1", "normative": true, "shortname": "html", "spec": "html", "status": "current", "text": "Window", "type": "interface", "url": "https://html.spec.whatwg.org/multipage/nav-history-apis.html#window" },
                 "https://html.spec.whatwg.org/multipage/webappapis.html#concept-global-object-realm": { "displayText": "realm", "export": true, "for_": ["global object"], "level": "1", "normative": true, "shortname": "html", "spec": "html", "status": "current", "text": "realm", "type": "dfn", "url": "https://html.spec.whatwg.org/multipage/webappapis.html#concept-global-object-realm" },
                 "https://html.spec.whatwg.org/multipage/webappapis.html#concept-relevant-global": { "displayText": "relevant global object", "export": true, "for_": [], "level": "1", "normative": true, "shortname": "html", "spec": "html", "status": "current", "text": "relevant global object", "type": "dfn", "url": "https://html.spec.whatwg.org/multipage/webappapis.html#concept-relevant-global" },
                 "https://html.spec.whatwg.org/multipage/webappapis.html#global-object": { "displayText": "global object", "export": true, "for_": [], "level": "1", "normative": true, "shortname": "html", "spec": "html", "status": "current", "text": "global object", "type": "dfn", "url": "https://html.spec.whatwg.org/multipage/webappapis.html#global-object" },
                 "https://infra.spec.whatwg.org/#64-bit-unsigned-integer": { "displayText": "64-bit unsigned integer", "export": true, "for_": [], "level": "1", "normative": true, "shortname": "infra", "spec": "infra", "status": "current", "text": "64-bit unsigned integer", "type": "dfn", "url": "https://infra.spec.whatwg.org/#64-bit-unsigned-integer" },
+                "https://infra.spec.whatwg.org/#assert": { "displayText": "assert", "export": true, "for_": [], "level": "1", "normative": true, "shortname": "infra", "spec": "infra", "status": "current", "text": "assert", "type": "dfn", "url": "https://infra.spec.whatwg.org/#assert" },
                 "https://infra.spec.whatwg.org/#list-iterate": { "displayText": "for each", "export": true, "for_": ["list", "set"], "level": "1", "normative": true, "shortname": "infra", "spec": "infra", "status": "current", "text": "for each", "type": "dfn", "url": "https://infra.spec.whatwg.org/#list-iterate" },
                 "https://infra.spec.whatwg.org/#map-exists": { "displayText": "exist", "export": true, "for_": ["map"], "level": "1", "normative": true, "shortname": "infra", "spec": "infra", "status": "current", "text": "exist", "type": "dfn", "url": "https://infra.spec.whatwg.org/#map-exists" },
                 "https://infra.spec.whatwg.org/#map-iterate": { "displayText": "for each", "export": true, "for_": ["map"], "level": "1", "normative": true, "shortname": "infra", "spec": "infra", "status": "current", "text": "for each", "type": "dfn", "url": "https://infra.spec.whatwg.org/#map-iterate" },
@@ -4783,6 +4799,8 @@ For darkmode:
                 "https://infra.spec.whatwg.org/#string": { "displayText": "string", "export": true, "for_": [], "level": "1", "normative": true, "shortname": "infra", "spec": "infra", "status": "current", "text": "string", "type": "dfn", "url": "https://infra.spec.whatwg.org/#string" },
                 "https://infra.spec.whatwg.org/#struct": { "displayText": "struct", "export": true, "for_": [], "level": "1", "normative": true, "shortname": "infra", "spec": "infra", "status": "current", "text": "struct", "type": "dfn", "url": "https://infra.spec.whatwg.org/#struct" },
                 "https://infra.spec.whatwg.org/#struct-item": { "displayText": "item", "export": true, "for_": ["struct", "tuple"], "level": "1", "normative": true, "shortname": "infra", "spec": "infra", "status": "current", "text": "item", "type": "dfn", "url": "https://infra.spec.whatwg.org/#struct-item" },
+                "https://pr-preview.s3.amazonaws.com/mmocny/event-timing/pull/165.html#dfn-interaction": { "displayText": "interaction", "export": true, "for_": [], "level": "", "normative": true, "shortname": "event-timing", "spec": "event-timing", "status": "anchor-block", "text": "interaction", "type": "dfn", "url": "https://pr-preview.s3.amazonaws.com/mmocny/event-timing/pull/165.html#dfn-interaction" },
+                "https://pr-preview.s3.amazonaws.com/mmocny/event-timing/pull/165.html#has-dispatched-input-event": { "displayText": "has dispatched input event", "export": true, "for_": [], "level": "", "normative": true, "shortname": "event-timing", "spec": "event-timing", "status": "anchor-block", "text": "has dispatched input event", "type": "dfn", "url": "https://pr-preview.s3.amazonaws.com/mmocny/event-timing/pull/165.html#has-dispatched-input-event" },
                 "https://pr-preview.s3.amazonaws.com/mmocny/event-timing/pull/165.html#initialize-and-record-event-timing-processing-start": { "displayText": "initialize and record event timing processing start", "export": true, "for_": [], "level": "", "normative": true, "shortname": "event-timing", "spec": "event-timing", "status": "anchor-block", "text": "initialize and record event timing processing start", "type": "dfn", "url": "https://pr-preview.s3.amazonaws.com/mmocny/event-timing/pull/165.html#initialize-and-record-event-timing-processing-start" },
                 "https://pr-preview.s3.amazonaws.com/mmocny/event-timing/pull/165.html#performanceeventtiming-associated-event": { "displayText": "associated event", "export": true, "for_": [], "level": "", "normative": true, "shortname": "event-timing", "spec": "event-timing", "status": "anchor-block", "text": "associated event", "type": "dfn", "url": "https://pr-preview.s3.amazonaws.com/mmocny/event-timing/pull/165.html#performanceeventtiming-associated-event" },
                 "https://pr-preview.s3.amazonaws.com/mmocny/event-timing/pull/165.html#record-event-timing-processing-end": { "displayText": "record event timing processing end", "export": true, "for_": [], "level": "", "normative": true, "shortname": "event-timing", "spec": "event-timing", "status": "anchor-block", "text": "record event timing processing end", "type": "dfn", "url": "https://pr-preview.s3.amazonaws.com/mmocny/event-timing/pull/165.html#record-event-timing-processing-end" },
@@ -4793,10 +4811,7 @@ For darkmode:
                 "https://pr-preview.s3.amazonaws.com/shaseley/largest-contentful-paint/pull/171.html#create-a-largestcontentfulpaint-entry": { "displayText": "create a LargestContentfulPaint entry", "export": true, "for_": [], "level": "", "normative": true, "shortname": "largest-contentful-paint", "spec": "largest-contentful-paint", "status": "anchor-block", "text": "create a largestcontentfulpaint entry", "type": "dfn", "url": "https://pr-preview.s3.amazonaws.com/shaseley/largest-contentful-paint/pull/171.html#create-a-largestcontentfulpaint-entry" },
                 "https://pr-preview.s3.amazonaws.com/shaseley/largest-contentful-paint/pull/171.html#largest-contentful-paint-candidate": { "displayText": "largest contentful paint candidate", "export": true, "for_": [], "level": "", "normative": true, "shortname": "largest-contentful-paint", "spec": "largest-contentful-paint", "status": "anchor-block", "text": "largest contentful paint candidate", "type": "dfn", "url": "https://pr-preview.s3.amazonaws.com/shaseley/largest-contentful-paint/pull/171.html#largest-contentful-paint-candidate" },
                 "https://pr-preview.s3.amazonaws.com/shaseley/largest-contentful-paint/pull/171.html#report-largest-contentful-paint": { "displayText": "report largest contentful paint", "export": true, "for_": [], "level": "", "normative": true, "shortname": "largest-contentful-paint", "spec": "largest-contentful-paint", "status": "anchor-block", "text": "report largest contentful paint", "type": "dfn", "url": "https://pr-preview.s3.amazonaws.com/shaseley/largest-contentful-paint/pull/171.html#report-largest-contentful-paint" },
-                "https://w3c.github.io/event-timing/#dfn-interaction": { "displayText": "interaction", "export": true, "for_": [], "level": "", "normative": true, "shortname": "soft-navigations", "spec": "", "status": "anchor-block", "text": "interaction", "type": "dfn", "url": "https://w3c.github.io/event-timing/#dfn-interaction" },
                 "https://w3c.github.io/event-timing/#dom-performanceeventtiming-interactionid": { "displayText": "interactionId", "export": true, "for_": ["PerformanceEventTiming"], "level": "1", "normative": false, "shortname": "event-timing", "spec": "event-timing", "status": "current", "text": "interactionId", "type": "attribute", "url": "https://w3c.github.io/event-timing/#dom-performanceeventtiming-interactionid" },
-                "https://w3c.github.io/event-timing/#has-dispatched-input-event": { "displayText": "has dispatched input event", "export": true, "for_": [], "level": "", "normative": true, "shortname": "soft-navigations", "spec": "", "status": "anchor-block", "text": "has dispatched input event", "type": "dfn", "url": "https://w3c.github.io/event-timing/#has-dispatched-input-event" },
-                "https://w3c.github.io/event-timing/#interaction-id": { "displayText": "interaction id", "export": true, "for_": [], "level": "", "normative": true, "shortname": "soft-navigations", "spec": "", "status": "anchor-block", "text": "interaction id", "type": "dfn", "url": "https://w3c.github.io/event-timing/#interaction-id" },
                 "https://w3c.github.io/event-timing/#performanceeventtiming": { "displayText": "PerformanceEventTiming", "export": true, "for_": [], "level": "1", "normative": true, "shortname": "event-timing", "spec": "event-timing", "status": "current", "text": "PerformanceEventTiming", "type": "interface", "url": "https://w3c.github.io/event-timing/#performanceeventtiming" },
                 "https://w3c.github.io/hr-time/#dfn-current-high-resolution-time": { "displayText": "current high resolution time", "export": true, "for_": [], "level": "3", "normative": true, "shortname": "hr-time", "spec": "hr-time-3", "status": "current", "text": "current high resolution time", "type": "dfn", "url": "https://w3c.github.io/hr-time/#dfn-current-high-resolution-time" },
                 "https://w3c.github.io/largest-contentful-paint/#dom-largestcontentfulpaint-rendertime": { "displayText": "renderTime", "export": true, "for_": ["LargestContentfulPaint"], "level": "1", "normative": true, "shortname": "largest-contentful-paint", "spec": "largest-contentful-paint", "status": "current", "text": "renderTime", "type": "attribute", "url": "https://w3c.github.io/largest-contentful-paint/#dom-largestcontentfulpaint-rendertime" },
@@ -4819,7 +4834,6 @@ For darkmode:
                 "https://w3c.github.io/performance-timeline/#performance-entry-buffer": { "displayText": "performance entry buffer", "export": true, "for_": [], "level": "1", "normative": true, "shortname": "performance-timeline", "spec": "performance-timeline", "status": "current", "text": "performance entry buffer", "type": "dfn", "url": "https://w3c.github.io/performance-timeline/#performance-entry-buffer" },
                 "https://w3c.github.io/performance-timeline/#performanceentry": { "displayText": "PerformanceEntry", "export": true, "for_": [], "level": "1", "normative": true, "shortname": "performance-timeline", "spec": "performance-timeline", "status": "current", "text": "PerformanceEntry", "type": "interface", "url": "https://w3c.github.io/performance-timeline/#performanceentry" },
                 "https://webidl.spec.whatwg.org/#Exposed": { "displayText": "Exposed", "export": true, "for_": [], "level": "1", "normative": true, "shortname": "webidl", "spec": "webidl", "status": "current", "text": "Exposed", "type": "extended-attribute", "url": "https://webidl.spec.whatwg.org/#Exposed" },
-                "https://webidl.spec.whatwg.org/#idl-DOMString": { "displayText": "DOMString", "export": true, "for_": [], "level": "1", "normative": true, "shortname": "webidl", "spec": "webidl", "status": "current", "text": "DOMString", "type": "interface", "url": "https://webidl.spec.whatwg.org/#idl-DOMString" },
                 "https://webidl.spec.whatwg.org/#idl-object": { "displayText": "object", "export": true, "for_": [], "level": "1", "normative": true, "shortname": "webidl", "spec": "webidl", "status": "current", "text": "object", "type": "interface", "url": "https://webidl.spec.whatwg.org/#idl-object" },
                 "https://webidl.spec.whatwg.org/#idl-unsigned-long-long": { "displayText": "unsigned long long", "export": true, "for_": [], "level": "1", "normative": true, "shortname": "webidl", "spec": "webidl", "status": "current", "text": "unsigned long long", "type": "interface", "url": "https://webidl.spec.whatwg.org/#idl-unsigned-long-long" },
                 "https://webidl.spec.whatwg.org/#this": { "displayText": "this", "export": true, "for_": [], "level": "1", "normative": true, "shortname": "webidl", "spec": "webidl", "status": "current", "text": "this", "type": "dfn", "url": "https://webidl.spec.whatwg.org/#this" },
