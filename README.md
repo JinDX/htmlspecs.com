@@ -213,7 +213,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Permissions Policy](https://htmlspecs.com/permissions-policy/)（[Source](https://www.w3.org/TR/2025/WD-permissions-policy-1-20251006/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Document Policy](https://htmlspecs.com/document-policy/)（[Source](https://wicg.github.io/document-policy/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Capability Delegation](https://htmlspecs.com/capability-delegation/)（[Source](https://wicg.github.io/capability-delegation/spec.html) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
-- [Global Privacy Control (GPC)](https://htmlspecs.com/gpc/)（[Source](https://www.w3.org/TR/2026/WD-gpc-20260423/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Global Privacy Control (GPC)](https://htmlspecs.com/gpc/)（[Source](https://www.w3.org/TR/2026/WD-gpc-20260611/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Privacy Principles](https://htmlspecs.com/privacy-principles/)（[Source](https://www.w3.org/TR/2025/STMT-privacy-principles-20250515/) ![Statement](https://img.shields.io/badge/STMT-6c757d)）
 - [Secure Contexts](https://htmlspecs.com/secure-contexts/)（[Source](https://www.w3.org/TR/2023/CRD-secure-contexts-20231110/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [Isolated Contexts](https://htmlspecs.com/isolated-contexts/)（[Source](https://wicg.github.io/isolated-web-apps/isolated-contexts.html) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）

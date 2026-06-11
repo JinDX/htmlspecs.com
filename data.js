@@ -1629,7 +1629,7 @@ const links = [
     {
         text: "Global Privacy Control (GPC)",
         href: "https://htmlspecs.com/gpc/",
-        src: "https://www.w3.org/TR/2026/WD-gpc-20260423/",
+        src: "https://www.w3.org/TR/2026/WD-gpc-20260611/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
