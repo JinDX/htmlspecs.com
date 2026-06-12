@@ -73,7 +73,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Push API](https://htmlspecs.com/push-api/)（[Source](https://www.w3.org/TR/2025/WD-push-api-20251201/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [WebRTC](https://htmlspecs.com/webrtc/)（[Source](https://www.w3.org/TR/2025/REC-webrtc-20250313/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Identifiers for WebRTC&#39;s Statistics API](https://htmlspecs.com/webrtc-stats/)（[Source](https://www.w3.org/TR/2025/CRD-webrtc-stats-20250925/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
-- [WebRTC Encoded Transform](https://htmlspecs.com/webrtc-encoded-transform/)（[Source](https://www.w3.org/TR/2026/WD-webrtc-encoded-transform-20260521/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [WebRTC Encoded Transform](https://htmlspecs.com/webrtc-encoded-transform/)（[Source](https://www.w3.org/TR/2026/WD-webrtc-encoded-transform-20260611/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Scalable Video Coding (SVC) Extension for WebRTC](https://htmlspecs.com/webrtc-svc/)（[Source](https://www.w3.org/TR/2024/WD-webrtc-svc-20240817/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Payment Request API](https://htmlspecs.com/payment-request/)（[Source](https://www.w3.org/TR/2026/CRD-payment-request-20260327/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [Web-based Payment Handler API](https://htmlspecs.com/web-based-payment-handler/)（[Source](https://www.w3.org/TR/2026/WD-web-based-payment-handler-20260423/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）

@@ -563,7 +563,7 @@ const links = [
     {
         text: "WebRTC Encoded Transform",
         href: "https://htmlspecs.com/webrtc-encoded-transform/",
-        src: "https://www.w3.org/TR/2026/WD-webrtc-encoded-transform-20260521/",
+        src: "https://www.w3.org/TR/2026/WD-webrtc-encoded-transform-20260611/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
