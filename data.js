@@ -163,6 +163,78 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
+    // {
+    //     text: "JSON-LD 1.1 Processing Algorithms and API",
+    //     href: "https://htmlspecs.com/json-ld11-api/",
+    //     src: "https://www.w3.org/TR/2020/REC-json-ld11-api-20200716/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "REC"
+    // },
+    // {
+    //     text: "JSON-LD 1.1 Framing",
+    //     href: "https://htmlspecs.com/json-ld11-framing/",
+    //     src: "https://www.w3.org/TR/2020/REC-json-ld11-framing-20200716/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "REC"
+    // },
+    // {
+    //     text: "JavaScript Object Notation (JSON) Pointer",
+    //     href: "https://htmlspecs.com/json-pointer/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc6901",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
+    // {
+    //     text: "JSONPath: Query Expressions for JSON",
+    //     href: "https://htmlspecs.com/jsonpath/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc9535",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
+    // {
+    //     text: "JavaScript Object Notation (JSON) Patch",
+    //     href: "https://htmlspecs.com/json-patch/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc6902",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
+    // {
+    //     text: "JSON Merge Patch",
+    //     href: "https://htmlspecs.com/json-merge-patch/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc7396",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
+    // {
+    //     text: "JavaScript Object Notation (JSON) Text Sequences",
+    //     href: "https://htmlspecs.com/json-seq/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc7464",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
+    // {
+    //     text: "The I-JSON Message Format",
+    //     href: "https://htmlspecs.com/i-json/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc7493",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
+    // {
+    //     text: "JSON Canonicalization Scheme (JCS)",
+    //     href: "https://htmlspecs.com/json-canonicalization/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc8785",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
     {
         text: "MIME Sniffing",
         href: "https://htmlspecs.com/mimesniff/",
@@ -771,6 +843,38 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
+    // {
+    //     text: "JSON Schema Core",
+    //     href: "https://htmlspecs.com/json-schema-core/",
+    //     src: "https://json-schema.org/draft/2020-12/json-schema-core",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
+    // {
+    //     text: "JSON Schema Validation",
+    //     href: "https://htmlspecs.com/json-schema-validation/",
+    //     src: "https://json-schema.org/draft/2020-12/json-schema-validation",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
+    // {
+    //     text: "Relative JSON Pointers",
+    //     href: "https://htmlspecs.com/relative-json-pointer/",
+    //     src: "https://json-schema.org/draft/2020-12/relative-json-pointer",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
+    // {
+    //     text: "JSON Type Definition",
+    //     href: "https://htmlspecs.com/json-type-definition/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc8927",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
     {
         text: "Storage Access API",
         href: "https://htmlspecs.com/storage-access/",
@@ -1982,6 +2086,38 @@ const links = [
         lang: "cjk",
         state: "CR"
     },
+    // {
+    //     text: "Timed Text Markup Language 2 (TTML2)",
+    //     href: "https://htmlspecs.com/ttml2/",
+    //     src: "https://www.w3.org/TR/2018/REC-ttml2-20181108/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "REC"
+    // },
+    // {
+    //     text: "IMSC Text Profile 1.3",
+    //     href: "https://htmlspecs.com/ttml-imsc1.3/",
+    //     src: "https://www.w3.org/TR/2026/REC-ttml-imsc1.3-20260521/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "REC"
+    // },
+    // {
+    //     text: "Dubbing and Audio description Profiles of TTML2",
+    //     href: "https://htmlspecs.com/dapt/",
+    //     src: "https://www.w3.org/TR/2026/CRD-dapt-20260210/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "CRD"
+    // },
+    // {
+    //     text: "Requirements for Media Timed Events",
+    //     href: "https://htmlspecs.com/media-timed-events/",
+    //     src: "https://www.w3.org/TR/2020/NOTE-media-timed-events-20200625/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "NOTE"
+    // },
     {
         text: "Media Source Extensions",
         href: "https://htmlspecs.com/media-source-2/",
