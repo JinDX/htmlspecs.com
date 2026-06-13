@@ -163,14 +163,14 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
-    // {
-    //     text: "JSON-LD 1.1 Processing Algorithms and API",
-    //     href: "https://htmlspecs.com/json-ld11-api/",
-    //     src: "https://www.w3.org/TR/2020/REC-json-ld11-api-20200716/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "REC"
-    // },
+    {
+        text: "JSON-LD 1.1 Processing Algorithms and API",
+        href: "https://htmlspecs.com/json-ld11-api/",
+        src: "https://www.w3.org/TR/2020/REC-json-ld11-api-20200716/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "REC"
+    },
     // {
     //     text: "JSON-LD 1.1 Framing",
     //     href: "https://htmlspecs.com/json-ld11-framing/",
