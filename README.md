@@ -21,6 +21,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [The JavaScript Object Notation (JSON) Data Interchange Format](https://htmlspecs.com/json/)（[Source](https://www.rfc-editor.org/rfc/rfc8259.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [JSON-LD 1.1](https://htmlspecs.com/json-ld11/)（[Source](https://www.w3.org/TR/2020/REC-json-ld11-20200716/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [JSON-LD 1.1 Processing Algorithms and API](https://htmlspecs.com/json-ld11-api/)（[Source](https://www.w3.org/TR/2020/REC-json-ld11-api-20200716/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
+- [JSON-LD 1.1 Framing](https://htmlspecs.com/json-ld11-framing/)（[Source](https://www.w3.org/TR/2020/REC-json-ld11-framing-20200716/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [MIME Sniffing](https://htmlspecs.com/mimesniff/)（[Source](https://mimesniff.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [Infra](https://htmlspecs.com/infra/)（[Source](https://infra.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [Web User Agents](https://htmlspecs.com/web-user-agents/)（[Source](https://www.w3.org/TR/2026/DNOTE-web-user-agents-20260319/) ![Note](https://img.shields.io/badge/NOTE-309c40)）
