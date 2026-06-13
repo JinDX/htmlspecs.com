@@ -171,14 +171,14 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
-    // {
-    //     text: "JSON-LD 1.1 Framing",
-    //     href: "https://htmlspecs.com/json-ld11-framing/",
-    //     src: "https://www.w3.org/TR/2020/REC-json-ld11-framing-20200716/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "REC"
-    // },
+    {
+        text: "JSON-LD 1.1 Framing",
+        href: "https://htmlspecs.com/json-ld11-framing/",
+        src: "https://www.w3.org/TR/2020/REC-json-ld11-framing-20200716/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "REC"
+    },
     // {
     //     text: "JavaScript Object Notation (JSON) Pointer",
     //     href: "https://htmlspecs.com/json-pointer/",
