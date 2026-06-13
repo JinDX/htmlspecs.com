@@ -179,62 +179,6 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
-    // {
-    //     text: "JavaScript Object Notation (JSON) Pointer",
-    //     href: "https://htmlspecs.com/json-pointer/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc6901",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
-    // {
-    //     text: "JSONPath: Query Expressions for JSON",
-    //     href: "https://htmlspecs.com/jsonpath/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc9535",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
-    // {
-    //     text: "JavaScript Object Notation (JSON) Patch",
-    //     href: "https://htmlspecs.com/json-patch/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc6902",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
-    // {
-    //     text: "JSON Merge Patch",
-    //     href: "https://htmlspecs.com/json-merge-patch/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc7396",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
-    // {
-    //     text: "JavaScript Object Notation (JSON) Text Sequences",
-    //     href: "https://htmlspecs.com/json-seq/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc7464",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
-    // {
-    //     text: "The I-JSON Message Format",
-    //     href: "https://htmlspecs.com/i-json/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc7493",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
-    // {
-    //     text: "JSON Canonicalization Scheme (JCS)",
-    //     href: "https://htmlspecs.com/json-canonicalization/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc8785",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
     {
         text: "MIME Sniffing",
         href: "https://htmlspecs.com/mimesniff/",
@@ -843,38 +787,6 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
-    // {
-    //     text: "JSON Schema Core",
-    //     href: "https://htmlspecs.com/json-schema-core/",
-    //     src: "https://json-schema.org/draft/2020-12/json-schema-core",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
-    // {
-    //     text: "JSON Schema Validation",
-    //     href: "https://htmlspecs.com/json-schema-validation/",
-    //     src: "https://json-schema.org/draft/2020-12/json-schema-validation",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
-    // {
-    //     text: "Relative JSON Pointers",
-    //     href: "https://htmlspecs.com/relative-json-pointer/",
-    //     src: "https://json-schema.org/draft/2020-12/relative-json-pointer",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
-    // {
-    //     text: "JSON Type Definition",
-    //     href: "https://htmlspecs.com/json-type-definition/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc8927",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
     {
         text: "Storage Access API",
         href: "https://htmlspecs.com/storage-access/",
