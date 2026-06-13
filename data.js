@@ -2326,8 +2326,6 @@ const links = [
 const cssLinks = [
 
     //## CSS|CSS|CSS
-
-    //### 索引、快照与总览|색인, 스냅샷 및 개요|索引・スナップショット・概要
     {
         text: "CSS current work",
         href: "https://htmlspecs.com/css/",
@@ -3414,8 +3412,6 @@ const cssLinks = [
 const httpLinks = [
 
     //## HTTP|HTTP|HTTP
-
-    //### 索引和总览|색인 및 개요|索引と概要
     {
         text: "index",
         href: "https://htmlspecs.com/http/",

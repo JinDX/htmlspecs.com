@@ -332,7 +332,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [WebDriver](https://htmlspecs.com/webdriver2/)（[Source](https://www.w3.org/TR/2026/WD-webdriver2-20260528/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [WebDriver BiDi](https://htmlspecs.com/webdriver-bidi/)（[Source](https://www.w3.org/TR/2026/WD-webdriver-bidi-20260601/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 
-### 索引、快照与总览
+## CSS
 - [CSS current work](https://htmlspecs.com/css/)（[Source](https://www.w3.org/Style/CSS/current-work)）
 - [CSS 2.2 Specification](https://htmlspecs.com/css/css22/)（[Source](https://www.w3.org/TR/2016/WD-CSS22-20160412/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)），- [How to Read](https://htmlspecs.com/css/read/)（[Source](https://www.w3.org/Style/CSS/read)）
 - [CSS Snapshot 2023](https://htmlspecs.com/css/css-2023/)（[Source](https://www.w3.org/TR/2023/NOTE-css-2023-20231207/) ![Note](https://img.shields.io/badge/NOTE-309c40)）
@@ -489,7 +489,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Design Tokens Color Module 2025.10](https://htmlspecs.com/css/design-tokens-color/)（[Source](https://www.designtokens.org/tr/2025.10/color/) ![Community Group Final Report](https://img.shields.io/badge/CG--FINAL-ffcc00)）
 - [Design Tokens Resolver Module 2025.10](https://htmlspecs.com/css/design-tokens-resolver/)（[Source](https://www.designtokens.org/tr/2025.10/resolver/) ![Community Group Final Report](https://img.shields.io/badge/CG--FINAL-ffcc00)）
 
-### 索引和总览
+## HTTP
 - [index](https://htmlspecs.com/http/)（[Source](https://httpwg.org/specs/)）
 
 ### HTTP 核心、版本与压缩
