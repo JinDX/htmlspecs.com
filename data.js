@@ -296,7 +296,7 @@ const links = [
         state: "Draft"
     },
 
-    //### 文档、数学与出版|문서, 수학 및 출판|文書・数学・出版
+    //### 数学|수학|数学
     {
         text: "MathML Core",
         href: "https://htmlspecs.com/mathml-core/",
