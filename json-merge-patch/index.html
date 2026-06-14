@@ -1,0 +1,478 @@
+<pre>互联网工程任务组 (IETF)                                      P. Hoffman
+征求意见稿：7396                                           VPN Consortium
+废止：<a href="./rfc7386">7386</a>                                                 J. Snell
+类别：标准跟踪                                               2014 年 10 月
+ISSN: 2070-1721
+
+
+                            <span class="h1">JSON 合并补丁</span>
+
+摘要
+
+   本规范定义了 JSON 合并补丁格式和处理规则。合并补丁格式主要
+   旨在与 HTTP PATCH 方法一起使用，作为描述对目标资源内容的一组
+   修改的方式。
+
+本备忘录状态
+
+   本文档是互联网标准跟踪文档。
+
+   本文档是互联网工程任务组 (IETF) 的成果。它代表了 IETF 社区的
+   共识。它已经经过公开评审，并已获互联网工程指导组 (IESG)
+   批准发布。有关互联网标准的更多信息，请参见
+   <a href="./rfc5741#section-2">RFC 5741 第&nbsp;2 节</a>。
+
+   关于本文档当前状态、任何勘误以及如何提供反馈的信息，可通过
+   <a href="http://www.rfc-editor.org/info/rfc7396">http://www.rfc-editor.org/info/rfc7396</a> 获得。
+
+版权声明
+
+   版权所有 (c) 2014 IETF Trust 和列为本文档作者的人员。保留所有
+   权利。
+
+   本文档受 <a href="https://www.rfc-editor.org/bcp/bcp78">BCP 78</a> 以及在本文档发布之日生效的 IETF Trust
+   与 IETF 文档相关的法律条款
+   (<a href="http://trustee.ietf.org/license-info">http://trustee.ietf.org/license-info</a>) 约束。请仔细阅读这些
+   文档，因为它们描述了你关于本文档的权利与限制。从本文档中提取
+   的代码组件必须包含 Trust 法律条款第 4.e 节所述的简化 BSD 许可证
+   文本，并且按简化 BSD 许可证所述不提供任何担保。
+
+
+
+
+
+
+
+<span class="grey">Hoffman &amp; Snell              标准跟踪                         [第 1 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-2" ></span>
+<span class="grey"><a href="./rfc7396">RFC 7396</a>                    JSON 合并补丁                    2014 年 10 月</span>
+
+
+目录
+
+   <a href="#section-1">1</a>.  引言  . . . . . . . . . . . . . . . . . . . . . . . . . . . .   <a href="#page-2">2</a>
+   <a href="#section-2">2</a>.  处理合并补丁文档  . . . . . . . . . . . . . . . . . . . . .   <a href="#page-3">3</a>
+   <a href="#section-3">3</a>.  示例 . . . . . . . . . . . . . . . . . . . . . . . . . . . .   <a href="#page-4">4</a>
+   <a href="#section-4">4</a>.  IANA 考虑事项 . . . . . . . . . . . . . . . . . . . . . . .   <a href="#page-5">5</a>
+   <a href="#section-5">5</a>.  安全考虑事项 . . . . . . . . . . . . . . . . . . . . . . .   <a href="#page-6">6</a>
+   <a href="#section-6">6</a>.  参考文献  . . . . . . . . . . . . . . . . . . . . . . . . .   <a href="#page-7">7</a>
+     <a href="#section-6.1">6.1</a>.  规范性参考文献  . . . . . . . . . . . . . . . . . . . .   <a href="#page-7">7</a>
+     <a href="#section-6.2">6.2</a>.  资料性参考文献  . . . . . . . . . . . . . . . . . . . .   <a href="#page-7">7</a>
+   <a href="#appendix-A">附录 A</a>.  示例测试用例 . . . . . . . . . . . . . . . . . . . .   <a href="#page-8">8</a>
+   致谢 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .   <a href="#page-9">9</a>
+   作者地址  . . . . . . . . . . . . . . . . . . . . . . . . . . .   <a href="#page-9">9</a>
+
+<span class="h2"><a class="selflink" id="section-1" href="#section-1">1</a>.  引言</span>
+
+   本规范定义了 JSON 合并补丁文档格式、处理规则以及相关的 MIME
+   媒体类型标识符。合并补丁格式主要旨在与 HTTP PATCH 方法
+   [<a href="./rfc5789" title="&quot;PATCH Method for HTTP&quot;">RFC5789</a>] 一起使用，作为描述对目标资源内容的一组修改的方式。
+
+   JSON 合并补丁文档使用一种与被修改文档非常相似的语法，描述要
+   对目标 JSON 文档进行的更改。合并补丁文档的接收方通过将所提供
+   补丁的内容与目标文档的当前内容进行比较，来确定所请求的确切
+   更改集合。如果所提供的合并补丁包含目标中不存在的成员，则添加
+   这些成员。如果目标确实包含该成员，则替换其值。合并补丁中的
+   Null 值被赋予特殊含义，用于指示移除目标中的现有值。
+
+   例如，给定以下原始 JSON 文档：
+
+   {
+     "a": "b",
+     "c": {
+       "d": "e",
+       "f": "g"
+     }
+   }
+
+
+
+
+
+
+
+
+
+<span class="grey">Hoffman &amp; Snell              标准跟踪                         [第 2 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-3" ></span>
+<span class="grey"><a href="./rfc7396">RFC 7396</a>                    JSON 合并补丁                    2014 年 10 月</span>
+
+
+   可以通过发送以下内容来更改 "a" 的值并移除 "f"：
+
+   PATCH /target HTTP/1.1
+   Host: example.org
+   Content-Type: application/merge-patch+json
+
+   {
+     "a":"z",
+     "c": {
+       "f": null
+     }
+   }
+
+   当应用到目标资源时，"a" 成员的值会被替换为 "z"，并且 "f" 会
+   被移除，而其余内容保持不变。
+
+   这种设计意味着，合并补丁文档适合描述对主要使用对象作为结构且
+   不使用显式 null 值的 JSON 文档的修改。合并补丁格式并不适用于
+   所有 JSON 语法。
+
+<span class="h2"><a class="selflink" id="section-2" href="#section-2">2</a>.  处理合并补丁文档</span>
+
+   JSON 合并补丁文档以示例方式描述要对目标资源进行的一组更改。
+   合并补丁文档的接收方负责将合并补丁与目标资源的当前内容进行
+   比较，以确定要应用于目标的具体更改操作集合。
+
+   为了将合并补丁文档应用到目标资源，系统实现以下函数的效果，
+   该函数以伪代码描述。在本说明中，该函数称为 MergePatch，并接受
+   两个参数：目标资源文档和合并补丁文档。Target 参数可以是任何
+   JSON 值或 undefined。Patch 参数可以是任何 JSON 值。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Hoffman &amp; Snell              标准跟踪                         [第 3 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-4" ></span>
+<span class="grey"><a href="./rfc7396">RFC 7396</a>                    JSON 合并补丁                    2014 年 10 月</span>
+
+
+   define MergePatch(Target, Patch):
+     if Patch is an Object:
+       if Target is not an Object:
+         Target = {} # Ignore the contents and set it to an empty Object
+       for each Name/Value pair in Patch:
+         if Value is null:
+           if Name exists in Target:
+             remove the Name/Value pair from Target
+         else:
+           Target[Name] = MergePatch(Target[Name], Value)
+       return Target
+     else:
+       return Patch
+
+   关于该函数有几点需要注意。如果补丁不是对象，则结果始终是用整个
+   补丁替换整个目标。此外，也不可能对非对象目标的一部分进行补丁
+   处理，例如只替换数组中的某些值。
+
+   MergePatch 操作被定义为在数据项层级运行，而不是在文本表示层级
+   运行。并不期望 MergePatch 操作保留文本表示层级的特征，例如空白、
+   成员顺序、超出目标实现可用范围的数字精度等。此外，即使目标实现
+   允许多个具有相同名称的名称/值对，这类对象上的 MergePatch 操作
+   结果也未定义。
+
+<span class="h2"><a class="selflink" id="section-3" href="#section-3">3</a>.  示例</span>
+
+   给定以下示例 JSON 文档：
+
+   {
+     "title": "Goodbye!",
+     "author" : {
+       "givenName" : "John",
+       "familyName" : "Doe"
+     },
+     "tags":[ "example", "sample" ],
+     "content": "This will be unchanged"
+   }
+
+
+
+
+
+
+
+
+<span class="grey">Hoffman &amp; Snell              标准跟踪                         [第 4 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-5" ></span>
+<span class="grey"><a href="./rfc7396">RFC 7396</a>                    JSON 合并补丁                    2014 年 10 月</span>
+
+
+   希望将 "title" 成员的值从 "Goodbye!" 改为 "Hello!"、添加新的
+   "phoneNumber" 成员、从 "author" 对象中移除 "familyName" 成员、
+   并替换 "tags" 数组以使其不包含单词 "sample" 的用户代理，会发送
+   以下请求：
+
+   PATCH /my/resource HTTP/1.1
+   Host: example.org
+   Content-Type: application/merge-patch+json
+
+   {
+     "title": "Hello!",
+     "phoneNumber": "+01-123-456-7890",
+     "author": {
+       "familyName": null
+     },
+     "tags": [ "example" ]
+   }
+
+   得到的 JSON 文档将是：
+
+   {
+     "title": "Hello!",
+     "author" : {
+       "givenName" : "John"
+     },
+     "tags": [ "example" ],
+     "content": "This will be unchanged",
+     "phoneNumber": "+01-123-456-7890"
+   }
+
+<span class="h2"><a class="selflink" id="section-4" href="#section-4">4</a>.  IANA 考虑事项</span>
+
+   本规范注册以下额外的 MIME 媒体类型：
+
+      类型名称：application
+
+      子类型名称：merge-patch+json
+
+      必需参数：无
+
+      可选参数：无
+
+      编码考虑事项：使用 "application/merge-patch+json" 媒体类型
+      的资源必须符合 "application/json" 媒体类型，因此受
+      <a href="./rfc7159#section-8">[RFC7159] 第&nbsp;8 节</a> 中规定的相同编码考虑事项约束。
+
+
+
+<span class="grey">Hoffman &amp; Snell              标准跟踪                         [第 5 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-6" ></span>
+<span class="grey"><a href="./rfc7396">RFC 7396</a>                    JSON 合并补丁                    2014 年 10 月</span>
+
+
+      安全考虑事项：如本规范所定义
+
+      发布的规范：本规范。
+
+      使用此媒体类型的应用：目前未知。
+
+      附加信息：
+
+         魔数：N/A
+
+         文件扩展名：N/A
+
+         Macintosh 文件类型代码：TEXT
+
+      进一步信息的联系人及电子邮件地址：IESG
+
+      预期用途：COMMON
+
+      使用限制：无
+
+      作者：James M. Snell &lt;jasnell@gmail.com&gt;
+
+      变更控制者：IESG
+
+<span class="h2"><a class="selflink" id="section-5" href="#section-5">5</a>.  安全考虑事项</span>
+
+   "application/merge-patch+json" 媒体类型允许用户代理表明其意图，
+   即希望服务器确定要应用于目标资源的具体更改操作集合。因此，
+   服务器有责任确定任何给定更改是否适当，以及用户代理是否被授权
+   请求此类更改。如何作出此类确定被视为超出本规范范围。
+
+   <a href="./rfc5789#section-5">[RFC5789] 第&nbsp;5 节</a> 中讨论的所有安全考虑事项，均适用于 HTTP PATCH
+   方法与 "application/merge-patch+json" 媒体类型的所有使用。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Hoffman &amp; Snell              标准跟踪                         [第 6 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-7" ></span>
+<span class="grey"><a href="./rfc7396">RFC 7396</a>                    JSON 合并补丁                    2014 年 10 月</span>
+
+
+<span class="h2"><a class="selflink" id="section-6" href="#section-6">6</a>.  参考文献</span>
+
+<span class="h3"><a class="selflink" id="section-6.1" href="#section-6.1">6.1</a>.  规范性参考文献</span>
+
+   [<a id="ref-RFC7159">RFC7159</a>]  Bray, T., “JavaScript 对象表示法 (JSON) 数据
+              交换格式”, <a href="./rfc7159">RFC 7159</a>, 2014 年 3 月,
+              &lt;<a href="http://www.rfc-editor.org/info/rfc7159">http://www.rfc-editor.org/info/rfc7159</a>&gt;.
+
+<span class="h3"><a class="selflink" id="section-6.2" href="#section-6.2">6.2</a>.  资料性参考文献</span>
+
+   [<a id="ref-RFC5789">RFC5789</a>]  Dusseault, L. and J. Snell, “HTTP 的 PATCH 方法”, <a href="./rfc5789">RFC</a>
+              <a href="./rfc5789">5789</a>, 2010 年 3 月,
+              &lt;<a href="http://www.rfc-editor.org/info/rfc5789">http://www.rfc-editor.org/info/rfc5789</a>&gt;.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Hoffman &amp; Snell              标准跟踪                         [第 7 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-8" ></span>
+<span class="grey"><a href="./rfc7396">RFC 7396</a>                    JSON 合并补丁                    2014 年 10 月</span>
+
+
+<span class="h2"><a class="selflink" id="appendix-A" href="#appendix-A">附录 A</a>.  示例测试用例</span>
+
+   ORIGINAL        PATCH            RESULT
+   ------------------------------------------
+   {"a":"b"}       {"a":"c"}       {"a":"c"}
+
+   {"a":"b"}       {"b":"c"}       {"a":"b",
+                                    "b":"c"}
+
+   {"a":"b"}       {"a":null}      {}
+
+   {"a":"b",       {"a":null}      {"b":"c"}
+    "b":"c"}
+
+   {"a":["b"]}     {"a":"c"}       {"a":"c"}
+
+   {"a":"c"}       {"a":["b"]}     {"a":["b"]}
+
+   {"a": {         {"a": {         {"a": {
+     "b": "c"}       "b": "d",       "b": "d"
+   }                 "c": null}      }
+                   }               }
+
+   {"a": [         {"a": [1]}      {"a": [1]}
+     {"b":"c"}
+    ]
+   }
+
+   ["a","b"]       ["c","d"]       ["c","d"]
+
+   {"a":"b"}       ["c"]           ["c"]
+
+   {"a":"foo"}     null            null
+
+   {"a":"foo"}     "bar"           "bar"
+
+   {"e":null}      {"a":1}         {"e":null,
+                                    "a":1}
+
+   [1,2]           {"a":"b",       {"a":"b"}
+                    "c":null}
+
+   {}              {"a":            {"a":
+                    {"bb":           {"bb":
+                     {"ccc":          {}}}
+                      null}}}
+
+
+
+
+
+<span class="grey">Hoffman &amp; Snell              标准跟踪                         [第 8 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-9" ></span>
+<span class="grey"><a href="./rfc7396">RFC 7396</a>                    JSON 合并补丁                    2014 年 10 月</span>
+
+
+致谢
+
+   许多人为本文档贡献了重要想法。这些人包括但不限于 James Manger、
+   Matt Miller、Carsten Bormann、Bjoern Hoehrmann、Pete Resnick 和
+   Richard Barnes。
+
+作者地址
+
+   Paul Hoffman
+   VPN Consortium
+
+   EMail: paul.hoffman@vpnc.org
+
+
+   James M. Snell
+
+   EMail: jasnell@gmail.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Hoffman &amp; Snell              标准跟踪                         [第 9 页]
+</pre>
+<script src="https://htmlspecs.com/dropdown.js"></script>

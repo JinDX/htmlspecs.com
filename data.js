@@ -247,14 +247,14 @@ const links = [
         lang: "cjk",
         state: "RFC"
     },
-    // {
-    //     text: "JSON Merge Patch",
-    //     href: "https://htmlspecs.com/json-merge-patch/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc7396.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
+    {
+        text: "JSON Merge Patch",
+        href: "https://htmlspecs.com/json-merge-patch/",
+        src: "https://www.rfc-editor.org/rfc/rfc7396.html",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "RFC"
+    },
     // {
     //     text: "JavaScript Object Notation (JSON) Text Sequences",
     //     href: "https://htmlspecs.com/json-seq/",
