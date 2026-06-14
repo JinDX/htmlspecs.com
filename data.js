@@ -189,14 +189,14 @@ const links = [
         lang: "cjk",
         state: "NOTE"
     },
-    // {
-    //     text: "Internationalization Best Practices for Spec Developers",
-    //     href: "https://htmlspecs.com/international-specs/",
-    //     src: "https://www.w3.org/TR/2025/NOTE-international-specs-20250808/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "NOTE"
-    // },
+    {
+        text: "Internationalization Best Practices for Spec Developers",
+        href: "https://htmlspecs.com/international-specs/",
+        src: "https://www.w3.org/TR/2025/NOTE-international-specs-20250808/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "NOTE"
+    },
     // {
     //     text: "Character Model for the World Wide Web: String Matching",
     //     href: "https://htmlspecs.com/charmod-norm/",
