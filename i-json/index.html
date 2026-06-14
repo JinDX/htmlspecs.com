@@ -1,0 +1,299 @@
+<pre>互联网工程任务组 (IETF)                                      T. Bray, Ed.
+征求意见稿：7493                                      Textuality Services
+类别：标准跟踪                                                2015 年 3 月
+ISSN: 2070-1721
+
+
+                       <span class="h1">I-JSON 消息格式</span>
+
+摘要
+
+   I-JSON（"Internet JSON" 的缩写）是 JSON 的一个受限配置文件，
+   旨在最大化互操作性，并增强软件能够以可预测结果成功处理它的
+   信心。
+
+本备忘录状态
+
+   本文档是互联网标准跟踪文档。
+
+   本文档是互联网工程任务组 (IETF) 的成果。它代表了 IETF 社区的
+   共识。它已经经过公开评审，并已获互联网工程指导组 (IESG) 批准
+   发布。有关互联网标准的更多信息，请参见
+   <a href="./rfc5741#section-2">RFC 5741 第&nbsp;2 节</a>。
+
+   关于本文档当前状态、任何勘误以及如何提供反馈的信息，可通过
+   <a href="http://www.rfc-editor.org/info/rfc7493">http://www.rfc-editor.org/info/rfc7493</a> 获得。
+
+版权声明
+
+   版权所有 (c) 2015 IETF Trust 和列为本文档作者的人员。保留所有
+   权利。
+
+   本文档受 <a href="https://www.rfc-editor.org/bcp/bcp78">BCP 78</a> 以及在本文档发布之日生效的 IETF Trust
+   与 IETF 文档相关的法律条款
+   (<a href="http://trustee.ietf.org/license-info">http://trustee.ietf.org/license-info</a>) 约束。请仔细阅读这些
+   文档，因为它们描述了你关于本文档的权利与限制。从本文档中提取
+   的代码组件必须包含 Trust 法律条款第 4.e 节所述的简化 BSD 许可证
+   文本，并且按简化 BSD 许可证所述不提供任何担保。
+
+
+
+
+
+
+
+
+
+<span class="grey">Bray                         标准跟踪                         [第 1 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-2" ></span>
+<span class="grey"><a href="./rfc7493">RFC 7493</a>                I-JSON 消息格式                     2015 年 3 月</span>
+
+
+目录
+
+   <a href="#section-1">1</a>.  引言  . . . . . . . . . . . . . . . . . . . . . . . . . . . .   <a href="#page-2">2</a>
+     <a href="#section-1.1">1.1</a>.  术语 . . . . . . . . . . . . . . . . . . . . . . . . . .   <a href="#page-2">2</a>
+     <a href="#section-1.2">1.2</a>.  需求语言 . . . . . . . . . . . . . . . . . . . . . . . .   <a href="#page-2">2</a>
+   <a href="#section-2">2</a>.  I-JSON 消息 . . . . . . . . . . . . . . . . . . . . . . . .   <a href="#page-3">3</a>
+     <a href="#section-2.1">2.1</a>.  编码和字符 . . . . . . . . . . . . . . . . . . . . . .   <a href="#page-3">3</a>
+     <a href="#section-2.2">2.2</a>.  数字 . . . . . . . . . . . . . . . . . . . . . . . . . .   <a href="#page-3">3</a>
+     <a href="#section-2.3">2.3</a>.  对象约束  . . . . . . . . . . . . . . . . . . . . . . .   <a href="#page-3">3</a>
+   <a href="#section-3">3</a>.  软件行为 . . . . . . . . . . . . . . . . . . . . . . . . .   <a href="#page-4">4</a>
+   <a href="#section-4">4</a>.  协议设计建议 . . . . . . . . . . . . . . . . . . . . . . .   <a href="#page-4">4</a>
+     <a href="#section-4.1">4.1</a>.  顶层构造  . . . . . . . . . . . . . . . . . . . . . . .   <a href="#page-4">4</a>
+     <a href="#section-4.2">4.2</a>.  必须忽略策略  . . . . . . . . . . . . . . . . . . . . .   <a href="#page-4">4</a>
+     <a href="#section-4.3">4.3</a>.  时间和日期处理  . . . . . . . . . . . . . . . . . . . .   <a href="#page-5">5</a>
+     <a href="#section-4.4">4.4</a>.  二进制数据 . . . . . . . . . . . . . . . . . . . . . .   <a href="#page-5">5</a>
+   <a href="#section-5">5</a>.  安全考虑事项 . . . . . . . . . . . . . . . . . . . . . . .   <a href="#page-5">5</a>
+   <a href="#section-6">6</a>.  规范性参考文献  . . . . . . . . . . . . . . . . . . . . .   <a href="#page-5">5</a>
+   致谢  . . . . . . . . . . . . . . . . . . . . . . . . . . . . .   <a href="#page-6">6</a>
+   作者地址  . . . . . . . . . . . . . . . . . . . . . . . . . . .   <a href="#page-6">6</a>
+
+<span class="h2"><a class="selflink" id="section-1" href="#section-1">1</a>.  引言</span>
+
+   <a href="./rfc7159">RFC 7159</a> 描述了 JSON 数据交换格式，该格式在互联网协议中被广泛
+   使用。由于历史原因，该规范允许使用一些语言习惯用法和文本编码
+   模式，而这些做法很可能导致互操作性问题和软件故障，尤其是当
+   接收 JSON 数据的程序使用自动化软件将其映射到原生编程语言结构
+   或数据库记录时。<a href="./rfc7159">RFC 7159</a> 描述了可用于避免这些互操作性问题的
+   实践。
+
+   本文档规定了 I-JSON，即 "Internet JSON" 的缩写。定义的单位是
+   “I-JSON 消息”。I-JSON 消息也是 <a href="./rfc7159">RFC 7159</a> 中定义的“JSON 文本”，
+   但带有某些额外约束，用以执行该规范中描述的良好互操作性实践。
+
+<span class="h3"><a class="selflink" id="section-1.1" href="#section-1.1">1.1</a>.  术语</span>
+
+   本文档中的术语 "object"、"member"、"array"、"number"、"name"
+   和 "string" 应按 <a href="./rfc7159">RFC 7159</a> [<a href="./rfc7159" title="&quot;The JavaScript Object Notation (JSON) Data Interchange Format&quot;">RFC7159</a>] 中的描述进行解释。
+
+<span class="h3"><a class="selflink" id="section-1.2" href="#section-1.2">1.2</a>.  需求语言</span>
+
+   本文档中的关键词 "MUST"、"MUST NOT"、"REQUIRED"、"SHALL"、
+   "SHALL NOT"、"SHOULD"、"SHOULD NOT"、"RECOMMENDED"、"MAY" 和
+   "OPTIONAL" 应按 <a href="./rfc2119">RFC 2119</a> [<a href="./rfc2119" title="&quot;Key words for use in RFCs to Indicate Requirement Levels&quot;">RFC2119</a>] 中的描述进行解释。
+
+
+
+<span class="grey">Bray                         标准跟踪                         [第 2 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-3" ></span>
+<span class="grey"><a href="./rfc7493">RFC 7493</a>                I-JSON 消息格式                     2015 年 3 月</span>
+
+
+<span class="h2"><a class="selflink" id="section-2" href="#section-2">2</a>.  I-JSON 消息</span>
+
+   I-JSON 消息是由 <a href="./rfc7159">RFC 7159</a> 定义的 JSON 文本。
+
+<span class="h3"><a class="selflink" id="section-2.1" href="#section-2.1">2.1</a>.  编码和字符</span>
+
+   I-JSON 消息 MUST 使用 UTF-8 [<a href="./rfc3629" title="&quot;UTF-8, a transformation format of ISO 10646&quot;">RFC3629</a>] 编码。
+
+   对象成员名称，以及数组和对象成员中的字符串值，MUST NOT 包含
+   标识代理项或非字符的码点，相关定义见 [<a href="#ref-UNICODE" title="&quot;The Unicode Standard&quot;">UNICODE</a>]。
+
+   这既适用于直接以 UTF-8 编码的字符，也适用于被转义的字符；
+   因此，"\uDEAD" 是无效的，因为它是未配对的代理项，而
+   "\uD800\uDEAD" 则是合法的。
+
+<span class="h3"><a class="selflink" id="section-2.2" href="#section-2.2">2.2</a>.  数字</span>
+
+   实现 IEEE 754-2008 binary64（双精度）数字 [<a href="#ref-IEEE754" title="&quot;IEEE Standard for Floating-Point Arithmetic&quot;">IEEE754</a>] 的软件通常
+   可用并被广泛使用。生成 I-JSON 消息的实现不能假定接收方实现
+   能够处理比这些数字所提供的范围或精度更大的数值。I-JSON 消息
+   SHOULD NOT 包含表示超出 IEEE 754 双精度数字所能提供的范围或
+   精度的数字，例如 1E400 或 3.141592653589793238462643383279。
+
+   I-JSON 发送方不能期望接收方将绝对值大于 9007199254740991
+   （即超出 [-(2**53)+1, (2**53)-1] 范围）的整数视为精确值。
+
+   对于需要精确交换具有更大范围或精度的数字的应用，RECOMMENDED
+   将它们编码为 JSON 字符串值。这要求接收程序理解该值的预期语义。
+   一个例子是 64 位整数，尽管现代硬件可以处理它们，但由于
+   JavaScript 数字的范围有限，仍应如此。
+
+<span class="h3"><a class="selflink" id="section-2.3" href="#section-2.3">2.3</a>.  对象约束</span>
+
+   I-JSON 消息中的对象 MUST NOT 具有名称重复的成员。在此上下文中，
+   "duplicate" 表示在处理任何转义字符之后，名称是相同的 Unicode
+   字符序列。
+
+
+
+
+
+
+
+<span class="grey">Bray                         标准跟踪                         [第 3 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-4" ></span>
+<span class="grey"><a href="./rfc7493">RFC 7493</a>                I-JSON 消息格式                     2015 年 3 月</span>
+
+
+   I-JSON 消息中对象成员的顺序不会改变 I-JSON 消息的含义。如果两个
+   I-JSON 消息仅在对象成员的顺序上不同，接收方实现 MAY 将它们视为
+   等价。
+
+<span class="h2"><a class="selflink" id="section-3" href="#section-3">3</a>.  软件行为</span>
+
+   使用 I-JSON 的一个主要优势是，接收方可以避免其接收的 JSON 消息
+   中存在语义歧义。这使得接收方能够拒绝或以其他方式忽略不符合
+   本文档中 I-JSON 消息要求的消息。使用 I-JSON 消息的协议可以
+   写成要求接收方实现拒绝（或者，在安全协议的情况下，不信任）
+   不满足 I-JSON 约束的消息。
+
+   使用 I-JSON 消息的协议设计者 SHOULD 在这种情况下为错误数据的
+   接收方提供一种向发送方指示问题的方式。
+
+<span class="h2"><a class="selflink" id="section-4" href="#section-4">4</a>.  协议设计建议</span>
+
+   I-JSON 被设计用于互联网协议。以下建议适用于在这类协议中使用
+   I-JSON。
+
+<span class="h3"><a class="selflink" id="section-4.1" href="#section-4.1">4.1</a>.  顶层构造</span>
+
+   I-JSON 消息可以是任何 JSON 值。然而，存在一些按照较旧规范
+   [<a href="./rfc4627" title="&quot;The application/json Media Type for JavaScript Object Notation (JSON)&quot;">RFC4627</a>] 编写的软件实现，它们只接受位于 JSON 文本顶层的 JSON
+   对象或 JSON 数组。为了与这类实现实现最大互操作性，协议设计者
+   SHOULD NOT 使用既不是对象也不是数组的顶层 JSON 文本。
+
+<span class="h3"><a class="selflink" id="section-4.2" href="#section-4.2">4.2</a>.  必须忽略策略</span>
+
+   协议投入生产后经常需要进行更改。允许以不干扰现有软件运行的
+   方式引入新协议元素的协议，在实践中已证明具有优势。
+
+   这可以称为“必须忽略”策略，意思是当实现遇到无法识别的协议元素
+   时，它应将协议事务的其余部分视为该新元素根本没有出现，尤其是，
+   该实现 MUST NOT 将此视为错误条件。相反的“必须理解”策略不容许
+   引入新的协议元素，虽然这在某些协议设计中已被证明是必要的，
+
+
+
+<span class="grey">Bray                         标准跟踪                         [第 4 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-5" ></span>
+<span class="grey"><a href="./rfc7493">RFC 7493</a>                I-JSON 消息格式                     2015 年 3 月</span>
+
+
+   但总体而言，它被发现过于限制且脆弱。
+
+   在 I-JSON 协议设计中支持使用 Must-Ignore 的一种好方法是，要求
+   顶层协议元素必须是 JSON 对象，并规定名称无法识别的成员 MUST
+   被忽略。
+
+<span class="h3"><a class="selflink" id="section-4.3" href="#section-4.3">4.3</a>.  时间和日期处理</span>
+
+   协议通常包含设计用于保存时间戳或时间持续时间的数据项。对于
+   所有这类数据项，RECOMMENDED 将其表示为 [<a href="./rfc3339" title="&quot;Date and Time on the Internet: Timestamps&quot;">RFC3339</a>] 中规定的
+   ISO 8601 格式字符串值，并附加以下限制：使用大写字母而不是小写
+   字母，包含时区而不是默认时区，并且即使值为 "00" 也包含可选的
+   尾随秒。还 RECOMMENDED 所有包含时间持续时间的数据项都符合
+   <a href="./rfc3339#appendix-A">RFC 3339 附录&nbsp;A</a> 中的 "duration" 产生式，并采用相同的附加限制。
+
+<span class="h3"><a class="selflink" id="section-4.4" href="#section-4.4">4.4</a>.  二进制数据</span>
+
+   当要求 I-JSON 协议元素包含任意二进制数据时，RECOMMENDED 将该
+   数据以 base64url 编码为字符串值；见 <a href="./rfc4648#section-5">[RFC4648] 第&nbsp;5 节</a>。
+
+<span class="h2"><a class="selflink" id="section-5" href="#section-5">5</a>.  安全考虑事项</span>
+
+   适用于 JSON 的所有安全考虑事项（见 <a href="./rfc7159">RFC 7159</a>）也适用于
+   I-JSON。不存在特定于 I-JSON 的额外安全考虑事项。
+
+   由于 I-JSON 禁止使用某些可能导致接收软件出现不可预测行为的
+   JSON 习惯用法，它可能被证明是互联网协议更安全的基础，并且可能
+   是具有特殊安全需求的协议设计者的良好选择。
+
+<span class="h2"><a class="selflink" id="section-6" href="#section-6">6</a>.  规范性参考文献</span>
+
+   [<a id="ref-IEEE754">IEEE754</a>]  IEEE, "浮点运算 IEEE 标准", IEEE
+              754-2008, 2008, &lt;<a href="http://grouper.ieee.org/groups/754/">http://grouper.ieee.org/groups/754/</a>&gt;.
+
+   [<a id="ref-RFC2119">RFC2119</a>]  Bradner, S., "RFC 中用于表示需求级别的关键词",
+              <a href="https://www.rfc-editor.org/bcp/bcp14">BCP 14</a>, <a href="./rfc2119">RFC 2119</a>, 1997 年 3 月,
+              &lt;<a href="http://www.rfc-editor.org/info/rfc2119">http://www.rfc-editor.org/info/rfc2119</a>&gt;.
+
+
+
+
+
+<span class="grey">Bray                         标准跟踪                         [第 5 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-6" ></span>
+<span class="grey"><a href="./rfc7493">RFC 7493</a>                I-JSON 消息格式                     2015 年 3 月</span>
+
+
+   [<a id="ref-RFC3339">RFC3339</a>]  Klyne, G. and C. Newman, "互联网上的日期和时间：
+              时间戳", <a href="./rfc3339">RFC 3339</a>, 2002 年 7 月,
+              &lt;<a href="http://www.rfc-editor.org/info/rfc3339">http://www.rfc-editor.org/info/rfc3339</a>&gt;.
+
+   [<a id="ref-RFC3629">RFC3629</a>]  Yergeau, F., "UTF-8，ISO
+              10646 的一种变换格式", STD 63, <a href="./rfc3629">RFC 3629</a>, 2003 年 11 月,
+              &lt;<a href="http://www.rfc-editor.org/info/rfc3629">http://www.rfc-editor.org/info/rfc3629</a>&gt;.
+
+   [<a id="ref-RFC4627">RFC4627</a>]  Crockford, D., "JavaScript 对象表示法 (JSON) 的
+              application/json 媒体类型", <a href="./rfc4627">RFC 4627</a>, 2006 年 7 月,
+              &lt;<a href="http://www.rfc-editor.org/info/rfc4627">http://www.rfc-editor.org/info/rfc4627</a>&gt;.
+
+   [<a id="ref-RFC4648">RFC4648</a>]  Josefsson, S., "Base16、Base32 和 Base64 数据
+              编码", <a href="./rfc4648">RFC 4648</a>, 2006 年 10 月,
+              &lt;<a href="http://www.rfc-editor.org/info/rfc4648">http://www.rfc-editor.org/info/rfc4648</a>&gt;.
+
+   [<a id="ref-RFC7159">RFC7159</a>]  Bray, T., Ed., "JavaScript 对象表示法 (JSON) 数据
+              交换格式", <a href="./rfc7159">RFC 7159</a>, 2014 年 3 月,
+              &lt;<a href="http://www.rfc-editor.org/info/rfc7159">http://www.rfc-editor.org/info/rfc7159</a>&gt;.
+
+   [<a id="ref-UNICODE">UNICODE</a>]  The Unicode Consortium, "Unicode 标准",
+              &lt;<a href="http://www.unicode.org/versions/latest/">http://www.unicode.org/versions/latest/</a>&gt;.
+
+致谢
+
+   I-JSON 完全依赖于 JSON 的设计，而 JSON 的设计很大程度上归功于
+   Douglas Crockford。具体细节受到 IETF JSON 工作组中 <a href="./rfc7159">RFC 7159</a>
+   设计贡献者的强烈影响。
+
+作者地址
+
+   Tim Bray（编辑）
+   Textuality Services
+
+   EMail: tbray@textuality.com
+   URI:   <a href="https://www.tbray.org/">https://www.tbray.org/</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Bray                         标准跟踪                         [第 6 页]
+</pre>
+<script src="https://htmlspecs.com/dropdown.js"></script>

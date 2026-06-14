@@ -263,14 +263,14 @@ const links = [
         lang: "cjk",
         state: "RFC"
     },
-    // {
-    //     text: "The I-JSON Message Format",
-    //     href: "https://htmlspecs.com/i-json/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc7493.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
+    {
+        text: "The I-JSON Message Format",
+        href: "https://htmlspecs.com/i-json/",
+        src: "https://www.rfc-editor.org/rfc/rfc7493.html",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "RFC"
+    },
     // {
     //     text: "JSON Canonicalization Scheme (JCS)",
     //     href: "https://htmlspecs.com/json-canonicalization/",
