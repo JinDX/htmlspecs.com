@@ -223,6 +223,70 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
+    // {
+    //     text: "JavaScript Object Notation (JSON) Pointer",
+    //     href: "https://htmlspecs.com/json-pointer/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc6901.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
+    // {
+    //     text: "JSONPath: Query Expressions for JSON",
+    //     href: "https://htmlspecs.com/jsonpath/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc9535.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
+    // {
+    //     text: "JavaScript Object Notation (JSON) Patch",
+    //     href: "https://htmlspecs.com/json-patch/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc6902.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
+    // {
+    //     text: "JSON Merge Patch",
+    //     href: "https://htmlspecs.com/json-merge-patch/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc7396.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
+    // {
+    //     text: "JavaScript Object Notation (JSON) Text Sequences",
+    //     href: "https://htmlspecs.com/json-seq/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc7464.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
+    // {
+    //     text: "The I-JSON Message Format",
+    //     href: "https://htmlspecs.com/i-json/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc7493.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
+    // {
+    //     text: "JSON Canonicalization Scheme (JCS)",
+    //     href: "https://htmlspecs.com/json-canonicalization/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc8785.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
+    // {
+    //     text: "JSON Type Definition",
+    //     href: "https://htmlspecs.com/json-type-definition/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc8927.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
     {
         text: "ActivityPub",
         href: "https://htmlspecs.com/activitypub/",
