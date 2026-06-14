@@ -1,0 +1,410 @@
+<pre>互联网工程任务组 (IETF)                                      N. Williams
+征求意见稿：7464                                             Cryptonector
+类别：标准跟踪                                                2015 年 2 月
+ISSN: 2070-1721
+
+
+            <span class="h1">JavaScript 对象表示法 (JSON) 文本序列</span>
+
+摘要
+
+   本文档描述了 JavaScript 对象表示法 (JSON) 文本序列格式以及
+   相关的媒体类型 "application/json-seq"。JSON 文本序列由任意数量
+   的 JSON 文本组成，全部以 UTF-8 编码，每个文本前面都带有一个
+   ASCII 记录分隔符 (0x1E)，并且每个文本都以 ASCII 换行符 (0x0A)
+   结束。
+
+本备忘录状态
+
+   本文档是互联网标准跟踪文档。
+
+   本文档是互联网工程任务组 (IETF) 的成果。它代表了 IETF 社区的
+   共识。它已经经过公开评审，并已获互联网工程指导组 (IESG) 批准
+   发布。有关互联网标准的更多信息，请参见
+   <a href="./rfc5741#section-2">RFC 5741 第&nbsp;2 节</a>。
+
+   关于本文档当前状态、任何勘误以及如何提供反馈的信息，可通过
+   <a href="http://www.rfc-editor.org/info/rfc7464">http://www.rfc-editor.org/info/rfc7464</a> 获得。
+
+版权声明
+
+   版权所有 (c) 2015 IETF Trust 和列为本文档作者的人员。保留所有
+   权利。
+
+   本文档受 <a href="https://www.rfc-editor.org/bcp/bcp78">BCP 78</a> 以及在本文档发布之日生效的 IETF Trust
+   与 IETF 文档相关的法律条款
+   (<a href="http://trustee.ietf.org/license-info">http://trustee.ietf.org/license-info</a>) 约束。请仔细阅读这些
+   文档，因为它们描述了你关于本文档的权利与限制。从本文档中提取
+   的代码组件必须包含 Trust 法律条款第 4.e 节所述的简化 BSD 许可证
+   文本，并且按简化 BSD 许可证所述不提供任何担保。
+
+
+
+
+
+
+
+<span class="grey">Williams                     标准跟踪                         [第 1 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-2" ></span>
+<span class="grey"><a href="./rfc7464">RFC 7464</a>                   JSON 文本序列                    2015 年 2 月</span>
+
+
+目录
+
+   <a href="#section-1">1</a>. 引言与动机 ...................................................<a href="#page-2">2</a>
+      <a href="#section-1.1">1.1</a>. 本文档中使用的约定 .................................<a href="#page-2">2</a>
+   <a href="#section-2">2</a>. JSON 文本序列格式 .............................................<a href="#page-3">3</a>
+      <a href="#section-2.1">2.1</a>. JSON 文本序列解析 ....................................<a href="#page-3">3</a>
+      <a href="#section-2.2">2.2</a>. JSON 文本序列编码 ....................................<a href="#page-4">4</a>
+      <a href="#section-2.3">2.3</a>. 不完整/无效的 JSON 文本不必是致命错误 ...............<a href="#page-4">4</a>
+      <a href="#section-2.4">2.4</a>. 顶层值：数字、true、false 和 null ...................<a href="#page-5">5</a>
+   <a href="#section-3">3</a>. 安全考虑事项 .................................................<a href="#page-6">6</a>
+   <a href="#section-4">4</a>. IANA 考虑事项 .................................................<a href="#page-6">6</a>
+   <a href="#section-5">5</a>. 规范性参考文献 ...............................................<a href="#page-7">7</a>
+   致谢 ............................................................<a href="#page-8">8</a>
+   作者地址 ........................................................<a href="#page-8">8</a>
+
+<span class="h2"><a class="selflink" id="section-1" href="#section-1">1</a>.  引言与动机</span>
+
+   JavaScript 对象表示法 (JSON) [<a href="./rfc7159" title="&quot;The JavaScript Object Notation (JSON) Data Interchange Format&quot;">RFC7159</a>] 是一种非常方便的
+   序列化格式。然而，当把大量值的序列序列化为数组，或者序列化
+   可能长度不确定或永不结束的值序列时，JSON 会变得难以处理。
+
+   设想一个包含一百万个值的序列，每个值在编码后可能为一千字节
+   ——大约一吉字节。通常希望以增量方式处理这样的数据集，而不必
+   在开始产生结果之前先读取全部数据。传统上，用 JSON 实现这一点
+   的方式是使用“流式”解析器，但这类解析器并不普遍可用、并不广泛
+   使用，也不容易使用。
+
+   本文档描述了“JSON 文本序列”的概念和格式；它们本身明确不是
+   JSON 文本，而是由（可能的）JSON 文本组成。JSON 文本序列可以
+   增量地解析（和生成），而不需要流式解析器（也不需要流式编码器）。
+
+<span class="h3"><a class="selflink" id="section-1.1" href="#section-1.1">1.1</a>.  本文档中使用的约定</span>
+
+   本文档中的关键词 "MUST"、"MUST NOT"、"REQUIRED"、"SHALL"、
+   "SHALL NOT"、"SHOULD"、"SHOULD NOT"、"RECOMMENDED"、
+   "NOT RECOMMENDED"、"MAY" 和 "OPTIONAL" 应按 [<a href="./rfc2119" title="&quot;Key words for use in RFCs to Indicate Requirement Levels&quot;">RFC2119</a>] 中的
+   描述进行解释。
+
+
+
+
+
+
+
+
+
+<span class="grey">Williams                     标准跟踪                         [第 2 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-3" ></span>
+<span class="grey"><a href="./rfc7464">RFC 7464</a>                   JSON 文本序列                    2015 年 2 月</span>
+
+
+<span class="h2"><a class="selflink" id="section-2" href="#section-2">2</a>.  JSON 文本序列格式</span>
+
+   为 JSON 文本序列的定义提供了两组不同的 ABNF 规则：一组用于
+   解析器，一组用于编码器。拥有两组不同的规则允许解析器从某些
+   元素因任何原因被截断的序列中恢复。用于解析器的语法以八位组
+   字符串为单位指定，然后在可能时将其解释为 JSON 文本。另一方面，
+   用于编码器的语法假定序列元素未被截断。
+
+   JSON 文本序列 MUST 使用 UTF-8 编码；MUST NOT 使用 JSON 的其他
+   编码（即 UTF-16 和 UTF-32）。
+
+<span class="h3"><a class="selflink" id="section-2.1" href="#section-2.1">2.1</a>.  JSON 文本序列解析</span>
+
+   JSON 文本序列解析器的 ABNF [<a href="./rfc5234" title="&quot;Augmented BNF for Syntax Specifications: ABNF&quot;">RFC5234</a>] 如图 1 所示。
+
+      input-JSON-sequence = *(1*RS possible-JSON)
+      RS = %x1E; "record separator" (RS)，见 <a href="./rfc20">RFC 20</a>
+               ; 也称为：Unicode 字符 INFORMATION SEPARATOR
+               ;          TWO (U+001E)
+      possible-JSON = 1*(not-RS); 尝试解析为 UTF-8 编码的
+                                ; JSON 文本（见 <a href="./rfc7159">RFC 7159</a>）
+      not-RS = %x00-1d / %x1f-ff; 除 RS 之外的任何八位组
+
+                     图 1：JSON 文本序列 ABNF
+
+   用文字表述：这是一系列八位组字符串，每个字符串包含除记录
+   分隔符 (RS) (0x1E) [<a href="./rfc20" title="&quot;ASCII format for network interchange&quot;">RFC20</a>] 之外的任何八位组。所有八位组字符串
+   前面都有一个 RS 字节。序列中的每个八位组字符串都要作为 UTF-8
+   编码 [<a href="./rfc3629" title="&quot;UTF-8, a transformation format of ISO 10646&quot;">RFC3629</a>] 的 JSON 文本来解析。
+
+   如果将这样的八位组字符串解析为 UTF-8 编码的 JSON 文本失败，
+   解析器 SHOULD 仍继续解析序列的其余部分。解析器可以向应用报告
+   这类失败，应用随后可以选择终止对序列的解析。多个连续的 RS
+   八位组并不表示它们之间存在空的序列元素，可以忽略。
+
+   本文档没有定义一种机制来可靠地按位置识别文本序列（例如，当
+   把数组的各个元素作为唯一文本序列发送时）。对于可能发生截断的
+   应用，这意味着预期的序列元素可能被截断，甚至可能完全缺失；
+   因此，对第 n 个元素的引用将是不可靠的。
+
+
+
+
+<span class="grey">Williams                     标准跟踪                         [第 3 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-4" ></span>
+<span class="grey"><a href="./rfc7464">RFC 7464</a>                   JSON 文本序列                    2015 年 2 月</span>
+
+
+   没有序列结束指示符。
+
+<span class="h3"><a class="selflink" id="section-2.2" href="#section-2.2">2.2</a>.  JSON 文本序列编码</span>
+
+   JSON 文本序列编码器的 ABNF 如图 2 所示。
+
+      JSON-sequence = *(RS JSON-text LF)
+      RS = %x1E; 见 <a href="./rfc20">RFC 20</a>
+               ; 也称为：Unicode 字符 INFORMATION SEPARATOR
+               ;          TWO (U+001E)
+      LF = %x0A; "line feed" (LF)，见 <a href="./rfc20">RFC 20</a>
+      JSON-text = &lt;由 <a href="./rfc7159">RFC 7159</a> 给出，使用 UTF-8 编码&gt;
+
+                     图 2：JSON 文本序列 ABNF
+
+   用文字表述：任意数量的 JSON 文本，每个都以 UTF-8 [<a href="./rfc3629" title="&quot;UTF-8, a transformation format of ISO 10646&quot;">RFC3629</a>] 编码，
+   每个前面都有一个 ASCII RS 字符，并且每个后面都跟有一个换行符
+   (LF)。由于 RS 是 ASCII 控制字符，它只能以转义形式出现在 JSON
+   字符串中（见 [<a href="./rfc7159" title="&quot;The JavaScript Object Notation (JSON) Data Interchange Format&quot;">RFC7159</a>]），并且由于 RS 不能以任何其他形式出现
+   在 JSON 文本中，因此 RS 可以明确地定界序列中任何元素的开始。
+   除数字之外，RS 足以明确地定界所有顶层 JSON 值类型。在序列中
+   每个 JSON 文本后面跟随 LF，可以检测由顶层数字组成的被截断的
+   JSON 文本；见<a href="#section-2.4">第 2.4 节</a>。
+
+   期望 JSON 文本序列编码器确保序列元素格式正确。当 JSON 文本
+   序列编码器执行 JSON 文本编码时，序列元素自然会格式正确。当
+   JSON 文本序列编码器接受已经编码的 JSON 文本时，JSON 文本序列
+   编码器应当在把它们加入序列之前解析它们。
+
+   注意，在某些系统上，可以通过键入 "ctrl-^" 来输入 RS；在某些
+   系统或应用中，正确的序列可能是 "ctrl-v ctrl-^"。这在使用文本
+   编辑器手动构造序列时很有用。
+
+<span class="h3"><a class="selflink" id="section-2.3" href="#section-2.3">2.3</a>.  不完整/无效的 JSON 文本不必是致命错误</span>
+
+   按<a href="#section-2.1">第 2.1 节</a>，当八位组字符串包含格式错误的 JSON 文本时，
+   JSON 文本序列解析器不应中止。相反，JSON 文本序列解析器应跳到
+   下一个 RS。这种情况可能出现在例如追加到日志文件的数据被文件
+   系统截断的上下文中（例如，由于崩溃或管理进程终止）。
+
+
+
+
+
+<span class="grey">Williams                     标准跟踪                         [第 4 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-5" ></span>
+<span class="grey"><a href="./rfc7464">RFC 7464</a>                   JSON 文本序列                    2015 年 2 月</span>
+
+
+   可以使用增量 JSON 文本解析器，不过当然，解析给定文本失败可能
+   发生在先产生一些增量解析结果之后。
+
+   序列解析器应当具有一个选项，用于对被截断的 JSON 文本发出警告。
+
+<span class="h3"><a class="selflink" id="section-2.4" href="#section-2.4">2.4</a>.  顶层值：数字、true、false 和 null</span>
+
+   虽然对象、数组和字符串在 JSON 文本中是自定界的，但数字以及
+   值 'true'、'false' 和 'null' 不是。只有空白可以定界后四类值。
+
+   JSON 文本序列使用 0x0A 作为“金丝雀”八位组来检测截断。
+
+   解析器 MUST 检查任何属于顶层数字，或可能为 'true'、'false' 或
+   'null' 的 JSON 文本，在该值之后是否包含 JSON 空白（至少一个
+   匹配 [<a href="./rfc7159" title="&quot;The JavaScript Object Notation (JSON) Data Interchange Format&quot;">RFC7159</a>] 中 "ws" ABNF 规则的字节）；否则，该 JSON-text
+   可能已被截断。注意，每个 JSON 文本后面的 LF 与 "ws" ABNF 规则
+   匹配。
+
+   解析器 MUST 丢弃由可能已被截断的非自定界顶层值组成的 JSON-text
+   序列元素（即未由空白定界的那些元素）。解析器可以将这类文本
+   报告为警告（可选地包括已解析文本和/或原始八位组字符串）。
+
+   例如，'&lt;RS&gt;123&lt;RS&gt;' 可能原本意图携带顶层数字 1234，但它被截断
+   了。类似地，'&lt;RS&gt;true&lt;RS&gt;' 可能原本意图携带无效文本 'trueish'。
+   '&lt;RS&gt;truefalse&lt;RS&gt;' 不是两个顶层值 'true' 和 'false'；它只是一个
+   无效的 JSON 文本。
+
+   实现在解析 '&lt;RS&gt;"foo"&lt;RS&gt;' 时可以产生一个值，因为它们的 JSON
+   文本解析器可能能够增量地消耗字节；由于此例中的 JSON 文本是
+   自定界顶层值，解析器可以在不消耗额外字节的情况下产生结果。
+   这类实现应当跳到下一个 RS 字节，并且可能报告其间任何非空白
+   字节。
+
+   对非自定界序列元素（数字、true、false 和 null）的截断检测，
+   只有在序列编码器产生或接收完整 JSON 文本时才可能实现。对于
+   序列编码器不同时负责各个 JSON 文本编码的实现，应确保这些
+   JSON 文本是完整的。
+
+
+
+
+<span class="grey">Williams                     标准跟踪                         [第 5 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-6" ></span>
+<span class="grey"><a href="./rfc7464">RFC 7464</a>                   JSON 文本序列                    2015 年 2 月</span>
+
+
+<span class="h2"><a class="selflink" id="section-3" href="#section-3">3</a>.  安全考虑事项</span>
+
+   JSON [<a href="./rfc7159" title="&quot;The JavaScript Object Notation (JSON) Data Interchange Format&quot;">RFC7159</a>] 的所有安全考虑事项均适用。此格式不提供任何形式的
+   加密完整性保护。
+
+   与通常情况一样，解析器必须在假定输入不可信的前提下运行。这
+   意味着解析器必须在面对恶意输入时优雅地失败。
+
+   注意，增量 JSON 文本解析器可以产生部分结果，并在稍后指示无法
+   解析文本的其余部分。使用增量 JSON 文本解析器的序列解析器可能
+   会把像 '&lt;RS&gt;"foo"&lt;LF&gt;456&lt;LF&gt;&lt;RS&gt;' 这样的序列视为一个元素
+   ("foo") 的序列，而使用非增量 JSON 文本解析器的序列解析器可能
+   会把同一序列视为空序列。这种效果，以及解析失败后被忽略的文本，
+   可用于绕过不会对 JSON 文本失败发出警告的序列解析器来夹带数据。
+
+   对 JSON 文本序列进行反复解析和重新编码，可能导致向各个序列
+   元素的 JSON 文本添加（或从中剥离）尾随 LF 字节。这可能破坏
+   签名验证。JSON 文本没有规范形式，因此 JSON 文本序列格式也没有。
+
+<span class="h2"><a class="selflink" id="section-4" href="#section-4">4</a>.  IANA 考虑事项</span>
+
+   JSON 文本序列的 MIME 媒体类型是 application/json-seq。
+
+   类型名称：application
+
+   子类型名称：json-seq
+
+   必需参数：N/A
+
+   可选参数：N/A
+
+   编码考虑事项：binary
+
+   安全考虑事项：见 <a href="./rfc7464#section-3">RFC 7464，第&nbsp;3 节</a>。
+
+   互操作性考虑事项：本文描述。
+
+   发布的规范：<a href="./rfc7464">RFC 7464</a>。
+
+
+
+
+
+
+
+<span class="grey">Williams                     标准跟踪                         [第 6 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-7" ></span>
+<span class="grey"><a href="./rfc7464">RFC 7464</a>                   JSON 文本序列                    2015 年 2 月</span>
+
+
+   使用此媒体类型的应用：
+
+      &lt;<a href="https://stedolan.github.io/jq">https://stedolan.github.io/jq</a>&gt;
+      &lt;<a href="https://github.com/mapbox/cligj">https://github.com/mapbox/cligj</a>&gt;
+      &lt;<a href="https://github.com/hildjj/json-text-sequence">https://github.com/hildjj/json-text-sequence</a>&gt;
+
+   片段标识符考虑事项：N/A
+
+   附加信息：
+
+   o  此类型的已弃用别名：N/A
+
+   o  魔数：N/A
+
+   o  文件扩展名：N/A
+
+   o  Macintosh 文件类型代码：N/A
+
+   进一步信息的联系人及电子邮件地址：
+
+      json@ietf.org
+
+   预期用途：COMMON
+
+   作者：Nicolas Williams (nico@cryptonector.com)
+
+   变更控制者：IETF
+
+<span class="h2"><a class="selflink" id="section-5" href="#section-5">5</a>.  规范性参考文献</span>
+
+   [<a id="ref-RFC20">RFC20</a>]    Cerf, V., "ASCII 网络交换格式", STD 80,
+              <a href="./rfc20">RFC 20</a>, 1969 年 10 月,
+              &lt;<a href="http://www.rfc-editor.org/info/rfc20">http://www.rfc-editor.org/info/rfc20</a>&gt;.
+
+   [<a id="ref-RFC2119">RFC2119</a>]  Bradner, S., "RFC 中用于表示需求级别的关键词",
+              <a href="https://www.rfc-editor.org/bcp/bcp14">BCP 14</a>, <a href="./rfc2119">RFC 2119</a>, 1997 年 3 月,
+              &lt;<a href="http://www.rfc-editor.org/info/rfc2119">http://www.rfc-editor.org/info/rfc2119</a>&gt;.
+
+   [<a id="ref-RFC3629">RFC3629</a>]  Yergeau, F., "UTF-8，ISO 10646 的一种变换格式",
+              STD 63, <a href="./rfc3629">RFC 3629</a>, 2003 年 11 月,
+              &lt;<a href="http://www.rfc-editor.org/info/rfc3629">http://www.rfc-editor.org/info/rfc3629</a>&gt;.
+
+   [<a id="ref-RFC5234">RFC5234</a>]  Crocker, D., Ed. and P. Overell, "语法规范的增强
+              BNF：ABNF", STD 68, <a href="./rfc5234">RFC 5234</a>, 2008 年 1 月,
+              &lt;<a href="http://www.rfc-editor.org/info/rfc5234">http://www.rfc-editor.org/info/rfc5234</a>&gt;.
+
+
+
+
+
+
+<span class="grey">Williams                     标准跟踪                         [第 7 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-8" ></span>
+<span class="grey"><a href="./rfc7464">RFC 7464</a>                   JSON 文本序列                    2015 年 2 月</span>
+
+
+   [<a id="ref-RFC7159">RFC7159</a>]  Bray, T., Ed., "JavaScript 对象表示法 (JSON) 数据
+              交换格式", <a href="./rfc7159">RFC 7159</a>, 2014 年 3 月,
+              &lt;<a href="http://www.rfc-editor.org/info/rfc7159">http://www.rfc-editor.org/info/rfc7159</a>&gt;.
+
+致谢
+
+   Phillip Hallam-Baker 提出了将 JSON 文本序列用于日志文件，并指出
+   了重新同步的必要性。Stephen Dolan 创建了
+   &lt;<a href="https://github.com/stedolan/jq">https://github.com/stedolan/jq</a>&gt;，它使用了类似 JSON 文本序列的
+   东西（输出时用 LF 作为文本之间的分隔符，输入时仅要求有足以消除
+   歧义的空白）。Carsten Bormann 建议使用 ASCII RS，Joe Hildebrand
+   建议在 RS 之外再使用 LF 来消除顶层数字值的歧义。Paul Hoffman
+   指导了本文档。还有许多人在 JSON 工作组邮件列表上贡献了评审和
+   评论。
+
+作者地址
+
+   Nicolas Williams
+   Cryptonector, LLC
+
+   EMail: nico@cryptonector.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Williams                     标准跟踪                         [第 8 页]
+</pre>
+<script src="https://htmlspecs.com/dropdown.js"></script>
