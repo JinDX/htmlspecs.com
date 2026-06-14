@@ -26,6 +26,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [ECMAScript® 2027 Internationalization API Specification](https://htmlspecs.com/ecma402/)（[Source](https://tc39.es/ecma402/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Language Tags and Locale Identifiers for the World Wide Web](https://htmlspecs.com/ltli/)（[Source](https://www.w3.org/TR/2020/WD-ltli-20201007) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Strings on the Web: Language and Direction Metadata](https://htmlspecs.com/string-meta/)（[Source](https://www.w3.org/TR/2024/NOTE-string-meta-20241017/) ![Note](https://img.shields.io/badge/NOTE-309c40)）
+- [Internationalization Best Practices for Spec Developers](https://htmlspecs.com/international-specs/)（[Source](https://www.w3.org/TR/2025/NOTE-international-specs-20250808/) ![Note](https://img.shields.io/badge/NOTE-309c40)）
 
 ### 数据格式、语义 Web 与 API 描述
 - [The JavaScript Object Notation (JSON) Data Interchange Format](https://htmlspecs.com/json/)（[Source](https://www.rfc-editor.org/rfc/rfc8259.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
