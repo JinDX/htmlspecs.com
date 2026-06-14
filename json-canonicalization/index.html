@@ -1,0 +1,3231 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="RFC">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="Common,Latin" name="scripts">
+    <meta content="initial-scale=1.0" name="viewport">
+    <title>RFC 8785：JSON 规范化方案 (JCS)</title>
+    <meta content="Anders Rundgren" name="author">
+    <meta content="Bret Jordan" name="author">
+    <meta content="Samuel Erdtman" name="author">
+    <meta content='
+       
+        哈希和签名等加密操作需要将数据表示为一种不变格式，
+        以便这些操作能够可靠地重复执行。
+
+        解决这一问题的一种方式是创建数据的规范表示。
+        规范化还允许数据以其原始形式在“线路”上传输，
+        同时生产者和消费者端点对数据的规范化副本执行的
+        加密操作会生成一致的结果。
+       
+       
+        本文档描述 JSON 规范化方案 (JCS)。
+        本规范定义了如何通过基于 ECMAScript 为 JSON
+        原语定义的严格序列化方法、将 JSON 数据约束到
+        Internet JSON (I-JSON) 子集，以及使用确定性的属性
+        排序，来创建 JSON 数据的规范表示。
+       
+    ' name="description">
+    <meta content="xml2rfc 2.46.0" name="generator">
+    <meta content="JSON" name="keyword">
+    <meta content="ECMAScript" name="keyword">
+    <meta content="Signatures" name="keyword">
+    <meta content="Cryptography" name="keyword">
+    <meta content="Canonicalization" name="keyword">
+    <meta content="8785" name="rfc.number">
+    <link href="rfc8785.xml" rel="alternate" type="application/rfc+xml">
+    <link href="#copyright" rel="license">
+    <style type="text/css">
+        /*
+
+  NOTE: Changes at the bottom of this file overrides some earlier settings.
+
+  Once the style has stabilized and has been adopted as an official RFC style,
+  this can be consolidated so that style settings occur only in one place, but
+  for now the contents of this file consists first of the initial CSS work as
+  provided to the RFC Formatter (xml2rfc) work, followed by itemized and
+  commented changes found necssary during the development of the v3
+  formatters.
+
+*/
+
+        /* fonts */
+        @import url('https://fonts.googleapis.com/css?family=Noto+Sans');
+        /* Sans-serif */
+        @import url('https://fonts.googleapis.com/css?family=Noto+Serif');
+        /* Serif (print) */
+        @import url('https://fonts.googleapis.com/css?family=Roboto+Mono');
+        /* Monospace */
+
+        @viewport {
+            zoom: 1.0;
+            width: extend-to-zoom;
+        }
+
+        @-ms-viewport {
+            width: extend-to-zoom;
+            zoom: 1.0;
+        }
+
+        /* general and mobile first */
+        html {}
+
+        body {
+            max-width: 90%;
+            margin: 1.5em auto;
+            color: #222;
+            background-color: #fff;
+            font-size: 14px;
+            font-family: 'Noto Sans', Arial, Helvetica, sans-serif;
+            line-height: 1.6;
+            scroll-behavior: smooth;
+        }
+
+        .ears {
+            display: none;
+        }
+
+        /* headings */
+        #title,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            margin: 1em 0 0.5em;
+            font-weight: bold;
+            line-height: 1.3;
+        }
+
+        #title {
+            clear: both;
+            border-bottom: 1px solid #ddd;
+            margin: 0 0 0.5em 0;
+            padding: 1em 0 0.5em;
+        }
+
+        .author {
+            padding-bottom: 4px;
+        }
+
+        h1 {
+            font-size: 26px;
+            margin: 1em 0;
+        }
+
+        h2 {
+            font-size: 22px;
+            margin-top: -20px;
+            /* provide offset for in-page anchors */
+            padding-top: 33px;
+        }
+
+        h3 {
+            font-size: 18px;
+            margin-top: -36px;
+            /* provide offset for in-page anchors */
+            padding-top: 42px;
+        }
+
+        h4 {
+            font-size: 16px;
+            margin-top: -36px;
+            /* provide offset for in-page anchors */
+            padding-top: 42px;
+        }
+
+        h5,
+        h6 {
+            font-size: 14px;
+        }
+
+        #n-copyright-notice {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 1em;
+            margin-bottom: 1em;
+        }
+
+        /* general structure */
+        p {
+            padding: 0;
+            margin: 0 0 1em 0;
+            text-align: left;
+        }
+
+        div,
+        span {
+            position: relative;
+        }
+
+        div {
+            margin: 0;
+        }
+
+        .alignRight.art-text {
+            background-color: #f9f9f9;
+            border: 1px solid #eee;
+            border-radius: 3px;
+            padding: 1em 1em 0;
+            margin-bottom: 1.5em;
+        }
+
+        .alignRight.art-text pre {
+            padding: 0;
+        }
+
+        .alignRight {
+            margin: 1em 0;
+        }
+
+        .alignRight>*:first-child {
+            border: none;
+            margin: 0;
+            float: right;
+            clear: both;
+        }
+
+        .alignRight>*:nth-child(2) {
+            clear: both;
+            display: block;
+            border: none;
+        }
+
+        svg {
+            display: block;
+        }
+
+        .alignCenter.art-text {
+            background-color: #f9f9f9;
+            border: 1px solid #eee;
+            border-radius: 3px;
+            padding: 1em 1em 0;
+            margin-bottom: 1.5em;
+        }
+
+        .alignCenter.art-text pre {
+            padding: 0;
+        }
+
+        .alignCenter {
+            margin: 1em 0;
+        }
+
+        .alignCenter>*:first-child {
+            border: none;
+            /* this isn't optimal, but it's an existence proof.  PrinceXML doesn't
+     support flexbox yet.
+  */
+            display: table;
+            margin: 0 auto;
+        }
+
+        /* lists */
+        ol,
+        ul {
+            padding: 0;
+            margin: 0 0 1em 2em;
+        }
+
+        ol ol,
+        ul ul,
+        ol ul,
+        ul ol {
+            margin-left: 1em;
+        }
+
+        li {
+            margin: 0 0 0.25em 0;
+        }
+
+        .ulCompact li {
+            margin: 0;
+        }
+
+        ul.empty,
+        .ulEmpty {
+            list-style-type: none;
+        }
+
+        ul.empty li,
+        .ulEmpty li {
+            margin-top: 0.5em;
+        }
+
+        ul.compact,
+        .ulCompact,
+        ol.compact,
+        .olCompact {
+            line-height: 100%;
+            margin: 0 0 0 2em;
+        }
+
+        /* definition lists */
+        dl {}
+
+        dl>dt {
+            float: left;
+            margin-right: 1em;
+        }
+
+        /* 
+dl.nohang > dt {
+  float: none;
+}
+*/
+        dl>dd {
+            margin-bottom: .8em;
+            min-height: 1.3em;
+        }
+
+        dl.compact>dd,
+        .dlCompact>dd {
+            margin-bottom: 0em;
+        }
+
+        dl>dd>dl {
+            margin-top: 0.5em;
+            margin-bottom: 0em;
+        }
+
+        /* links */
+        a {
+            text-decoration: none;
+        }
+
+        a[href] {
+            color: #22e;
+            /* Arlen: WCAG 2019 */
+        }
+
+        a[href]:hover {
+            background-color: #f2f2f2;
+        }
+
+        figcaption a[href],
+        a[href].selfRef {
+            color: #222;
+        }
+
+        /* XXX probably not this:
+a.selfRef:hover {
+  background-color: transparent;
+  cursor: default;
+} */
+
+        /* Figures */
+        tt,
+        code,
+        pre,
+        code {
+            background-color: #f9f9f9;
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        pre {
+            border: 1px solid #eee;
+            margin: 0;
+            padding: 1em;
+        }
+
+        img {
+            max-width: 100%;
+        }
+
+        figure {
+            margin: 0;
+        }
+
+        figure blockquote {
+            margin: 0.8em 0.4em 0.4em;
+        }
+
+        figcaption {
+            font-style: italic;
+            margin: 0 0 1em 0;
+        }
+
+        @media screen {
+            pre {
+                overflow-x: auto;
+                max-width: 100%;
+                max-width: calc(100% - 22px);
+            }
+        }
+
+        /* aside, blockquote */
+        aside,
+        blockquote {
+            margin-left: 0;
+            padding: 1.2em 2em;
+        }
+
+        blockquote {
+            background-color: #f9f9f9;
+            color: #111;
+            /* Arlen: WCAG 2019 */
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            margin: 1em 0;
+        }
+
+        cite {
+            display: block;
+            text-align: right;
+            font-style: italic;
+        }
+
+        /* tables */
+        table {
+            width: 100%;
+            margin: 0 0 1em;
+            border-collapse: collapse;
+            border: 1px solid #eee;
+        }
+
+        th,
+        td {
+            text-align: left;
+            vertical-align: top;
+            padding: 0.5em 0.75em;
+        }
+
+        th {
+            text-align: left;
+            background-color: #e9e9e9;
+        }
+
+        tr:nth-child(2n+1)>td {
+            background-color: #f5f5f5;
+        }
+
+        table caption {
+            font-style: italic;
+            margin: 0;
+            padding: 0;
+            text-align: left;
+        }
+
+        table p {
+            /* XXX to avoid bottom margin on table row signifiers. If paragraphs should
+     be allowed within tables more generally, it would be far better to select on a class. */
+            margin: 0;
+        }
+
+        /* pilcrow */
+        a.pilcrow {
+            color: #666;
+            /* Arlen: AHDJ 2019 */
+            text-decoration: none;
+            visibility: hidden;
+            user-select: none;
+            -ms-user-select: none;
+            -o-user-select: none;
+            -moz-user-select: none;
+            -khtml-user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
+        }
+
+        @media screen {
+
+            aside:hover>a.pilcrow,
+            p:hover>a.pilcrow,
+            blockquote:hover>a.pilcrow,
+            div:hover>a.pilcrow,
+            li:hover>a.pilcrow,
+            pre:hover>a.pilcrow {
+                visibility: visible;
+            }
+
+            a.pilcrow:hover {
+                background-color: transparent;
+            }
+        }
+
+        /* misc */
+        hr {
+            border: 0;
+            border-top: 1px solid #eee;
+        }
+
+        .bcp14 {
+            font-variant: small-caps;
+        }
+
+        .role {
+            font-variant: all-small-caps;
+        }
+
+        /* info block */
+        #identifiers {
+            margin: 0;
+            font-size: 0.9em;
+        }
+
+        #identifiers dt {
+            width: 3em;
+            clear: left;
+        }
+
+        #identifiers dd {
+            float: left;
+            margin-bottom: 0;
+        }
+
+        #identifiers .authors .author {
+            display: inline-block;
+            margin-right: 1.5em;
+        }
+
+        #identifiers .authors .org {
+            font-style: italic;
+        }
+
+        /* The prepared/rendered info at the very bottom of the page */
+        .docInfo {
+            color: #666;
+            /* Arlen: WCAG 2019 */
+            font-size: 0.9em;
+            font-style: italic;
+            margin-top: 2em;
+        }
+
+        .docInfo .prepared {
+            float: left;
+        }
+
+        .docInfo .prepared {
+            float: right;
+        }
+
+        /* table of contents */
+        #toc {
+            padding: 0.75em 0 2em 0;
+            margin-bottom: 1em;
+        }
+
+        nav.toc ul {
+            margin: 0 0.5em 0 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        nav.toc li {
+            line-height: 1.3em;
+            margin: 0.75em 0;
+            padding-left: 1.2em;
+            text-indent: -1.2em;
+        }
+
+        /* references */
+        .references dt {
+            text-align: right;
+            font-weight: bold;
+            min-width: 7em;
+        }
+
+        .references dd {
+            margin-left: 8em;
+            overflow: auto;
+        }
+
+        .refInstance {
+            margin-bottom: 1.25em;
+        }
+
+        .references .ascii {
+            margin-bottom: 0.25em;
+        }
+
+        /* index */
+        .index ul {
+            margin: 0 0 0 1em;
+            padding: 0;
+            list-style: none;
+        }
+
+        .index ul ul {
+            margin: 0;
+        }
+
+        .index li {
+            margin: 0;
+            text-indent: -2em;
+            padding-left: 2em;
+            padding-bottom: 5px;
+        }
+
+        .indexIndex {
+            margin: 0.5em 0 1em;
+        }
+
+        .index a {
+            font-weight: 700;
+        }
+
+        /* make the index two-column on all but the smallest screens */
+        @media (min-width: 600px) {
+            .index ul {
+                -moz-column-count: 2;
+                -moz-column-gap: 20px;
+            }
+
+            .index ul ul {
+                -moz-column-count: 1;
+                -moz-column-gap: 0;
+            }
+        }
+
+        /* authors */
+        address.vcard {
+            font-style: normal;
+            margin: 1em 0;
+        }
+
+        address.vcard .nameRole {
+            font-weight: 700;
+            margin-left: 0;
+        }
+
+        address.vcard .label {
+            font-family: "Noto Sans", Arial, Helvetica, sans-serif;
+            margin: 0.5em 0;
+        }
+
+        address.vcard .type {
+            display: none;
+        }
+
+        .alternative-contact {
+            margin: 1.5em 0 1em;
+        }
+
+        hr.addr {
+            border-top: 1px dashed;
+            margin: 0;
+            color: #ddd;
+            max-width: calc(100% - 16px);
+        }
+
+        /* temporary notes */
+        .rfcEditorRemove::before {
+            position: absolute;
+            top: 0.2em;
+            right: 0.2em;
+            padding: 0.2em;
+            content: "The RFC Editor will remove this note";
+            color: #9e2a00;
+            /* Arlen: WCAG 2019 */
+            background-color: #ffd;
+            /* Arlen: WCAG 2019 */
+        }
+
+        .rfcEditorRemove {
+            position: relative;
+            padding-top: 1.8em;
+            background-color: #ffd;
+            /* Arlen: WCAG 2019 */
+            border-radius: 3px;
+        }
+
+        .cref {
+            background-color: #ffd;
+            /* Arlen: WCAG 2019 */
+            padding: 2px 4px;
+        }
+
+        .crefSource {
+            font-style: italic;
+        }
+
+        /* alternative layout for smaller screens */
+        @media screen and (max-width: 1023px) {
+            body {
+                padding-top: 2em;
+            }
+
+            #title {
+                padding: 1em 0;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            h2 {
+                font-size: 20px;
+                margin-top: -18px;
+                /* provide offset for in-page anchors */
+                padding-top: 38px;
+            }
+
+            #identifiers dd {
+                max-width: 60%;
+            }
+
+            #toc {
+                position: fixed;
+                z-index: 2;
+                top: 0;
+                right: 0;
+                padding: 0;
+                margin: 0;
+                background-color: inherit;
+                border-bottom: 1px solid #ccc;
+            }
+
+            #toc h2 {
+                margin: -1px 0 0 0;
+                padding: 4px 0 4px 6px;
+                padding-right: 1em;
+                min-width: 190px;
+                font-size: 1.1em;
+                text-align: right;
+                background-color: #444;
+                color: white;
+                cursor: pointer;
+            }
+
+            #toc h2::before {
+                /* css hamburger */
+                float: right;
+                position: relative;
+                width: 1em;
+                height: 1px;
+                left: -164px;
+                margin: 6px 0 0 0;
+                background: white none repeat scroll 0 0;
+                box-shadow: 0 4px 0 0 white, 0 8px 0 0 white;
+                content: "";
+            }
+
+            #toc nav {
+                display: none;
+                padding: 0.5em 1em 1em;
+                overflow: auto;
+                height: calc(100vh - 48px);
+                border-left: 1px solid #ddd;
+            }
+        }
+
+        /* alternative layout for wide screens */
+        @media screen and (min-width: 1024px) {
+            body {
+                max-width: 724px;
+                margin: 42px auto;
+                padding-left: 1.5em;
+                padding-right: 29em;
+            }
+
+            #toc {
+                position: fixed;
+                top: 42px;
+                right: 42px;
+                width: 25%;
+                margin: 0;
+                padding: 0 1em;
+                z-index: 1;
+            }
+
+            #toc h2 {
+                border-top: none;
+                border-bottom: 1px solid #ddd;
+                font-size: 1em;
+                font-weight: normal;
+                margin: 0;
+                padding: 0.25em 1em 1em 0;
+            }
+
+            #toc nav {
+                display: block;
+                height: calc(90vh - 84px);
+                bottom: 0;
+                padding: 0.5em 0 0;
+                overflow: auto;
+            }
+
+            img {
+                /* future proofing */
+                max-width: 100%;
+                height: auto;
+            }
+        }
+
+        /* pagination */
+        @media print {
+            body {
+
+                width: 100%;
+            }
+
+            p {
+                orphans: 3;
+                widows: 3;
+            }
+
+            #n-copyright-notice {
+                border-bottom: none;
+            }
+
+            #toc,
+            #n-introduction {
+                page-break-before: always;
+            }
+
+            #toc {
+                border-top: none;
+                padding-top: 0;
+            }
+
+            figure,
+            pre {
+                page-break-inside: avoid;
+            }
+
+            figure {
+                overflow: scroll;
+            }
+
+            h1,
+            h2,
+            h3,
+            h4,
+            h5,
+            h6 {
+                page-break-after: avoid;
+            }
+
+            h2+*,
+            h3+*,
+            h4+*,
+            h5+*,
+            h6+* {
+                page-break-before: avoid;
+            }
+
+            pre {
+                white-space: pre-wrap;
+                word-wrap: break-word;
+                font-size: 10pt;
+            }
+
+            table {
+                border: 1px solid #ddd;
+            }
+
+            td {
+                border-top: 1px solid #ddd;
+            }
+        }
+
+        /* This is commented out here, as the string-set: doesn't
+   pass W3C validation currently */
+        /*
+.ears thead .left {
+  string-set: ears-top-left content();
+}
+
+.ears thead .center {
+  string-set: ears-top-center content();
+}
+
+.ears thead .right {
+  string-set: ears-top-right content();
+}
+
+.ears tfoot .left {
+  string-set: ears-bottom-left content();
+}
+
+.ears tfoot .center {
+  string-set: ears-bottom-center content();
+}
+
+.ears tfoot .right {
+  string-set: ears-bottom-right content();
+}
+*/
+
+        @page :first {
+            padding-top: 0;
+
+            @top-left {
+                content: normal;
+                border: none;
+            }
+
+            @top-center {
+                content: normal;
+                border: none;
+            }
+
+            @top-right {
+                content: normal;
+                border: none;
+            }
+        }
+
+        @page {
+            size: A4;
+            margin-bottom: 45mm;
+            padding-top: 20px;
+            /* The follwing is commented out here, but set appropriately by in code, as
+     the content depends on the document */
+            /*
+  @top-left {
+    content: 'Internet-Draft';
+    vertical-align: bottom;
+    border-bottom: solid 1px #ccc;
+  }
+  @top-left {
+    content: string(ears-top-left);
+    vertical-align: bottom;
+    border-bottom: solid 1px #ccc;
+  }
+  @top-center {
+    content: string(ears-top-center);
+    vertical-align: bottom;
+    border-bottom: solid 1px #ccc;
+  }
+  @top-right {
+    content: string(ears-top-right);
+    vertical-align: bottom;
+    border-bottom: solid 1px #ccc;
+  }
+  @bottom-left {
+    content: string(ears-bottom-left);
+    vertical-align: top;
+    border-top: solid 1px #ccc;
+  }
+  @bottom-center {
+    content: string(ears-bottom-center);
+    vertical-align: top;
+    border-top: solid 1px #ccc;
+  }
+  @bottom-right {
+      content: '[Page ' counter(page) ']';
+      vertical-align: top;
+      border-top: solid 1px #ccc;
+  }
+  */
+
+        }
+
+        /* Changes introduced to fix issues found during implementation */
+        /* Make sure links are clickable even if overlapped by following H* */
+        a {
+            z-index: 2;
+        }
+
+        /* Separate body from document info even without intervening H1 */
+        section {
+            clear: both;
+        }
+
+
+        /* Top align author divs, to avoid names without organization dropping level with org names */
+        .author {
+            vertical-align: top;
+        }
+
+        /* Leave room in document info to show Internet-Draft on one line */
+        #identifiers dt {
+            width: 8em;
+        }
+
+        /* Don't waste quite as much whitespace between label and value in doc info */
+        #identifiers dd {
+            margin-left: 1em;
+        }
+
+        /* Give floating toc a background color (needed when it's a div inside section */
+        #toc {
+            background-color: white;
+        }
+
+        /* Make the collapsed ToC header render white on gray also when it's a link */
+        @media screen and (max-width: 1023px) {
+
+            #toc h2 a,
+            #toc h2 a:link,
+            #toc h2 a:focus,
+            #toc h2 a:hover,
+            #toc a.toplink,
+            #toc a.toplink:hover {
+                color: white;
+                background-color: #444;
+                text-decoration: none;
+            }
+        }
+
+        /* Give the bottom of the ToC some whitespace */
+        @media screen and (min-width: 1024px) {
+            #toc {
+                padding: 0 0 1em 1em;
+            }
+        }
+
+        /* Style section numbers with more space between number and title */
+        .section-number {
+            padding-right: 0.5em;
+        }
+
+        /* prevent monospace from becoming overly large */
+        tt,
+        code,
+        pre,
+        code {
+            font-size: 95%;
+        }
+
+        /* Fix the height/width aspect for ascii art*/
+        pre.sourcecode,
+        .art-text pre {
+            line-height: 1.12;
+        }
+
+
+        /* Add styling for a link in the ToC that points to the top of the document */
+        a.toplink {
+            float: right;
+            margin-right: 0.5em;
+        }
+
+        /* Fix the dl styling to match the RFC 7992 attributes */
+        dl>dt,
+        dl.dlParallel>dt {
+            float: left;
+            margin-right: 1em;
+        }
+
+        dl.dlNewline>dt {
+            float: none;
+        }
+
+        /* Provide styling for table cell text alignment */
+        table td.text-left,
+        table th.text-left {
+            text-align: left;
+        }
+
+        table td.text-center,
+        table th.text-center {
+            text-align: center;
+        }
+
+        table td.text-right,
+        table th.text-right {
+            text-align: right;
+        }
+
+        /* Make the alternative author contact informatio look less like just another
+   author, and group it closer with the primary author contact information */
+        .alternative-contact {
+            margin: 0.5em 0 0.25em 0;
+        }
+
+        address .non-ascii {
+            margin: 0 0 0 2em;
+        }
+
+        /* With it being possible to set tables with alignment
+  left, center, and right, { width: 100%; } does not make sense */
+        table {
+            width: auto;
+        }
+
+        /* Avoid reference text that sits in a block with very wide left margin,
+   because of a long floating dt label.*/
+        .references dd {
+            overflow: visible;
+        }
+
+        /* Control caption placement */
+        caption {
+            caption-side: bottom;
+        }
+
+        /* Limit the width of the author address vcard, so names in right-to-left
+   script don't end up on the other side of the page. */
+
+        address.vcard {
+            max-width: 30em;
+            margin-right: auto;
+        }
+
+        /* For address alignment dependent on LTR or RTL scripts */
+        address div.left {
+            text-align: left;
+        }
+
+        address div.right {
+            text-align: right;
+        }
+
+        /* Provide table alignment support.  We can't use the alignX classes above
+   since they do unwanted things with caption and other styling. */
+        table.right {
+            margin-left: auto;
+            margin-right: 0;
+        }
+
+        table.center {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        table.left {
+            margin-left: 0;
+            margin-right: auto;
+        }
+
+        /* Give the table caption label the same styling as the figcaption */
+        caption a[href] {
+            color: #222;
+        }
+
+        @media print {
+            .toplink {
+                display: none;
+            }
+
+            /* avoid overwriting the top border line with the ToC header */
+            #toc {
+                padding-top: 1px;
+            }
+
+            /* Avoid page breaks inside dl and author address entries */
+            .vcard {
+                page-break-inside: avoid;
+            }
+
+        }
+
+        /* Tweak the bcp14 keyword presentation */
+        .bcp14 {
+            font-variant: small-caps;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        /* Tweak the invisible space above H* in order not to overlay links in text above */
+        h2 {
+            margin-top: -18px;
+            /* provide offset for in-page anchors */
+            padding-top: 31px;
+        }
+
+        h3 {
+            margin-top: -18px;
+            /* provide offset for in-page anchors */
+            padding-top: 24px;
+        }
+
+        h4 {
+            margin-top: -18px;
+            /* provide offset for in-page anchors */
+            padding-top: 24px;
+        }
+
+        /* Float artwork pilcrow to the right */
+        @media screen {
+            .artwork a.pilcrow {
+                display: block;
+                line-height: 0.7;
+                margin-top: 0.15em;
+            }
+        }
+
+        /* Make pilcrows on dd visible */
+        @media screen {
+            dd:hover>a.pilcrow {
+                visibility: visible;
+            }
+        }
+
+        /* Make the placement of figcaption match that of a table's caption
+   by removing the figure's added bottom margin */
+        .alignLeft.art-text,
+        .alignCenter.art-text,
+        .alignRight.art-text {
+            margin-bottom: 0;
+        }
+
+        .alignLeft,
+        .alignCenter,
+        .alignRight {
+            margin: 1em 0 0 0;
+        }
+
+        /* In print, the pilcrow won't show on hover, so prevent it from taking up space,
+   possibly even requiring a new line */
+        @media print {
+            a.pilcrow {
+                display: none;
+            }
+        }
+
+        /* Styling for the external metadata */
+        div#external-metadata {
+            background-color: #eee;
+            padding: 0.5em;
+            margin-bottom: 0.5em;
+            display: none;
+        }
+
+        div#internal-metadata {
+            padding: 0.5em;
+            /* to match the external-metadata padding */
+        }
+
+        /* Styling for title RFC Number */
+        h1#rfcnum {
+            clear: both;
+            margin: 0 0 -1em;
+            padding: 1em 0 0 0;
+        }
+
+        /* Make .olPercent look the same as <ol><li> */
+        dl.olPercent>dd {
+            margin-bottom: 0.25em;
+            min-height: initial;
+        }
+
+        /* Give aside some styling to set it apart */
+        aside {
+            border-left: 1px solid #ddd;
+            margin: 1em 0 1em 2em;
+            padding: 0.2em 2em;
+        }
+
+        aside>dl,
+        aside>ol,
+        aside>ul,
+        aside>table,
+        aside>p {
+            margin-bottom: 0.5em;
+        }
+
+        /* Additional page break settings */
+        @media print {
+
+            figcaption,
+            table caption {
+                page-break-before: avoid;
+            }
+        }
+
+        /* Font size adjustments for print */
+        @media print {
+            body {
+                font-size: 10pt;
+                line-height: normal;
+                max-width: 96%;
+            }
+
+            h1 {
+                font-size: 1.72em;
+                padding-top: 1.5em;
+            }
+
+            /* 1*1.2*1.2*1.2 */
+            h2 {
+                font-size: 1.44em;
+                padding-top: 1.5em;
+            }
+
+            /* 1*1.2*1.2 */
+            h3 {
+                font-size: 1.2em;
+                padding-top: 1.5em;
+            }
+
+            /* 1*1.2 */
+            h4 {
+                font-size: 1em;
+                padding-top: 1.5em;
+            }
+
+            h5,
+            h6 {
+                font-size: 1em;
+                margin: initial;
+                padding: 0.5em 0 0.3em;
+            }
+        }
+
+        /* Sourcecode margin in print, when there's no pilcrow */
+        @media print {
+
+            .artwork,
+            .sourcecode {
+                margin-bottom: 1em;
+            }
+        }
+
+        /* Avoid narrow tables forcing too narrow table captions, which may render badly */
+        table {
+            min-width: 20em;
+        }
+
+        /* ol type a */
+        ol.type-a {
+            list-style-type: lower-alpha;
+        }
+
+        ol.type-A {
+            list-style-type: upper-alpha;
+        }
+
+        ol.type-i {
+            list-style-type: lower-roman;
+        }
+
+        ol.type-I {
+            list-style-type: lower-roman;
+        }
+
+        /* Apply the print table and row borders in general, on request from the RPC,
+and increase the contrast between border and odd row background sligthtly */
+        table {
+            border: 1px solid #ddd;
+        }
+
+        td {
+            border-top: 1px solid #ddd;
+        }
+
+        tr:nth-child(2n+1)>td {
+            background-color: #f8f8f8;
+        }
+
+        /* Use style rules to govern display of the TOC. */
+        @media screen and (max-width: 1023px) {
+            #toc nav {
+                display: none;
+            }
+
+            #toc.active nav {
+                display: block;
+            }
+        }
+
+        /* Add support for keepWithNext */
+        .keepWithNext {
+            break-after: avoid-page;
+            break-after: avoid-page;
+        }
+
+        /* Add support for keepWithPrevious */
+        .keepWithPrevious {
+            break-before: avoid-page;
+        }
+
+        /* Change the approach to avoiding breaks inside artwork etc. */
+        figure,
+        pre,
+        table,
+        .artwork,
+        .sourcecode {
+            break-before: avoid-page;
+            break-after: auto;
+        }
+
+        /* Avoid breaks between <dt> and <dd> */
+        dl {
+            break-before: auto;
+            break-inside: auto;
+        }
+
+        dt {
+            break-before: auto;
+            break-after: avoid-page;
+        }
+
+        dd {
+            break-before: avoid-page;
+            break-after: auto;
+            orphans: 3;
+            widows: 3
+        }
+
+        span.break,
+        dd.break {
+            margin-bottom: 0;
+            min-height: 0;
+            break-before: auto;
+            break-inside: auto;
+            break-after: auto;
+        }
+
+        /* Undo break-before ToC */
+        @media print {
+            #toc {
+                break-before: auto;
+            }
+        }
+
+        /* Text in compact lists should not get extra bottim margin space,
+   since that would makes the list not compact */
+        ul.compact p,
+        .ulCompact p,
+        ol.compact p,
+        .olCompact p {
+            margin: 0;
+        }
+
+        /* But the list as a whole needs the extra space at the end */
+        section ul.compact,
+        section .ulCompact,
+        section ol.compact,
+        section .olCompact {
+            margin-bottom: 1em;
+            /* same as p not within ul.compact etc. */
+        }
+
+        /* The tt and code background above interferes with for instance table cell
+   backgrounds.  Changed to something a bit more selective. */
+        tt,
+        code {
+            background-color: transparent;
+        }
+
+        p tt,
+        p code {
+            background-color: #f9f9f9;
+        }
+    </style>
+    <link href="https://www.rfc-editor.org/rfc/rfc-local.css" rel="stylesheet" type="text/css">
+    <link href="https://dx.doi.org/10.17487/rfc8785" rel="alternate">
+    <link href="urn:issn:2070-1721" rel="alternate">
+    <link href="https://datatracker.ietf.org/doc/draft-rundgren-json-canonicalization-scheme-17" rel="prev">
+</head>
+
+<body>
+    <script src="https://www.rfc-editor.org/js/metadata.min.js"></script>
+    <table class="ears">
+        <thead>
+            <tr>
+                <td class="left">RFC 8785</td>
+                <td class="center">JSON 规范化方案</td>
+                <td class="right">2020 年 6 月</td>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <td class="left">Rundgren, et al.</td>
+                <td class="center">资料性</td>
+                <td class="right">[页]</td>
+            </tr>
+        </tfoot>
+    </table>
+    <div id="external-metadata" class="document-information"></div>
+    <div id="internal-metadata" class="document-information">
+        <dl id="identifiers">
+            <dt class="label-stream">流：</dt>
+            <dd class="stream">独立提交</dd>
+            <dt class="label-rfc">RFC：</dt>
+            <dd class="rfc"><a href="https://www.rfc-editor.org/rfc/rfc8785" class="eref">8785</a></dd>
+            <dt class="label-category">类别：</dt>
+            <dd class="category">资料性</dd>
+            <dt class="label-published">发布：</dt>
+            <dd class="published">
+                <time datetime="2020-06" class="published">2020 年 6 月</time>
+            </dd>
+            <dt class="label-issn">ISSN：</dt>
+            <dd class="issn">2070-1721</dd>
+            <dt class="label-authors">作者：</dt>
+            <dd class="authors">
+                <div class="author">
+                    <div class="author-name">A. Rundgren</div>
+                    <div class="org">Independent</div>
+                </div>
+                <div class="author">
+                    <div class="author-name">B. Jordan</div>
+                    <div class="org">Broadcom</div>
+                </div>
+                <div class="author">
+                    <div class="author-name">S. Erdtman</div>
+                    <div class="org">Spotify AB</div>
+                </div>
+            </dd>
+        </dl>
+    </div>
+    <h1 id="rfcnum">RFC 8785</h1>
+    <h1 id="title">JSON 规范化方案 (JCS)</h1>
+    <section id="section-abstract">
+        <h2 id="abstract"><a href="#abstract" class="selfRef">摘要</a></h2>
+        <p id="section-abstract-1">
+            哈希和签名等加密操作需要将数据表示为一种不变格式，
+            以便这些操作能够可靠地重复执行。
+
+            解决这一问题的一种方式是创建数据的规范表示。
+            规范化还允许数据以其原始形式在“线路”上传输，
+            同时生产者和消费者端点对数据的规范化副本执行的
+            加密操作会生成一致的结果。<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+        <p id="section-abstract-2">
+            本文档描述 JSON 规范化方案 (JCS)。
+            本规范定义了如何通过基于 ECMAScript 为 JSON
+            原语定义的严格序列化方法、将 JSON 数据约束到
+            Internet JSON (I-JSON) 子集，以及使用确定性的属性
+            排序，来创建 JSON 数据的规范表示。<a href="#section-abstract-2" class="pilcrow">¶</a></p>
+    </section>
+    <div id="status-of-memo">
+        <section id="section-boilerplate.1">
+            <h2 id="name-status-of-this-memo">
+                <a href="#name-status-of-this-memo" class="section-name selfRef">本备忘录状态</a>
+            </h2>
+            <p id="section-boilerplate.1-1">
+                本文档不是互联网标准跟踪规范；它是为资料性目的而发布的。<a href="#section-boilerplate.1-1" class="pilcrow">¶</a></p>
+            <p id="section-boilerplate.1-2">
+                这是对 RFC 系列的贡献，独立于任何其他 RFC 流。
+                RFC 编辑器已自行决定发布本文档，并且不对其实现或部署价值
+                作出任何声明。经 RFC 编辑器批准发布的文档不是任何级别
+                互联网标准的候选；见 RFC 7841 第 2 节。<a href="#section-boilerplate.1-2" class="pilcrow">¶</a>
+            </p>
+            <p id="section-boilerplate.1-3">
+                关于本文档当前状态、任何勘误以及如何提供反馈的信息，可通过
+                <span><a
+                        href="https://www.rfc-editor.org/info/rfc8785">https://www.rfc-editor.org/info/rfc8785</a></span>
+                获得。<a href="#section-boilerplate.1-3" class="pilcrow">¶</a>
+            </p>
+        </section>
+    </div>
+    <div id="copyright">
+        <section id="section-boilerplate.2">
+            <h2 id="name-copyright-notice">
+                <a href="#name-copyright-notice" class="section-name selfRef">版权声明</a>
+            </h2>
+            <p id="section-boilerplate.2-1">
+                版权所有 (c) 2020 IETF Trust 和列为本文档作者的人员。
+                保留所有权利。<a href="#section-boilerplate.2-1" class="pilcrow">¶</a></p>
+            <p id="section-boilerplate.2-2">
+                本文档受 BCP 78 以及在本文档发布之日生效的 IETF Trust
+                与 IETF 文档相关的法律条款
+                (<span><a href="https://trustee.ietf.org/license-info">https://trustee.ietf.org/license-info</a></span>)
+                约束。请仔细阅读这些文档，因为它们描述了你关于本文档的
+                权利与限制。<a href="#section-boilerplate.2-2" class="pilcrow">¶</a></p>
+        </section>
+    </div>
+    <div id="toc">
+        <section id="section-toc.1">
+            <a href="#" onclick="scroll(0,0)" class="toplink">▲</a>
+            <h2 id="name-table-of-contents">
+                <a href="#name-table-of-contents" class="section-name selfRef">目录</a>
+            </h2>
+            <nav class="toc">
+                <ul class="toc compact ulEmpty">
+                    <li class="toc compact ulEmpty" id="section-toc.1-1.1">
+                        <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="xref">1</a>. <a
+                                href="#name-introduction" class="xref">引言</a><a href="#section-toc.1-1.1.1"
+                                class="pilcrow">¶</a></p>
+                    </li>
+                    <li class="toc compact ulEmpty" id="section-toc.1-1.2">
+                        <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2" class="xref">2</a>. <a
+                                href="#name-terminology" class="xref">术语</a><a href="#section-toc.1-1.2.1"
+                                class="pilcrow">¶</a></p>
+                    </li>
+                    <li class="toc compact ulEmpty" id="section-toc.1-1.3">
+                        <p id="section-toc.1-1.3.1"><a href="#section-3" class="xref">3</a>. <a
+                                href="#name-detailed-operation" class="xref">详细操作</a><a href="#section-toc.1-1.3.1"
+                                class="pilcrow">¶</a></p>
+                        <ul class="toc compact ulEmpty">
+                            <li class="toc compact ulEmpty" id="section-toc.1-1.3.2.1">
+                                <p id="section-toc.1-1.3.2.1.1" class="keepWithNext"><a href="#section-3.1"
+                                        class="xref">3.1</a>. <a href="#name-creation-of-input-data"
+                                        class="xref">输入数据的创建</a><a href="#section-toc.1-1.3.2.1.1" class="pilcrow">¶</a>
+                                </p>
+                            </li>
+                            <li class="toc compact ulEmpty" id="section-toc.1-1.3.2.2">
+                                <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="xref">3.2</a>. <a
+                                        href="#name-generation-of-canonical-jso" class="xref">规范 JSON
+                                        数据的生成</a><a href="#section-toc.1-1.3.2.2.1" class="pilcrow">¶</a></p>
+                                <ul class="toc compact ulEmpty">
+                                    <li class="toc compact ulEmpty" id="section-toc.1-1.3.2.2.2.1">
+                                        <p id="section-toc.1-1.3.2.2.2.1.1"><a href="#section-3.2.1"
+                                                class="xref">3.2.1</a>. <a href="#name-whitespace" class="xref">空白</a><a
+                                                href="#section-toc.1-1.3.2.2.2.1.1" class="pilcrow">¶</a></p>
+                                    </li>
+                                    <li class="toc compact ulEmpty" id="section-toc.1-1.3.2.2.2.2">
+                                        <p id="section-toc.1-1.3.2.2.2.2.1"><a href="#section-3.2.2"
+                                                class="xref">3.2.2</a>. <a href="#name-serialization-of-primitive-"
+                                                class="xref">原始数据类型的序列化</a><a href="#section-toc.1-1.3.2.2.2.2.1"
+                                                class="pilcrow">¶</a></p>
+                                        <ul class="toc compact ulEmpty">
+                                            <li class="toc compact ulEmpty" id="section-toc.1-1.3.2.2.2.2.2.1">
+                                                <p id="section-toc.1-1.3.2.2.2.2.2.1.1"><a href="#section-3.2.2.1"
+                                                        class="xref">3.2.2.1</a>. <a
+                                                        href="#name-serialization-of-literals"
+                                                        class="xref">字面量的序列化</a><a
+                                                        href="#section-toc.1-1.3.2.2.2.2.2.1.1" class="pilcrow">¶</a>
+                                                </p>
+                                            </li>
+                                            <li class="toc compact ulEmpty" id="section-toc.1-1.3.2.2.2.2.2.2">
+                                                <p id="section-toc.1-1.3.2.2.2.2.2.2.1"><a href="#section-3.2.2.2"
+                                                        class="xref">3.2.2.2</a>. <a
+                                                        href="#name-serialization-of-strings" class="xref">字符串的序列化</a><a
+                                                        href="#section-toc.1-1.3.2.2.2.2.2.2.1" class="pilcrow">¶</a>
+                                                </p>
+                                            </li>
+                                            <li class="toc compact ulEmpty" id="section-toc.1-1.3.2.2.2.2.2.3">
+                                                <p id="section-toc.1-1.3.2.2.2.2.2.3.1"><a href="#section-3.2.2.3"
+                                                        class="xref">3.2.2.3</a>. <a
+                                                        href="#name-serialization-of-numbers" class="xref">数字的序列化</a><a
+                                                        href="#section-toc.1-1.3.2.2.2.2.2.3.1" class="pilcrow">¶</a>
+                                                </p>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li class="toc compact ulEmpty" id="section-toc.1-1.3.2.2.2.3">
+                                        <p id="section-toc.1-1.3.2.2.2.3.1"><a href="#section-3.2.3"
+                                                class="xref">3.2.3</a>. <a href="#name-sorting-of-object-propertie"
+                                                class="xref">对象属性的排序</a><a href="#section-toc.1-1.3.2.2.2.3.1"
+                                                class="pilcrow">¶</a></p>
+                                    </li>
+                                    <li class="toc compact ulEmpty" id="section-toc.1-1.3.2.2.2.4">
+                                        <p id="section-toc.1-1.3.2.2.2.4.1"><a href="#section-3.2.4"
+                                                class="xref">3.2.4</a>. <a href="#name-utf-8-generation"
+                                                class="xref">UTF-8 生成</a><a href="#section-toc.1-1.3.2.2.2.4.1"
+                                                class="pilcrow">¶</a></p>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="toc compact ulEmpty" id="section-toc.1-1.4">
+                        <p id="section-toc.1-1.4.1"><a href="#section-4" class="xref">4</a>. <a
+                                href="#name-iana-considerations" class="xref">IANA 考虑事项</a><a
+                                href="#section-toc.1-1.4.1" class="pilcrow">¶</a></p>
+                    </li>
+                    <li class="toc compact ulEmpty" id="section-toc.1-1.5">
+                        <p id="section-toc.1-1.5.1"><a href="#section-5" class="xref">5</a>. <a
+                                href="#name-security-considerations" class="xref">安全考虑事项</a><a
+                                href="#section-toc.1-1.5.1" class="pilcrow">¶</a></p>
+                    </li>
+                    <li class="toc compact ulEmpty" id="section-toc.1-1.6">
+                        <p id="section-toc.1-1.6.1"><a href="#section-6" class="xref">6</a>. <a href="#name-references"
+                                class="xref">参考文献</a><a href="#section-toc.1-1.6.1" class="pilcrow">¶</a></p>
+                        <ul class="toc compact ulEmpty">
+                            <li class="toc compact ulEmpty" id="section-toc.1-1.6.2.1">
+                                <p id="section-toc.1-1.6.2.1.1"><a href="#section-6.1" class="xref">6.1</a>. <a
+                                        href="#name-normative-references" class="xref">规范性参考文献</a><a
+                                        href="#section-toc.1-1.6.2.1.1" class="pilcrow">¶</a></p>
+                            </li>
+                            <li class="toc compact ulEmpty" id="section-toc.1-1.6.2.2">
+                                <p id="section-toc.1-1.6.2.2.1"><a href="#section-6.2" class="xref">6.2</a>. <a
+                                        href="#name-informative-references" class="xref">资料性参考文献</a><a
+                                        href="#section-toc.1-1.6.2.2.1" class="pilcrow">¶</a></p>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="toc compact ulEmpty" id="section-toc.1-1.7">
+                        <p id="section-toc.1-1.7.1"><a href="#section-appendix.a" class="xref">附录 A</a>. <a
+                                href="#name-ecmascript-sample-canonical" class="xref">ECMAScript 示例
+                                规范化器</a><a href="#section-toc.1-1.7.1" class="pilcrow">¶</a></p>
+                    </li>
+                    <li class="toc compact ulEmpty" id="section-toc.1-1.8">
+                        <p id="section-toc.1-1.8.1"><a href="#section-appendix.b" class="xref">附录 B</a>. <a
+                                href="#name-number-serialization-sample" class="xref">数字序列化样例</a><a
+                                href="#section-toc.1-1.8.1" class="pilcrow">¶</a></p>
+                    </li>
+                    <li class="toc compact ulEmpty" id="section-toc.1-1.9">
+                        <p id="section-toc.1-1.9.1"><a href="#section-appendix.c" class="xref">附录 C</a>. <a
+                                href="#name-canonicalized-json-as-wire-" class="xref">作为“线路
+                                格式”的规范化 JSON</a><a href="#section-toc.1-1.9.1" class="pilcrow">¶</a></p>
+                    </li>
+                    <li class="toc compact ulEmpty" id="section-toc.1-1.10">
+                        <p id="section-toc.1-1.10.1"><a href="#section-appendix.d" class="xref">附录 D</a>. <a
+                                href="#name-dealing-with-big-numbers" class="xref">处理大数</a><a
+                                href="#section-toc.1-1.10.1" class="pilcrow">¶</a></p>
+                    </li>
+                    <li class="toc compact ulEmpty" id="section-toc.1-1.11">
+                        <p id="section-toc.1-1.11.1"><a href="#section-appendix.e" class="xref">附录 E</a>. <a
+                                href="#name-string-subtype-handling" class="xref">字符串子类型处理</a><a
+                                href="#section-toc.1-1.11.1" class="pilcrow">¶</a></p>
+                        <ul class="toc compact ulEmpty">
+                            <li class="toc compact ulEmpty" id="section-toc.1-1.11.2.1">
+                                <p id="section-toc.1-1.11.2.1.1"><a href="#section-e.1" class="xref">E.1</a>. <a
+                                        href="#name-subtypes-in-arrays" class="xref">数组中的子类型</a><a
+                                        href="#section-toc.1-1.11.2.1.1" class="pilcrow">¶</a></p>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="toc compact ulEmpty" id="section-toc.1-1.12">
+                        <p id="section-toc.1-1.12.1"><a href="#section-appendix.f" class="xref">附录 F</a>. <a
+                                href="#name-implementation-guidelines" class="xref">实现指南</a><a
+                                href="#section-toc.1-1.12.1" class="pilcrow">¶</a></p>
+                    </li>
+                    <li class="toc compact ulEmpty" id="section-toc.1-1.13">
+                        <p id="section-toc.1-1.13.1"><a href="#section-appendix.g" class="xref">附录 G</a>. <a
+                                href="#name-open-source-implementations" class="xref">开源实现</a><a
+                                href="#section-toc.1-1.13.1" class="pilcrow">¶</a></p>
+                    </li>
+                    <li class="toc compact ulEmpty" id="section-toc.1-1.14">
+                        <p id="section-toc.1-1.14.1"><a href="#section-appendix.h" class="xref">附录 H</a>. <a
+                                href="#name-other-json-canonicalization" class="xref">其他 JSON 规范化
+                                工作</a><a href="#section-toc.1-1.14.1" class="pilcrow">¶</a></p>
+                    </li>
+                    <li class="toc compact ulEmpty" id="section-toc.1-1.15">
+                        <p id="section-toc.1-1.15.1"><a href="#section-appendix.i" class="xref">附录 I</a>. <a
+                                href="#name-development-portal" class="xref">开发门户</a><a href="#section-toc.1-1.15.1"
+                                class="pilcrow">¶</a></p>
+                    </li>
+                    <li class="toc compact ulEmpty" id="section-toc.1-1.16">
+                        <p id="section-toc.1-1.16.1"><a href="#section-appendix.j" class="xref"></a><a
+                                href="#name-acknowledgements" class="xref">致谢</a><a href="#section-toc.1-1.16.1"
+                                class="pilcrow">¶</a></p>
+                    </li>
+                    <li class="toc compact ulEmpty" id="section-toc.1-1.17">
+                        <p id="section-toc.1-1.17.1"><a href="#section-appendix.k" class="xref"></a><a
+                                href="#name-authors-addresses" class="xref">作者地址</a><a href="#section-toc.1-1.17.1"
+                                class="pilcrow">¶</a></p>
+                    </li>
+                </ul>
+            </nav>
+        </section>
+    </div>
+    <div id="Introduction">
+        <section id="section-1">
+            <h2 id="name-introduction">
+                <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction"
+                    class="section-name selfRef">引言</a>
+            </h2>
+            <p id="section-1-1">
+                本文档描述 JSON 规范化方案 (JCS)。
+                本规范定义了如何通过基于 ECMAScript <span>[<a href="#ECMA-262" class="xref">ECMA-262</a>]</span>
+                为 JSON 原语定义的严格序列化方法、将 JSON <span>[<a href="#RFC8259" class="xref">RFC8259</a>]</span>
+                数据约束到 I-JSON <span>[<a href="#RFC7493" class="xref">RFC7493</a>]</span>
+                子集，以及使用确定性的属性排序，来创建 JSON 数据的规范表示。
+                JCS 的输出是 JSON 数据的一种“可哈希”表示，可供加密方法使用。
+                后续段落概述主要设计考虑。<a href="#section-1-1" class="pilcrow">¶</a></p>
+            <p id="section-1-2">
+                哈希和签名等加密操作需要将数据表示为一种不变格式，
+                以便这些操作能够可靠地重复执行。
+                实现这一点的一种方式是把数据转换为一种具有简单且固定表示的格式，
+                例如 base64url <span>[<a href="#RFC4648" class="xref">RFC4648</a>]</span>。
+                JSON Web Signature (JWS) <span>[<a href="#RFC7515" class="xref">RFC7515</a>]</span>
+                就是这样处理这一问题的。
+                另一种解决方案是创建数据的规范版本，
+                类似于 XML 签名 <span>[<a href="#XMLDSIG" class="xref">XMLDSIG</a>]</span> 标准所采用的做法。<a href="#section-1-2"
+                    class="pilcrow">¶</a></p>
+            <p id="section-1-3">
+                规范化方案的主要优势是数据可以保持其原始形式。
+                这是 JCS 背后的核心理由。
+                换句话说，使用规范化使 JSON 对象即使在签名之后仍能保持为 JSON 对象。
+                这可以简化系统设计、文档编写和日志记录。<a href="#section-1-3" class="pilcrow">¶</a></p>
+            <p id="section-1-4">
+                为避免“重新发明轮子”，JCS 依赖 ECMAScript（又称 JavaScript）
+                <span>[<a href="#ECMA-262" class="xref">ECMA-262</a>]</span>
+                从第 6 版开始定义的 JSON 原语
+                （字符串、数字和字面量）序列化。<a href="#section-1-4" class="pilcrow">¶</a>
+            </p>
+            <p id="section-1-5">
+                经验丰富的 XML 开发人员可能还记得让 XML 签名通过验证时遇到的困难。
+                这通常是由于对相当复杂的 XML 规范化规则以及同样复杂的
+                Web Services 安全标准有不同解释造成的。
+                JCS 不应遭受类似问题的原因如下：<a href="#section-1-5" class="pilcrow">¶</a></p>
+            <ul class="normal">
+                <li class="normal" id="section-1-6.1">
+                    JSON 没有命名空间概念和默认值。<a href="#section-1-6.1" class="pilcrow">¶</a>
+                </li>
+                <li class="normal" id="section-1-6.2">
+                    数据被约束到 I-JSON <span>[<a href="#RFC7493" class="xref">RFC7493</a>]</span> 子集。
+                    这消除了为处理规范化而需要特定解析器的必要性。<a href="#section-1-6.2" class="pilcrow">¶</a>
+                </li>
+                <li class="normal" id="section-1-6.3">
+                    JCS 兼容的 JSON 原语序列化目前受到大多数 Web 浏览器以及
+                    Node.js <span>[<a href="#NODEJS" class="xref">NODEJS</a>]</span> 的支持。<a href="#section-1-6.3"
+                        class="pilcrow">¶</a>
+                </li>
+                <li class="normal" id="section-1-6.4">
+                    完整的 JCS 规范目前受到多个开源实现的支持（见<a href="#open.source" class="xref">附录 G</a>）。
+                    另见<a href="#impl.guidelines" class="xref">附录 F</a> 中的实现指南。<a href="#section-1-6.4"
+                        class="pilcrow">¶</a>
+                </li>
+            </ul>
+            <p id="section-1-7">
+                JCS 与一些依赖 JSON 规范化的现有系统兼容，例如 JSON Web Key (JWK)
+                Thumbprint <span>[<a href="#RFC7638" class="xref">RFC7638</a>]</span> 和 Keybase <span>[<a
+                        href="#KEYBASE" class="xref">KEYBASE</a>]</span>。<a href="#section-1-7" class="pilcrow">¶</a>
+            </p>
+            <p id="section-1-8">
+                关于加密之外的潜在用途，见 <span>[<a href="#I-D.rundgren-comparable-json" class="xref">JSONCOMP</a>]</span>。<a
+                    href="#section-1-8" class="pilcrow">¶</a></p>
+            <p id="section-1-9">
+                本文档的预期读者是 JSON 工具供应商以及基于 JSON 的加密解决方案的设计者。
+                假定读者了解 ECMAScript，包括 "JSON" 对象。<a href="#section-1-9" class="pilcrow">¶</a></p>
+        </section>
+    </div>
+    <div id="Terminology">
+        <section id="section-2">
+            <h2 id="name-terminology">
+                <a href="#section-2" class="section-number selfRef">2. </a><a href="#name-terminology"
+                    class="section-name selfRef">术语</a>
+            </h2>
+            <p id="section-2-1">
+                注意，本文档不属于 IETF 标准跟踪。然而，出于安全性和互操作性原因，
+                合规实现应当遵循所规定的行为。本文使用 BCP 14 来描述这种必要行为。<a href="#section-2-1" class="pilcrow">¶</a></p>
+            <p id="section-2-2">
+                本文档中的关键词 "<span class="bcp14">MUST</span>"、"<span class="bcp14">MUST NOT</span>"、
+                "<span class="bcp14">REQUIRED</span>"、"<span class="bcp14">SHALL</span>"、"<span class="bcp14">SHALL
+                    NOT</span>"、"<span class="bcp14">SHOULD</span>"、"<span class="bcp14">SHOULD NOT</span>"、
+                "<span class="bcp14">RECOMMENDED</span>"、"<span class="bcp14">NOT RECOMMENDED</span>"、
+                "<span class="bcp14">MAY</span>" 和 "<span class="bcp14">OPTIONAL</span>"，当且仅当它们以全大写形式出现时，
+                应按 BCP 14 <span>[<a href="#RFC2119" class="xref">RFC2119</a>]</span>
+                <span>[<a href="#RFC8174" class="xref">RFC8174</a>]</span> 中的描述进行解释，
+                如这里所示。<a href="#section-2-2" class="pilcrow">¶</a>
+            </p>
+        </section>
+    </div>
+    <div id="Operation">
+        <section id="section-3">
+            <h2 id="name-detailed-operation">
+                <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-detailed-operation"
+                    class="section-name selfRef">详细操作</a>
+            </h2>
+            <p id="section-3-1">
+                本节描述与创建规范 JSON 表示相关的细节，以及 JCS 如何处理这些细节。<a href="#section-3-1" class="pilcrow">¶</a></p>
+            <p id="section-3-2">
+                <a href="#impl.guidelines" class="xref">附录 F</a> 描述了向现有 JSON 工具添加 JCS 支持的
+                <span class="bcp14">RECOMMENDED</span> 方式。<a href="#section-3-2" class="pilcrow">¶</a>
+            </p>
+            <div id="json.datacreation">
+                <section id="section-3.1">
+                    <h3 id="name-creation-of-input-data">
+                        <a href="#section-3.1" class="section-number selfRef">3.1. </a><a
+                            href="#name-creation-of-input-data" class="section-name selfRef">输入数据的创建</a>
+                    </h3>
+                    <p id="section-3.1-1">
+                        要进行规范序列化的数据通常通过以下方式创建：<a href="#section-3.1-1" class="pilcrow">¶</a></p>
+                    <ul class="normal">
+                        <li class="normal" id="section-3.1-2.1">
+                            解析先前生成的 JSON 数据。<a href="#section-3.1-2.1" class="pilcrow">¶</a>
+                        </li>
+                        <li class="normal" id="section-3.1-2.2">
+                            以编程方式创建数据。<a href="#section-3.1-2.2" class="pilcrow">¶</a>
+                        </li>
+                    </ul>
+                    <p id="section-3.1-3">
+                        无论使用哪种方法，要序列化的数据都
+                        <span class="bcp14">MUST</span> 适配
+                        I-JSON <span>[<a href="#RFC7493" class="xref">RFC7493</a>]</span>
+                        格式，这意味着以下要求：<a href="#section-3.1-3" class="pilcrow">¶</a>
+                    </p>
+                    <ul class="normal">
+                        <li class="normal" id="section-3.1-4.1">
+                            JSON 对象 <span class="bcp14">MUST NOT</span> 呈现重复的属性名称。<a href="#section-3.1-4.1"
+                                class="pilcrow">¶</a>
+                        </li>
+                        <li class="normal" id="section-3.1-4.2">
+                            JSON 字符串数据 <span class="bcp14">MUST</span> 能够表示为
+                            Unicode <span>[<a href="#UNICODE" class="xref">UNICODE</a>]</span>。<a
+                                href="#section-3.1-4.2" class="pilcrow">¶</a>
+                        </li>
+                        <li class="normal" id="section-3.1-4.3">
+                            JSON 数字数据 <span class="bcp14">MUST</span> 能够表示为
+                            IEEE 754 <span>[<a href="#IEEE754" class="xref">IEEE754</a>]</span>
+                            双精度值。
+                            对于需要比 IEEE 754 双精度所提供的精度更高或整数更长的应用，
+                            <span class="bcp14">RECOMMENDED</span> 将这类数字表示为 JSON 字符串；
+                            关于如何以可互操作且可扩展的方式实现这一点，见<a href="#json.bignumbers" class="xref">附录 D</a>。<a
+                                href="#section-3.1-4.3" class="pilcrow">¶</a>
+                        </li>
+                    </ul>
+                    <p id="section-3.1-5">
+                        一个附加约束是，已解析的 JSON 字符串数据在后续序列化期间
+                        <span class="bcp14">MUST NOT</span> 被更改。更多信息见<a href="#string.subtypes" class="xref">附录 E</a>。<a
+                            href="#section-3.1-5" class="pilcrow">¶</a>
+                    </p>
+                    <p id="section-3.1-6">
+                        注意：尽管 Unicode 标准提供了重新排列某些字符序列的可能性，
+                        称为“Unicode 规范化” <span>[<a href="#UCNORM" class="xref">UCNORM</a>]</span>，
+                        JCS 合规的字符串处理不会考虑这一点。也就是说，依赖 JCS 的方案中
+                        涉及的所有组件 <span class="bcp14">MUST</span> “按原样”保留 Unicode 字符串数据。<a href="#section-3.1-6"
+                            class="pilcrow">¶</a></p>
+                </section>
+            </div>
+            <div id="json.canonicalization">
+                <section id="section-3.2">
+                    <h3 id="name-generation-of-canonical-jso">
+                        <a href="#section-3.2" class="section-number selfRef">3.2. </a><a
+                            href="#name-generation-of-canonical-jso" class="section-name selfRef">规范 JSON 数据的生成</a>
+                    </h3>
+                    <p id="section-3.2-1">
+                        以下小节描述创建上一节所详述数据的规范 JSON 表示所需的步骤。<a href="#section-3.2-1" class="pilcrow">¶</a></p>
+                    <p id="section-3.2-2">
+                        <a href="#canonicalize.js" class="xref">附录 A</a> 展示了基于 ECMAScript 的规范化器示例代码，
+                        与 JCS 规范相匹配。<a href="#section-3.2-2" class="pilcrow">¶</a>
+                    </p>
+                    <div id="json.whitespace">
+                        <section id="section-3.2.1">
+                            <h4 id="name-whitespace">
+                                <a href="#section-3.2.1" class="section-number selfRef">3.2.1. </a><a
+                                    href="#name-whitespace" class="section-name selfRef">空白</a>
+                            </h4>
+                            <p id="section-3.2.1-1">
+                                JSON 标记之间的空白 <span class="bcp14">MUST NOT</span> 被输出。<a href="#section-3.2.1-1"
+                                    class="pilcrow">¶</a></p>
+                        </section>
+                    </div>
+                    <div id="json.serialization.data">
+                        <section id="section-3.2.2">
+                            <h4 id="name-serialization-of-primitive-">
+                                <a href="#section-3.2.2" class="section-number selfRef">3.2.2. </a><a
+                                    href="#name-serialization-of-primitive-" class="section-name selfRef">原始数据类型的序列化</a>
+                            </h4>
+                            <p id="section-3.2.2-1">
+                                假定解析了以下 JSON 对象：<a href="#section-3.2.2-1" class="pilcrow">¶</a></p>
+                            <div id="section-3.2.2-2">
+                                <pre class="sourcecode lang-json">
+  {
+    "numbers": [333333333.33333329, 1E30, 4.50,
+                2e-3, 0.000000000000000000000000001],
+    "string": "\u20ac$\u000F\u000aA'\u0042\u0022\u005c\\\"\/",
+    "literals": [null, true, false]
+  }
+</pre><a href="#section-3.2.2-2" class="pilcrow">¶</a>
+                            </div>
+                            <p id="section-3.2.2-3">
+                                如果随后使用符合 ECMAScript "JSON.stringify()" 的序列化器
+                                对解析后的数据进行序列化，结果（仅为显示目的添加了换行）
+                                将与原始数据有很大差异：<a href="#section-3.2.2-3" class="pilcrow">¶</a></p>
+                            <div id="section-3.2.2-4">
+                                <pre class="sourcecode lang-json">
+  {"numbers":[333333333.3333333,1e+30,4.5,0.002,1e-27],"string":
+  "€$\u000f\nA'B\"\\\\\"/","literals":[null,true,false]}
+</pre><a href="#section-3.2.2-4" class="pilcrow">¶</a>
+                            </div>
+                            <p id="section-3.2.2-5">
+                                解析后的数据与其序列化对应物之间存在差异的原因在于，
+                                输入数据具有较宽的容忍度（如 JSON <span>[<a href="#RFC8259" class="xref">RFC8259</a>]</span> 所定义），
+                                而输出数据（如 ECMAScript 所定义）具有固定表示。
+                                如示例所示，数字也会受到舍入影响。<a href="#section-3.2.2-5" class="pilcrow">¶</a>
+                            </p>
+                            <p id="section-3.2.2-6">
+                                以下小节描述按照 JCS 对原始 JSON 数据类型进行序列化。
+                                这一部分与 ECMAScript 的相应部分相同。
+                                在未来某个 ECMAScript 版本使以下任何序列化方法失效的
+                                （不太可能的）情况下，开发者社区将需要决定是坚持本规范，
+                                还是创建新的规范。<a href="#section-3.2.2-6" class="pilcrow">¶</a></p>
+                            <div id="json.ser.literals">
+                                <section id="section-3.2.2.1">
+                                    <h5 id="name-serialization-of-literals">
+                                        <a href="#section-3.2.2.1" class="section-number selfRef">3.2.2.1. </a><a
+                                            href="#name-serialization-of-literals"
+                                            class="section-name selfRef">字面量的序列化</a>
+                                    </h5>
+                                    <p id="section-3.2.2.1-1">
+                                        按照 JSON <span>[<a href="#RFC8259" class="xref">RFC8259</a>]</span>，
+                                        字面量 "null"、"true" 和
+                                        "false" <span class="bcp14">MUST</span> 分别被序列化为 null、true 和
+                                        false。<a href="#section-3.2.2.1-1" class="pilcrow">¶</a></p>
+                                </section>
+                            </div>
+                            <div id="json.ser.string">
+                                <section id="section-3.2.2.2">
+                                    <h5 id="name-serialization-of-strings">
+                                        <a href="#section-3.2.2.2" class="section-number selfRef">3.2.2.2. </a><a
+                                            href="#name-serialization-of-strings"
+                                            class="section-name selfRef">字符串的序列化</a>
+                                    </h5>
+                                    <p id="section-3.2.2.2-1">
+                                        对于 JSON 字符串数据（也包括 JSON 对象属性名称），
+                                        每个 Unicode 码点 <span class="bcp14">MUST</span> 按如下方式序列化
+                                        （见 <span>[<a href="#ECMA-262" class="xref">ECMA-262</a>]</span> 第 24.3.2.2 节）：<a
+                                            href="#section-3.2.2.2-1" class="pilcrow">¶</a></p>
+                                    <ul class="normal">
+                                        <li class="normal" id="section-3.2.2.2-2.1">
+                                            如果 Unicode 值落在传统 ASCII 控制字符范围内
+                                            （U+0000 到 U+001F），则除非它属于预定义 JSON
+                                            控制字符集合 U+0008、U+0009、U+000A、U+000C 或
+                                            U+000D，否则它 <span class="bcp14">MUST</span> 使用小写十六进制
+                                            Unicode 记法 (\uhhhh) 序列化；这些预定义控制字符
+                                            <span class="bcp14">MUST</span> 分别序列化为
+                                            \b、\t、\n、\f 和 \r。<a href="#section-3.2.2.2-2.1" class="pilcrow">¶</a>
+                                        </li>
+                                        <li class="normal" id="section-3.2.2.2-2.2">
+                                            如果 Unicode 值位于 ASCII 控制字符范围之外，
+                                            则除非它等价于 U+005C (\) 或 U+0022 (")，
+                                            否则它 <span class="bcp14">MUST</span> “按原样”序列化；
+                                            这两个字符 <span class="bcp14">MUST</span> 分别序列化为 \\ 和 \"。<a
+                                                href="#section-3.2.2.2-2.2" class="pilcrow">¶</a>
+                                        </li>
+                                    </ul>
+                                    <p id="section-3.2.2.2-3">
+                                        最后，所得 Unicode 码点序列 <span class="bcp14">MUST</span>
+                                        用双引号 (") 包围。<a href="#section-3.2.2.2-3" class="pilcrow">¶</a>
+                                    </p>
+                                    <p id="section-3.2.2.2-4">
+                                        注意：由于无效 Unicode 数据（例如“孤立代理项”，如 U+DEAD）
+                                        可能导致互操作性问题，包括签名损坏，因此出现这类数据
+                                        <span class="bcp14">MUST</span> 使合规 JCS 实现以适当错误终止。<a href="#section-3.2.2.2-4"
+                                            class="pilcrow">¶</a>
+                                    </p>
+                                </section>
+                            </div>
+                            <div id="json.ser.number">
+                                <section id="section-3.2.2.3">
+                                    <h5 id="name-serialization-of-numbers">
+                                        <a href="#section-3.2.2.3" class="section-number selfRef">3.2.2.3. </a><a
+                                            href="#name-serialization-of-numbers"
+                                            class="section-name selfRef">数字的序列化</a>
+                                    </h5>
+                                    <p id="section-3.2.2.3-1">
+                                        ECMAScript 基于 IEEE 754 <span>[<a href="#IEEE754"
+                                                class="xref">IEEE754</a>]</span> 双精度标准来表示
+                                        JSON 数字数据。这类数据 <span class="bcp14">MUST</span> 按
+                                        <span>[<a href="#ECMA-262" class="xref">ECMA-262</a>]</span> 第 7.1.12.1 节进行序列化，
+                                        包括 "Note 2" 增强。<a href="#section-3.2.2.3-1" class="pilcrow">¶</a>
+                                    </p>
+                                    <p id="section-3.2.2.3-2">
+                                        由于这一部分相对复杂，本文档不包含算法本身。
+                                        对于 JCS 合规数字序列化的实现者，Google 在 V8
+                                        <span>[<a href="#V8" class="xref">V8</a>]</span> 中的实现可作为参考。
+                                        另一个兼容的数字序列化参考实现是 Ryu
+                                        <span>[<a href="#RYU" class="xref">RYU</a>]</span>，
+                                        它被<a href="#open.source" class="xref">附录 G</a> 中提到的 JCS 开源 Java 实现使用。
+                                        <a href="#json.ieee754.test" class="xref">附录 B</a> 包含一组
+                                        IEEE 754 样例值及其对应的 JSON 序列化。<a href="#section-3.2.2.3-2" class="pilcrow">¶</a>
+                                    </p>
+                                    <p id="section-3.2.2.3-3">
+                                        注意：由于 JSON 中不允许 Not a Number (NaN) 和 Infinity，
+                                        出现 NaN 或 Infinity <span class="bcp14">MUST</span> 使合规 JCS
+                                        实现以适当错误终止。<a href="#section-3.2.2.3-3" class="pilcrow">¶</a></p>
+                                </section>
+                            </div>
+                        </section>
+                    </div>
+                    <div id="json.sorting.properties">
+                        <section id="section-3.2.3">
+                            <h4 id="name-sorting-of-object-propertie">
+                                <a href="#section-3.2.3" class="section-number selfRef">3.2.3. </a><a
+                                    href="#name-sorting-of-object-propertie" class="section-name selfRef">对象属性的排序</a>
+                            </h4>
+                            <p id="section-3.2.3-1">
+                                尽管前一步规范化了原始 JSON 数据类型的表示，
+                                但结果仍不符合“规范”要求，因为 JSON 对象属性并未按
+                                字典序（字母顺序）排列。<a href="#section-3.2.3-1" class="pilcrow">¶</a></p>
+                            <p id="section-3.2.3-2">
+                                将其应用到<a href="#json.serialization.data" class="xref">第
+                                    3.2.2 节</a>中的样例，正确规范化后的版本应当
+                                （仅为显示目的添加了换行）如下所示：<a href="#section-3.2.3-2" class="pilcrow">¶</a></p>
+                            <div id="section-3.2.3-3">
+                                <pre class="sourcecode lang-json">
+  {"literals":[null,true,false],"numbers":[333333333.3333333,
+  1e+30,4.5,0.002,1e-27],"string":"€$\u000f\nA'B\"\\\\\"/"}
+</pre><a href="#section-3.2.3-3" class="pilcrow">¶</a>
+                            </div>
+                            <p id="section-3.2.3-4">
+                                按照 JCS 对 JSON 对象属性进行字典序排序的规则如下：<a href="#section-3.2.3-4" class="pilcrow">¶</a></p>
+                            <ul class="normal">
+                                <li class="normal" id="section-3.2.3-5.1">
+                                    JSON 对象属性 <span class="bcp14">MUST</span> 递归排序，
+                                    这意味着 JSON 子对象的属性也 <span class="bcp14">MUST</span> 排序。<a href="#section-3.2.3-5.1"
+                                        class="pilcrow">¶</a>
+                                </li>
+                                <li class="normal" id="section-3.2.3-5.2">
+                                    JSON 数组数据也 <span class="bcp14">MUST</span> 扫描是否存在
+                                    JSON 对象（如果发现对象，则其属性 <span class="bcp14">MUST</span> 排序），
+                                    但数组元素顺序 <span class="bcp14">MUST NOT</span> 被更改。<a href="#section-3.2.3-5.2"
+                                        class="pilcrow">¶</a>
+                                </li>
+                            </ul>
+                            <p id="section-3.2.3-6">
+                                当 JSON 对象即将对其属性排序时，<span class="bcp14">MUST</span> 遵守以下措施：<a href="#section-3.2.3-6"
+                                    class="pilcrow">¶</a></p>
+                            <ul class="normal">
+                                <li class="normal" id="section-3.2.3-7.1">
+                                    排序过程应用于属性名称字符串的“原始”（未转义）形式。
+                                    也就是说，换行字符被视为 U+000A。<a href="#section-3.2.3-7.1" class="pilcrow">¶</a>
+                                </li>
+                                <li class="normal" id="section-3.2.3-7.2">
+                                    要排序的属性名称字符串被格式化为 UTF-16
+                                    <span>[<a href="#UNICODE" class="xref">UNICODE</a>]</span>
+                                    码元数组。
+                                    排序基于纯值比较，其中码元被视为无符号整数，
+                                    与区域设置无关。<a href="#section-3.2.3-7.2" class="pilcrow">¶</a>
+                                </li>
+                                <li class="normal" id="section-3.2.3-7.3">
+                                    <p id="section-3.2.3-7.3.1">
+                                        属性名称字符串要么在某个对两个字符串都有效的索引处具有不同值，
+                                        要么长度不同，或者两者兼有。
+                                        如果它们在一个或多个索引位置具有不同值，
+                                        令 k 为最小的此类索引；则根据使用 "&lt;" 运算符确定的结果，
+                                        在位置 k 的值较小的字符串按字典序位于另一个字符串之前。
+                                        如果不存在它们不同的索引位置，则较短的字符串按字典序位于较长字符串之前。<a href="#section-3.2.3-7.3.1"
+                                            class="pilcrow">¶</a></p>
+                                    <p id="section-3.2.3-7.3.2">
+                                        用通俗英语说，这意味着属性名称按如下升序排序：<a href="#section-3.2.3-7.3.2" class="pilcrow">¶</a></p>
+                                    <div class="artwork art-text alignLeft art-ascii-art" id="section-3.2.3-7.3.3">
+                                        <pre>
+        ""
+        "a"
+        "aa"
+        "ab"
+</pre><a href="#section-3.2.3-7.3.3" class="pilcrow">¶</a>
+                                    </div>
+                                </li>
+                            </ul>
+                            <p id="section-3.2.3-8">
+                                将排序算法基于 UTF-16 码元的理由是，
+                                它直接映射到 ECMAScript（Web 浏览器和 Node.js 中的特性）、
+                                Java 和 .NET 中的字符串类型。此外，JSON 仅支持表示为
+                                UTF-16 码元的转义序列，因此了解和处理这类数据无论如何都是必要的。
+                                使用另一种内部字符串数据表示的系统需要在排序之前将 JSON
+                                属性名称字符串转换为 UTF-16 码元数组。
+                                从 UTF-8 或 UTF-32 到 UTF-16 的转换由 Unicode
+                                <span>[<a href="#UNICODE" class="xref">UNICODE</a>]</span> 标准定义。<a
+                                    href="#section-3.2.3-8" class="pilcrow">¶</a>
+                            </p>
+                            <p id="section-3.2.3-9">
+                                以下 JSON 测试数据可用于验证 JCS 实现中排序方案的正确性：<a href="#section-3.2.3-9" class="pilcrow">¶</a></p>
+                            <div id="section-3.2.3-10">
+                                <pre class="sourcecode lang-json">
+  {
+    "\u20ac": "Euro Sign",
+    "\r": "Carriage Return",
+    "\ufb33": "Hebrew Letter Dalet With Dagesh",
+    "1": "One",
+    "\ud83d\ude00": "Emoji: Grinning Face",
+    "\u0080": "Control",
+    "\u00f6": "Latin Small Letter O With Diaeresis"
+  }
+</pre><a href="#section-3.2.3-10" class="pilcrow">¶</a>
+                            </div>
+                            <p id="section-3.2.3-11">
+                                属性字符串排序后的预期参数顺序：<a href="#section-3.2.3-11" class="pilcrow">¶</a></p>
+                            <div class="artwork art-text alignLeft art-ascii-art" id="section-3.2.3-12">
+                                <pre>  "Carriage Return"
+  "One"
+  "Control"
+  "Latin Small Letter O With Diaeresis"
+  "Euro Sign"
+  "Emoji: Grinning Face"
+  "Hebrew Letter Dalet With Dagesh"</pre><a href="#section-3.2.3-12" class="pilcrow">¶</a>
+                            </div>
+                            <p id="section-3.2.3-13">
+                                注意：为了获得确定性的属性顺序，对以 UTF-8 或 UTF-32
+                                编码的数据进行排序也可行，但对于上述 JSON 数据，其结果会不同，
+                                因而与本规范不兼容。
+
+                                然而，在实践中，属性名称很少在 7 位 ASCII 之外定义，
+                                因此可以在不转换为 UTF-16 的情况下以 UTF-8 或 UTF-32
+                                格式排序字符串数据，并仍与 JCS 兼容。这是否可行取决于
+                                使用 JCS 的环境。<a href="#section-3.2.3-13" class="pilcrow">¶</a></p>
+                        </section>
+                    </div>
+                    <div id="json.utf8">
+                        <section id="section-3.2.4">
+                            <h4 id="name-utf-8-generation">
+                                <a href="#section-3.2.4" class="section-number selfRef">3.2.4. </a><a
+                                    href="#name-utf-8-generation" class="section-name selfRef">UTF-8 生成</a>
+                            </h4>
+                            <p id="section-3.2.4-1">
+                                最后，为了创建平台无关的表示，前一步的结果
+                                <span class="bcp14">MUST</span> 以 UTF-8 编码。<a href="#section-3.2.4-1"
+                                    class="pilcrow">¶</a>
+                            </p>
+                            <p id="section-3.2.4-2">
+                                将其应用到<a href="#json.sorting.properties" class="xref">第
+                                    3.2.3 节</a>中的样例，应得到以下字节，
+                                这里以十六进制记法显示：<a href="#section-3.2.4-2" class="pilcrow">¶</a></p>
+                            <div class="artwork art-text alignLeft art-ascii-art" id="section-3.2.4-3">
+                                <pre>  7b 22 6c 69 74 65 72 61 6c 73 22 3a 5b 6e 75 6c 6c 2c 74 72
+  75 65 2c 66 61 6c 73 65 5d 2c 22 6e 75 6d 62 65 72 73 22 3a
+  5b 33 33 33 33 33 33 33 33 33 2e 33 33 33 33 33 33 33 2c 31
+  65 2b 33 30 2c 34 2e 35 2c 30 2e 30 30 32 2c 31 65 2d 32 37
+  5d 2c 22 73 74 72 69 6e 67 22 3a 22 e2 82 ac 24 5c 75 30 30
+  30 66 5c 6e 41 27 42 5c 22 5c 5c 5c 5c 5c 22 2f 22 7d</pre><a href="#section-3.2.4-3" class="pilcrow">¶</a>
+                            </div>
+                            <p id="section-3.2.4-4">
+                                此数据旨在可用作加密方法的输入。<a href="#section-3.2.4-4" class="pilcrow">¶</a></p>
+                        </section>
+                    </div>
+                </section>
+            </div>
+        </section>
+    </div>
+    <div id="IANA">
+        <section id="section-4">
+            <h2 id="name-iana-considerations">
+                <a href="#section-4" class="section-number selfRef">4. </a><a href="#name-iana-considerations"
+                    class="section-name selfRef">IANA 考虑事项</a>
+            </h2>
+            <p id="section-4-1">
+                本文档没有 IANA 操作。<a href="#section-4-1" class="pilcrow">¶</a></p>
+        </section>
+    </div>
+    <div id="Security">
+        <section id="section-5">
+            <h2 id="name-security-considerations">
+                <a href="#section-5" class="section-number selfRef">5. </a><a href="#name-security-considerations"
+                    class="section-name selfRef">安全考虑事项</a>
+            </h2>
+            <p id="section-5-1">
+                对输入数据执行健全性检查至关重要，以避免缓冲区溢出以及可能影响系统完整性的类似问题。<a href="#section-5-1" class="pilcrow">¶</a></p>
+            <p id="section-5-2">
+                当 JCS 应用于签名方案（例如<a href="#impl.guidelines" class="xref">附录 F</a>
+                中描述的方案）时，应用在根据接收数据采取行动之前
+                <span class="bcp14">MUST</span> 执行以下操作：<a href="#section-5-2" class="pilcrow">¶</a>
+            </p>
+            <ol start="1" type="1" class="normal type-1" id="section-5-3">
+                <li id="section-5-3.1">
+                    解析 JSON 数据并验证其符合 I-JSON。<a href="#section-5-3.1" class="pilcrow">¶</a>
+                </li>
+                <li id="section-5-3.2">
+                    根据将要使用该数据的生态系统所定义的约定，验证数据的正确性。
+                    这还包括定位保存签名数据的属性。<a href="#section-5-3.2" class="pilcrow">¶</a>
+                </li>
+                <li id="section-5-3.3">
+                    验证签名。<a href="#section-5-3.3" class="pilcrow">¶</a>
+                </li>
+            </ol>
+            <p id="section-5-4">
+                如果这些步骤中的任何一步失败，正在进行的操作
+                <span class="bcp14">MUST</span> 被中止。<a href="#section-5-4" class="pilcrow">¶</a>
+            </p>
+        </section>
+    </div>
+    <section id="section-6">
+        <h2 id="name-references">
+            <a href="#section-6" class="section-number selfRef">6. </a><a href="#name-references"
+                class="section-name selfRef">参考文献</a>
+        </h2>
+        <section id="section-6.1">
+            <h3 id="name-normative-references">
+                <a href="#section-6.1" class="section-number selfRef">6.1. </a><a href="#name-normative-references"
+                    class="section-name selfRef">规范性参考文献</a>
+            </h3>
+            <dl class="references">
+                <dt id="ECMA-262">[ECMA-262]</dt>
+                <dd>
+                    <span class="refAuthor">ECMA International</span>, <span class="refTitle">"ECMAScript 2019 语言
+                        规范"</span>, <span class="refContent">Standard ECMA-262 第 10 版</span>, <time datetime="2019-06"
+                        class="refDate">2019 年 6 月</time>, <span>&lt;<a
+                            href="https://www.ecma-international.org/ecma-262/10.0/index.html">https://www.ecma-international.org/ecma-262/10.0/index.html</a>&gt;</span>.
+                </dd>
+                <dd class="break"></dd>
+                <dt id="IEEE754">[IEEE754]</dt>
+                <dd>
+                    <span class="refAuthor">IEEE</span>, <span class="refTitle">"浮点运算 IEEE 标准"</span>, <span
+                        class="refContent">IEEE 754-2019</span>, <span class="seriesInfo">DOI
+                        10.1109/IEEESTD.2019.8766229</span>, <span>&lt;<a
+                            href="https://ieeexplore.ieee.org/document/8766229">https://ieeexplore.ieee.org/document/8766229</a>&gt;</span>.
+                </dd>
+                <dd class="break"></dd>
+                <dt id="RFC2119">[RFC2119]</dt>
+                <dd>
+                    <span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"RFC 中用于表示需求级别的关键词"</span>, <span
+                        class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span
+                        class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">1997 年
+                        3 月</time>, <span>&lt;<a
+                            href="https://www.rfc-editor.org/info/rfc2119">https://www.rfc-editor.org/info/rfc2119</a>&gt;</span>.
+                </dd>
+                <dd class="break"></dd>
+                <dt id="RFC7493">[RFC7493]</dt>
+                <dd>
+                    <span class="refAuthor">Bray, T., Ed.</span>, <span class="refTitle">"I-JSON 消息
+                        格式"</span>, <span class="seriesInfo">RFC 7493</span>, <span class="seriesInfo">DOI
+                        10.17487/RFC7493</span>, <time datetime="2015-03" class="refDate">2015 年 3 月</time>,
+                    <span>&lt;<a
+                            href="https://www.rfc-editor.org/info/rfc7493">https://www.rfc-editor.org/info/rfc7493</a>&gt;</span>.
+                </dd>
+                <dd class="break"></dd>
+                <dt id="RFC8174">[RFC8174]</dt>
+                <dd>
+                    <span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"RFC 2119 关键词中大写与小写的
+                        歧义"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>,
+                    <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">2017
+                        年 5 月</time>, <span>&lt;<a
+                            href="https://www.rfc-editor.org/info/rfc8174">https://www.rfc-editor.org/info/rfc8174</a>&gt;</span>.
+                </dd>
+                <dd class="break"></dd>
+                <dt id="RFC8259">[RFC8259]</dt>
+                <dd>
+                    <span class="refAuthor">Bray, T., Ed.</span>, <span class="refTitle">"JavaScript 对象表示法
+                        (JSON) 数据交换格式"</span>, <span class="seriesInfo">STD 90</span>, <span class="seriesInfo">RFC
+                        8259</span>, <span class="seriesInfo">DOI 10.17487/RFC8259</span>, <time datetime="2017-12"
+                        class="refDate">2017 年 12 月</time>, <span>&lt;<a
+                            href="https://www.rfc-editor.org/info/rfc8259">https://www.rfc-editor.org/info/rfc8259</a>&gt;</span>.
+                </dd>
+                <dd class="break"></dd>
+                <dt id="UCNORM">[UCNORM]</dt>
+                <dd>
+                    <span class="refAuthor">The Unicode Consortium</span>, <span class="refTitle">"Unicode 规范化
+                        形式"</span>, <span>&lt;<a
+                            href="https://www.unicode.org/reports/tr15/">https://www.unicode.org/reports/tr15/</a>&gt;</span>.
+                </dd>
+                <dd class="break"></dd>
+                <dt id="UNICODE">[UNICODE]</dt>
+                <dd>
+                    <span class="refAuthor">The Unicode Consortium</span>, <span class="refTitle">"Unicode
+                        标准"</span>, <span>&lt;<a
+                            href="https://www.unicode.org/versions/latest/">https://www.unicode.org/versions/latest/</a>&gt;</span>.
+                </dd>
+                <dd class="break"></dd>
+            </dl>
+        </section>
+        <section id="section-6.2">
+            <h3 id="name-informative-references">
+                <a href="#section-6.2" class="section-number selfRef">6.2. </a><a href="#name-informative-references"
+                    class="section-name selfRef">资料性参考文献</a>
+            </h3>
+            <dl class="references">
+                <dt id="I-D.rundgren-comparable-json">[JSONCOMP]</dt>
+                <dd>
+                    <span class="refAuthor">Rundgren, A.</span>, <span class="refTitle">""Comparable" JSON
+                        (JSONCOMP)"</span>, <span class="refContent">进行中的工作</span>, <span
+                        class="seriesInfo">Internet-Draft, draft-rundgren-comparable-json-04</span>, <time
+                        datetime="2019-02-13" class="refDate">2019 年 2 月 13 日</time>, <span>&lt;<a
+                            href="https://tools.ietf.org/html/draft-rundgren-comparable-json-04">https://tools.ietf.org/html/draft-rundgren-comparable-json-04</a>&gt;</span>.
+                </dd>
+                <dd class="break"></dd>
+                <dt id="KEYBASE">[KEYBASE]</dt>
+                <dd>
+                    <span class="refAuthor">Keybase</span>, <span class="refTitle">"JSON 和
+                        Msgpack 的规范打包"</span>, <span>&lt;<a
+                            href="https://keybase.io/docs/api/1.0/canonical_packings">https://keybase.io/docs/api/1.0/canonical_packings</a>&gt;</span>.
+                </dd>
+                <dd class="break"></dd>
+                <dt id="NODEJS">[NODEJS]</dt>
+                <dd>
+                    <span class="refAuthor">OpenJS Foundation</span>, <span class="refTitle">"Node.js"</span>,
+                    <span>&lt;<a href="https://nodejs.org">https://nodejs.org</a>&gt;</span>.
+                </dd>
+                <dd class="break"></dd>
+                <dt id="OPENAPI">[OPENAPI]</dt>
+                <dd>
+                    <span class="refAuthor">OpenAPI Initiative</span>, <span class="refTitle">"OpenAPI
+                        规范：一种用于描述现代 API 的广泛采用的行业标准"</span>,
+                    <span>&lt;<a href="https://www.openapis.org/">https://www.openapis.org/</a>&gt;</span>.
+                </dd>
+                <dd class="break"></dd>
+                <dt id="RFC4648">[RFC4648]</dt>
+                <dd>
+                    <span class="refAuthor">Josefsson, S.</span>, <span class="refTitle">"Base16、Base32 和 Base64
+                        数据编码"</span>, <span class="seriesInfo">RFC 4648</span>, <span class="seriesInfo">DOI
+                        10.17487/RFC4648</span>, <time datetime="2006-10" class="refDate">2006 年 10 月</time>,
+                    <span>&lt;<a
+                            href="https://www.rfc-editor.org/info/rfc4648">https://www.rfc-editor.org/info/rfc4648</a>&gt;</span>.
+                </dd>
+                <dd class="break"></dd>
+                <dt id="RFC7515">[RFC7515]</dt>
+                <dd>
+                    <span class="refAuthor">Jones, M.</span><span class="refAuthor">, Bradley, J.</span><span
+                        class="refAuthor">, and N. Sakimura</span>, <span class="refTitle">"JSON Web Signature
+                        (JWS)"</span>, <span class="seriesInfo">RFC 7515</span>, <span class="seriesInfo">DOI
+                        10.17487/RFC7515</span>, <time datetime="2015-05" class="refDate">2015 年 5 月</time>,
+                    <span>&lt;<a
+                            href="https://www.rfc-editor.org/info/rfc7515">https://www.rfc-editor.org/info/rfc7515</a>&gt;</span>.
+                </dd>
+                <dd class="break"></dd>
+                <dt id="RFC7638">[RFC7638]</dt>
+                <dd>
+                    <span class="refAuthor">Jones, M.</span><span class="refAuthor"> and N. Sakimura</span>, <span
+                        class="refTitle">"JSON Web Key (JWK) Thumbprint"</span>, <span class="seriesInfo">RFC
+                        7638</span>, <span class="seriesInfo">DOI 10.17487/RFC7638</span>, <time datetime="2015-09"
+                        class="refDate">2015 年 9 月</time>, <span>&lt;<a
+                            href="https://www.rfc-editor.org/info/rfc7638">https://www.rfc-editor.org/info/rfc7638</a>&gt;</span>.
+                </dd>
+                <dd class="break"></dd>
+                <dt id="RYU">[RYU]</dt>
+                <dd>
+                    <span class="refTitle">"Ryu 浮点数序列化算法"</span>, <span class="refContent">commit 27d3c55</span>, <time
+                        datetime="2020-05" class="refDate">2020 年 5 月</time>, <span>&lt;<a
+                            href="https://github.com/ulfjack/ryu">https://github.com/ulfjack/ryu</a>&gt;</span>.
+                </dd>
+                <dd class="break"></dd>
+                <dt id="V8">[V8]</dt>
+                <dd>
+                    <span class="refAuthor">Google LLC</span>, <span class="refTitle">"什么是 V8？"</span>, <span>&lt;<a
+                            href="https://v8.dev/">https://v8.dev/</a>&gt;</span>.
+                </dd>
+                <dd class="break"></dd>
+                <dt id="XMLDSIG">[XMLDSIG]</dt>
+                <dd>
+                    <span class="refAuthor">W3C</span>, <span class="refTitle">"XML 签名语法与处理
+                        版本 1.1"</span>, <span class="refContent">W3C Recommendation</span>, <time datetime="2013-04"
+                        class="refDate">2013 年 4 月</time>, <span>&lt;<a
+                            href="https://www.w3.org/TR/xmldsig-core1/">https://www.w3.org/TR/xmldsig-core1/</a>&gt;</span>.
+                </dd>
+                <dd class="break"></dd>
+            </dl>
+        </section>
+    </section>
+    <div id="canonicalize.js">
+        <section id="section-appendix.a">
+            <h2 id="name-ecmascript-sample-canonical">
+                <a href="#section-appendix.a" class="section-number selfRef">附录 A. </a><a
+                    href="#name-ecmascript-sample-canonical" class="section-name selfRef">ECMAScript 示例
+                    规范化器</a>
+            </h2>
+            <p id="section-appendix.a-1">
+                下面是一个用于基于 ECMAScript 系统的 JCS 规范化器示例：<a href="#section-appendix.a-1" class="pilcrow">¶</a></p>
+            <div id="section-appendix.a-2">
+                <pre class="sourcecode lang-javascript">
+  ////////////////////////////////////////////////////////////
+  // Since the primary purpose of this code is highlighting //
+  // the core of the JCS algorithm, error handling and      //
+  // UTF-8 generation were not implemented.                 //
+  ////////////////////////////////////////////////////////////
+  var canonicalize = function(object) {
+
+      var buffer = '';
+      serialize(object);
+      return buffer;
+
+      function serialize(object) {
+          if (object === null || typeof object !== 'object' ||
+              object.toJSON != null) {
+              /////////////////////////////////////////////////
+              // Primitive type or toJSON, use "JSON"        //
+              /////////////////////////////////////////////////
+              buffer += JSON.stringify(object);
+
+          } else if (Array.isArray(object)) {
+              /////////////////////////////////////////////////
+              // Array - Maintain element order              //
+              /////////////////////////////////////////////////
+              buffer += '[';
+              let next = false;
+              object.forEach((element) =&gt; {
+                  if (next) {
+                      buffer += ',';
+                  }
+                  next = true;
+                  /////////////////////////////////////////
+                  // Array element - Recursive expansion //
+                  /////////////////////////////////////////
+                  serialize(element);
+              });
+              buffer += ']';
+
+          } else {
+              /////////////////////////////////////////////////
+              // Object - Sort properties before serializing //
+              /////////////////////////////////////////////////
+              buffer += '{';
+              let next = false;
+              Object.keys(object).sort().forEach((property) =&gt; {
+                  if (next) {
+                      buffer += ',';
+                  }
+                  next = true;
+                  /////////////////////////////////////////////
+                  // Property names are strings, use "JSON"  //
+                  /////////////////////////////////////////////
+                  buffer += JSON.stringify(property);
+                  buffer += ':';
+                  //////////////////////////////////////////
+                  // Property value - Recursive expansion //
+                  //////////////////////////////////////////
+                  serialize(object[property]);
+              });
+              buffer += '}';
+          }
+      }
+  };
+</pre><a href="#section-appendix.a-2" class="pilcrow">¶</a>
+            </div>
+        </section>
+    </div>
+    <div id="json.ieee754.test">
+        <section id="section-appendix.b">
+            <h2 id="name-number-serialization-sample">
+                <a href="#section-appendix.b" class="section-number selfRef">附录 B. </a><a
+                    href="#name-number-serialization-sample" class="section-name selfRef">数字序列化
+                    样例</a>
+            </h2>
+            <p id="section-appendix.b-1">
+                下表包含一组与 ECMAScript 兼容的数字序列化样例，
+                包括一些边界情况。"IEEE 754" 列指的是 "Number" 数据类型的
+                内部 ECMAScript 表示，该表示基于 IEEE 754
+                <span>[<a href="#IEEE754" class="xref">IEEE754</a>]</span> 标准，使用
+                64 位（双精度）值，这里以十六进制表示。<a href="#section-appendix.b-1" class="pilcrow">¶</a>
+            </p>
+            <span id="name-ecmascript-compatible-json-"></span>
+            <div id="ECMAScript-TABLE">
+                <table class="center" id="table-1">
+                    <caption>
+                        <a href="#table-1" class="selfRef">表 1</a>：
+                        <a href="#name-ecmascript-compatible-json-" class="selfRef">与 ECMAScript 兼容的 JSON 数字
+                            序列化样例</a>
+                    </caption>
+                    <thead>
+                        <tr>
+                            <th class="text-center" rowspan="1" colspan="1">IEEE 754</th>
+                            <th class="text-center" rowspan="1" colspan="1">JSON 表示</th>
+                            <th class="text-center" rowspan="1" colspan="1">注释</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>0000000000000000</code>
+                            </td>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>0</code>
+                            </td>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>零</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>8000000000000000</code>
+                            </td>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>0</code>
+                            </td>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>负零</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>0000000000000001</code>
+                            </td>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>5e-324</code>
+                            </td>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>最小正数</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>8000000000000001</code>
+                            </td>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>-5e-324</code>
+                            </td>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>最小负数</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>7fefffffffffffff</code>
+                            </td>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>1.7976931348623157e+308</code>
+                            </td>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>最大正数</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>ffefffffffffffff</code>
+                            </td>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>-1.7976931348623157e+308</code>
+                            </td>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>最大负数</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>4340000000000000</code>
+                            </td>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>9007199254740992</code>
+                            </td>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>最大正
+整数  (1)</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>c340000000000000</code>
+                            </td>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>-9007199254740992</code>
+                            </td>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>最大负
+整数  (1)</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>4430000000000000</code>
+                            </td>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>295147905179352830000</code>
+                            </td>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>约 2**68       (2)
+</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>7fffffffffffffff</code>
+                            </td>
+                            <td class="text-left" rowspan="1" colspan="1"></td>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>NaN            (3)</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>7ff0000000000000</code>
+                            </td>
+                            <td class="text-left" rowspan="1" colspan="1"></td>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>Infinity       (3)</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>44b52d02c7e14af5</code>
+                            </td>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>9.999999999999997e+22</code>
+                            </td>
+                            <td class="text-left" rowspan="1" colspan="1"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>44b52d02c7e14af6</code>
+                            </td>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>1e+23</code>
+                            </td>
+                            <td class="text-left" rowspan="1" colspan="1"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>44b52d02c7e14af7</code>
+                            </td>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>1.0000000000000001e+23</code>
+                            </td>
+                            <td class="text-left" rowspan="1" colspan="1"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>444b1ae4d6e2ef4e</code>
+                            </td>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>999999999999999700000</code>
+                            </td>
+                            <td class="text-left" rowspan="1" colspan="1"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>444b1ae4d6e2ef4f</code>
+                            </td>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>999999999999999900000</code>
+                            </td>
+                            <td class="text-left" rowspan="1" colspan="1"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>444b1ae4d6e2ef50</code>
+                            </td>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>1e+21</code>
+                            </td>
+                            <td class="text-left" rowspan="1" colspan="1"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>3eb0c6f7a0b5ed8c</code>
+                            </td>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>9.999999999999997e-7</code>
+                            </td>
+                            <td class="text-left" rowspan="1" colspan="1"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>3eb0c6f7a0b5ed8d</code>
+                            </td>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>0.000001</code>
+                            </td>
+                            <td class="text-left" rowspan="1" colspan="1">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>41b3de4355555553</code>
+                            </td>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>333333333.3333332</code>
+                            </td>
+                            <td class="text-left" rowspan="1" colspan="1"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>41b3de4355555554</code>
+                            </td>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>333333333.33333325</code>
+                            </td>
+                            <td class="text-left" rowspan="1" colspan="1"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>41b3de4355555555</code>
+                            </td>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>333333333.3333333</code>
+                            </td>
+                            <td class="text-left" rowspan="1" colspan="1"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>41b3de4355555556</code>
+                            </td>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>333333333.3333334</code>
+                            </td>
+                            <td class="text-left" rowspan="1" colspan="1"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>41b3de4355555557</code>
+                            </td>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>333333333.33333343</code>
+                            </td>
+                            <td class="text-left" rowspan="1" colspan="1"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>becbf647612f3696</code>
+                            </td>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>-0.0000033333333333333333</code>
+                            </td>
+                            <td class="text-left" rowspan="1" colspan="1"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>43143ff3c1cb0959</code>
+                            </td>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>1424953923781206.2</code>
+                            </td>
+                            <td class="text-left" rowspan="1" colspan="1">
+                                <code>舍入到偶数  (4)</code>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p id="section-appendix.b-3">
+                注：<a href="#section-appendix.b-3" class="pilcrow">¶</a></p>
+            <span class="break"></span>
+            <dl class="olPercent" id="section-appendix.b-4">
+                <dt>(1)</dt>
+                <dd id="section-appendix.b-4.1">
+                    为了最大限度符合 ECMAScript "JSON" 对象，
+                    要解释为真整数的值 <span class="bcp14">SHOULD</span> 位于
+                    -9007199254740991 到 9007199254740991 范围内。
+                    然而，数字在应用中的使用方式不会影响 JCS 算法。<a href="#section-appendix.b-4.1" class="pilcrow">¶</a>
+                </dd>
+                <dd class="break"></dd>
+                <dt>(2)</dt>
+                <dd id="section-appendix.b-4.2">
+                    尽管像 2**68 这样的一组特定整数可被视为具有扩展精度，
+                    但 JCS/ECMAScript 数字序列化算法并不考虑这一点。<a href="#section-appendix.b-4.2" class="pilcrow">¶</a>
+                </dd>
+                <dd class="break"></dd>
+                <dt>(3)</dt>
+                <dd id="section-appendix.b-4.3">
+                    JSON 中不允许超出范围的值。
+                    见<a href="#json.ser.number" class="xref">第 3.2.2.3 节</a>。<a href="#section-appendix.b-4.3"
+                        class="pilcrow">¶</a>
+                </dd>
+                <dd class="break"></dd>
+                <dt>(4)</dt>
+                <dd id="section-appendix.b-4.4">
+                    该数字精确值为 1424953923781206.25，但在应用
+                    <a href="#json.ser.number" class="xref">第 3.2.2.3 节</a> 中提到的
+                    "Note 2" 规则后，将被截断并舍入到最接近的偶数值。<a href="#section-appendix.b-4.4" class="pilcrow">¶</a>
+                </dd>
+                <dd class="break"></dd>
+            </dl>
+            <p id="section-appendix.b-5">
+                若要对 JCS 数字序列化器进行更详尽的验证，你可以测试
+                开发门户（见<a href="#json.development" class="xref">附录 I</a>）中
+                （目前）可用的、包含大量样例值的文件。另一个选择是运行
+                V8 <span>[<a href="#V8" class="xref">V8</a>]</span> 作为实时参考，并配合一个生成大量随机
+                IEEE 754 值的程序。<a href="#section-appendix.b-5" class="pilcrow">¶</a></p>
+        </section>
+    </div>
+    <div id="json.wireformat">
+        <section id="section-appendix.c">
+            <h2 id="name-canonicalized-json-as-wire-">
+                <a href="#section-appendix.c" class="section-number selfRef">附录 C. </a><a
+                    href="#name-canonicalized-json-as-wire-" class="section-name selfRef">作为“线路格式”的规范化 JSON</a>
+            </h2>
+            <p id="section-appendix.c-1">
+                由于规范化过程（见<a href="#json.utf8" class="xref">第
+                    3.2.4 节</a>）的结果是完全有效的 JSON，
+                它也可以用作“线路格式”。然而，这只是一个选项，因为基于 JCS
+                的加密方案在大多数情况下并不依赖外部提供的 JSON 数据已经规范化。<a href="#section-appendix.c-1" class="pilcrow">¶</a></p>
+            <p id="section-appendix.c-2">
+                实际上，使用 "JSON.stringify()" 序列化对象的 ECMAScript 标准方式
+                会产生一种更“合乎逻辑”的格式，其中属性保持其创建或接收时的顺序。
+                下面的示例展示了一个可能受益于 ECMAScript 标准序列化的地址记录：<a href="#section-appendix.c-2" class="pilcrow">¶</a></p>
+            <div id="section-appendix.c-3">
+                <pre class="sourcecode lang-json">
+  {
+    "name": "John Doe",
+    "address": "2000 Sunset Boulevard",
+    "city": "Los Angeles",
+    "zip": "90001",
+    "state": "CA"
+  }
+</pre><a href="#section-appendix.c-3" class="pilcrow">¶</a>
+            </div>
+            <p id="section-appendix.c-4">
+                使用规范化后，上述属性将按 "address"、"city"、"name"、
+                "state" 和 "zip" 的顺序输出，从人类（开发者或技术支持）
+                角度看，这会给数据增加模糊性。
+                规范化还会将 JSON 数据转换为单行文本，这对于调试和日志记录
+                可能并不理想。<a href="#section-appendix.c-4" class="pilcrow">¶</a></p>
+        </section>
+    </div>
+    <div id="json.bignumbers">
+        <section id="section-appendix.d">
+            <h2 id="name-dealing-with-big-numbers">
+                <a href="#section-appendix.d" class="section-number selfRef">附录 D. </a><a
+                    href="#name-dealing-with-big-numbers" class="section-name selfRef">处理大数</a>
+            </h2>
+            <p id="section-appendix.d-1">
+                JSON 数字类型存在若干相关问题，这里通过以下示例对象进行说明：<a href="#section-appendix.d-1" class="pilcrow">¶</a></p>
+            <div id="section-appendix.d-2">
+                <pre class="sourcecode lang-json">
+  {
+    "giantNumber": 1.4e+9999,
+    "payMeThis": 26000.33,
+    "int64Max": 9223372036854775807
+  }
+</pre><a href="#section-appendix.d-2" class="pilcrow">¶</a>
+            </div>
+            <p id="section-appendix.d-3">
+                尽管上述样例符合 JSON <span>[<a href="#RFC8259" class="xref">RFC8259</a>]</span>，
+                应用通常会使用不同的原生数据类型来存储 "giantNumber" 和 "int64Max"。
+                此外，像 "payMeThis" 这样的货币数据大概不会依赖浮点数据类型，
+                因为十进制算术存在舍入问题。<a href="#section-appendix.d-3" class="pilcrow">¶</a></p>
+            <p id="section-appendix.d-4">
+                处理 JSON 数字类型这种“重载”的既定方式（至少以可扩展方式而言）
+                是通过映射机制，根据属性名称指示解析器应如何处理不同属性。
+                然而，这大大限制了在 JSON 原始且多少受限的 JavaScript 上下文之外
+                使用 JSON 数字类型的价值。ECMAScript "JSON" 对象也不支持到
+                JSON 数字类型的映射。<a href="#section-appendix.d-4" class="pilcrow">¶</a></p>
+            <p id="section-appendix.d-5">
+                因此，在当前 JSON 生态系统中没有自然位置的数字
+                <span class="bcp14">MUST</span> 使用 JSON 字符串类型进行包装。
+                这接近开放系统中的事实标准。这也适用于 JSON 中没有直接支持的
+                其他数据类型，例如<a href="#string.subtypes" class="xref">附录 E</a> 中描述的
+                "DateTime" 对象。<a href="#section-appendix.d-5" class="pilcrow">¶</a>
+            </p>
+            <p id="section-appendix.d-6">
+                在使用 JSON 字符串类型的系统辅助下，无论是像下面这样以编程方式<a href="#section-appendix.d-6" class="pilcrow">¶</a></p>
+            <div id="section-appendix.d-7">
+                <pre class="sourcecode">
+  var obj = JSON.parse('{"giantNumber": "1.4e+9999"}');
+  var biggie = new BigNumber(obj.giantNumber);
+</pre><a href="#section-appendix.d-7" class="pilcrow">¶</a>
+            </div>
+            <p id="section-appendix.d-8">
+                还是使用像 OpenAPI <span>[<a href="#OPENAPI" class="xref">OPENAPI</a>]</span>
+                这样的声明式方案，JCS 都不会对应用施加限制，包括使用
+                ECMAScript 时也是如此。<a href="#section-appendix.d-8" class="pilcrow">¶</a></p>
+        </section>
+    </div>
+    <div id="string.subtypes">
+        <section id="section-appendix.e">
+            <h2 id="name-string-subtype-handling">
+                <a href="#section-appendix.e" class="section-number selfRef">附录 E. </a><a
+                    href="#name-string-subtype-handling" class="section-name selfRef">字符串子类型处理</a>
+            </h2>
+            <p id="section-appendix.e-1">
+                由于 JSON 中的数据类型集合有限，JSON 字符串类型通常用于保存子类型。
+                这可能取决于 JSON 解析方法而导致互操作性问题，
+                面向更广泛受众的 JCS 合规应用 <span class="bcp14">MUST</span>
+                处理这些问题。<a href="#section-appendix.e-1" class="pilcrow">¶</a>
+            </p>
+            <p id="section-appendix.e-2">
+                假设你想解析一个 JSON 对象，其中模式设计者指定属性 "big"
+                用于保存 "BigInt" 子类型，"time" 用于保存 "DateTime" 子类型，
+                而 "val" 应当是一个符合 JCS 的 JSON 数字。
+                以下示例展示了这样的对象：<a href="#section-appendix.e-2" class="pilcrow">¶</a></p>
+            <div id="section-appendix.e-3">
+                <pre class="sourcecode lang-json">
+  {
+    "time": "2019-01-28T07:45:10Z",
+    "big": "055",
+    "val": 3.5
+  }
+</pre><a href="#section-appendix.e-3" class="pilcrow">¶</a>
+            </div>
+            <p id="section-appendix.e-4">可以通过以下 ECMAScript 语句解析该对象：<a href="#section-appendix.e-4" class="pilcrow">¶</a>
+            </p>
+            <div id="section-appendix.e-5">
+                <pre class="sourcecode">
+  var object = JSON.parse(JSON_object_featured_as_a_string);
+</pre><a href="#section-appendix.e-5" class="pilcrow">¶</a>
+            </div>
+            <p id="section-appendix.e-6">解析后，可以提取实际数据；对于子类型，
+                这还涉及使用解析过程结果（一个 ECMAScript 对象）作为输入的转换步骤：<a href="#section-appendix.e-6" class="pilcrow">¶</a></p>
+            <div id="section-appendix.e-7">
+                <pre class="sourcecode">
+  ... = new Date(object.time); // Date object
+  ... = BigInt(object.big);    // Big integer
+  ... = object.val;            // JSON/JS number
+</pre><a href="#section-appendix.e-7" class="pilcrow">¶</a>
+            </div>
+            <p id="section-appendix.e-8">
+                注意，"BigInt" 数据类型目前仅由 V8 <span>[<a href="#V8" class="xref">V8</a>]</span>
+                原生支持。<a href="#section-appendix.e-8" class="pilcrow">¶</a></p>
+            <p id="section-appendix.e-9">
+                使用<a href="#canonicalize.js" class="xref">附录 A</a>中的示例代码对
+                "object" 进行规范化，将返回以下字符串：<a href="#section-appendix.e-9" class="pilcrow">¶</a></p>
+            <div id="section-appendix.e-10">
+                <pre class="sourcecode lang-json">
+  {"big":"055","time":"2019-01-28T07:45:10Z","val":3.5}
+</pre><a href="#section-appendix.e-10" class="pilcrow">¶</a>
+            </div>
+            <p id="section-appendix.e-11">
+                尽管这在 JCS 方面技术上是正确的，但还有另一种解析 JSON 数据的方式，
+                也可以与 ECMAScript 一起使用，如下所示：<a href="#section-appendix.e-11" class="pilcrow">¶</a></p>
+            <div id="section-appendix.e-12">
+                <pre class="sourcecode">
+  // "BigInt" requires the following code to become JSON serializable
+  BigInt.prototype.toJSON = function() {
+      return this.toString();
+  };
+
+  // JSON parsing using a "stream"-based method
+  var object = JSON.parse(JSON_object_featured_as_a_string,
+      (k,v) =&gt; k == 'time' ? new Date(v) : k == 'big' ? BigInt(v) : v
+  );
+</pre><a href="#section-appendix.e-12" class="pilcrow">¶</a>
+            </div>
+            <p id="section-appendix.e-13">
+                如果现在将<a href="#canonicalize.js" class="xref">附录 A</a>中的规范化器应用到
+                "object"，将生成以下字符串：<a href="#section-appendix.e-13" class="pilcrow">¶</a></p>
+            <div id="section-appendix.e-14">
+                <pre class="sourcecode lang-json">
+  {"big":"55","time":"2019-01-28T07:45:10.000Z","val":3.5}
+</pre><a href="#section-appendix.e-14" class="pilcrow">¶</a>
+            </div>
+            <p id="section-appendix.e-15">
+                在这种情况下，"big" 和 "time" 的字符串参数相对于原始值发生了变化，
+                很可能会使依赖 JCS 的应用失败。<a href="#section-appendix.e-15" class="pilcrow">¶</a></p>
+            <p id="section-appendix.e-16">
+                产生偏差的原因是，在基于流和基于模式的 JSON 解析器中，
+                原始字符串参数通常会即时被原生子类型替换，而该子类型在序列化时
+                可能表现出不同且依赖平台的模式。<a href="#section-appendix.e-16" class="pilcrow">¶</a></p>
+            <p id="section-appendix.e-17">
+                也就是说，基于流和基于模式的解析 <span class="bcp14">MUST</span>
+                将子类型视为“纯”（不可变）JSON 字符串类型，并在后续步骤中
+                执行到指定原生类型的实际转换。
+                在 Go、Java 和 C# 等现代编程平台中，可以通过结合注解、getter 和 setter
+                以适度工作量实现这一点。下面是 C#/Json.NET 中的一个示例，
+                展示了可序列化为 JSON 对象的类的一部分：<a href="#section-appendix.e-17" class="pilcrow">¶</a></p>
+            <div id="section-appendix.e-18">
+                <pre class="sourcecode">
+  // The "pure" string solution uses a local
+  // string variable for JSON serialization while
+  // exposing another type to the application
+  [JsonProperty("amount")]
+  private string _amount;
+
+  [JsonIgnore]
+  public decimal Amount {
+      get { return decimal.Parse(_amount); }
+      set { _amount = value.ToString(); }
+  }
+</pre><a href="#section-appendix.e-18" class="pilcrow">¶</a>
+            </div>
+            <p id="section-appendix.e-19">
+                在应用中，"Amount" 可以像任何其他属性一样访问，
+                而在 JSON 上下文中它实际上由带引号的字符串表示。<a href="#section-appendix.e-19" class="pilcrow">¶</a></p>
+            <p id="section-appendix.e-20">
+                注意：上述示例还处理了 I-JSON 隐含的数字数据约束
+                （C# "decimal" 数据类型与 IEEE 754 双精度相比具有相当不同的特性）。<a href="#section-appendix.e-20" class="pilcrow">¶</a></p>
+            <div id="string.subtypes.arrays">
+                <section id="section-e.1">
+                    <h2 id="name-subtypes-in-arrays">
+                        <a href="#section-e.1" class="section-number selfRef">E.1. </a><a
+                            href="#name-subtypes-in-arrays" class="section-name selfRef">数组中的子类型</a>
+                    </h2>
+                    <p id="section-e.1-1">
+                        由于 JSON 数组构造允许混合任意 JSON 数据类型，
+                        可能仍然需要自定义解析和序列化代码来处理子类型。<a href="#section-e.1-1" class="pilcrow">¶</a></p>
+                </section>
+            </div>
+        </section>
+    </div>
+    <div id="impl.guidelines">
+        <section id="section-appendix.f">
+            <h2 id="name-implementation-guidelines">
+                <a href="#section-appendix.f" class="section-number selfRef">附录 F. </a><a
+                    href="#name-implementation-guidelines" class="section-name selfRef">实现指南</a>
+            </h2>
+            <p id="section-appendix.f-1">
+                最优解决方案是在 JSON 序列化器中直接集成 JCS 支持
+                （解析器不需要改变）。
+                也就是说，规范化只是 JSON 序列化器的一个附加“模式”。
+                然而，目前情况并非如此。
+                幸运的是，可以通过外部提供的规范化器软件作为现有 JSON
+                序列化器的后处理器来引入 JCS 支持。
+                这种安排还使 JCS 实现者无需处理底层数据应如何表示为 JSON。<a href="#section-appendix.f-1" class="pilcrow">¶</a></p>
+            <p id="section-appendix.f-2">
+                后处理器概念支持如下签名创建方案：<a href="#section-appendix.f-2" class="pilcrow">¶</a></p>
+            <ol start="1" type="1" class="normal type-1" id="section-appendix.f-3">
+                <li id="section-appendix.f-3.1">
+                    创建要签名的数据。<a href="#section-appendix.f-3.1" class="pilcrow">¶</a>
+                </li>
+                <li id="section-appendix.f-3.2">
+                    使用现有 JSON 工具序列化数据。<a href="#section-appendix.f-3.2" class="pilcrow">¶</a>
+                </li>
+                <li id="section-appendix.f-3.3">
+                    让外部规范化器处理序列化数据，并返回规范化后的结果数据。<a href="#section-appendix.f-3.3" class="pilcrow">¶</a>
+                </li>
+                <li id="section-appendix.f-3.4">
+                    对规范化数据进行签名。<a href="#section-appendix.f-3.4" class="pilcrow">¶</a>
+                </li>
+                <li id="section-appendix.f-3.5">
+                    通过指定的签名属性将生成的签名值添加到原始 JSON 数据中。<a href="#section-appendix.f-3.5" class="pilcrow">¶</a>
+                </li>
+                <li id="section-appendix.f-3.6">
+                    使用现有 JSON 工具序列化已完成的（现在已签名的）JSON 对象。<a href="#section-appendix.f-3.6" class="pilcrow">¶</a>
+                </li>
+            </ol>
+            <p id="section-appendix.f-4">
+                兼容的签名验证方案随后如下：<a href="#section-appendix.f-4" class="pilcrow">¶</a></p>
+            <ol start="1" type="1" class="normal type-1" id="section-appendix.f-5">
+                <li id="section-appendix.f-5.1">
+                    使用现有 JSON 工具解析已签名的 JSON 数据。<a href="#section-appendix.f-5.1" class="pilcrow">¶</a>
+                </li>
+                <li id="section-appendix.f-5.2">
+                    从指定的签名属性读取并保存签名值。<a href="#section-appendix.f-5.2" class="pilcrow">¶</a>
+                </li>
+                <li id="section-appendix.f-5.3">
+                    从解析后的 JSON 对象中移除签名属性。<a href="#section-appendix.f-5.3" class="pilcrow">¶</a>
+                </li>
+                <li id="section-appendix.f-5.4">
+                    使用现有 JSON 工具序列化剩余的 JSON 数据。<a href="#section-appendix.f-5.4" class="pilcrow">¶</a>
+                </li>
+                <li id="section-appendix.f-5.5">
+                    让外部规范化器处理序列化数据，并返回规范化后的结果数据。<a href="#section-appendix.f-5.5" class="pilcrow">¶</a>
+                </li>
+                <li id="section-appendix.f-5.6">
+                    使用创建签名时所用的算法和密钥，验证规范化数据是否与保存的签名值匹配。<a href="#section-appendix.f-5.6" class="pilcrow">¶</a>
+                </li>
+            </ol>
+            <p id="section-appendix.f-6">
+                上述规范化器实际上只是一个“过滤器”，可能可与多种相当不同的加密方案一起使用。<a href="#section-appendix.f-6" class="pilcrow">¶</a></p>
+            <p id="section-appendix.f-7">
+                使用集成 JCS 支持的 JSON 序列化器时，
+                对于这两个过程，都可以消除规范化步骤之前执行的序列化。<a href="#section-appendix.f-7" class="pilcrow">¶</a></p>
+        </section>
+    </div>
+    <div id="open.source">
+        <section id="section-appendix.g">
+            <h2 id="name-open-source-implementations">
+                <a href="#section-appendix.g" class="section-number selfRef">附录 G. </a><a
+                    href="#name-open-source-implementations" class="section-name selfRef">开源
+                    实现</a>
+            </h2>
+            <p id="section-appendix.g-1">
+                以下开源实现已被验证与 JCS 兼容：<a href="#section-appendix.g-1" class="pilcrow">¶</a></p>
+            <ul class="normal">
+                <li class="normal" id="section-appendix.g-2.1">
+                    JavaScript：<span>&lt;<a
+                            href="https://www.npmjs.com/package/canonicalize">https://www.npmjs.com/package/canonicalize</a>&gt;</span><a
+                        href="#section-appendix.g-2.1" class="pilcrow">¶</a>
+                </li>
+                <li class="normal" id="section-appendix.g-2.2">
+                    Java：<span>&lt;<a
+                            href="https://github.com/erdtman/java-json-canonicalization">https://github.com/erdtman/java-json-canonicalization</a>&gt;</span><a
+                        href="#section-appendix.g-2.2" class="pilcrow">¶</a>
+                </li>
+                <li class="normal" id="section-appendix.g-2.3">
+                    Go：<span>&lt;<a
+                            href="https://github.com/cyberphone/json-canonicalization/tree/master/go">https://github.com/cyberphone/json-canonicalization/tree/master/go</a>&gt;</span><a
+                        href="#section-appendix.g-2.3" class="pilcrow">¶</a>
+                </li>
+                <li class="normal" id="section-appendix.g-2.4">
+                    .NET/C#：<span>&lt;<a
+                            href="https://github.com/cyberphone/json-canonicalization/tree/master/dotnet">https://github.com/cyberphone/json-canonicalization/tree/master/dotnet</a>&gt;</span><a
+                        href="#section-appendix.g-2.4" class="pilcrow">¶</a>
+                </li>
+                <li class="normal" id="section-appendix.g-2.5">
+                    Python：<span>&lt;<a
+                            href="https://github.com/cyberphone/json-canonicalization/tree/master/python3">https://github.com/cyberphone/json-canonicalization/tree/master/python3</a>&gt;</span><a
+                        href="#section-appendix.g-2.5" class="pilcrow">¶</a>
+                </li>
+            </ul>
+        </section>
+    </div>
+    <div id="json.otherefforts">
+        <section id="section-appendix.h">
+            <h2 id="name-other-json-canonicalization">
+                <a href="#section-appendix.h" class="section-number selfRef">附录 H. </a><a
+                    href="#name-other-json-canonicalization" class="section-name selfRef">其他 JSON 规范化
+                    工作</a>
+            </h2>
+            <p id="section-appendix.h-1">
+                还有（并且曾经有）其他创建“Canonical JSON”的工作。
+                下面列出其中一些工作的 URL：<a href="#section-appendix.h-1" class="pilcrow">¶</a></p>
+            <ul class="normal">
+                <li class="normal" id="section-appendix.h-2.1">
+                    <span>&lt;<a
+                            href="https://tools.ietf.org/html/draft-staykov-hu-json-canonical-form-00">https://tools.ietf.org/html/draft-staykov-hu-json-canonical-form-00</a>&gt;</span><a
+                        href="#section-appendix.h-2.1" class="pilcrow">¶</a>
+                </li>
+                <li class="normal" id="section-appendix.h-2.2">
+                    <span>&lt;<a
+                            href="https://gibson042.github.io/canonicaljson-spec/">https://gibson042.github.io/canonicaljson-spec/</a>&gt;</span><a
+                        href="#section-appendix.h-2.2" class="pilcrow">¶</a>
+                </li>
+                <li class="normal" id="section-appendix.h-2.3">
+                    <span>&lt;<a
+                            href="http://wiki.laptop.org/go/Canonical_JSON">http://wiki.laptop.org/go/Canonical_JSON</a>&gt;</span><a
+                        href="#section-appendix.h-2.3" class="pilcrow">¶</a>
+                </li>
+            </ul>
+            <p id="section-appendix.h-3">
+                列出的工作都基于文本级 JSON 到 JSON 转换。
+                文本级规范化的主要特性是，它可以被设计为对所使用的 JSON 风格保持中立。
+                然而，这类方案也意味着需要对 JSON 解析过程进行重大改变，
+                这很可能成为采用障碍。
+                尽管需要付出某些 JSON 和应用约束的代价，JCS 仍被设计为
+                与现有 JSON 工具兼容。<a href="#section-appendix.h-3" class="pilcrow">¶</a></p>
+        </section>
+    </div>
+    <div id="json.development">
+        <section id="section-appendix.i">
+            <h2 id="name-development-portal">
+                <a href="#section-appendix.i" class="section-number selfRef">附录 I. </a><a
+                    href="#name-development-portal" class="section-name selfRef">开发门户</a>
+            </h2>
+            <p id="section-appendix.i-1">
+                JCS 规范目前在以下位置开发：
+                <span>&lt;<a
+                        href="https://github.com/cyberphone/ietf-json-canon">https://github.com/cyberphone/ietf-json-canon</a>&gt;</span>。<a
+                    href="#section-appendix.i-1" class="pilcrow">¶</a>
+            </p>
+            <p id="section-appendix.i-2">
+                JCS 源代码和大量测试数据可在以下位置获得：
+                <span>&lt;<a
+                        href="https://github.com/cyberphone/json-canonicalization">https://github.com/cyberphone/json-canonicalization</a>&gt;</span>。<a
+                    href="#section-appendix.i-2" class="pilcrow">¶</a>
+            </p>
+        </section>
+    </div>
+    <div id="Acknowledgements">
+        <section id="section-appendix.j">
+            <h2 id="name-acknowledgements">
+                <a href="#name-acknowledgements" class="section-name selfRef">致谢</a>
+            </h2>
+            <p id="section-appendix.j-1">
+                基于 ECMAScript 数字序列化这一做法最初由
+                <span class="contact-name">James Manger</span> 提出。
+                这最终促成了对 JSON 原语采用完整 ECMAScript 序列化方案。<a href="#section-appendix.j-1" class="pilcrow">¶</a>
+            </p>
+            <p id="section-appendix.j-2">
+                其他为本规范贡献了宝贵意见的人包括
+                <span class="contact-name">Scott Ananian</span>、
+                <span class="contact-name">Tim Bray</span>、
+                <span class="contact-name">Ben Campbell</span>、
+                <span class="contact-name">Adrian Farell</span>、
+                <span class="contact-name">Richard Gibson</span>、
+                <span class="contact-name">Bron Gondwana</span>、
+                <span class="contact-name">John-Mark Gurney</span>、
+                <span class="contact-name">Mike Jones,</span>
+                <span class="contact-name">John Levine</span>、
+                <span class="contact-name">Mark Miller</span>、
+                <span class="contact-name">Matthew Miller</span>、
+                <span class="contact-name">Mark Nottingham</span>、
+                <span class="contact-name">Mike Samuel</span>、
+                <span class="contact-name">Jim Schaad</span>、
+                <span class="contact-name">Robert Tupelo-Schneck</span>
+                和 <span class="contact-name">Michal Wadas</span>。<a href="#section-appendix.j-2" class="pilcrow">¶</a>
+            </p>
+            <p id="section-appendix.j-3">
+                为进行真实世界的概念验证，
+                <span class="contact-name">Ulf Adams</span>、
+                <span class="contact-name">Tanner Gooding</span>
+                和 <span class="contact-name">Remy Oudompheng</span>
+                提供的软件以及对数字序列化的支持非常有帮助。<a href="#section-appendix.j-3" class="pilcrow">¶</a>
+            </p>
+        </section>
+    </div>
+    <div id="authors-addresses">
+        <section id="section-appendix.k">
+            <h2 id="name-authors-addresses">
+                <a href="#name-authors-addresses" class="section-name selfRef">作者地址</a>
+            </h2>
+            <address class="vcard">
+                <div dir="auto" class="left"><span class="fn nameRole">Anders Rundgren</span></div>
+                <div dir="auto" class="left"><span class="org">Independent</span></div>
+                <div dir="auto" class="left"><span class="locality">Montpellier</span></div>
+                <div dir="auto" class="left"><span class="country-name">France</span></div>
+                <div class="email">
+                    <span>电子邮件：</span>
+                    <a href="mailto:anders.rundgren.net@gmail.com" class="email">anders.rundgren.net@gmail.com</a>
+                </div>
+                <div class="url">
+                    <span>URI：</span>
+                    <a href="https://www.linkedin.com/in/andersrundgren/"
+                        class="url">https://www.linkedin.com/in/andersrundgren/</a>
+                </div>
+            </address>
+            <address class="vcard">
+                <div dir="auto" class="left"><span class="fn nameRole">Bret Jordan</span></div>
+                <div dir="auto" class="left"><span class="org">Broadcom</span></div>
+                <div dir="auto" class="left"><span class="street-address">1320 Ridder Park Drive</span></div>
+                <div dir="auto" class="left">
+                    <span class="locality">San Jose</span>, <span class="region">CA</span> <span
+                        class="postal-code">95131</span>
+                </div>
+                <div dir="auto" class="left"><span class="country-name">United States of America</span></div>
+                <div class="email">
+                    <span>电子邮件：</span>
+                    <a href="mailto:bret.jordan@broadcom.com" class="email">bret.jordan@broadcom.com</a>
+                </div>
+            </address>
+            <address class="vcard">
+                <div dir="auto" class="left"><span class="fn nameRole">Samuel Erdtman</span></div>
+                <div dir="auto" class="left"><span class="org">Spotify AB</span></div>
+                <div dir="auto" class="left"><span class="street-address">Birger Jarlsgatan 61, 4tr</span></div>
+                <div dir="auto" class="left">SE-<span class="postal-code">113 56</span> <span
+                        class="locality">Stockholm</span>
+                </div>
+                <div dir="auto" class="left"><span class="country-name">Sweden</span></div>
+                <div class="email">
+                    <span>电子邮件：</span>
+                    <a href="mailto:erdtman@spotify.com" class="email">erdtman@spotify.com</a>
+                </div>
+            </address>
+        </section>
+    </div>
+    <script>const toc = document.getElementById("toc");
+        toc.querySelector("h2").addEventListener("click", e => {
+            toc.classList.toggle("active");
+        });
+        toc.querySelector("nav").addEventListener("click", e => {
+            toc.classList.remove("active");
+        });
+    </script>
+    <script src="https://htmlspecs.com/dropdown.js"></script>
+</body>
+
+</html>
