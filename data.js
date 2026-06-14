@@ -271,14 +271,14 @@ const links = [
         lang: "cjk",
         state: "RFC"
     },
-    // {
-    //     text: "JSON Canonicalization Scheme (JCS)",
-    //     href: "https://htmlspecs.com/json-canonicalization/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc8785.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
+    {
+        text: "JSON Canonicalization Scheme (JCS)",
+        href: "https://htmlspecs.com/json-canonicalization/",
+        src: "https://www.rfc-editor.org/rfc/rfc8785.html",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "RFC"
+    },
     // {
     //     text: "JSON Type Definition",
     //     href: "https://htmlspecs.com/json-type-definition/",
