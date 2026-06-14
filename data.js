@@ -223,30 +223,30 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
-    // {
-    //     text: "JavaScript Object Notation (JSON) Pointer",
-    //     href: "https://htmlspecs.com/json-pointer/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc6901.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
-    // {
-    //     text: "JSONPath: Query Expressions for JSON",
-    //     href: "https://htmlspecs.com/jsonpath/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc9535.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
-    // {
-    //     text: "JavaScript Object Notation (JSON) Patch",
-    //     href: "https://htmlspecs.com/json-patch/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc6902.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
+    {
+        text: "JavaScript Object Notation (JSON) Pointer",
+        href: "https://htmlspecs.com/json-pointer/",
+        src: "https://www.rfc-editor.org/rfc/rfc6901.html",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "RFC"
+    },
+    {
+        text: "JSONPath: Query Expressions for JSON",
+        href: "https://htmlspecs.com/jsonpath/",
+        src: "https://www.rfc-editor.org/rfc/rfc9535.html",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "RFC"
+    },
+    {
+        text: "JavaScript Object Notation (JSON) Patch",
+        href: "https://htmlspecs.com/json-patch/",
+        src: "https://www.rfc-editor.org/rfc/rfc6902.html",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "RFC"
+    },
     // {
     //     text: "JSON Merge Patch",
     //     href: "https://htmlspecs.com/json-merge-patch/",
