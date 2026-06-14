@@ -1,0 +1,416 @@
+<pre>互联网工程任务组（IETF）                         P. Bryan, 编
+请求评议：6901                                Salesforce.com
+类别：标准轨道                                         K. Zyp
+ISSN: 2070-1721                                            SitePen (USA)
+                                                      M. Nottingham, 编
+                                                                  Akamai
+                                                              2013 年 4 月
+
+
+               <span class="h1">JavaScript 对象表示法（JSON）指针</span>
+
+摘要
+
+   JSON Pointer 定义了一种字符串语法，用于标识 JavaScript 对象表示法
+   （JSON）文档中的某个特定值。
+
+本备忘录状态
+
+   本文档是互联网标准轨道文档。
+
+   本文档是互联网工程任务组（IETF）的产物。它代表了 IETF
+   社区的共识。它已接受公开审查，并已获互联网工程指导组（IESG）
+   批准发布。有关互联网标准的更多信息可见
+   <a href="./rfc5741#section-2">RFC 5741 第 2 节</a>。
+
+   关于本文档当前状态、任何勘误以及如何提供反馈的信息，可在
+   <a href="http://www.rfc-editor.org/info/rfc6901">http://www.rfc-editor.org/info/rfc6901</a> 获取。
+
+Copyright Notice
+
+   Copyright (c) 2013 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to <a href="https://www.rfc-editor.org/bcp/bcp78">BCP 78</a> and the IETF Trust's Legal
+   Provisions Relating to IETF Documents
+   (<a href="http://trustee.ietf.org/license-info">http://trustee.ietf.org/license-info</a>) in effect on the date of
+   publication of this document.  Please review these documents
+   carefully, as they describe your rights and restrictions with respect
+   to this document.  Code Components extracted from this document must
+   include Simplified BSD License text as described in Section 4.e of
+   the Trust Legal Provisions and are provided without warranty as
+   described in the Simplified BSD License.
+
+
+
+
+
+
+
+<span class="grey">Bryan, et al.                Standards Track                    [Page 1]</span></pre>
+<hr class='noprint'/><!--NewPage--><pre class='newpage'><span id="page-2" ></span>
+<span class="grey"><a href="./rfc6901">RFC 6901</a>                      JSON Pointer                    2013 年 4 月</span>
+
+
+目录
+
+   <a href="#section-1">1</a>.  引言  . . . . . . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-2">2</a>
+   <a href="#section-2">2</a>.  约定 . . . . . . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-2">2</a>
+   <a href="#section-3">3</a>.  语法  . . . . . . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-2">2</a>
+   <a href="#section-4">4</a>.  求值  . . . . . . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-3">3</a>
+   <a href="#section-5">5</a>.  JSON 字符串表示 . . . . . . . . . . . . . . . . . . . . . . <a href="#page-4">4</a>
+   <a href="#section-6">6</a>.  URI 片段标识符表示  . . . . . . . . . . . . . . . . . . . . <a href="#page-5">5</a>
+   <a href="#section-7">7</a>.  错误处理  . . . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-6">6</a>
+   <a href="#section-8">8</a>.  安全性考虑 . . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-6">6</a>
+   <a href="#section-9">9</a>.  致谢  . . . . . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-7">7</a>
+   <a href="#section-10">10</a>. 参考文献  . . . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-7">7</a>
+     <a href="#section-10.1">10.1</a>.  规范性参考文献 . . . . . . . . . . . . . . . . . . . . <a href="#page-7">7</a>
+     <a href="#section-10.2">10.2</a>.  资料性参考文献 . . . . . . . . . . . . . . . . . . . . <a href="#page-7">7</a>
+
+<span class="h2"><a class="selflink" id="section-1" href="#section-1">1</a>.  引言</span>
+
+   本规范定义了 JSON Pointer，这是一种字符串语法，用于标识
+   JavaScript 对象表示法（JSON）文档 [<a href="./rfc4627" title="&quot;The application/json Media Type for JavaScript Object Notation (JSON)&quot;">RFC4627</a>] 中的某个特定值。
+   JSON Pointer 旨在易于表示为 JSON 字符串值，也易于表示为统一资源
+   标识符（URI）[<a href="./rfc3986" title="&quot;Uniform Resource Identifier (URI): Generic Syntax&quot;">RFC3986</a>] 片段标识符。
+
+<span class="h2"><a class="selflink" id="section-2" href="#section-2">2</a>.  约定</span>
+
+   本文档中的关键词 “MUST”、“MUST NOT”、“REQUIRED”、“SHALL”、
+   “SHALL NOT”、“SHOULD”、“SHOULD NOT”、“RECOMMENDED”、“MAY” 和
+   “OPTIONAL” 应按 [<a href="./rfc2119" title="&quot;Key words for use in RFCs to Indicate Requirement Levels&quot;">RFC2119</a>] 中的说明解释。
+
+   本规范使用增强巴科斯-诺尔范式（ABNF）[<a href="./rfc5234" title="&quot;Augmented BNF for Syntax Specifications: ABNF&quot;">RFC5234</a>] 记法
+   表达规范性语法规则。
+
+<span class="h2"><a class="selflink" id="section-3" href="#section-3">3</a>.  语法</span>
+
+   JSON Pointer 是一个 Unicode 字符串（见 <a href="./rfc4627#section-3">[RFC4627] 第 3 节</a>），
+   包含零个或多个引用标记的序列，每个引用标记前面都带有一个 '/'
+   （%x2F）字符。
+
+   由于字符 '~'（%x7E）和 '/'（%x2F）在 JSON Pointer 中具有特殊
+   含义，因此当这些字符出现在引用标记中时，'~' 需要编码为 '~0'，
+   '/' 需要编码为 '~1'。
+
+
+
+
+
+
+
+
+
+<span class="grey">Bryan, et al.                Standards Track                    [Page 2]</span></pre>
+<hr class='noprint'/><!--NewPage--><pre class='newpage'><span id="page-3" ></span>
+<span class="grey"><a href="./rfc6901">RFC 6901</a>                      JSON Pointer                    2013 年 4 月</span>
+
+
+   JSON Pointer 的 ABNF 语法为：
+
+      json-pointer    = *( "/" reference-token )
+      reference-token = *( unescaped / escaped )
+      unescaped       = %x00-2E / %x30-7D / %x7F-10FFFF
+         ; %x2F ('/') 和 %x7E ('~') 不包含在 'unescaped' 中
+      escaped         = "~" ( "0" / "1" )
+        ; 分别表示 '~' 和 '/'
+
+   如果 JSON Pointer 值不符合此语法，则属于错误条件（见<a href="#section-7">第 7 节</a>）。
+
+   注意，JSON Pointer 是按字符指定的，而不是按字节指定的。
+
+<span class="h2"><a class="selflink" id="section-4" href="#section-4">4</a>.  求值</span>
+
+   JSON Pointer 的求值从对 JSON 文档根值的引用开始，并以对文档内
+   某个值的引用完成。JSON Pointer 中的每个引用标记都会按顺序求值。
+
+   每个引用标记的求值首先会解码任何转义字符序列。该过程先将
+   任何出现的序列 '~1' 转换为 '/'，然后再将任何出现的序列 '~0'
+   转换为 '~'。按此顺序执行替换时，实现可避免这样的错误：先把
+   '~01' 变成 '~1'，再变成 '/'；这将是不正确的（字符串 '~01'
+   在转换后正确地变为 '~1'）。
+
+   随后，引用标记会按以下方案修改被引用的值：
+
+   o  如果当前被引用的值是 JSON 对象，则新的被引用值为该对象中
+      名称由引用标记标识的成员。如果成员名与该标记具有相同数量的
+      Unicode 字符，并且它们的码点逐字节相等，则该成员名等于该
+      标记。不执行 Unicode 字符规范化。如果对象中被引用的成员名
+      并不唯一，则被引用的成员未定义，并且求值失败（见下文）。
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Bryan, et al.                Standards Track                    [Page 3]</span></pre>
+<hr class='noprint'/><!--NewPage--><pre class='newpage'><span id="page-4" ></span>
+<span class="grey"><a href="./rfc6901">RFC 6901</a>                      JSON Pointer                    2013 年 4 月</span>
+
+
+   o  如果当前被引用的值是 JSON 数组，则引用标记 MUST 包含以下
+      二者之一：
+
+      *  由数字组成的字符（见下面的 ABNF；注意不允许前导零），
+         表示一个无符号十进制整数值，使新的被引用值成为该标记
+         标识的、从零开始索引的数组元素；或者
+
+      *  恰好单个字符 "-"，使新的被引用值成为最后一个数组元素之后的
+         （不存在的）成员。
+
+   数组索引的 ABNF 语法为：
+
+   array-index = %x30 / ( %x31-39 *(%x30-39) )
+                 ; "0"，或不带前导 "0" 的数字
+
+   实现会针对文档内容对每个引用标记求值；如果它无法为 JSON
+   Pointer 的任何引用标记解析出具体值，则会引发错误条件。例如，
+   如果使用非数字标记引用数组，则会引发错误条件。详见<a href="#section-7">第 7 节</a>。
+
+   注意，使用 "-" 字符来索引数组始终会导致这样的错误条件，因为
+   按定义它引用的是不存在的数组元素。因此，如果 JSON Pointer 的
+   应用需要让该字符有用，就需要指定应如何处理该字符。
+
+   对于 JSON Pointer 应用未定义具体动作的任何错误条件，其结果都是
+   终止求值。
+
+<span class="h2"><a class="selflink" id="section-5" href="#section-5">5</a>.  JSON 字符串表示</span>
+
+   JSON Pointer 可以表示在 JSON 字符串值中。根据
+   <a href="./rfc4627#section-2.5">[RFC4627] 第 2.5 节</a>，所有引号 '"'（%x22）、反斜杠 '\'
+   （%x5C）以及控制字符（%x00-1F）实例均 MUST 被转义。
+
+   注意，在将 JSON 字符串作为 JSON Pointer 处理之前，必须先将
+   反斜杠转义序列反转义。
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Bryan, et al.                Standards Track                    [Page 4]</span></pre>
+<hr class='noprint'/><!--NewPage--><pre class='newpage'><span id="page-5" ></span>
+<span class="grey"><a href="./rfc6901">RFC 6901</a>                      JSON Pointer                    2013 年 4 月</span>
+
+
+   例如，给定 JSON 文档
+
+   {
+      "foo": ["bar", "baz"],
+      "": 0,
+      "a/b": 1,
+      "c%d": 2,
+      "e^f": 3,
+      "g|h": 4,
+      "i\\j": 5,
+      "k\"l": 6,
+      " ": 7,
+      "m~n": 8
+   }
+
+   以下 JSON 字符串会求值为相应的值：
+
+    ""           // 整个文档
+    "/foo"       ["bar", "baz"]
+    "/foo/0"     "bar"
+    "/"          0
+    "/a~1b"      1
+    "/c%d"       2
+    "/e^f"       3
+    "/g|h"       4
+    "/i\\j"      5
+    "/k\"l"      6
+    "/ "         7
+    "/m~0n"      8
+
+<span class="h2"><a class="selflink" id="section-6" href="#section-6">6</a>.  URI 片段标识符表示</span>
+
+   JSON Pointer 可以表示在 URI 片段标识符中，方法是使用 UTF-8
+   [<a href="./rfc3629" title="&quot;UTF-8, a transformation format of ISO 10646&quot;">RFC3629</a>] 将其编码为八位字节，同时对 [<a href="./rfc3986" title="&quot;Uniform Resource Identifier (URI): Generic Syntax&quot;">RFC3986</a>] 中
+   fragment 规则不允许的那些字符进行百分号编码。
+
+   注意，给定媒体类型需要显式指定 JSON Pointer 作为其片段标识符
+   语法（通常在其注册信息中 [<a href="./rfc6838" title="&quot;Media Type Specifications and Registration Procedures&quot;">RFC6838</a>]）。也就是说，仅仅因为
+   文档是 JSON，并不意味着 JSON Pointer 可以用作其片段标识符语法。
+   特别是，application/json 的片段标识符语法并不是 JSON Pointer。
+
+
+
+
+
+
+
+
+
+<span class="grey">Bryan, et al.                Standards Track                    [Page 5]</span></pre>
+<hr class='noprint'/><!--NewPage--><pre class='newpage'><span id="page-6" ></span>
+<span class="grey"><a href="./rfc6901">RFC 6901</a>                      JSON Pointer                    2013 年 4 月</span>
+
+
+   给定与上面相同的示例文档，以下 URI 片段标识符会求值为相应的值：
+
+    #            // 整个文档
+    #/foo        ["bar", "baz"]
+    #/foo/0      "bar"
+    #/           0
+    #/a~1b       1
+    #/c%25d      2
+    #/e%5Ef      3
+    #/g%7Ch      4
+    #/i%5Cj      5
+    #/k%22l      6
+    #/%20        7
+    #/m~0n       8
+
+<span class="h2"><a class="selflink" id="section-7" href="#section-7">7</a>.  错误处理</span>
+
+   发生错误条件时，JSON Pointer 的求值无法完成。
+
+   错误条件包括但不限于：
+
+   o  无效的指针语法
+
+   o  引用了不存在值的指针
+
+   本规范不定义如何处理错误。JSON Pointer 的应用 SHOULD 指定每种
+   错误类型的影响和处理方式。
+
+   例如，某些应用可能会在发生错误时停止指针处理，而另一些应用
+   可能会尝试通过插入默认值来从缺失值中恢复。
+
+<span class="h2"><a class="selflink" id="section-8" href="#section-8">8</a>.  安全性考虑</span>
+
+   给定的 JSON Pointer 不保证会引用实际的 JSON 值。因此，使用
+   JSON Pointer 的应用应预见这种情况，并定义应如何处理无法解析的
+   指针。
+
+   注意，JSON 指针可以包含 NUL（Unicode U+0000）字符。在使用
+   NUL 标记字符串结尾的编程语言中，需要小心不要误解此字符。
+
+
+
+
+
+
+<span class="grey">Bryan, et al.                Standards Track                    [Page 6]</span></pre>
+<hr class='noprint'/><!--NewPage--><pre class='newpage'><span id="page-7" ></span>
+<span class="grey"><a href="./rfc6901">RFC 6901</a>                      JSON Pointer                    2013 年 4 月</span>
+
+
+<span class="h2"><a class="selflink" id="section-9" href="#section-9">9</a>.  致谢</span>
+
+   以下个人为本规范贡献了想法、反馈和文字：
+
+      Mike Acar, Carsten Bormann, Tim Bray, Jacob Davies, Martin J.
+      Duerst, Bjoern Hoehrmann, James H. Manger, Drew Perttula, and
+      Julian Reschke.
+
+<span class="h2"><a class="selflink" id="section-10" href="#section-10">10</a>.  参考文献</span>
+
+<span class="h3"><a class="selflink" id="section-10.1" href="#section-10.1">10.1</a>.  规范性参考文献</span>
+
+   [<a id="ref-RFC2119">RFC2119</a>]  Bradner, S., "用于在 RFC 中表示要求级别的关键词",
+              <a href="https://www.rfc-editor.org/bcp/bcp14">BCP 14</a>, <a href="./rfc2119">RFC 2119</a>, 1997 年 3 月。
+
+   [<a id="ref-RFC3629">RFC3629</a>]  Yergeau, F., "UTF-8，ISO 10646 的一种转换格式",
+              STD 63, <a href="./rfc3629">RFC 3629</a>, 2003 年 11 月。
+
+   [<a id="ref-RFC3986">RFC3986</a>]  Berners-Lee, T., Fielding, R., and L. Masinter, "统一
+              资源标识符（URI）：通用语法", STD 66,
+              <a href="./rfc3986">RFC 3986</a>, 2005 年 1 月。
+
+   [<a id="ref-RFC4627">RFC4627</a>]  Crockford, D., "JavaScript 对象表示法（JSON）的
+              application/json 媒体类型", <a href="./rfc4627">RFC 4627</a>, 2006 年 7 月。
+
+   [<a id="ref-RFC5234">RFC5234</a>]  Crocker, D. and P. Overell, "语法规范的增强 BNF：
+              ABNF", STD 68, <a href="./rfc5234">RFC 5234</a>, 2008 年 1 月。
+
+<span class="h3"><a class="selflink" id="section-10.2" href="#section-10.2">10.2</a>.  资料性参考文献</span>
+
+   [<a id="ref-RFC6838">RFC6838</a>]  Freed, N., Klensin, J., and T. Hansen, "媒体类型规范
+              与注册流程", <a href="https://www.rfc-editor.org/bcp/bcp13">BCP 13</a>,
+              <a href="./rfc6838">RFC 6838</a>, 2013 年 1 月。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Bryan, et al.                Standards Track                    [Page 7]</span></pre>
+<hr class='noprint'/><!--NewPage--><pre class='newpage'><span id="page-8" ></span>
+<span class="grey"><a href="./rfc6901">RFC 6901</a>                      JSON Pointer                    2013 年 4 月</span>
+
+
+作者地址
+
+   Paul C. Bryan（编辑）
+   Salesforce.com
+
+   电话：+1 604 783 1481
+   电子邮件：pbryan@anode.ca
+
+
+   Kris Zyp
+   SitePen (USA)
+
+   电话：+1 650 968 8787
+   电子邮件：kris@sitepen.com
+
+
+   Mark Nottingham（编辑）
+   Akamai
+
+   电子邮件：mnot@mnot.net
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Bryan, et al.                Standards Track                    [Page 8]
+</pre>
+<script src="https://htmlspecs.com/dropdown.js"></script>
