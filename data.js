@@ -255,14 +255,14 @@ const links = [
         lang: "cjk",
         state: "RFC"
     },
-    // {
-    //     text: "JavaScript Object Notation (JSON) Text Sequences",
-    //     href: "https://htmlspecs.com/json-seq/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc7464.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
+    {
+        text: "JavaScript Object Notation (JSON) Text Sequences",
+        href: "https://htmlspecs.com/json-seq/",
+        src: "https://www.rfc-editor.org/rfc/rfc7464.html",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "RFC"
+    },
     // {
     //     text: "The I-JSON Message Format",
     //     href: "https://htmlspecs.com/i-json/",
