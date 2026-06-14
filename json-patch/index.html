@@ -1,0 +1,965 @@
+<pre>互联网工程任务组 (IETF)                              P. Bryan, 编辑
+征求意见稿：6902                                      Salesforce.com
+类别：标准跟踪                                   M. Nottingham, 编辑
+ISSN: 2070-1721                                                   Akamai
+                                                              2013 年 4 月
+
+
+                <span class="h1">JavaScript 对象表示法 (JSON) 补丁</span>
+
+摘要
+
+   JSON Patch 定义了一种 JSON 文档结构，用于表示要应用到
+   JavaScript Object Notation (JSON) 文档上的一系列操作；
+   它适合与 HTTP PATCH 方法一起使用。
+   "application/json-patch+json" 媒体类型用于标识此类
+   补丁文档。
+
+本文档状态
+
+   本文档是互联网标准跟踪文档。
+
+   本文档是互联网工程任务组 (IETF) 的产物。它代表了 IETF
+   社区的共识。它已经过公开审查，并已由互联网工程指导组
+   (IESG) 批准发布。有关互联网标准的更多信息见
+   <a href="./rfc5741#section-2">RFC 5741 第&nbsp;2 节</a>。
+
+   有关本文档当前状态、任何勘误以及如何提供反馈的信息，
+   可以在
+   <a href="http://www.rfc-editor.org/info/rfc6902">http://www.rfc-editor.org/info/rfc6902</a> 获取。
+
+版权声明
+
+   版权所有 (c) 2013 IETF Trust 以及被确定为本文档作者的人员。
+   保留所有权利。
+
+   本文档受 <a href="https://www.rfc-editor.org/bcp/bcp78">BCP 78</a> 以及 IETF Trust 关于 IETF 文档的法律
+   条款
+   (<a href="http://trustee.ietf.org/license-info">http://trustee.ietf.org/license-info</a>) 约束，该条款以本文档
+   发布日期时有效的版本为准。请仔细阅读这些文档，因为它们
+   描述了你对本文档享有的权利以及所受限制。从本文档中提取的
+   代码组件必须包含 Trust 法律条款第 4.e 节所述的简化 BSD
+   许可证文本，并且按照简化 BSD 许可证中的说明按“无担保”
+   方式提供。
+
+
+
+
+
+
+<span class="grey">Bryan &amp; Nottingham           标准跟踪                          [第 1 页]</span></pre>
+<hr class='noprint'/><!--NewPage--><pre class='newpage'><span id="page-2" ></span>
+<span class="grey"><a href="./rfc6902">RFC 6902</a>                       JSON Patch                     2013 年 4 月</span>
+
+
+目录
+
+   <a href="#section-1">1</a>.  引言 . . . . . . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-3">3</a>
+   <a href="#section-2">2</a>.  约定  . . . . . . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-3">3</a>
+   <a href="#section-3">3</a>.  文档结构 . . . . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-3">3</a>
+   <a href="#section-4">4</a>.  操作 . . . . . . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-4">4</a>
+     <a href="#section-4.1">4.1</a>.  add  . . . . . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-4">4</a>
+     <a href="#section-4.2">4.2</a>.  remove . . . . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-6">6</a>
+     <a href="#section-4.3">4.3</a>.  replace  . . . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-6">6</a>
+     <a href="#section-4.4">4.4</a>.  move . . . . . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-6">6</a>
+     <a href="#section-4.5">4.5</a>.  copy . . . . . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-7">7</a>
+     <a href="#section-4.6">4.6</a>.  test . . . . . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-7">7</a>
+   <a href="#section-5">5</a>.  错误处理 . . . . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-8">8</a>
+   <a href="#section-6">6</a>.  IANA 考量  . . . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-9">9</a>
+   <a href="#section-7">7</a>.  安全考量  . . . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-10">10</a>
+   <a href="#section-8">8</a>.  致谢 . . . . . . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-10">10</a>
+   <a href="#section-9">9</a>.  参考文献 . . . . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-10">10</a>
+     <a href="#section-9.1">9.1</a>.  规范性引用 . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-10">10</a>
+     <a href="#section-9.2">9.2</a>.  资料性引用 . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-10">10</a>
+   <a href="#appendix-A">附录 A</a>.  示例  . . . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-12">12</a>
+     <a href="#appendix-A.1">A.1</a>.  添加对象成员  . . . . . . . . . . . . . . . . . . . . . <a href="#page-12">12</a>
+     <a href="#appendix-A.2">A.2</a>.  添加数组元素  . . . . . . . . . . . . . . . . . . . . . <a href="#page-12">12</a>
+     <a href="#appendix-A.3">A.3</a>.  移除对象成员  . . . . . . . . . . . . . . . . . . . . . <a href="#page-12">12</a>
+     <a href="#appendix-A.4">A.4</a>.  移除数组元素  . . . . . . . . . . . . . . . . . . . . . <a href="#page-13">13</a>
+     <a href="#appendix-A.5">A.5</a>.  替换值  . . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-13">13</a>
+     <a href="#appendix-A.6">A.6</a>.  移动值 . . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-14">14</a>
+     <a href="#appendix-A.7">A.7</a>.  移动数组元素  . . . . . . . . . . . . . . . . . . . . . <a href="#page-14">14</a>
+     <a href="#appendix-A.8">A.8</a>.  测试值：成功 . . . . . . . . . . . . . . . . . . . . . <a href="#page-15">15</a>
+     <a href="#appendix-A.9">A.9</a>.  测试值：错误 . . . . . . . . . . . . . . . . . . . . . <a href="#page-15">15</a>
+     <a href="#appendix-A.10">A.10</a>. 添加嵌套成员对象  . . . . . . . . . . . . . . . . . . <a href="#page-15">15</a>
+     <a href="#appendix-A.11">A.11</a>. 忽略无法识别的元素 . . . . . . . . . . . . . . . . . <a href="#page-16">16</a>
+     <a href="#appendix-A.12">A.12</a>. 添加到不存在的目标 . . . . . . . . . . . . . . . . . <a href="#page-16">16</a>
+     <a href="#appendix-A.13">A.13</a>. 无效的 JSON Patch 文档  . . . . . . . . . . . . . . . <a href="#page-17">17</a>
+     <a href="#appendix-A.14">A.14</a>. ~ 转义顺序  . . . . . . . . . . . . . . . . . . . . . <a href="#page-17">17</a>
+     <a href="#appendix-A.15">A.15</a>. 比较字符串和数字  . . . . . . . . . . . . . . . . . . <a href="#page-17">17</a>
+     <a href="#appendix-A.16">A.16</a>. 添加数组值  . . . . . . . . . . . . . . . . . . . . . <a href="#page-18">18</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Bryan &amp; Nottingham           标准跟踪                          [第 2 页]</span></pre>
+<hr class='noprint'/><!--NewPage--><pre class='newpage'><span id="page-3" ></span>
+<span class="grey"><a href="./rfc6902">RFC 6902</a>                       JSON Patch                     2013 年 4 月</span>
+
+
+<span class="h2"><a class="selflink" id="section-1" href="#section-1">1</a>.  引言</span>
+
+   JavaScript Object Notation (JSON) [<a href="./rfc4627" title="&quot;The application/json Media Type for JavaScript Object Notation (JSON)&quot;">RFC4627</a>] 是一种用于
+   交换和存储结构化数据的通用格式。HTTP PATCH [<a href="./rfc5789" title="&quot;PATCH Method for HTTP&quot;">RFC5789</a>]
+   使用一种对资源执行局部修改的方法扩展了超文本传输协议
+   (HTTP) [<a href="./rfc2616" title="&quot;Hypertext Transfer Protocol -- HTTP/1.1&quot;">RFC2616</a>]。
+
+   JSON Patch 是一种格式（由媒体类型 "application/
+   json-patch+json" 标识），用于表示要应用到目标 JSON 文档上的
+   一系列操作；它适合与 HTTP PATCH 方法一起使用。
+
+   在其他需要对 JSON 文档或具有类似约束的数据结构进行局部
+   更新的场景中，此格式也可能有用（即，它们可以使用 JSON
+   语法序列化为对象或数组）。
+
+<span class="h2"><a class="selflink" id="section-2" href="#section-2">2</a>.  约定</span>
+
+   本文档中的关键词 "MUST"、"MUST NOT"、"REQUIRED"、"SHALL"、
+   "SHALL NOT"、"SHOULD"、"SHOULD NOT"、"RECOMMENDED"、"MAY" 和
+   "OPTIONAL" 应按 <a href="./rfc2119">RFC 2119</a> [<a href="./rfc2119" title="&quot;Key words for use in RFCs to Indicate Requirement Levels&quot;">RFC2119</a>] 中的说明解释。
+
+<span class="h2"><a class="selflink" id="section-3" href="#section-3">3</a>.  文档结构</span>
+
+   JSON Patch 文档是一个 JSON [<a href="./rfc4627" title="&quot;The application/json Media Type for JavaScript Object Notation (JSON)&quot;">RFC4627</a>] 文档，它表示一个
+   对象数组。每个对象表示要应用到目标 JSON 文档的一个
+   单独操作。
+
+   以下是一个 JSON Patch 文档示例，它在 HTTP PATCH 请求中传输：
+
+   PATCH /my/data HTTP/1.1
+   Host: example.org
+   Content-Length: 326
+   Content-Type: application/json-patch+json
+   If-Match: "abc123"
+
+   [
+     { "op": "test", "path": "/a/b/c", "value": "foo" },
+     { "op": "remove", "path": "/a/b/c" },
+     { "op": "add", "path": "/a/b/c", "value": [ "foo", "bar" ] },
+     { "op": "replace", "path": "/a/b/c", "value": 42 },
+     { "op": "move", "from": "/a/b/c", "path": "/a/b/d" },
+     { "op": "copy", "from": "/a/b/d", "path": "/a/b/e" }
+   ]
+
+
+
+
+
+<span class="grey">Bryan &amp; Nottingham           标准跟踪                          [第 3 页]</span></pre>
+<hr class='noprint'/><!--NewPage--><pre class='newpage'><span id="page-4" ></span>
+<span class="grey"><a href="./rfc6902">RFC 6902</a>                       JSON Patch                     2013 年 4 月</span>
+
+
+   对 JSON Patch 文档的求值从目标 JSON 文档开始。操作按它们在
+   数组中出现的顺序依次应用。序列中的每个操作都会应用到
+   目标文档；得到的文档成为下一个操作的目标。求值会继续，
+   直到所有操作都成功应用，或直到遇到错误条件。
+
+<span class="h2"><a class="selflink" id="section-4" href="#section-4">4</a>.  操作</span>
+
+   操作对象必须恰好有一个 "op" 成员，其值指示要执行的操作。
+   其值必须是 "add"、"remove"、"replace"、"move"、"copy" 或
+   "test" 之一；其他值都是错误。每个对象的语义定义如下。
+
+   此外，操作对象必须恰好有一个 "path" 成员。该成员的值是
+   一个包含 JSON-Pointer 值的字符串
+   [<a href="./rfc6901" title="&quot;JavaScript Object Notation (JSON) Pointer&quot;">RFC6901</a>]，它引用目标文档中执行操作的位置（即
+   “目标位置”）。
+
+   其他操作对象成员的含义由操作定义（见下面的小节）。对于
+   所讨论的操作，未显式定义的成员必须被忽略（即，操作将
+   像该未定义成员没有出现在对象中一样完成）。
+
+   请注意，JSON 对象中成员的顺序不重要；因此，以下操作对象
+   是等价的：
+
+   { "op": "add", "path": "/a/b/c", "value": "foo" }
+   { "path": "/a/b/c", "op": "add", "value": "foo" }
+   { "value": "foo", "path": "/a/b/c", "op": "add" }
+
+   操作应用到 JSON 文档所表示的数据结构，即，在任何反转义
+   发生之后（见 <a href="./rfc4627#section-2.5">[RFC4627]，第&nbsp;2.5 节</a>）。
+
+<span class="h3"><a class="selflink" id="section-4.1" href="#section-4.1">4.1</a>.  add</span>
+
+   "add" 操作根据目标位置所引用的内容执行以下功能之一：
+
+   o  如果目标位置指定了一个数组索引，则在该数组中指定索引处
+      插入一个新值。
+
+   o  如果目标位置指定了一个尚不存在的对象成员，则向该对象
+      添加一个新成员。
+
+
+
+
+
+<span class="grey">Bryan &amp; Nottingham           标准跟踪                          [第 4 页]</span></pre>
+<hr class='noprint'/><!--NewPage--><pre class='newpage'><span id="page-5" ></span>
+<span class="grey"><a href="./rfc6902">RFC 6902</a>                       JSON Patch                     2013 年 4 月</span>
+
+
+   o  如果目标位置指定了一个已经存在的对象成员，则替换该成员
+      的值。
+
+   操作对象必须包含一个 "value" 成员，其内容指定要添加的值。
+
+   例如：
+
+   { "op": "add", "path": "/a/b/c", "value": [ "foo", "bar" ] }
+
+   当应用该操作时，目标位置必须引用以下项之一：
+
+   o  目标文档的根——此时指定的值将成为目标文档的全部内容。
+
+   o  要添加到现有对象中的成员——此时提供的值会被添加到该对象
+      的所指示位置。如果该成员已经存在，则由指定的值替换它。
+
+   o  要添加到现有数组中的元素——此时提供的值会被添加到数组中
+      的所指示位置。位于指定索引处或其后的任何元素都会向右
+      移动一个位置。指定的索引不得大于数组中的元素数量。
+      如果使用 "-" 字符来索引数组末尾（见 [<a href="./rfc6901" title="&quot;JavaScript Object Notation (JSON) Pointer&quot;">RFC6901</a>]），
+      这具有将该值追加到数组的效果。
+
+   因为此操作被设计为添加到现有对象和数组中，所以其目标位置
+   通常并不存在。尽管如此会调用指针的错误处理算法，但本规范
+   定义了 "add" 指针的错误处理行为：忽略该错误并按指定添加
+   该值。
+
+   不过，对象本身或包含它的数组确实需要存在；如果并非如此，
+   仍然是错误。例如，从以下文档开始，对目标位置为 "/a/b" 的
+   "add"：
+
+   { "a": { "foo": 1 } }
+
+   不是错误，因为 "a" 存在，并且 "b" 将被添加到其值中。
+   在以下文档中则是错误：
+
+   { "q": { "bar": 2 } }
+
+   因为 "a" 不存在。
+
+
+
+
+<span class="grey">Bryan &amp; Nottingham           标准跟踪                          [第 5 页]</span></pre>
+<hr class='noprint'/><!--NewPage--><pre class='newpage'><span id="page-6" ></span>
+<span class="grey"><a href="./rfc6902">RFC 6902</a>                       JSON Patch                     2013 年 4 月</span>
+
+
+<span class="h3"><a class="selflink" id="section-4.2" href="#section-4.2">4.2</a>.  remove</span>
+
+   "remove" 操作移除目标位置处的值。
+
+   目标位置必须存在，操作才能成功。
+
+   例如：
+
+   { "op": "remove", "path": "/a/b/c" }
+
+   如果从数组中移除一个元素，则指定索引之后的任何元素都会
+   向左移动一个位置。
+
+<span class="h3"><a class="selflink" id="section-4.3" href="#section-4.3">4.3</a>.  replace</span>
+
+   "replace" 操作用新值替换目标位置处的值。操作对象必须包含
+   一个 "value" 成员，其内容指定替换值。
+
+   目标位置必须存在，操作才能成功。
+
+   例如：
+
+   { "op": "replace", "path": "/a/b/c", "value": 42 }
+
+   此操作在功能上等同于对一个值执行 "remove" 操作，随后立即
+   在同一位置用替换值执行 "add" 操作。
+
+<span class="h3"><a class="selflink" id="section-4.4" href="#section-4.4">4.4</a>.  move</span>
+
+   "move" 操作移除指定位置处的值，并将其添加到目标位置。
+
+   操作对象必须包含一个 "from" 成员，它是一个包含 JSON Pointer
+   值的字符串，引用目标文档中要从其移动该值的位置。
+
+   "from" 位置必须存在，操作才能成功。
+
+   例如：
+
+   { "op": "move", "from": "/a/b/c", "path": "/a/b/d" }
+
+   此操作在功能上等同于对 "from" 位置执行 "remove" 操作，
+   随后立即在目标位置用刚刚移除的值执行 "add" 操作。
+
+
+
+
+<span class="grey">Bryan &amp; Nottingham           标准跟踪                          [第 6 页]</span></pre>
+<hr class='noprint'/><!--NewPage--><pre class='newpage'><span id="page-7" ></span>
+<span class="grey"><a href="./rfc6902">RFC 6902</a>                       JSON Patch                     2013 年 4 月</span>
+
+
+   "from" 位置不得是 "path" 位置的真前缀；也就是说，不能将一个
+   位置移动到它的某个子位置中。
+
+<span class="h3"><a class="selflink" id="section-4.5" href="#section-4.5">4.5</a>.  copy</span>
+
+   "copy" 操作将指定位置处的值复制到目标位置。
+
+   操作对象必须包含一个 "from" 成员，它是一个包含 JSON Pointer
+   值的字符串，引用目标文档中要从其复制该值的位置。
+
+   "from" 位置必须存在，操作才能成功。
+
+   例如：
+
+   { "op": "copy", "from": "/a/b/c", "path": "/a/b/e" }
+
+   此操作在功能上等同于在目标位置使用 "from" 成员中指定的值
+   执行 "add" 操作。
+
+<span class="h3"><a class="selflink" id="section-4.6" href="#section-4.6">4.6</a>.  test</span>
+
+   "test" 操作测试目标位置处的值是否等于指定值。
+
+   操作对象必须包含一个 "value" 成员，该成员传递要与目标位置
+   的值进行比较的值。
+
+   目标位置必须等于 "value" 值，操作才被视为成功。
+
+   这里，“相等”意味着目标位置处的值与 "value" 传递的值具有
+   相同的 JSON 类型，并且按该类型的以下规则认为它们相等：
+
+   o  strings：如果它们包含相同数量的 Unicode 字符，并且其
+      码点逐字节相等，则认为相等。
+
+   o  numbers：如果它们的数值相等，则认为相等。
+
+   o  arrays：如果它们包含相同数量的值，并且使用此特定类型
+      规则列表时，每个值都可以被认为与另一个数组中对应位置的
+      值相等，则认为相等。
+
+
+
+
+
+<span class="grey">Bryan &amp; Nottingham           标准跟踪                          [第 7 页]</span></pre>
+<hr class='noprint'/><!--NewPage--><pre class='newpage'><span id="page-8" ></span>
+<span class="grey"><a href="./rfc6902">RFC 6902</a>                       JSON Patch                     2013 年 4 月</span>
+
+
+   o  objects：如果它们包含相同数量的成员，并且通过比较其键
+      （作为字符串）及其值（使用此特定类型规则列表），每个成员
+      都可以被认为等于另一个对象中的某个成员，则认为相等。
+
+   o  literals（false、true 和 null）：如果它们相同，则认为
+      相等。
+
+   请注意，所执行的比较是逻辑比较；例如，数组成员值之间的
+   空白并不重要。
+
+   另请注意，对象成员的序列化顺序并不重要。
+
+   例如：
+
+   { "op": "test", "path": "/a/b/c", "value": "foo" }
+
+<span class="h2"><a class="selflink" id="section-5" href="#section-5">5</a>.  错误处理</span>
+
+   如果 JSON Patch 文档违反了规范性要求，或者操作不成功，
+   则应终止对 JSON Patch 文档的求值，并且不得认为整个补丁
+   文档已成功应用。
+
+   当 JSON Patch 与 HTTP PATCH 方法一起使用时，有关处理错误的
+   考量，包括用于指示各种条件的建议状态码，见
+   <a href="./rfc5789#section-2.2">[RFC5789]，第&nbsp;2.2 节</a>。
+
+   请注意，按照 [<a href="./rfc5789" title="&quot;PATCH Method for HTTP&quot;">RFC5789</a>]，HTTP PATCH 方法是原子的。
+   因此，以下补丁不会导致文档发生任何更改（因为 "test" 操作
+   会产生错误）：
+
+   [
+     { "op": "replace", "path": "/a/b/c", "value": 42 },
+     { "op": "test", "path": "/a/b/c", "value": "C" }
+   ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Bryan &amp; Nottingham           标准跟踪                          [第 8 页]</span></pre>
+<hr class='noprint'/><!--NewPage--><pre class='newpage'><span id="page-9" ></span>
+<span class="grey"><a href="./rfc6902">RFC 6902</a>                       JSON Patch                     2013 年 4 月</span>
+
+
+<span class="h2"><a class="selflink" id="section-6" href="#section-6">6</a>.  IANA 考量</span>
+
+   JSON Patch 文档的互联网媒体类型为 application/
+   json-patch+json。
+
+   类型名称：  application
+
+   子类型名称：  json-patch+json
+
+   必需参数：  无
+
+   可选参数：   无
+
+   编码考量：  binary
+
+   安全考量：
+      见<a href="#section-7">第 7 节</a>中的安全考量。
+
+   互操作性考量：  N/A
+
+   已发布规范：
+      <a href="./rfc6902">RFC 6902</a>
+
+   使用此媒体类型的应用：
+      操作 JSON 文档的应用。
+
+   附加信息：
+
+      魔数：  N/A
+
+      文件扩展名：  .json-patch
+
+      Macintosh 文件类型代码：  TEXT
+
+   获取更多信息的联系人及电子邮件地址：
+      Paul C. Bryan &lt;pbryan@anode.ca&gt;
+
+   预期用途：  COMMON
+
+   使用限制：  无
+
+   作者：  Paul C. Bryan &lt;pbryan@anode.ca&gt;
+
+   变更控制方：  IETF
+
+
+
+
+
+
+
+<span class="grey">Bryan &amp; Nottingham           标准跟踪                          [第 9 页]</span></pre>
+<hr class='noprint'/><!--NewPage--><pre class='newpage'><span id="page-10" ></span>
+<span class="grey"><a href="./rfc6902">RFC 6902</a>                       JSON Patch                     2013 年 4 月</span>
+
+
+<span class="h2"><a class="selflink" id="section-7" href="#section-7">7</a>.  安全考量</span>
+
+   本规范具有与 JSON
+   [<a href="./rfc4627" title="&quot;The application/json Media Type for JavaScript Object Notation (JSON)&quot;">RFC4627</a>] 和 JSON-Pointer [<a href="./rfc6901" title="&quot;JavaScript Object Notation (JSON) Pointer&quot;">RFC6901</a>] 相同的安全考量。
+
+   少数较旧的 Web 浏览器可能被诱导加载一个根为数组的任意
+   JSON 文档，从而导致包含敏感信息的 JSON Patch 文档可能
+   暴露给攻击者，即使访问需要认证也是如此。这被称为跨站请求
+   伪造 (CSRF) 攻击 [<a href="#ref-CSRF" title="&quot;Robust Defenses for Cross-Site Request Forgery&quot;">CSRF</a>]。
+
+   不过，这类浏览器并未被广泛使用（在撰写本文时，估计其
+   市场占有率低于 1%）。仍然担心此攻击的发布者，建议避免
+   使用 HTTP GET 提供此类文档。
+
+<span class="h2"><a class="selflink" id="section-8" href="#section-8">8</a>.  致谢</span>
+
+   以下个人为本规范贡献了想法、反馈和措辞：
+
+      Mike Acar, Mike Amundsen, Cyrus Daboo, Paul Davis, Stefan Koegl,
+      Murray S. Kucherawy, Dean Landolt, Randall Leeds, James Manger,
+      Julian Reschke, James Snell, Eli Stevens, and Henry S. Thompson.
+
+   JSON Patch 文档的结构受 XML Patch 文档规范
+   [<a href="./rfc5261" title="&quot;An Extensible Markup Language (XML) Patch Operations Framework Utilizing XML Path Language (XPath) Selectors&quot;">RFC5261</a>] 影响。
+
+<span class="h2"><a class="selflink" id="section-9" href="#section-9">9</a>.  参考文献</span>
+
+<span class="h3"><a class="selflink" id="section-9.1" href="#section-9.1">9.1</a>.  规范性引用</span>
+
+   [<a id="ref-RFC2119">RFC2119</a>]  Bradner, S., “用于 RFC 中表示要求等级的关键词”，
+              <a href="https://www.rfc-editor.org/bcp/bcp14">BCP 14</a>, <a href="./rfc2119">RFC 2119</a>, 1997 年 3 月。
+
+   [<a id="ref-RFC4627">RFC4627</a>]  Crockford, D., “JavaScript Object Notation (JSON) 的
+              application/json 媒体类型”，<a href="./rfc4627">RFC 4627</a>, 2006 年 7 月。
+
+   [<a id="ref-RFC6901">RFC6901</a>]  Bryan, P., Ed., Zyp, K., and M. Nottingham, Ed.,
+              “JavaScript Object Notation (JSON) Pointer”, <a href="./rfc6901">RFC 6901</a>,
+              2013 年 4 月。
+
+<span class="h3"><a class="selflink" id="section-9.2" href="#section-9.2">9.2</a>.  资料性引用</span>
+
+   [<a id="ref-CSRF">CSRF</a>]     Barth, A., Jackson, C., and J. Mitchell, “针对跨站请求
+              伪造的稳健防御”, ACM Conference
+              on Computer and Communications Security, 2008 年 10 月,
+              &lt;<a href="http://seclab.stanford.edu/websec/csrf/csrf.pdf">http://seclab.stanford.edu/websec/csrf/csrf.pdf</a>&gt;.
+
+
+
+<span class="grey">Bryan &amp; Nottingham           标准跟踪                         [第 10 页]</span></pre>
+<hr class='noprint'/><!--NewPage--><pre class='newpage'><span id="page-11" ></span>
+<span class="grey"><a href="./rfc6902">RFC 6902</a>                       JSON Patch                     2013 年 4 月</span>
+
+
+   [<a id="ref-RFC2616">RFC2616</a>]  Fielding, R., Gettys, J., Mogul, J., Frystyk, H.,
+              Masinter, L., Leach, P., and T. Berners-Lee, “超文本
+              传输协议 -- HTTP/1.1”, <a href="./rfc2616">RFC 2616</a>, 1999 年 6 月。
+
+   [<a id="ref-RFC5261">RFC5261</a>]  Urpalainen, J., “使用 XML Path Language (XPath)
+              选择器的可扩展标记语言 (XML) 补丁操作框架”,
+              <a href="./rfc5261">RFC 5261</a>, 2008 年 9 月。
+
+   [<a id="ref-RFC5789">RFC5789</a>]  Dusseault, L. and J. Snell, “HTTP 的 PATCH 方法”,
+              <a href="./rfc5789">RFC 5789</a>, 2010 年 3 月。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Bryan &amp; Nottingham           标准跟踪                         [第 11 页]</span></pre>
+<hr class='noprint'/><!--NewPage--><pre class='newpage'><span id="page-12" ></span>
+<span class="grey"><a href="./rfc6902">RFC 6902</a>                       JSON Patch                     2013 年 4 月</span>
+
+
+<span class="h2"><a class="selflink" id="appendix-A" href="#appendix-A">附录 A</a>.  示例</span>
+
+<span class="h3"><a class="selflink" id="appendix-A.1" href="#appendix-A.1">A.1</a>.  添加对象成员</span>
+
+   一个示例目标 JSON 文档：
+
+   { "foo": "bar"}
+
+   一个 JSON Patch 文档：
+
+   [
+     { "op": "add", "path": "/baz", "value": "qux" }
+   ]
+
+   得到的 JSON 文档：
+
+   {
+     "baz": "qux",
+     "foo": "bar"
+   }
+
+<span class="h3"><a class="selflink" id="appendix-A.2" href="#appendix-A.2">A.2</a>.  添加数组元素</span>
+
+   一个示例目标 JSON 文档：
+
+   { "foo": [ "bar", "baz" ] }
+
+   一个 JSON Patch 文档：
+
+   [
+     { "op": "add", "path": "/foo/1", "value": "qux" }
+   ]
+
+   得到的 JSON 文档：
+
+   { "foo": [ "bar", "qux", "baz" ] }
+
+<span class="h3"><a class="selflink" id="appendix-A.3" href="#appendix-A.3">A.3</a>.  移除对象成员</span>
+
+   一个示例目标 JSON 文档：
+
+   {
+     "baz": "qux",
+     "foo": "bar"
+   }
+
+
+
+
+
+
+<span class="grey">Bryan &amp; Nottingham           标准跟踪                         [第 12 页]</span></pre>
+<hr class='noprint'/><!--NewPage--><pre class='newpage'><span id="page-13" ></span>
+<span class="grey"><a href="./rfc6902">RFC 6902</a>                       JSON Patch                     2013 年 4 月</span>
+
+
+   一个 JSON Patch 文档：
+
+   [
+     { "op": "remove", "path": "/baz" }
+   ]
+
+   得到的 JSON 文档：
+
+   { "foo": "bar" }
+
+<span class="h3"><a class="selflink" id="appendix-A.4" href="#appendix-A.4">A.4</a>.  移除数组元素</span>
+
+   一个示例目标 JSON 文档：
+
+   { "foo": [ "bar", "qux", "baz" ] }
+
+   一个 JSON Patch 文档：
+
+   [
+     { "op": "remove", "path": "/foo/1" }
+   ]
+
+   得到的 JSON 文档：
+
+   { "foo": [ "bar", "baz" ] }
+
+<span class="h3"><a class="selflink" id="appendix-A.5" href="#appendix-A.5">A.5</a>.  替换值</span>
+
+   一个示例目标 JSON 文档：
+
+   {
+     "baz": "qux",
+     "foo": "bar"
+   }
+
+   一个 JSON Patch 文档：
+
+   [
+     { "op": "replace", "path": "/baz", "value": "boo" }
+   ]
+
+   得到的 JSON 文档：
+
+   {
+     "baz": "boo",
+     "foo": "bar"
+   }
+
+
+
+
+<span class="grey">Bryan &amp; Nottingham           标准跟踪                         [第 13 页]</span></pre>
+<hr class='noprint'/><!--NewPage--><pre class='newpage'><span id="page-14" ></span>
+<span class="grey"><a href="./rfc6902">RFC 6902</a>                       JSON Patch                     2013 年 4 月</span>
+
+
+<span class="h3"><a class="selflink" id="appendix-A.6" href="#appendix-A.6">A.6</a>.  移动值</span>
+
+   一个示例目标 JSON 文档：
+
+   {
+     "foo": {
+       "bar": "baz",
+       "waldo": "fred"
+     },
+     "qux": {
+       "corge": "grault"
+     }
+   }
+
+   一个 JSON Patch 文档：
+
+   [
+     { "op": "move", "from": "/foo/waldo", "path": "/qux/thud" }
+   ]
+
+   得到的 JSON 文档：
+
+   {
+     "foo": {
+       "bar": "baz"
+     },
+     "qux": {
+       "corge": "grault",
+       "thud": "fred"
+     }
+   }
+
+<span class="h3"><a class="selflink" id="appendix-A.7" href="#appendix-A.7">A.7</a>.  移动数组元素</span>
+
+   一个示例目标 JSON 文档：
+
+   { "foo": [ "all", "grass", "cows", "eat" ] }
+
+   一个 JSON Patch 文档：
+
+   [
+     { "op": "move", "from": "/foo/1", "path": "/foo/3" }
+   ]
+
+   得到的 JSON 文档：
+
+   { "foo": [ "all", "cows", "eat", "grass" ] }
+
+
+
+
+<span class="grey">Bryan &amp; Nottingham           标准跟踪                         [第 14 页]</span></pre>
+<hr class='noprint'/><!--NewPage--><pre class='newpage'><span id="page-15" ></span>
+<span class="grey"><a href="./rfc6902">RFC 6902</a>                       JSON Patch                     2013 年 4 月</span>
+
+
+<span class="h3"><a class="selflink" id="appendix-A.8" href="#appendix-A.8">A.8</a>.  测试值：成功</span>
+
+   一个示例目标 JSON 文档：
+
+   {
+     "baz": "qux",
+     "foo": [ "a", 2, "c" ]
+   }
+
+   一个将导致成功求值的 JSON Patch 文档：
+
+   [
+     { "op": "test", "path": "/baz", "value": "qux" },
+     { "op": "test", "path": "/foo/1", "value": 2 }
+   ]
+
+<span class="h3"><a class="selflink" id="appendix-A.9" href="#appendix-A.9">A.9</a>.  测试值：错误</span>
+
+   一个示例目标 JSON 文档：
+
+   { "baz": "qux" }
+
+   一个将导致错误条件的 JSON Patch 文档：
+
+   [
+     { "op": "test", "path": "/baz", "value": "bar" }
+   ]
+
+<span class="h3"><a class="selflink" id="appendix-A.10" href="#appendix-A.10">A.10</a>.  添加嵌套成员对象</span>
+
+   一个示例目标 JSON 文档：
+
+   { "foo": "bar" }
+
+   一个 JSON Patch 文档：
+
+   [
+     { "op": "add", "path": "/child", "value": { "grandchild": { } } }
+   ]
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Bryan &amp; Nottingham           标准跟踪                         [第 15 页]</span></pre>
+<hr class='noprint'/><!--NewPage--><pre class='newpage'><span id="page-16" ></span>
+<span class="grey"><a href="./rfc6902">RFC 6902</a>                       JSON Patch                     2013 年 4 月</span>
+
+
+   得到的 JSON 文档：
+
+   {
+     "foo": "bar",
+     "child": {
+       "grandchild": {
+       }
+     }
+   }
+
+<span class="h3"><a class="selflink" id="appendix-A.11" href="#appendix-A.11">A.11</a>.  忽略无法识别的元素</span>
+
+   一个示例目标 JSON 文档：
+
+   { "foo": "bar" }
+
+   一个 JSON Patch 文档：
+
+   [
+     { "op": "add", "path": "/baz", "value": "qux", "xyz": 123 }
+   ]
+
+   得到的 JSON 文档：
+
+   {
+     "foo": "bar",
+     "baz": "qux"
+   }
+
+<span class="h3"><a class="selflink" id="appendix-A.12" href="#appendix-A.12">A.12</a>.  添加到不存在的目标</span>
+
+   一个示例目标 JSON 文档：
+
+   { "foo": "bar" }
+
+   一个 JSON Patch 文档：
+
+   [
+     { "op": "add", "path": "/baz/bat", "value": "qux" }
+   ]
+
+   此 JSON Patch 文档应用到上面的目标 JSON 文档时会产生错误
+   （因此不会被应用），因为 "add" 操作的目标位置既不引用
+   文档根，也不引用现有对象中的成员，也不引用现有数组中的
+   成员。
+
+
+
+
+
+<span class="grey">Bryan &amp; Nottingham           标准跟踪                         [第 16 页]</span></pre>
+<hr class='noprint'/><!--NewPage--><pre class='newpage'><span id="page-17" ></span>
+<span class="grey"><a href="./rfc6902">RFC 6902</a>                       JSON Patch                     2013 年 4 月</span>
+
+
+<span class="h3"><a class="selflink" id="appendix-A.13" href="#appendix-A.13">A.13</a>.  无效的 JSON Patch 文档</span>
+
+   一个 JSON Patch 文档：
+
+   [
+     { "op": "add", "path": "/baz", "value": "qux", "op": "remove" }
+   ]
+
+   此 JSON Patch 文档不能被当作 "add" 操作处理，因为它包含一个
+   后出现的 "op":"remove" 元素。JSON 要求对象成员名称唯一，
+   这是一个 "SHOULD" 要求，并且没有针对重复项的标准错误处理。
+
+<span class="h3"><a class="selflink" id="appendix-A.14" href="#appendix-A.14">A.14</a>.  ~ 转义顺序</span>
+
+   一个示例目标 JSON 文档：
+
+   {
+     "/": 9,
+     "~1": 10
+   }
+
+   一个 JSON Patch 文档：
+
+   [
+     {"op": "test", "path": "/~01", "value": 10}
+   ]
+
+   得到的 JSON 文档：
+
+   {
+     "/": 9,
+     "~1": 10
+   }
+
+<span class="h3"><a class="selflink" id="appendix-A.15" href="#appendix-A.15">A.15</a>.  比较字符串和数字</span>
+
+   一个示例目标 JSON 文档：
+
+   {
+     "/": 9,
+     "~1": 10
+   }
+
+
+
+
+
+
+
+
+<span class="grey">Bryan &amp; Nottingham           标准跟踪                         [第 17 页]</span></pre>
+<hr class='noprint'/><!--NewPage--><pre class='newpage'><span id="page-18" ></span>
+<span class="grey"><a href="./rfc6902">RFC 6902</a>                       JSON Patch                     2013 年 4 月</span>
+
+
+   一个 JSON Patch 文档：
+
+   [
+     {"op": "test", "path": "/~01", "value": "10"}
+   ]
+
+   这会导致错误，因为测试失败。文档值是数值，而被测试的值是
+   字符串。
+
+<span class="h3"><a class="selflink" id="appendix-A.16" href="#appendix-A.16">A.16</a>.  添加数组值</span>
+
+   一个示例目标 JSON 文档：
+
+   { "foo": ["bar"] }
+
+   一个 JSON Patch 文档：
+
+   [
+     { "op": "add", "path": "/foo/-", "value": ["abc", "def"] }
+   ]
+
+   得到的 JSON 文档：
+
+   { "foo": ["bar", ["abc", "def"]] }
+
+作者地址
+
+   Paul C. Bryan（编辑）
+   Salesforce.com
+
+   电话：+1 604 783 1481
+   电子邮件：pbryan@anode.ca
+
+
+   Mark Nottingham（编辑）
+   Akamai
+
+   电子邮件：mnot@mnot.net
+
+
+
+
+
+
+
+
+
+
+
+
+
+Bryan &amp; Nottingham           标准跟踪                         [第 18 页]
+</pre>
+<script src="https://htmlspecs.com/dropdown.js"></script>
