@@ -39,6 +39,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [JavaScript Object Notation (JSON) Text Sequences](https://htmlspecs.com/json-seq/)（[Source](https://www.rfc-editor.org/rfc/rfc7464.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [The I-JSON Message Format](https://htmlspecs.com/i-json/)（[Source](https://www.rfc-editor.org/rfc/rfc7493.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [JSON Canonicalization Scheme (JCS)](https://htmlspecs.com/json-canonicalization/)（[Source](https://www.rfc-editor.org/rfc/rfc8785.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [JSON Type Definition](https://htmlspecs.com/json-type-definition/)（[Source](https://www.rfc-editor.org/rfc/rfc8927.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [ActivityPub](https://htmlspecs.com/activitypub/)（[Source](https://www.w3.org/TR/2018/REC-activitypub-20180123/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Activity Streams 2.0](https://htmlspecs.com/activitystreams-core/)（[Source](https://www.w3.org/TR/2017/REC-activitystreams-core-20170523/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Linked Data Notifications](https://htmlspecs.com/ldn/)（[Source](https://www.w3.org/TR/2017/REC-ldn-20170502/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）

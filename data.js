@@ -279,14 +279,14 @@ const links = [
         lang: "cjk",
         state: "RFC"
     },
-    // {
-    //     text: "JSON Type Definition",
-    //     href: "https://htmlspecs.com/json-type-definition/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc8927.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
+    {
+        text: "JSON Type Definition",
+        href: "https://htmlspecs.com/json-type-definition/",
+        src: "https://www.rfc-editor.org/rfc/rfc8927.html",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "RFC"
+    },
     {
         text: "ActivityPub",
         href: "https://htmlspecs.com/activitypub/",
