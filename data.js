@@ -189,6 +189,38 @@ const links = [
         lang: "cjk",
         state: "NOTE"
     },
+    // {
+    //     text: "Internationalization Best Practices for Spec Developers",
+    //     href: "https://htmlspecs.com/international-specs/",
+    //     src: "https://www.w3.org/TR/2025/NOTE-international-specs-20250808/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "NOTE"
+    // },
+    // {
+    //     text: "Character Model for the World Wide Web: String Matching",
+    //     href: "https://htmlspecs.com/charmod-norm/",
+    //     src: "https://www.w3.org/TR/2021/NOTE-charmod-norm-20210811/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "NOTE"
+    // },
+    // {
+    //     text: "String Searching",
+    //     href: "https://htmlspecs.com/string-search/",
+    //     src: "https://www.w3.org/TR/2025/DNOTE-string-search-20250107/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "DNOTE"
+    // },
+    // {
+    //     text: "Language enablement index",
+    //     href: "https://htmlspecs.com/typography/",
+    //     src: "https://www.w3.org/TR/2024/DNOTE-typography-20241115/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "DNOTE"
+    // },
 
     //### 数据格式、语义 Web 与 API 描述|데이터 형식, 시맨틱 웹 및 API 설명|データ形式・セマンティック Web・API 記述
     {
@@ -403,6 +435,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
+    // {
+    //     text: "Developing Localizable Manifests",
+    //     href: "https://htmlspecs.com/localizable-manifests/",
+    //     src: "https://www.w3.org/TR/2025/NOTE-localizable-manifests-20250214/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "NOTE"
+    // },
     {
         text: "Web App Manifest - Application Information",
         href: "https://htmlspecs.com/manifest-app-info/",
@@ -2089,6 +2129,38 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "Digital Credentials",
+    //     href: "https://htmlspecs.com/digital-credentials/",
+    //     src: "https://www.w3.org/TR/2026/WD-digital-credentials-20260601/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
+    // {
+    //     text: "Verifiable Credentials Data Model v2.0",
+    //     href: "https://htmlspecs.com/vc-data-model-2.0/",
+    //     src: "https://www.w3.org/TR/2025/REC-vc-data-model-2.0-20250515/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "REC"
+    // },
+    // {
+    //     text: "Securing Verifiable Credentials using JOSE and COSE",
+    //     href: "https://htmlspecs.com/vc-jose-cose/",
+    //     src: "https://www.w3.org/TR/2025/REC-vc-jose-cose-20250515/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "REC"
+    // },
+    // {
+    //     text: "Verifiable Credential Rendering Methods v1.0",
+    //     href: "https://htmlspecs.com/vc-render-method/",
+    //     src: "https://www.w3.org/TR/2026/WD-vc-render-method-20260405/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
 
     //### 隐私、权限与反跟踪|프라이버시, 권한 및 추적 방지|プライバシー・権限・トラッキング対策
     {
@@ -2263,6 +2335,22 @@ const links = [
         lang: "cjk",
         state: "NOTE"
     },
+    // {
+    //     text: "WAI-Adapt Explainer",
+    //     href: "https://htmlspecs.com/adapt/",
+    //     src: "https://www.w3.org/TR/2023/DNOTE-adapt-20230103/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "DNOTE"
+    // },
+    // {
+    //     text: "WAI-Adapt: Symbols Module",
+    //     href: "https://htmlspecs.com/adapt-symbols/",
+    //     src: "https://www.w3.org/TR/2023/CR-adapt-symbols-20230105/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "CR"
+    // },
     {
         text: "Accessible Rich Internet Applications (WAI-ARIA) 1.2",
         href: "https://htmlspecs.com/wai-aria-1.2/",
@@ -2279,6 +2367,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "Digital Publishing WAI-ARIA Module 1.1",
+    //     href: "https://htmlspecs.com/dpub-aria-1.1/",
+    //     src: "https://www.w3.org/TR/2025/REC-dpub-aria-1.1-20250612/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "REC"
+    // },
     {
         text: "Core Accessibility API Mappings 1.2",
         href: "https://htmlspecs.com/core-aam-1.2/",
@@ -2303,6 +2399,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "Digital Publishing Accessibility API Mappings 1.1",
+    //     href: "https://htmlspecs.com/dpub-aam-1.1/",
+    //     src: "https://www.w3.org/TR/2025/REC-dpub-aam-1.1-20250612/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "REC"
+    // },
     {
         text: "WAI-ARIA Graphics Module",
         href: "https://htmlspecs.com/graphics-aria-1.0/",
