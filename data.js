@@ -205,14 +205,14 @@ const links = [
         lang: "cjk",
         state: "NOTE"
     },
-    // {
-    //     text: "String Searching",
-    //     href: "https://htmlspecs.com/string-search/",
-    //     src: "https://www.w3.org/TR/2025/DNOTE-string-search-20250107/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "DNOTE"
-    // },
+    {
+        text: "String Searching",
+        href: "https://htmlspecs.com/string-search/",
+        src: "https://www.w3.org/TR/2025/DNOTE-string-search-20250107/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "DNOTE"
+    },
     // {
     //     text: "Language enablement index",
     //     href: "https://htmlspecs.com/typography/",
