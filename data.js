@@ -2153,14 +2153,14 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
-    // {
-    //     text: "Verifiable Credential Rendering Methods v1.0",
-    //     href: "https://htmlspecs.com/vc-render-method/",
-    //     src: "https://www.w3.org/TR/2026/WD-vc-render-method-20260405/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "Verifiable Credential Rendering Methods v1.0",
+        href: "https://htmlspecs.com/vc-render-method/",
+        src: "https://www.w3.org/TR/2026/WD-vc-render-method-20260405/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
 
     //### 隐私、权限与反跟踪|프라이버시, 권한 및 추적 방지|プライバシー・権限・トラッキング対策
     {
