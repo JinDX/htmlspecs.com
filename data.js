@@ -2399,14 +2399,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "Digital Publishing Accessibility API Mappings 1.1",
-    //     href: "https://htmlspecs.com/dpub-aam-1.1/",
-    //     src: "https://www.w3.org/TR/2025/REC-dpub-aam-1.1-20250612/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "REC"
-    // },
+    {
+        text: "Digital Publishing Accessibility API Mappings 1.1",
+        href: "https://htmlspecs.com/dpub-aam-1.1/",
+        src: "https://www.w3.org/TR/2025/REC-dpub-aam-1.1-20250612/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "REC"
+    },
     {
         text: "WAI-ARIA Graphics Module",
         href: "https://htmlspecs.com/graphics-aria-1.0/",
