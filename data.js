@@ -35,6 +35,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
+    // {
+    //     text: "WebAssembly Core Specification",
+    //     href: "https://htmlspecs.com/wasm-core",
+    //     src: "https://webassembly.github.io/spec/core/bikeshed/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
     {
         text: "WebAssembly JavaScript Interface",
         href: "https://htmlspecs.com/wasm-js-api-2/",
