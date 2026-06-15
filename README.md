@@ -27,6 +27,9 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Language Tags and Locale Identifiers for the World Wide Web](https://htmlspecs.com/ltli/)（[Source](https://www.w3.org/TR/2020/WD-ltli-20201007) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Strings on the Web: Language and Direction Metadata](https://htmlspecs.com/string-meta/)（[Source](https://www.w3.org/TR/2024/NOTE-string-meta-20241017/) ![Note](https://img.shields.io/badge/NOTE-309c40)）
 - [Internationalization Best Practices for Spec Developers](https://htmlspecs.com/international-specs/)（[Source](https://www.w3.org/TR/2025/NOTE-international-specs-20250808/) ![Note](https://img.shields.io/badge/NOTE-309c40)）
+- [Character Model for the World Wide Web: String Matching](https://htmlspecs.com/charmod-norm/)（[Source](https://www.w3.org/TR/2021/NOTE-charmod-norm-20210811/) ![Note](https://img.shields.io/badge/NOTE-309c40)）
+- [String Searching](https://htmlspecs.com/string-search/)（[Source](https://www.w3.org/TR/2025/DNOTE-string-search-20250107/) ![Note Draft](https://img.shields.io/badge/DNOTE-ffcc00)）
+- [Language enablement index](https://htmlspecs.com/typography/)（[Source](https://www.w3.org/TR/2024/DNOTE-typography-20241115/) ![Note Draft](https://img.shields.io/badge/DNOTE-ffcc00)）
 
 ### 数据格式、语义 Web 与 API 描述
 - [The JavaScript Object Notation (JSON) Data Interchange Format](https://htmlspecs.com/json/)（[Source](https://www.rfc-editor.org/rfc/rfc8259.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
@@ -59,6 +62,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Web Application Manifest](https://htmlspecs.com/appmanifest/)（[Source](https://www.w3.org/TR/2026/WD-appmanifest-20260507/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Web App Launch Handler API](https://htmlspecs.com/web-app-launch/)（[Source](https://wicg.github.io/web-app-launch/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Manifest Incubations](https://htmlspecs.com/manifest-incubations/)（[Source](https://wicg.github.io/manifest-incubations/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
+- [Developing Localizable Manifests](https://htmlspecs.com/localizable-manifests/)（[Source](https://www.w3.org/TR/2025/NOTE-localizable-manifests-20250214/) ![Note](https://img.shields.io/badge/NOTE-309c40)）
 - [Web App Manifest - Application Information](https://htmlspecs.com/manifest-app-info/)（[Source](https://www.w3.org/TR/2023/NOTE-manifest-app-info-20230821/) ![Note](https://img.shields.io/badge/NOTE-309c40)）
 - [Get Installed Related Apps API](https://htmlspecs.com/get-installed-related-apps/)（[Source](https://wicg.github.io/get-installed-related-apps/spec/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Service Workers Nightly](https://htmlspecs.com/service-workers/)（[Source](https://www.w3.org/TR/2026/CRD-service-workers-20260608/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
@@ -296,6 +300,10 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [A Well-Known URL for Changing Passwords](https://htmlspecs.com/change-password-url/)（[Source](https://www.w3.org/TR/2024/WD-change-password-url-20240603/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Credential Management Level 1](https://htmlspecs.com/credential-management-1/)（[Source](https://www.w3.org/TR/2026/WD-credential-management-1-20260410/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Federated Credential Management API (FedCM)](https://htmlspecs.com/fedcm/)（[Source](https://www.w3.org/TR/2024/WD-fedcm-1-20240820/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Digital Credentials](https://htmlspecs.com/digital-credentials/)（[Source](https://www.w3.org/TR/2026/WD-digital-credentials-20260601/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Verifiable Credentials Data Model v2.0](https://htmlspecs.com/vc-data-model-2.0/)（[Source](https://www.w3.org/TR/2025/REC-vc-data-model-2.0-20250515/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
+- [Securing Verifiable Credentials using JOSE and COSE](https://htmlspecs.com/vc-jose-cose/)（[Source](https://www.w3.org/TR/2025/REC-vc-jose-cose-20250515/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
+- [Verifiable Credential Rendering Methods v1.0](https://htmlspecs.com/vc-render-method/)（[Source](https://www.w3.org/TR/2026/WD-vc-render-method-20260405/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 
 ### 隐私、权限与反跟踪
 - [Permissions](https://htmlspecs.com/permissions/)（[Source](https://www.w3.org/TR/2025/WD-permissions-20251006/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
@@ -323,11 +331,15 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Web Content Accessibility Guidelines (WCAG) 2.2](https://htmlspecs.com/WCAG22/)（[Source](https://www.w3.org/TR/2024/REC-WCAG22-20241212/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [W3C Accessibility Guidelines (WCAG) 3.0](https://htmlspecs.com/wcag-3.0/)（[Source](https://www.w3.org/TR/2026/WD-wcag-3.0-20260303/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Making Content Usable for People with Cognitive and Learning Disabilities](https://htmlspecs.com/coga-usable/)（[Source](https://www.w3.org/TR/2021/NOTE-coga-usable-20210429/) ![Note](https://img.shields.io/badge/NOTE-309c40)）
+- [WAI-Adapt Explainer](https://htmlspecs.com/adapt/)（[Source](https://www.w3.org/TR/2023/DNOTE-adapt-20230103/) ![Note Draft](https://img.shields.io/badge/DNOTE-ffcc00)）
+- [WAI-Adapt: Symbols Module](https://htmlspecs.com/adapt-symbols/)（[Source](https://www.w3.org/TR/2023/CR-adapt-symbols-20230105/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
 - [Accessible Rich Internet Applications (WAI-ARIA) 1.2](https://htmlspecs.com/wai-aria-1.2/)（[Source](https://www.w3.org/TR/2023/REC-wai-aria-1.2-20230606/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Accessible Rich Internet Applications (WAI-ARIA) 1.3](https://htmlspecs.com/wai-aria-1.3/)（[Source](https://www.w3.org/TR/2026/WD-wai-aria-1.3-20260604/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Digital Publishing WAI-ARIA Module 1.1](https://htmlspecs.com/dpub-aria-1.1/)（[Source](https://www.w3.org/TR/2025/REC-dpub-aria-1.1-20250612/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Core Accessibility API Mappings 1.2](https://htmlspecs.com/core-aam-1.2/)（[Source](https://www.w3.org/TR/2026/CRD-core-aam-1.2-20260611/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [HTML Accessibility API Mappings 1.0](https://htmlspecs.com/html-aam-1.0/)（[Source](https://www.w3.org/TR/2026/WD-html-aam-1.0-20260529/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [SVG Accessibility API Mappings](https://htmlspecs.com/svg-aam-1.0/)（[Source](https://www.w3.org/TR/2026/WD-svg-aam-1.0-20260529/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Digital Publishing Accessibility API Mappings 1.1](https://htmlspecs.com/dpub-aam-1.1/)（[Source](https://www.w3.org/TR/2025/REC-dpub-aam-1.1-20250612/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [WAI-ARIA Graphics Module](https://htmlspecs.com/graphics-aria-1.0/)（[Source](https://www.w3.org/TR/2018/REC-graphics-aria-1.0-20181002/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [ARIA in HTML](https://htmlspecs.com/html-aria/)（[Source](https://www.w3.org/TR/2026/REC-html-aria-20260415/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Accessible Name and Description Computation 1.1](https://htmlspecs.com/accname-1.1/)（[Source](https://www.w3.org/TR/2018/REC-accname-1.1-20181218/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
