@@ -2129,14 +2129,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "Digital Credentials",
-    //     href: "https://htmlspecs.com/digital-credentials/",
-    //     src: "https://www.w3.org/TR/2026/WD-digital-credentials-20260601/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "Digital Credentials",
+        href: "https://htmlspecs.com/digital-credentials/",
+        src: "https://www.w3.org/TR/2026/WD-digital-credentials-20260601/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     // {
     //     text: "Verifiable Credentials Data Model v2.0",
     //     href: "https://htmlspecs.com/vc-data-model-2.0/",
