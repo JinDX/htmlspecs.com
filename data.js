@@ -2335,14 +2335,14 @@ const links = [
         lang: "cjk",
         state: "NOTE"
     },
-    // {
-    //     text: "WAI-Adapt Explainer",
-    //     href: "https://htmlspecs.com/adapt/",
-    //     src: "https://www.w3.org/TR/2023/DNOTE-adapt-20230103/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "DNOTE"
-    // },
+    {
+        text: "WAI-Adapt Explainer",
+        href: "https://htmlspecs.com/adapt/",
+        src: "https://www.w3.org/TR/2023/DNOTE-adapt-20230103/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "DNOTE"
+    },
     // {
     //     text: "WAI-Adapt: Symbols Module",
     //     href: "https://htmlspecs.com/adapt-symbols/",
