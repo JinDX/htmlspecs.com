@@ -2145,14 +2145,14 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
-    // {
-    //     text: "Securing Verifiable Credentials using JOSE and COSE",
-    //     href: "https://htmlspecs.com/vc-jose-cose/",
-    //     src: "https://www.w3.org/TR/2025/REC-vc-jose-cose-20250515/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "REC"
-    // },
+    {
+        text: "Securing Verifiable Credentials using JOSE and COSE",
+        href: "https://htmlspecs.com/vc-jose-cose/",
+        src: "https://www.w3.org/TR/2025/REC-vc-jose-cose-20250515/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "REC"
+    },
     // {
     //     text: "Verifiable Credential Rendering Methods v1.0",
     //     href: "https://htmlspecs.com/vc-render-method/",
