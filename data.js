@@ -2343,14 +2343,14 @@ const links = [
         lang: "cjk",
         state: "DNOTE"
     },
-    // {
-    //     text: "WAI-Adapt: Symbols Module",
-    //     href: "https://htmlspecs.com/adapt-symbols/",
-    //     src: "https://www.w3.org/TR/2023/CR-adapt-symbols-20230105/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "CR"
-    // },
+    {
+        text: "WAI-Adapt: Symbols Module",
+        href: "https://htmlspecs.com/adapt-symbols/",
+        src: "https://www.w3.org/TR/2023/CR-adapt-symbols-20230105/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "CR"
+    },
     {
         text: "Accessible Rich Internet Applications (WAI-ARIA) 1.2",
         href: "https://htmlspecs.com/wai-aria-1.2/",
