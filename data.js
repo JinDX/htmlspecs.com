@@ -197,14 +197,14 @@ const links = [
         lang: "cjk",
         state: "NOTE"
     },
-    // {
-    //     text: "Character Model for the World Wide Web: String Matching",
-    //     href: "https://htmlspecs.com/charmod-norm/",
-    //     src: "https://www.w3.org/TR/2021/NOTE-charmod-norm-20210811/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "NOTE"
-    // },
+    {
+        text: "Character Model for the World Wide Web: String Matching",
+        href: "https://htmlspecs.com/charmod-norm/",
+        src: "https://www.w3.org/TR/2021/NOTE-charmod-norm-20210811/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "NOTE"
+    },
     // {
     //     text: "String Searching",
     //     href: "https://htmlspecs.com/string-search/",
