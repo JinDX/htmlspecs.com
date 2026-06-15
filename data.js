@@ -2367,14 +2367,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "Digital Publishing WAI-ARIA Module 1.1",
-    //     href: "https://htmlspecs.com/dpub-aria-1.1/",
-    //     src: "https://www.w3.org/TR/2025/REC-dpub-aria-1.1-20250612/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "REC"
-    // },
+    {
+        text: "Digital Publishing WAI-ARIA Module 1.1",
+        href: "https://htmlspecs.com/dpub-aria-1.1/",
+        src: "https://www.w3.org/TR/2025/REC-dpub-aria-1.1-20250612/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "REC"
+    },
     {
         text: "Core Accessibility API Mappings 1.2",
         href: "https://htmlspecs.com/core-aam-1.2/",
