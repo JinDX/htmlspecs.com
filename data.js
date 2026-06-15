@@ -213,14 +213,14 @@ const links = [
         lang: "cjk",
         state: "DNOTE"
     },
-    // {
-    //     text: "Language enablement index",
-    //     href: "https://htmlspecs.com/typography/",
-    //     src: "https://www.w3.org/TR/2024/DNOTE-typography-20241115/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "DNOTE"
-    // },
+    {
+        text: "Language enablement index",
+        href: "https://htmlspecs.com/typography/",
+        src: "https://www.w3.org/TR/2024/DNOTE-typography-20241115/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "DNOTE"
+    },
 
     //### 数据格式、语义 Web 与 API 描述|데이터 형식, 시맨틱 웹 및 API 설명|データ形式・セマンティック Web・API 記述
     {
