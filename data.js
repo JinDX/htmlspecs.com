@@ -435,14 +435,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
-    // {
-    //     text: "Developing Localizable Manifests",
-    //     href: "https://htmlspecs.com/localizable-manifests/",
-    //     src: "https://www.w3.org/TR/2025/NOTE-localizable-manifests-20250214/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "NOTE"
-    // },
+    {
+        text: "Developing Localizable Manifests",
+        href: "https://htmlspecs.com/localizable-manifests/",
+        src: "https://www.w3.org/TR/2025/NOTE-localizable-manifests-20250214/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "NOTE"
+    },
     {
         text: "Web App Manifest - Application Information",
         href: "https://htmlspecs.com/manifest-app-info/",
