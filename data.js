@@ -2137,14 +2137,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "Verifiable Credentials Data Model v2.0",
-    //     href: "https://htmlspecs.com/vc-data-model-2.0/",
-    //     src: "https://www.w3.org/TR/2025/REC-vc-data-model-2.0-20250515/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "REC"
-    // },
+    {
+        text: "Verifiable Credentials Data Model v2.0",
+        href: "https://htmlspecs.com/vc-data-model-2.0/",
+        src: "https://www.w3.org/TR/2025/REC-vc-data-model-2.0-20250515/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "REC"
+    },
     // {
     //     text: "Securing Verifiable Credentials using JOSE and COSE",
     //     href: "https://htmlspecs.com/vc-jose-cose/",
