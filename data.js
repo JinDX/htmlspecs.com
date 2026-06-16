@@ -529,7 +529,7 @@ const links = [
         text: "Local Network Access",
         href: "https://htmlspecs.com/local-network-access/",
         src: "https://wicg.github.io/local-network-access/",
-        "last-modified": "Wed, 06 May 2026 20:00:43 GMT",
+        "last-modified": "Mon, 15 Jun 2026 18:29:50 GMT",
         lang: "cjk",
         state: "Draft"
     },
