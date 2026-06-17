@@ -1693,7 +1693,7 @@ const links = [
         text: "Prompt API",
         href: "https://htmlspecs.com/prompt-api/",
         src: "https://webmachinelearning.github.io/prompt-api/",
-        "last-modified": "Fri, 10 Apr 2026 00:30:40 GMT",
+        "last-modified": "Tue, 16 Jun 2026 17:19:17 GMT",
         lang: "cjk",
         state: "Draft"
     },
