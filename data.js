@@ -1381,14 +1381,14 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
-    // {
-    //     text: "IMSC Text Profile 1.3",
-    //     href: "https://htmlspecs.com/ttml-imsc1.3/",
-    //     src: "https://www.w3.org/TR/2026/REC-ttml-imsc1.3-20260521/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "REC"
-    // },
+    {
+        text: "IMSC Text Profile 1.3",
+        href: "https://htmlspecs.com/ttml-imsc1.3/",
+        src: "https://www.w3.org/TR/2026/REC-ttml-imsc1.3-20260521/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "REC"
+    },
     // {
     //     text: "Dubbing and Audio description Profiles of TTML2",
     //     href: "https://htmlspecs.com/dapt/",
