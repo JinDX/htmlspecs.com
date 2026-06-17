@@ -1135,14 +1135,6 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
-    // {
-    //     text: "Web Share Target API",
-    //     href: "https://htmlspecs.com/web-share-target/",
-    //     src: "https://w3c.github.io/web-share-target/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
 
     //### 音频、语音与媒体控制|오디오, 음성 및 미디어 제어|音声・スピーチ・メディア制御
     {
