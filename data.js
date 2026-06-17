@@ -1373,14 +1373,14 @@ const links = [
         lang: "cjk",
         state: "CR"
     },
-    // {
-    //     text: "Timed Text Markup Language 2 (TTML2)",
-    //     href: "https://htmlspecs.com/ttml2/",
-    //     src: "https://www.w3.org/TR/2018/REC-ttml2-20181108/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "REC"
-    // },
+    {
+        text: "Timed Text Markup Language 2 (TTML2)",
+        href: "https://htmlspecs.com/ttml2/",
+        src: "https://www.w3.org/TR/2018/REC-ttml2-20181108/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "REC"
+    },
     // {
     //     text: "IMSC Text Profile 1.3",
     //     href: "https://htmlspecs.com/ttml-imsc1.3/",

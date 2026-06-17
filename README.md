@@ -194,6 +194,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 
 ### 媒体格式、字幕与编解码
 - [WebVTT: The Web Video Text Tracks Format](https://htmlspecs.com/webvtt1/)（[Source](https://www.w3.org/TR/2026/CRD-webvtt1-20260520/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
+- [Timed Text Markup Language 2 (TTML2)](https://htmlspecs.com/ttml2/)（[Source](https://www.w3.org/TR/2018/REC-ttml2-20181108/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Media Source Extensions](https://htmlspecs.com/media-source-2/)（[Source](https://www.w3.org/TR/2025/WD-media-source-2-20251104/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [WebCodecs](https://htmlspecs.com/webcodecs/)（[Source](https://www.w3.org/TR/2026/WD-webcodecs-20260608/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [WebCodecs Codec Registry](https://htmlspecs.com/webcodecs-codec-registry/)（[Source](https://www.w3.org/TR/2026/DRY-webcodecs-codec-registry-20260212/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
