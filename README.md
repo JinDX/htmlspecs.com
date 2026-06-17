@@ -106,7 +106,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Subresource Loading with Web Bundles](https://htmlspecs.com/webpackage-subresource-loading/)（[Source](https://wicg.github.io/webpackage/subresource-loading.html) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 
 ### 输入、编辑与剪贴板
-- [EditContext API](https://htmlspecs.com/edit-context/)（[Source](https://www.w3.org/TR/2026/WD-edit-context-20260610/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [EditContext API](https://htmlspecs.com/edit-context/)（[Source](https://www.w3.org/TR/2026/WD-edit-context-20260616/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Scroll To Text Fragment](https://htmlspecs.com/scroll-to-text-fragment/)（[Source](https://wicg.github.io/scroll-to-text-fragment/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Pointer Events Level 2](https://htmlspecs.com/pointerevents2/)（[Source](https://www.w3.org/TR/2019/REC-pointerevents2-20190404/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Pointer Events Level 3](https://htmlspecs.com/pointerevents3/)（[Source](https://www.w3.org/TR/2026/CRD-pointerevents3-20260522/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
