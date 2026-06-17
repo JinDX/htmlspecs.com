@@ -7,7 +7,7 @@ const links = [
         text: "HTML",
         href: "https://htmlspecs.com/",
         src: "https://html.spec.whatwg.org/",
-        "last-modified": "Mon, 15 Jun 2026 11:11:11 GMT",
+        "last-modified": "Tue, 16 Jun 2026 13:23:18 GMT",
         lang: "cjk",
         state: "LS"
     },
@@ -15,7 +15,7 @@ const links = [
         text: "ECMAScript® 2027 Language Specification",
         href: "https://ecma262.com/",
         src: "https://tc39.es/ecma262/",
-        "last-modified": "Mon, 15 Jun 2026 05:28:24 GMT",
+        "last-modified": "Tue, 16 Jun 2026 13:45:44 GMT",
         lang: "cjk",
         state: "Draft"
     },
@@ -119,7 +119,7 @@ const links = [
         text: "Infra",
         href: "https://htmlspecs.com/infra/",
         src: "https://infra.spec.whatwg.org/",
-        "last-modified": "Fri, 08 May 2026 12:45:16 GMT",
+        "last-modified": "Tue, 16 Jun 2026 13:31:34 GMT",
         lang: "cjk",
         state: "LS"
     },
@@ -742,7 +742,7 @@ const links = [
     {
         text: "EditContext API",
         href: "https://htmlspecs.com/edit-context/",
-        src: "https://www.w3.org/TR/2026/WD-edit-context-20260610/",
+        src: "https://www.w3.org/TR/2026/WD-edit-context-20260616/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
@@ -774,7 +774,7 @@ const links = [
     {
         text: "Pointer Events Level 4",
         href: "https://htmlspecs.com/pointerevents4/",
-        src: "https://www.w3.org/TR/2026/WD-pointerevents4-20260522/",
+        src: "https://www.w3.org/TR/2026/WD-pointerevents4-20260616/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
@@ -1725,7 +1725,7 @@ const links = [
         text: "Prompt API",
         href: "https://htmlspecs.com/prompt-api/",
         src: "https://webmachinelearning.github.io/prompt-api/",
-        "last-modified": "Fri, 10 Apr 2026 00:30:40 GMT",
+        "last-modified": "Tue, 16 Jun 2026 17:19:17 GMT",
         lang: "cjk",
         state: "Draft"
     },
