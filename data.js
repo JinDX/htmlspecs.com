@@ -1135,6 +1135,14 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
+    // {
+    //     text: "Web Share Target API",
+    //     href: "https://htmlspecs.com/web-share-target/",
+    //     src: "https://w3c.github.io/web-share-target/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
 
     //### 音频、语音与媒体控制|오디오, 음성 및 미디어 제어|音声・スピーチ・メディア制御
     {
@@ -1373,6 +1381,30 @@ const links = [
         lang: "cjk",
         state: "CR"
     },
+    // {
+    //     text: "Timed Text Markup Language 2 (TTML2)",
+    //     href: "https://htmlspecs.com/ttml2/",
+    //     src: "https://www.w3.org/TR/2018/REC-ttml2-20181108/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "REC"
+    // },
+    // {
+    //     text: "IMSC Text Profile 1.3",
+    //     href: "https://htmlspecs.com/ttml-imsc1.3/",
+    //     src: "https://www.w3.org/TR/2026/REC-ttml-imsc1.3-20260521/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "REC"
+    // },
+    // {
+    //     text: "Dubbing and Audio description Profiles of TTML2",
+    //     href: "https://htmlspecs.com/dapt/",
+    //     src: "https://www.w3.org/TR/2026/CRD-dapt-20260210/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "CRD"
+    // },
     {
         text: "Media Source Extensions",
         href: "https://htmlspecs.com/media-source-2/",
@@ -1983,6 +2015,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "Content Security Policy: Embedded Enforcement",
+    //     href: "https://htmlspecs.com/csp-embedded-enforcement/",
+    //     src: "https://www.w3.org/TR/2026/WD-csp-embedded-enforcement-20260507/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "Secure Contexts",
         href: "https://htmlspecs.com/secure-contexts/",
@@ -1991,6 +2031,14 @@ const links = [
         lang: "cjk",
         state: "CRD"
     },
+    // {
+    //     text: "The Web Origin Concept",
+    //     href: "https://htmlspecs.com/web-origin/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc6454.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
     {
         text: "Referrer Policy",
         href: "https://htmlspecs.com/referrer-policy/",
@@ -2259,6 +2307,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
+    // {
+    //     text: "Iframe credentialless",
+    //     href: "https://htmlspecs.com/anonymous-iframe/",
+    //     src: "https://wicg.github.io/anonymous-iframe/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
     {
         text: "Private State Token API",
         href: "https://htmlspecs.com/trust-token-api/",
@@ -3765,6 +3821,14 @@ const httpLinks = [
         lang: "cjk",
         state: "RFC"
     },
+    // {
+    //     text: "The No-Vary-Search HTTP Caching Extension",
+    //     href: "https://htmlspecs.com/http/no-vary-search.html",
+    //     src: "https://httpwg.org/http-extensions/draft-ietf-httpbis-no-vary-search.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
 
     //### 表示元数据、链接与内容编码|표현 메타데이터, 링크 및 콘텐츠 인코딩|表現メタデータ・リンク・内容エンコーディング
     {
@@ -3776,6 +3840,14 @@ const httpLinks = [
         lang: "cjk",
         state: "RFC"
     },
+    // {
+    //     text: "Cookies: HTTP State Management Mechanism",
+    //     href: "https://htmlspecs.com/http/draft-ietf-httpbis-rfc6265bis.html",
+    //     src: "https://httpwg.org/http-extensions/draft-ietf-httpbis-rfc6265bis.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
     {
         text: "Use of the Content-Disposition Header Field in the Hypertext Transfer Protocol (HTTP)",
         href: "https://htmlspecs.com/http/rfc6266.html",
