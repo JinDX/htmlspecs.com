@@ -3818,7 +3818,7 @@ const httpLinks = [
         href: "https://htmlspecs.com/http/no-vary-search.html",
         src: "https://httpwg.org/http-extensions/draft-ietf-httpbis-no-vary-search.html",
         "last-modified": "-",
-        etag: "6a335c85-1b5bf",
+        etag: "6a33ad56-1b5d3",
         lang: "cjk",
         state: "Draft"
     },
@@ -3838,7 +3838,7 @@ const httpLinks = [
         href: "https://htmlspecs.com/http/draft-ietf-httpbis-rfc6265bis.html",
         src: "https://httpwg.org/http-extensions/draft-ietf-httpbis-rfc6265bis.html",
         "last-modified": "-",
-        etag: "6a335c85-44977",
+        etag: "6a33ad56-4498b",
         lang: "cjk",
         state: "Draft"
     },
