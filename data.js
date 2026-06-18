@@ -3818,6 +3818,7 @@ const httpLinks = [
         href: "https://htmlspecs.com/http/no-vary-search.html",
         src: "https://httpwg.org/http-extensions/draft-ietf-httpbis-no-vary-search.html",
         "last-modified": "-",
+        etag: "6a335c85-1b5bf",
         lang: "cjk",
         state: "Draft"
     },
@@ -3832,14 +3833,15 @@ const httpLinks = [
         lang: "cjk",
         state: "RFC"
     },
-    // {
-    //     text: "Cookies: HTTP State Management Mechanism",
-    //     href: "https://htmlspecs.com/http/draft-ietf-httpbis-rfc6265bis.html",
-    //     src: "https://httpwg.org/http-extensions/draft-ietf-httpbis-rfc6265bis.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "Cookies: HTTP State Management Mechanism",
+        href: "https://htmlspecs.com/http/draft-ietf-httpbis-rfc6265bis.html",
+        src: "https://httpwg.org/http-extensions/draft-ietf-httpbis-rfc6265bis.html",
+        "last-modified": "-",
+        etag: "6a335c85-44977",
+        lang: "cjk",
+        state: "Draft"
+    },
     {
         text: "Use of the Content-Disposition Header Field in the Hypertext Transfer Protocol (HTTP)",
         href: "https://htmlspecs.com/http/rfc6266.html",
