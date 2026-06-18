@@ -2299,14 +2299,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
-    // {
-    //     text: "Iframe credentialless",
-    //     href: "https://htmlspecs.com/anonymous-iframe/",
-    //     src: "https://wicg.github.io/anonymous-iframe/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "Iframe credentialless",
+        href: "https://htmlspecs.com/anonymous-iframe/",
+        src: "https://wicg.github.io/anonymous-iframe/",
+        "last-modified": "Sun, 03 Dec 2023 08:42:59 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
     {
         text: "Private State Token API",
         href: "https://htmlspecs.com/trust-token-api/",
