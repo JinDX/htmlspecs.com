@@ -3834,15 +3834,6 @@ const httpLinks = [
         state: "RFC"
     },
     {
-        text: "Cookies: HTTP State Management Mechanism",
-        href: "https://htmlspecs.com/http/draft-ietf-httpbis-rfc6265bis.html",
-        src: "https://httpwg.org/http-extensions/draft-ietf-httpbis-rfc6265bis.html",
-        "last-modified": "-",
-        etag: "6a33ad56-4498b",
-        lang: "cjk",
-        state: "Draft"
-    },
-    {
         text: "Use of the Content-Disposition Header Field in the Hypertext Transfer Protocol (HTTP)",
         href: "https://htmlspecs.com/http/rfc6266.html",
         src: "https://httpwg.org/specs/rfc6266.html",
