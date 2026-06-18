@@ -1,0 +1,1008 @@
+<pre>互联网工程任务组 (IETF)                                      A. Barth
+请求评议：6454                                           Google, Inc.
+类别：标准轨道                                          2011 年 12 月
+ISSN: 2070-1721
+
+
+                         <span class="h1">Web 源概念</span>
+
+摘要
+
+   本文档定义了“源”的概念，用户代理经常将其用作权限或特权的
+   作用域。通常，用户代理会隔离从不同源检索到的内容，以防止
+   恶意网站运营者干扰良性网站的运行。除了概述支撑源概念的
+   原则之外，本文档还详细说明了如何确定 URI 的源，以及如何将
+   源序列化为字符串。本文档还定义了一个名为 "Origin" 的 HTTP
+   首部字段，用于指示哪些源与某个 HTTP 请求相关联。
+
+本备忘录状态
+
+   本文档是互联网标准轨道文档。
+
+   本文档是互联网工程任务组 (IETF) 的产物。它代表了 IETF
+   社区的共识。它已经过公开审查，并已获互联网工程指导组
+   (IESG) 批准发布。有关互联网标准的更多信息，请参见
+   <a href="./rfc5741#section-2">RFC 5741 第&nbsp;2 节</a>。
+
+   有关本文档的当前状态、任何勘误以及如何提供反馈的信息，
+   可从以下位置获得：
+   <a href="http://www.rfc-editor.org/info/rfc6454">http://www.rfc-editor.org/info/rfc6454</a>.
+
+Copyright Notice
+
+   Copyright (c) 2011 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to <a href="https://www.rfc-editor.org/bcp/bcp78">BCP 78</a> and the IETF Trust's Legal
+   Provisions Relating to IETF Documents
+   (<a href="http://trustee.ietf.org/license-info">http://trustee.ietf.org/license-info</a>) in effect on the date of
+   publication of this document.  Please review these documents
+   carefully, as they describe your rights and restrictions with respect
+   to this document.  Code Components extracted from this document must
+   include Simplified BSD License text as described in Section 4.e of
+   the Trust Legal Provisions and are provided without warranty as
+   described in the Simplified BSD License.
+
+
+
+<span class="grey">Barth                        标准轨道                         [第 1 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-2" ></span>
+<span class="grey"><a href="./rfc6454">RFC 6454</a>                 Web 源概念                    2011 年 12 月</span>
+
+
+目录
+
+   <a href="#section-1">1</a>.  引言 . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-3">3</a>
+   <a href="#section-2">2</a>.  约定  . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-3">3</a>
+     <a href="#section-2.1">2.1</a>.  符合性准则 . . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-3">3</a>
+     <a href="#section-2.2">2.2</a>.  语法表示法  . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-4">4</a>
+     <a href="#section-2.3">2.3</a>.  术语  . . . . . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-4">4</a>
+   <a href="#section-3">3</a>.  同源策略的原则 . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-4">4</a>
+     <a href="#section-3.1">3.1</a>.  信任  . . . . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-5">5</a>
+       <a href="#section-3.1.1">3.1.1</a>.  陷阱 . . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-5">5</a>
+     <a href="#section-3.2">3.2</a>.  源 . . . . . . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-6">6</a>
+       <a href="#section-3.2.1">3.2.1</a>.  示例 . . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-7">7</a>
+     <a href="#section-3.3">3.3</a>.  权限  . . . . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-7">7</a>
+       <a href="#section-3.3.1">3.3.1</a>.  陷阱 . . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-8">8</a>
+     <a href="#section-3.4">3.4</a>.  策略 . . . . . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-8">8</a>
+       <a href="#section-3.4.1">3.4.1</a>.  对象访问  . . . . . . . . . . . . . . . . . . . . .  <a href="#page-8">8</a>
+       <a href="#section-3.4.2">3.4.2</a>.  网络访问 . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-9">9</a>
+       <a href="#section-3.4.3">3.4.3</a>.  陷阱 . . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-9">9</a>
+     <a href="#section-3.5">3.5</a>.  结论 . . . . . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-10">10</a>
+   <a href="#section-4">4</a>.  URI 的源  . . . . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-10">10</a>
+   <a href="#section-5">5</a>.  比较源  . . . . . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-11">11</a>
+   <a href="#section-6">6</a>.  序列化源  . . . . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-11">11</a>
+     <a href="#section-6.1">6.1</a>.  源的 Unicode 序列化 . . . . . . . . . . . . . . . . . . <a href="#page-12">12</a>
+     <a href="#section-6.2">6.2</a>.  源的 ASCII 序列化 . . . . . . . . . . . . . . . . . . . <a href="#page-12">12</a>
+   <a href="#section-7">7</a>.  HTTP Origin 首部字段 . . . . . . . . . . . . . . . . . . . . <a href="#page-13">13</a>
+     <a href="#section-7.1">7.1</a>.  语法 . . . . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-13">13</a>
+     <a href="#section-7.2">7.2</a>.  语义  . . . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-13">13</a>
+     <a href="#section-7.3">7.3</a>.  用户代理要求  . . . . . . . . . . . . . . . . . . . . <a href="#page-14">14</a>
+   <a href="#section-8">8</a>.  安全考虑  . . . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-14">14</a>
+     <a href="#section-8.1">8.1</a>.  对 DNS 的依赖  . . . . . . . . . . . . . . . . . . . . <a href="#page-15">15</a>
+     <a href="#section-8.2">8.2</a>.  隔离单元的差异 . . . . . . . . . . . . . . . . . . . <a href="#page-15">15</a>
+     <a href="#section-8.3">8.3</a>.  环境权限  . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-16">16</a>
+     <a href="#section-8.4">8.4</a>.  IDNA 依赖和迁移  . . . . . . . . . . . . . . . . . . . <a href="#page-16">16</a>
+   <a href="#section-9">9</a>.  IANA 考虑事项  . . . . . . . . . . . . . . . . . . . . . . <a href="#page-17">17</a>
+   <a href="#section-10">10</a>. 参考文献 . . . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-17">17</a>
+     <a href="#section-10.1">10.1</a>. 规范性引用 . . . . . . . . . . . . . . . . . . . . . . <a href="#page-17">17</a>
+     <a href="#section-10.2">10.2</a>. 资料性引用 . . . . . . . . . . . . . . . . . . . . . . <a href="#page-18">18</a>
+   <a href="#appendix-A">附录 A</a>.  致谢  . . . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-20">20</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Barth                        标准轨道                         [第 2 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-3" ></span>
+<span class="grey"><a href="./rfc6454">RFC 6454</a>                 Web 源概念                    2011 年 12 月</span>
+
+
+<span class="h2"><a class="selflink" id="section-1" href="#section-1">1</a>.  引言</span>
+
+   用户代理会与大量作者创建的内容交互。尽管这些作者中有许多
+   都是善意的，但有些作者可能是恶意的。就用户代理会基于其
+   处理的内容而采取行动而言，用户代理实现者可能希望限制
+   恶意作者破坏其他内容或服务器的机密性或完整性的能力。
+
+   举例来说，考虑一个渲染从各种服务器检索到的 HTML 内容的
+   HTTP 用户代理。如果该用户代理执行这些文档中包含的脚本，
+   用户代理实现者可能希望防止从恶意服务器检索到的脚本读取
+   存储在诚实服务器上的文档，例如该服务器可能位于防火墙之后。
+
+   按照传统，用户代理根据内容的“源”来划分内容。更具体地说，
+   用户代理允许从一个源检索到的内容与从该源检索到的其他内容
+   自由交互，但用户代理会限制该内容如何与来自另一个源的内容
+   交互。
+
+   本文档描述了所谓同源策略背后的原则，以及比较和序列化源的
+   “具体细节”。本文档并不描述同源策略的所有方面，其细节留给
+   其他规范，例如 HTML [<a href="#ref-HTML" title="&quot;HTML5&quot;">HTML</a>] 和 WebSockets [<a href="./rfc6455" title="&quot;WebSocket 协议&quot;">RFC6455</a>]，因为
+   这些细节通常是特定于应用的。
+
+<span class="h2"><a class="selflink" id="section-2" href="#section-2">2</a>.  约定</span>
+
+<span class="h3"><a class="selflink" id="section-2.1" href="#section-2.1">2.1</a>.  符合性准则</span>
+
+   本文档中的关键词 "MUST"、"MUST NOT"、"REQUIRED"、"SHALL"、
+   "SHALL NOT"、"SHOULD"、"SHOULD NOT"、"RECOMMENDED"、"MAY" 和
+   "OPTIONAL" 应按 [<a href="./rfc2119" title="&quot;用于 RFC 中表示要求级别的关键词&quot;">RFC2119</a>] 中的描述解释。
+
+   作为算法一部分以祈使语气表述的要求（例如“剥离任何前导
+   空格字符”或“返回 false 并中止这些步骤”），应按引入该算法时
+   所使用的关键词（"MUST"、"SHOULD"、"MAY" 等）的含义来解释。
+
+   以算法或具体步骤形式表述的符合性要求，可以用任何方式实现，
+   只要最终结果等价即可。特别地，本规范中定义的算法旨在易于
+   理解，并不旨在具有高性能。
+
+
+
+
+<span class="grey">Barth                        标准轨道                         [第 3 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-4" ></span>
+<span class="grey"><a href="./rfc6454">RFC 6454</a>                 Web 源概念                    2011 年 12 月</span>
+
+
+<span class="h3"><a class="selflink" id="section-2.2" href="#section-2.2">2.2</a>.  语法表示法</span>
+
+   本规范使用 [<a href="./rfc5234" title="&quot;语法规范的增强型 BNF：ABNF&quot;">RFC5234</a>] 的增强型巴科斯-诺尔范式（ABNF）
+   表示法。
+
+   下列核心规则通过引用纳入，定义见
+   <a href="./rfc5234#appendix-B.1">[RFC5234]，附录&nbsp;B.1</a>：ALPHA（字母）、CR（回车）、CRLF
+   （CR LF）、CTL（控制字符）、DIGIT（十进制 0-9）、DQUOTE（双引号）、
+   HEXDIG（十六进制 0-9/A-F/a-f）、LF（换行）、OCTET（任意 8 位
+   数据序列）、SP（空格）、HTAB（水平制表符）、CHAR（任意 US-
+   ASCII 字符）、VCHAR（任意可见 US-ASCII 字符）以及 WSP
+   （空白）。
+
+   OWS 规则用于可能出现零个或多个线性空白八位组的位置。OWS
+   SHOULD 要么不产生，要么产生为单个 SP。在 field-content 内
+   出现的多个 OWS 八位组，在解释字段值或向下游转发消息之前，
+   SHOULD 要么替换为单个 SP，要么转换为全部 SP 八位组（每个
+   非 SP 的八位组替换为 SP）。
+
+   OWS            = *( SP / HTAB / obs-fold )
+                  ; “可选”空白
+   obs-fold       = CRLF ( SP / HTAB )
+                  ; 过时的行折叠
+
+<span class="h3"><a class="selflink" id="section-2.3" href="#section-2.3">2.3</a>.  术语</span>
+
+   术语“用户代理”、“客户端”、“服务器”、“代理”和“源服务器”
+   与 HTTP/1.1 规范（<a href="./rfc2616#section-1.3">[RFC2616]，第&nbsp;1.3 节</a>）中的含义相同。
+
+   全局唯一标识符是一个不同于所有先前存在值的值。例如，一个
+   足够长的随机字符串很可能就是全局唯一标识符。如果源值从不
+   离开用户代理，那么用户代理本地的单调递增计数器也可以充当
+   全局唯一标识符。
+
+<span class="h2"><a class="selflink" id="section-3" href="#section-3">3</a>.  同源策略的原则</span>
+
+   许多用户代理会代表远程方采取行动。例如，HTTP 用户代理会
+   遵循重定向，而重定向是来自远程服务器的指令；HTML 用户代理
+   则会向从远程服务器检索到的脚本暴露丰富的文档对象模型
+   （DOM）接口。
+
+   如果没有任何安全模型，用户代理可能会采取对用户或其他各方
+   有害的行动。随着时间推移，许多与 Web 相关的技术已经趋向于
+   一个共同的安全模型，
+
+
+
+<span class="grey">Barth                        标准轨道                         [第 4 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-5" ></span>
+<span class="grey"><a href="./rfc6454">RFC 6454</a>                 Web 源概念                    2011 年 12 月</span>
+
+
+   俗称“同源策略”。尽管这个安全模型在很大程度上是自然演化而来，
+   但可以用少数几个关键概念来理解同源策略。本节介绍这些概念，
+   并就如何安全地使用这些概念提供建议。
+
+<span class="h3"><a class="selflink" id="section-3.1" href="#section-3.1">3.1</a>.  信任</span>
+
+   同源策略通过 URI 来指定信任。例如，HTML 文档使用 URI 指定
+   要运行的脚本：
+
+   &lt;script src="https://example.com/library.js"&gt;&lt;/script&gt;
+
+   当用户代理处理此元素时，用户代理将获取指定 URI 处的脚本，
+   并以该文档的特权执行该脚本。通过这种方式，文档将其拥有的
+   全部特权授予该 URI 指定的资源。本质上，该文档声明它信任从
+   该 URI 检索到的信息的完整性。
+
+   除了从 URI 导入库之外，用户代理还会向 URI 指定的远程方发送
+   信息。例如，考虑 HTML form 元素：
+
+   &lt;form method="POST" action="https://example.com/login"&gt;
+    ... &lt;input type="password"&gt; ...
+   &lt;/form&gt;
+
+   当用户输入其密码并提交表单时，用户代理会将密码发送到该 URI
+   指定的网络端点。通过这种方式，文档将其秘密数据导出到该 URI，
+   本质上声明它信任发送到该 URI 的信息的机密性。
+
+<span class="h4"><a class="selflink" id="section-3.1.1" href="#section-3.1.1">3.1.1</a>.  陷阱</span>
+
+   在设计使用同源策略的新协议时，应确保重要的信任差异在 URI
+   中可见。例如，如果传输层安全性（TLS）和非 TLS 保护的资源都
+   使用 "http" URI 方案（如 [<a href="./rfc2817" title="&quot;在 HTTP/1.1 中升级到 TLS&quot;">RFC2817</a>] 中那样），文档就无法指定
+   它只希望通过 TLS 检索脚本。通过使用 "https" URI 方案，文档
+   能够表示它希望与受主动网络攻击者防护的资源进行交互。
+
+
+
+
+
+
+
+<span class="grey">Barth                        标准轨道                         [第 5 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-6" ></span>
+<span class="grey"><a href="./rfc6454">RFC 6454</a>                 Web 源概念                    2011 年 12 月</span>
+
+
+<span class="h3"><a class="selflink" id="section-3.2" href="#section-3.2">3.2</a>.  源</span>
+
+   原则上，用户代理可以将每个 URI 都视为单独的保护域，并要求
+   显式同意，才能让从一个 URI 检索到的内容与另一个 URI 交互。
+   不幸的是，这种设计对开发者而言很繁琐，因为 Web 应用通常由
+   多个协同工作的资源组成。
+
+   相反，用户代理会将 URI 分组为称为“源”的保护域。粗略地说，
+   如果两个 URI 具有相同的方案、主机和端口，则它们属于同一个
+   源（即表示同一个主体）。（完整细节见<a href="#section-4">第 4 节</a>。）
+
+   问：为什么不只使用主机？
+
+   答：将方案包含在源元组中对于安全性至关重要。如果用户代理
+   不包含方案，那么 http://example.com 和 https://example.com
+   之间就不会有隔离，因为二者具有相同的主机。然而，如果没有
+   这种隔离，主动网络攻击者就可以篡改从 http://example.com
+   检索到的内容，并让该内容指示用户代理破坏从
+   https://example.com 检索到的内容的机密性和完整性，从而绕过
+   TLS [<a href="./rfc5246" title="&quot;传输层安全性（TLS）协议版本 1.2&quot;">RFC5246</a>] 所提供的保护。
+
+   问：为什么使用完全限定主机名，而不是只使用“顶级”域名？
+
+   答：尽管 DNS 具有层级委派，但主机名之间的信任关系因部署而异。
+   例如，在许多教育机构中，学生可以在
+   <a href="https://example.edu/~student/">https://example.edu/~student/</a> 托管内容，但这并不意味着
+   由学生编写的文档应当与托管在
+   <a href="https://grades.example.edu/">https://grades.example.edu/</a> 的成绩管理 Web 应用属于同一个源
+   （即处于同一个保护域）。
+
+   example.edu 的部署说明，按源对资源分组并不总是能与每种部署
+   场景完美对齐。在这种部署中，每个学生的网站都处于同一个源中，
+   这可能并不理想。从某种意义上说，源的粒度是安全模型演化方式
+   所留下的历史产物。
+
+
+
+
+
+
+
+
+
+<span class="grey">Barth                        标准轨道                         [第 6 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-7" ></span>
+<span class="grey"><a href="./rfc6454">RFC 6454</a>                 Web 源概念                    2011 年 12 月</span>
+
+
+<span class="h4"><a class="selflink" id="section-3.2.1" href="#section-3.2.1">3.2.1</a>.  示例</span>
+
+   下列所有资源都具有相同的源：
+
+   http://example.com/
+   <a href="http://example.com:80/">http://example.com:80/</a>
+   http://example.com/path/file
+
+   每个 URI 都具有相同的方案、主机和端口组成部分。
+
+   下列每个资源都具有与其他资源不同的源。
+
+   http://example.com/
+   <a href="http://example.com:8080/">http://example.com:8080/</a>
+   http://www.example.com/
+   <a href="https://example.com:80/">https://example.com:80/</a>
+   https://example.com/
+   http://example.org/
+   <a href="http://ietf.org/">http://ietf.org/</a>
+
+   在每种情况下，列表中至少有一个方案、主机和端口组成部分会与
+   其他项不同。
+
+<span class="h3"><a class="selflink" id="section-3.3" href="#section-3.3">3.3</a>.  权限</span>
+
+   尽管用户代理会将 URI 分组为源，但并非源中的每个资源都携带
+   相同的权限（这里的“权限”是安全意义上的，而不是 [<a href="./rfc3986" title="&quot;统一资源标识符（URI）：通用语法&quot;">RFC3986</a>]
+   意义上的）。例如，图像是被动内容，因此不携带权限，这意味着
+   图像无法访问其源可用的对象和资源。相比之下，HTML 文档携带
+   其源的全部权限，文档内部的脚本（或导入到文档中的脚本）可以
+   访问其源中的每个资源。
+
+   用户代理通过检查资源的媒体类型来确定向该资源授予多少权限。
+   例如，媒体类型为 image/png 的资源被视为图像，媒体类型为
+   text/html 的资源被视为 HTML 文档。
+
+   在托管不受信任的内容（例如用户生成内容）时，Web 应用可以通过
+   限制其媒体类型来限制该内容的权限。例如，将用户生成内容作为
+   image/png 提供，比将用户生成内容作为 text/html 提供风险更小。
+   当然，许多 Web 应用会在其 HTML 文档中纳入不受信任的内容。
+   如果处理不当，这些应用就有可能将其源的权限泄漏给不受信任的
+   内容，这种漏洞通常称为跨站脚本。
+
+
+
+<span class="grey">Barth                        标准轨道                         [第 7 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-8" ></span>
+<span class="grey"><a href="./rfc6454">RFC 6454</a>                 Web 源概念                    2011 年 12 月</span>
+
+
+<span class="h4"><a class="selflink" id="section-3.3.1" href="#section-3.3.1">3.3.1</a>.  陷阱</span>
+
+   在设计 Web 平台的新组成部分时，应注意不要在不考虑媒体类型的
+   情况下向资源授予权限。许多 Web 应用会以受限的媒体类型提供
+   不受信任的内容。如果一项新的 Web 平台功能向这些内容授予权限，
+   就有可能给现有应用引入漏洞。相反，应优先向已经拥有源的全部
+   权限的媒体类型授予权限，或者向专门设计用于携带新权限的新
+   媒体类型授予权限。
+
+   为了与提供错误媒体类型的服务器保持兼容，一些用户代理会采用
+   “内容嗅探”，并将内容视为具有不同于服务器所提供媒体类型的
+   媒体类型。如果处理不当，内容嗅探可能导致安全漏洞，因为用户
+   代理可能会向低权限媒体类型（例如图像）授予高权限媒体类型
+   （例如 HTML 文档）的特权 [<a href="#ref-SNIFF" title="&quot;媒体类型嗅探&quot;">SNIFF</a>]。
+
+<span class="h3"><a class="selflink" id="section-3.4" href="#section-3.4">3.4</a>.  策略</span>
+
+   一般而言，用户代理会隔离不同源，并允许源之间进行受控通信。
+   用户代理提供隔离和通信的具体细节会因若干因素而异。
+
+<span class="h4"><a class="selflink" id="section-3.4.1" href="#section-3.4.1">3.4.1</a>.  对象访问</span>
+
+   用户代理暴露的大多数对象（也称为应用程序编程接口或 API）
+   仅对同一个源可用。具体而言，当且仅当两个 URI 属于同一个源
+   （例如具有相同的方案、主机和端口）时，从一个 URI 检索到的
+   内容才可以访问与从另一个 URI 检索到的内容相关联的对象。
+
+   此一般规则有一些例外。例如，HTML 的 Location 接口的某些部分
+   可跨源使用（例如，为了允许导航其他浏览上下文）。另一个例子是，
+   HTML 的 postMessage 接口明确地跨源可见，以便促进跨源通信。
+   将对象暴露给外来源是危险的，只有在极其谨慎的情况下才应这样做，
+   因为这样做会使这些对象暴露给潜在攻击者。
+
+
+
+
+
+
+
+
+<span class="grey">Barth                        标准轨道                         [第 8 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-9" ></span>
+<span class="grey"><a href="./rfc6454">RFC 6454</a>                 Web 源概念                    2011 年 12 月</span>
+
+
+<span class="h4"><a class="selflink" id="section-3.4.2" href="#section-3.4.2">3.4.2</a>.  网络访问</span>
+
+   对网络资源的访问会根据这些资源是否与试图访问它们的内容处于
+   同一个源而有所不同。
+
+   一般来说，禁止读取来自另一个源的信息。然而，一个源被允许使用
+   从其他源检索到的某些类型的资源。例如，一个源可以执行来自任意
+   源的脚本、渲染来自任意源的图像，并应用来自任意源的样式表。
+   同样，一个源可以显示来自另一个源的内容，例如 HTML frame 中的
+   HTML 文档。网络资源也可以选择允许其他源读取其信息，例如使用
+   跨源资源共享 [<a href="#ref-CORS" title="&quot;跨源资源共享&quot;">CORS</a>]。在这些情况下，访问通常按每个源授予。
+
+   允许向另一个源发送信息。然而，以任意格式通过网络发送信息是
+   危险的。因此，用户代理会限制文档只能使用特定协议发送信息，
+   例如不带自定义首部的 HTTP 请求。扩展允许的协议集合，例如添加
+   对 WebSockets 的支持，必须谨慎进行，以避免引入漏洞 [<a href="./rfc6455" title="&quot;WebSocket 协议&quot;">RFC6455</a>]。
+
+<span class="h4"><a class="selflink" id="section-3.4.3" href="#section-3.4.3">3.4.3</a>.  陷阱</span>
+
+   每当用户代理允许一个源与来自另一个源的资源交互时，它们都会
+   招致安全问题。例如，显示来自另一个源的图像的能力会泄漏其高度
+   和宽度。类似地，向另一个源发送网络请求的能力会产生跨站请求
+   伪造漏洞 [<a href="#ref-CSRF" title="&quot;跨站请求伪造的稳健防御&quot;">CSRF</a>]。然而，用户代理实现者通常会在这些风险
+   与允许跨源交互带来的收益之间权衡。例如，一个阻止跨源网络请求
+   的 HTML 用户代理会阻止其用户跟随超链接，而这是 Web 的核心功能。
+
+   在向 Web 平台添加新功能时，很容易想要向一个资源授予某项特权，
+   但不向同一源中的另一个资源授予该特权。然而，以这种方式保留
+   特权是无效的，因为没有该特权的资源通常仍然可以获得该特权，
+   因为用户代理不会隔离同一源内的资源。相反，应当从整体上向源
+   授予或拒绝特权（而不是区分同一源内的各个资源）[<a href="#ref-BOFGO" title="&quot;警惕更细粒度的源&quot;">BOFGO</a>]。
+
+
+
+
+
+
+<span class="grey">Barth                        标准轨道                         [第 9 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-10" ></span>
+<span class="grey"><a href="./rfc6454">RFC 6454</a>                 Web 源概念                    2011 年 12 月</span>
+
+
+<span class="h3"><a class="selflink" id="section-3.5" href="#section-3.5">3.5</a>.  结论</span>
+
+   同源策略使用 URI 来指定信任关系。URI 被分组为源，而源表示
+   保护域。源中的某些资源（例如活动内容）被授予该源的全部权限，
+   而源中的其他资源（例如被动内容）则不会被授予该源的权限。
+   携带其源权限的内容被授予对其自身源内对象和网络资源的访问权。
+   此内容还被授予对其他源的对象和网络资源的有限访问权，但必须
+   谨慎设计这些跨源特权，以避免安全漏洞。
+
+<span class="h2"><a class="selflink" id="section-4" href="#section-4">4</a>.  URI 的源</span>
+
+   URI 的源是由以下算法计算出的值：
+
+   1.  如果 URI 没有使用层级元素作为命名权限（见
+       <a href="./rfc3986#section-3.2">[RFC3986]，第&nbsp;3.2 节</a>），或者 URI 不是绝对 URI，
+       则生成一个新的全局唯一标识符，并返回该值。
+
+          注：对同一个 URI 多次运行此算法，每次都可能产生不同的值。
+          通常，用户代理会对例如 HTML 文档的源计算一次，并将该源
+          用于后续安全检查，而不是为每次安全检查重新计算源。
+
+   2.  令 uri-scheme 为 URI 的 scheme 组成部分，并转换为小写。
+
+   3.  如果实现不支持 uri-scheme 给出的协议，则生成一个新的
+       全局唯一标识符，并返回该值。
+
+   4.  如果 uri-scheme 是 "file"，实现 MAY 返回一个由实现定义的值。
+
+          注：从历史上看，用户代理曾向来自 file 方案的内容授予
+          大量特权。然而，向所有本地文件授予如此广泛的特权可能
+          导致特权提升攻击。一些用户代理在向本地文件授予基于目录
+          的特权方面取得了成功，但这种做法并未被广泛采用。其他
+          用户代理对每个 file URI 使用全局唯一标识符，这是最安全
+          的选项。
+
+
+
+
+
+<span class="grey">Barth                        标准轨道                        [第 10 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-11" ></span>
+<span class="grey"><a href="./rfc6454">RFC 6454</a>                 Web 源概念                    2011 年 12 月</span>
+
+
+   5.  令 uri-host 为 URI 的 host 组成部分，并转换为小写
+       （使用 [<a href="./rfc4790" title="&quot;互联网应用协议排序规则注册表&quot;">RFC4790</a>] 中定义的 i;ascii-casemap 排序规则）。
+
+          注：本文档假定用户代理在构造 URI 时执行应用程序中的
+          国际化域名（IDNA）处理和验证。特别地，本文档假定
+          uri-host 将只包含 LDH 标签，因为用户代理已经将任何
+          非 ASCII 标签转换为其对应的 A-label（见 [<a href="./rfc5890" title="&quot;应用程序中的国际化域名（IDNA）：定义和文档框架&quot;">RFC5890</a>]）。
+          因此，基于源的安全策略对用户代理采用的 IDNA 算法很敏感。
+          更多讨论见<a href="#section-8.4">第 8.4 节</a>。
+
+   6.  如果 URI 没有 port 组成部分：
+
+       1.  令 uri-port 为 uri-scheme 给出的协议的默认端口。
+
+       否则：
+
+       2.  令 uri-port 为 URI 的 port 组成部分。
+
+   7.  返回三元组 (uri-scheme, uri-host, uri-port)。
+
+<span class="h2"><a class="selflink" id="section-5" href="#section-5">5</a>.  比较源</span>
+
+   当且仅当两个源完全相同时，两个源才是“相同的”。特别地：
+
+   o  如果两个源都是 scheme/host/port 三元组，则当且仅当二者
+      具有完全相同的 scheme、host 和 port 时，这两个源才相同。
+
+   o  作为全局唯一标识符的源，不可能与 scheme/host/port 三元组
+      形式的源相同。
+
+   如果两个 URI 的源相同，则这两个 URI 是同源的。
+
+      注：一个 URI 不一定与其自身同源。例如，data URI [<a href="./rfc2397" title="&quot;The &quot;">RFC2397</a>]
+      与其自身并不同源，因为 data URI 不使用基于服务器的命名权限，
+      因此其源是全局唯一标识符。
+
+<span class="h2"><a class="selflink" id="section-6" href="#section-6">6</a>.  序列化源</span>
+
+   本节定义如何将源序列化为 unicode [<a href="#ref-Unicode6" title="&quot;Unicode 标准，版本 6.0.0&quot;">Unicode6</a>] 字符串以及
+   ASCII [<a href="./rfc20" title="&quot;用于网络交换的 ASCII 格式&quot;">RFC20</a>] 字符串。
+
+
+
+
+<span class="grey">Barth                        标准轨道                        [第 11 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-12" ></span>
+<span class="grey"><a href="./rfc6454">RFC 6454</a>                 Web 源概念                    2011 年 12 月</span>
+
+
+<span class="h3"><a class="selflink" id="section-6.1" href="#section-6.1">6.1</a>.  源的 Unicode 序列化</span>
+
+   源的 unicode-serialization 是由以下算法返回的值：
+
+   1.  如果源不是 scheme/host/port 三元组，则返回字符串
+
+          null
+
+       （即码点序列 U+006E、U+0075、U+006C、U+006C），并中止这些步骤。
+
+   2.  否则，令 result 为源三元组的 scheme 部分。
+
+   3.  将字符串 "://" 追加到 result。
+
+   4.  将源三元组的 host 部分的每个组成部分（按如下方式转换）
+       追加到 result，并以 U+002E FULL STOP 码点（"."）分隔：
+
+       1.  如果该组成部分是 A-label，则改用对应的 U-label
+           （见 [<a href="./rfc5890" title="&quot;应用程序中的国际化域名（IDNA）：定义和文档框架&quot;">RFC5890</a>] 和 [<a href="./rfc5891" title="&quot;应用程序中的国际化域名（IDNA）：协议&quot;">RFC5891</a>]）。
+
+       2.  否则，逐字使用该组成部分。
+
+   5.  如果源三元组的 port 部分不同于源三元组的 scheme 部分给出的
+       协议的默认端口：
+
+       1.  将 U+003A COLON 码点（":"）和给定端口（以十进制表示）
+           追加到 result。
+
+   6.  返回 result。
+
+<span class="h3"><a class="selflink" id="section-6.2" href="#section-6.2">6.2</a>.  源的 ASCII 序列化</span>
+
+   源的 ascii-serialization 是由以下算法返回的值：
+
+   1.  如果源不是 scheme/host/port 三元组，则返回字符串
+
+          null
+
+       （即码点序列 U+006E、U+0075、U+006C、U+006C），并中止这些步骤。
+
+
+
+
+<span class="grey">Barth                        标准轨道                        [第 12 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-13" ></span>
+<span class="grey"><a href="./rfc6454">RFC 6454</a>                 Web 源概念                    2011 年 12 月</span>
+
+
+   2.  否则，令 result 为源三元组的 scheme 部分。
+
+   3.  将字符串 "://" 追加到 result。
+
+   4.  将源三元组的 host 部分追加到 result。
+
+   5.  如果源三元组的 port 部分不同于源三元组的 scheme 部分给出的
+       协议的默认端口：
+
+       1.  将 U+003A COLON 码点（":"）和给定端口（以十进制表示）
+           追加到 result。
+
+   6.  返回 result。
+
+<span class="h2"><a class="selflink" id="section-7" href="#section-7">7</a>.  HTTP Origin 首部字段</span>
+
+   本节定义 HTTP Origin 首部字段。
+
+<span class="h3"><a class="selflink" id="section-7.1" href="#section-7.1">7.1</a>.  语法</span>
+
+   Origin 首部字段具有以下语法：
+
+   origin              = "Origin:" OWS origin-list-or-null OWS
+   origin-list-or-null = %x6E %x75 %x6C %x6C / origin-list
+   origin-list         = serialized-origin *( SP serialized-origin )
+   serialized-origin   = scheme "://" host [ ":" port ]
+                       ; &lt;scheme&gt;、&lt;host&gt;、&lt;port&gt; 来自 <a href="./rfc3986">RFC 3986</a>
+
+<span class="h3"><a class="selflink" id="section-7.2" href="#section-7.2">7.2</a>.  语义</span>
+
+   当包含在 HTTP 请求中时，Origin 首部字段指示“导致”用户代理发出
+   该请求的源，具体由触发用户代理发出该请求的 API 定义。
+
+   例如，考虑一个代表源执行脚本的用户代理。如果其中一个脚本导致
+   用户代理发出 HTTP 请求，则用户代理 MAY 使用 Origin 首部字段，
+   向服务器告知该脚本在导致用户代理发出该请求时所处的安全上下文。
+
+   在某些情况下，多个源共同导致用户代理发出 HTTP 请求。在这些情况
+   下，用户代理 MAY 在 Origin 首部字段中列出所有这些源。例如，如果
+   HTTP 请求最初由一个源发出，但随后
+
+
+
+
+
+<span class="grey">Barth                        标准轨道                        [第 13 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-14" ></span>
+<span class="grey"><a href="./rfc6454">RFC 6454</a>                 Web 源概念                    2011 年 12 月</span>
+
+
+   被另一个源重定向，则用户代理 MAY 告知服务器，有两个源参与导致
+   用户代理发出该请求。
+
+<span class="h3"><a class="selflink" id="section-7.3" href="#section-7.3">7.3</a>.  用户代理要求</span>
+
+   用户代理 MAY 在任何 HTTP 请求中包含 Origin 首部字段。
+
+   用户代理 MUST NOT 在任何 HTTP 请求中包含超过一个 Origin 首部字段。
+
+   每当用户代理从“隐私敏感”上下文发出 HTTP 请求时，用户代理
+   MUST 在 Origin 首部字段中发送值 "null"。
+
+      注：本文档不定义隐私敏感上下文的概念。生成 HTTP 请求的应用
+      可以将上下文指定为隐私敏感，以便对用户代理如何生成 Origin
+      首部字段施加限制。
+
+   在生成 Origin 首部字段时，用户代理 MUST 满足以下要求：
+
+   o  语法中的每个 serialized-origin 产生式 MUST 是某个源的
+      ascii-serialization。
+
+   o  语法中任意两个连续的 serialized-origin 产生式不能相同。
+      特别地，如果用户代理会生成两个连续的 serialized-origins，
+      则用户代理 MUST NOT 生成第二个。
+
+<span class="h2"><a class="selflink" id="section-8" href="#section-8">8</a>.  安全考虑</span>
+
+   同源策略是许多用户代理（包括 Web 浏览器）安全性的基石之一。
+   从历史上看，一些用户代理尝试过其他安全模型，包括污点跟踪和
+   外泄防护，但这些模型当时被证明难以实现（尽管最近人们又对
+   复兴其中一些想法产生了兴趣）。
+
+   评估同源策略的安全性很困难，因为源概念本身在安全格局中扮演
+   着如此核心的角色。概念上的源本身只是一个隔离单元，和大多数
+   一刀切的概念一样并不完美。尽管如此，仍存在一些系统性弱点，
+   如下所述。
+
+
+
+
+
+<span class="grey">Barth                        标准轨道                        [第 14 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-15" ></span>
+<span class="grey"><a href="./rfc6454">RFC 6454</a>                 Web 源概念                    2011 年 12 月</span>
+
+
+<span class="h3"><a class="selflink" id="section-8.1" href="#section-8.1">8.1</a>.  对 DNS 的依赖</span>
+
+   实践中，同源策略依赖域名系统（DNS）来提供安全性，因为许多
+   常用 URI 方案（例如 http）使用基于 DNS 的命名权限。如果 DNS
+   被部分或完全攻破，同源策略可能无法提供应用所需的安全属性。
+
+   某些 URI 方案（例如 https）对 DNS 攻破具有更强的抵抗力，因为
+   用户代理会采用其他机制（例如证书）来验证从这些 URI 检索到的
+   内容的来源。其他 URI 方案（例如 chrome-extension URI 方案
+   （见 [<a href="#ref-CRX" title="&quot;保护浏览器免受扩展漏洞影响&quot;">CRX</a>] 的第 4.3 节））使用基于公钥的命名权限，并且
+   能够完全抵御 DNS 攻破。
+
+   Web 源概念会隔离从不同 URI 方案检索到的内容；这对于遏制 DNS
+   攻破的影响至关重要。
+
+<span class="h3"><a class="selflink" id="section-8.2" href="#section-8.2">8.2</a>.  隔离单元的差异</span>
+
+   随着时间推移，许多技术都趋向于将 Web 源概念作为一种方便的
+   隔离单元。然而，今天使用的许多技术（例如 cookie [<a href="./rfc6265" title="&quot;HTTP 状态管理机制&quot;">RFC6265</a>]）
+   早于现代 Web 源概念。这些技术通常具有不同的隔离单元，从而
+   导致漏洞。
+
+   一种替代方案是仅使用“受注册机构控制”的域，而不是使用完全
+   限定域名作为隔离单元（例如使用 "example.com" 而不是
+   "www.example.com"）。这种做法由于若干原因存在问题，并且
+   NOT RECOMMENDED：
+
+   1.  “受注册机构控制”的域这一概念，是围绕 DNS 的人类实践的
+       函数，而不是 DNS 本身的属性。例如，日本许多市町村在 DNS
+       层级中相当深的位置运行公共注册机构。虽然存在被广泛使用的
+       “公共后缀列表”，但这些列表难以及时更新，并且在实现之间
+       存在差异。
+
+   2.  这种做法与不使用基于 DNS 的命名权限的 URI 方案不兼容。
+       例如，如果某个给定 URI 方案使用公钥作为命名权限，那么
+       “受注册机构控制”的公钥这一概念就有些不连贯。更糟的是，
+       某些 URI 方案（例如 nntp）使用与 DNS 相反方向的点分委派
+       （例如 alt.usenet.kooks），而另一些方案使用 DNS，但以与
+       通常顺序相反的方式呈现标签（例如 com.example.www）。
+
+
+
+
+<span class="grey">Barth                        标准轨道                        [第 15 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-16" ></span>
+<span class="grey"><a href="./rfc6454">RFC 6454</a>                 Web 源概念                    2011 年 12 月</span>
+
+
+   最好的情况下，使用“受注册机构控制”的域是特定于 URI 方案和
+   实现的。最坏的情况下，URI 方案和实现之间的差异可能导致漏洞。
+
+<span class="h3"><a class="selflink" id="section-8.3" href="#section-8.3">8.3</a>.  环境权限</span>
+
+   使用同源策略时，用户代理会基于内容的 URI 向内容授予权限，
+   而不是基于该内容能够指称哪些对象来授予权限。这种将指称与
+   权限分离的做法是环境权限的一个例子，并可能导致漏洞。
+
+   例如，考虑 HTML 文档中的跨站脚本。如果攻击者能够向 HTML 文档
+   注入脚本内容，那么这些脚本将以该文档源的权限运行，可能允许
+   脚本访问敏感信息，例如用户的医疗记录。然而，如果脚本的权限
+   被限制为该脚本能够指称的那些对象，那么攻击者就不会因为将脚本
+   注入第三方托管的 HTML 文档而获得任何优势。
+
+<span class="h3"><a class="selflink" id="section-8.4" href="#section-8.4">8.4</a>.  IDNA 依赖和迁移</span>
+
+   同源策略的安全属性可能关键地依赖于用户代理采用的 IDNA 算法的
+   细节。特别地，用户代理可能会根据其使用 IDNA2003 [<a href="./rfc3490" title="&quot;应用程序中的国际化域名（IDNA）&quot;">RFC3490</a>]
+   还是 IDNA2008 [<a href="./rfc5890" title="&quot;应用程序中的国际化域名（IDNA）：定义和文档框架&quot;">RFC5890</a>]，将某些国际化域名（例如涉及
+   U+00DF 字符的域名）映射到不同的 ASCII 表示。
+
+   从一种 IDNA 算法迁移到另一种 IDNA 算法，可能会重新划定若干
+   安全边界，可能建立新的安全边界，或者更糟的是，拆除两个互不
+   信任实体之间的安全边界。改变安全边界是有风险的，因为将两个
+   互不信任的实体合并到同一个源中，可能会允许其中一方攻击另一方。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Barth                        标准轨道                        [第 16 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-17" ></span>
+<span class="grey"><a href="./rfc6454">RFC 6454</a>                 Web 源概念                    2011 年 12 月</span>
+
+
+<span class="h2"><a class="selflink" id="section-9" href="#section-9">9</a>.  IANA 考虑事项</span>
+
+   永久消息首部字段注册表（见 [<a href="./rfc3864" title="&quot;消息首部字段注册程序&quot;">RFC3864</a>]）已使用以下注册项更新：
+
+   首部字段名称：Origin
+
+   适用协议：http
+
+   状态：standard
+
+   作者/变更控制者：IETF
+
+   规范文档：本规范（<a href="#section-7">第 7 节</a>）
+
+<span class="h2"><a class="selflink" id="section-10" href="#section-10">10</a>.  参考文献</span>
+
+<span class="h3"><a class="selflink" id="section-10.1" href="#section-10.1">10.1</a>.  规范性引用</span>
+
+   [<a id="ref-RFC20">RFC20</a>]     Cerf, V., "用于网络交换的 ASCII 格式", <a href="./rfc20">RFC 20</a>,
+               1969 年 10 月。
+
+   [<a id="ref-RFC2119">RFC2119</a>]   Bradner, S., "用于 RFC 中表示要求级别的关键词",
+               <a href="https://www.rfc-editor.org/bcp/bcp14">BCP 14</a>, <a href="./rfc2119">RFC 2119</a>, 1997 年 3 月。
+
+   [<a id="ref-RFC2616">RFC2616</a>]   Fielding, R., Gettys, J., Mogul, J., Frystyk, H.,
+               Masinter, L., Leach, P., and T. Berners-Lee, "超文本
+               传输协议 -- HTTP/1.1", <a href="./rfc2616">RFC 2616</a>, 1999 年 6 月。
+
+   [<a id="ref-RFC3864">RFC3864</a>]   Klyne, G., Nottingham, M., and J. Mogul, "消息首部
+               字段注册程序", <a href="https://www.rfc-editor.org/bcp/bcp90">BCP 90</a>, <a href="./rfc3864">RFC 3864</a>,
+               2004 年 9 月。
+
+   [<a id="ref-RFC3986">RFC3986</a>]   Berners-Lee, T., Fielding, R., and L. Masinter, "统一
+               资源标识符（URI）：通用语法", STD 66,
+               <a href="./rfc3986">RFC 3986</a>, 2005 年 1 月。
+
+   [<a id="ref-RFC4790">RFC4790</a>]   Newman, C., Duerst, M., and A. Gulbrandsen, "互联网
+               应用协议排序规则注册表", <a href="./rfc4790">RFC 4790</a>,
+               2007 年 3 月。
+
+   [<a id="ref-RFC5234">RFC5234</a>]   Crocker, D., Ed. and P. Overell, "语法规范的增强型
+               BNF：ABNF", STD 68, <a href="./rfc5234">RFC 5234</a>,
+               2008 年 1 月。
+
+   [<a id="ref-RFC5890">RFC5890</a>]   Klensin, J., "应用程序中的国际化域名（IDNA）：
+               定义和文档框架",
+               <a href="./rfc5890">RFC 5890</a>, 2010 年 8 月。
+
+
+
+<span class="grey">Barth                        标准轨道                        [第 17 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-18" ></span>
+<span class="grey"><a href="./rfc6454">RFC 6454</a>                 Web 源概念                    2011 年 12 月</span>
+
+
+   [<a id="ref-RFC5891">RFC5891</a>]   Klensin, J., "应用程序中的国际化域名（IDNA）：
+               协议", <a href="./rfc5891">RFC 5891</a>, 2010 年 8 月。
+
+   [<a id="ref-Unicode6">Unicode6</a>]  Unicode Consortium, "Unicode 标准，版本
+               6.0.0", 2011,
+               &lt;<a href="http://www.unicode.org/versions/Unicode6.0.0/">http://www.unicode.org/versions/Unicode6.0.0/</a>&gt;。
+
+<span class="h3"><a class="selflink" id="section-10.2" href="#section-10.2">10.2</a>.  资料性引用</span>
+
+   [<a id="ref-BOFGO">BOFGO</a>]     Jackson, C. and A. Barth, "警惕更细粒度的源",
+               2008,
+               &lt;<a href="http://w2spconf.com/2008/papers/s2p1.pdf">http://w2spconf.com/2008/papers/s2p1.pdf</a>&gt;。
+
+   [<a id="ref-CORS">CORS</a>]      van Kesteren, A., "跨源资源共享", W3C
+               工作草案 WD-cors-20100727, 2010 年 7 月,
+               &lt;<a href="http://www.w3.org/TR/2010/WD-cors-20100727/">http://www.w3.org/TR/2010/WD-cors-20100727/</a>&gt;。
+
+               最新版本可见于 &lt;<a href="http://www.w3.org/TR/cors/">http://www.w3.org/TR/cors/</a>&gt;。
+
+   [<a id="ref-CRX">CRX</a>]       Barth, A., Felt, A., Saxena, P., and A. Boodman,
+               "保护浏览器免受扩展漏洞影响",
+               2010, &lt;<a href="http://www.isoc.org/isoc/conferences/ndss/10/pdf/04.pdf">http://www.isoc.org/isoc/conferences/ndss/10/pdf/</a>
+               <a href="http://www.isoc.org/isoc/conferences/ndss/10/pdf/04.pdf">04.pdf</a>&gt;。
+
+   [<a id="ref-CSRF">CSRF</a>]      Barth, A., Jackson, C., and J. Mitchell, "跨站请求伪造
+               的稳健防御", 2008,
+               &lt;<a href="http://portal.acm.org/citation.cfm?id=1455770.1455782">http://portal.acm.org/citation.cfm?id=1455770.1455782</a>&gt;。
+
+   [<a id="ref-HTML">HTML</a>]      Hickson, I., "HTML5", W3C 工作草案 WD-html5-
+               20110525, 2011 年 5 月,
+               &lt;<a href="http://www.w3.org/TR/2011/WD-html5-20110525/">http://www.w3.org/TR/2011/WD-html5-20110525/</a>&gt;。
+
+               最新版本可见于
+               &lt;<a href="http://www.w3.org/TR/html5/">http://www.w3.org/TR/html5/</a>&gt;。
+
+   [<a id="ref-RFC2397">RFC2397</a>]   Masinter, L., ""data" URL 方案", <a href="./rfc2397">RFC 2397</a>,
+               1998 年 8 月。
+
+   [<a id="ref-RFC2817">RFC2817</a>]   Khare, R. and S. Lawrence, "在 HTTP/1.1 中升级到 TLS",
+               <a href="./rfc2817">RFC 2817</a>, 2000 年 5 月。
+
+   [<a id="ref-RFC3490">RFC3490</a>]   Faltstrom, P., Hoffman, P., and A. Costello,
+               "应用程序中的国际化域名（IDNA）",
+               <a href="./rfc3490">RFC 3490</a>, 2003 年 3 月。
+
+   [<a id="ref-RFC5246">RFC5246</a>]   Dierks, T. and E. Rescorla, "传输层安全性
+               （TLS）协议版本 1.2", <a href="./rfc5246">RFC 5246</a>, 2008 年 8 月。
+
+
+
+
+<span class="grey">Barth                        标准轨道                        [第 18 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-19" ></span>
+<span class="grey"><a href="./rfc6454">RFC 6454</a>                 Web 源概念                    2011 年 12 月</span>
+
+
+   [<a id="ref-RFC6265">RFC6265</a>]   Barth, A., "HTTP 状态管理机制", <a href="./rfc6265">RFC 6265</a>,
+               2011 年 4 月。
+
+   [<a id="ref-RFC6455">RFC6455</a>]   Fette, I. and A. Melnikov, "WebSocket 协议",
+               <a href="./rfc6455">RFC 6455</a>, 2011 年 12 月。
+
+   [<a id="ref-SNIFF">SNIFF</a>]     Barth, A. and I. Hickson, <a style="text-decoration: none" href='https://www.google.com/search?sitesearch=datatracker.ietf.org%2Fdoc%2Fhtml%2F&amp;q=inurl:draft-+%22Media+Type+Sniffing%22'>"媒体类型嗅探"</a>, 进行中
+               工作, 2011 年 5 月。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Barth                        标准轨道                        [第 19 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-20" ></span>
+<span class="grey"><a href="./rfc6454">RFC 6454</a>                 Web 源概念                    2011 年 12 月</span>
+
+
+<span class="h2"><a class="selflink" id="appendix-A" href="#appendix-A">附录 A</a>.  致谢</span>
+
+   我们要感谢 Lucas Adamski、Stephen Farrell、Miguel A.
+   Garcia、Tobias Gondrom、Ian Hickson、Anne van Kesteren、Jeff Hodges、
+   Collin Jackson、Larry Masinter、Alexey Melnikov、Mark Nottingham、
+   Julian Reschke、Peter Saint-Andre、Jonas Sicking、Sid Stamm、Daniel
+   Veditz 和 Chris Weber 对本文档提供的宝贵反馈。
+
+作者地址
+
+   Adam Barth
+   Google, Inc.
+
+   EMail: ietf@adambarth.com
+   URI:   <a href="http://www.adambarth.com/">http://www.adambarth.com/</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Barth                        标准轨道                        [第 20 页]
+</pre>
+<script src="https://htmlspecs.com/dropdown.js"></script>

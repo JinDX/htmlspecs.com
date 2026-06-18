@@ -2023,14 +2023,14 @@ const links = [
         lang: "cjk",
         state: "CRD"
     },
-    // {
-    //     text: "The Web Origin Concept",
-    //     href: "https://htmlspecs.com/web-origin/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc6454.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
+    {
+        text: "The Web Origin Concept",
+        href: "https://htmlspecs.com/web-origin/",
+        src: "https://www.rfc-editor.org/rfc/rfc6454.html",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "RFC"
+    },
     {
         text: "Referrer Policy",
         href: "https://htmlspecs.com/referrer-policy/",
