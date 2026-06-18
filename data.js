@@ -2007,14 +2007,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "Content Security Policy: Embedded Enforcement",
-    //     href: "https://htmlspecs.com/csp-embedded-enforcement/",
-    //     src: "https://www.w3.org/TR/2026/WD-csp-embedded-enforcement-20260507/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "Content Security Policy: Embedded Enforcement",
+        href: "https://htmlspecs.com/csp-embedded-enforcement/",
+        src: "https://www.w3.org/TR/2026/WD-csp-embedded-enforcement-20260507/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     {
         text: "Secure Contexts",
         href: "https://htmlspecs.com/secure-contexts/",
