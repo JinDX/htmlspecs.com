@@ -1,0 +1,2964 @@
+<!DOCTYPE html>
+<html lang="zh-hans" class="Internet-Draft">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="Common,Han,Latin" name="scripts">
+    <meta content="initial-scale=1.0" name="viewport">
+    <title>No-Vary-Search HTTP 缓存扩展</title>
+    <meta content="Domenic Denicola" name="author">
+    <meta content="Jeremy Roman" name="author">
+    <meta content="Nidhi Jaju" name="author">
+    <meta content="
+       本规范定义了对 HTTP 缓存的扩展，改变 URI 查询参数影响缓存的方式。 
+    " name="description">
+    <meta content="xml2rfc 3.33.0" name="generator">
+    <meta content="http" name="keyword">
+    <meta content="caching" name="keyword">
+    <meta content="draft-ietf-httpbis-no-vary-search-latest" name="ietf.draft">
+    <!-- Generator version information:
+  xml2rfc 3.33.0
+    Python 3.12.13
+    ConfigArgParse 1.7
+    google-i18n-address 3.1.1
+    intervaltree 3.2.1
+    Jinja2 3.1.6
+    lxml 6.0.2
+    platformdirs 4.9.6
+    pycountry 24.6.1
+    PyYAML 6.0.3
+    requests 2.33.1
+    wcwidth 0.7.0
+-->
+    <link href="draft-ietf-httpbis-no-vary-search.xml" rel="alternate" type="application/rfc+xml">
+    <link href="#copyright" rel="license">
+    <style type="text/css">
+        @font-face {
+            font-family: 'Lora';
+            font-style: italic;
+            font-weight: 400;
+            font-display: swap;
+            src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-cyrillic-ext.woff2') format('woff2');
+            unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+        }
+
+        @font-face {
+            font-family: 'Lora';
+            font-style: italic;
+            font-weight: 400;
+            font-display: swap;
+            src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-cyrillic-ext.woff2') format('woff2');
+            unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+        }
+
+        @font-face {
+            font-family: 'Lora';
+            font-style: italic;
+            font-weight: 400;
+            font-display: swap;
+            src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-vietnamese.woff2') format('woff2');
+            unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+        }
+
+        @font-face {
+            font-family: 'Lora';
+            font-style: italic;
+            font-weight: 400;
+            font-display: swap;
+            src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-latin-ext.woff2') format('woff2');
+            unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+        }
+
+        @font-face {
+            font-family: 'Lora';
+            font-style: italic;
+            font-weight: 400;
+            font-display: swap;
+            src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-latin.woff2') format('woff2');
+            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+        }
+
+        @font-face {
+            font-family: 'Lora';
+            font-style: normal;
+            font-weight: 400;
+            font-display: swap;
+            src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-cyrillic-ext.woff2') format('woff2');
+            unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+        }
+
+        @font-face {
+            font-family: 'Lora';
+            font-style: normal;
+            font-weight: 400;
+            font-display: swap;
+            src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-cyrillic.woff2') format('woff2');
+            unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+        }
+
+        @font-face {
+            font-family: 'Lora';
+            font-style: normal;
+            font-weight: 400;
+            font-display: swap;
+            src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-vietnamese.woff2') format('woff2');
+            unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+        }
+
+        @font-face {
+            font-family: 'Lora';
+            font-style: normal;
+            font-weight: 400;
+            font-display: swap;
+            src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-latin-ext.woff2') format('woff2');
+            unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+        }
+
+        @font-face {
+            font-family: 'Lora';
+            font-style: normal;
+            font-weight: 400;
+            font-display: swap;
+            src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-latin.woff2') format('woff2');
+            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+        }
+
+        @font-face {
+            font-family: 'Lora';
+            font-style: normal;
+            font-weight: 700;
+            font-display: swap;
+            src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-cyrillic-ext.woff2') format('woff2');
+            unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+        }
+
+        @font-face {
+            font-family: 'Lora';
+            font-style: normal;
+            font-weight: 700;
+            font-display: swap;
+            src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-cyrillic.woff2') format('woff2');
+            unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+        }
+
+        @font-face {
+            font-family: 'Lora';
+            font-style: normal;
+            font-weight: 700;
+            font-display: swap;
+            src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-vietnamese.woff2') format('woff2');
+            unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+        }
+
+        @font-face {
+            font-family: 'Lora';
+            font-style: normal;
+            font-weight: 700;
+            font-display: swap;
+            src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-latin-ext.woff2') format('woff2');
+            unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+        }
+
+        @font-face {
+            font-family: 'Lora';
+            font-style: normal;
+            font-weight: 700;
+            font-display: swap;
+            src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-latin.woff2') format('woff2');
+            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+        }
+
+        @font-face {
+            font-family: 'Lora';
+            font-style: normal;
+            font-weight: 600;
+            font-display: swap;
+            src: local('Lora SemiBold'), local('Lora-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-semibold-latin.woff2') format('woff2');
+            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+        }
+
+        @font-face {
+            font-family: 'Oxygen Mono';
+            font-style: normal;
+            font-weight: 400;
+            font-display: swap;
+            src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin-ext.woff2') format('woff2');
+            unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+        }
+
+        @font-face {
+            font-family: 'Oxygen Mono';
+            font-style: normal;
+            font-weight: 400;
+            font-display: swap;
+            src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin.woff2') format('woff2');
+            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+        }
+        }
+
+        @font-face {
+            font-family: 'Sofia Sans Semi Condensed';
+            font-style: italic;
+            font-weight: 1 1000;
+            src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-cyrillic-ext.woff2') format('woff2');
+            unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+        }
+
+        @font-face {
+            font-family: 'Sofia Sans Semi Condensed';
+            font-style: italic;
+            font-weight: 1 1000;
+            src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-cyrillic.woff2') format('woff2');
+            unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+        }
+
+        @font-face {
+            font-family: 'Sofia Sans Semi Condensed';
+            font-style: italic;
+            font-weight: 1 1000;
+            src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-greek.woff2') format('woff2');
+            unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+        }
+
+        @font-face {
+            font-family: 'Sofia Sans Semi Condensed';
+            font-style: italic;
+            font-weight: 1 1000;
+            src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-latin-ext.woff2') format('woff2');
+            unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+        }
+
+        @font-face {
+            font-family: 'Sofia Sans Semi Condensed';
+            font-style: italic;
+            font-weight: 1 1000;
+            src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-latin.woff2') format('woff2');
+            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+        }
+
+        @font-face {
+            font-family: 'Sofia Sans Semi Condensed';
+            font-style: normal;
+            font-weight: 1 1000;
+            src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-cyrillic-ext.woff2') format('woff2');
+            unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+        }
+
+        @font-face {
+            font-family: 'Sofia Sans Semi Condensed';
+            font-style: normal;
+            font-weight: 1 1000;
+            src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-cyrillic.woff2') format('woff2');
+            unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+        }
+
+        @font-face {
+            font-family: 'Sofia Sans Semi Condensed';
+            font-style: normal;
+            font-weight: 1 1000;
+            src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-greek.woff2') format('woff2');
+            unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+        }
+
+        @font-face {
+            font-family: 'Sofia Sans Semi Condensed';
+            font-style: normal;
+            font-weight: 1 1000;
+            src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-latin-ext.woff2') format('woff2');
+            unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+        }
+
+        @font-face {
+            font-family: 'Sofia Sans Semi Condensed';
+            font-style: normal;
+            font-weight: 1 1000;
+            src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-latin.woff2') format('woff2');
+            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+        }
+
+        :root {
+            color-scheme: light dark;
+            --background-color: #fff;
+            --text-color: #222;
+            --title-color: #191919;
+            --link-color: #2a6496;
+            --highlight-color: #f9f9f9;
+            --line-color: #eee;
+            --pilcrow-weak: #ddd;
+            --pilcrow-strong: #bbb;
+            --small-font-size: 14.5px;
+            --font-mono: 'Oxygen Mono', monospace;
+            --font-title: "Sofia Sans Semi Condensed", sans-serif;
+            scrollbar-color: #bbb #eee;
+        }
+
+        body {
+            max-width: 600px;
+            margin: 75px auto;
+            padding: 0 5px;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            font: 16px/22px "Lora", serif;
+            scroll-behavior: smooth;
+        }
+
+        .ears {
+            display: none;
+        }
+
+        /* headings */
+        section {
+            clear: both;
+        }
+
+        .section-number {
+            padding-right: 0.5em;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: var(--font-title);
+            font-weight: 680;
+            margin: 0.8em 0 0.3em;
+            font-size-adjust: 0.5;
+            color: var(--title-color);
+        }
+
+        h1 {
+            &#title {
+                font-size: 32px;
+                line-height: 40px;
+                clear: both;
+                margin: 1.5em 0 0.2em;
+            }
+
+            &#rfcnum {
+                margin: 1.5em 0 0.2em;
+
+                &+h1#title {
+                    margin: 0.2em 0;
+                }
+            }
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-size: 22px;
+            line-height: 27px;
+        }
+
+        h4,
+        h5,
+        h6 {
+            font-size: 20px;
+            line-height: 24px;
+        }
+
+        /* general structure */
+        .author {
+            padding-bottom: 0.3em;
+            vertical-align: top;
+        }
+
+        #abstract+p {
+            font-size: 18px;
+            line-height: 24px;
+
+            & code,
+            & samp,
+            & tt {
+                font-size: 16px;
+                line-height: 0;
+            }
+        }
+
+        p {
+            padding: 0;
+            margin: 0.5em 0;
+            text-align: left;
+        }
+
+        div {
+            margin: 0;
+        }
+
+        .alignRight {
+            margin: 1em 0;
+
+            &.art-text {
+                background-color: var(--highlight-color);
+                border: 1px solid var(--line-color);
+                border-radius: 3px;
+                padding: 0.5em 1em 0;
+                margin-bottom: 0.5em;
+
+                & pre {
+                    padding: 0;
+                    width: auto;
+                }
+            }
+
+            &>*:first-child {
+                border: none;
+                margin: 0;
+                float: right;
+                clear: both;
+            }
+
+            &>*:nth-child(2) {
+                clear: both;
+                display: block;
+                border: none;
+            }
+        }
+
+        svg {
+            display: block;
+
+            /* font-family isn't space-separated, but =~ will have to do */
+            &[font-family~="monospace" i],
+            & [font-family~="monospace" i] {
+                font-family: var(--font-mono);
+            }
+        }
+
+        .alignCenter {
+            margin: 1em 0;
+
+            &.art-text {
+                background-color: var(--highlight-color);
+                border: 1px solid var(--line-color);
+                border-radius: 3px;
+                padding: 0.5em 1em 0;
+                margin-bottom: 0.5em;
+
+                & pre {
+                    padding: 0;
+                    width: auto;
+                }
+            }
+
+            &>*:first-child {
+                border: none;
+                /* this isn't optimal, but it's an existence proof.  PrinceXML doesn't
+       support flexbox yet.
+    */
+                display: table;
+                margin: 0 auto;
+            }
+        }
+
+        /* lists */
+        ol,
+        ul {
+            padding: 0;
+            margin: 0 0 0.5em 2em;
+
+            & :is(ol, ul) {
+                margin-left: 1em;
+            }
+        }
+
+        li {
+            margin: 0 0 0.25em 0;
+        }
+
+        ul.empty,
+        .ulEmpty {
+            list-style-type: none;
+
+            & li {
+                margin-top: 0.5em;
+            }
+        }
+
+        :is(ul, ol).compact,
+        .ulCompact,
+        .olCompact {
+            margin: 0 0 0 2em;
+
+            & li {
+                margin: 0;
+
+                & :first-child {
+                    margin-top: 0;
+                }
+
+                & :last-child {
+                    margin-bottom: 0;
+                }
+            }
+        }
+
+        /* definition lists */
+        dl {
+            clear: left;
+            --indent: 3ch;
+
+            /* --indent: attr(indent ch); not supported in any browser, but we can dream */
+            &.olPercent {
+                --indent: 5ch;
+
+                &>dt {
+                    min-width: calc(var(--indent) - 2ch);
+                    float: none;
+                }
+            }
+
+            dl>dd>& {
+                margin-top: 0.5em;
+                margin-bottom: 0;
+            }
+
+            &:not(.dlNewline)>dt {
+                float: left;
+                margin-right: 2ch;
+                min-width: 8ch;
+            }
+
+            &>dd {
+                margin-bottom: .8em;
+                margin-left: var(--indent) !important;
+                /* stupid element overrides */
+                min-height: 2ex;
+            }
+        }
+
+        :is(dl.compact, .dlCompact)>dd {
+            margin-bottom: 0;
+
+            &> :is(:first-child, .break:first-child + *) {
+                margin-top: 0;
+            }
+
+            &> :is(:last-child) {
+                margin-bottom: 0;
+            }
+        }
+
+        :is(dd, span).break {
+            display: none;
+        }
+
+        /* links */
+        a {
+            text-decoration: none;
+
+            &[href] {
+                color: var(--link-color);
+
+                &:hover {
+                    text-decoration: underline;
+                }
+
+                &.selfRef {
+                    color: var(--text-color);
+
+                    &:hover {
+                        text-decoration: none;
+                        background-color: var(--highlight-color);
+                    }
+                }
+            }
+        }
+
+        .iref+a[href].internal {
+            color: var(--text-color);
+        }
+
+        a.xref:is(.cite, .auto),
+        :is(#status-of-memo, #copyright) a {
+            white-space: nowrap;
+        }
+
+        /* Figures */
+        tt,
+        code,
+        pre {
+            background-color: var(--highlight-color);
+            font: 14px/22px var(--font-mono);
+        }
+
+        tt,
+        code {
+            /* changing the font for inline elements leads to different ascender
+     and descender heights; as we want to retain baseline alignment,
+     remove leading to avoid altering the final height of lines
+     note: this fails if these blocks take an entire line,
+     a different solution would be great */
+            line-height: 0;
+        }
+
+        :is(h1, h2, h3, h4, h5, h6) :is(tt, code) {
+            font-size: 84%;
+        }
+
+        pre {
+            border: 1px solid var(--line-color);
+            font-size: 13.5px;
+            line-height: 16px;
+            letter-spacing: -0.2px;
+            margin: 5px;
+            padding: 5px;
+        }
+
+        img {
+            max-width: 100%;
+        }
+
+        figure {
+            margin: 0.5em 0;
+            padding: 0;
+
+            & blockquote {
+                margin: 0.8em 0.4em 0.4em;
+            }
+        }
+
+        figcaption,
+        caption {
+            font-style: italic;
+            margin: 0.5em 1.5em;
+            text-align: left;
+            caption-side: bottom;
+        }
+
+        @media screen {
+
+            /* Auto-collapse boilerplate. */
+            :is(#status-of-memo, #copyright) {
+                & p {
+                    margin: -2px 0;
+                    max-height: 0;
+                    transition: max-height 2s ease, margin 0.5s ease 0.5s;
+                    overflow: hidden;
+                }
+
+                &:hover p,
+                & h2:target~p {
+                    margin: 0.5em 0;
+                    max-height: 500px;
+                    overflow: auto;
+                }
+            }
+
+            pre,
+            svg {
+                display: inline-block;
+                /* In the horizontal direction, sometimes people make over-sized figures.
+       Scrollbars for those is therefore necessary: auto adds them as necessary..
+       In the vertical direction, the line-height can combine with the font
+       asender/descender height to produce scrollbars: hidden avoids that. */
+                overflow: auto hidden;
+            }
+
+            pre {
+                max-width: 100%;
+                width: calc(100% - 22px - 1em);
+            }
+
+            svg {
+                max-width: calc(100% - 22px - 1em);
+            }
+
+            figure pre {
+                display: block;
+                width: calc(100% - 25px);
+            }
+
+            :is(pre, svg)+.pilcrow {
+                display: inline-block;
+                vertical-align: text-bottom;
+                padding-bottom: 8px;
+            }
+        }
+
+        /* aside, blockquote */
+        aside,
+        blockquote {
+            margin-left: 0;
+            padding: 0 2em;
+            font-style: italic;
+        }
+
+        blockquote {
+            margin: 1em 0;
+            border-left: 2px var(--pilcrow-strong) solid;
+        }
+
+        cite {
+            display: block;
+            text-align: right;
+            font-style: italic;
+        }
+
+        /* tables */
+        table {
+            width: auto;
+            max-width: 100%;
+            margin: 0 0 1em;
+            border-collapse: collapse;
+
+            &.right {
+                margin-left: auto;
+            }
+
+            &.center {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            &.left {
+                margin-right: auto;
+            }
+
+            & .text-left {
+                text-align: left;
+            }
+
+            & .text-center {
+                text-align: center;
+            }
+
+            & .text-right {
+                text-align: right;
+            }
+
+            & caption {
+                margin: 0;
+                padding: 3px 0 3px 1em;
+            }
+
+            & p {
+                margin: 0;
+            }
+        }
+
+        thead,
+        tbody {
+            border: 1px solid var(--line-color);
+        }
+
+        th,
+        td {
+            text-align: left;
+            vertical-align: top;
+            padding: 5px 10px;
+        }
+
+        th {
+            background-color: var(--line-color);
+        }
+
+        :is(tr:nth-child(2n), thead+tbody > tr:nth-child(2n+1))>td {
+            background-color: var(--background-color);
+        }
+
+        :is(tr:nth-child(2n+1), thead+tbody > tr:nth-child(2n))>td {
+            background-color: var(--highlight-color);
+        }
+
+        /* pilcrow */
+        a.pilcrow {
+            margin-left: 3px;
+            opacity: 0.2;
+            user-select: none;
+
+            &[href] {
+                color: var(--pilcrow-weak);
+
+                &:hover {
+                    text-decoration: none;
+                }
+            }
+
+            @media not print {
+
+                :hover>&,
+                &:focus {
+                    opacity: 1;
+                }
+
+                &[href]:hover {
+                    color: var(--pilcrow-strong);
+                    background-color: transparent;
+                }
+            }
+
+            @media print {
+                display: none;
+            }
+        }
+
+        /* misc */
+        hr {
+            border: 0;
+            border-top: 1px solid var(--line-color);
+        }
+
+        .bcp14 {
+            font-variant: small-caps;
+            font-weight: 600;
+            font-size: var(--small-font-size);
+        }
+
+        .role {
+            font-variant: all-small-caps;
+        }
+
+        sub,
+        sup {
+            line-height: 1;
+            font-size: 80%;
+        }
+
+        /* info block */
+        #identifiers {
+            margin: 0;
+            font-size: var(--small-font-size);
+            line-height: 18px;
+            --identifier-width: 15ch;
+
+            & dt {
+                width: var(--identifier-width);
+                min-width: var(--identifier-width);
+                clear: left;
+                float: left;
+                text-align: right;
+                margin-right: 1ch;
+            }
+
+            & dd {
+                margin: 0;
+                margin-left: calc(1em + var(--identifier-width)) !important;
+                min-width: 5em;
+            }
+
+            & .authors {
+                & .author {
+                    display: inline-block;
+                    margin-right: 1.5em;
+                }
+
+                & .org {
+                    font-style: italic;
+                }
+            }
+        }
+
+        /* The prepared/rendered info at the very bottom of the page */
+        .docInfo {
+            color: #999;
+            font-size: 0.9em;
+            font-style: italic;
+            margin-top: 2em;
+
+            & .prepared {
+                float: right;
+            }
+        }
+
+        /* table of contents */
+        #toc {
+            padding: 0.75em 0 2em 0;
+            margin-bottom: 1em;
+
+            & nav {
+                & ul {
+                    margin: 0 0.5em 0 0;
+                    padding: 0;
+                    list-style: none;
+                }
+
+                & li {
+                    line-height: 1.3em;
+                    margin: 2px 0;
+                    padding-left: 1.2em;
+                    text-indent: -1.2em;
+                }
+            }
+
+            & a.xref {
+                white-space: normal;
+            }
+        }
+
+        .references {
+            &>dt {
+                text-align: right;
+                font-weight: bold;
+                min-width: 10ch;
+                margin-right: 1.5ch;
+
+                &:target::before {
+                    content: "⇒";
+                    margin: 0 10px 0 -25px;
+                }
+            }
+
+            &>dd {
+                margin-left: 12ch !important;
+                overflow: visible;
+
+                & .refInstance {
+                    margin-bottom: 0.8em;
+                }
+
+                & .ascii {
+                    margin-bottom: 0.25em;
+                }
+            }
+        }
+
+        #rfc\.index\.index+ul {
+            margin-left: 0;
+        }
+
+        /* authors */
+        address.vcard {
+            font-style: normal;
+            max-width: 20em;
+            margin: 1em auto 1em 0;
+
+            & .nameRole {
+                font-weight: 700;
+                margin-left: 0;
+            }
+
+            & .label {
+                margin: 0.5em 0;
+            }
+
+            & .type {
+                display: none;
+            }
+
+            & .alternative-contact {
+                margin: 0.5em 0 0.25em 0;
+            }
+
+            & .non-ascii {
+                margin: 0 0 0 2em;
+            }
+
+            & div.left {
+                text-align: left;
+            }
+
+            & div.right {
+                text-align: right;
+            }
+        }
+
+        hr.addr {
+            border-top: 1px dashed;
+            margin: 0;
+            color: #ddd;
+            max-width: calc(100% - 16px);
+        }
+
+        @media (min-width: 500px) {
+            #authors-addresses {
+                &>section {
+                    column-count: 2;
+                    column-gap: 20px;
+                }
+
+                &>section>h2 {
+                    column-span: all;
+                }
+
+                /* hack for break-inside: avoid-column */
+                & address {
+                    display: inline-block;
+                    break-inside: avoid-column;
+                }
+            }
+        }
+
+        /* Comments */
+        .rfcEditorRemove {
+            & p:first-of-type {
+                font-style: italic;
+            }
+        }
+
+        .cref {
+            background-color: rgba(249, 232, 105, 0.3);
+            padding: 2px 4px;
+        }
+
+        .crefSource {
+            font-style: italic;
+        }
+
+        @media screen {
+            #toc {
+                & nav {
+                    font-family: var(--font-title);
+                    font-weight: 360;
+
+                    &>ul {
+                        margin-bottom: 2em;
+                    }
+
+                    & ul {
+                        margin: 0 0 0 4px;
+
+                        & :is(p, li) {
+                            margin: 2px 0;
+                        }
+                    }
+                }
+
+                & a.toplink {
+                    float: right;
+                }
+            }
+        }
+
+        @media not screen {
+            #toc a.toplink {
+                display: none;
+            }
+        }
+
+
+        /* TOC layout for smaller screens */
+        @media screen and (max-width: 929px) {
+            #toc {
+                position: fixed;
+                z-index: 2;
+                top: 0;
+                right: 0;
+                padding: 1px 0 0 0;
+                margin: 0;
+                border-bottom: 1px solid #ccc;
+                opacity: 0.6;
+
+                & h2 {
+                    margin: 0;
+                    padding: 2px 0 2px 6px;
+                    padding-right: 1em;
+                    font-size: 18px;
+                    line-height: 24px;
+                    min-width: 190px;
+                    text-align: right;
+                    background-color: #444;
+                    color: white;
+                    cursor: pointer;
+
+                    &::before {
+                        /* css hamburger */
+                        float: right;
+                        position: relative;
+                        width: 1em;
+                        height: 1px;
+                        left: -164px;
+                        margin: 8px 0 0 0;
+                        background: white none repeat scroll 0 0;
+                        box-shadow: 0 4px 0 0 white, 0 8px 0 0 white;
+                        content: "";
+                    }
+                }
+
+                & nav {
+                    display: none;
+                    background-color: var(--background-color);
+                    padding: 0.5em 1em 1em;
+                    overflow: auto;
+                    overscroll-behavior: contain;
+                    height: calc(100vh - 48px);
+                    border-left: 1px solid #ddd;
+                }
+
+                &.active {
+                    opacity: 1;
+
+                    & nav {
+                        display: block;
+                    }
+                }
+
+                /* Make the collapsed ToC header render white on gray also when it's a link */
+                & h2 a,
+                & h2 a:is(:link, :focus, :hover),
+                & a.toplink,
+                & a.toplink:hover {
+                    color: white;
+                    background-color: #444;
+                    text-decoration: none;
+                }
+
+                & a.toplink {
+                    margin: 2px 0.5em 0;
+                }
+            }
+        }
+
+        /* TOC layout for wide screens */
+        @media screen and (min-width: 930px) {
+            body {
+                padding-right: 360px;
+                padding-right: calc(min(180px + 20%, 500px));
+            }
+
+            #toc {
+                position: fixed;
+                bottom: 0;
+                right: 0;
+                right: calc(50vw - 480px);
+                width: 312px;
+                margin: 0;
+                padding: 0;
+                z-index: 1;
+
+                & h2 {
+                    margin: 0;
+                    padding: 0.25em 1em 1em 0;
+                }
+
+                & nav {
+                    display: block;
+                    height: calc(90vh - 84px);
+                    bottom: 0;
+                    padding: 0.5em 0 2em;
+                    overflow: auto;
+                    overscroll-behavior: contain;
+                    scrollbar-width: thin;
+                }
+
+                & a.toplink {
+                    margin: 8px 0.5em 0;
+                }
+            }
+
+            img {
+                /* future proofing */
+                max-width: 100%;
+                height: auto;
+            }
+        }
+
+        /* pagination */
+        @media print {
+            body {
+                width: 100%;
+            }
+
+            p {
+                orphans: 3;
+                widows: 3;
+            }
+
+            #n-copyright-notice {
+                border-bottom: none;
+            }
+
+            #toc {
+                page-break-before: always;
+                border-top: none;
+                padding-top: 0;
+            }
+
+            #n-introduction {
+                page-break-before: always;
+            }
+
+            figure,
+            pre,
+            .vcard {
+                page-break-inside: avoid;
+            }
+
+            h1,
+            h2,
+            h3,
+            h4,
+            h5,
+            h6 {
+                page-break-after: avoid;
+            }
+
+            :is(h2, h3, h4, h5, h6)+*,
+            dd {
+                page-break-before: avoid;
+            }
+
+            pre {
+                white-space: pre-wrap;
+                word-wrap: break-word;
+                font-size: 10pt;
+            }
+
+            table {
+                border: 1px solid #ddd;
+            }
+
+            td {
+                border-top: 1px solid #ddd;
+            }
+        }
+
+        @page :first {
+            padding-top: 0;
+
+            @top-left {
+                content: normal;
+                border: none;
+            }
+
+            @top-center {
+                content: normal;
+                border: none;
+            }
+
+            @top-right {
+                content: normal;
+                border: none;
+            }
+        }
+
+        @page {
+            size: A4;
+            margin-bottom: 45mm;
+            padding-top: 20px;
+        }
+
+        /* Dark mode. */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --background-color: #121212;
+                --text-color: #f0f0f0;
+                --title-color: #fff;
+                --link-color: #4da4f0;
+                --highlight-color: #282828;
+                --line-color: #444;
+                --pilcrow-weak: #444;
+                --pilcrow-strong: #666;
+                scrollbar-color: #777 #333;
+            }
+        }
+
+        /* SVG Trick: a prefix match works because only black and white are allowed */
+        svg {
+            & :is([stroke="black"], [stroke^="#000"]) {
+                stroke: var(--text-color);
+            }
+
+            & :is([stroke="white"], [stroke^="#fff"]) {
+                stroke: var(--background-color);
+            }
+
+            & :is([fill="black"], [fill^="#000"], :not([fill])) {
+                fill: var(--text-color);
+            }
+
+            & :is([fill="white"], [fill^="#fff"]) {
+                fill: var(--background-color);
+            }
+        }
+    </style>
+
+</head>
+
+<body class="xml2rfc">
+    <table class="ears">
+        <thead>
+            <tr>
+                <td class="left">Internet 草案</td>
+                <td class="center">No-Vary-Search</td>
+                <td class="right">2026 年 6 月</td>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <td class="left">Denicola 等人</td>
+                <td class="center">2026 年 12 月 20 日到期</td>
+                <td class="right">[页]</td>
+            </tr>
+        </tfoot>
+    </table>
+    <div id="external-metadata" class="document-information"></div>
+    <div id="internal-metadata" class="document-information">
+        <dl id="identifiers">
+            <dt class="label-workgroup">工作组：</dt>
+            <dd class="workgroup">超文本传输协议</dd>
+            <dt class="label-internet-draft">Internet 草案：</dt>
+            <dd class="internet-draft">draft-ietf-httpbis-no-vary-search-latest</dd>
+            <dt class="label-published">发布日期：</dt>
+            <dd class="published">
+                <time datetime="2026-06-18" class="published">2026 年 6 月 18 日</time>
+            </dd>
+            <dt class="label-intended-status">预期状态：</dt>
+            <dd class="intended-status">标准轨道</dd>
+            <dt class="label-expires">到期：</dt>
+            <dd class="expires"><time datetime="2026-12-20">2026 年 12 月 20 日</time></dd>
+            <dt class="label-authors">作者：</dt>
+            <dd class="authors">
+                <div class="author">
+                    <div class="author-name">D. Denicola</div>
+                    <div class="org">Google LLC</div>
+                </div>
+                <div class="author">
+                    <div class="author-name">J. Roman</div>
+                    <div class="org">Google LLC</div>
+                </div>
+                <div class="author">
+                    <div class="author-name">N. Jaju, <span class="editor">编。</span>
+                    </div>
+                    <div class="org">Google LLC</div>
+                </div>
+            </dd>
+        </dl>
+    </div>
+    <h1 id="title">No-Vary-Search HTTP 缓存扩展</h1>
+    <section id="section-abstract">
+        <h2 id="abstract"><a href="#abstract" class="selfRef">摘要</a></h2>
+        <p id="section-abstract-1">本规范定义了对 HTTP 缓存的扩展，改变 URI 查询
+            参数影响缓存的方式。<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+    </section>
+    <section class="note rfcEditorRemove" id="section-note.1">
+        <h2 id="name-about-this-document">
+            <a href="#name-about-this-document" class="section-name selfRef">关于本文档</a>
+        </h2>
+        <p id="section-note.1-1">本说明将在作为 RFC 发布前移除。<a href="#section-note.1-1" class="pilcrow">¶</a></p>
+        <p id="section-note.1-2">
+            本草案的最新修订版可在 <span><a
+                    href="https://httpwg.org/http-extensions/draft-ietf-httpbis-no-vary-search.html">https://httpwg.org/http-extensions/draft-ietf-httpbis-no-vary-search.html</a></span>
+            找到。
+            本文档的状态信息可在 <span><a
+                    href="https://datatracker.ietf.org/doc/draft-ietf-httpbis-no-vary-search/">https://datatracker.ietf.org/doc/draft-ietf-httpbis-no-vary-search/</a></span>
+            找到。<a href="#section-note.1-2" class="pilcrow">¶</a></p>
+        <p id="section-note.1-3">
+            本文档的讨论在
+            HTTP 工作组邮件列表（<span><a href="mailto:ietf-http-wg@w3.org">mailto:ietf-http-wg@w3.org</a></span>）上进行，
+            该邮件列表归档于 <span><a
+                    href="https://lists.w3.org/Archives/Public/ietf-http-wg/">https://lists.w3.org/Archives/Public/ietf-http-wg/</a></span>。
+            工作组信息可在 <span><a href="https://httpwg.org/">https://httpwg.org/</a></span> 找到。<a href="#section-note.1-3"
+                class="pilcrow">¶</a></p>
+        <p id="section-note.1-4">本草案的源文件和问题跟踪器可在
+            <span><a
+                    href="https://github.com/httpwg/http-extensions/labels/no-vary-search">https://github.com/httpwg/http-extensions/labels/no-vary-search</a></span>
+            找到。<a href="#section-note.1-4" class="pilcrow">¶</a>
+        </p>
+    </section>
+    <div id="status-of-memo">
+        <section id="section-boilerplate.1">
+            <h2 id="name-status-of-this-memo">
+                <a href="#name-status-of-this-memo" class="section-name selfRef">本备忘录的状态</a>
+            </h2>
+            <p id="section-boilerplate.1-1">
+                本 Internet 草案完全按照
+                BCP 78 和 BCP 79 的规定提交。<a href="#section-boilerplate.1-1" class="pilcrow">¶</a></p>
+            <p id="section-boilerplate.1-2">
+                Internet 草案是互联网工程任务组
+                （IETF）的工作文档。请注意，其他组织也可以将工作
+                文档作为 Internet 草案分发。当前 Internet 草案列表位于
+                <span><a
+                        href="https://datatracker.ietf.org/drafts/current/">https://datatracker.ietf.org/drafts/current/</a></span>。<a
+                    href="#section-boilerplate.1-2" class="pilcrow">¶</a>
+            </p>
+            <p id="section-boilerplate.1-3">
+                Internet 草案是有效期最长为六个月的草案文档，
+                并且可在任何时候由其他文档更新、替换或废止。将
+                Internet 草案用作参考材料，或以“进行中的工作”之外的方式引用它们，
+                都是不适当的。<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
+            <p id="section-boilerplate.1-4">
+                本 Internet 草案将于 2026 年 12 月 20 日到期。<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        </section>
+    </div>
+    <div id="copyright">
+        <section id="section-boilerplate.2">
+            <h2 id="name-copyright-notice">
+                <a href="#name-copyright-notice" class="section-name selfRef">Copyright Notice</a>
+            </h2>
+            <p id="section-boilerplate.2-1">
+                Copyright (c) 2026 IETF Trust and the persons identified as the
+                document authors. All rights reserved.<a href="#section-boilerplate.2-1" class="pilcrow">¶</a></p>
+            <p id="section-boilerplate.2-2">
+                This document is subject to BCP 78 and the IETF Trust's Legal
+                Provisions Relating to IETF Documents
+                (<span><a href="https://trustee.ietf.org/license-info">https://trustee.ietf.org/license-info</a></span>)
+                in effect on the date of
+                publication of this document. Please review these documents
+                carefully, as they describe your rights and restrictions with
+                respect to this document. Code Components extracted from this
+                document must include Revised BSD License text as described in
+                Section 4.e of the Trust Legal Provisions and are provided without
+                warranty as described in the Revised BSD License.<a href="#section-boilerplate.2-2"
+                    class="pilcrow">¶</a></p>
+        </section>
+    </div>
+    <div id="toc">
+        <section id="section-toc.1">
+            <a href="#" onclick="scroll(0,0)" class="toplink">▲</a>
+            <h2 id="name-table-of-contents">
+                <a href="#name-table-of-contents" class="section-name selfRef">目录</a>
+            </h2>
+            <nav class="toc">
+                <ul class="compact toc ulBare ulEmpty">
+                    <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1">
+                        <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1"
+                                class="auto internal xref">1</a>. <a href="#name-introduction"
+                                class="internal xref">引言</a></p>
+                    </li>
+                    <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2">
+                        <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2"
+                                class="auto internal xref">2</a>. <a href="#name-conventions-and-definitions"
+                                class="internal xref">约定和定义</a></p>
+                    </li>
+                    <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
+                        <p id="section-toc.1-1.3.1" class="keepWithNext"><a href="#section-3"
+                                class="auto internal xref">3</a>. <a href="#name-http-header-field-definitio"
+                                class="internal xref">HTTP 标头字段定义</a></p>
+                    </li>
+                    <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
+                        <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>. <a
+                                href="#name-data-model" class="internal xref">数据模型</a></p>
+                    </li>
+                    <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
+                        <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>. <a
+                                href="#name-parsing" class="internal xref">解析</a></p>
+                        <ul class="compact toc ulBare ulEmpty">
+                            <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1">
+                                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1"
+                                        class="auto internal xref">5.1</a>. <a href="#name-parse-a-url-variation-confi"
+                                        class="internal xref">解析 URL 变体配置</a></p>
+                            </li>
+                            <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2">
+                                <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2"
+                                        class="auto internal xref">5.2</a>. <a href="#name-obtain-a-url-variation-conf"
+                                        class="internal xref">获取 URL 变体配置</a></p>
+                                <ul class="compact toc ulBare ulEmpty">
+                                    <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2.2.1">
+                                        <p id="section-toc.1-1.5.2.2.2.1.1"><a href="#section-5.2.1"
+                                                class="auto internal xref">5.2.1</a>. <a href="#name-examples"
+                                                class="internal xref">示例</a></p>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.3">
+                                <p id="section-toc.1-1.5.2.3.1"><a href="#section-5.3"
+                                        class="auto internal xref">5.3</a>. <a href="#name-parse-a-key"
+                                        class="internal xref">解析键</a></p>
+                                <ul class="compact toc ulBare ulEmpty">
+                                    <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.3.2.1">
+                                        <p id="section-toc.1-1.5.2.3.2.1.1"><a href="#section-5.3.1"
+                                                class="auto internal xref">5.3.1</a>. <a href="#name-examples-2"
+                                                class="internal xref">示例</a></p>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
+                        <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>. <a
+                                href="#name-comparing" class="internal xref">比较</a></p>
+                        <ul class="compact toc ulBare ulEmpty">
+                            <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.1">
+                                <p id="section-toc.1-1.6.2.1.1"><a href="#section-6.1"
+                                        class="auto internal xref">6.1</a>. <a href="#name-examples-3"
+                                        class="internal xref">示例</a></p>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
+                        <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>. <a
+                                href="#name-caching" class="internal xref">缓存</a></p>
+                    </li>
+                    <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
+                        <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>. <a
+                                href="#name-security-considerations" class="internal xref">安全考虑事项</a>
+                        </p>
+                    </li>
+                    <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9">
+                        <p id="section-toc.1-1.9.1"><a href="#section-9" class="auto internal xref">9</a>. <a
+                                href="#name-privacy-considerations" class="internal xref">隐私考虑事项</a></p>
+                    </li>
+                    <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
+                        <p id="section-toc.1-1.10.1"><a href="#section-10" class="auto internal xref">10</a>. <a
+                                href="#name-iana-considerations" class="internal xref">IANA 考虑事项</a></p>
+                        <ul class="compact toc ulBare ulEmpty">
+                            <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.1">
+                                <p id="section-toc.1-1.10.2.1.1"><a href="#section-10.1"
+                                        class="auto internal xref">10.1</a>. <a href="#name-http-field-names"
+                                        class="internal xref">HTTP 字段名称</a></p>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
+                        <p id="section-toc.1-1.11.1"><a href="#section-11" class="auto internal xref">11</a>. <a
+                                href="#name-references" class="internal xref">参考文献</a></p>
+                        <ul class="compact toc ulBare ulEmpty">
+                            <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.1">
+                                <p id="section-toc.1-1.11.2.1.1"><a href="#section-11.1"
+                                        class="auto internal xref">11.1</a>. <a href="#name-normative-references"
+                                        class="internal xref">规范性参考文献</a></p>
+                            </li>
+                            <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.2">
+                                <p id="section-toc.1-1.11.2.2.1"><a href="#section-11.2"
+                                        class="auto internal xref">11.2</a>. <a href="#name-informative-references"
+                                        class="internal xref">资料性参考文献</a></p>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
+                        <p id="section-toc.1-1.12.1"><a href="#appendix-A" class="auto internal xref"></a><a
+                                href="#name-acknowledgments" class="internal xref">致谢</a></p>
+                    </li>
+                    <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13">
+                        <p id="section-toc.1-1.13.1"><a href="#appendix-B" class="auto internal xref"></a><a
+                                href="#name-index" class="internal xref">索引</a></p>
+                    </li>
+                    <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14">
+                        <p id="section-toc.1-1.14.1"><a href="#appendix-C" class="auto internal xref"></a><a
+                                href="#name-authors-addresses" class="internal xref">作者地址</a></p>
+                    </li>
+                </ul>
+            </nav>
+        </section>
+    </div>
+    <div id="introduction">
+        <section id="section-1">
+            <h2 id="name-introduction">
+                <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction"
+                    class="section-name selfRef">引言</a>
+            </h2>
+            <p id="section-1-1">HTTP 缓存 <span>[<a href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]</span>
+                基于复用在若干缓存键上匹配的资源，其中最重要的是所呈现的目标 URI（<span><a href="https://rfc-editor.org/rfc/rfc9110#section-7.1"
+                        class="relref">[<a href="#HTTP" class="cite xref">HTTP</a>] 的第 7.1 节</span>）。然而，
+                有时多个 URI 可以表示同一资源。这会导致缓存并不总是像本可做到的那样有用：如果缓存中包含某个 URI 下的响应，
+                但随后又在另一个 URI 下请求该响应，则缓存版本将被忽略。<a href="#section-1-1" class="pilcrow">¶</a>
+            </p>
+            <p id="section-1-2">`No-Vary-Search` 响应标头字段定义了一种缓存扩展，如
+                <span><a href="https://rfc-editor.org/rfc/rfc9111#section-4" class="relref">[<a href="#HTTP-CACHING"
+                            class="cite xref">HTTP-CACHING</a>] 的第 4 节</span> 所述，
+                它处理这一一般问题的一个特定子集，即仅在某些查询参数上不同的 URI 标识同一资源的情形。
+                它允许资源声明查询组件的某些或全部部分不会在语义上影响所提供的响应，因此可在缓存匹配目的中被忽略。
+                例如，如果查询参数的顺序不会影响所标识的资源，则可使用以下方式表示<a href="#section-1-2" class="pilcrow">¶</a>
+            </p>
+            <div class="lang-http-message sourcecode" id="section-1-3">
+                <pre>
+No-Vary-Search: key-order
+</pre><a href="#section-1-3" class="pilcrow">¶</a>
+            </div>
+            <p id="section-1-4">如果特定查询参数（例如用于分析的参数）不会在语义上影响所提供的资源，
+                则可使用以下方式表示<a href="#section-1-4" class="pilcrow">¶</a></p>
+            <div class="lang-http-message sourcecode" id="section-1-5">
+                <pre>
+No-Vary-Search: params=("utm_source" "utm_medium" "utm_campaign")
+</pre><a href="#section-1-5" class="pilcrow">¶</a>
+            </div>
+            <p id="section-1-6">如果资源反而想采用基于允许列表的方法，即只有
+                某些已知查询参数会在语义上影响所提供的响应，它们可以使用<a href="#section-1-6" class="pilcrow">¶</a></p>
+            <div class="lang-http-message sourcecode" id="section-1-7">
+                <pre>
+No-Vary-Search: except=("productId")
+</pre><a href="#section-1-7" class="pilcrow">¶</a>
+            </div>
+            <p id="section-1-8">请注意，通过发送唯一查询参数以避免取回
+                缓存响应的“缓存清除”可能会被 <code>No-Vary-Search</code> 标头字段变得无效。<a href="#section-1-8" class="pilcrow">¶</a></p>
+            <p id="section-1-9"><a href="#header-definition" class="auto internal xref">第 3 节</a> 使用 <span>[<a
+                        href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span> 框架定义新的
+                响应标头字段 <code>No-Vary-Search</code>。<a href="#data-model" class="auto internal xref">第 4 节</a> 和 <a
+                    href="#parsing" class="auto internal xref">第
+                    5 节</a> 说明字段值如何在规范中表示的数据模型，以及
+                将结构化字段解析器的原始输出解析为该数据模型的过程。<a href="#comparing" class="auto internal xref">第 6 节</a> 给出用于比较
+                两个 URL 在该标头字段影响下是否等价的关键算法；值得注意的是，它依赖
+                <span>[<a href="#WHATWG-URL" class="cite xref">WHATWG-URL</a>]</span> 中指定的
+                <a href="https://url.spec.whatwg.org/#concept-urlencoded">application/x-www-form-urlencoded</a> 格式
+                对查询组件给出的键和值分解。（因此，此
+                标头字段不适用于查询组件不遵循该格式的 URL。）最后，<a href="#caching" class="auto internal xref">第 7 节</a> 解释如何扩展 <span><a
+                        href="https://rfc-editor.org/rfc/rfc9111#section-4" class="relref">[<a href="#HTTP-CACHING"
+                            class="cite xref">HTTP-CACHING</a>] 的第 4 节</span>，以考虑这种新的等价性。<a href="#section-1-9"
+                    class="pilcrow">¶</a>
+            </p>
+        </section>
+    </div>
+    <div id="conventions-and-definitions">
+        <section id="section-2">
+            <h2 id="name-conventions-and-definitions">
+                <a href="#section-2" class="section-number selfRef">2. </a><a href="#name-conventions-and-definitions"
+                    class="section-name selfRef">约定和定义</a>
+            </h2>
+            <p id="section-2-1">本文档中的关键词“<span class="bcp14">MUST</span>”、“<span class="bcp14">MUST NOT</span>”、
+                “<span class="bcp14">REQUIRED</span>”、“<span class="bcp14">SHALL</span>”、“<span class="bcp14">SHALL
+                    NOT</span>”、“<span class="bcp14">SHOULD</span>”、“<span class="bcp14">SHOULD NOT</span>”、“<span
+                    class="bcp14">RECOMMENDED</span>”、“<span class="bcp14">NOT RECOMMENDED</span>”、
+                “<span class="bcp14">MAY</span>”和“<span class="bcp14">OPTIONAL</span>”应按
+                BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174"
+                        class="cite xref">RFC8174</a>]</span> 中的描述解释，且仅当它们
+                如此处所示以全大写形式出现时才如此解释。<a href="#section-2-1" class="pilcrow">¶</a></p>
+            <p id="section-2-2">在本文档中，术语“URI”和“URL”会根据
+                上下文互换使用。“URI”用于 <span>[<a href="#URI" class="cite xref">URI</a>]</span>、
+                <span>[<a href="#HTTP" class="cite xref">HTTP</a>]</span> 和 <span>[<a href="#HTTP-CACHING"
+                        class="cite xref">HTTP-CACHING</a>]</span> 的上下文，而“URL”用于
+                <span>[<a href="#WHATWG-URL" class="cite xref">WHATWG-URL</a>]</span> 中指定的算法上下文。<a href="#section-2-2"
+                    class="pilcrow">¶</a>
+            </p>
+            <p id="section-2-3">本文档还采用 WHATWG 和 W3C 用法中常见的一些约定和记法，
+                尤其是在涉及算法时。见 <span>[<a href="#WHATWG-INFRA" class="cite xref">WHATWG-INFRA</a>]</span>，特别是：<a
+                    href="#section-2-3" class="pilcrow">¶</a></p>
+            <ul class="normal">
+                <li class="normal" id="section-2-4.1">
+                    <p id="section-2-4.1.1">其对列表的定义，包括列表字面量记法 « 1, 2, 3 »。<a href="#section-2-4.1.1"
+                            class="pilcrow">¶</a></p>
+                </li>
+                <li class="normal" id="section-2-4.2">
+                    <p id="section-2-4.2.1">其对字符串的定义，包括它们表示为码元的方式。<a href="#section-2-4.2.1" class="pilcrow">¶</a></p>
+                </li>
+            </ul>
+            <p id="section-2-5">（其他使用的概念会通过内联引用指出。）<a href="#section-2-5" class="pilcrow">¶</a></p>
+        </section>
+    </div>
+    <div id="header-definition">
+        <section id="section-3">
+            <h2 id="name-http-header-field-definitio">
+                <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-http-header-field-definitio"
+                    class="section-name selfRef">HTTP 标头字段定义</a>
+            </h2>
+            <p id="section-3-1"><code>No-Vary-Search</code> HTTP 标头字段是一个结构化字段 <span>[<a href="#STRUCTURED-FIELDS"
+                        class="cite xref">STRUCTURED-FIELDS</a>]</span>，其值 <span class="bcp14">MUST</span>
+                是一个字典（<span><a href="https://rfc-editor.org/rfc/rfc9651#section-3.2" class="relref">[<a
+                            href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>] 的第 3.2 节</span>）。<a
+                    href="#section-3-1" class="pilcrow">¶</a></p>
+            <p id="section-3-2">它具有以下创作一致性要求：<a href="#section-3-2" class="pilcrow">¶</a></p>
+            <ul class="normal">
+                <li class="normal" id="section-3-3.1">
+                    <p id="section-3-3.1.1">如果存在，<code>key-order</code> 条目的值 <span class="bcp14">MUST</span>
+                        是布尔值（<span><a href="https://rfc-editor.org/rfc/rfc9651#section-3.3.6" class="relref">[<a
+                                    href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>] 的第 3.3.6
+                                节</span>）。<a href="#section-3-3.1.1" class="pilcrow">¶</a></p>
+                </li>
+                <li class="normal" id="section-3-3.2">
+                    <p id="section-3-3.2.1">如果存在，<code>params</code> 条目的值 <span class="bcp14">MUST</span>
+                        是字符串内列表（<span><a href="https://rfc-editor.org/rfc/rfc9651#section-3.1.1" class="relref">[<a
+                                    href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>] 的第 3.1.1
+                                节</span>）。<a href="#section-3-3.2.1" class="pilcrow">¶</a></p>
+                </li>
+                <li class="normal" id="section-3-3.3">
+                    <p id="section-3-3.3.1">如果存在，<code>except</code> 条目的值 <span class="bcp14">MUST</span>
+                        是字符串内列表（<span><a href="https://rfc-editor.org/rfc/rfc9651#section-3.1.1" class="relref">[<a
+                                    href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>] 的第 3.1.1
+                                节</span>）。<a href="#section-3-3.3.1" class="pilcrow">¶</a></p>
+                </li>
+                <li class="normal" id="section-3-3.4">
+                    <p id="section-3-3.4.1">如果 <code>params</code> 条目也存在，则 <code>except</code> 条目 <span
+                            class="bcp14">MUST NOT</span> 存在。<a href="#section-3-3.4.1" class="pilcrow">¶</a></p>
+                </li>
+            </ul>
+            <p id="section-3-4">字典 <span class="bcp14">MAY</span> 包含键不是
+                <code>key-order</code>、<code>params</code> 和 <code>except</code> 之一的条目，
+                但它们的含义不由本规范定义。本规范的实现将忽略此类条目（但未来
+                文档可能会为此类条目赋予含义）。<a href="#section-3-4" class="pilcrow">¶</a>
+            </p>
+            <aside id="section-3-5">
+                <p id="section-3-5.1">一如既往，创作一致性要求不约束
+                    实现。实现反而需要实现由 <span id="iref-obtain-a-url-variation-conf" class="iref"></span><a
+                        href="#obtain-a-url-variation-config" class="internal xref">获取 URL
+                        变体配置</a>算法（<a href="#obtain-a-url-variation-config" class="auto internal xref">第 5.2 节</a>）给出的
+                    URL 变体
+                    配置（配置）的处理模型。<a href="#section-3-5.1" class="pilcrow">¶</a></p>
+            </aside>
+        </section>
+    </div>
+    <div id="data-model">
+        <section id="section-4">
+            <h2 id="name-data-model">
+                <a href="#section-4" class="section-number selfRef">4. </a><a href="#name-data-model"
+                    class="section-name selfRef">数据模型</a>
+            </h2>
+            <p id="section-4-1"><em>URL 变体配置</em>由以下内容组成：<a href="#section-4-1" class="pilcrow">¶</a></p>
+            <span class="break"></span>
+            <dl class="dlNewline" id="section-4-2">
+                <dt id="section-4-2.1">no-vary params</dt>
+                <dd style="margin-left: 1.5em" id="section-4-2.2">
+                    <p id="section-4-2.2.1">特殊值 <strong>wildcard</strong> 或字符串列表<a href="#section-4-2.2.1"
+                            class="pilcrow">¶</a></p>
+                </dd>
+                <dd class="break"></dd>
+                <dt id="section-4-2.3">vary params</dt>
+                <dd style="margin-left: 1.5em" id="section-4-2.4">
+                    <p id="section-4-2.4.1">特殊值 <strong>wildcard</strong> 或字符串列表<a href="#section-4-2.4.1"
+                            class="pilcrow">¶</a></p>
+                </dd>
+                <dd class="break"></dd>
+                <dt id="section-4-2.5">vary on key order</dt>
+                <dd style="margin-left: 1.5em" id="section-4-2.6">
+                    <p id="section-4-2.6.1">布尔值<a href="#section-4-2.6.1" class="pilcrow">¶</a></p>
+                </dd>
+                <dd class="break"></dd>
+            </dl>
+            <p id="section-4-3"><span id="iref-default-url-variation-confi" class="iref"></span>
+                <em><span id="iref-default-url-variation-config" class="iref"></span>默认 URL 变体
+                    配置</em>是这样一种 URL 变体配置：其 no-vary params 是空列表，vary params 是
+                <strong>wildcard</strong>，且 vary on key order 为 true。<a href="#section-4-3" class="pilcrow">¶</a>
+            </p>
+            <p id="section-4-4"><span id="iref-obtain-a-url-variation-confi" class="iref"></span><a
+                    href="#obtain-a-url-variation-config" class="internal xref">获取 URL 变体配置</a>
+                算法（<a href="#obtain-a-url-variation-config" class="auto internal xref">第 5.2 节</a>）确保
+                所有 URL 变体配置都遵循以下约束：<a href="#section-4-4" class="pilcrow">¶</a></p>
+            <ul class="normal">
+                <li class="normal" id="section-4-5.1">
+                    <p id="section-4-5.1.1">当且仅当 no-vary params 是
+                        <strong>wildcard</strong> 时，vary params 是列表；且<a href="#section-4-5.1.1" class="pilcrow">¶</a>
+                    </p>
+                </li>
+                <li class="normal" id="section-4-5.2">
+                    <p id="section-4-5.2.1">当且仅当 vary params 是
+                        <strong>wildcard</strong> 时，no-vary params 是列表。<a href="#section-4-5.2.1" class="pilcrow">¶</a>
+                    </p>
+                </li>
+            </ul>
+        </section>
+    </div>
+    <div id="parsing">
+        <section id="section-5">
+            <h2 id="name-parsing">
+                <a href="#section-5" class="section-number selfRef">5. </a><a href="#name-parsing"
+                    class="section-name selfRef">解析</a>
+            </h2>
+            <div id="parse-a-url-variation-config">
+                <section id="section-5.1">
+                    <h3 id="name-parse-a-url-variation-confi">
+                        <a href="#section-5.1" class="section-number selfRef">5.1. </a><a
+                            href="#name-parse-a-url-variation-confi" class="section-name selfRef">解析 URL 变体
+                            配置</a>
+                    </h3>
+                    <p id="section-5.1-1"><span id="iref-parse-a-url-variation-confi" class="iref"></span>
+                        给定 <em>value</em>，要<em><span id="iref-parse-a-url-variation-config" class="iref"></span><a
+                                href="#parse-a-url-variation-config" class="internal xref">解析 URL 变体
+                                配置</a></em>：<a href="#section-5.1-1" class="pilcrow">¶</a></p>
+                    <ol start="1" type="1" class="normal type-1" id="section-5.1-2">
+                        <li id="section-5.1-2.1">
+                            <p id="section-5.1-2.1.1">如果 <em>value</em> 为 null，则返回 <span
+                                    id="iref-default-url-variation-config-" class="iref"></span>默认 URL 变体
+                                配置。<a href="#section-5.1-2.1.1" class="pilcrow">¶</a></p>
+                        </li>
+                        <li id="section-5.1-2.2">
+                            <p id="section-5.1-2.2.1">令 <em>result</em> 为新的 URL 变体配置。<a href="#section-5.1-2.2.1"
+                                    class="pilcrow">¶</a></p>
+                        </li>
+                        <li id="section-5.1-2.3">
+                            <p id="section-5.1-2.3.1">将 <em>result</em> 的 vary on key order 设为 true。<a
+                                    href="#section-5.1-2.3.1" class="pilcrow">¶</a></p>
+                        </li>
+                        <li id="section-5.1-2.4">
+                            <p id="section-5.1-2.4.1">如果 <em>value</em>["<code>key-order</code>"] 存在：<a
+                                    href="#section-5.1-2.4.1" class="pilcrow">¶</a></p>
+                            <ol start="1" type="1" class="normal type-1" id="section-5.1-2.4.2">
+                                <li id="section-5.1-2.4.2.1">
+                                    <p id="section-5.1-2.4.2.1.1">如果 <em>value</em>["<code>key-order</code>"] 不是
+                                        布尔值，则返回 <span id="iref-default-url-variation-config-8" class="iref"></span>默认
+                                        URL 变体配置。<a href="#section-5.1-2.4.2.1.1" class="pilcrow">¶</a></p>
+                                </li>
+                                <li id="section-5.1-2.4.2.2">
+                                    <p id="section-5.1-2.4.2.2.1">将 <em>result</em> 的 vary on key order 设为
+                                        <em>value</em>["<code>key-order</code>"] 的布尔否定。<a href="#section-5.1-2.4.2.2.1"
+                                            class="pilcrow">¶</a>
+                                    </p>
+                                </li>
+                            </ol>
+                        </li>
+                        <li id="section-5.1-2.5">
+                            <p id="section-5.1-2.5.1">如果 <em>value</em>["<code>params</code>"] 和
+                                <em>value</em>["<code>except</code>"] 均存在或均不存在，则返回 <span
+                                    id="iref-default-url-variation-config-9" class="iref"></span>默认 URL 变体
+                                配置。<a href="#section-5.1-2.5.1" class="pilcrow">¶</a>
+                            </p>
+                        </li>
+                        <li id="section-5.1-2.6">
+                            <p id="section-5.1-2.6.1">如果 <em>value</em>["<code>params</code>"] 存在：<a
+                                    href="#section-5.1-2.6.1" class="pilcrow">¶</a></p>
+                            <ol start="1" type="1" class="normal type-1" id="section-5.1-2.6.2">
+                                <li id="section-5.1-2.6.2.1">
+                                    <p id="section-5.1-2.6.2.1.1">如果 <em>value</em>["<code>params</code>"] 不是
+                                        数组，则返回 <span id="iref-default-url-variation-config-1" class="iref"></span>默认 URL
+                                        变体配置。<a href="#section-5.1-2.6.2.1.1" class="pilcrow">¶</a></p>
+                                </li>
+                                <li id="section-5.1-2.6.2.2">
+                                    <p id="section-5.1-2.6.2.2.1">如果 <em>value</em>["<code>params</code>"] 中的任一项
+                                        不是字符串，则返回 <span id="iref-default-url-variation-config-11" class="iref"></span>默认
+                                        URL 变体配置。<a href="#section-5.1-2.6.2.2.1" class="pilcrow">¶</a></p>
+                                </li>
+                                <li id="section-5.1-2.6.2.3">
+                                    <p id="section-5.1-2.6.2.3.1">将 <em>result</em> 的 no-vary params 设为
+                                        对 <em>value</em>["<code>params</code>"] 中每一项应用 <span id="iref-parse-a-key-12"
+                                            class="iref"></span><a href="#parse-a-key" class="internal xref">解析键</a>（<a
+                                            href="#parse-a-key" class="auto internal xref">第 5.3 节</a>）的结果。<a
+                                            href="#section-5.1-2.6.2.3.1" class="pilcrow">¶</a></p>
+                                </li>
+                                <li id="section-5.1-2.6.2.4">
+                                    <p id="section-5.1-2.6.2.4.1">如果 <em>result</em> 的 no-vary params 中的任一项是
+                                        错误，则返回 <span id="iref-default-url-variation-config-13" class="iref"></span>默认
+                                        URL 变体配置。<a href="#section-5.1-2.6.2.4.1" class="pilcrow">¶</a></p>
+                                </li>
+                                <li id="section-5.1-2.6.2.5">
+                                    <p id="section-5.1-2.6.2.5.1">将 <em>result</em> 的 vary params 设为
+                                        <strong>wildcard</strong>。<a href="#section-5.1-2.6.2.5.1" class="pilcrow">¶</a>
+                                    </p>
+                                </li>
+                            </ol>
+                        </li>
+                        <li id="section-5.1-2.7">
+                            <p id="section-5.1-2.7.1">否则，如果 <em>value</em>["<code>except</code>"] 存在：<a
+                                    href="#section-5.1-2.7.1" class="pilcrow">¶</a></p>
+                            <ol start="1" type="1" class="normal type-1" id="section-5.1-2.7.2">
+                                <li id="section-5.1-2.7.2.1">
+                                    <p id="section-5.1-2.7.2.1.1">如果 <em>value</em>["<code>except</code>"] 不是
+                                        数组，则返回 <span id="iref-default-url-variation-config-14" class="iref"></span>默认
+                                        URL 变体配置。<a href="#section-5.1-2.7.2.1.1" class="pilcrow">¶</a></p>
+                                </li>
+                                <li id="section-5.1-2.7.2.2">
+                                    <p id="section-5.1-2.7.2.2.1">如果 <em>value</em>["<code>except</code>"] 中的任一项
+                                        不是字符串，则返回 <span id="iref-default-url-variation-config-15" class="iref"></span>默认
+                                        URL 变体配置。<a href="#section-5.1-2.7.2.2.1" class="pilcrow">¶</a></p>
+                                </li>
+                                <li id="section-5.1-2.7.2.3">
+                                    <p id="section-5.1-2.7.2.3.1">将 <em>result</em> 的 vary params 设为
+                                        对 <em>value</em>["<code>except</code>"] 中每一项应用 <span id="iref-parse-a-key-16"
+                                            class="iref"></span><a href="#parse-a-key" class="internal xref">解析键</a>（<a
+                                            href="#parse-a-key" class="auto internal xref">第 5.3 节</a>）的结果。<a
+                                            href="#section-5.1-2.7.2.3.1" class="pilcrow">¶</a></p>
+                                </li>
+                                <li id="section-5.1-2.7.2.4">
+                                    <p id="section-5.1-2.7.2.4.1">如果 <em>result</em> 的 vary params 中的任一项是
+                                        错误，则返回 <span id="iref-default-url-variation-config-17" class="iref"></span>默认
+                                        URL 变体配置。<a href="#section-5.1-2.7.2.4.1" class="pilcrow">¶</a></p>
+                                </li>
+                                <li id="section-5.1-2.7.2.5">
+                                    <p id="section-5.1-2.7.2.5.1">将 <em>result</em> 的 no-vary params 设为
+                                        <strong>wildcard</strong>。<a href="#section-5.1-2.7.2.5.1" class="pilcrow">¶</a>
+                                    </p>
+                                </li>
+                            </ol>
+                        </li>
+                        <li id="section-5.1-2.8">
+                            <p id="section-5.1-2.8.1">返回 <em>result</em>。<a href="#section-5.1-2.8.1"
+                                    class="pilcrow">¶</a></p>
+                        </li>
+                    </ol>
+                    <aside id="section-5.1-3">
+                        <p id="section-5.1-3.1">一般来说，该算法是严格的，并且在看到
+                            不认识的内容时往往返回 <span id="iref-default-url-variation-config-18" class="iref"></span>默认 URL 变体
+                            配置。这是因为 <span id="iref-default-url-variation-config-19" class="iref"></span>默认 URL 变体
+                            配置行为只会导致更少的缓存命中，这是可接受的回退
+                            行为。<a href="#section-5.1-3.1" class="pilcrow">¶</a></p>
+                        <p id="section-5.1-3.2">然而，顶层未识别的键会被忽略，以便
+                            未来更容易扩展本规范。为避免现有客户端
+                            软件出现错误行为，此类扩展很可能会扩大而不是减少
+                            缓存响应可匹配的请求集合。<a href="#section-5.1-3.2" class="pilcrow">¶</a></p>
+                    </aside>
+                    <aside id="section-5.1-4">
+                        <p id="section-5.1-4.1">该算法的输入通常通过使用 field_type "dictionary"
+                            解析结构化字段（<span><a href="https://rfc-editor.org/rfc/rfc9651#section-4.2" class="relref">[<a
+                                        href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>] 的第 4.2
+                                    节</span>）获得。<a href="#section-5.1-4.1" class="pilcrow">¶</a></p>
+                    </aside>
+                </section>
+            </div>
+            <div id="obtain-a-url-variation-config">
+                <section id="section-5.2">
+                    <h3 id="name-obtain-a-url-variation-conf">
+                        <a href="#section-5.2" class="section-number selfRef">5.2. </a><a
+                            href="#name-obtain-a-url-variation-conf" class="section-name selfRef">获取 URL 变体
+                            配置</a>
+                    </h3>
+                    <p id="section-5.2-1"><span id="iref-obtain-a-url-variation-config" class="iref"></span>
+                        给定一个 <a href="https://fetch.spec.whatwg.org/#concept-response">response</a>
+                        <em>response</em>，要<em><span id="iref-obtain-a-url-variation-config-" class="iref"></span><a
+                                href="#obtain-a-url-variation-config" class="internal xref">获取 URL 变体
+                                配置</a></em>：<a href="#section-5.2-1" class="pilcrow">¶</a>
+                    </p>
+                    <ol start="1" type="1" class="normal type-1" id="section-5.2-2">
+                        <li id="section-5.2-2.1">
+                            <p id="section-5.2-2.1.1">令 <em>fieldValue</em> 为给定 `<code>No-Vary-Search</code>` 和
+                                "<code>dictionary</code>"，从 <em>response</em> 的 header list 中
+                                <a href="https://fetch.spec.whatwg.org/#concept-header-list-get-structured-header">获取
+                                    结构化字段值</a> <span>[<a href="#FETCH" class="cite xref">FETCH</a>]</span> 的结果。<a
+                                    href="#section-5.2-2.1.1" class="pilcrow">¶</a>
+                            </p>
+                        </li>
+                        <li id="section-5.2-2.2">
+                            <p id="section-5.2-2.2.1">返回给定 <em>fieldValue</em> 后解析 URL 变体配置（<a
+                                    href="#parse-a-url-variation-config" class="auto internal xref">第 5.1 节</a>）
+                                的结果。<span id="iref-parse-a-url-variation-config-" class="iref"></span><a
+                                    href="#section-5.2-2.2.1" class="pilcrow">¶</a></p>
+                        </li>
+                    </ol>
+                    <div id="examples">
+                        <section id="section-5.2.1">
+                            <h4 id="name-examples">
+                                <a href="#section-5.2.1" class="section-number selfRef">5.2.1. </a><a
+                                    href="#name-examples" class="section-name selfRef">示例</a>
+                            </h4>
+                            <p id="section-5.2.1-1">以下从对最终 no-vary params 和 vary params 的影响角度，
+                                说明各种输入如何被解析：<a href="#section-5.2.1-1" class="pilcrow">¶</a></p>
+                            <table class="center" id="table-1">
+                                <caption><a href="#table-1" class="selfRef">表 1</a></caption>
+                                <thead>
+                                    <tr>
+                                        <th class="text-left" rowspan="1" colspan="1">输入</th>
+                                        <th class="text-left" rowspan="1" colspan="1">结果</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="text-left" rowspan="1" colspan="1">
+                                            <code>No-Vary-Search: params=("a")</code>
+                                        </td>
+                                        <td class="text-left" rowspan="1" colspan="1">no-vary params: « "<code>a</code>"
+                                            »<br>vary params: <strong>wildcard</strong>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left" rowspan="1" colspan="1">
+                                            <code>No-Vary-Search: except=("x")</code>
+                                        </td>
+                                        <td class="text-left" rowspan="1" colspan="1">no-vary params:
+                                            <strong>wildcard</strong><br>vary params: « "<code>x</code>" »
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left" rowspan="1" colspan="1">
+                                            <code>No-Vary-Search: params=()</code>
+                                        </td>
+                                        <td class="text-left" rowspan="1" colspan="1">no-vary params:（空
+                                            列表）<br>vary params: <strong>wildcard</strong>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left" rowspan="1" colspan="1">
+                                            <code>No-Vary-Search: except=()</code>
+                                        </td>
+                                        <td class="text-left" rowspan="1" colspan="1">no-vary params:
+                                            <strong>wildcard</strong><br>vary params:（空列表）
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p id="section-5.2.1-3">以下输入均无效，并会导致返回 <span id="iref-default-url-variation-config-2"
+                                    class="iref"></span>默认 URL 变体
+                                配置：<a href="#section-5.2.1-3" class="pilcrow">¶</a></p>
+                            <ul class="compact">
+                                <li class="compact" id="section-5.2.1-4.1">
+                                    <p id="section-5.2.1-4.1.1"><code>No-Vary-Search: key-order="not a boolean"</code><a
+                                            href="#section-5.2.1-4.1.1" class="pilcrow">¶</a></p>
+                                </li>
+                                <li class="compact" id="section-5.2.1-4.2">
+                                    <p id="section-5.2.1-4.2.1">
+                                        <code>No-Vary-Search: params="not an inner list"</code><a
+                                            href="#section-5.2.1-4.2.1" class="pilcrow">¶</a>
+                                    </p>
+                                </li>
+                                <li class="compact" id="section-5.2.1-4.3">
+                                    <p id="section-5.2.1-4.3.1"><code>No-Vary-Search: params=(not-a-string)</code><a
+                                            href="#section-5.2.1-4.3.1" class="pilcrow">¶</a></p>
+                                </li>
+                                <li class="compact" id="section-5.2.1-4.4">
+                                    <p id="section-5.2.1-4.4.1"><code>No-Vary-Search: params=?0</code><a
+                                            href="#section-5.2.1-4.4.1" class="pilcrow">¶</a></p>
+                                </li>
+                                <li class="compact" id="section-5.2.1-4.5">
+                                    <p id="section-5.2.1-4.5.1"><code>No-Vary-Search: params=?1</code><a
+                                            href="#section-5.2.1-4.5.1" class="pilcrow">¶</a></p>
+                                </li>
+                                <li class="compact" id="section-5.2.1-4.6">
+                                    <p id="section-5.2.1-4.6.1"><code>No-Vary-Search: params=?1, except=("x")</code><a
+                                            href="#section-5.2.1-4.6.1" class="pilcrow">¶</a></p>
+                                </li>
+                                <li class="compact" id="section-5.2.1-4.7">
+                                    <p id="section-5.2.1-4.7.1">
+                                        <code>No-Vary-Search: params=("a"), except=("x")</code><a
+                                            href="#section-5.2.1-4.7.1" class="pilcrow">¶</a>
+                                    </p>
+                                </li>
+                                <li class="compact" id="section-5.2.1-4.8">
+                                    <p id="section-5.2.1-4.8.1"><code>No-Vary-Search: params=(), except=()</code><a
+                                            href="#section-5.2.1-4.8.1" class="pilcrow">¶</a></p>
+                                </li>
+                                <li class="compact" id="section-5.2.1-4.9">
+                                    <p id="section-5.2.1-4.9.1">
+                                        <code>No-Vary-Search: except="not an inner list"</code><a
+                                            href="#section-5.2.1-4.9.1" class="pilcrow">¶</a>
+                                    </p>
+                                </li>
+                                <li class="compact" id="section-5.2.1-4.10">
+                                    <p id="section-5.2.1-4.10.1"><code>No-Vary-Search: except=(not-a-string)</code><a
+                                            href="#section-5.2.1-4.10.1" class="pilcrow">¶</a></p>
+                                </li>
+                                <li class="compact" id="section-5.2.1-4.11">
+                                    <p id="section-5.2.1-4.11.1"><code>No-Vary-Search: except=?1</code><a
+                                            href="#section-5.2.1-4.11.1" class="pilcrow">¶</a></p>
+                                </li>
+                            </ul>
+                            <p id="section-5.2.1-5">以下输入是有效的，但有些不常规。它们与其更常规的形式
+                                一并展示。<a href="#section-5.2.1-5" class="pilcrow">¶</a></p>
+                            <table class="center" id="table-2">
+                                <caption><a href="#table-2" class="selfRef">表 2</a></caption>
+                                <thead>
+                                    <tr>
+                                        <th class="text-left" rowspan="1" colspan="1">输入</th>
+                                        <th class="text-left" rowspan="1" colspan="1">常规形式</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="text-left" rowspan="1" colspan="1">
+                                            <code>No-Vary-Search: key-order=?1</code>
+                                        </td>
+                                        <td class="text-left" rowspan="1" colspan="1">
+                                            <code>No-Vary-Search: key-order</code>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left" rowspan="1" colspan="1">
+                                            <code>No-Vary-Search: except=("x")</code>, key-order
+                                        </td>
+                                        <td class="text-left" rowspan="1" colspan="1">
+                                            <code>No-Vary-Search: key-order, except=("x")</code>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left" rowspan="1" colspan="1">
+                                            <code>No-Vary-Search: params=()</code>
+                                        </td>
+                                        <td class="text-left" rowspan="1" colspan="1">（省略该标头字段）</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left" rowspan="1" colspan="1">
+                                            <code>No-Vary-Search: key-order=?0</code>
+                                        </td>
+                                        <td class="text-left" rowspan="1" colspan="1">（省略该标头字段）</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </section>
+                    </div>
+                </section>
+            </div>
+            <div id="parse-a-key">
+                <section id="section-5.3">
+                    <h3 id="name-parse-a-key">
+                        <a href="#section-5.3" class="section-number selfRef">5.3. </a><a href="#name-parse-a-key"
+                            class="section-name selfRef">解析键</a>
+                    </h3>
+                    <p id="section-5.3-1"><span id="iref-parse-a-key-24" class="iref"></span>
+                        给定 ASCII 字符串 <em>keyString</em>，要<em><span id="iref-parse-a-key-25" class="iref"></span><a
+                                href="#parse-a-key" class="internal xref">解析键</a></em>：<a href="#section-5.3-1"
+                            class="pilcrow">¶</a></p>
+                    <ol start="1" type="1" class="normal type-1" id="section-5.3-2">
+                        <li id="section-5.3-2.1">
+                            <p id="section-5.3-2.1.1">令 <em>keyBytes</em> 为 <em>keyString</em> 的
+                                <a href="https://infra.spec.whatwg.org/#isomorphic-encode">同构编码</a>
+                                <span>[<a href="#WHATWG-INFRA" class="cite xref">WHATWG-INFRA</a>]</span>。<a
+                                    href="#section-5.3-2.1.1" class="pilcrow">¶</a>
+                            </p>
+                        </li>
+                        <li id="section-5.3-2.2">
+                            <p id="section-5.3-2.2.1">将 <em>keyBytes</em> 中的任何 0x2B (+) 替换为 0x20 (SP)。<a
+                                    href="#section-5.3-2.2.1" class="pilcrow">¶</a></p>
+                        </li>
+                        <li id="section-5.3-2.3">
+                            <p id="section-5.3-2.3.1">令 <em>keyBytesDecoded</em> 为
+                                <em>keyBytes</em> 的 <a href="https://url.spec.whatwg.org/#percent-decode">百分号解码</a>
+                                <span>[<a href="#WHATWG-URL" class="cite xref">WHATWG-URL</a>]</span>。<a
+                                    href="#section-5.3-2.3.1" class="pilcrow">¶</a>
+                            </p>
+                        </li>
+                        <li id="section-5.3-2.4">
+                            <p id="section-5.3-2.4.1">令 <em>keyStringDecoded</em> 为 <em>keyBytesDecoded</em> 的
+                                <a href="https://encoding.spec.whatwg.org/#utf-8-decode-without-bom">不带 BOM 的 UTF-8
+                                    解码</a> <span>[<a href="#WHATWG-ENCODING"
+                                        class="cite xref">WHATWG-ENCODING</a>]</span>。<a href="#section-5.3-2.4.1"
+                                    class="pilcrow">¶</a>
+                            </p>
+                        </li>
+                        <li id="section-5.3-2.5">
+                            <p id="section-5.3-2.5.1">返回 <em>keyStringDecoded</em>。<a href="#section-5.3-2.5.1"
+                                    class="pilcrow">¶</a></p>
+                        </li>
+                    </ol>
+                    <div id="examples-1">
+                        <section id="section-5.3.1">
+                            <h4 id="name-examples-2">
+                                <a href="#section-5.3.1" class="section-number selfRef">5.3.1. </a><a
+                                    href="#name-examples-2" class="section-name selfRef">示例</a>
+                            </h4>
+                            <p id="section-5.3.1-1"><span id="iref-parse-a-key-26" class="iref"></span><a
+                                    href="#parse-a-key" class="internal xref">解析键</a>算法允许在 ASCII 结构化标头字段格式中
+                                编码非 ASCII 键字符串，类似于 <a
+                                    href="https://url.spec.whatwg.org/#concept-urlencoded">application/x-www-form-urlencoded</a>
+                                格式 <span>[<a href="#WHATWG-URL" class="cite xref">WHATWG-URL</a>]</span> 如何允许
+                                在 URI（限制为 ASCII 字符）中编码键和值的整个条目列表。例如，<a href="#section-5.3.1-1" class="pilcrow">¶</a></p>
+                            <div class="lang-http-message sourcecode" id="section-5.3.1-2">
+                                <pre>
+No-Vary-Search: params=("%C3%A9+%E6%B0%97")
+</pre><a href="#section-5.3.1-2" class="pilcrow">¶</a>
+                            </div>
+                            <p id="section-5.3.1-3">将得到一个 URL 变体配置，其 vary params 为 «
+                                "<code>é 気</code>" »。如后面的示例所解释的，等价性测试期间的规范化过程
+                                意味着这会将诸如下列 URI 视为等价：<a href="#section-5.3.1-3" class="pilcrow">¶</a></p>
+                            <ul class="normal">
+                                <li class="normal" id="section-5.3.1-4.1">
+                                    <p id="section-5.3.1-4.1.1"><code>https://example.com/?é 気=1</code><a
+                                            href="#section-5.3.1-4.1.1" class="pilcrow">¶</a></p>
+                                </li>
+                                <li class="normal" id="section-5.3.1-4.2">
+                                    <p id="section-5.3.1-4.2.1"><code>https://example.com/?é+気=2</code><a
+                                            href="#section-5.3.1-4.2.1" class="pilcrow">¶</a></p>
+                                </li>
+                                <li class="normal" id="section-5.3.1-4.3">
+                                    <p id="section-5.3.1-4.3.1"><code>https://example.com/?%C3%A9%20気=3</code><a
+                                            href="#section-5.3.1-4.3.1" class="pilcrow">¶</a></p>
+                                </li>
+                                <li class="normal" id="section-5.3.1-4.4">
+                                    <p id="section-5.3.1-4.4.1"><code>https://example.com/?%C3%A9+%E6%B0%97=4</code><a
+                                            href="#section-5.3.1-4.4.1" class="pilcrow">¶</a></p>
+                                </li>
+                            </ul>
+                            <p id="section-5.3.1-5">等等，因为它们全都会被<a
+                                    href="https://url.spec.whatwg.org/#concept-urlencoded-parser">解析</a> <span>[<a
+                                        href="#WHATWG-URL" class="cite xref">WHATWG-URL</a>]</span> 为具有相同的
+                                键 "<code>é 気</code>"。<a href="#section-5.3.1-5" class="pilcrow">¶</a></p>
+                        </section>
+                    </div>
+                </section>
+            </div>
+        </section>
+    </div>
+    <div id="comparing">
+        <section id="section-6">
+            <h2 id="name-comparing">
+                <a href="#section-6" class="section-number selfRef">6. </a><a href="#name-comparing"
+                    class="section-name selfRef">比较</a>
+            </h2>
+            <p id="section-6-1"><span id="iref-equivalent-modulo-variation" class="iref"></span>
+                给定 URL 变体配置 <em>variationConfig</em>，两个 <a href="https://url.spec.whatwg.org/#concept-url">URL</a>
+                <span>[<a href="#WHATWG-URL" class="cite xref">WHATWG-URL</a>]</span> <em>urlA</em> 和 <em>urlB</em>
+                是<em>按变体配置
+                    模等价的</em>，如果以下
+                算法返回 true：<a href="#section-6-1" class="pilcrow">¶</a>
+            </p>
+            <ol start="1" type="1" class="normal type-1" id="section-6-2">
+                <li id="section-6-2.1">
+                    <p id="section-6-2.1.1">如果 <em>urlA</em> 和
+                        <em>urlB</em> 的 scheme、username、password、host、port 或 path 不同，则返回 false。<a
+                            href="#section-6-2.1.1" class="pilcrow">¶</a>
+                    </p>
+                </li>
+                <li id="section-6-2.2">
+                    <p id="section-6-2.2.1">如果 <em>variationConfig</em> 等价于 <span
+                            id="iref-default-url-variation-config-28" class="iref"></span>默认 URL 变体配置，
+                        则：<a href="#section-6-2.2.1" class="pilcrow">¶</a></p>
+                    <ol start="1" type="1" class="normal type-1" id="section-6-2.2.2">
+                        <li id="section-6-2.2.2.1">
+                            <p id="section-6-2.2.2.1.1">如果 <em>urlA</em> 的 query 等于 <em>urlB</em> 的 query，则
+                                返回 true。<a href="#section-6-2.2.2.1.1" class="pilcrow">¶</a></p>
+                        </li>
+                        <li id="section-6-2.2.2.2">
+                            <p id="section-6-2.2.2.2.1">返回 false。<a href="#section-6-2.2.2.2.1" class="pilcrow">¶</a>
+                            </p>
+                        </li>
+                    </ol>
+                    <p id="section-6-2.2.3">
+                        在这种情况下，即使 URL 对在对其查询运行 <a
+                            href="https://url.spec.whatwg.org/#concept-urlencoded-parser">application/x-www-form-urlencoded
+                            解析器</a> <span>[<a href="#WHATWG-URL" class="cite xref">WHATWG-URL</a>]</span> 后可能看似相同，
+                        例如 <code>https://example.com/a</code> 和 <code>https://example.com/a?</code>，或
+                        <code>https://example.com/foo?a=b&amp;&amp;&amp;c</code> 和
+                        <code>https://example.com/foo?a=b&amp;c=</code>，也会被视为不等价。<a href="#section-6-2.2.3"
+                            class="pilcrow">¶</a>
+                    </p>
+                </li>
+                <li id="section-6-2.3">
+                    <p id="section-6-2.3.1">令 <em>searchParamsA</em> 和 <em>searchParamsB</em> 为空列表。<a
+                            href="#section-6-2.3.1" class="pilcrow">¶</a></p>
+                </li>
+                <li id="section-6-2.4">
+                    <p id="section-6-2.4.1">如果 <em>urlA</em> 的 query 不是 null，则将 <em>searchParamsA</em> 设为
+                        给定 <em>urlA</em> 的 query 的
+                        <a href="https://infra.spec.whatwg.org/#isomorphic-encode">同构编码</a> <span>[<a
+                                href="#WHATWG-INFRA" class="cite xref">WHATWG-INFRA</a>]</span> 后运行
+                        <a href="https://url.spec.whatwg.org/#concept-urlencoded-parser">application/x-www-form-urlencoded
+                            解析器</a> <span>[<a href="#WHATWG-URL" class="cite xref">WHATWG-URL</a>]</span> 的结果。<a
+                            href="#section-6-2.4.1" class="pilcrow">¶</a>
+                    </p>
+                </li>
+                <li id="section-6-2.5">
+                    <p id="section-6-2.5.1">如果 <em>urlB</em> 的 query 不是 null，则将 <em>searchParamsB</em> 设为
+                        给定 <em>urlB</em> 的 query 的
+                        <a href="https://infra.spec.whatwg.org/#isomorphic-encode">同构编码</a> <span>[<a
+                                href="#WHATWG-INFRA" class="cite xref">WHATWG-INFRA</a>]</span> 后运行
+                        <a href="https://url.spec.whatwg.org/#concept-urlencoded-parser">application/x-www-form-urlencoded
+                            解析器</a> <span>[<a href="#WHATWG-URL" class="cite xref">WHATWG-URL</a>]</span> 的结果。<a
+                            href="#section-6-2.5.1" class="pilcrow">¶</a>
+                    </p>
+                </li>
+                <li id="section-6-2.6">
+                    <p id="section-6-2.6.1">如果 <em>variationConfig</em> 的 no-vary params 是列表，则：<a
+                            href="#section-6-2.6.1" class="pilcrow">¶</a></p>
+                    <ol start="1" type="1" class="normal type-1" id="section-6-2.6.2">
+                        <li id="section-6-2.6.2.1">
+                            <p id="section-6-2.6.2.1.1">将 <em>searchParamsA</em> 设为包含
+                                <em>searchParamsA</em> 中那些项 <em>pair</em> 的列表，其中 <em>variationConfig</em> 的 no-vary
+                                params
+                                不包含 <em>pair</em>[0]。<a href="#section-6-2.6.2.1.1" class="pilcrow">¶</a>
+                            </p>
+                        </li>
+                        <li id="section-6-2.6.2.2">
+                            <p id="section-6-2.6.2.2.1">将 <em>searchParamsB</em> 设为包含
+                                <em>searchParamsB</em> 中那些项 <em>pair</em> 的列表，其中 <em>variationConfig</em> 的 no-vary
+                                params
+                                不包含 <em>pair</em>[0]。<a href="#section-6-2.6.2.2.1" class="pilcrow">¶</a>
+                            </p>
+                        </li>
+                    </ol>
+                </li>
+                <li id="section-6-2.7">
+                    <p id="section-6-2.7.1">否则，如果 <em>variationConfig</em> 的 vary params 是列表，则：<a
+                            href="#section-6-2.7.1" class="pilcrow">¶</a></p>
+                    <ol start="1" type="1" class="normal type-1" id="section-6-2.7.2">
+                        <li id="section-6-2.7.2.1">
+                            <p id="section-6-2.7.2.1.1">将 <em>searchParamsA</em> 设为包含
+                                <em>searchParamsA</em> 中那些项 <em>pair</em> 的列表，其中 <em>variationConfig</em> 的 vary params
+                                包含 <em>pair</em>[0]。<a href="#section-6-2.7.2.1.1" class="pilcrow">¶</a>
+                            </p>
+                        </li>
+                        <li id="section-6-2.7.2.2">
+                            <p id="section-6-2.7.2.2.1">将 <em>searchParamsB</em> 设为包含
+                                <em>searchParamsB</em> 中那些项 <em>pair</em> 的列表，其中 <em>variationConfig</em> 的 vary params
+                                包含 <em>pair</em>[0]。<a href="#section-6-2.7.2.2.1" class="pilcrow">¶</a>
+                            </p>
+                        </li>
+                    </ol>
+                </li>
+                <li id="section-6-2.8">
+                    <p id="section-6-2.8.1">如果 <em>variationConfig</em> 的 vary on key order 为 false，则：<a
+                            href="#section-6-2.8.1" class="pilcrow">¶</a></p>
+                    <ol start="1" type="1" class="normal type-1" id="section-6-2.8.2">
+                        <li id="section-6-2.8.2.1">
+                            <p id="section-6-2.8.2.1.1">令 <em>keyLessThan</em> 为一个以两个
+                                pair（<em>keyA</em>、<em>valueA</em>）和（<em>keyB</em>、<em>valueB</em>）为输入的算法，该算法
+                                返回 <em>keyA</em> 是否按<a
+                                    href="https://infra.spec.whatwg.org/#code-unit-less-than">码元小于</a>
+                                <span>[<a href="#WHATWG-INFRA" class="cite xref">WHATWG-INFRA</a>]</span>
+                                <em>keyB</em>。<a href="#section-6-2.8.2.1.1" class="pilcrow">¶</a>
+                            </p>
+                        </li>
+                        <li id="section-6-2.8.2.2">
+                            <p id="section-6-2.8.2.2.1">将 <em>searchParamsA</em> 设为用 <em>keyLessThan</em> 将
+                                <em>searchParamsA</em> 按升序
+                                <a href="https://infra.spec.whatwg.org/#list-sort-in-ascending-order">排序</a>
+                                <span>[<a href="#WHATWG-INFRA" class="cite xref">WHATWG-INFRA</a>]</span>
+                                的结果。<a href="#section-6-2.8.2.2.1" class="pilcrow">¶</a>
+                            </p>
+                        </li>
+                        <li id="section-6-2.8.2.3">
+                            <p id="section-6-2.8.2.3.1">将 <em>searchParamsB</em> 设为用 <em>keyLessThan</em> 将
+                                <em>searchParamsB</em> 按升序
+                                <a href="https://infra.spec.whatwg.org/#list-sort-in-ascending-order">排序</a>
+                                <span>[<a href="#WHATWG-INFRA" class="cite xref">WHATWG-INFRA</a>]</span>
+                                的结果。<a href="#section-6-2.8.2.3.1" class="pilcrow">¶</a>
+                            </p>
+                        </li>
+                    </ol>
+                </li>
+                <li id="section-6-2.9">
+                    <p id="section-6-2.9.1">如果 <em>searchParamsA</em> 的大小不等于 <em>searchParamsB</em> 的
+                        大小，则返回 false。<a href="#section-6-2.9.1" class="pilcrow">¶</a></p>
+                </li>
+                <li id="section-6-2.10">
+                    <p id="section-6-2.10.1">令 <em>i</em> 为 0。<a href="#section-6-2.10.1" class="pilcrow">¶</a></p>
+                </li>
+                <li id="section-6-2.11">
+                    <p id="section-6-2.11.1">当 <em>i</em> &lt; <em>searchParamsA</em> 的大小时：<a href="#section-6-2.11.1"
+                            class="pilcrow">¶</a></p>
+                    <ol start="1" type="1" class="normal type-1" id="section-6-2.11.2">
+                        <li id="section-6-2.11.2.1">
+                            <p id="section-6-2.11.2.1.1">如果 <em>searchParamsA</em>[<em>i</em>][0] 不等于
+                                <em>searchParamsB</em>[<em>i</em>][0]，则返回 false。<a href="#section-6-2.11.2.1.1"
+                                    class="pilcrow">¶</a>
+                            </p>
+                        </li>
+                        <li id="section-6-2.11.2.2">
+                            <p id="section-6-2.11.2.2.1">如果 <em>searchParamsA</em>[<em>i</em>][1] 不等于
+                                <em>searchParamsB</em>[<em>i</em>][1]，则返回 false。<a href="#section-6-2.11.2.2.1"
+                                    class="pilcrow">¶</a>
+                            </p>
+                        </li>
+                        <li id="section-6-2.11.2.3">
+                            <p id="section-6-2.11.2.3.1">将 <em>i</em> 设为 <em>i</em> + 1。<a href="#section-6-2.11.2.3.1"
+                                    class="pilcrow">¶</a></p>
+                        </li>
+                    </ol>
+                </li>
+                <li id="section-6-2.12">
+                    <p id="section-6-2.12.1">返回 true。<a href="#section-6-2.12.1" class="pilcrow">¶</a></p>
+                </li>
+            </ol>
+            <div id="examples-2">
+                <section id="section-6.1">
+                    <h3 id="name-examples-3">
+                        <a href="#section-6.1" class="section-number selfRef">6.1. </a><a href="#name-examples-3"
+                            class="section-name selfRef">示例</a>
+                    </h3>
+                    <p id="section-6.1-1">由于 application/x-www-form-urlencoded 解析器规范化查询
+                        字符串的方式，某些查询字符串虽然看起来并不明显等价，
+                        但在解析后最终会被视为等价。<a href="#section-6.1-1" class="pilcrow">¶</a>
+                    </p>
+                    <p id="section-6.1-2">因此，例如，给定 <code>No-Vary-Search</code> 的任何非默认值，
+                        如 <code>No-Vary-Search: key-order</code>，我们将得到以下等价关系：<a href="#section-6.1-2"
+                            class="pilcrow">¶</a></p>
+                    <table class="center" id="table-3">
+                        <caption><a href="#table-3" class="selfRef">表 3</a></caption>
+                        <thead>
+                            <tr>
+                                <th class="text-left" rowspan="1" colspan="1">第一个查询</th>
+                                <th class="text-left" rowspan="1" colspan="1">第二个查询</th>
+                                <th class="text-left" rowspan="1" colspan="1">说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-left" rowspan="1" colspan="1">null</td>
+                                <td class="text-left" rowspan="1" colspan="1">
+                                    <code>?</code>
+                                </td>
+                                <td class="text-left" rowspan="1" colspan="1">null 查询与空字符串解析结果相同</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left" rowspan="1" colspan="1">
+                                    <code>?a=x</code>
+                                </td>
+                                <td class="text-left" rowspan="1" colspan="1">
+                                    <code>?%61=%78</code>
+                                </td>
+                                <td class="text-left" rowspan="1" colspan="1">解析会执行百分号解码</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left" rowspan="1" colspan="1">
+                                    <code>?a=é</code>
+                                </td>
+                                <td class="text-left" rowspan="1" colspan="1">
+                                    <code>?a=%C3%A9</code>
+                                </td>
+                                <td class="text-left" rowspan="1" colspan="1">解析会执行百分号解码</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left" rowspan="1" colspan="1">
+                                    <code>?a=%f6</code>
+                                </td>
+                                <td class="text-left" rowspan="1" colspan="1">
+                                    <code>?a=%ef%bf%bd</code>
+                                </td>
+                                <td class="text-left" rowspan="1" colspan="1">两个值都会解析为 U+FFFD (�)</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left" rowspan="1" colspan="1">
+                                    <code>?a=x&amp;&amp;&amp;&amp;</code>
+                                </td>
+                                <td class="text-left" rowspan="1" colspan="1">
+                                    <code>?a=x</code>
+                                </td>
+                                <td class="text-left" rowspan="1" colspan="1">解析会按 <code>&amp;</code> 分割并
+                                    丢弃空字符串</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left" rowspan="1" colspan="1">
+                                    <code>?a=</code>
+                                </td>
+                                <td class="text-left" rowspan="1" colspan="1">
+                                    <code>?a</code>
+                                </td>
+                                <td class="text-left" rowspan="1" colspan="1">二者都解析为对 <code>a</code>
+                                    具有空字符串值
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-left" rowspan="1" colspan="1">
+                                    <code>?a=%20</code>
+                                </td>
+                                <td class="text-left" rowspan="1" colspan="1">
+                                    <code>?a= &amp;</code>
+                                </td>
+                                <td class="text-left" rowspan="1" colspan="1">
+                                    <code>%20</code> 会解析为 U+0020 SPACE
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-left" rowspan="1" colspan="1">
+                                    <code>?a=+</code>
+                                </td>
+                                <td class="text-left" rowspan="1" colspan="1">
+                                    <code>?a= &amp;</code>
+                                </td>
+                                <td class="text-left" rowspan="1" colspan="1">
+                                    <code>+</code> 会解析为 U+0020 SPACE
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+            </div>
+        </section>
+    </div>
+    <div id="caching">
+        <section id="section-7">
+            <h2 id="name-caching">
+                <a href="#section-7" class="section-number selfRef">7. </a><a href="#name-caching"
+                    class="section-name selfRef">缓存</a>
+            </h2>
+            <p id="section-7-1">如果缓存 <span>[<a href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]</span>
+                实现本规范，则 <span><a href="https://rfc-editor.org/rfc/rfc9111#section-4" class="relref">[<a
+                            href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>] 的第 4 节</span> 中的呈现目标 URI 要求：<a
+                    href="#section-7-1" class="pilcrow">¶</a></p>
+            <blockquote id="section-7-2">
+                <p id="section-7-2.1">所呈现的目标 URI（<span>[<a href="#HTTP" class="cite xref">HTTP</a>]</span> 的第 7.1
+                    节）与所存储响应的目标 URI 匹配，且<a href="#section-7-2.1" class="pilcrow">¶</a></p>
+            </blockquote>
+            <p id="section-7-3">替换为：<a href="#section-7-3" class="pilcrow">¶</a></p>
+            <blockquote id="section-7-4">
+                <p id="section-7-4.1">所呈现的目标 URI（<span>[<a href="#HTTP" class="cite xref">HTTP</a>]</span> 的第 7.1
+                    节）与所存储响应的目标 URI 匹配或
+                    按 URL 变体配置模等价，且<a href="#section-7-4.1" class="pilcrow">¶</a></p>
+            </blockquote>
+            <p id="section-7-5">缓存实现 <span class="bcp14">MAY</span> 不复用其目标 URI
+                仅按 URL 变体配置模匹配的已存储响应，如果该缓存最近已
+                存储了一个响应，该响应：<a href="#section-7-5" class="pilcrow">¶</a></p>
+            <ul class="normal">
+                <li class="normal" id="section-7-6.1">
+                    <p id="section-7-6.1.1">具有一个与所呈现目标 URI 相等的目标 URI（排除
+                        query），并且<a href="#section-7-6.1.1" class="pilcrow">¶</a></p>
+                </li>
+                <li class="normal" id="section-7-6.2">
+                    <p id="section-7-6.2.1">其 <code>No-Vary-Search</code> 字段具有非空值，并且<a href="#section-7-6.2.1"
+                            class="pilcrow">¶</a></p>
+                </li>
+                <li class="normal" id="section-7-6.3">
+                    <p id="section-7-6.3.1">其 <code>No-Vary-Search</code> 字段值不同于正被考虑复用的
+                        已存储响应。<a href="#section-7-6.3.1" class="pilcrow">¶</a></p>
+                </li>
+            </ul>
+            <aside id="section-7-7">
+                <p id="section-7-7.1">一般来说，并不要求缓存复用已存储响应。然而，上述内容
+                    明确授权缓存在出于性能或其他原因有利时，搜索
+                    更少数量的已存储响应。<a href="#section-7-7.1" class="pilcrow">¶</a></p>
+                <p id="section-7-7.2">也就是说，因为缓存可能为给定 pathname 存储多个响应，
+                    它们需要一种无需访问所有缓存响应即可高效查找 No-Vary-Search 值的方法。
+                    这样的缓存可能会采取如下步骤，以高性能方式识别一个已存储响应，
+                    然后再检查 <span><a href="https://rfc-editor.org/rfc/rfc9111#section-4" class="relref">[<a
+                                href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>] 的第 4 节</span> 中的其他条件：<a
+                        href="#section-7-7.2" class="pilcrow">¶</a></p>
+                <ol start="1" type="1" class="normal type-1" id="section-7-7.3">
+                    <li id="section-7-7.3.1">
+                        <p id="section-7-7.3.1.1">令 exactMatch 为 cache[presentedTargetURI]。如果它是可复用的已存储
+                            响应，则返回它。<a href="#section-7-7.3.1.1" class="pilcrow">¶</a>
+                        </p>
+                    </li>
+                    <li id="section-7-7.3.2">
+                        <p id="section-7-7.3.2.1">令 targetPath 为移除查询参数后的 presentedTargetURI。<a href="#section-7-7.3.2.1"
+                                class="pilcrow">¶</a></p>
+                    </li>
+                    <li id="section-7-7.3.3">
+                        <p id="section-7-7.3.3.1">令 lastNVS 为 mostRecentNVS[targetPath]。如果它不存在，则返回
+                            null。<a href="#section-7-7.3.3.1" class="pilcrow">¶</a></p>
+                    </li>
+                    <li id="section-7-7.3.4">
+                        <p id="section-7-7.3.4.1">令 simplifiedURL 为根据 lastNVS 简化 presentedTargetURI
+                            的结果（通过移除不重要的查询参数，并在应忽略键顺序时
+                            按键升序<a href="https://infra.spec.whatwg.org/#list-sort-in-ascending-order">排序</a> <span>[<a
+                                    href="#WHATWG-INFRA" class="cite xref">WHATWG-INFRA</a>]</span>
+                            参数）。<a href="#section-7-7.3.4.1" class="pilcrow">¶</a></p>
+                    </li>
+                    <li id="section-7-7.3.5">
+                        <p id="section-7-7.3.5.1">令 nvsMatch 为 cache[simplifiedURL]。如果它不存在，则返回
+                            null。（假定这是在写入缓存时，除了精确 URL 外也写入的。）<a href="#section-7-7.3.5.1" class="pilcrow">¶</a></p>
+                    </li>
+                    <li id="section-7-7.3.6">
+                        <p id="section-7-7.3.6.1">令 variationConfig 从 nvsMatch 中获取（<a
+                                href="#obtain-a-url-variation-config" class="auto internal xref">第 5.2 节</a>）。<a
+                                href="#section-7-7.3.6.1" class="pilcrow">¶</a></p>
+                    </li>
+                    <li id="section-7-7.3.7">
+                        <p id="section-7-7.3.7.1">如果 nvsMatch 的目标 URI 和 presentedTargetURI 在给定 variationConfig 时
+                            不是按 URL 变体配置模等价（<a href="#comparing" class="auto internal xref">第 6 节</a>），
+                            则返回 null。<a href="#section-7-7.3.7.1" class="pilcrow">¶</a>
+                        </p>
+                    </li>
+                    <li id="section-7-7.3.8">
+                        <p id="section-7-7.3.8.1">如果 nvsMatch 是可复用的已存储响应，则返回它。
+                            否则，返回 null。<a href="#section-7-7.3.8.1" class="pilcrow">¶</a></p>
+                    </li>
+                </ol>
+            </aside>
+            <p id="section-7-8">为了帮助提高缓存实现效率，服务器 <span class="bcp14">SHOULD NOT</span>
+                对某个给定 pathname 的请求随时间发送不同的非空 <code>No-Vary-Search</code> 字段值，
+                除非需要更新它们处理 query 组件的方式。这样做
+                会导致使用上述策略的缓存实现错过一些本可被复用的已存储响应。<a href="#section-7-8" class="pilcrow">¶</a></p>
+        </section>
+    </div>
+    <div id="security-considerations">
+        <section id="section-8">
+            <h2 id="name-security-considerations">
+                <a href="#section-8" class="section-number selfRef">8. </a><a href="#name-security-considerations"
+                    class="section-name selfRef">安全考虑事项</a>
+            </h2>
+            <p id="section-8-1">需要注意的主要风险是 URL 不匹配的影响。具体而言，这可能
+                导致用户看到的响应最初取自一个不同于其悬停链接时所显示
+                URL 或 URL 栏中所显示 URL 的 URL。<a href="#section-8-1" class="pilcrow">¶</a></p>
+            <p id="section-8-2">然而，由于影响仅限于查询参数，这不会跨越
+                相关的安全边界，即 <a href="https://html.spec.whatwg.org/multipage/browsers.html#concept-origin">origin</a>
+                <span>[<a href="#HTML" class="cite xref">HTML</a>]</span>。（或者从 <a
+                    href="https://url.spec.whatwg.org/#url-rendering-simplification">Web 浏览器
+                    安全 UI 的角度</a>，也许只是 <a href="https://url.spec.whatwg.org/#concept-url-host">host</a>。<span>[<a
+                        href="#WHATWG-URL" class="cite xref">WHATWG-URL</a>]</span>）
+                确实，我们已经给予 origin 对其如何呈现 (URL, response body) 对的完全控制，
+                包括在客户端通过 <a
+                    href="https://html.spec.whatwg.org/multipage/nav-history-apis.html#dom-history-replacestate">history.replaceState()</a>
+                或 service workers 等技术来控制。<a href="#section-8-2" class="pilcrow">¶</a>
+            </p>
+        </section>
+    </div>
+    <div id="privacy-considerations">
+        <section id="section-9">
+            <h2 id="name-privacy-considerations">
+                <a href="#section-9" class="section-number selfRef">9. </a><a href="#name-privacy-considerations"
+                    class="section-name selfRef">隐私考虑事项</a>
+            </h2>
+            <p id="section-9-1">本提案邻近高度涉及隐私的<a
+                    href="https://privacycg.github.io/nav-tracking-mitigations/#terminology">导航跟踪</a>领域，
+                该领域通常使用查询参数传递用户标识符。然而，我们认为本提案
+                本身没有隐私影响。它不会干扰<a href="https://privacycg.github.io/nav-tracking-mitigations/#deployed-mitigations">现有的
+                    导航跟踪缓解措施</a>，也不会干扰任何已知正在考虑的未来措施。事实上，如果
+                页面在其 URI 中编码用户标识符，本提案提供的唯一能力是
+                通过阻止服务器处理此类用户 ID（因为服务器会被绕过而使用缓存）
+                来<em>减少</em>此类用户跟踪。<span>[<a href="#NAV-TRACKING-MITIGATIONS"
+                        class="cite xref">NAV-TRACKING-MITIGATIONS</a>]</span><a href="#section-9-1"
+                    class="pilcrow">¶</a>
+            </p>
+        </section>
+    </div>
+    <div id="iana-considerations">
+        <section id="section-10">
+            <h2 id="name-iana-considerations">
+                <a href="#section-10" class="section-number selfRef">10. </a><a href="#name-iana-considerations"
+                    class="section-name selfRef">IANA 考虑事项</a>
+            </h2>
+            <div id="http-field-names">
+                <section id="section-10.1">
+                    <h3 id="name-http-field-names">
+                        <a href="#section-10.1" class="section-number selfRef">10.1. </a><a
+                            href="#name-http-field-names" class="section-name selfRef">HTTP 字段名称</a>
+                    </h3>
+                    <p id="section-10.1-1">请求 IANA 将以下内容录入超文本传输协议
+                        (HTTP) 字段名称注册表（<a
+                            href="https://www.iana.org/assignments/http-fields/http-fields.xhtml">https://www.iana.org/assignments/http-fields/http-fields.xhtml</a>）：<a
+                            href="#section-10.1-1" class="pilcrow">¶</a></p>
+                    <span class="break"></span>
+                    <dl class="dlParallel" id="section-10.1-2">
+                        <dt id="section-10.1-2.1">字段名称：</dt>
+                        <dd style="margin-left: 1.5em" id="section-10.1-2.2">
+                            <p id="section-10.1-2.2.1"><code>No-Vary-Search</code><a href="#section-10.1-2.2.1"
+                                    class="pilcrow">¶</a></p>
+                        </dd>
+                        <dd class="break"></dd>
+                        <dt id="section-10.1-2.3">状态：</dt>
+                        <dd style="margin-left: 1.5em" id="section-10.1-2.4">
+                            <p id="section-10.1-2.4.1">永久<a href="#section-10.1-2.4.1" class="pilcrow">¶</a></p>
+                        </dd>
+                        <dd class="break"></dd>
+                        <dt id="section-10.1-2.5">结构化类型：</dt>
+                        <dd style="margin-left: 1.5em" id="section-10.1-2.6">
+                            <p id="section-10.1-2.6.1">字典<a href="#section-10.1-2.6.1" class="pilcrow">¶</a></p>
+                        </dd>
+                        <dd class="break"></dd>
+                        <dt id="section-10.1-2.7">参考：</dt>
+                        <dd style="margin-left: 1.5em" id="section-10.1-2.8">
+                            <p id="section-10.1-2.8.1">本文档<a href="#section-10.1-2.8.1" class="pilcrow">¶</a>
+                            </p>
+                        </dd>
+                        <dd class="break"></dd>
+                        <dt id="section-10.1-2.9">备注：</dt>
+                        <dd style="margin-left: 1.5em" id="section-10.1-2.10">
+                            <p id="section-10.1-2.10.1">（无）<a href="#section-10.1-2.10.1" class="pilcrow">¶</a></p>
+                        </dd>
+                        <dd class="break"></dd>
+                    </dl>
+                </section>
+            </div>
+        </section>
+    </div>
+    <div id="sec-combined-references">
+        <section id="section-11">
+            <h2 id="name-references">
+                <a href="#section-11" class="section-number selfRef">11. </a><a href="#name-references"
+                    class="section-name selfRef">参考文献</a>
+            </h2>
+            <div id="sec-normative-references">
+                <section id="section-11.1">
+                    <h3 id="name-normative-references">
+                        <a href="#section-11.1" class="section-number selfRef">11.1. </a><a
+                            href="#name-normative-references" class="section-name selfRef">规范性参考文献</a>
+                    </h3>
+                    <dl class="references">
+                        <dt id="FETCH">[FETCH]</dt>
+                        <dd>
+                            <span class="refAuthor">van Kesteren, A.</span>, <span class="refTitle">"Fetch 现行标准"</span>,
+                            <span>n.d.</span>, <span>&lt;<a
+                                    href="https://fetch.spec.whatwg.org/">https://fetch.spec.whatwg.org/</a>&gt;</span>.
+                            <span class="annotation">WHATWG</span>
+                        </dd>
+                        <dd class="break"></dd>
+                        <dt id="HTTP">[HTTP]</dt>
+                        <dd>
+                            <span class="refAuthor">Fielding, R., Ed.</span>, <span class="refAuthor">Nottingham, M.,
+                                Ed.</span>, and <span class="refAuthor">J. Reschke, Ed.</span>, <span
+                                class="refTitle">"HTTP 语义"</span>, <span class="seriesInfo">STD 97</span>, <span
+                                class="seriesInfo">RFC 9110</span>, <span class="seriesInfo">DOI
+                                10.17487/RFC9110</span>, <time datetime="2022-06" class="refDate">2022 年 6 月</time>,
+                            <span>&lt;<a
+                                    href="https://www.rfc-editor.org/rfc/rfc9110">https://www.rfc-editor.org/rfc/rfc9110</a>&gt;</span>.
+                        </dd>
+                        <dd class="break"></dd>
+                        <dt id="HTTP-CACHING">[HTTP-CACHING]</dt>
+                        <dd>
+                            <span class="refAuthor">Fielding, R., Ed.</span>, <span class="refAuthor">Nottingham, M.,
+                                Ed.</span>, and <span class="refAuthor">J. Reschke, Ed.</span>, <span
+                                class="refTitle">"HTTP 缓存"</span>, <span class="seriesInfo">STD 98</span>, <span
+                                class="seriesInfo">RFC 9111</span>, <span class="seriesInfo">DOI
+                                10.17487/RFC9111</span>, <time datetime="2022-06" class="refDate">2022 年 6 月</time>,
+                            <span>&lt;<a
+                                    href="https://www.rfc-editor.org/rfc/rfc9111">https://www.rfc-editor.org/rfc/rfc9111</a>&gt;</span>.
+                        </dd>
+                        <dd class="break"></dd>
+                        <dt id="RFC2119">[RFC2119]</dt>
+                        <dd>
+                            <span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"用于 RFC 中表示
+                                要求级别的关键词"</span>, <span class="seriesInfo">BCP 14</span>,
+                            <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI
+                                10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">1997 年 3 月</time>,
+                            <span>&lt;<a
+                                    href="https://www.rfc-editor.org/rfc/rfc2119">https://www.rfc-editor.org/rfc/rfc2119</a>&gt;</span>.
+                        </dd>
+                        <dd class="break"></dd>
+                        <dt id="RFC8174">[RFC8174]</dt>
+                        <dd>
+                            <span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"RFC 2119 关键词中大写与
+                                小写的歧义"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC
+                                8174</span>, <span class="seriesInfo">DOI
+                                10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">2017 年 5 月</time>,
+                            <span>&lt;<a
+                                    href="https://www.rfc-editor.org/rfc/rfc8174">https://www.rfc-editor.org/rfc/rfc8174</a>&gt;</span>.
+                        </dd>
+                        <dd class="break"></dd>
+                        <dt id="STRUCTURED-FIELDS">[STRUCTURED-FIELDS]</dt>
+                        <dd>
+                            <span class="refAuthor">Nottingham, M.</span> and <span class="refAuthor">P. Kamp</span>,
+                            <span class="refTitle">"HTTP 的结构化字段值"</span>, <span class="seriesInfo">RFC 9651</span>,
+                            <span class="seriesInfo">DOI
+                                10.17487/RFC9651</span>, <time datetime="2024-09" class="refDate">2024 年 9 月</time>,
+                            <span>&lt;<a
+                                    href="https://www.rfc-editor.org/rfc/rfc9651">https://www.rfc-editor.org/rfc/rfc9651</a>&gt;</span>.
+                        </dd>
+                        <dd class="break"></dd>
+                        <dt id="URI">[URI]</dt>
+                        <dd>
+                            <span class="refAuthor">Berners-Lee, T.</span>, <span class="refAuthor">Fielding, R.</span>,
+                            and <span class="refAuthor">L. Masinter</span>, <span class="refTitle">"统一资源
+                                标识符（URI）：通用语法"</span>, <span class="seriesInfo">STD 66</span>, <span
+                                class="seriesInfo">RFC 3986</span>, <span class="seriesInfo">DOI
+                                10.17487/RFC3986</span>, <time datetime="2005-01" class="refDate">2005 年 1 月</time>,
+                            <span>&lt;<a
+                                    href="https://www.rfc-editor.org/rfc/rfc3986">https://www.rfc-editor.org/rfc/rfc3986</a>&gt;</span>.
+                        </dd>
+                        <dd class="break"></dd>
+                        <dt id="WHATWG-ENCODING">[WHATWG-ENCODING]</dt>
+                        <dd>
+                            <span class="refAuthor">van Kesteren, A.</span>, <span class="refTitle">"Encoding
+                                现行标准"</span>, <span>n.d.</span>, <span>&lt;<a
+                                    href="https://encoding.spec.whatwg.org/">https://encoding.spec.whatwg.org/</a>&gt;</span>.
+                            <span class="annotation">WHATWG</span>
+                        </dd>
+                        <dd class="break"></dd>
+                        <dt id="WHATWG-INFRA">[WHATWG-INFRA]</dt>
+                        <dd>
+                            <span class="refAuthor">van Kesteren, A.</span> and <span class="refAuthor">D.
+                                Denicola</span>, <span class="refTitle">"Infra 现行标准"</span>,
+                            <span>n.d.</span>, <span>&lt;<a
+                                    href="https://infra.spec.whatwg.org/">https://infra.spec.whatwg.org/</a>&gt;</span>.
+                            <span class="annotation">WHATWG</span>
+                        </dd>
+                        <dd class="break"></dd>
+                        <dt id="WHATWG-URL">[WHATWG-URL]</dt>
+                        <dd>
+                            <span class="refAuthor">van Kesteren, A.</span>, <span class="refTitle">"URL 现行标准"</span>,
+                            <span>n.d.</span>, <span>&lt;<a
+                                    href="https://url.spec.whatwg.org/">https://url.spec.whatwg.org/</a>&gt;</span>.
+                            <span class="annotation">WHATWG</span>
+                        </dd>
+                        <dd class="break"></dd>
+                    </dl>
+                </section>
+            </div>
+            <div id="sec-informative-references">
+                <section id="section-11.2">
+                    <h3 id="name-informative-references">
+                        <a href="#section-11.2" class="section-number selfRef">11.2. </a><a
+                            href="#name-informative-references" class="section-name selfRef">资料性参考文献</a>
+                    </h3>
+                    <dl class="references">
+                        <dt id="HTML">[HTML]</dt>
+                        <dd>
+                            <span class="refAuthor">van Kesteren, A.</span>, <span class="refTitle">"HTML 现行标准"</span>,
+                            <span>n.d.</span>, <span>&lt;<a
+                                    href="https://html.spec.whatwg.org/">https://html.spec.whatwg.org/</a>&gt;</span>.
+                            <span class="annotation">WHATWG</span>
+                        </dd>
+                        <dd class="break"></dd>
+                        <dt id="NAV-TRACKING-MITIGATIONS">[NAV-TRACKING-MITIGATIONS]</dt>
+                        <dd>
+                            <span class="refAuthor">Snyder, P.</span> and <span class="refAuthor">J. Yasskin</span>,
+                            <span class="refTitle">"导航跟踪缓解措施"</span>, <span>n.d.</span>,
+                            <span>&lt;<a
+                                    href="https://privacycg.github.io/nav-tracking-mitigations/">https://privacycg.github.io/nav-tracking-mitigations/</a>&gt;</span>.
+                            <span class="annotation">W3C Privacy CG</span>
+                        </dd>
+                        <dd class="break"></dd>
+                    </dl>
+                </section>
+            </div>
+        </section>
+    </div>
+    <div id="acknowledgments">
+        <section id="appendix-A">
+            <h2 id="name-acknowledgments">
+                <a href="#name-acknowledgments" class="section-name selfRef">致谢</a>
+            </h2>
+            <p id="appendix-A-1">本文档受益于以下人员有价值的审阅和建议：<a href="#appendix-A-1" class="pilcrow">¶</a></p>
+            <ul class="normal">
+                <li class="normal" id="appendix-A-2.1">
+                    <p id="appendix-A-2.1.1">Adam Rice<a href="#appendix-A-2.1.1" class="pilcrow">¶</a></p>
+                </li>
+                <li class="normal" id="appendix-A-2.2">
+                    <p id="appendix-A-2.2.1">Julian Reschke<a href="#appendix-A-2.2.1" class="pilcrow">¶</a></p>
+                </li>
+                <li class="normal" id="appendix-A-2.3">
+                    <p id="appendix-A-2.3.1">Kevin McNee<a href="#appendix-A-2.3.1" class="pilcrow">¶</a></p>
+                </li>
+                <li class="normal" id="appendix-A-2.4">
+                    <p id="appendix-A-2.4.1">Liviu Tinta<a href="#appendix-A-2.4.1" class="pilcrow">¶</a></p>
+                </li>
+                <li class="normal" id="appendix-A-2.5">
+                    <p id="appendix-A-2.5.1">Mark Nottingham<a href="#appendix-A-2.5.1" class="pilcrow">¶</a></p>
+                </li>
+                <li class="normal" id="appendix-A-2.6">
+                    <p id="appendix-A-2.6.1">Martin Thomson<a href="#appendix-A-2.6.1" class="pilcrow">¶</a></p>
+                </li>
+                <li class="normal" id="appendix-A-2.7">
+                    <p id="appendix-A-2.7.1">Valentin Gosu<a href="#appendix-A-2.7.1" class="pilcrow">¶</a></p>
+                </li>
+            </ul>
+        </section>
+    </div>
+    <section id="appendix-B">
+        <h2 id="name-index">
+            <a href="#name-index" class="section-name selfRef">索引</a>
+        </h2>
+        <div id="rfc.index.index">
+            <p id="appendix-B-1">
+                <a href="#rfc.index.u68" class="internal xref">D</a>
+                <a href="#rfc.index.u69" class="internal xref">E</a>
+                <a href="#rfc.index.u79" class="internal xref">O</a>
+                <a href="#rfc.index.u80" class="internal xref">P</a><a href="#appendix-B-1" class="pilcrow">¶</a>
+            </p>
+        </div>
+        <ul class="normal ulEmpty">
+            <li class="normal ulEmpty" id="appendix-B-2.1">
+                <div id="rfc.index.u68">
+                    <p id="appendix-B-2.1.1" class="keepWithNext">
+                        <a href="#rfc.index.u68" class="internal xref">D</a><a href="#appendix-B-2.1.1"
+                            class="pilcrow">¶</a>
+                    </p>
+                </div>
+                <ul class="compact normal ulEmpty">
+                    <li class="compact normal ulEmpty" id="appendix-B-2.1.2.1">
+                        <span class="break"></span>
+                        <dl class="dlCompact dlParallel" id="appendix-B-2.1.2.1.1">
+                            <dt id="appendix-B-2.1.2.1.1.1">默认 URL 变体配置</dt>
+                            <dd style="margin-left: 1.5em" id="appendix-B-2.1.2.1.1.2">
+                                <p id="appendix-B-2.1.2.1.1.2.1">
+                                    <strong><em><a href="#section-4-3" class="auto internal xref">第 4 节，第
+                                                3 段</a></em></strong>;
+                                    <a href="#section-5.1-2.1.1" class="auto internal xref">第 5.1 节，第
+                                        2.1.1 段</a>;
+                                    <a href="#section-5.1-2.4.2.1.1" class="auto internal xref">第 5.1 节，第
+                                        2.4.2.1.1 段</a>;
+                                    <a href="#section-5.1-2.5.1" class="auto internal xref">第 5.1 节，第
+                                        2.5.1 段</a>;
+                                    <a href="#section-5.1-2.6.2.1.1" class="auto internal xref">第 5.1 节，第
+                                        2.6.2.1.1 段</a>;
+                                    <a href="#section-5.1-2.6.2.2.1" class="auto internal xref">第 5.1 节，第
+                                        2.6.2.2.1 段</a>;
+                                    <a href="#section-5.1-2.6.2.4.1" class="auto internal xref">第 5.1 节，第
+                                        2.6.2.4.1 段</a>;
+                                    <a href="#section-5.1-2.7.2.1.1" class="auto internal xref">第 5.1 节，第
+                                        2.7.2.1.1 段</a>;
+                                    <a href="#section-5.1-2.7.2.2.1" class="auto internal xref">第 5.1 节，第
+                                        2.7.2.2.1 段</a>;
+                                    <a href="#section-5.1-2.7.2.4.1" class="auto internal xref">第 5.1 节，第
+                                        2.7.2.4.1 段</a>;
+                                    <a href="#section-5.1-3.1" class="auto internal xref">第 5.1 节，第
+                                        3.1 段</a>;
+                                    <a href="#section-5.2.1-3" class="auto internal xref">第 5.2.1 节，第
+                                        3 段</a>;
+                                    <a href="#section-6-2.2.1" class="auto internal xref">第 6 节，第
+                                        2.2.1 段</a><a href="#appendix-B-2.1.2.1.1.2.1" class="pilcrow">¶</a>
+                                </p>
+                            </dd>
+                            <dd class="break"></dd>
+                        </dl>
+                    </li>
+                </ul>
+            </li>
+            <li class="normal ulEmpty" id="appendix-B-2.2">
+                <div id="rfc.index.u69">
+                    <p id="appendix-B-2.2.1" class="keepWithNext">
+                        <a href="#rfc.index.u69" class="internal xref">E</a><a href="#appendix-B-2.2.1"
+                            class="pilcrow">¶</a>
+                    </p>
+                </div>
+                <ul class="compact normal ulEmpty">
+                    <li class="compact normal ulEmpty" id="appendix-B-2.2.2.1">
+                        <span class="break"></span>
+                        <dl class="dlCompact dlParallel" id="appendix-B-2.2.2.1.1">
+                            <dt id="appendix-B-2.2.2.1.1.1">按变体配置模等价</dt>
+                            <dd style="margin-left: 1.5em" id="appendix-B-2.2.2.1.1.2">
+                                <p id="appendix-B-2.2.2.1.1.2.1">
+                                    <strong><em><a href="#section-6-1" class="auto internal xref">第 6 节，第
+                                                1 段</a></em></strong><a href="#appendix-B-2.2.2.1.1.2.1"
+                                        class="pilcrow">¶</a>
+                                </p>
+                            </dd>
+                            <dd class="break"></dd>
+                        </dl>
+                    </li>
+                </ul>
+            </li>
+            <li class="normal ulEmpty" id="appendix-B-2.3">
+                <div id="rfc.index.u79">
+                    <p id="appendix-B-2.3.1" class="keepWithNext">
+                        <a href="#rfc.index.u79" class="internal xref">O</a><a href="#appendix-B-2.3.1"
+                            class="pilcrow">¶</a>
+                    </p>
+                </div>
+                <ul class="compact normal ulEmpty">
+                    <li class="compact normal ulEmpty" id="appendix-B-2.3.2.1">
+                        <span class="break"></span>
+                        <dl class="dlCompact dlParallel" id="appendix-B-2.3.2.1.1">
+                            <dt id="appendix-B-2.3.2.1.1.1">获取 URL 变体配置</dt>
+                            <dd style="margin-left: 1.5em" id="appendix-B-2.3.2.1.1.2">
+                                <p id="appendix-B-2.3.2.1.1.2.1">
+                                    <a href="#section-3-5.1" class="auto internal xref">第 3 节，第 5.1 段</a>;
+                                    <a href="#section-4-4" class="auto internal xref">第 4 节，第 4 段</a>;
+                                    <strong><em><a href="#section-5.2-1" class="auto internal xref">第 5.2 节，
+                                                第 1 段</a></em></strong><a href="#appendix-B-2.3.2.1.1.2.1"
+                                        class="pilcrow">¶</a>
+                                </p>
+                            </dd>
+                            <dd class="break"></dd>
+                        </dl>
+                    </li>
+                </ul>
+            </li>
+            <li class="normal ulEmpty" id="appendix-B-2.4">
+                <div id="rfc.index.u80">
+                    <p id="appendix-B-2.4.1" class="keepWithNext">
+                        <a href="#rfc.index.u80" class="internal xref">P</a><a href="#appendix-B-2.4.1"
+                            class="pilcrow">¶</a>
+                    </p>
+                </div>
+                <ul class="compact normal ulEmpty">
+                    <li class="compact normal ulEmpty" id="appendix-B-2.4.2.1">
+                        <span class="break"></span>
+                        <dl class="dlCompact dlParallel" id="appendix-B-2.4.2.1.1">
+                            <dt id="appendix-B-2.4.2.1.1.1">解析键</dt>
+                            <dd style="margin-left: 1.5em" id="appendix-B-2.4.2.1.1.2">
+                                <p id="appendix-B-2.4.2.1.1.2.1">
+                                    <a href="#section-5.1-2.6.2.3.1" class="auto internal xref">第 5.1 节，第
+                                        2.6.2.3.1 段</a>;
+                                    <a href="#section-5.1-2.7.2.3.1" class="auto internal xref">第 5.1 节，第
+                                        2.7.2.3.1 段</a>;
+                                    <strong><em><a href="#section-5.3-1" class="auto internal xref">第 5.3 节，
+                                                第 1 段</a></em></strong>;
+                                    <a href="#section-5.3.1-1" class="auto internal xref">第 5.3.1 节，第
+                                        1 段</a><a href="#appendix-B-2.4.2.1.1.2.1" class="pilcrow">¶</a>
+                                </p>
+                            </dd>
+                            <dd class="break"></dd>
+                            <dt id="appendix-B-2.4.2.1.1.3">解析 URL 变体配置</dt>
+                            <dd style="margin-left: 1.5em" id="appendix-B-2.4.2.1.1.4">
+                                <p id="appendix-B-2.4.2.1.1.4.1">
+                                    <strong><em><a href="#section-5.1-1" class="auto internal xref">第 5.1 节，
+                                                第 1 段</a></em></strong>;
+                                    <a href="#section-5.2-2.2.1" class="auto internal xref">第 5.2 节，第
+                                        2.2.1 段</a><a href="#appendix-B-2.4.2.1.1.4.1" class="pilcrow">¶</a>
+                                </p>
+                            </dd>
+                            <dd class="break"></dd>
+                        </dl>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+    <div id="authors-addresses">
+        <section id="appendix-C">
+            <h2 id="name-authors-addresses">
+                <a href="#name-authors-addresses" class="section-name selfRef">作者地址</a>
+            </h2>
+            <address class="vcard">
+                <div dir="auto" class="left"><span class="fn nameRole">Domenic Denicola</span></div>
+                <div dir="auto" class="left"><span class="org">Google LLC</span></div>
+                <div class="email">
+                    <span>电子邮件：</span>
+                    <a href="mailto:d@domenic.me" class="email">d@domenic.me</a>
+                </div>
+            </address>
+            <address class="vcard">
+                <div dir="auto" class="left"><span class="fn nameRole">Jeremy Roman</span></div>
+                <div dir="auto" class="left"><span class="org">Google LLC</span></div>
+                <div class="email">
+                    <span>电子邮件：</span>
+                    <a href="mailto:jbroman@chromium.org" class="email">jbroman@chromium.org</a>
+                </div>
+            </address>
+            <address class="vcard">
+                <div dir="auto" class="left"><span class="fn nameRole">Nidhi Jaju（<span class="role">编辑</span>）</span>
+                </div>
+                <div dir="auto" class="left"><span class="org">Google LLC</span></div>
+                <div class="email">
+                    <span>电子邮件：</span>
+                    <a href="mailto:nidhijaju@chromium.org" class="email">nidhijaju@chromium.org</a>
+                </div>
+            </address>
+        </section>
+    </div>
+    <script>const toc = document.getElementById("toc");
+        toc.querySelector("h2").addEventListener("click", e => {
+            toc.classList.toggle("active");
+        });
+        toc.querySelector("nav").addEventListener("click", e => {
+            toc.classList.remove("active");
+        });
+    </script>
+    <script src="https://htmlspecs.com/dropdown.js"></script>
+</body>
+
+</html>

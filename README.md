@@ -542,6 +542,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [The Cache-Status HTTP Response Header Field](https://htmlspecs.com/http/rfc9211.html)（[Source](https://httpwg.org/specs/rfc9211.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [Targeted HTTP Cache Control](https://htmlspecs.com/http/rfc9213.html)（[Source](https://httpwg.org/specs/rfc9213.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [HTTP Cache Groups](https://htmlspecs.com/http/rfc9875.html)（[Source](https://httpwg.org/specs/rfc9875.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [The No-Vary-Search HTTP Caching Extension](https://htmlspecs.com/http/no-vary-search.html)（[Source](https://httpwg.org/http-extensions/draft-ietf-httpbis-no-vary-search.html) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 
 ### 表示元数据、链接与内容编码
 - [HTTP State Management Mechanism](https://htmlspecs.com/http/rfc6265.html)（[Source](https://httpwg.org/specs/rfc6265.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）

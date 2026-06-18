@@ -3813,14 +3813,14 @@ const httpLinks = [
         lang: "cjk",
         state: "RFC"
     },
-    // {
-    //     text: "The No-Vary-Search HTTP Caching Extension",
-    //     href: "https://htmlspecs.com/http/no-vary-search.html",
-    //     src: "https://httpwg.org/http-extensions/draft-ietf-httpbis-no-vary-search.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "The No-Vary-Search HTTP Caching Extension",
+        href: "https://htmlspecs.com/http/no-vary-search.html",
+        src: "https://httpwg.org/http-extensions/draft-ietf-httpbis-no-vary-search.html",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "Draft"
+    },
 
     //### 表示元数据、链接与内容编码|표현 메타데이터, 링크 및 콘텐츠 인코딩|表現メタデータ・リンク・内容エンコーディング
     {
