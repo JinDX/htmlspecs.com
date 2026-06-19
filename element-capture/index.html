@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="zh-hans">
+
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+    <title>元素捕获</title>
+    <script class="remove" src="https://screen-share.github.io/element-capture/element-capture.js"
+        type="text/javascript"></script>
+    <script src="https://www.w3.org/Tools/respec/respec-w3c" class="remove"></script>
+</head>
+
+<body>
+    <section id="abstract">
+        <h2>摘要</h2>
+        <p>
+            诸如 {{MediaDevices/getDisplayMedia()}} 之类的现有机制允许 Web 应用程序
+            发起屏幕捕获。如果用户选择捕获某个标签页，诸如
+            [[mediacapture-region|Region Capture]] 之类的机制会改变所产生的视频轨道，并对
+            后续产生的所有帧执行某项操作。（以 [[mediacapture-region|Region
+            Capture]] 为例，该操作包括将帧裁剪为该帧与目标元素的
+            边界框的交集。）
+        </p>
+        <p>
+            元素捕获引入了一种新的改变机制，我们将其命名为“限定（restriction）”。当某个
+            应用程序将一个视频轨道“限定”到给定的目标元素时，在该被限定的视频轨道上产生的
+            帧只包含来自该目标元素及其后代元素的信息。换句话说，该轨道变成了对以
+            目标元素为根的 DOM 子树的捕获。
+        </p>
+    </section>
+    <section id="sotd"></section>
+    <section id="conformance"></section>
+    <section id="use-cases">
+        <h2>用例</h2>
+        <section id="generic-use-case">
+            <h3>通用用例</h3>
+            <p>
+                [[mediacapture-region|Region Capture]] 允许应用程序裁剪捕获内容。假设某个
+                元素 <code>TARGET</code> 是限定目标。如果其他并非 <code>TARGET</code> 的
+                DOM 后代的元素绘制在 <code>TARGET</code> 之前会怎样？使用
+                [[mediacapture-region|Region Capture]]，这些其他元素也会被捕获，
+                而这并不总是合乎需要的。人们寻求一种机制，它能够裁剪到
+                <code>TARGET</code> 的边界框，同时还能将任何并非 DOM 后代的
+                内容排除在捕获之外。
+            </p>
+        </section>
+        <section id="practical-use-case-1">
+            <h3>实际用例 #1：录制应用程序的一部分</h3>
+            <p>
+                设想一个“编辑器”Web 应用程序（文本编辑器、图像编辑器、幻灯片编辑器或
+                视频编辑器）。此类应用程序通常包含一个主内容区域，周围环绕着各种
+                工具栏、下拉菜单和小部件，本地用户可以借助它们编辑主内容区域中的内容。
+            </p>
+            <p>
+                有时 Web 应用程序希望只录制主内容区域，然后或者将其“实时”
+                传输给远程参与者，或者将其录制到磁盘。此类应用程序
+                不一定希望在主内容区域之外的任何内容上耗费存储、带宽或远程参与者的屏幕
+                空间。
+            </p>
+            <p>
+                诸如 [[mediacapture-region|Region Capture]] 之类的机制有助于裁剪到目标元素的
+                边界框，但当下拉列表临时绘制在它之上时会发生什么呢？
+            </p>
+        </section>
+        <section id="practical-use-case-2">
+            <h3>实际用例 #2：视频会议期间的协作工具</h3>
+            <p>
+                视频会议应用程序通常使用“图块（tiles）”来排列自身——每个远程
+                参与者的视频呈现在一个图块中。假设一个协作 Web 应用程序，
+                比如文本编辑器或图像编辑应用程序，加载在另一个 iframe 中，并且
+                这个 iframe 也呈现为一个图块。
+            </p>
+            <p>
+                一些远程参与者会类似地在专用图块中加载同一个工具。但
+                如果某些用户没有加载该工具所需的权限会怎样？或者如果他们是
+                从不支持该工具的平台加入的呢？
+            </p>
+            <p>
+                视频会议解决方案随后可以选择让其中一位已成功加载该工具的参与者
+                将该工具的图块屏幕共享给那些无法加载
+                该工具的用户，使他们至少能够查看它，尽管无法与之交互。这可以
+                通过 {{MediaDevices/getDisplayMedia()}} 和
+                [[mediacapture-region|Region Capture]] 进行自捕获来实现。
+            </p>
+            <p>
+                但这样的解决方案带来了一些问题。如果其他元素曾经绘制在
+                该工具图块之上，无论是短暂的还是永久的，会发生什么？示例包括：
+            </p>
+            <ul>
+                <li>在视频会议应用程序内发送的私信。</li>
+                <li>新用户加入的请求。</li>
+                <li>图块布局变更期间的其他图块。</li>
+                <li>来自视频会议应用程序其他元素的下拉列表。</li>
+            </ul>
+        </section>
+    </section>
+    <section id="solution-overview">
+        <h2>解决方案概述</h2>
+        <p>元素捕获机制包含两个部分：</p>
+        <ol>
+            <li>
+                [=RestrictionTarget production=]：一种将 {{Element}} <dfn>标记（tagging）</dfn>为
+                [=restriction mechanism=] 潜在目标的机制。
+            </li>
+            <li>
+                [=Restriction mechanism=]：一种机制，用于指示用户代理开始将
+                视频轨道限定到先前已 [=tagging|被标记的=] {{Element}} 的边界框，或者
+                停止此种限定并将轨道恢复到其 [=unrestricted=] 状态。
+            </li>
+        </ol>
+        <p>
+            我们定义两种 <dfn>限定状态（restriction-states）</dfn>：<dfn>受限（restricted）</dfn> 和
+            <dfn>不受限（unrestricted）</dfn>。视频轨道始终处于其中一种状态。轨道开始时
+            为 [=unrestricted=]，并且在成功调用
+            {{BrowserCaptureMediaStreamTrack/restrictTo()}} 时可能转变为 [=restricted=]。
+        </p>
+    </section>
+    <section id="produce-restriction-target">
+        <h2><dfn>RestrictionTarget Production</dfn></h2>
+        <section id="restriction-target-motivation">
+            <h3>定义 RestrictionTarget 的动机</h3>
+            <p>
+                本文档中介绍的 [=restriction mechanism=]
+                （{{BrowserCaptureMediaStreamTrack/restrictTo}}）依赖于 {{RestrictionTarget}} 令牌
+                而非直接的节点引用。这允许由一个文档限定到在另一个文档中指定的
+                目标元素。
+            </p>
+            <p>
+                由于 {{BrowserCaptureMediaStreamTrack/cropTo()}} 和
+                {{BrowserCaptureMediaStreamTrack/restrictTo()}} 使用不同的令牌类型——分别是 {{CropTarget}}
+                和 {{RestrictionTarget}}——文档可以限制它们授予
+                给捕获它们的文档的能力。
+            </p>
+        </section>
+        <section id="restriction-target">
+            <h3><dfn>RestrictionTarget</dfn> 定义</h3>
+            <p>
+                RestrictionTarget 是一个有意为空的、不透明的标识符。它的用途是被
+                作为输入交给 {{BrowserCaptureMediaStreamTrack/restrictTo}}。
+            </p>
+            <pre class="idl">
+          [Exposed=(Window,Worker), Serializable]
+          interface RestrictionTarget {
+            [Exposed=Window, SecureContext] static Promise&lt;RestrictionTarget&gt; fromElement(Element element);
+          };
+        </pre>
+            <dl data-link-for="RestrictionTarget" data-dfn-for="RestrictionTarget">
+                <dt>
+                    <dfn>fromElement()</dfn>
+                </dt>
+                <dd>
+                    <p>
+                        使用受支持类型的 {{Element}} 调用 {{RestrictionTarget/fromElement}} 会
+                        将该 {{Element}} 与一个 {{RestrictionTarget}} 关联起来。这个 {{RestrictionTarget}}
+                        可以用作 {{BrowserCaptureMediaStreamTrack/restrictTo}} 的输入。我们将
+                        有效的 RestrictionTarget 定义为：由在仍然
+                        <a data-cite="!HTML#active-document">活动</a> 的
+                        <a data-cite="!HTML#document">文档</a> 中调用
+                        {{RestrictionTarget.fromElement()}} 所返回的对象。
+                    </p>
+                    <p>
+                        当使用给定的 |element| 调用 {{RestrictionTarget/fromElement}} 时，用户
+                        代理 [=create a RestrictionTarget|创建一个 RestrictionTarget=]，以 |element| 作为
+                        输入。用户代理 MUST 返回一个 {{Promise}} |p|。用户代理 MUST 仅在
+                        它完成了与新 {{RestrictionTarget}} 相关联的所有必要内部状态传播
+                        之后才解决（resolve）|p|，到那时用户代理 MUST 准备好
+                        接收新的 {{RestrictionTarget}} 作为
+                        {{BrowserCaptureMediaStreamTrack/restrictTo}} 的有效参数。
+                    </p>
+                    <p>
+                        当克隆一个先前已对其调用过 {{RestrictionTarget/fromElement}} 的 {{Element}} 时，
+                        该克隆不与任何 {{RestrictionTarget}} 关联。如果
+                        之后对该克隆调用 {{RestrictionTarget/fromElement}}，则会为它分配一个新的
+                        {{RestrictionTarget}}。
+                    </p>
+                </dd>
+            </dl>
+            <p>
+                要以 |element| 作为输入 <dfn data-export>创建一个 RestrictionTarget</dfn>，请执行
+                以下步骤：
+            </p>
+            <ol>
+                <li>
+                    <p>令 |restrictionTarget| 为一个 {{RestrictionTarget}} 类型的新对象。</p>
+                </li>
+                <li>
+                    <p>
+                        将 |restrictionTarget|.<dfn data-dfn-for="RestrictionTarget">[[\Element]]</dfn>
+                        设置为 |element|。
+                    </p>
+                </li>
+            </ol>
+            <p>
+                {{RestrictionTarget}} 对象是可序列化的。给定 |value|、|serialized| 和一个布尔值
+                |forStorage|，其 [=serialization steps=] 为：
+            </p>
+            <ol>
+                <li>
+                    <p>
+                        如果 |forStorage| 为 <code>true</code>，则抛出一个新的 {{DOMException}} 对象，其
+                        {{DOMException/name}} 属性的值为 {{"DataCloneError"}}。
+                    </p>
+                </li>
+                <li>
+                    <p>
+                        将 |serialized|.[[\RestrictionTargetElement]] 设置为
+                        |value|.{{RestrictionTarget/[[Element]]}}。
+                    </p>
+                </li>
+            </ol>
+            <p>给定 |serialized| 和 |value|，其 [=deserialization steps=] 为：</p>
+            <ol>
+                <li>
+                    <p>
+                        将 |value|.{{RestrictionTarget/[[Element]]}} 设置为
+                        |serialized|.[[\RestrictionTargetElement]]。
+                    </p>
+                </li>
+            </ol>
+        </section>
+    </section>
+    <section id="restricting-a-track">
+        <h2><dfn>Restriction Mechanism</dfn></h2>
+        <section>
+            <h3>定义</h3>
+            <section>
+                <h4>可限定的轨道</h4>
+                <p>
+                    我们说一个 {{MediaStreamTrack}} |T| 是一个
+                    <dfn>可限定的 MediaStreamTrack（restrictable MediaStreamTrack）</dfn>，当且仅当它满足以下所有
+                    条件：
+                </p>
+                <ul>
+                    <li>|T|.{{MediaStreamTrack/[[Restrictable]]}} 为 <code>true</code>。</li>
+                    <li>
+                        |T| 与一个
+                        <a data-cite="screen-capture/#dfn-browser">浏览器</a>
+                        <a data-cite="screen-capture/#dfn-display-surface">显示表面</a> 相关联。（也就是说，如果
+                        调用 |T|.{{MediaStreamTrack/getSettings()}}，它将返回一个
+                        包含键 {{MediaTrackSettings/displaySurface}} 映射到值
+                        {{DisplayCaptureSurfaceType/"browser"}} 的 {{MediaTrackSettings}} 字典。）
+                    </li>
+                    <li>
+                        |T|.<a data-cite="mediacapture-streams/#dfn-kind">[[\Kind]]</a> 为
+                        <a data-cite="mediacapture-streams/#dfn-video">"video"</a>。
+                    </li>
+                    <li>
+                        |T|.<a data-cite="mediacapture-streams/#dfn-readystate">[[\ReadyState]]</a> 为
+                        <a data-cite="mediacapture-streams/#idl-def-MediaStreamTrackState.live">"live"</a>。
+                    </li>
+                </ul>
+            </section>
+            <section>
+                <h4>符合限定条件的元素</h4>
+                <p>
+                    我们说一个 {{Element}} |E| <dfn>符合限定条件（eligible for restriction）</dfn>，当且仅当它
+                    满足以下所有条件：
+                </p>
+                <ul>
+                    <li>
+                        <p>|E| 形成一个 <a data-cite="css2ed#stacking-context">层叠上下文</a>。</p>
+                    </li>
+                    <li>
+                        <p>
+                            |E| 被
+                            <a data-cite="css-transforms-2#grouping-property-values">在 3D 中扁平化</a>。
+                        </p>
+                    </li>
+                    <li>
+                        <p>
+                            |E| 形成一个
+                            <a data-cite="filter-effects-2/#backdrop-root">背景根（backdrop root）</a>。
+                        </p>
+                    </li>
+                    <li>
+                        <p>
+                            |E| 恰好有一个
+                            <a data-cite="css-break-4/#box-fragment">盒片段（box fragment）</a>。
+                        </p>
+                    </li>
+                    <li>
+                        <p>|E| 被 <a data-cite="css-images-4/#element-not-rendered">渲染</a>。</p>
+                    </li>
+                </ul>
+                <div class="note">
+                    <p>
+                        为确保这些条件成立，开发者可以使用诸如以下代码片段之类的 CSS：
+                    </p>
+                    <pre class="css">
+              #target {
+                isolation: isolate;     /* 形成一个层叠上下文。 */
+                transform-style: flat;  /* 扁平化。 */
+              }
+            </pre>
+                </div>
+            </section>
+            <h4>有效的限定目标</h4>
+            <p>
+                我们说一个 {{Element}} |E| 对于一个 {{MediaStreamTrack}} |T| 是一个
+                <dfn>有效的限定目标（valid restriction target）</dfn>，当且仅当以下所有条件成立：
+            </p>
+            <ul>
+                <li>|T| 是一个 [=restrictable MediaStreamTrack=]。</li>
+                <li>|E| 是一个 [=eligible for restriction=]。</li>
+                <li>
+                    作为 |T| 来源的
+                    <a data-cite="screen-capture/#dfn-display-surface">显示表面</a>
+                    的 [=top-level browsing context=]，是 |E| 的 [=shadow-including root=]。
+                </li>
+            </ul>
+            <div class="note">
+                <p>
+                    非正式地说，这意味着 |T| 是与标签页捕获相关联的活动视频轨道，
+                    并且 |E| 是在被捕获标签页中 [=connected=] 到 DOM 的一个 Element。
+                </p>
+                <p>
+                    请注意，一个 Element |E| 对于一个 {{MediaStreamTrack}} |T| 是否为
+                    [=valid restriction target=]，可能在捕获开始之前或之后发生变化，也可能在
+                    限定开始之前或之后发生变化。示例包括：
+                </p>
+                <ul>
+                    <li>|T| 被以编程方式停止。</li>
+                    <li>|T| 被用户停止。</li>
+                    <li>
+                        由于用户与用户代理和/或操作系统的交互，
+                        |T|.<a data-cite="mediacapture-streams/#dfn-source-0">[[\Source]]</a> 发生变化。
+                    </li>
+                    <li>
+                        |E| 的 CSS 属性集合发生变化，使得 |E| 不再 [=eligible for
+                        restriction=]。
+                    </li>
+                </ul>
+                <p>无效性会抑制额外的帧，直到有效性被恢复。</p>
+            </div>
+        </section>
+        <section id="browser-capture-media-stream-track-extension">
+            <h3>BrowserCaptureMediaStreamTrack 扩展</h3>
+            <p>
+                [[mediacapture-region|Region Capture]] 引入了 {{BrowserCaptureMediaStreamTrack}}
+                接口。我们用一个新方法 {{BrowserCaptureMediaStreamTrack/restrictTo}} 对其进行扩展。
+            </p>
+            <pre class="idl">
+          [Exposed = Window]
+          partial interface BrowserCaptureMediaStreamTrack {
+            Promise&lt;undefined&gt; restrictTo(RestrictionTarget? RestrictionTarget);
+          };
+        </pre>
+            <p>
+                下面排队的所有任务都使用与该 {{BrowserCaptureMediaStreamTrack}} 相同的
+                <a data-cite="!HTML#global-object">全局对象</a> 相关联的
+                <a data-cite="!HTML#rendering-task-source">渲染任务源</a>。
+            </p>
+            <dl data-link-for="BrowserCaptureMediaStreamTrack" data-dfn-for="BrowserCaptureMediaStreamTrack">
+                <dt>
+                    <dfn>restrictTo()</dfn>
+                </dt>
+                <dd>
+                    <p>
+                        对此方法的调用指示用户代理开始/停止限定一个视频轨道。
+                    </p>
+                    <p>
+                        当以 |restrictionTarget| 作为第一个参数被调用时，用户代理 MUST
+                        执行以下算法：
+                    </p>
+                    <ol>
+                        <li>
+                            <p>
+                                如果 [=this=] 不是一个 [=restrictable MediaStreamTrack=]，返回一个以
+                                新的 {{NotSupportedError}} [=rejected=] 的 {{Promise}}。
+                            </p>
+                        </li>
+                        <li>令 |p| 为一个新的 {{Promise}}。</li>
+                        <li>
+                            <p>并行运行以下步骤：</p>
+                            <ol>
+                                <li>
+                                    <p>令 |E| 为 |restrictionTarget|.{{RestrictionTarget/[[Element]]}}。</p>
+                                </li>
+                                <li>
+                                    <p>
+                                        将 [=this=] 视频轨道的
+                                        <a data-cite="!mediacapture-region/#dfn-crop-states">crop-state</a>
+                                        更新为 <a data-cite="!mediacapture-region/#dfn-uncropped">uncropped</a>。
+                                    </p>
+                                </li>
+                                <li>
+                                    <p>
+                                        根据 |restrictionTarget| 更新 [=this=] 视频轨道的 [=restriction-state=]：
+                                    </p>
+                                    <ol>
+                                        <li>
+                                            如果 |restrictionTarget| 不为 {{undefined}}，用户代理 MUST 将
+                                            [=this=] 视频轨道的 [=restriction-state=] 设置为 [=restricted=]，并开始
+                                            以 |restrictionTarget| 作为目标对递送到
+                                            [=this=] 视频轨道的所有帧 [=applying the restriction transformation=]。
+                                        </li>
+                                        <li>
+                                            如果 |restrictionTarget| 被设置为 {{undefined}}，用户代理 MUST 将
+                                            [=this=] 视频轨道的 [=restriction-state=] 设置为 [=unrestricted=]，并停止
+                                            对递送到 [=this=] 视频轨道的帧 [=applying the restriction transformation=]。
+                                        </li>
+                                    </ol>
+                                </li>
+                                <li>
+                                    <p>
+                                        将该轨道在此方法调用之前的状态称为 |preState|，调用
+                                        之后的状态称为 |postState|。用户代理 MUST
+                                        <a data-cite="!HTML#queue-a-global-task">排队一个全局任务</a> 以在
+                                        保证不会再有按照 |preState| 进行 [=restricted=]（或
+                                        [=unrestricted=]）的帧被递送到应用程序，并且任何被递送到应用程序的
+                                        额外帧因此都将按照 |postState| 或更晚的状态进行
+                                        [=restricted=]（或 [=unrestricted=]）时，解决 |p|。
+                                    </p>
+                                </li>
+                            </ol>
+                        </li>
+                        <li>返回 |p|。</li>
+                    </ol>
+                </dd>
+            </dl>
+        </section>
+    </section>
+    <section id="applying-the-restriction-transformation">
+        <h2><dfn>Applying the restriction transformation</dfn></h2>
+        <p>
+            每当用户代理即将为一个 [=restricted=] 到给定目标 |restrictionTarget| 的视频轨道 |T|
+            产生一个新的 |frame| 时，用户代理 MUST 执行
+            以下算法：
+        </p>
+        <ol>
+            <li>令 |E| 为 |restrictionTarget|.{{RestrictionTarget/[[Element]]}}。</li>
+            <li>
+                如果 |E| 不是 |T| 的 [=valid restriction target=]，则中止而不产生新帧。
+            </li>
+            <li>
+                令 |intersection| 为 |E| 的边界框与被捕获表面的
+                [=top-level browsing context=] 的视口的交集。
+            </li>
+            <li>如果 |intersection| 为空，则中止而不产生新帧。</li>
+            <li>
+                前述步骤的一个推论是 |E| 形成一个层叠上下文。产生并递送一个
+                帧，它由该层叠上下文的独立渲染组成，裁剪到
+                |intersection|。
+            </li>
+        </ol>
+        <p>
+            最后一步中产生的帧是通过将 |E| 及其后代渲染
+            到一个无限透明画布上来构建的，其位置使得
+            <a data-cite="!css-images-4#decorated-bounding-box">装饰边界框</a> 的边缘
+            与帧的边缘齐平。
+        </p>
+        <p class="note">
+            在某些实现中，帧数据的底层像素格式将无法
+            携带 alpha 通道信息。在这种情况下，实现可以将渲染后的
+            帧与一个无限的黑色画布（`rgb(0,0,0)`）混合。
+        </p>
+        <p class="note">
+            实现可以重用为 |E| 生成的现有位图数据，或者重新生成
+            该元素的显示以在帧尺寸下最大化质量（例如，如果
+            实现检测到所引用的元素是一个 SVG 片段）。然而，该帧
+            必须看起来与上面渲染的 |E| 完全相同，光栅化质量除外。
+        </p>
+    </section>
+    <section id="sample-code">
+        <h2>示例代码</h2>
+        <div class="example">
+            <p>捕获目标中的代码：</p>
+            <pre class="javascript">
+          const mainContentArea = navigator.getElementById('mainContentArea');
+          const restrictionTarget = await RestrictionTarget.fromElement(mainContentArea);
+          sendRestrictionTarget(restrictionTarget);
+
+          function sendRestrictionTarget(restrictionTarget) {
+            // 要么使用 postMessage() 发送限定目标，
+            // 要么在同一文档内本地传递它。
+          }
+        </pre>
+        </div>
+        <div class="example">
+            <p>捕获文档中的代码：</p>
+            <pre class="javascript">
+          async function startRestrictedCapture(RestrictionTarget) {
+            const stream = await navigator.mediaDevices.getDisplayMedia();
+            const [track] = stream.getVideoTracks();
+            if (!!track.restrictTo) {
+              handleError(stream);
+              return;
+            }
+            await track.restrictTo(RestrictionTarget);
+            transmitVideoRemotely(track);
+          }
+        </pre>
+        </div>
+    </section>
+    <section id="privacy-and-security-considerations">
+        <h1>隐私与安全注意事项</h1>
+        <section>
+            <h2>本 API 的益处</h2>
+            <p>
+                对于非恶意应用程序，本规范引入的 API 应当是
+                纯粹的正面影响，因为它们允许负责任的应用程序削减所
+                记录的信息。这具有正面的特性。
+            </p>
+            <p>例如，使用现有机制，视频会议应用程序可以：</p>
+            <ol>
+                <li>
+                    <p>在 iframe 中嵌入内容。</p>
+                </li>
+                <li>
+                    <p>
+                        提示用户捕获当前标签页。（使用
+                        {{MediaDevices/getDisplayMedia()}}。）
+                    </p>
+                </li>
+                <li>
+                    <p>
+                        将所产生的捕获裁剪为仅供捕获之用的那个 iframe。（使用
+                        {{BrowserCaptureMediaStreamTrack/cropTo()}}。）
+                    </p>
+                </li>
+                <li>
+                    <p>
+                        将所产生的像素传输给远程参与者。（使用
+                        <a data-cite="webrtc#dom-rtcpeerconnection">RTCPeerConnection</a>。）
+                    </p>
+                </li>
+            </ol>
+            <p>
+                然而，这是有风险的，因为任何恰好绘制在
+                供捕获之用的内容之前的内容也将被远程传输。即使这只是
+                短暂发生，远程用户也可能注意到。而此类内容可能是高度私密的——
+                例如，聊天通知、提醒、演讲者备注……
+            </p>
+            <p>
+                本规范引入的机制允许负责任的应用程序以
+                一种能够完全保证此类问题不可能发生的方式来组织自身。
+                此类应用程序可以更容易地向其用户做出并信守隐私保证。
+            </p>
+        </section>
+        <section>
+            <h2>关于本 API 的担忧</h2>
+            <section>
+                <h3>读取跨源像素</h3>
+                <p>
+                    本规范引入的机制全都依赖于通过某些其他方式提供的
+                    自捕获——通常是 {{MediaDevices/getDisplayMedia()}}。这些机制的主要担忧
+                    是，它们允许应用程序对跨源内容进行读访问。
+                </p>
+                <p>
+                    当一个恶意应用程序诱骗用户批准自捕获时，它随后可以
+                    在一个不可见的 iframe 中加载跨源内容，然后将该内容带到最前面，
+                    使攻击者能够在用户做出反应之前读取该内容。此类攻击
+                    在没有本规范引入的任何机制的情况下也已经可能实现。
+                </p>
+            </section>
+            <section>
+                <h3>加剧旧的攻击途径</h3>
+                <p>
+                    主要的担忧是，我们在本规范中引入的机制不应
+                    <b>加剧</b>上述旧的攻击途径。人们自然会担心，我们引入的
+                    机制允许旧的攻击被<b>暗中</b>实施。
+                    我们主张，这里引入的机制并不增加攻击者
+                    隐藏攻击的能力；此类攻击隐藏一直都可以使用以下任何
+                    技术来实现：
+                </p>
+                <ul>
+                    <li>
+                        <p>
+                            <b>短暂地显示内容。</b>攻击者一直都可以将内容
+                            闪现到屏幕上，持续时长为单个帧。这足够长以记录它，但
+                            不足以让用户理解它。
+                        </p>
+                    </li>
+                    <li>
+                        <p>
+                            <b>零碎地显示内容。</b>攻击者一直都可以将
+                            内容拆分成多个小片，甚至每片一个像素，并在
+                            不同的位置和时间显示它们。用户将无法观察到这种操纵，
+                            但软件收集这些像素并据此重建一幅图像
+                            是轻而易举的。
+                        </p>
+                    </li>
+                    <li>
+                        <p>
+                            <b>以低不透明度显示内容。</b>攻击者一直都可以以
+                            一种用户无法察觉但机器仍能读取的不透明度显示内容。
+                        </p>
+                    </li>
+                </ul>
+                <p>
+                    这些技术中的任何一种本身就足够了，但通过它们的组合，
+                    恶意应用程序一直都能够有效地隐藏其攻击，同时仍然
+                    高效地读取内容。
+                </p>
+            </section>
+            <section id="reading-occluded-content">
+                <h3>读取被遮挡的内容</h3>
+                <p>
+                    人们可能会担心，一个恶意应用程序能够在没有该内容选择加入的情况下，
+                    移除跨源 iframe 中的遮挡。该 API 的形态阻止了此类攻击——
+                    跨源 iframe 必须产生一个 {{RestrictionTarget}} 并将其传递给
+                    潜在的攻击者。由于 {{RestrictionTargets}} 除了作为本规范引入的
+                    API 的一部分之外没有任何用途，{{RestrictionTarget}} 的铸造和传递
+                    证明了该跨源 iframe 允许移除其遮挡的许可。
+                </p>
+            </section>
+            <section>
+                <h3>与 Region Capture 的交互</h3>
+                <p>
+                    在设计本规范引入的 API 时，有意决定
+                    不重用 {{CropTarget}}，而是定义一个专用令牌（{{CropTarget}}）。这
+                    确保了任何先前在设计和实现时考虑了
+                    {{BrowserCaptureMediaStreamTrack/cropTo()}} 但未考虑
+                    {{BrowserCaptureMediaStreamTrack/restrictTo()}} 的现有 Web 应用程序，不会
+                    实际上选择加入到允许移除遮挡，如
+                    <a href="#reading-occluded-content">上一节</a>中所述。
+                </p>
+            </section>
+        </section>
+    </section>
+    <script src="https://htmlspecs.com/dropdown.js"></script>
+</body>
+
+</html>

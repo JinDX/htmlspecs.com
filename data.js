@@ -1244,6 +1244,14 @@ const links = [
         state: "WD"
     },
     {
+        text: "Element Capture",
+        href: "https://htmlspecs.com/element-capture/",
+        src: "https://screen-share.github.io/element-capture/",
+        "last-modified": "Tue, 12 Nov 2024 10:04:42 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
+    {
         text: "Picture-in-Picture",
         href: "https://htmlspecs.com/picture-in-picture/",
         src: "https://www.w3.org/TR/2026/WD-picture-in-picture-20260616/",
