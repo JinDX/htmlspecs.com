@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+    <title>Element Capture</title>
+    <script class="remove" src="element-capture.js" type="text/javascript"></script>
+    <script src="https://www.w3.org/Tools/respec/respec-w3c" class="remove"></script>
+</head>
+
+<body>
+    <section id="abstract">
+        <h2>Abstract</h2>
+        <p>
+            Pre-existing mechanisms such as {{MediaDevices/getDisplayMedia()}} allow Web applications to
+            initiate screen-capture. If the user chooses to capture a tab, mechanisms such as
+            [[mediacapture-region|Region Capture]] mutate the resulting video track and perform an
+            operation on all subsequent frames produced. (In the example of [[mediacapture-region|Region
+            Capture]], the operation consists of cropping frames to the frame's intersection with the
+            bounding box of a target-element.)
+        </p>
+        <p>
+            Element Capture introduces a new mutation mechanism which we name "restriction". When an
+            application "restricts" a video track to a given target-element, frames produced on the
+            restricted video track only consist of information from the target-element and its
+            descendants. Phrased differently, the track becomes a capture of the DOM sub-tree rooted at
+            the target-element.
+        </p>
+    </section>
+    <section id="sotd"></section>
+    <section id="conformance"></section>
+    <section id="use-cases">
+        <h2>Use Cases</h2>
+        <section id="generic-use-case">
+            <h3>Generic Use-Case</h3>
+            <p>
+                [[mediacapture-region|Region Capture]] allows applications to crop captures. Assume some
+                element <code>TARGET</code> is the restriction-target. What if other elements, which are
+                not DOM-descendants of <code>TARGET</code>, draw in front of <code>TARGET</code>? Using
+                [[mediacapture-region|Region Capture]], these other elements would also get captured,
+                which is not always desirable. A mechanism is sought that would allow cropping to
+                <code>TARGET</code>'s bounding box, while also excluding from capture any of the content
+                that is not a DOM-descendant.
+            </p>
+        </section>
+        <section id="practical-use-case-1">
+            <h3>Practical Use-Case #1: Recording part of an app</h3>
+            <p>
+                Consider an "editor" Web application (text-editor, image-editor, slides-editor or
+                video-editor). Such applications often include a main content area, surrounded by various
+                toolbars, drop-down menus and widgets which allow the local user to edit the content in
+                the main content area.
+            </p>
+            <p>
+                Sometimes a Web application wishes to record only the main content area, and then either
+                transmit it "live" to remote participants, or record it to disk. Such an application would
+                not necessarily wish to expend storage, bandwidth, or remote participants' screen
+                real-estate on anything outside of the main content area.
+            </p>
+            <p>
+                A mechanism such as [[mediacapture-region|Region Capture]] helps with cropping to the
+                bounding box of the target-element, but what happens when drop-down lists temporarily draw
+                over it?
+            </p>
+        </section>
+        <section id="practical-use-case-2">
+            <h3>Practical Use-Case #2: Collaborative tools during video-conferencing</h3>
+            <p>
+                Video-conferencing applications often arrange themselves using "tiles" - each remote
+                participant's video is presented in a tile. Assume that a collaborative Web application,
+                like a text editor or an image-editing application, is loaded in another iframe, and that
+                this iframe is also presented as a tile.
+            </p>
+            <p>
+                Some remote participants would similarly load the same tool in a dedicated tile. But what
+                if some users don't have the necessary permissions to load that tool? Or if they are
+                joining from a platform that does not support the tool?
+            </p>
+            <p>
+                The video conferencing solution may then choose to have one of the participants who have
+                loaded the tool successfully screen-share that tool's tile to the users who cannot load
+                the tool, allowing them to at least view it, although not interact with it. This can be
+                done using self-capture through {{MediaDevices/getDisplayMedia()}} and
+                [[mediacapture-region|Region Capture]].
+            </p>
+            <p>
+                But such a solution introduces some problems. What happens if other elements ever draw on
+                top of the tool tile, either briefly or permanently? Examples include:
+            </p>
+            <ul>
+                <li>Private messages sent inside of the video-conferencing application.</li>
+                <li>Requests by new users to join.</li>
+                <li>Other tiles during tile-layout changes.</li>
+                <li>Drop-down lists from other elements of the video-conferencing application.</li>
+            </ul>
+        </section>
+    </section>
+    <section id="solution-overview">
+        <h2>Solution Overview</h2>
+        <p>The Element Capture mechanism comprises two parts:</p>
+        <ol>
+            <li>
+                [=RestrictionTarget production=]: A mechanism for <dfn>tagging</dfn> an {{Element}} as a
+                potential target for the [=restriction mechanism=].
+            </li>
+            <li>
+                [=Restriction mechanism=]: A mechanism for instructing the user agent to start restricting
+                a video track to the bounding box of a previously [=tagging|tagged=] {{Element}}, or to
+                stop such restriction and revert a track to its [=unrestricted=] state.
+            </li>
+        </ol>
+        <p>
+            We define two <dfn>restriction-states</dfn>. <dfn>restricted</dfn> and
+            <dfn>unrestricted</dfn>. Video tracks are always in one state or the other. Tracks start out
+            [=unrestricted=], and may turn to [=restricted=] when
+            {{BrowserCaptureMediaStreamTrack/restrictTo()}} is successfully called.
+        </p>
+    </section>
+    <section id="produce-restriction-target">
+        <h2><dfn>RestrictionTarget Production</dfn></h2>
+        <section id="restriction-target-motivation">
+            <h3>Motivation for defining RestrictionTarget</h3>
+            <p>
+                The [=restriction mechanism=] presented in this document
+                ({{BrowserCaptureMediaStreamTrack/restrictTo}}) relies on a {{RestrictionTarget}} token
+                rather than on direct node references. This allows restriction by one document to a target
+                element specified in another document.
+            </p>
+            <p>
+                Because {{BrowserCaptureMediaStreamTrack/cropTo()}} and
+                {{BrowserCaptureMediaStreamTrack/restrictTo()}} use different token types - {{CropTarget}}
+                and {{RestrictionTarget}}, respectively - it is possible for documents to limit the
+                capabilities they bestow on documents that capture them.
+            </p>
+        </section>
+        <section id="restriction-target">
+            <h3><dfn>RestrictionTarget</dfn> Definition</h3>
+            <p>
+                RestrictionTarget is an intentionally empty, opaque identifier. Its purpose is to be
+                handed to {{BrowserCaptureMediaStreamTrack/restrictTo}} as input.
+            </p>
+            <pre class="idl">
+          [Exposed=(Window,Worker), Serializable]
+          interface RestrictionTarget {
+            [Exposed=Window, SecureContext] static Promise&lt;RestrictionTarget&gt; fromElement(Element element);
+          };
+        </pre>
+            <dl data-link-for="RestrictionTarget" data-dfn-for="RestrictionTarget">
+                <dt>
+                    <dfn>fromElement()</dfn>
+                </dt>
+                <dd>
+                    <p>
+                        Calling {{RestrictionTarget/fromElement}} with an {{Element}} of a supported type
+                        associates that {{Element}} with a {{RestrictionTarget}}. This {{RestrictionTarget}}
+                        may be used as input to {{BrowserCaptureMediaStreamTrack/restrictTo}}. We define a
+                        valid RestrictionTarget as one returned by a call to
+                        {{RestrictionTarget.fromElement()}} in a
+                        <a data-cite="!HTML#document">document</a> that is still
+                        <a data-cite="!HTML#active-document">active</a>.
+                    </p>
+                    <p>
+                        When {{RestrictionTarget/fromElement}} is called with a given |element|, the user
+                        agent [=create a RestrictionTarget|creates a RestrictionTarget=] with |element| as
+                        input. The user agent MUST return a {{Promise}} |p|. The user agent MUST resolve |p|
+                        only after it has finished all the necessary internal propagation of state associated
+                        with the new {{RestrictionTarget}}, at which point the user agent MUST be ready to
+                        receive the new {{RestrictionTarget}} as a valid parameter to
+                        {{BrowserCaptureMediaStreamTrack/restrictTo}}.
+                    </p>
+                    <p>
+                        When cloning an {{Element}} on which {{RestrictionTarget/fromElement}} was previously
+                        called, the clone is not associated with any {{RestrictionTarget}}. If
+                        {{RestrictionTarget/fromElement}} is later called on the clone, a new
+                        {{RestrictionTarget}} will be assigned to it.
+                    </p>
+                </dd>
+            </dl>
+            <p>
+                To <dfn data-export>create a RestrictionTarget</dfn> with |element| as input, run the
+                following steps:
+            </p>
+            <ol>
+                <li>
+                    <p>Let |restrictionTarget| be a new object of type {{RestrictionTarget}}.</p>
+                </li>
+                <li>
+                    <p>
+                        Set |restrictionTarget|.<dfn data-dfn-for="RestrictionTarget">[[\Element]]</dfn>
+                        to |element|.
+                    </p>
+                </li>
+            </ol>
+            <p>
+                {{RestrictionTarget}} objects are serializable. The [=serialization steps=], given
+                |value|, |serialized|, and a boolean |forStorage|, are:
+            </p>
+            <ol>
+                <li>
+                    <p>
+                        If |forStorage| is <code>true</code>, throw with new {{DOMException}} object whose
+                        {{DOMException/name}} attribute has the value {{"DataCloneError"}}.
+                    </p>
+                </li>
+                <li>
+                    <p>
+                        Set |serialized|.[[\RestrictionTargetElement]] to
+                        |value|.{{RestrictionTarget/[[Element]]}}.
+                    </p>
+                </li>
+            </ol>
+            <p>The [=deserialization steps=], given |serialized| and |value| are:</p>
+            <ol>
+                <li>
+                    <p>
+                        Set |value|.{{RestrictionTarget/[[Element]]}} to
+                        |serialized|.[[\RestrictionTargetElement]].
+                    </p>
+                </li>
+            </ol>
+        </section>
+    </section>
+    <section id="restricting-a-track">
+        <h2><dfn>Restriction Mechanism</dfn></h2>
+        <section>
+            <h3>Definitions</h3>
+            <section>
+                <h4>Restrictable tracks</h4>
+                <p>
+                    We say that a {{MediaStreamTrack}} |T| is a
+                    <dfn>restrictable MediaStreamTrack</dfn> if and only if it fulfills all of the following
+                    conditions:
+                </p>
+                <ul>
+                    <li>|T|.{{MediaStreamTrack/[[Restrictable]]}} is <code>true</code>.</li>
+                    <li>
+                        |T| is associated with a
+                        <a data-cite="screen-capture/#dfn-browser">browser</a>
+                        <a data-cite="screen-capture/#dfn-display-surface">display surface</a>. (That is, if
+                        |T|.{{MediaStreamTrack/getSettings()}} were called, it would have returned a
+                        {{MediaTrackSettings}} dictionary containing the key
+                        {{MediaTrackSettings/displaySurface}} mapped to the value
+                        {{DisplayCaptureSurfaceType/"browser"}}.)
+                    </li>
+                    <li>
+                        |T|.<a data-cite="mediacapture-streams/#dfn-kind">[[\Kind]]</a> is
+                        <a data-cite="mediacapture-streams/#dfn-video">"video"</a>.
+                    </li>
+                    <li>
+                        |T|.<a data-cite="mediacapture-streams/#dfn-readystate">[[\ReadyState]]</a> is
+                        <a data-cite="mediacapture-streams/#idl-def-MediaStreamTrackState.live">"live"</a>.
+                    </li>
+                </ul>
+            </section>
+            <section>
+                <h4>Elements eligible for restriction</h4>
+                <p>
+                    We say that an {{Element}} |E| is <dfn>eligible for restriction</dfn> if and only if it
+                    fulfills all of the following conditions:
+                </p>
+                <ul>
+                    <li>
+                        <p>|E| forms a <a data-cite="css2ed#stacking-context">stacking context</a>.</p>
+                    </li>
+                    <li>
+                        <p>
+                            |E| is
+                            <a data-cite="css-transforms-2#grouping-property-values">flattened in 3D</a>.
+                        </p>
+                    </li>
+                    <li>
+                        <p>
+                            |E| forms a
+                            <a data-cite="filter-effects-2/#backdrop-root">backdrop root</a>.
+                        </p>
+                    </li>
+                    <li>
+                        <p>
+                            |E| has exactly one
+                            <a data-cite="css-break-4/#box-fragment">box fragment</a>.
+                        </p>
+                    </li>
+                    <li>
+                        <p>|E| is <a data-cite="css-images-4/#element-not-rendered">rendered</a>.</p>
+                    </li>
+                </ul>
+                <div class="note">
+                    <p>
+                        To ensure these conditions hold, developers may use CSS such as the following snippet:
+                    </p>
+                    <pre class="css">
+              #target {
+                isolation: isolate;     /* Forms a stacking context. */
+                transform-style: flat;  /* Flattened. */
+              }
+            </pre>
+                </div>
+            </section>
+            <h4>Valid restriction targets</h4>
+            <p>
+                We say that an {{Element}} |E| is a <dfn>valid restriction target</dfn> for a
+                {{MediaStreamTrack}} |T|, if and only if all of the following conditions hold:
+            </p>
+            <ul>
+                <li>|T| is a [=restrictable MediaStreamTrack=].</li>
+                <li>|E| is a [=eligible for restriction=].</li>
+                <li>
+                    The [=top-level browsing context=] of the
+                    <a data-cite="screen-capture/#dfn-display-surface">display surface</a>
+                    that is the source of |T|, is |E|'s [=shadow-including root=].
+                </li>
+            </ul>
+            <div class="note">
+                <p>
+                    Informally, this means that |T| is an active video track associated with tab-capture,
+                    and |E| is an Element [=connected=] to the DOM in the captured tab.
+                </p>
+                <p>
+                    Note that whether an Element |E| is a [=valid restriction target=] for a
+                    {{MediaStreamTrack}} |T| may change either before or after a capture starts, as well as
+                    before or after restriction starts. Examples include:
+                </p>
+                <ul>
+                    <li>|T| is stopped programmatically.</li>
+                    <li>|T| is stopped by the user.</li>
+                    <li>
+                        |T|.<a data-cite="mediacapture-streams/#dfn-source-0">[[\Source]]</a> changes due to
+                        user interaction with the user agent and/or operating system.
+                    </li>
+                    <li>
+                        |E|'s set of CSS attributes change such that |E| is no longer [=eligible for
+                        restriction=].
+                    </li>
+                </ul>
+                <p>Invalidity will suppress additional frames until validity is restored.</p>
+            </div>
+        </section>
+        <section id="browser-capture-media-stream-track-extension">
+            <h3>BrowserCaptureMediaStreamTrack extension</h3>
+            <p>
+                [[mediacapture-region|Region Capture]] introduced the {{BrowserCaptureMediaStreamTrack}}
+                interface. We extend it with a new method, {{BrowserCaptureMediaStreamTrack/restrictTo}}.
+            </p>
+            <pre class="idl">
+          [Exposed = Window]
+          partial interface BrowserCaptureMediaStreamTrack {
+            Promise&lt;undefined&gt; restrictTo(RestrictionTarget? RestrictionTarget);
+          };
+        </pre>
+            <p>
+                All tasks queued below use the
+                <a data-cite="!HTML#rendering-task-source">rendering task source</a> associated with the
+                same <a data-cite="!HTML#global-object">global object</a> as the
+                {{BrowserCaptureMediaStreamTrack}}.
+            </p>
+            <dl data-link-for="BrowserCaptureMediaStreamTrack" data-dfn-for="BrowserCaptureMediaStreamTrack">
+                <dt>
+                    <dfn>restrictTo()</dfn>
+                </dt>
+                <dd>
+                    <p>
+                        Calls to this method instruct the user agent to start/stop restrict a video track.
+                    </p>
+                    <p>
+                        When invoked with |restrictionTarget| as the first parameter, the user agent MUST
+                        execute the following algorithm:
+                    </p>
+                    <ol>
+                        <li>
+                            <p>
+                                If [=this=] is not a [=restrictable MediaStreamTrack=], return a {{Promise}}
+                                [=rejected=] with a new {{NotSupportedError}}.
+                            </p>
+                        </li>
+                        <li>Let |p| be a new {{Promise}}.</li>
+                        <li>
+                            <p>Run the following steps in parallel:</p>
+                            <ol>
+                                <li>
+                                    <p>Let |E| be |restrictionTarget|.{{RestrictionTarget/[[Element]]}}.</p>
+                                </li>
+                                <li>
+                                    <p>
+                                        Update [=this=] video track's
+                                        <a data-cite="!mediacapture-region/#dfn-crop-states">crop-state</a>
+                                        to <a data-cite="!mediacapture-region/#dfn-uncropped">uncropped</a>.
+                                    </p>
+                                </li>
+                                <li>
+                                    <p>
+                                        Update [=this=] video track's [=restriction-state=] according to
+                                        |restrictionTarget|:
+                                    </p>
+                                    <ol>
+                                        <li>
+                                            If |restrictionTarget| is NOT {{undefined}}, the user agent MUST set
+                                            [=this=] video track's [=restriction-state=] to [=restricted=] and start
+                                            [=applying the restriction transformation=] to all frames delivered to
+                                            [=this=] video track with |restrictionTarget| as the target.
+                                        </li>
+                                        <li>
+                                            If |restrictionTarget| is set to {{undefined}}, the user agent MUST set
+                                            [=this=] video track's [=restriction-state=] to [=unrestricted=] and stop
+                                            [=applying the restriction transformation=] to frames delivered to [=this=]
+                                            video track.
+                                        </li>
+                                    </ol>
+                                </li>
+                                <li>
+                                    <p>
+                                        Call the track's state before this method invocation |preState|, and after
+                                        this method invocation |postState|. The user agent MUST
+                                        <a data-cite="!HTML#queue-a-global-task">queue a global task</a> to resolve
+                                        |p| when it is guaranteed that no more frames [=restricted=] (or
+                                        [=unrestricted=]) according to |preState| will be delivered to the
+                                        application, and that any additional frames delivered to the application will
+                                        therefore be [=restricted=] (or [=unrestricted=]) according to either
+                                        |postState| or a later state.
+                                    </p>
+                                </li>
+                            </ol>
+                        </li>
+                        <li>Return |p|.</li>
+                    </ol>
+                </dd>
+            </dl>
+        </section>
+    </section>
+    <section id="applying-the-restriction-transformation">
+        <h2><dfn>Applying the restriction transformation</dfn></h2>
+        <p>
+            Whenever the user agent is about to produce a new |frame| for a video track |T| that is
+            [=restricted=] to a given target |restrictionTarget|, the user agent MUST execute the
+            following algorithm:
+        </p>
+        <ol>
+            <li>Let |E| be |restrictionTarget|.{{RestrictionTarget/[[Element]]}}.</li>
+            <li>
+                If |E| is not a [=valid restriction target=] for |T|, abort without producing a new frame.
+            </li>
+            <li>
+                Let |intersection| be the intersection of |E|'s bounding box and the captured surface's
+                [=top-level browsing context=]'s viewport.
+            </li>
+            <li>If |intersection| is empty, abort without producing a new frame.</li>
+            <li>
+                A corollary of previous steps is that |E| forms a stacking context. Produce and deliver a
+                frame consisting of an independent rendering of that stacking context, clipped to
+                |intersection|.
+            </li>
+        </ol>
+        <p>
+            The frame produced in the final step is constructed by rendering |E| and its descendants
+            over an infinite transparent canvas, positioned so that the edges of the
+            <a data-cite="!css-images-4#decorated-bounding-box">decorated bounding box</a> are flush
+            with the edges of the frame.
+        </p>
+        <p class="note">
+            In some implementations, the underlying pixel format for the frame data will not be able to
+            carry alpha channel information. In this case, the implementation can blend the rendered
+            frame with an infinite canvas of black (`rgb(0,0,0)`).
+        </p>
+        <p class="note">
+            Implementations may either re-use existing bitmap data generated for |E| or regenerate the
+            display of the element to maximize quality at the frame's size (for example, if the
+            implementation detects that the referenced element is an SVG fragment). However, the frame
+            must look identical to |E| as rendered above, modulo rasterization quality.
+        </p>
+    </section>
+    <section id="sample-code">
+        <h2>Sample Code</h2>
+        <div class="example">
+            <p>Code in the capture-target:</p>
+            <pre class="javascript">
+          const mainContentArea = navigator.getElementById('mainContentArea');
+          const restrictionTarget = await RestrictionTarget.fromElement(mainContentArea);
+          sendRestrictionTarget(restrictionTarget);
+
+          function sendRestrictionTarget(restrictionTarget) {
+            // Either send the restriction-target using postMessage(),
+            // or pass it on locally within the same document.
+          }
+        </pre>
+        </div>
+        <div class="example">
+            <p>Code in the capturing-document:</p>
+            <pre class="javascript">
+          async function startRestrictedCapture(RestrictionTarget) {
+            const stream = await navigator.mediaDevices.getDisplayMedia();
+            const [track] = stream.getVideoTracks();
+            if (!!track.restrictTo) {
+              handleError(stream);
+              return;
+            }
+            await track.restrictTo(RestrictionTarget);
+            transmitVideoRemotely(track);
+          }
+        </pre>
+        </div>
+    </section>
+    <section id="privacy-and-security-considerations">
+        <h1>Privacy and Security Considerations</h1>
+        <section>
+            <h2>Benefits of this API</h2>
+            <p>
+                For non-malicious applications, the APIs introduced by this specifications should be a
+                pure positive, as they allow responsible applications to pare down the information
+                recorded. This has positive properties.
+            </p>
+            <p>For example, using pre-existing mechanisms, video-conferencing applications can:</p>
+            <ol>
+                <li>
+                    <p>Embed content in an iframe.</p>
+                </li>
+                <li>
+                    <p>
+                        Prompt the user to capture the current tab. (Using
+                        {{MediaDevices/getDisplayMedia()}}.)
+                    </p>
+                </li>
+                <li>
+                    <p>
+                        Crop the resulting capture to just the iframe that's intended for capture. (Using
+                        {{BrowserCaptureMediaStreamTrack/cropTo()}}.)
+                    </p>
+                </li>
+                <li>
+                    <p>
+                        Transmit the resulting pixels to remote participants. (Using
+                        <a data-cite="webrtc#dom-rtcpeerconnection">RTCPeerConnection</a>.)
+                    </p>
+                </li>
+            </ol>
+            <p>
+                However, this is risky, because any content that happens to be drawn in front of the
+                content intended for capture will also be transmitted remotely. Even if this happens but
+                briefly, remote users might notice. And such content might be highly private - for
+                example, chat notifications, reminders, speaker notes...
+            </p>
+            <p>
+                The mechanisms introduced in this specification allow a responsible application to
+                structure itself in a way that would completely guarantee that such issues are impossible.
+                Such an application can more easily make and keep privacy guarantees to its users.
+            </p>
+        </section>
+        <section>
+            <h2>Concerns about this API</h2>
+            <section>
+                <h3>Reading cross-origin pixels</h3>
+                <p>
+                    The mechanisms introduced by this specification all rely on self-capture being provided
+                    by some other means - typically {{MediaDevices/getDisplayMedia()}}. The main concern
+                    with these, is that they allow an application read-access to cross-origin content.
+                </p>
+                <p>
+                    When a malicious application tricks the user to approve self-capture, it can then load
+                    cross-origin content in an invisible iframe and then bring the content to the forefront,
+                    allowing the attacker to read the content before the user can react. Such attacks are
+                    already possible without any of the mechanisms introduced by this specification.
+                </p>
+            </section>
+            <section>
+                <h3>Aggravating old attack vectors</h3>
+                <p>
+                    The main concern is that the mechanisms we introduce in this specification should not
+                    <b>aggravate</b> the old attack vectors described above. One naturally worries that the
+                    mechanisms we introduce allow the old attacks to be carried out <b>surreptitiously</b>.
+                    We contend that the mechanisms introduced here do not increase an attacker's power to
+                    hide the attack; such attack-concealment was always possible using any of the following
+                    techniques:
+                </p>
+                <ul>
+                    <li>
+                        <p>
+                            <b>Displaying the content briefly.</b> Attackers could always flash content to the
+                            screen for a timespan of a single frame. This is long enough to record it, but not
+                            long enough for users to understand it.
+                        </p>
+                    </li>
+                    <li>
+                        <p>
+                            <b>Displaying the content piecemeal.</b> Attackers could always display break the
+                            content up into multiple small pieces, even one pixel each, and display them in
+                            different locations and times. Users would not be able to observe this manipulation,
+                            but it is trivial for software to collect these pixels and reconstruct a picture
+                            from it.
+                        </p>
+                    </li>
+                    <li>
+                        <p>
+                            <b>Displaying the content at low opacity.</b> Attackers could always display content
+                            at an opacity that is imperceptible for a user, but which machines can still read.
+                        </p>
+                    </li>
+                </ul>
+                <p>
+                    Any of these techniques is enough on its own, but through a combination of them,
+                    malicious applications were always able to conceal their attacks effectively and still
+                    read content efficiently.
+                </p>
+            </section>
+            <section id="reading-occluded-content">
+                <h3>Reading occluded content</h3>
+                <p>
+                    One might worry that a malicious app be able to remove occlusions in cross-origin
+                    iframes, without opt-in from that content. The shape of the API prevents such attacks -
+                    the cross-origin iframe would have to produce a {{RestrictionTarget}} and pass it to the
+                    would-be attacker. As {{RestrictionTargets}} serve no purpose other than as part of the
+                    API introduced by this specification, the minting and passing of a {{RestrictionTarget}}
+                    proves the cross-origin iframe's permission for its occlusions to be removed.
+                </p>
+            </section>
+            <section>
+                <h3>Interaction with Region Capture</h3>
+                <p>
+                    In designing the APIs introduced by this specification, a conscious decision was made to
+                    not reuse {{CropTarget}}, and define a dedicated token instead ({{CropTarget}}). This
+                    ensures that any existing Web applications that have previously been designed and
+                    implemented with {{BrowserCaptureMediaStreamTrack/cropTo()}} in mind, but not with
+                    {{BrowserCaptureMediaStreamTrack/restrictTo()}}, would not be effectively opting into
+                    allowing occlusions to be removed, as described in the
+                    <a href="#reading-occluded-content">previous section</a>.
+                </p>
+            </section>
+        </section>
+    </section>
+</body>
+
+</html>
