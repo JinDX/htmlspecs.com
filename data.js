@@ -1885,7 +1885,7 @@ const links = [
     },
     {
         text: "Performance measure memory",
-        href: "https://wicg.github.io/performance-measure-memory/",
+        href: "https://htmlspecs.com/performance-measure-memory/",
         src: "https://wicg.github.io/performance-measure-memory/",
         "last-modified": "Fri, 28 May 2021 11:50:10 GMT",
         lang: "cjk",
@@ -3916,7 +3916,7 @@ const httpLinks = [
         state: "RFC"
     },
 
-    //### 连接、中介、代理与隧道|연결, 중개자, 프록시 및 터널|接続・中介・プロキシ・トンネル
+    //### 连接、中介、代理与隧道|연결, 중개자, 프록시 및 터널|接続・仲介・プロキシ・トンネル
     {
         text: "The ALPN HTTP Header Field",
         href: "https://htmlspecs.com/http/rfc7639.html",
