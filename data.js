@@ -1546,7 +1546,7 @@ const links = [
     {
         text: "WebGPU Shading Language",
         href: "https://htmlspecs.com/WGSL/",
-        src: "https://www.w3.org/TR/2026/CRD-WGSL-20260617/",
+        src: "https://www.w3.org/TR/2026/CRD-WGSL-20260618/",
         "last-modified": "-",
         lang: "cjk",
         state: "CRD"
@@ -2757,7 +2757,7 @@ const cssLinks = [
     {
         text: "CSS Color Module Level 4",
         href: "https://htmlspecs.com/css/css-color-4/",
-        src: "https://www.w3.org/TR/2026/CRD-css-color-4-20260502/",
+        src: "https://www.w3.org/TR/2026/CRD-css-color-4-20260618/",
         "last-modified": "-",
         lang: "cjk",
         state: "CRD"
