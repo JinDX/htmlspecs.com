@@ -314,7 +314,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Permissions](https://htmlspecs.com/permissions/)（[Source](https://www.w3.org/TR/2025/WD-permissions-20251006/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Requesting Permissions](https://htmlspecs.com/permissions-request/)（[Source](https://wicg.github.io/permissions-request/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Self-Review Questionnaire: Security and Privacy](https://htmlspecs.com/security-privacy-questionnaire/)（[Source](https://www.w3.org/TR/2025/NOTE-security-privacy-questionnaire-20250418/) ![Note](https://img.shields.io/badge/NOTE-309c40)）
-- [Permissions Policy](https://htmlspecs.com/permissions-policy/)（[Source](https://www.w3.org/TR/2025/WD-permissions-policy-1-20251006/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Permissions Policy](https://htmlspecs.com/permissions-policy/)（[Source](https://www.w3.org/TR/2026/WD-permissions-policy-1-20260618/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Document Policy](https://htmlspecs.com/document-policy/)（[Source](https://wicg.github.io/document-policy/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Capability Delegation](https://htmlspecs.com/capability-delegation/)（[Source](https://wicg.github.io/capability-delegation/spec.html) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Global Privacy Control (GPC)](https://htmlspecs.com/gpc/)（[Source](https://www.w3.org/TR/2026/WD-gpc-20260611/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
