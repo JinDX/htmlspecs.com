@@ -2238,7 +2238,7 @@ const links = [
     {
         text: "Permissions Policy",
         href: "https://htmlspecs.com/permissions-policy/",
-        src: "https://www.w3.org/TR/2025/WD-permissions-policy-1-20251006/",
+        src: "https://www.w3.org/TR/2026/WD-permissions-policy-1-20260618/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
