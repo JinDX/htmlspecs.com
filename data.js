@@ -2545,14 +2545,14 @@ const links = [
     },
 
     //### 数字出版与电子书|디지털 출판 및 전자책|デジタル出版・電子書籍
-    // {
-    //     text: "EPUB 3.3",
-    //     href: "https://htmlspecs.com/epub-33/",
-    //     src: "https://www.w3.org/TR/epub-33/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "REC"
-    // },
+    {
+        text: "EPUB 3.3",
+        href: "https://htmlspecs.com/epub-33/",
+        src: "https://www.w3.org/TR/2026/REC-epub-33-20260113/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "REC"
+    },
     // {
     //     text: "EPUB Reading Systems 3.3",
     //     href: "https://htmlspecs.com/epub-rs-33/",

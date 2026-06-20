@@ -357,6 +357,9 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Accessibility Conformance Testing (ACT) Rules Format 1.1](https://htmlspecs.com/act-rules-format/)（[Source](https://www.w3.org/TR/2026/REC-act-rules-format-1.1-20260205/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Using ARIA](https://htmlspecs.com/using-aria/)（[Source](https://www.w3.org/TR/2026/DISC-using-aria-20260224/) ![Discontinued Draft](https://img.shields.io/badge/DISC-ffcc00)）
 
+### 数字出版与电子书
+- [EPUB 3.3](https://htmlspecs.com/epub-33/)（[Source](https://www.w3.org/TR/2026/REC-epub-33-20260113/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
+
 ### 开发者工具、测试与自动化
 - [Test Utils](https://htmlspecs.com/testutils/)（[Source](https://testutils.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [Console](https://htmlspecs.com/console/)（[Source](https://console.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
