@@ -2553,14 +2553,14 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
-    // {
-    //     text: "EPUB Reading Systems 3.3",
-    //     href: "https://htmlspecs.com/epub-rs-33/",
-    //     src: "https://www.w3.org/TR/epub-rs-33/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "REC"
-    // },
+    {
+        text: "EPUB Reading Systems 3.3",
+        href: "https://htmlspecs.com/epub-rs-33/",
+        src: "https://www.w3.org/TR/epub-rs-33/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "REC"
+    },
     // {
     //     text: "Publication Manifest",
     //     href: "https://htmlspecs.com/pub-manifest/",
