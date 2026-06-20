@@ -2561,14 +2561,14 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
-    // {
-    //     text: "Publication Manifest",
-    //     href: "https://htmlspecs.com/pub-manifest/",
-    //     src: "https://www.w3.org/TR/pub-manifest/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "REC"
-    // },
+    {
+        text: "Publication Manifest",
+        href: "https://htmlspecs.com/pub-manifest/",
+        src: "https://www.w3.org/TR/2020/REC-pub-manifest-20201110/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "REC"
+    },
     // {
     //     text: "Audiobooks",
     //     href: "https://htmlspecs.com/audiobooks/",
@@ -3904,7 +3904,7 @@ const httpLinks = [
         href: "https://htmlspecs.com/http/draft-ietf-httpbis-rfc6265bis.html",
         src: "https://httpwg.org/http-extensions/draft-ietf-httpbis-rfc6265bis.html",
         "last-modified": "-",
-        etag: "6a361926-4498b",
+        etag: "6a361927-4498b",
         lang: "cjk",
         state: "Draft"
     },
