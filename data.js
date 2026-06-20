@@ -2556,7 +2556,7 @@ const links = [
     {
         text: "EPUB Reading Systems 3.3",
         href: "https://htmlspecs.com/epub-rs-33/",
-        src: "https://www.w3.org/TR/epub-rs-33/",
+        src: "https://www.w3.org/TR/2024/REC-epub-rs-33-20241017/",
         "last-modified": "-",
         lang: "cjk",
         state: "REC"
