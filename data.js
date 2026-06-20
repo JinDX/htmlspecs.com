@@ -327,6 +327,22 @@ const links = [
         lang: "cjk",
         state: "RFC"
     },
+    // {
+    //     text: "Concise Binary Object Representation (CBOR)",
+    //     href: "https://htmlspecs.com/cbor/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc8949.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
+    // {
+    //     text: "WebFinger",
+    //     href: "https://htmlspecs.com/webfinger/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc7033.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
     {
         text: "ActivityPub",
         href: "https://htmlspecs.com/activitypub/",
@@ -399,6 +415,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
+    // {
+    //     text: "URI Template",
+    //     href: "https://htmlspecs.com/uri-template/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc6570.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
 
     //### 数学|수학|数学
     {
@@ -1143,6 +1167,14 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
+    // {
+    //     text: "Web Share Target API",
+    //     href: "https://htmlspecs.com/web-share-target/",
+    //     src: "https://w3c.github.io/web-share-target/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
 
     //### 音频、语音与媒体控制|오디오, 음성 및 미디어 제어|音声・スピーチ・メディア制御
     {
@@ -2090,7 +2122,7 @@ const links = [
     {
         text: "JSON Web Token (JWT)",
         href: "https://htmlspecs.com/jwt/",
-        src: "https://www.rfc-editor.org/rfc/rfc7519",
+        src: "https://www.rfc-editor.org/rfc/rfc7519.html",
         "last-modified": "-",
         lang: "cjk",
         state: "RFC"
@@ -2098,7 +2130,7 @@ const links = [
     {
         text: "JSON Web Signature (JWS)",
         href: "https://htmlspecs.com/jws/",
-        src: "https://www.rfc-editor.org/rfc/rfc7515",
+        src: "https://www.rfc-editor.org/rfc/rfc7515.html",
         "last-modified": "-",
         lang: "cjk",
         state: "RFC"
@@ -2106,7 +2138,7 @@ const links = [
     {
         text: "JSON Web Encryption (JWE)",
         href: "https://htmlspecs.com/jwe/",
-        src: "https://www.rfc-editor.org/rfc/rfc7516",
+        src: "https://www.rfc-editor.org/rfc/rfc7516.html",
         "last-modified": "-",
         lang: "cjk",
         state: "RFC"
@@ -2114,7 +2146,7 @@ const links = [
     {
         text: "JSON Web Key (JWK)",
         href: "https://htmlspecs.com/jwk/",
-        src: "https://www.rfc-editor.org/rfc/rfc7517",
+        src: "https://www.rfc-editor.org/rfc/rfc7517.html",
         "last-modified": "-",
         lang: "cjk",
         state: "RFC"
@@ -2122,7 +2154,7 @@ const links = [
     {
         text: "JSON Web Algorithms (JWA)",
         href: "https://htmlspecs.com/jwa/",
-        src: "https://www.rfc-editor.org/rfc/rfc7518",
+        src: "https://www.rfc-editor.org/rfc/rfc7518.html",
         "last-modified": "-",
         lang: "cjk",
         state: "RFC"
@@ -2130,11 +2162,19 @@ const links = [
     {
         text: "JWT Best Current Practices",
         href: "https://htmlspecs.com/jwt-bcp/",
-        src: "https://www.rfc-editor.org/rfc/rfc8725",
+        src: "https://www.rfc-editor.org/rfc/rfc8725.html",
         "last-modified": "-",
         lang: "cjk",
         state: "RFC"
     },
+    // {
+    //     text: "CBOR Object Signing and Encryption (COSE): Structures and Process",
+    //     href: "https://htmlspecs.com/cose/",
+    //     src: "http://rfc-editor.org/rfc/rfc9052.html,
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
 
     //### 身份、认证与凭证|신원, 인증 및 자격 증명|ID・認証・資格情報
     {
@@ -2201,6 +2241,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "Decentralized Identifiers (DIDs) v1.1",
+    //     href: "https://htmlspecs.com/did-1.1/",
+    //     src: "https://www.w3.org/TR/2026/CR-did-1.1-20260305/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "CR"
+    // },
     {
         text: "Verifiable Credentials Data Model v2.0",
         href: "https://htmlspecs.com/vc-data-model-2.0/",
@@ -3832,6 +3880,15 @@ const httpLinks = [
         lang: "cjk",
         state: "RFC"
     },
+    // {
+    //     text: "Problem Details for HTTP APIs",
+    //     href: "https://htmlspecs.com/http/rfc9457.html",
+    //     src: "https://www.rfc-editor.org/rfc/rfc9457.html",
+    //     "last-modified": "-",
+    //     etag: null,
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
 
     //### 缓存与重用|캐시 및 재사용|キャッシュと再利用
     {
@@ -3935,6 +3992,15 @@ const httpLinks = [
         lang: "cjk",
         state: "RFC"
     },
+    // {
+    //     text: "Well-Known Uniform Resource Identifiers (URIs)",
+    //     href: "https://htmlspecs.com/http/rfc8615.html",
+    //     src: "https://www.rfc-editor.org/rfc/rfc8615.html",
+    //     "last-modified": "-",
+    //     etag: null,
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
     {
         text: "Compression Dictionary Transport",
         href: "https://htmlspecs.com/http/rfc9842.html",
@@ -4121,6 +4187,15 @@ const httpLinks = [
         lang: "cjk",
         state: "RFC"
     }
+    //, {
+    //     text: "HTTP Strict Transport Security (HSTS)",
+    //     href: "https://htmlspecs.com/http/rfc6797.html",
+    //     src: "https://www.rfc-editor.org/rfc/rfc6797.html",
+    //     "last-modified": "-",
+    //     etag: null,
+    //     lang: "cjk",
+    //     state: "RFC"
+    // }
 ];
 
 if (typeof module !== 'undefined' && module.exports) {
