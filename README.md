@@ -81,6 +81,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Baggage](https://htmlspecs.com/baggage/)（[Source](https://www.w3.org/TR/2024/CR-baggage-20240530/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
 - [Beacon](https://htmlspecs.com/beacon/)（[Source](https://www.w3.org/TR/2022/CRD-beacon-20220803/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [Network Error Logging](https://htmlspecs.com/network-error-logging/)（[Source](https://www.w3.org/TR/2025/WD-network-error-logging-20250505/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Network Information API](https://htmlspecs.com/netinfo/)（[Source](https://wicg.github.io/netinfo/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 
 ### 离线、后台与通知
 - [Web Background Synchronization](https://htmlspecs.com/background-sync/)（[Source](https://wicg.github.io/background-sync/spec/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
@@ -326,6 +327,8 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Iframe credentialless](https://htmlspecs.com/anonymous-iframe/)（[Source](https://wicg.github.io/anonymous-iframe/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Private State Token API](https://htmlspecs.com/trust-token-api/)（[Source](https://wicg.github.io/trust-token-api/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Attribution Level 1](https://htmlspecs.com/attribution/)（[Source](https://www.w3.org/TR/2026/WD-attribution-20260602/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Related Website Sets](https://htmlspecs.com/first-party-sets/)（[Source](https://wicg.github.io/first-party-sets/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
+- [Private Aggregation API](https://htmlspecs.com/private-aggregation-api/)（[Source](https://patcg-individual-drafts.github.io/private-aggregation-api/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 
 ### 支付与数字商品
 - [Payment Request API](https://htmlspecs.com/payment-request/)（[Source](https://www.w3.org/TR/2026/CRD-payment-request-20260327/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
@@ -547,6 +550,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 
 ### 表示元数据、链接与内容编码
 - [HTTP State Management Mechanism](https://htmlspecs.com/http/rfc6265.html)（[Source](https://httpwg.org/specs/rfc6265.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [Cookies: HTTP State Management Mechanism](https://htmlspecs.com/http/draft-ietf-httpbis-rfc6265bis.html)（[Source](https://httpwg.org/http-extensions/draft-ietf-httpbis-rfc6265bis.html) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Use of the Content-Disposition Header Field in the Hypertext Transfer Protocol (HTTP)](https://htmlspecs.com/http/rfc6266.html)（[Source](https://httpwg.org/specs/rfc6266.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [Hypertext Transfer Protocol (HTTP) Client-Initiated Content-Encoding](https://htmlspecs.com/http/rfc7694.html)（[Source](https://httpwg.org/specs/rfc7694.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [Web Linking](https://htmlspecs.com/http/rfc8288.html)（[Source](https://httpwg.org/specs/rfc8288.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
