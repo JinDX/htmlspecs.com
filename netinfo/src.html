@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<meta charset='utf-8'>
+<title>Network Information API</title>
+<script class='remove' src='https://www.w3.org/Tools/respec/respec-w3c-common'></script>
+<script>
+    async function loadTableData() {
+        const res = await fetch("downlink.json");
+        const json = await res.json();
+        try {
+            populateTable(json)
+        } catch (err) {
+            console.error("Error trying to get downlink.json", err);
+            populateTable({});
+        }
+    }
+
+    function populateTable(data) {
+        const tbody = document.querySelector("#max-downlink-table > tbody");
+        const head = document.querySelector("#max-downlink-table > thead");
+        const headsize = head.rows[0].children.length;
+        let trs = "";
+        //for each entry in the JSON
+        for (var connection in data) {
+            var connectionTypes = data[connection];
+            trs += "<tr>";
+            trs += connectionTypes.length > 1
+                ? "<td rowspan=" + connectionTypes.length + ">"
+                : "<td>";
+            trs += "<a>" + connection + "</a>";
+            trs += "</td>";
+
+            //Tell reader we don't have any data for connection
+            if (connectionTypes.length === 0) {
+                trs += "<td colspan=" + headsize + ">";
+                trs += "No data available for this";
+                trs += " <a>connection type</a>.</td>";
+            } else {
+                //loop through and populate the table
+                for (var j = 0; j < connectionTypes.length; j++) {
+                    var conObj = connectionTypes[j];
+                    if (j) {
+                        trs += "<tr>";
+                    }
+                    trs += "<td>" + conObj.name + "</td>";
+                    trs += "<td>" + conObj.version + "</td>";
+                    trs += "<td>" + conObj.max.downlink + "</td>";
+                    trs += "</tr>";
+                }
+            }
+        }
+        //finally, add the data
+        tbody.innerHTML = trs;
+    }
+
+    var respecConfig = {
+        specStatus: "CG-DRAFT",
+        shortName: "netinfo",
+        format: "markdown",
+        github: "https://github.com/WICG/netinfo/",
+        editors: [
+            {
+                name: "Ilya Grigorik",
+                company: "Google",
+                companyURL: "http://google.com",
+            },
+        ],
+        formerEditors: [
+            {
+                name: "Marcos Cáceres",
+                company: "Mozilla Corporation",
+                companyURL: "http://mozilla.com",
+            },
+            {
+                name: "Fernando Jiménez Moreno",
+                company: "Telefonica",
+                companyURL: "http://www.telefonica.com/en/home/jsp/home.jsp",
+            },
+        ],
+        wg: "Web Incubator Community Group",
+        wgURI: "https://wicg.io",
+        caniuse: {
+            feature: "netinfo",
+            browsers: ["chrome", "firefox", "and_ff", "safari"],
+        },
+        preProcess: [loadTableData],
+        localBiblio: {
+            "CLIENT-HINTS": {
+                title: "HTTP Client Hints",
+                href: "https://tools.ietf.org/html/draft-grigorik-http-client-hints",
+                status: "Internet-Draft",
+                publisher: "IETF",
+            },
+            "STRUCTURED-HEADERS": {
+                title: "Structured Headers for HTTP",
+                href: "https://tools.ietf.org/html/draft-ietf-httpbis-header-structure",
+                status: "Internet-Draft",
+                publisher: "IETF",
+            },
+        },
+        mdn: true,
+    };
+</script>
+
+<section id='abstract'>
+    The <cite>Network Information API</cite> enables web applications to access information about the network connection
+    in use by the device.
+</section>
+
+<section id='sotd'></section>
+
+## Requirements and use cases
+
+This document describes an API that addresses two specific requirements:
+
+### Provide an interface for determining the [connection type](https://wicg.github.io/netinfo/#dfn-connection-types)
+currently used to communicate with the network.
+
+It should be queryable in an ad hoc fashion from client pages, and should also be available in other contexts, like
+exposed to [service workers](https://w3c.github.io/ServiceWorker/v1/).
+
+**Example use cases:**
+
+* A web application whose primary purpose is to stream media could check `navigator.connection.type` prior to playback.
+When it's set to `'cellular'`, it could advise users that their mobile network operator might be charging for the
+bandwidth, and only start automatic playback of previously cached content.
+* A web application that makes use of a service worker to [cache](https://w3c.github.io/ServiceWorker/v1/#cache-objects)
+resources during [installation](https://w3c.github.io/ServiceWorker/v1/#installation-algorithm) might have different
+bundles of assets that it might cache: a list of crucial assets that are cached unconditionally, and a bundle of larger,
+optional assets that are only cached ahead of time when `navigator.connection.type` is `'ethernet'` or `'wifi'`.
+* A web application that uses a service worker with a [background
+sync](https://github.com/WICG/BackgroundSync/blob/master/explainer.md) handler might check the current
+`navigator.connection.type` value, and only transfer data inside the `sync` event handler if it is is `'ethernet'` or
+`'wifi'`.
+* A web application might make decision to enable offline mode based on network condition (e.g., when EDGE is not
+enough).
+
+### Provide a way for scripts to be notified if the connection type changes.
+
+This allows developers to make dynamic changes to their user interface to inform the user that the network connection
+type has changed, and that it could impact them in some way. It also allows applications that were deferring the
+transfer of large amounts of data to automatically begin once a high-bandwidth network is detected.
+
+**Example use cases:**
+
+* A web application whose primary purpose is to stream media could dynamically change its user interface in response to
+updates to the connection type. This may afford a better user experience than waiting until a user attempts to playback
+and performing a one-off query. It allows applications to provide context about the connection in advance of user
+interaction.
+* A web application that allows for uploads or downloads might defer initiating the request when
+`navigator.connection.type` is set to `'cellular'`, and add a listener for changes to the connection. When a change to a
+high-bandwidth network type is detected, the request could be automatically started.
+
+<section class="informative">
+    ## Examples of usage
+    For examples of the kinds of applications one can build with this API, see the <cite>[Review of Apps that Use
+        Network Information](https://github.com/w3c-webmob/netinfo)</cite>.
+
+    <pre class="example js">
+  // Get the connection type.
+  var type = navigator.connection.type;
+
+  // Get an upper bound on the downlink speed of the first network hop
+  var max = navigator.connection.downlinkMax;
+
+  function changeHandler(e) {
+    // Handle change to connection here.
+  }
+
+  // Register for event changes.
+  navigator.connection.onchange = changeHandler;
+
+  // Alternatively.
+  navigator.connection.addEventListener('change', changeHandler);
+  </pre>
+</section>
+
+
+## Definitions
+
+For clarity, a <dfn>megabit</dfn> is 1,000,000 bits, and <dfn data-lt="Mbit/s">megabits per second</dfn> is equivalent
+to transferring:
+
+* 1,000,000 bits per second
+* 1,000 kilobits per second
+* 125,000 bytes per second
+* 125 kilobytes per second
+* and so on...
+
+
+## Connection types
+
+### Underlying connection technology
+
+This section defines the <dfn data-lt="connection type">connection types</dfn> and the <a>underlying connection
+    technology</a> that the <a>user agent</a> is using (if any):
+
+<dl data-dfn-for="ConnectionType">
+    <dt><dfn>bluetooth</dfn></dt>
+    <dd>A Bluetooth connection.</dd>
+    <dt><dfn>cellular</dfn></dt>
+    <dd>A cellular connection (e.g., EDGE, HSPA, LTE, etc.).</dd>
+    <dt><dfn>ethernet</dfn></dt>
+    <dd>An Ethernet connection.</dd>
+    <dt><dfn>none</dfn></dt>
+    <dd>No network connection. The user agent will not contact the network when the user follows links or when a script
+        requests a remote page (or knows that such an attempt would fail) - i.e., equivalent to
+        <code>navigator.onLine === false</code> in HTML.
+    </dd>
+    <dt><dfn>mixed</dfn></dt>
+    <dd>The user agent is using multiple connection types.</dd>
+    <dt><dfn>other</dfn></dt>
+    <dd>The connection type that is known, but not one of enumerated connection types.</dd>
+    <dt><dfn>unknown</dfn></dt>
+    <dd>The user agent has established a network connection, but is unable, or unwilling, to determine the <a>underlying
+            connection technology</a>.</dd>
+    <dt><dfn>wifi</dfn></dt>
+    <dd>A Wi-Fi connection.</dd>
+    <dt><dfn>wimax</dfn></dt>
+    <dd>A WiMAX connection.</dd>
+</dl>
+
+The <a>connection types</a> are represented in this API by the <a>ConnectionType</a> enum.
+
+### <dfn>ConnectionType</dfn> enum
+
+<pre class="idl">
+  enum ConnectionType {
+    "bluetooth",
+    "cellular",
+    "ethernet",
+    "mixed",
+    "none",
+    "other",
+    "unknown",
+    "wifi",
+    "wimax"
+  };
+</pre>
+
+### Effective connection types
+
+This section defines the <dfn data-lt="effective connection type">effective connection types</dfn> (ECT):
+
+<table id="effective-connection-type-table" data-dfn-for="EffectiveConnectionType">
+    <caption><dfn>Table of effective connection types</dfn></caption>
+    <thead>
+        <tr>
+            <th>ECT</th>
+            <th>Minimum RTT (ms)</th>
+            <th>Maximum downlink (Kbps)</th>
+            <th>Explanation</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><dfn>slow-2g</dfn></td>
+            <td>2000</td>
+            <td>50</td>
+            <td>The network is suited for small transfers only such as text-only pages.</td>
+        </tr>
+        <tr>
+            <td><dfn>2g</dfn></td>
+            <td>1400</td>
+            <td>70</td>
+            <td>The network is suited for transfers of small images.</td>
+        </tr>
+        <tr>
+            <td><dfn>3g</dfn></td>
+            <td>270</td>
+            <td>700</td>
+            <td>The network is suited for transfers of large assets such as high resolution images, audio, and SD video.
+            </td>
+        </tr>
+        <tr>
+            <td><dfn>4g</dfn></td>
+            <td>0</td>
+            <td>∞</td>
+            <td>The network is suited for HD video, real-time video, etc.</td>
+        </tr>
+    </tbody>
+</table>
+
+The above round-trip and bandwidth values are based on real user measurement observations:
+
+* `slow-2g` is the 66.6th percentile of 2G observations
+* `2g` is the 50th percentile of 2G observations
+* `3g` is the 50th percentile of 3G observations
+
+The absolute values provided above are based on real user measurement on Chrome on Android, as captured in April 2017.
+The user agent MAY update these values in the future to reflect changes in the measurement data.
+
+The <a>effective connection types</a> are represented in this API by the <a>EffectiveConnectionType</a> enum.
+
+### <dfn>EffectiveConnectionType</dfn> enum
+
+<pre class="idl">
+  enum EffectiveConnectionType {
+    "2g",
+    "3g",
+    "4g",
+    "slow-2g"
+  };
+</pre>
+
+
+## <dfn>NavigatorNetworkInformation</dfn> interface
+
+The <code><dfn data-cite="!HTML#navigator">Navigator</dfn></code> and
+<code><dfn data-cite="!HTML#workernavigator">WorkerNavigator</dfn></code> interface expose access to
+<a>NetworkInformation</a> interface by mixing in <a>NavigatorNetworkInformation</a>.
+
+<pre class="idl">
+  interface mixin NavigatorNetworkInformation {
+    [SameObject] readonly attribute NetworkInformation connection;
+  };
+
+  Navigator includes NavigatorNetworkInformation;
+  WorkerNavigator includes NavigatorNetworkInformation;
+</pre>
+
+<section data-dfn-for="NavigatorNetworkInformation" data-link-for="NavigatorNetworkInformation">
+    ### <code><dfn>connection</dfn></code> attribute
+
+    The <a>connection</a> attribute, when getting, returns an object that implements the <a>NetworkInformation</a>
+    interface.
+</section>
+
+<section data-dfn-for="NetworkInformation" data-link-for="NetworkInformation">
+    ## <dfn>NetworkInformation</dfn> interface
+
+    The <a>NetworkInformation</a> interface provides a means to access information about the network connection the user
+    agent is currently using. The <code><dfn data-cite="DOM#interface-eventtarget">EventTarget</dfn></code> is defined
+    in [[!DOM]].
+
+    <pre class="idl">
+  [Exposed=(Window,Worker)]
+  interface NetworkInformation : EventTarget {
+    readonly attribute ConnectionType type;
+    readonly attribute EffectiveConnectionType effectiveType;
+    readonly attribute Megabit downlinkMax;
+    readonly attribute Megabit downlink;
+    readonly attribute Millisecond rtt;
+    attribute EventHandler onchange;
+  };
+
+  typedef unrestricted double Megabit;
+  typedef unsigned long long Millisecond;
+  </pre>
+
+    This section also defines a number of HTTP request header fields that expose details about the user's network
+    conditions, which servers can opt-into receiving. They can do that via the Client Hints infrastructure defined in
+    [[CLIENT-HINTS]] and bound by the processing model defined in [[CLIENT-HINTS-INFRASTRUCTURE]].
+
+    ### <dfn>type</dfn> attribute
+
+    The <a>type</a> attribute, when getting, returns the <a>connection type</a> that the user agent is using.
+
+    ### <dfn>effectiveType</dfn> attribute
+
+    The <a>effectiveType</a> attribute, when getting, returns the <a>effective connection type</a> that is determined
+    using a combination of recently observed <a>rtt</a> and <a>downlink</a> values.
+
+    #### <code><dfn>ECT</dfn></code> Request Header Field
+
+    The <a>ECT</a> request header field is a token that indicates the <a>effectiveType</a>, which is one of
+    <a>EffectiveConnectionType</a> values, at the time when the request is made by the user agent.
+    It is a Structured Header whose value must be a Token. [[STRUCTURED-HEADERS]]
+
+    ### <dfn>downlinkMax</dfn> attribute
+
+    The <a>downlinkMax</a> attribute represents an <dfn>upper bound on the downlink speed of the first network
+        hop</dfn>. The reported value is in <a>megabits per second</a> and determined by the properties of the
+    <a>underlying connection technology</a>.
+
+    <div class="note">
+        The user agent has no knowledge of the total number or the performance characteristics of the various network
+        hops required to fulfill a particular request; different requests may follow different routes and have different
+        performance characteristics. The reported <a>upper bound on the downlink speed of the first network hop</a>
+        value is determined by the properties of the <a>underlying connection technology</a> of the first network hop.
+        The end-to-end performance of any request cannot exceed this value, but it is also not a guarantee of
+        performance and may be significantly worse.
+    </div>
+
+    ### <dfn>onchange</dfn> attribute
+
+    The <a>onchange</a> event handler attribute handles "change" events fired during the <a>steps to update the
+        connection values</a>.
+
+    ### <dfn>downlink</dfn> attribute
+
+    The <a>downlink</a> attribute represents the effective bandwidth estimate in <a>megabits per second</a>, rounded to
+    nearest multiple of 25 kilobits per second, and is based on recently observed application layer throughput across
+    recently active connections, excluding connections made to private address space [[!RFC1918]]. In absence of recent
+    bandwidth measurement data, the attribute value is determined by the properties of the <a>underlying connection
+        technology</a>.
+
+    #### `Downlink` Request Header Field
+
+    The <a>Downlink</a> request header field is a number that indicates the <a>downlink</a> value at the time when the
+    request is made by the user agent.
+    It is a Structured Header whose value must be a Decimal. [[STRUCTURED-HEADERS]]
+
+    ### <dfn>rtt</dfn> attribute
+
+    The <a>rtt</a> attribute represents the effective round-trip time estimate in <dfn
+        data-lt="Millisecond">milliseconds</dfn>, rounded to nearest multiple of 25 milliseconds, and is based on
+    recently observed application-layer RTT measurements across recently active connections, excluding connections made
+    to private address space [[!RFC1918]]. In absence of recent RTT measurement data, the attribute value is determined
+    by the properties of the <a>underlying connection technology</a>.
+
+    #### `RTT` Request Header Field
+
+    The <a>RTT</a> request header field is a number that indicates the <a>rtt</a> value at the time when the request is
+    made by the user agent.
+    It is a Structured Header whose value must be an Integer. [[STRUCTURED-HEADERS]]
+
+    ## Underlying connection technology
+
+    The relationship between an <dfn>underlying connection technology</dfn> and its <a>upper bound on the downlink speed
+        of the first network hop</a> is determined by the available network interfaces that may be used to fulfill new
+    network requests.
+
+    The <dfn>downlinkMax for an available interface</dfn> is determined via the standardized, or generally accepted,
+    maximum download data rate captured in the <a>table of maximum downlink speeds</a>. Where possible, this value may
+    be refined to report a more accurate upper bound based on current properties of the interface - e.g. signal
+    strength, modulation algorithm, and other "network weather" variables.
+
+    The <a>upper bound on the downlink speed of the first network hop</a> is determined by the rules described in <a
+        href="#handling-changes-to-the-underlying-connection">handling changes to the underlying connection</a>.
+
+    <div class="note">
+        The enumeration of available network interfaces and their generation and version is not directly exposed to
+        script. Instead, `downlinkMax` exposes a single value in <a>megabits per second</a> that accounts for all
+        available interfaces and their current network conditions.
+    </div>
+
+    <table id="max-downlink-table" class="simple" data-link-for="ConnectionType">
+        <caption><dfn>Table of maximum downlink speeds</dfn></caption>
+        <thead>
+            <tr>
+                <th>Connection type</th>
+                <th>Underlying connection technology</th>
+                <th>Generation or Version</th>
+                <th>Max downlink speed (<a>Mbit/s</a>)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <!-- fallback if JS disabled or xhr fails -->
+                <td colspan="4"><a href="downlink.json">Data available as JSON</a>.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <section data-link-for="NetworkInformation">
+        ### Handling changes to the underlying connection
+
+        When the properties of the <a>underlying connection technology</a> change, due to a switch to a different
+        <a>connection type</a> or <a>effective connection type</a>, change in <a>upper bound on the downlink speed of
+            the first network hop</a>, or change in effective <a>downlink</a> or <a>rtt</a> estimates, the user agent
+        MUST run the <dfn>steps to update the connection values</dfn>:
+
+        1. Let <var>new-type</var> be the <a>connection type</a> that represents the <a>underlying connection
+            technology</a>.
+        1. Let <var>new-effective-type</var> be the <a>effective connection type</a> determined by current
+        <a>downlink</a> and <a>rtt</a> values.
+        1. Let <var>new-downlink</var> be the result of:
+        1. Rounding <a>downlink</a> value to nearest multiple of 25 kilobits per second.
+        1. If the resulting value is 10% greater or smaller than the value of `connection.downlink`, then set
+        <var>new-dowlink</var> to resulting value. Otherwise, set <var>new-downlink</var> to the value of
+        `connection.downlink`.
+        1. Let <var>new-rtt</var> be the result of:
+        1. Rounding <a>rtt</a> value to nearest multiple of 25 milliseconds.
+        1. If the resulting value is 10% greater or smaller than the value of `connection.rtt`, then set
+        <var>new-rtt</var> to resulting value. Otherwise, set <var>new-rtt</var> to the value of `connection.rtt`.
+        1. If <var>new-type</var> is "none", set <var>max-value</var> to `0`.
+        1. if <var>new-type</var> is "unknown", set <var>max-value</var> to `+Infinity`.
+        1. If <var>new-type</var> is "mixed", set <var>max-value</var> to an applicable value for the interface
+        configuration used to service new network requests - e.g. if multiple interfaces may be used, sum their
+        <a>downlinkMax for an available interface</a> values.
+        1. Otherwise, set <var>max-value</var> to <a>downlinkMax for an available interface</a>.
+        1. If <var>max-value</var> is not equal to the value of `connection.downlinkMax`, or if <var>new-type</var> is
+        not equal to the value of `connection.type`, or if <var>new-downlink</var> is not equal to the value of
+        `connection.downlink`, or if <var>new-rtt</var> is not equal to the value of `connection.rtt`:
+        1. Using the <a data-cite="!HTML#networking-task-source">networking task source</a>, <a
+            data-cite="!HTML#queue-a-task">queue a task</a> to perform the following:
+        1. Set `connection.downlinkMax` to <var>max-value</var>.
+        1. Set `connection.type` to <var>new-type</var>.
+        1. set `connection.effectiveType` to <var>new-effective-type</var>.
+        1. Set `connection.downlink` to <var>new-downlink</var>.
+        1. Set `connection.rtt` to <var>new-rtt</var>.
+        1. <a data-cite="!DOM#concept-event-fire">Fire an event</a> named `change` at the `NetworkInformation` object.
+    </section>
+
+    <section>
+        ## Privacy Considerations
+
+        The Network Information API exposes information about the observed end-to-end network bandwidth and latency, and
+        the first network hop between the user agent and the server; specifically, the type of connection and the upper
+        bound of the downlink speed, as well as signals whenever this information changes. Such information may be used
+        to:
+
+        * Fingerprint a user based on characteristics of a particular network (e.g. type and downlink estimates) at a
+        point in time, and by observing change in such characteristics over a period of time.
+        * Fingerprint a user based on transitions between one or more networks (e.g. based on order of transitions by
+        type, downlink estimates, and time).
+        * Infer user location (e.g. are they home, at work, or in transit) based on above criteria.
+
+        However, above considerations are not new, and sufficiently motivated attackers may already obtain such
+        information using other technologies:
+
+        * The attacker can use JavaScript to observe the duration (e.g. time from start of fetch to `onload` event) of
+        any network fetch (same or cross-origin) on the client, and may get more detailed timing data about the same
+        fetch via the Resource Timing API.
+        * The attacker can use WebRTC to identify client's public and private IP addresses via STUN, or similar
+        mechanisms.
+        * The attacker can observe the client IP, fetch duration, RTT, transfer speed, and other low-level socket
+        metrics of a fetch on the server.
+
+        Further, by repeating one of the above strategies (e.g. via invoking periodic fetch or refresh of a resource;
+        via periodic SSE or WebSocket messages; via periodic STUN requests, etc.), the attacker can observe changes over
+        time in the performance characteristics of client's connection and IP address. Such data can then be used to
+        refine the user fingerprint, infer users location (e.g. are they home, at work, or in transit), and extract
+        various behavioral patterns.
+
+        The above list is not a complete overview. However, as the above examples illustrate, the attacks are possible
+        both from the sender and the receiver:
+
+        * If the attacker can initiate or observe a network fetch of any kind from the client, then they can observe its
+        performance characteristics and how they change over time.
+        * If the attacker can convince the client to fetch a resource from their server, then they can similarly observe
+        the performance characteristics of the fetch and how they change over time.
+
+        Mitigating such attacks initiated from the client requires preventing the attacker from observing and initiating
+        network requests - e.g., use HTTPS to prevent trivial content injection by malicious parties; disable JavaScript
+        to prevent scripted resource fetch of any kind. Mitigating attacks from the sender is possible via the use of a
+        VPN or an HTTP proxy - e.g. to hide the client's true IP address, to introduce additional latency, and so on.
+
+        As such, while the Network Information API makes it easier to obtain information about the end-to-end network
+        throughput, latency, and the first network hop, by avoiding the need to observe or make network requests, it
+        does not expose anything that is not already available to a sufficiently-motivated attacker.
+
+        If the client wants to mitigate this class of attacks, they should disable JavaScript, monitor that all outbound
+        requests are made to trusted origins, and make diligent use of anonymizing VPN/proxy services.
+    </section>
+
+    <section id="iana-considerations">
+        ## IANA Considerations
+
+        The following three HTTP request header fields should be added to the permanent registry of message header
+        fields (see [[!RFC3864]]), taking into account the guidelines given by HTTP/1.1 [[!RFC7231]].
+
+        <section id="registration-ect">
+            ### `ECT` Request Header Field Registration
+
+            * Header Field Name: ECT
+            * Applicable Protocol: Hypertext Transfer Protocol (HTTP)
+            * Status: Standard
+            * Author/Change controller: W3C
+            * Specification document(s): W3C TR https://www.w3.org/TR/netinfo/
+
+        </section>
+
+        <section id="registration-downlink">
+            ### `Downlink` Request Header Field Registration
+
+            * Header Field Name: Downlink
+            * Applicable Protocol: Hypertext Transfer Protocol (HTTP)
+            * Status: Standard
+            * Author/Change controller: W3C
+            * Specification document(s): W3C TR https://www.w3.org/TR/netinfo/
+
+        </section>
+
+        <section id="registration-rtt">
+            ### `RTT` Request Header Field Registration
+
+            * Header Field Name: RTT
+            * Applicable Protocol: Hypertext Transfer Protocol (HTTP)
+            * Status: Standard
+            * Author/Change controller: W3C
+            * Specification document(s): W3C TR https://www.w3.org/TR/netinfo/
+
+        </section>
+
+    </section>
+
+    <section id="conformance">
+        There is only one class of product that can claim conformance to this
+        specification: a <dfn>user agent</dfn>.
+    </section>
+
+    <section class="appendix">
+        ## Acknowledgments
+        This document reuses text from the [[!HTML]] specification
+        as permitted by the license of that specification.
+    </section>

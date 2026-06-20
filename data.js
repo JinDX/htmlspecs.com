@@ -581,14 +581,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "Network Information API",
-    //     href: "https://htmlspecs.com/netinfo/",
-    //     src: "https://wicg.github.io/netinfo/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "Network Information API",
+        href: "https://htmlspecs.com/netinfo/",
+        src: "https://wicg.github.io/netinfo/",
+        "last-modified": "Mon, 11 May 2020 04:50:34 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
 
     //### 离线、后台与通知|오프라인, 백그라운드 및 알림|オフライン・バックグラウンド・通知
     {
