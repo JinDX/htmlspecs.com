@@ -2339,14 +2339,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "Related Website Sets",
-    //     href: "https://htmlspecs.com/first-party-sets/",
-    //     src: "https://wicg.github.io/first-party-sets/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "Related Website Sets",
+        href: "https://htmlspecs.com/first-party-sets/",
+        src: "https://wicg.github.io/first-party-sets/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "Draft"
+    },
     // {
     //     text: "Private Aggregation API",
     //     href: "https://htmlspecs.com/private-aggregation-api/",
