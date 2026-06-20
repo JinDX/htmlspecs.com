@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<meta charset='utf-8'>
+<title>网络信息 API</title>
+<script class='remove' src='https://www.w3.org/Tools/respec/respec-w3c-common'></script>
+<script>
+    async function loadTableData() {
+        const res = await fetch("downlink.json");
+        const json = await res.json();
+        try {
+            populateTable(json)
+        } catch (err) {
+            console.error("Error trying to get downlink.json", err);
+            populateTable({});
+        }
+    }
+
+    function populateTable(data) {
+        const tbody = document.querySelector("#max-downlink-table > tbody");
+        const head = document.querySelector("#max-downlink-table > thead");
+        const headsize = head.rows[0].children.length;
+        let trs = "";
+        //for each entry in the JSON
+        for (var connection in data) {
+            var connectionTypes = data[connection];
+            trs += "<tr>";
+            trs += connectionTypes.length > 1
+                ? "<td rowspan=" + connectionTypes.length + ">"
+                : "<td>";
+            trs += "<a>" + connection + "</a>";
+            trs += "</td>";
+
+            //Tell reader we don't have any data for connection
+            if (connectionTypes.length === 0) {
+                trs += "<td colspan=" + headsize + ">";
+                trs += "No data available for this";
+                trs += " <a>connection type</a>.</td>";
+            } else {
+                //loop through and populate the table
+                for (var j = 0; j < connectionTypes.length; j++) {
+                    var conObj = connectionTypes[j];
+                    if (j) {
+                        trs += "<tr>";
+                    }
+                    trs += "<td>" + conObj.name + "</td>";
+                    trs += "<td>" + conObj.version + "</td>";
+                    trs += "<td>" + conObj.max.downlink + "</td>";
+                    trs += "</tr>";
+                }
+            }
+        }
+        //finally, add the data
+        tbody.innerHTML = trs;
+    }
+
+    var respecConfig = {
+        specStatus: "CG-DRAFT",
+        shortName: "netinfo",
+        format: "markdown",
+        github: "https://github.com/WICG/netinfo/",
+        editors: [
+            {
+                name: "Ilya Grigorik",
+                company: "Google",
+                companyURL: "http://google.com",
+            },
+        ],
+        formerEditors: [
+            {
+                name: "Marcos Cáceres",
+                company: "Mozilla Corporation",
+                companyURL: "http://mozilla.com",
+            },
+            {
+                name: "Fernando Jiménez Moreno",
+                company: "Telefonica",
+                companyURL: "http://www.telefonica.com/en/home/jsp/home.jsp",
+            },
+        ],
+        wg: "Web Incubator Community Group",
+        wgURI: "https://wicg.io",
+        caniuse: {
+            feature: "netinfo",
+            browsers: ["chrome", "firefox", "and_ff", "safari"],
+        },
+        preProcess: [loadTableData],
+        localBiblio: {
+            "CLIENT-HINTS": {
+                title: "HTTP Client Hints",
+                href: "https://tools.ietf.org/html/draft-grigorik-http-client-hints",
+                status: "Internet-Draft",
+                publisher: "IETF",
+            },
+            "STRUCTURED-HEADERS": {
+                title: "Structured Headers for HTTP",
+                href: "https://tools.ietf.org/html/draft-ietf-httpbis-header-structure",
+                status: "Internet-Draft",
+                publisher: "IETF",
+            },
+        },
+        mdn: true,
+    };
+</script>
+
+<section id='abstract'>
+    <cite>网络信息 API</cite> 使 Web 应用程序能够访问设备当前正在使用的
+    网络连接的相关信息。
+</section>
+
+<section id='sotd'></section>
+
+## 需求与用例
+
+本文档描述了一个满足两个特定需求的 API：
+
+### 提供一个接口，用于确定设备当前用来与网络通信所使用的[连接类型](https://wicg.github.io/netinfo/#dfn-connection-types)
+。
+
+它应当可以从客户端页面以临时方式进行查询，也应当在其他上下文中可用，例如
+暴露给 [service workers](https://w3c.github.io/ServiceWorker/v1/)。
+
+**示例用例：**
+
+* 一个主要用途为流媒体播放的 Web 应用程序，可以在播放前检查 `navigator.connection.type`。
+当其值被设置为 `'cellular'` 时，它可以提示用户其移动网络运营商可能会就该带宽
+收费，并且只自动播放先前已缓存的内容。
+* 一个使用 service worker
+在[安装](https://w3c.github.io/ServiceWorker/v1/#installation-algorithm)期间[缓存](https://w3c.github.io/ServiceWorker/v1/#cache-objects)
+资源的 Web 应用程序，可能会有不同的资源包供其缓存：一份无条件缓存的关键资源
+清单，以及一份较大的、仅当 `navigator.connection.type` 为 `'ethernet'` 或 `'wifi'`
+时才提前缓存的可选资源包。
+* 一个使用带有[后台同步](https://github.com/WICG/BackgroundSync/blob/master/explainer.md)
+处理程序的 service worker 的 Web 应用程序，可能会检查当前的
+`navigator.connection.type` 值，并且仅当其为 `'ethernet'` 或 `'wifi'` 时才在 `sync` 事件处理程序内部
+传输数据。
+* 一个 Web 应用程序可能会根据网络状况来决定是否启用离线模式（例如，当 EDGE 不
+够用时）。
+
+### 提供一种方式，让脚本在连接类型发生变化时收到通知。
+
+这使得开发者能够动态地改变其用户界面，以告知用户网络连接类型已经发生了变化，
+并且这可能会以某种方式影响他们。它还使得那些一直在推迟大量数据传输的应用程序，
+能够在检测到高带宽网络后自动开始传输。
+
+**示例用例：**
+
+* 一个主要用途为流媒体播放的 Web 应用程序，可以响应连接类型的更新而动态地改变其
+用户界面。相比于等到用户尝试播放时再执行一次性查询，这可以提供更好的用户体验。
+它使应用程序能够在用户交互之前就提供有关连接的上下文
+信息。
+* 一个允许上传或下载的 Web 应用程序，可能会在 `navigator.connection.type` 被设置为
+`'cellular'` 时推迟发起请求，并为连接的变化添加一个监听器。当检测到向高带宽网络
+类型的变化时，该请求可以自动开始。
+
+<section class="informative">
+    ## 用法示例
+    要了解可以使用此 API 构建的各类应用程序的示例，请参阅 <cite>[使用网络信息的应用
+        程序评述](https://github.com/w3c-webmob/netinfo)</cite>。
+
+    <pre class="example js">
+  // 获取连接类型。
+  var type = navigator.connection.type;
+
+  // 获取第一个网络跳的下行速度上限
+  var max = navigator.connection.downlinkMax;
+
+  function changeHandler(e) {
+    // 在此处理连接的变化。
+  }
+
+  // 注册事件变化。
+  navigator.connection.onchange = changeHandler;
+
+  // 或者。
+  navigator.connection.addEventListener('change', changeHandler);
+  </pre>
+</section>
+
+
+## 定义
+
+为清晰起见，一个 <dfn>兆比特</dfn> 为 1,000,000 比特，而 <dfn data-lt="Mbit/s">兆比特每秒</dfn> 相当于
+传输：
+
+* 每秒 1,000,000 比特
+* 每秒 1,000 千比特
+* 每秒 125,000 字节
+* 每秒 125 千字节
+* 等等……
+
+
+## 连接类型
+
+### 底层连接技术
+
+本节定义了 <a>用户代理</a> 正在使用的 <dfn data-lt="connection type">连接类型</dfn> 和<a>底层连接
+    技术</a>（如果有的话）：
+
+<dl data-dfn-for="ConnectionType">
+    <dt><dfn>bluetooth</dfn></dt>
+    <dd>蓝牙连接。</dd>
+    <dt><dfn>cellular</dfn></dt>
+    <dd>蜂窝连接（例如 EDGE、HSPA、LTE 等）。</dd>
+    <dt><dfn>ethernet</dfn></dt>
+    <dd>以太网连接。</dd>
+    <dt><dfn>none</dfn></dt>
+    <dd>无网络连接。当用户跟随链接，或当脚本请求远程页面时（或已知此类尝试会失败），
+        用户代理将不会联系网络——即等同于 HTML 中的
+        <code>navigator.onLine === false</code>。
+    </dd>
+    <dt><dfn>mixed</dfn></dt>
+    <dd>用户代理正在使用多种连接类型。</dd>
+    <dt><dfn>other</dfn></dt>
+    <dd>已知的连接类型，但不属于所枚举的连接类型之一。</dd>
+    <dt><dfn>unknown</dfn></dt>
+    <dd>用户代理已建立网络连接，但无法或不愿确定其<a>底层
+            连接技术</a>。</dd>
+    <dt><dfn>wifi</dfn></dt>
+    <dd>Wi-Fi 连接。</dd>
+    <dt><dfn>wimax</dfn></dt>
+    <dd>WiMAX 连接。</dd>
+</dl>
+
+在此 API 中，<a>连接类型</a> 由 <a>ConnectionType</a> 枚举表示。
+
+### <dfn>ConnectionType</dfn> 枚举
+
+<pre class="idl">
+  enum ConnectionType {
+    "bluetooth",
+    "cellular",
+    "ethernet",
+    "mixed",
+    "none",
+    "other",
+    "unknown",
+    "wifi",
+    "wimax"
+  };
+</pre>
+
+### 有效连接类型
+
+本节定义了<dfn data-lt="effective connection type">有效连接类型</dfn>（ECT）：
+
+<table id="effective-connection-type-table" data-dfn-for="EffectiveConnectionType">
+    <caption><dfn>有效连接类型表</dfn></caption>
+    <thead>
+        <tr>
+            <th>ECT</th>
+            <th>最小 RTT（毫秒）</th>
+            <th>最大下行（Kbps）</th>
+            <th>说明</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><dfn>slow-2g</dfn></td>
+            <td>2000</td>
+            <td>50</td>
+            <td>该网络仅适合小型传输，例如纯文本页面。</td>
+        </tr>
+        <tr>
+            <td><dfn>2g</dfn></td>
+            <td>1400</td>
+            <td>70</td>
+            <td>该网络适合传输小图片。</td>
+        </tr>
+        <tr>
+            <td><dfn>3g</dfn></td>
+            <td>270</td>
+            <td>700</td>
+            <td>该网络适合传输大型资源，例如高分辨率图片、音频和标清视频。
+            </td>
+        </tr>
+        <tr>
+            <td><dfn>4g</dfn></td>
+            <td>0</td>
+            <td>∞</td>
+            <td>该网络适合高清视频、实时视频等。</td>
+        </tr>
+    </tbody>
+</table>
+
+上述往返时延和带宽值基于真实用户测量观测：
+
+* `slow-2g` 是 2G 观测值的第 66.6 百分位
+* `2g` 是 2G 观测值的第 50 百分位
+* `3g` 是 3G 观测值的第 50 百分位
+
+上面提供的绝对值基于 2017 年 4 月在 Android 版 Chrome 上采集的真实用户测量数据。
+用户代理将来可以更新这些值，以反映测量数据的变化。
+
+在此 API 中，<a>有效连接类型</a> 由 <a>EffectiveConnectionType</a> 枚举表示。
+
+### <dfn>EffectiveConnectionType</dfn> 枚举
+
+<pre class="idl">
+  enum EffectiveConnectionType {
+    "2g",
+    "3g",
+    "4g",
+    "slow-2g"
+  };
+</pre>
+
+
+## <dfn>NavigatorNetworkInformation</dfn> 接口
+
+<code><dfn data-cite="!HTML#navigator">Navigator</dfn></code> 和
+<code><dfn data-cite="!HTML#workernavigator">WorkerNavigator</dfn></code> 接口通过混入
+<a>NavigatorNetworkInformation</a>，暴露对 <a>NetworkInformation</a> 接口的访问。
+
+<pre class="idl">
+  interface mixin NavigatorNetworkInformation {
+    [SameObject] readonly attribute NetworkInformation connection;
+  };
+
+  Navigator includes NavigatorNetworkInformation;
+  WorkerNavigator includes NavigatorNetworkInformation;
+</pre>
+
+<section data-dfn-for="NavigatorNetworkInformation" data-link-for="NavigatorNetworkInformation">
+    ### <code><dfn>connection</dfn></code> 属性
+
+    <a>connection</a> 属性在读取时，返回一个实现了 <a>NetworkInformation</a> 接口的
+    对象。
+</section>
+
+<section data-dfn-for="NetworkInformation" data-link-for="NetworkInformation">
+    ## <dfn>NetworkInformation</dfn> 接口
+
+    <a>NetworkInformation</a> 接口提供了一种方式，用于访问有关用户代理当前正在使用的
+    网络连接的信息。<code><dfn data-cite="DOM#interface-eventtarget">EventTarget</dfn></code> 定义
+    于 [[!DOM]] 中。
+
+    <pre class="idl">
+  [Exposed=(Window,Worker)]
+  interface NetworkInformation : EventTarget {
+    readonly attribute ConnectionType type;
+    readonly attribute EffectiveConnectionType effectiveType;
+    readonly attribute Megabit downlinkMax;
+    readonly attribute Megabit downlink;
+    readonly attribute Millisecond rtt;
+    attribute EventHandler onchange;
+  };
+
+  typedef unrestricted double Megabit;
+  typedef unsigned long long Millisecond;
+  </pre>
+
+    本节还定义了若干 HTTP 请求头字段，它们暴露了有关用户网络状况的详细信息，服务器
+    可以选择接收这些信息。它们可以通过 [[CLIENT-HINTS]] 中定义的 Client Hints 基础设施
+    来做到这一点，并受 [[CLIENT-HINTS-INFRASTRUCTURE]] 中定义的处理模型约束。
+
+    ### <dfn>type</dfn> 属性
+
+    <a>type</a> 属性在读取时，返回用户代理正在使用的<a>连接类型</a>。
+
+    ### <dfn>effectiveType</dfn> 属性
+
+    <a>effectiveType</a> 属性在读取时，返回使用最近观测到的 <a>rtt</a> 和 <a>downlink</a> 值
+    组合所确定的<a>有效连接类型</a>。
+
+    #### <code><dfn>ECT</dfn></code> 请求头字段
+
+    <a>ECT</a> 请求头字段是一个 token，用于指示在用户代理发出请求时的 <a>effectiveType</a>，
+    它是 <a>EffectiveConnectionType</a> 值之一。
+    它是一个 Structured Header，其值必须是一个 Token。[[STRUCTURED-HEADERS]]
+
+    ### <dfn>downlinkMax</dfn> 属性
+
+    <a>downlinkMax</a> 属性表示<dfn>第一个网络跳的下行速度上限</dfn>。所报告的值
+    以<a>兆比特每秒</a>为单位，并由<a>底层连接技术</a>的属性
+    决定。
+
+    <div class="note">
+        用户代理无法知晓为满足某个特定请求所需的各个网络跳的总数或性能特征；不同的
+        请求可能会经过不同的路由并具有不同的性能特征。所报告的<a>第一个网络跳的下行速度上限</a>
+        值由第一个网络跳的<a>底层连接技术</a>的属性决定。
+        任何请求的端到端性能都不能超过此值，但它也不是性能的保证，
+        并且实际性能可能会明显更差。
+    </div>
+
+    ### <dfn>onchange</dfn> 属性
+
+    <a>onchange</a> 事件处理程序属性处理在<a>更新连接值的
+        步骤</a>期间触发的“change”事件。
+
+    ### <dfn>downlink</dfn> 属性
+
+    <a>downlink</a> 属性表示以<a>兆比特每秒</a>为单位的有效带宽估计值，四舍五入到
+    最接近的 25 千比特每秒的倍数，并基于在最近活跃的连接上最近观测到的应用层吞吐量，
+    但不包括对私有地址空间发起的连接 [[!RFC1918]]。在缺少近期带宽测量数据的情况下，
+    该属性值由<a>底层连接
+        技术</a>的属性决定。
+
+    #### `Downlink` 请求头字段
+
+    <a>Downlink</a> 请求头字段是一个数字，用于指示在用户代理发出请求时的 <a>downlink</a> 值。
+    它是一个 Structured Header，其值必须是一个 Decimal。[[STRUCTURED-HEADERS]]
+
+    ### <dfn>rtt</dfn> 属性
+
+    <a>rtt</a> 属性表示以<dfn data-lt="Millisecond">毫秒</dfn>为单位的有效往返时延估计值，四舍五入到最接近的 25 毫秒的倍数，并基于
+    在最近活跃的连接上最近观测到的应用层 RTT 测量值，但不包括对
+    私有地址空间发起的连接 [[!RFC1918]]。在缺少近期 RTT 测量数据的情况下，该属性值
+    由<a>底层连接技术</a>的属性决定。
+
+    #### `RTT` 请求头字段
+
+    <a>RTT</a> 请求头字段是一个数字，用于指示在用户代理发出请求时的 <a>rtt</a> 值。
+    它是一个 Structured Header，其值必须是一个 Integer。[[STRUCTURED-HEADERS]]
+
+    ## 底层连接技术
+
+    <dfn>底层连接技术</dfn>与其<a>第一个网络跳的下行速度
+        上限</a>之间的关系，由可用于满足新网络请求的可用网络接口
+    决定。
+
+    <dfn>可用接口的 downlinkMax</dfn> 通过<a>最大下行速度表</a>中所记录的、
+    标准化或普遍认可的最大下载数据速率来确定。在可能的情况下，可以基于接口的当前属性
+    （例如信号强度、调制算法及其他“网络天气”变量）对该值进行细化，以报告更
+    准确的上限。
+
+    <a>第一个网络跳的下行速度上限</a>由
+    href="#handling-changes-to-the-underlying-connection">处理底层连接的变化</a>中所描述的规则决定。
+
+    <div class="note">
+        可用网络接口及其代际和版本的枚举不会直接暴露给
+        脚本。相反，`downlinkMax` 暴露一个以<a>兆比特每秒</a>为单位的单一值，它综合考虑了所有
+        可用接口及其当前的网络状况。
+    </div>
+
+    <table id="max-downlink-table" class="simple" data-link-for="ConnectionType">
+        <caption><dfn>最大下行速度表</dfn></caption>
+        <thead>
+            <tr>
+                <th>连接类型</th>
+                <th>底层连接技术</th>
+                <th>代际或版本</th>
+                <th>最大下行速度（<a>Mbit/s</a>）</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <!-- fallback if JS disabled or xhr fails -->
+                <td colspan="4"><a href="downlink.json">以 JSON 形式提供的数据</a>。</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <section data-link-for="NetworkInformation">
+        ### 处理底层连接的变化
+
+        当<a>底层连接技术</a>的属性发生变化时——由于切换到了不同的
+        <a>连接类型</a>或<a>有效连接类型</a>、<a>第一个网络跳的下行速度
+            上限</a>发生变化，或有效的 <a>downlink</a> 或 <a>rtt</a> 估计值发生变化——用户代理
+        必须运行<dfn>更新连接值的步骤</dfn>：
+
+        1. 令 <var>new-type</var> 为表示<a>底层连接
+            技术</a>的<a>连接类型</a>。
+        1. 令 <var>new-effective-type</var> 为由当前 <a>downlink</a> 和 <a>rtt</a> 值所确定的
+        <a>有效连接类型</a>。
+        1. 令 <var>new-downlink</var> 为以下结果：
+        1. 将 <a>downlink</a> 值四舍五入到最接近的 25 千比特每秒的倍数。
+        1. 如果所得值比 `connection.downlink` 的值大或小 10%，则将
+        <var>new-dowlink</var> 设置为所得值。否则，将 <var>new-downlink</var> 设置为
+        `connection.downlink` 的值。
+        1. 令 <var>new-rtt</var> 为以下结果：
+        1. 将 <a>rtt</a> 值四舍五入到最接近的 25 毫秒的倍数。
+        1. 如果所得值比 `connection.rtt` 的值大或小 10%，则将
+        <var>new-rtt</var> 设置为所得值。否则，将 <var>new-rtt</var> 设置为 `connection.rtt` 的值。
+        1. 如果 <var>new-type</var> 为 "none"，则将 <var>max-value</var> 设置为 `0`。
+        1. 如果 <var>new-type</var> 为 "unknown"，则将 <var>max-value</var> 设置为 `+Infinity`。
+        1. 如果 <var>new-type</var> 为 "mixed"，则将 <var>max-value</var> 设置为用于服务新网络请求的接口
+        配置的适用值——例如，如果可能使用多个接口，则对它们的
+        <a>可用接口的 downlinkMax</a> 值求和。
+        1. 否则，将 <var>max-value</var> 设置为<a>可用接口的 downlinkMax</a>。
+        1. 如果 <var>max-value</var> 不等于 `connection.downlinkMax` 的值，或者如果 <var>new-type</var>
+        不等于 `connection.type` 的值，或者如果 <var>new-downlink</var> 不等于
+        `connection.downlink` 的值，或者如果 <var>new-rtt</var> 不等于 `connection.rtt` 的值：
+        1. 使用<a data-cite="!HTML#networking-task-source">网络任务源</a>，
+        data-cite="!HTML#queue-a-task">排队一个任务</a>来执行以下操作：
+        1. 将 `connection.downlinkMax` 设置为 <var>max-value</var>。
+        1. 将 `connection.type` 设置为 <var>new-type</var>。
+        1. 将 `connection.effectiveType` 设置为 <var>new-effective-type</var>。
+        1. 将 `connection.downlink` 设置为 <var>new-downlink</var>。
+        1. 将 `connection.rtt` 设置为 <var>new-rtt</var>。
+        1. 在 `NetworkInformation` 对象上<a data-cite="!DOM#concept-event-fire">触发一个事件</a>，名为 `change`。
+    </section>
+
+    <section>
+        ## 隐私考量
+
+        网络信息 API 暴露了有关所观测到的端到端网络带宽和时延，以及用户代理与服务器之间
+        第一个网络跳的信息；具体而言，包括连接的类型和下行速度的
+        上限，以及在该信息发生变化时的信号。此类信息可被用
+        于：
+
+        * 基于某个特定网络在某一时间点的特征（例如类型和下行估计值），以及通过观测此类
+        特征在一段时间内的变化，对用户进行指纹识别。
+        * 基于在一个或多个网络之间的切换（例如基于按类型、下行估计值和时间排列的切换
+        顺序），对用户进行指纹识别。
+        * 基于上述标准推断用户位置（例如他们是在家、在工作场所，还是在通勤途中）。
+
+        然而，上述考量并非新事物，足够有动机的攻击者可能已经能够使用其他技术获得此类
+        信息：
+
+        * 攻击者可以使用 JavaScript 来观测客户端上任何网络抓取（同源或跨源）的持续时间
+        （例如从抓取开始到 `onload` 事件的时间），并可通过 Resource Timing API 获得有关同一次
+        抓取的更详细的计时数据。
+        * 攻击者可以使用 WebRTC，通过 STUN 或类似机制来识别客户端的公有和私有 IP
+        地址。
+        * 攻击者可以在服务器上观测某次抓取的客户端 IP、抓取持续时间、RTT、传输速度及其他
+        底层套接字指标。
+
+        此外，通过重复上述某种策略（例如通过周期性地调用对某个资源的抓取或刷新；
+        通过周期性的 SSE 或 WebSocket 消息；通过周期性的 STUN 请求等），攻击者可以观测
+        客户端连接和 IP 地址的性能特征随时间的变化。此类数据随后可被用于
+        细化用户指纹、推断用户位置（例如他们是在家、在工作场所，还是在通勤途中），并提取
+        各种行为模式。
+
+        上述列表并非完整概述。然而，正如上述示例所表明的，这些攻击既可以从发送方发起，
+        也可以从接收方发起：
+
+        * 如果攻击者能够从客户端发起或观测任何类型的网络抓取，那么他们就可以观测其
+        性能特征以及它们随时间的变化。
+        * 如果攻击者能够说服客户端从其服务器抓取某个资源，那么他们同样可以观测
+        该抓取的性能特征以及它们随时间的变化。
+
+        缓解从客户端发起的此类攻击，需要阻止攻击者观测和发起
+        网络请求——例如，使用 HTTPS 以防止恶意方进行简单的内容注入；禁用 JavaScript
+        以防止任何类型的脚本化资源抓取。缓解来自发送方的攻击，可以通过使用
+        VPN 或 HTTP 代理来实现——例如隐藏客户端的真实 IP 地址、引入额外的时延等等。
+
+        因此，虽然网络信息 API 通过避免观测或发起网络请求的需要，使得获取有关端到端
+        网络吞吐量、时延和第一个网络跳的信息变得更容易，但它
+        并未暴露任何对足够有动机的攻击者而言尚不可获得的东西。
+
+        如果客户端想要缓解此类攻击，他们应当禁用 JavaScript，监控所有出站
+        请求是否都发往受信任的源，并谨慎地使用匿名化的 VPN/代理服务。
+    </section>
+
+    <section id="iana-considerations">
+        ## IANA 考量
+
+        以下三个 HTTP 请求头字段应当被添加到消息头字段的永久注册表中
+        （见 [[!RFC3864]]），同时应考虑 HTTP/1.1 [[!RFC7231]] 所给出的指南。
+
+        <section id="registration-ect">
+            ### `ECT` 请求头字段注册
+
+            * 头字段名称：ECT
+            * 适用协议：超文本传输协议（HTTP）
+            * 状态：标准
+            * 作者/变更控制者：W3C
+            * 规范文档：W3C TR https://www.w3.org/TR/netinfo/
+
+        </section>
+
+        <section id="registration-downlink">
+            ### `Downlink` 请求头字段注册
+
+            * 头字段名称：Downlink
+            * 适用协议：超文本传输协议（HTTP）
+            * 状态：标准
+            * 作者/变更控制者：W3C
+            * 规范文档：W3C TR https://www.w3.org/TR/netinfo/
+
+        </section>
+
+        <section id="registration-rtt">
+            ### `RTT` 请求头字段注册
+
+            * 头字段名称：RTT
+            * 适用协议：超文本传输协议（HTTP）
+            * 状态：标准
+            * 作者/变更控制者：W3C
+            * 规范文档：W3C TR https://www.w3.org/TR/netinfo/
+
+        </section>
+
+    </section>
+
+    <section id="conformance">
+        只有一类产品可以声称符合本
+        规范：<dfn>用户代理</dfn>。
+    </section>
+
+    <section class="appendix">
+        ## 致谢
+        本文档在 [[!HTML]] 规范的许可所允许的范围内，
+        重用了该规范中的文本。
+    </section>
+    <script src="https://htmlspecs.com/dropdown.js"></script>
