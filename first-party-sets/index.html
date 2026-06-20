@@ -1,0 +1,2529 @@
+<!doctype html>
+<html lang="zh-hans">
+
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <title>用户代理与相关网站集的交互</title>
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <link href="https://www.w3.org/StyleSheets/TR/2021/cg-draft" rel="stylesheet">
+    <!-- <meta content="Bikeshed version b25686b9f, updated Fri Mar 14 14:15:20 2025 -0700" name="generator"> -->
+    <link href="https://wicg.github.io/first-party-sets/" rel="canonical">
+    <!-- <meta content="41975cf9b4490c376a8eaff3e2738b14c999cf7a" name="revision"> -->
+    <meta content="dark light" name="color-scheme">
+    <link href="https://www.w3.org/StyleSheets/TR/2021/dark.css" media="(prefers-color-scheme: dark)" rel="stylesheet"
+        type="text/css">
+    <style>
+        /* Boilerplate: style-autolinks */
+        .css.css,
+        .property.property,
+        .descriptor.descriptor {
+            color: var(--a-normal-text);
+            font-size: inherit;
+            font-family: inherit;
+        }
+
+        .css::before,
+        .property::before,
+        .descriptor::before {
+            content: "‘";
+        }
+
+        .css::after,
+        .property::after,
+        .descriptor::after {
+            content: "’";
+        }
+
+        .property,
+        .descriptor {
+            /* Don't wrap property and descriptor names */
+            white-space: nowrap;
+        }
+
+        .type {
+            /* CSS value <type> */
+            font-style: italic;
+        }
+
+        pre .property::before,
+        pre .property::after {
+            content: "";
+        }
+
+        [data-link-type="property"]::before,
+        [data-link-type="propdesc"]::before,
+        [data-link-type="descriptor"]::before,
+        [data-link-type="value"]::before,
+        [data-link-type="function"]::before,
+        [data-link-type="at-rule"]::before,
+        [data-link-type="selector"]::before,
+        [data-link-type="maybe"]::before {
+            content: "‘";
+        }
+
+        [data-link-type="property"]::after,
+        [data-link-type="propdesc"]::after,
+        [data-link-type="descriptor"]::after,
+        [data-link-type="value"]::after,
+        [data-link-type="function"]::after,
+        [data-link-type="at-rule"]::after,
+        [data-link-type="selector"]::after,
+        [data-link-type="maybe"]::after {
+            content: "’";
+        }
+
+        [data-link-type].production::before,
+        [data-link-type].production::after,
+        .prod [data-link-type]::before,
+        .prod [data-link-type]::after {
+            content: "";
+        }
+
+        [data-link-type=element],
+        [data-link-type=element-attr] {
+            font-family: Menlo, Consolas, "DejaVu Sans Mono", monospace;
+            font-size: .9em;
+        }
+
+        [data-link-type=element]::before {
+            content: "<"
+        }
+
+        [data-link-type=element]::after {
+            content: ">"
+        }
+
+        [data-link-type=biblio] {
+            white-space: pre;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --selflink-text: black;
+                --selflink-bg: silver;
+                --selflink-hover-text: white;
+            }
+        }
+    </style>
+    <style>
+        /* Boilerplate: style-colors */
+        /* Any --*-text not paired with a --*-bg is assumed to have a transparent bg */
+        :root {
+            color-scheme: light dark;
+
+            --text: black;
+            --bg: white;
+
+            --unofficial-watermark: url(https://www.w3.org/StyleSheets/TR/2016/logos/UD-watermark);
+
+            --logo-bg: #1a5e9a;
+            --logo-active-bg: #c00;
+            --logo-text: white;
+
+            --tocnav-normal-text: #707070;
+            --tocnav-normal-bg: var(--bg);
+            --tocnav-hover-text: var(--tocnav-normal-text);
+            --tocnav-hover-bg: #f8f8f8;
+            --tocnav-active-text: #c00;
+            --tocnav-active-bg: var(--tocnav-normal-bg);
+
+            --tocsidebar-text: var(--text);
+            --tocsidebar-bg: #f7f8f9;
+            --tocsidebar-shadow: rgba(0, 0, 0, .1);
+            --tocsidebar-heading-text: hsla(203, 20%, 40%, .7);
+
+            --toclink-text: var(--text);
+            --toclink-underline: #3980b5;
+            --toclink-visited-text: var(--toclink-text);
+            --toclink-visited-underline: #054572;
+
+            --heading-text: #005a9c;
+
+            --hr-text: var(--text);
+
+            --algo-border: #def;
+
+            --del-text: red;
+            --del-bg: transparent;
+            --ins-text: #080;
+            --ins-bg: transparent;
+
+            --a-normal-text: #034575;
+            --a-normal-underline: #bbb;
+            --a-visited-text: var(--a-normal-text);
+            --a-visited-underline: #707070;
+            --a-hover-bg: rgba(75%, 75%, 75%, .25);
+            --a-active-text: #c00;
+            --a-active-underline: #c00;
+
+            --blockquote-border: silver;
+            --blockquote-bg: transparent;
+            --blockquote-text: currentcolor;
+
+            --issue-border: #e05252;
+            --issue-bg: #fbe9e9;
+            --issue-text: var(--text);
+            --issueheading-text: #831616;
+
+            --example-border: #e0cb52;
+            --example-bg: #fcfaee;
+            --example-text: var(--text);
+            --exampleheading-text: #574b0f;
+
+            --note-border: #52e052;
+            --note-bg: #e9fbe9;
+            --note-text: var(--text);
+            --noteheading-text: hsl(120, 70%, 30%);
+            --notesummary-underline: silver;
+
+            --assertion-border: #aaa;
+            --assertion-bg: #eee;
+            --assertion-text: black;
+
+            --advisement-border: orange;
+            --advisement-bg: #fec;
+            --advisement-text: var(--text);
+            --advisementheading-text: #b35f00;
+
+            --warning-border: red;
+            --warning-bg: hsla(40, 100%, 50%, 0.95);
+            --warning-text: var(--text);
+
+            --amendment-border: #330099;
+            --amendment-bg: #F5F0FF;
+            --amendment-text: var(--text);
+            --amendmentheading-text: #220066;
+
+            --def-border: #8ccbf2;
+            --def-bg: #def;
+            --def-text: var(--text);
+            --defrow-border: #bbd7e9;
+
+            --datacell-border: silver;
+
+            --indexinfo-text: #707070;
+
+            --indextable-hover-text: black;
+            --indextable-hover-bg: #f7f8f9;
+
+            --outdatedspec-bg: rgba(0, 0, 0, .5);
+            --outdatedspec-text: black;
+            --outdated-bg: maroon;
+            --outdated-text: white;
+            --outdated-shadow: red;
+
+            --editedrec-bg: darkorange;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text: #ddd;
+                --bg: black;
+
+                --unofficial-watermark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cg fill='%23100808' transform='translate(200 200) rotate(-45) translate(-200 -200)' stroke='%23100808' stroke-width='3'%3E%3Ctext x='50%25' y='220' style='font: bold 70px sans-serif; text-anchor: middle; letter-spacing: 6px;'%3EUNOFFICIAL%3C/text%3E%3Ctext x='50%25' y='305' style='font: bold 70px sans-serif; text-anchor: middle; letter-spacing: 6px;'%3EDRAFT%3C/text%3E%3C/g%3E%3C/svg%3E");
+
+                --logo-bg: #1a5e9a;
+                --logo-active-bg: #c00;
+                --logo-text: white;
+
+                --tocnav-normal-text: #999;
+                --tocnav-normal-bg: var(--bg);
+                --tocnav-hover-text: var(--tocnav-normal-text);
+                --tocnav-hover-bg: #080808;
+                --tocnav-active-text: #f44;
+                --tocnav-active-bg: var(--tocnav-normal-bg);
+
+                --tocsidebar-text: var(--text);
+                --tocsidebar-bg: #080808;
+                --tocsidebar-shadow: rgba(255, 255, 255, .1);
+                --tocsidebar-heading-text: hsla(203, 20%, 40%, .7);
+
+                --toclink-text: var(--text);
+                --toclink-underline: #6af;
+                --toclink-visited-text: var(--toclink-text);
+                --toclink-visited-underline: #054572;
+
+                --heading-text: #8af;
+
+                --hr-text: var(--text);
+
+                --algo-border: #456;
+
+                --del-text: #f44;
+                --del-bg: transparent;
+                --ins-text: #4a4;
+                --ins-bg: transparent;
+
+                --a-normal-text: #6af;
+                --a-normal-underline: #555;
+                --a-visited-text: var(--a-normal-text);
+                --a-visited-underline: var(--a-normal-underline);
+                --a-hover-bg: rgba(25%, 25%, 25%, .2);
+                --a-active-text: #f44;
+                --a-active-underline: var(--a-active-text);
+
+                --borderedblock-bg: rgba(255, 255, 255, .05);
+
+                --blockquote-border: silver;
+                --blockquote-bg: var(--borderedblock-bg);
+                --blockquote-text: currentcolor;
+
+                --issue-border: #e05252;
+                --issue-bg: var(--borderedblock-bg);
+                --issue-text: var(--text);
+                --issueheading-text: hsl(0deg, 70%, 70%);
+
+                --example-border: hsl(50deg, 90%, 60%);
+                --example-bg: var(--borderedblock-bg);
+                --example-text: var(--text);
+                --exampleheading-text: hsl(50deg, 70%, 70%);
+
+                --note-border: hsl(120deg, 100%, 35%);
+                --note-bg: var(--borderedblock-bg);
+                --note-text: var(--text);
+                --noteheading-text: hsl(120, 70%, 70%);
+                --notesummary-underline: silver;
+
+                --assertion-border: #444;
+                --assertion-bg: var(--borderedblock-bg);
+                --assertion-text: var(--text);
+
+                --advisement-border: orange;
+                --advisement-bg: #222218;
+                --advisement-text: var(--text);
+                --advisementheading-text: #f84;
+
+                --warning-border: red;
+                --warning-bg: hsla(40, 100%, 20%, 0.95);
+                --warning-text: var(--text);
+
+                --amendment-border: #330099;
+                --amendment-bg: #080010;
+                --amendment-text: var(--text);
+                --amendmentheading-text: #cc00ff;
+
+                --def-border: #8ccbf2;
+                --def-bg: #080818;
+                --def-text: var(--text);
+                --defrow-border: #136;
+
+                --datacell-border: silver;
+
+                --indexinfo-text: #aaa;
+
+                --indextable-hover-text: var(--text);
+                --indextable-hover-bg: #181818;
+
+                --outdatedspec-bg: rgba(255, 255, 255, .5);
+                --outdatedspec-text: black;
+                --outdated-bg: maroon;
+                --outdated-text: white;
+                --outdated-shadow: red;
+
+                --editedrec-bg: darkorange;
+            }
+
+            /* In case a transparent-bg image doesn't expect to be on a dark bg,
+       which is quite common in practice... */
+            img {
+                background: white;
+            }
+        }
+    </style>
+    <style>
+        /* Boilerplate: style-counters */
+        body {
+            counter-reset: example figure issue;
+        }
+
+        .issue {
+            counter-increment: issue;
+        }
+
+        .issue:not(.no-marker)::before {
+            content: "Issue " counter(issue);
+        }
+
+        .example {
+            counter-increment: example;
+        }
+
+        .example:not(.no-marker)::before {
+            content: "Example " counter(example);
+        }
+
+        .invalid.example:not(.no-marker)::before,
+        .illegal.example:not(.no-marker)::before {
+            content: "Invalid Example" counter(example);
+        }
+
+        figcaption {
+            counter-increment: figure;
+        }
+
+        figcaption:not(.no-marker)::before {
+            content: "Figure " counter(figure) " ";
+        }
+    </style>
+    <style>
+        /* Boilerplate: style-dfn-panel */
+        :root {
+            --dfnpanel-bg: #ddd;
+            --dfnpanel-text: var(--text);
+            --dfnpanel-target-bg: #ffc;
+            --dfnpanel-target-outline: orange;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --dfnpanel-bg: #222;
+                --dfnpanel-text: var(--text);
+                --dfnpanel-target-bg: #333;
+                --dfnpanel-target-outline: silver;
+            }
+        }
+
+        .dfn-panel {
+            position: absolute;
+            z-index: 35;
+            width: 20em;
+            width: 300px;
+            height: auto;
+            max-height: 500px;
+            overflow: auto;
+            padding: 0.5em 0.75em;
+            font: small Helvetica Neue, sans-serif, Droid Sans Fallback;
+            background: var(--dfnpanel-bg);
+            color: var(--dfnpanel-text);
+            border: outset 0.2em;
+            white-space: normal;
+            /* in case it's moved into a pre */
+        }
+
+        .dfn-panel:not(.on) {
+            display: none;
+        }
+
+        .dfn-panel * {
+            margin: 0;
+            padding: 0;
+            text-indent: 0;
+        }
+
+        .dfn-panel>b {
+            display: block;
+        }
+
+        .dfn-panel a {
+            color: var(--dfnpanel-text);
+        }
+
+        .dfn-panel a:not(:hover) {
+            text-decoration: none !important;
+            border-bottom: none !important;
+        }
+
+        .dfn-panel a:focus {
+            outline: 5px auto Highlight;
+            outline: 5px auto -webkit-focus-ring-color;
+        }
+
+        .dfn-panel>b+b {
+            margin-top: 0.25em;
+        }
+
+        .dfn-panel ul {
+            padding: 0 0 0 1em;
+            list-style: none;
+        }
+
+        .dfn-panel li a {
+            max-width: calc(300px - 1.5em - 1em);
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .dfn-panel.activated {
+            display: inline-block;
+            position: fixed;
+            left: 8px;
+            bottom: 2em;
+            margin: 0 auto;
+            max-width: calc(100vw - 1.5em - .4em - .5em);
+            max-height: 30vh;
+            transition: left 1s ease-out, bottom 1s ease-out;
+        }
+
+        .dfn-panel .link-item:hover {
+            text-decoration: underline;
+        }
+
+        .dfn-panel .link-item .copy-icon {
+            opacity: 0;
+        }
+
+        .dfn-panel .link-item:hover .copy-icon,
+        .dfn-panel .link-item .copy-icon:focus {
+            opacity: 1;
+        }
+
+        .dfn-panel .copy-icon {
+            display: inline-block;
+            margin-right: 0.5em;
+            width: 0.85em;
+            height: 1em;
+            border-radius: 3px;
+            background-color: #ccc;
+            cursor: pointer;
+        }
+
+        .dfn-panel .copy-icon .icon {
+            width: 100%;
+            height: 100%;
+            background-color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .dfn-panel .copy-icon .icon::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 1px solid black;
+            background-color: #ccc;
+            opacity: 0.25;
+            transform: translate(3px, -3px);
+        }
+
+        .dfn-panel .copy-icon:active .icon::before {
+            opacity: 1;
+        }
+
+        .dfn-paneled[role="button"] {
+            cursor: help;
+        }
+
+        .highlighted {
+            animation: target-fade 3s;
+        }
+
+        @keyframes target-fade {
+            from {
+                background-color: var(--dfnpanel-target-bg);
+                outline: 5px solid var(--dfnpanel-target-outline);
+            }
+
+            to {
+                color: var(--a-normal-text);
+                background-color: transparent;
+                outline: transparent;
+            }
+        }
+    </style>
+    <style>
+        /* Boilerplate: style-issues */
+        a[href].issue-return {
+            float: right;
+            float: inline-end;
+            color: var(--issueheading-text);
+            font-weight: bold;
+            text-decoration: none;
+        }
+    </style>
+    <style>
+        /* Boilerplate: style-md-lists */
+        /* This is a weird hack for me not yet following the commonmark spec
+   regarding paragraph and lists. */
+        [data-md]> :first-child {
+            margin-top: 0;
+        }
+
+        [data-md]> :last-child {
+            margin-bottom: 0;
+        }
+    </style>
+    <style>
+        /* Boilerplate: style-ref-hints */
+        :root {
+            --ref-hint-bg: #ddd;
+            --ref-hint-text: var(--text);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --ref-hint-bg: #222;
+                --ref-hint-text: var(--text);
+            }
+        }
+
+        .ref-hint {
+            display: inline-block;
+            position: absolute;
+            z-index: 35;
+            width: 20em;
+            width: 300px;
+            height: auto;
+            max-height: 500px;
+            overflow: auto;
+            padding: 0.5em 0.5em;
+            font: small Helvetica Neue, sans-serif, Droid Sans Fallback;
+            background: var(--ref-hint-bg);
+            color: var(--ref-hint-text);
+            border: outset 0.2em;
+            white-space: normal;
+            /* in case it's moved into a pre */
+        }
+
+        .ref-hint * {
+            margin: 0;
+            padding: 0;
+            text-indent: 0;
+        }
+
+        .ref-hint ul {
+            padding: 0 0 0 1em;
+            list-style: none;
+        }
+    </style>
+    <style>
+        /* Boilerplate: style-selflinks */
+        :root {
+            --selflink-text: white;
+            --selflink-bg: gray;
+            --selflink-hover-text: black;
+        }
+
+        .heading,
+        .issue,
+        .note,
+        .example,
+        li,
+        dt {
+            position: relative;
+        }
+
+        a.self-link {
+            position: absolute;
+            top: 0;
+            left: calc(-1 * (3.5rem - 26px));
+            width: calc(3.5rem - 26px);
+            height: 2em;
+            text-align: center;
+            border: none;
+            transition: opacity .2s;
+            opacity: .5;
+        }
+
+        a.self-link:hover {
+            opacity: 1;
+        }
+
+        .heading>a.self-link {
+            font-size: 83%;
+        }
+
+        .example>a.self-link,
+        .note>a.self-link,
+        .issue>a.self-link {
+            /* These blocks are overflow:auto, so positioning outside
+       doesn't work. */
+            left: auto;
+            right: 0;
+        }
+
+        li>a.self-link {
+            left: calc(-1 * (3.5rem - 26px) - 2em);
+        }
+
+        dfn>a.self-link {
+            top: auto;
+            left: auto;
+            opacity: 0;
+            width: 1.5em;
+            height: 1.5em;
+            background: var(--selflink-bg);
+            color: var(--selflink-text);
+            font-style: normal;
+            transition: opacity .2s, background-color .2s, color .2s;
+        }
+
+        dfn:hover>a.self-link {
+            opacity: 1;
+        }
+
+        dfn>a.self-link:hover {
+            color: var(--selflink-hover-text);
+        }
+
+        a.self-link::before {
+            content: "¶";
+        }
+
+        .heading>a.self-link::before {
+            content: "§";
+        }
+
+        dfn>a.self-link::before {
+            content: "#";
+        }
+    </style>
+
+<body class="h-entry">
+    <div class="head">
+        <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48"
+                    src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C" width="72"> </a> </p>
+        <h1 class="p-name no-ref" id="title">用户代理与相关网站集的交互</h1>
+        <p id="w3c-state"><a href="https://www.w3.org/standards/types/#CG-DRAFT">社区组报告草案</a>，<time class="dt-updated"
+                datetime="2025-03-19">2025年3月19日</time></p>
+        <div data-fill-with="spec-metadata">
+            <dl>
+                <dt>本版本：
+                <dd><a class="u-url"
+                        href="https://wicg.github.io/first-party-sets/">https://wicg.github.io/first-party-sets/</a>
+                <dt>问题跟踪：
+                <dd><a href="https://github.com/WICG/first-party-sets/issues/">GitHub</a>
+                <dd><a href="#issues-index">规范内联</a>
+                <dt class="editor">编辑：
+                <dd class="editor p-author h-card vcard"><a class="p-name fn u-email email"
+                        href="mailto:cfredric@google.com">Chris Fredrickson</a> (<a class="p-org org"
+                        href="https://google.com">Google</a>)
+                <dd class="editor p-author h-card vcard"><a class="p-name fn u-email email"
+                        href="mailto:kaustubhag@google.com">Kaustubha Govind</a> (<a class="p-org org"
+                        href="https://google.com">Google</a>)
+                <dd class="editor p-author h-card vcard"><a class="p-name fn u-email email"
+                        href="mailto:johannhof@google.com">Johann Hofmann</a> (<a class="p-org org"
+                        href="https://google.com">Google</a>)
+            </dl>
+        </div>
+        <div data-fill-with="warning"></div>
+        <p class="copyright" data-fill-with="copyright"><a href="https://www.w3.org/policies/#copyright">Copyright</a> ©
+            2025 the Contributors to the User Agent Interaction with Related Website Sets Specification, published by
+            the <a href="https://www.w3.org/community/wicg/">Web Platform Incubator Community Group</a> under the <a
+                href="https://www.w3.org/community/about/agreements/cla/">W3C Community Contributor License Agreement
+                (CLA)</a>.
+            A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/">summary</a> is available.
+        </p>
+        <hr title="Separator for header">
+    </div>
+    <div class="p-summary" data-fill-with="abstract">
+        <h2 class="no-num no-toc no-ref heading settled" id="abstract"><span class="content">摘要</span></h2>
+        <p>用户代理应如何与相关网站集集成，相关网站集是一种将一组相关
+            域名声明为属于同一相关网站集的机制。</p>
+    </div>
+    <div data-fill-with="at-risk"></div>
+    <h2 class="no-num no-toc no-ref heading settled" id="status"><span class="content">本文档的状态</span>
+    </h2>
+    <div data-fill-with="status">
+        <p> 本规范由<a href="https://www.w3.org/community/wicg/">Web 平台孵化器
+                社区组</a>发布。
+            它既不是 W3C 标准，也未处于 W3C 标准制定流程中。
+
+            请注意，根据 <a href="https://www.w3.org/community/about/agreements/cla/">W3C 社区
+                贡献者许可协议（CLA）</a>，存在有限的退出机制，并适用其他条件。
+
+            进一步了解 <a href="http://www.w3.org/community/">W3C 社区组与商业组</a>。 </p>
+        <p></p>
+    </div>
+    <div data-fill-with="at-risk"></div>
+    <nav data-fill-with="table-of-contents" id="toc">
+        <h2 class="no-num no-toc no-ref" id="contents">目录</h2>
+        <ol class="toc" role="directory">
+            <li><a href="#intro"><span class="secno">1</span> <span class="content">引言</span></a>
+            <li><a href="#infra"><span class="secno">2</span> <span class="content">基础设施</span></a>
+            <li><a href="#list-consumption"><span class="secno">3</span> <span class="content">列表
+                        消费</span></a>
+            <li><a href="#data-structures"><span class="secno">4</span> <span class="content">数据结构</span></a>
+            <li><a href="#validating-inclusion"><span class="secno">5</span> <span class="content">验证相关
+                        网站集的纳入</span></a>
+            <li><a href="#storage-access-integration"><span class="secno">6</span> <span class="content">与
+                        存储访问 API 的集成</span></a>
+            <li><a href="#handling-changes"><span class="secno">7</span> <span class="content">处理相关网站
+                        集的变更</span></a>
+            <li><a href="#other-features"><span class="secno">8</span> <span class="content">与其他
+                        特性的集成</span></a>
+            <li>
+                <a href="#privacy-consideration"><span class="secno">9</span> <span class="content">隐私
+                        考量</span></a>
+                <ol class="toc">
+                    <li><a href="#provide-transparency"><span class="secno">9.1</span> <span class="content">提供
+                                用户透明度与控制</span></a>
+                    <li><a href="#ensure-compatibility"><span class="secno">9.2</span> <span class="content">确保
+                                与非 RWS 环境的兼容性</span></a>
+                    <li><a href="#prevent-leaks"><span class="secno">9.3</span> <span class="content">防止因列表
+                                变更导致的隐私泄露</span></a>
+                </ol>
+            <li>
+                <a href="#security-considerations"><span class="secno">10</span> <span class="content">安全
+                        考量</span></a>
+                <ol class="toc">
+                    <li><a href="#avoid-weakening-boundaries"><span class="secno">10.1</span> <span
+                                class="content">避免削弱新的及现有的安全边界</span></a>
+                </ol>
+            <li><a href="#acknowledgements"><span class="secno"></span> <span class="content">致谢</span></a>
+            <li>
+                <a href="#w3c-conformance"><span class="secno"></span> <span class="content">符合性</span></a>
+                <ol class="toc">
+                    <li><a href="#w3c-conventions"><span class="secno"></span> <span class="content">文档
+                                约定</span></a>
+                </ol>
+            <li>
+                <a href="#index"><span class="secno"></span> <span class="content">索引</span></a>
+                <ol class="toc">
+                    <li><a href="#index-defined-here"><span class="secno"></span> <span class="content">本规范
+                                定义的术语</span></a>
+                    <li><a href="#index-defined-elsewhere"><span class="secno"></span> <span class="content">通过
+                                引用定义的术语</span></a>
+                </ol>
+            <li>
+                <a href="#references"><span class="secno"></span> <span class="content">参考文献</span></a>
+                <ol class="toc">
+                    <li><a href="#normative"><span class="secno"></span> <span class="content">规范性
+                                参考文献</span></a>
+                    <li><a href="#informative"><span class="secno"></span> <span class="content">资料性
+                                参考文献</span></a>
+                </ol>
+            <li><a href="#issues-index"><span class="secno"></span> <span class="content">问题索引</span></a>
+        </ol>
+    </nav>
+    <main>
+        <h2 class="heading settled" data-level="1" id="intro"><span class="secno">1. </span><span
+                class="content">引言</span><a class="self-link" href="#intro"></a></h2>
+        <p><em>本节内容为非规范性内容。</em></p>
+        <p>相关网站集（“RWS”）为开发者提供了一个声明站点之间关系的框架，
+            使得用户代理可以出于面向用户的目的允许有限地访问跨站数据（例如 Cookie）。
+            这是通过使用 <a data-link-type="biblio" href="https://privacycg.github.io/storage-access/"><cite>存储访问
+                    API</cite></a> 实现的。</p>
+        <p>本文档定义了用户代理应如何与<a data-link-type="biblio"
+                href="https://github.com/GoogleChrome/related-website-sets/blob/main/related_website_sets.JSON"><cite>相关
+                    网站集列表</cite></a>集成。关于 RWS 列表结构以及
+            提交时所运行的技术验证的规范参考，请参阅<a data-link-type="biblio"
+                href="https://github.com/GoogleChrome/related-website-sets/blob/main/RWS-Submission_Guidelines.md"><cite>相关
+                    网站集提交指南</cite></a>。</p>
+        <h2 class="heading settled" data-level="2" id="infra"><span class="secno">2. </span><span
+                class="content">基础设施</span><a class="self-link" href="#infra"></a></h2>
+        <p>本规范依赖于 Infra 标准。<a data-biblio-display="index" data-link-type="biblio" href="#biblio-infra"
+                title="Infra Standard">[INFRA]</a></p>
+        <h2 class="heading settled" data-level="3" id="list-consumption"><span class="secno">3. </span><span
+                class="content">列表消费</span><a class="self-link" href="#list-consumption"></a></h2>
+        <p>用户代理应定期消费规范的<a data-link-type="biblio"
+                href="https://github.com/GoogleChrome/related-website-sets/blob/main/related_website_sets.JSON"><cite>相关
+                    网站集列表</cite></a>（例如每 2 周一次），并将其作为可更新组件
+            交付给各个客户端（例如浏览器应用程序）。</p>
+        <p class="issue" id="issue-2f53edbf"><a class="self-link" href="#issue-2f53edbf"></a> 我们能否在此处
+            就更新间隔给出建议？
+            href="https://github.com/wicg/first-party-sets/issues/122">[wicg/first-party-sets Issue #122]</a></p>
+        <p>各个客户端必须在重启时，或在启动时（如果是新下载的），<a data-link-type="dfn" href="#build-the-list-of-related-website-sets"
+                id="ref-for-build-the-list-of-related-website-sets">构建相关网站集列表</a>。客户端不得在任何其他时间点
+            重新构建该列表。
+        </p>
+        <p>RWS 列表是一个 <a data-link-type="dfn" href="https://encoding.spec.whatwg.org/#utf-8" id="ref-for-utf-8">UTF-8</a>
+            编码的文件，其内容可解析为一个 JSON 对象，并符合
+            <a data-link-type="biblio"
+                href="https://github.com/GoogleChrome/related-website-sets/blob/main/RWS-Submission_Guidelines.md"><cite>相关
+                    网站集提交指南</cite></a>中所描述的 <a data-biblio-display="index" data-link-type="biblio"
+                href="#biblio-json-schema"
+                title="JSON Schema: A Media Type for Describing JSON Documents">[JSON-SCHEMA]</a>。
+        </p>
+        <p class="note" role="note"><span class="marker">注意：</span> 对该模式的符合性在
+            提交时进行验证。因此，用户代理无需在客户端再次验证符合性。
+            本规范中的算法描述了用户代理应如何解析 RWS 列表，以及
+            何时应从客户端的角度认为某个特定的集是有效的。</p>
+        <p class="issue" id="issue-bb862ccb"><a class="self-link" href="#issue-bb862ccb"></a> 在<a
+                data-link-type="biblio" href="#biblio-psl"><cite>公共后缀
+                    列表</cite></a>版本在服务器与客户端之间存在差异的情况下，可能
+            需要进行客户端验证。
+            href="https://github.com/wicg/first-party-sets/issues/125">[wicg/first-party-sets Issue #125]</a></p>
+        <p>要从一个 JSON
+            data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence">字节
+            序列</a> <var>bytes</var> <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport
+                id="build-the-list-of-related-website-sets">构建相关网站集列表</dfn>，用户代理应运行以下步骤：</p>
+        <ol>
+            <li data-md>
+                <p>令 <var>json</var> 为以 <var>bytes</var> 对 <a data-link-type="dfn"
+                        href="https://infra.spec.whatwg.org/#parse-json-bytes-to-an-infra-value"
+                        id="ref-for-parse-json-bytes-to-an-infra-value">将 JSON 字节解析为 infra 值</a> 的结果。
+                </p>
+            <li data-md>
+                <p>如果 <var>json</var> 是一个解析异常，或者 <var>json</var> 不是一个 <a data-link-type="dfn"
+                        href="https://infra.spec.whatwg.org/#ordered-map" id="ref-for-ordered-map">有序映射</a>，或者
+                    <var>json</var>[“sets”] 不存在，则返回，并可选择重试获取该列表，或执行
+                    其他错误恢复任务。
+                </p>
+            <li data-md>
+                <p>对于 <var>json</var> 的每个 <var>entry</var>：</p>
+                <ol>
+                    <li data-md>
+                        <p>令 <var>set</var> 为一个<a data-link-type="dfn" href="#related-website-set"
+                                id="ref-for-related-website-set">相关网站集</a>。</p>
+                    <li data-md>
+                        <p>如果 <var>entry</var>[“primary”] 不存在，则继续。</p>
+                </ol>
+        </ol>
+        <p class="issue" id="issue-f434ab32"><a class="self-link" href="#issue-f434ab32"></a> 本规范
+            目前建议跳过无效的集（缺少 primary 条目）而不是拒绝整个列表。
+            然而，鉴于服务器应始终持有有效信息，进行完全拒绝
+            可能会有好处。
+            href="https://github.com/wicg/first-party-sets/issues/126">[wicg/first-party-sets Issue #126]</a></p>
+        <ol start="3">
+            <li data-md>
+                <p>将 <var>set</var> 的 <a data-link-type="dfn" href="#related-website-set-primary"
+                        id="ref-for-related-website-set-primary">primary</a> 设置为 <var>entry</var>[“primary”]。</p>
+            <li data-md>
+                <p>令 <var>ccTLDs</var> 为从 <var>entry</var>[“ccTLDs”] <a data-link-type="dfn"
+                        href="#parse-an-equivalence-map" id="ref-for-parse-an-equivalence-map">解析等价映射</a> 的结果。如果
+                    <var>ccTLDs</var> 是失败，则继续。
+                </p>
+            <li data-md>
+                <p>将 <var>set</var> 的 ccTLDs 设置为 <var>ccTLDs</var>。</p>
+            <li data-md>
+                <p>令 <var>serviceSites</var> 为从 <var>entry</var>[“serviceSites”] <a data-link-type="dfn"
+                        href="#parse-a-subset" id="ref-for-parse-a-subset">解析子集</a> 的结果。如果
+                    结果是失败，则继续。</p>
+            <li data-md>
+                <p>将 <var>set</var> 的 <a data-link-type="dfn" href="#related-website-set-servicesites"
+                        id="ref-for-related-website-set-servicesites">serviceSites</a> 设置为 <var>serviceSites</var>。</p>
+            <li data-md>
+                <p>令 <var>associatedSites</var> 为从 <var>entry</var>[“associatedSites”] <a data-link-type="dfn"
+                        href="#parse-a-subset" id="ref-for-parse-a-subset①">解析子集</a> 的结果。如果
+                    结果是失败，则继续。</p>
+            <li data-md>
+                <p>将 <var>set</var> 的 <a data-link-type="dfn" href="#related-website-set-associatedsites"
+                        id="ref-for-related-website-set-associatedsites">associatedSites</a> 设置为
+                    <var>associatedSites</var>。
+                </p>
+            <li data-md>
+                <p>将 <var>set</var> 添加到用户代理的<a data-link-type="dfn" href="#list-of-related-website-sets"
+                        id="ref-for-list-of-related-website-sets">相关网站集列表</a>中。</p>
+        </ol>
+        <p>用户代理可以选择在交付给客户端之前将列表预处理为不同的格式（例如出于
+            优化原因），只要它们确保客户端最终持有本规范中定义的有效
+            data-link-type="dfn" href="#list-of-related-website-sets"
+            id="ref-for-list-of-related-website-sets①">相关网站集列表</a>即可。</p>
+        <h2 class="heading settled" data-level="4" id="data-structures"><span class="secno">4. </span><span
+                class="content">数据结构</span><a class="self-link" href="#data-structures"></a></h2>
+        <p>用户代理维护一个全局的<dfn class="dfn-paneled" data-dfn-type="dfn" data-export
+                id="list-of-related-website-sets">相关网站集列表</dfn>，它是一个由<a data-link-type="dfn" href="#related-website-set"
+                id="ref-for-related-website-set①">相关网站集</a>组成的<a data-link-type="dfn"
+                href="https://infra.spec.whatwg.org/#list" id="ref-for-list">列表</a>。</p>
+        <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-export id="related-website-set">相关网站集</dfn>
+            是一个<a data-link-type="dfn" href="https://infra.spec.whatwg.org/#struct" id="ref-for-struct">结构体</a>，
+            具有以下项：</p>
+        <p><dfn class="dfn-paneled" data-dfn-for="related website set" data-dfn-type="dfn" data-noexport
+                id="related-website-set-primary">primary</dfn>：一个代表该集的主域名的<a data-link-type="dfn"
+                href="https://html.spec.whatwg.org/multipage/browsers.html#site" id="ref-for-site">站点</a>。</p>
+        <p><dfn class="dfn-paneled" data-dfn-for="related website set" data-dfn-type="dfn" data-noexport
+                id="related-website-set-cctlds">ccTLDs</dfn>：一个<a data-link-type="dfn" href="#equivalence-map"
+                id="ref-for-equivalence-map">等价映射</a>，代表由提交者指定的该集的等价
+            国家代码顶级域名。</p>
+        <p><dfn class="dfn-paneled" data-dfn-for="related website set" data-dfn-type="dfn" data-noexport
+                id="related-website-set-associatedsites">associatedSites</dfn>：关联子集中的<a data-link-type="dfn"
+                href="https://html.spec.whatwg.org/multipage/browsers.html#site" id="ref-for-site①">站点</a>的<a
+                data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list①">列表</a>。</p>
+        <p><dfn class="dfn-paneled" data-dfn-for="related website set" data-dfn-type="dfn" data-noexport
+                id="related-website-set-servicesites">serviceSites</dfn>：服务子集中的<a data-link-type="dfn"
+                href="https://html.spec.whatwg.org/multipage/browsers.html#site" id="ref-for-site②">站点</a>的<a
+                data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list②">列表</a>。</p>
+        <p class="note" role="note"><span class="marker">注意：</span> 关于这些字段含义的
+            更多背景信息，请参阅<a data-link-type="biblio"
+                href="https://github.com/GoogleChrome/related-website-sets/blob/main/RWS-Submission_Guidelines.md"><cite>相关
+                    网站集提交指南</cite></a>。</p>
+        <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="equivalence-map">等价映射</dfn>是
+            一个从<a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsers.html#site"
+                id="ref-for-site③">站点</a>到
+            data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsers.html#site"
+            id="ref-for-site④">站点</a><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list"
+                id="ref-for-list③">列表</a>的<a data-link-type="dfn" href="https://infra.spec.whatwg.org/#ordered-map"
+                id="ref-for-ordered-map①">有序映射</a>。</p>
+        <p>要从一个<a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string" id="ref-for-string">字符串</a>
+            <var>input</var> <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport
+                id="parse-and-validate-a-site">解析并
+                验证一个站点</dfn>，运行以下步骤：
+        </p>
+        <ol>
+            <li data-md>
+                <p>令 <var>url</var> 为对 <var>input</var> 进行<a data-link-type="dfn"
+                        href="https://url.spec.whatwg.org/#concept-basic-url-parser"
+                        id="ref-for-concept-basic-url-parser">基本 URL 解析</a>的结果。如果结果是
+                    失败，则返回失败。</p>
+            <li data-md>
+                <p>如果 <var>url</var> 的 <a data-link-type="dfn" href="https://url.spec.whatwg.org/#concept-url-scheme"
+                        id="ref-for-concept-url-scheme">scheme</a> 不是 "<code>https</code>"，则返回失败。</p>
+            <li data-md>
+                <p>令 <var>site</var> 为从 <var>url</var> 的<a data-link-type="dfn"
+                        href="https://url.spec.whatwg.org/#concept-url-origin" id="ref-for-concept-url-origin">源</a><a
+                        data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsers.html#obtain-a-site"
+                        id="ref-for-obtain-a-site">获取站点</a>的结果。</p>
+            <li data-md>
+                <p>返回 <var>site</var>。</p>
+        </ol>
+        <p>要从一个<a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list④">列表</a>
+            <var>input</var> <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport
+                id="parse-a-subset">解析子集</dfn>，运行以下步骤：
+        </p>
+        <ol>
+            <li data-md>
+                <p>令 <var>list</var> 为一个空<a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list"
+                        id="ref-for-list⑤">列表</a>。</p>
+            <li data-md>
+                <p>对于 <var>input</var> 的每个 <var>item</var>：</p>
+                <ol>
+                    <li data-md>
+                        <p>令 <var>site</var> 为从 <var>item</var> <a data-link-type="dfn"
+                                href="#parse-and-validate-a-site" id="ref-for-parse-and-validate-a-site">解析并
+                                验证一个站点</a>的结果。</p>
+                    <li data-md>
+                        <p>如果 <var>site</var> 是失败，则返回失败。</p>
+                    <li data-md>
+                        <p>将 <var>site</var> 添加到 <var>list</var>。</p>
+                </ol>
+            <li data-md>
+                <p>返回 <var>list</var>。</p>
+        </ol>
+        <p>要从一个有序映射 <var>input</var> <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport
+                id="parse-an-equivalence-map">解析
+                等价映射</dfn>，运行以下步骤：</p>
+        <ol start="4">
+            <li data-md>
+                <p>令 <var>map</var> 为一个空<a data-link-type="dfn" href="#equivalence-map"
+                        id="ref-for-equivalence-map①">等价映射</a>。</p>
+            <li data-md>
+                <p>对于 <var>input</var> 的每个 <var>key</var> → <var>value</var>：</p>
+                <ol start="4">
+                    <li data-md>
+                        <p>令 <var>keySite</var> 为从 <var>key</var> <a data-link-type="dfn"
+                                href="#parse-and-validate-a-site" id="ref-for-parse-and-validate-a-site①">解析并
+                                验证一个站点</a>的结果。如果结果是失败，则返回失败。</p>
+                    <li data-md>
+                        <p>令 <var>equivalents</var> 为一个空列表。</p>
+                    <li data-md>
+                        <p>对于 <var>value</var> 中的每个 <var>equivalent</var>：</p>
+                        <ol>
+                            <li data-md>
+                                <p>令 <var>equivalentSite</var> 为从
+                                    <var>equivalent</var> <a data-link-type="dfn" href="#parse-and-validate-a-site"
+                                        id="ref-for-parse-and-validate-a-site②">解析并验证一个站点</a>的结果。如果结果是失败，则返回失败。
+                                </p>
+                            <li data-md>
+                                <p>将 <var>equivalentSite</var> 添加到 <var>equivalents</var>。</p>
+                        </ol>
+                    <li data-md>
+                        <p>将 <var>map</var>[<var>keySite</var>] 设置为 <var>equivalents</var>。</p>
+                </ol>
+            <li data-md>
+                <p>返回 <var>map</var>。</p>
+        </ol>
+        <h2 class="heading settled" data-level="5" id="validating-inclusion"><span class="secno">5. </span><span
+                class="content">验证相关网站集的纳入</span><a class="self-link" href="#validating-inclusion"></a></h2>
+        <p>在 RWS 下，给定一个<a data-link-type="dfn" href="#equivalence-map" id="ref-for-equivalence-map②">等价映射</a>
+            <var>equivalents</var>，若
+            <var>equivalents</var>[<var>site1</var>] 包含 <var>site2</var> 或
+            <var>equivalents</var>[<var>site2</var>] 包含 <var>site1</var>，则<a data-link-type="dfn"
+                href="https://html.spec.whatwg.org/multipage/browsers.html#site" id="ref-for-site⑤">站点</a>
+            <var>site1</var> 被视为<dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport
+                id="equivalent-to">等价于</dfn>另一个<a data-link-type="dfn"
+                href="https://html.spec.whatwg.org/multipage/browsers.html#site" id="ref-for-site⑥">站点</a>
+            <var>site2</var>。
+        </p>
+        <p class="issue" id="issue-7a693f54"><a class="self-link" href="#issue-7a693f54"></a> 是否应将其重命名
+            以避免与数学上的等价关系相混淆？
+            href="https://github.com/wicg/first-party-sets/issues/123">[wicg/first-party-sets Issue #123]</a></p>
+        <p>要<dfn class="dfn-paneled" data-dfn-type="dfn" data-export id="determine-the-member-type">确定
+                成员类型</dfn>，即给定一个<a data-link-type="dfn" href="#related-website-set"
+                id="ref-for-related-website-set②">相关网站集</a> <var>set</var> 中给定<a data-link-type="dfn"
+                href="https://html.spec.whatwg.org/multipage/browsers.html#site" id="ref-for-site⑦">站点</a>
+            <var>site</var> 的成员类型，运行以下步骤：
+        </p>
+        <ol>
+            <li data-md>
+                <p>如果给定 <var>set</var> 的 <a data-link-type="dfn" href="#related-website-set-cctlds"
+                        id="ref-for-related-website-set-cctlds">ccTLDs</a>，<var>site</var> <a data-link-type="dfn"
+                        href="#equivalent-to" id="ref-for-equivalent-to">等价于</a> <var>set</var> 的 <a
+                        data-link-type="dfn" href="#related-website-set-primary"
+                        id="ref-for-related-website-set-primary①">primary</a>，
+                    则返回 “primary”。
+                </p>
+            <li data-md>
+                <p>对于 <var>set</var> 的 <a data-link-type="dfn" href="#related-website-set-associatedsites"
+                        id="ref-for-related-website-set-associatedsites①">associatedSites</a> 中的每个
+                    <var>associatedSite</var>：
+                </p>
+                <ol>
+                    <li data-md>
+                        <p>如果给定 <var>set</var> 的 <a data-link-type="dfn" href="#related-website-set-cctlds"
+                                id="ref-for-related-website-set-cctlds①">ccTLDs</a>，<var>site</var> <a
+                                data-link-type="dfn" href="#equivalent-to" id="ref-for-equivalent-to①">等价于</a>
+                            <var>associatedSite</var>，
+                            则返回 “associated”。
+                        </p>
+                </ol>
+            <li data-md>
+                <p>对于 <var>set</var> 的 <a data-link-type="dfn" href="#related-website-set-servicesites"
+                        id="ref-for-related-website-set-servicesites①">serviceSites</a> 中的每个 <var>serviceSite</var>：</p>
+                <ol start="2">
+                    <li data-md>
+                        <p>如果给定 <var>set</var> 的 <a data-link-type="dfn" href="#related-website-set-cctlds"
+                                id="ref-for-related-website-set-cctlds②">ccTLDs</a>，<var>site</var> <a
+                                data-link-type="dfn" href="#equivalent-to" id="ref-for-equivalent-to②">等价于</a>
+                            <var>serviceSite</var>，
+                            则返回 “service”。
+                        </p>
+                </ol>
+            <li data-md>
+                <p>返回 “none”。</p>
+        </ol>
+        <p>要为给定的<a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsers.html#site"
+                id="ref-for-site⑧">站点</a>
+            <var>site</var> <dfn class="dfn-paneled" data-dfn-type="dfn" data-export
+                id="find-a-related-website-set">查找一个相关
+                网站集</dfn>，运行以下步骤：
+        </p>
+        <ol>
+            <li data-md>
+                <p>对于用户代理的<a data-link-type="dfn" href="#list-of-related-website-sets"
+                        id="ref-for-list-of-related-website-sets②">相关
+                        网站集列表</a>中的每个 <var>set</var>：</p>
+                <ol>
+                    <li data-md>
+                        <p>令 <var>type</var> 为 <var>site</var> 在
+                            <var>set</var> 中的<a data-link-type="dfn" href="#determine-the-member-type"
+                                id="ref-for-determine-the-member-type">成员类型</a>。
+                        </p>
+                    <li data-md>
+                        <p>如果 <var>type</var> 不是 “none”，则返回 <var>set</var>。</p>
+                </ol>
+            <li data-md>
+                <p>返回 null。</p>
+        </ol>
+        <p class="note" role="note"><span class="marker">注意：</span> <a data-link-type="biblio"
+                href="https://github.com/GoogleChrome/related-website-sets/blob/main/RWS-Submission_Guidelines.md"><cite>相关
+                    网站集提交指南</cite></a>要求每个站点最多只能出现在一个
+            相关网站集中，这在提交时进行验证。因此，用户代理在执行这些步骤时无需
+            关注相关网站集列表的顺序。</p>
+        <p>将单个<a data-link-type="dfn" href="#related-website-set" id="ref-for-related-website-set③">相关网站集</a>内的<dfn
+                class="dfn-paneled" data-dfn-type="dfn" data-noexport id="limit-for-associated-sites">关联站点
+                上限</dfn>定义为一个<a data-link-type="dfn" href="https://infra.spec.whatwg.org/#implementation-defined"
+                id="ref-for-implementation-defined">由实现定义</a>的值，建议为 3。</p>
+        <p class="note" role="note"><span class="marker">注意：</span> 此上限在<a data-link-type="dfn"
+                href="#determine-eligibility-for-an-associated-site"
+                id="ref-for-determine-eligibility-for-an-associated-site">确定关联站点资格</a>时使用，
+            以便仅考虑列在关联子集顶部的站点。它旨在
+            阻止滥用，并帮助用户和用户代理理解为什么某个特定的相关网站集需要
+            存在。用户代理可以基于此目标选择不同的数字。</p>
+        <p>如果以下步骤返回 true，则<a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsers.html#site"
+                id="ref-for-site⑨">站点</a> <var>embeddedSite</var> 在嵌入于<a data-link-type="dfn"
+                href="https://html.spec.whatwg.org/multipage/browsers.html#site" id="ref-for-site①⓪">站点</a>
+            <var>topLevelSite</var> 内时<dfn class="dfn-paneled" data-dfn-type="dfn" data-export
+                id="eligible-for-same-party-membership-when-embedded-within">有资格获得同方
+                成员资格</dfn>：
+        </p>
+        <ol>
+            <li data-md>
+                <p>令 <var>set</var> 为为 <var>topLevelSite</var> <a data-link-type="dfn"
+                        href="#find-a-related-website-set" id="ref-for-find-a-related-website-set">查找一个相关网站集</a>的结果。
+                </p>
+            <li data-md>
+                <p>如果 <var>set</var> 是 null，则返回 false。</p>
+            <li data-md>
+                <p>令 <var>topLevelType</var> 为 <var>topLevelSite</var> 在
+                    <var>set</var> 中的<a data-link-type="dfn" href="#determine-the-member-type"
+                        id="ref-for-determine-the-member-type①">成员类型</a>。
+                </p>
+            <li data-md>
+                <p>如果 <var>topLevelType</var> 是 “associated” 且给定 <var>topLevelSite</var> 和 <var>set</var> <a
+                        data-link-type="dfn" href="#determine-eligibility-for-an-associated-site"
+                        id="ref-for-determine-eligibility-for-an-associated-site①">确定
+                        关联站点资格</a>的结果为 false，则返回 false。</p>
+            <li data-md>
+                <p>如果 <var>topLevelType</var> 是 “service”，则返回 false。</p>
+            <li data-md>
+                <p>令 <var>type</var> 为 <var>embeddedSite</var> 在
+                    <var>set</var> 中的<a data-link-type="dfn" href="#determine-the-member-type"
+                        id="ref-for-determine-the-member-type②">成员类型</a>。
+                </p>
+            <li data-md>
+                <p>如果 <var>type</var> 是 “none”，则返回 false。</p>
+            <li data-md>
+                <p>如果 <var>type</var> 是 “associated”，则返回给定 <var>embeddedSite</var> 和 <var>set</var> <a
+                        data-link-type="dfn" href="#determine-eligibility-for-an-associated-site"
+                        id="ref-for-determine-eligibility-for-an-associated-site②">确定
+                        关联站点资格</a>的结果。</p>
+            <li data-md>
+                <p>返回 true。</p>
+        </ol>
+        <p>要给定一个<a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsers.html#site"
+                id="ref-for-site①①">站点</a> <var>site</var> 和一个<a data-link-type="dfn" href="#related-website-set"
+                id="ref-for-related-website-set④">相关网站集</a> <var>set</var> <dfn class="dfn-paneled" data-dfn-type="dfn"
+                data-noexport id="determine-eligibility-for-an-associated-site">确定关联站点资格</dfn>，运行以下步骤：</p>
+        <ol>
+            <li data-md>
+                <p>如果 <var>set</var> 的 <a data-link-type="dfn" href="#related-website-set-associatedsites"
+                        id="ref-for-related-website-set-associatedsites②">associatedSites</a> 不包含
+                    <var>site</var>，则返回 false。
+                </p>
+            <li data-md>
+                <p>令 <var>index</var> 为 <var>site</var> 在 <var>set</var> 的 <a data-link-type="dfn"
+                        href="#related-website-set-associatedsites"
+                        id="ref-for-related-website-set-associatedsites③">associatedSites</a> 中的索引。</p>
+            <li data-md>
+                <p>如果 <var>index</var> 大于或等于<a data-link-type="dfn" href="#limit-for-associated-sites"
+                        id="ref-for-limit-for-associated-sites">关联站点
+                        上限</a>，则返回 false。</p>
+            <li data-md>
+                <p>返回 true。</p>
+        </ol>
+        <p>如果以下步骤返回 true，则给定的<a data-link-type="dfn"
+                href="https://html.spec.whatwg.org/multipage/webappapis.html#environment-settings-object"
+                id="ref-for-environment-settings-object">环境设置对象</a> <var>settings</var> <dfn class="dfn-paneled"
+                data-dfn-type="dfn" data-noexport id="is-same-party-with-its-top-level-embedder">与其顶级嵌入者
+                同方</dfn>：</p>
+        <ol>
+            <li data-md>
+                <p>令 <var>topLevelSite</var> 为从 <var>settings</var> 的
+                    data-link-type="dfn"
+                    href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-environment-top-level-origin"
+                    id="ref-for-concept-environment-top-level-origin">顶级源</a><a data-link-type="dfn"
+                        href="https://html.spec.whatwg.org/multipage/browsers.html#obtain-a-site"
+                        id="ref-for-obtain-a-site①">获取站点</a>的结果。</p>
+            <li data-md>
+                <p>令 <var>embeddedSite</var> 为从 <var>settings</var> 的
+                    data-link-type="dfn"
+                    href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-origin"
+                    id="ref-for-concept-settings-object-origin">源</a><a data-link-type="dfn"
+                        href="https://html.spec.whatwg.org/multipage/browsers.html#obtain-a-site"
+                        id="ref-for-obtain-a-site②">获取站点</a>的结果。</p>
+            <li data-md>
+                <p>返回 <var>embeddedSite</var> 在嵌入于 <var>topLevelSite</var> 内时是否<a data-link-type="dfn"
+                        href="#eligible-for-same-party-membership-when-embedded-within"
+                        id="ref-for-eligible-for-same-party-membership-when-embedded-within">有资格获得同方
+                        成员资格</a>。</p>
+        </ol>
+        <p>如果以下步骤返回 true，则给定的<a data-link-type="dfn"
+                href="https://html.spec.whatwg.org/multipage/webappapis.html#environment-settings-object"
+                id="ref-for-environment-settings-object①">环境设置对象</a> <var>settings</var> 和
+            data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsers.html#concept-origin"
+            id="ref-for-concept-origin">源</a> <var>origin</var> <dfn class="dfn-paneled" data-dfn-type="dfn"
+                data-noexport id="are-same-party-in-an-embedding-context">在嵌入上下文中是同方</dfn>：</p>
+        <ol>
+            <li data-md>
+                <p>令 <var>topLevelSite</var> 为从 <var>settings</var> 的
+                    data-link-type="dfn"
+                    href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-environment-top-level-origin"
+                    id="ref-for-concept-environment-top-level-origin①">顶级源</a><a data-link-type="dfn"
+                        href="https://html.spec.whatwg.org/multipage/browsers.html#obtain-a-site"
+                        id="ref-for-obtain-a-site③">获取站点</a>的结果。</p>
+            <li data-md>
+                <p>令 <var>embeddedSite</var> 为从 <var>origin</var> <a data-link-type="dfn"
+                        href="https://html.spec.whatwg.org/multipage/browsers.html#obtain-a-site"
+                        id="ref-for-obtain-a-site④">获取站点</a>的结果。</p>
+            <li data-md>
+                <p>返回 <var>embeddedSite</var> 在嵌入于 <var>topLevelSite</var> 内时是否<a data-link-type="dfn"
+                        href="#eligible-for-same-party-membership-when-embedded-within"
+                        id="ref-for-eligible-for-same-party-membership-when-embedded-within①">有资格获得同方
+                        成员资格</a>。</p>
+        </ol>
+        <h2 class="heading settled" data-level="6" id="storage-access-integration"><span class="secno">6. </span><span
+                class="content">与存储访问 API 的集成</span><a class="self-link" href="#storage-access-integration"></a></h2>
+        <p>修改 <code
+                class="idl"><a data-link-type="idl" href="https://privacycg.github.io/storage-access/#dom-document-requeststorageaccess" id="ref-for-dom-document-requeststorageaccess">requestStorageAccess()</a></code>
+            以在步骤 13.5 之前（即在<a data-link-type="dfn"
+                href="https://w3c.github.io/permissions/#dfn-request-permission-to-use"
+                id="ref-for-dfn-request-permission-to-use">请求使用权限</a>之前）插入以下步骤：</p>
+        <ol>
+            <li data-md>
+                <p>令 <var>settings</var> 为 <var>doc</var> 的<a data-link-type="dfn"
+                        href="https://html.spec.whatwg.org/multipage/webappapis.html#relevant-settings-object"
+                        id="ref-for-relevant-settings-object">相关设置对象</a>。</p>
+            <li data-md>
+                <p>如果 <var>settings</var> <a data-link-type="dfn" href="#is-same-party-with-its-top-level-embedder"
+                        id="ref-for-is-same-party-with-its-top-level-embedder">与其顶级嵌入者
+                        同方</a>，用户代理可以以
+                    data-link-type="dfn" href="https://w3c.github.io/permissions/#dfn-granted"
+                    id="ref-for-dfn-granted">已授予</a>运行<var>处理权限状态</var>并中止剩余步骤。</p>
+        </ol>
+        <p>修改 <code
+                class="idl"><a data-link-type="idl" href="https://privacycg.github.io/requestStorageAccessFor/#dom-document-requeststorageaccessfor" id="ref-for-dom-document-requeststorageaccessfor">requestStorageAccessFor(requestedOrigin)</a></code>
+            以在步骤 13.8 之前（即在<a data-link-type="dfn"
+                href="https://w3c.github.io/permissions/#dfn-request-permission-to-use"
+                id="ref-for-dfn-request-permission-to-use①">请求使用权限</a>之前）插入以下步骤：</p>
+        <ol>
+            <li data-md>
+                <p>令 <var>settings</var> 为 <var>doc</var> 的<a data-link-type="dfn"
+                        href="https://html.spec.whatwg.org/multipage/webappapis.html#relevant-settings-object"
+                        id="ref-for-relevant-settings-object①">相关设置对象</a>。</p>
+            <li data-md>
+                <p>如果 <var>settings</var> 和 <var>requestedOrigin</var> <a data-link-type="dfn"
+                        href="#are-same-party-in-an-embedding-context"
+                        id="ref-for-are-same-party-in-an-embedding-context">在嵌入上下文中是同方</a>，
+                    用户代理可以给定 <var>global</var> 在<a data-link-type="dfn"
+                        href="https://w3c.github.io/permissions/#permissions-task-source"
+                        id="ref-for-permissions-task-source">权限任务源</a>上<a data-link-type="dfn"
+                        href="https://html.spec.whatwg.org/multipage/webappapis.html#queue-a-global-task"
+                        id="ref-for-queue-a-global-task">排队一个全局任务</a>以
+                    data-link-type="dfn" href="https://webidl.spec.whatwg.org/#resolve"
+                    id="ref-for-resolve">解决</a> <var>p</var> 并中止剩余步骤。</p>
+        </ol>
+        <h2 class="heading settled" data-level="7" id="handling-changes"><span class="secno">7. </span><span
+                class="content">处理相关网站集的变更</span><a class="self-link" href="#handling-changes"></a></h2>
+        <p>当一个<a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsers.html#site"
+                id="ref-for-site①②">站点</a> <var>site</var> 由于构建新的<a data-link-type="dfn"
+                href="#list-of-related-website-sets" id="ref-for-list-of-related-website-sets③">相关网站集列表</a>而离开一个<a
+                data-link-type="dfn" href="#related-website-set"
+                id="ref-for-related-website-set⑤">相关网站集</a>时，用户代理必须通过运行以下步骤确保
+            它不会保留对该相关网站集中其他站点所持有的数据或共享标识符的任何
+            访问权限：</p>
+        <ol>
+            <li data-md>
+                <p>断言 <var>site</var> 不是一个<a data-link-type="dfn"
+                        href="https://html.spec.whatwg.org/multipage/browsers.html#concept-origin-opaque"
+                        id="ref-for-concept-origin-opaque">不透明源</a>。</p>
+            <li data-md>
+                <p>令 <var>domain</var> 为 site 的<a data-link-type="dfn"
+                        href="https://html.spec.whatwg.org/multipage/browsers.html#concept-origin-host"
+                        id="ref-for-concept-origin-host">主机</a>。</p>
+            <li data-md>
+                <p>对于用户代理已知的每个其<a data-link-type="dfn"
+                        href="https://html.spec.whatwg.org/multipage/browsers.html#concept-origin-host"
+                        id="ref-for-concept-origin-host①">主机</a>的<a data-link-type="dfn"
+                        href="https://publicsuffix.org/list/#" id="ref-for-something">注册域名</a>为
+                    <var>domain</var> 的 <var>origin</var>：
+                </p>
+                <ol>
+                    <li data-md>
+                        <p><a data-link-type="dfn"
+                                href="https://www.w3.org/TR/clear-site-data/#abstract-opdef-clear-cache-for-origin"
+                                id="ref-for-abstract-opdef-clear-cache-for-origin">清除该源的缓存</a>。</p>
+                    <li data-md>
+                        <p><a data-link-type="dfn"
+                                href="https://www.w3.org/TR/clear-site-data/#abstract-opdef-clear-cookies-for-origin"
+                                id="ref-for-abstract-opdef-clear-cookies-for-origin">清除该源的 Cookie</a>。</p>
+                    <li data-md>
+                        <p><a data-link-type="dfn"
+                                href="https://www.w3.org/TR/clear-site-data/#abstract-opdef-clear-dom-accessible-storage-for-origin"
+                                id="ref-for-abstract-opdef-clear-dom-accessible-storage-for-origin">清除该源的
+                                DOM 可访问存储</a>。</p>
+                    <li data-md>
+                        <p>令 <var>descriptor</var> 为一个新创建的 <code
+                                class="idl"><a data-link-type="idl" href="https://w3c.github.io/permissions/#dom-permissiondescriptor" id="ref-for-dom-permissiondescriptor">PermissionDescriptor</a></code>，
+                            其 <code
+                                class="idl"><a data-link-type="idl" href="https://w3c.github.io/permissions/#dom-permissiondescriptor-name" id="ref-for-dom-permissiondescriptor-name">name</a></code>
+                            初始化为 “storage-access”。</p>
+                    <li data-md>
+                        <p>对于 <var>descriptor</var>，<a data-link-type="dfn"
+                                href="https://w3c.github.io/permissions/#dfn-remove-a-permission-store-entry"
+                                id="ref-for-dfn-remove-a-permission-store-entry">移除所有 key[0] 为 <var>site</var> 或 key[1]
+                                为 <var>origin</var> 的权限存储条目</a>。
+                        </p>
+                    <li data-md>
+                        <p>运行额外的<a data-link-type="dfn" href="https://infra.spec.whatwg.org/#implementation-defined"
+                                id="ref-for-implementation-defined①">由实现定义</a>的步骤，以确保从 <var>origin</var> 中移除任何
+                            网络可访问的存储。</p>
+                </ol>
+        </ol>
+        <p class="issue" id="issue-a87490bb"><a class="self-link" href="#issue-a87490bb"></a> 本节应
+            提供更多关于用户代理如何确定站点何时离开 RWS 的细节。
+            href="https://github.com/wicg/first-party-sets/issues/124">[wicg/first-party-sets Issue #124]</a></p>
+        <h2 class="heading settled" data-level="8" id="other-features"><span class="secno">8. </span><span
+                class="content">与其他特性的集成</span><a class="self-link" href="#other-features"></a>
+        </h2>
+        <p>用户代理可以将通过 RWS 声明的域名关系用于其他由实现定义的目的，
+            在这种情况下，它们仍必须遵循本规范的其余部分来消费和存储 RWS 列表
+            以及检查同方成员资格的资格。</p>
+        <p class="note" role="note"><span class="marker">注意：</span> 例如，
+            href="https://github.com/GoogleChrome/ip-protection">Chrome 的 IP 保护提案</a>包括
+            依赖 RWS 来确定第一方和第三方上下文。</p>
+        <h2 class="heading settled" data-level="9" id="privacy-consideration"><span class="secno">9. </span><span
+                class="content">隐私考量</span><a class="self-link" href="#privacy-consideration"></a>
+        </h2>
+        <h3 class="heading settled" data-level="9.1" id="provide-transparency"><span class="secno">9.1. </span><span
+                class="content">提供用户透明度与控制</span><a class="self-link" href="#provide-transparency"></a></h3>
+        <p>使用 RWS 来推断两个站点之间关系的用户代理应确保其用户被
+            告知此用户代理选择，并让用户有机会查看和控制用户代理所做的
+            选择。</p>
+        <h3 class="heading settled" data-level="9.2" id="ensure-compatibility"><span class="secno">9.2. </span><span
+                class="content">确保与非 RWS 环境的兼容性</span><a class="self-link" href="#ensure-compatibility"></a></h3>
+        <p>某些用户代理可能选择在特定环境中（例如隐私浏览模式）不支持 RWS，或
+            完全不支持。所有用户代理和规范应在其自身的 API 集成中注意这一点，并力求
+            为用户和开发者优雅地回退到一个可用的解决方案。</p>
+        <p>对于提供跨站 Cookie 的访问，本规范旨在通过使用<a data-link-type="biblio"
+                href="https://privacycg.github.io/storage-access/"><cite>存储访问 API</cite></a>来确保与非 RWS
+            环境的兼容性，该 API 为开发者提供了一个接口来处理对请求的拒绝，并赋予用户代理灵活性，
+            以采用诸如提示或启发式方法等机制作为 RWS 的替代方案。</p>
+        <h3 class="heading settled" data-level="9.3" id="prevent-leaks"><span class="secno">9.3. </span><span
+                class="content">防止因列表变更导致的隐私泄露</span><a class="self-link" href="#prevent-leaks"></a></h3>
+        <p>开发者可以提交对其集的更改以添加或移除站点。由于集中的成员资格可能通过
+            <a data-link-type="biblio" href="https://privacycg.github.io/storage-access/"><cite>存储访问 API</cite></a>
+            的自动授予提供对跨站 Cookie 的
+            访问，因此我们需要注意这些转换，使其不会跨越用户历史上所属的所有 RWS 来
+            关联用户身份。特别是，我们必须确保某个域名在更改其集成员资格时，不能将一个用户标识符从一个
+            相关网站集转移到另一个。虽然一个集成员可能并不总是请求
+            并被授予对跨站 Cookie 的访问，但为了简化集转换的处理，我们
+            提议将此类访问视为始终被授予。
+        </p>
+        <p>因此，本规范要求用户代理在某个站点从一个集中被移除时，于开始任何依赖
+            这些权限或站点数据的获取之前，清除该给定站点的任何站点数据和存储访问
+            权限。</p>
+        <p class="note" role="note"><span class="marker">注意：</span> 大多数获取并不依赖于需要
+            被清除的数据，因此建议用户代理针对请求延迟进行优化。</p>
+        <h2 class="heading settled" data-level="10" id="security-considerations"><span class="secno">10. </span><span
+                class="content">安全考量</span><a class="self-link" href="#security-considerations"></a>
+        </h2>
+        <h3 class="heading settled" data-level="10.1" id="avoid-weakening-boundaries"><span class="secno">10.1.
+            </span><span class="content">避免削弱新的及现有的安全边界</span><a class="self-link"
+                href="#avoid-weakening-boundaries"></a></h3>
+        <p>为提升隐私而收紧边界的 Web 平台变更往往对安全也有正面
+            影响。例如，缓存分区限制了<a data-link-type="biblio"
+                href="https://xsleaks.dev/docs/attacks/cache-probing/"><cite>缓存探测</cite></a>攻击，而
+            第三方 Cookie 阻止则默认使得执行<a data-link-type="biblio"
+                href="https://owasp.org/www-community/attacks/csrf"><cite>跨站请求伪造（CSRF）</cite></a>
+            变得困难得多。当用户代理打算使用相关网站集来替换或扩展 Web 上基于
+            站点或源的现有边界时，重要的是不仅要考虑对隐私的影响，还要考虑对
+            安全的影响。</p>
+        <p>共属一个 RWS 的站点可能具有差异极大的安全要求，例如，一个集可能包含一个
+            存储用户凭据的站点和另一个托管不受信任的用户数据的站点。即使在同一个集内，站点仍依赖
+            于跨站和跨源限制来保持对数据暴露的控制。在合理范围内，
+            RWS 中一个被入侵的站点不应能够影响集中其他站点的完整性。</p>
+        <p>这一考量将始终涉及一个必要的权衡，即在诸如性能或
+            互操作性等收益与对用户和站点的风险之间。用户代理应促成额外的机制，例如
+            按源的选择加入或选择退出，以管理这一权衡。</p>
+        <h2 class="no-num heading settled" id="acknowledgements"><span class="content">致谢</span>
+            class="self-link" href="#acknowledgements"></a></h2>
+        <p>W3C 隐私社区组的其他成员此前曾建议使用存储访问 API，或
+            一个等价的 API；以替代 SameParty Cookie。感谢 @jdcauley（
+            href="https://github.com/WICG/first-party-sets/issues/14#issuecomment-785144990">1</a>）、
+            @arthuredelstein（<a href="https://github.com/WICG/first-party-sets/issues/42">2</a>）以及 @johnwilander（
+            href="https://lists.w3.org/Archives/Public/public-privacycg/2022Jun/0001.html">3</a>）。</p>
+        <p>浏览器供应商、Web 开发者以及 Web 社区的成员在本提案
+            于 W3C 隐私社区组孵化期间提供了宝贵的反馈。</p>
+        <p>本提案包含来自前任共同编辑 David Benjamin 和 Harneet
+            Sidhana 的重大贡献。</p>
+        <p>我们也感谢 Chris Fredrickson 和 Shuran Huang 的贡献。</p>
+    </main>
+    <div data-fill-with="conformance">
+        <h2 class="no-ref no-num heading settled" id="w3c-conformance"><span class="content">一致性</span><a
+                class="self-link" href="#w3c-conformance"></a></h2>
+        <h3 class="no-ref no-num heading settled" id="w3c-conventions"><span class="content">文档
+                约定</span><a class="self-link" href="#w3c-conventions"></a></h3>
+        <p>一致性要求通过描述性断言
+            和 RFC 2119 术语的组合来表达。
+            规范性部分中的关键词 “MUST”、“MUST NOT”、“REQUIRED”、“SHALL”、“SHALL NOT”、“SHOULD”、“SHOULD NOT”、“RECOMMENDED”、
+            “MAY” 和 “OPTIONAL”
+            应按 RFC 2119 中的描述进行解释。
+            不过，为了可读性，
+            这些词在本规范中并不全部以大写字母出现。 </p>
+        <p>本规范的所有文本均为规范性内容，
+            但明确标记为非规范性的章节、示例和注释除外。 <a data-link-type="biblio"
+                href="https://datatracker.ietf.org/doc/html/rfc2119"><cite>用于在 RFC 中指示
+                    要求级别的关键词</cite></a> </p>
+        <p>本规范中的示例以 “for example” 一词引入，
+            或通过 <code>class="example"</code>
+            与规范性文本分开，
+            如下所示： </p>
+        <div class="example" id="w3c-example">
+            <a class="self-link" href="#w3c-example"></a>
+            <p>这是资料性示例的一个示例。 </p>
+        </div>
+        <p>资料性注释以 “Note” 一词开始，
+            并通过 <code>class="note"</code>
+            与规范性文本分开，
+            如下所示： </p>
+        <p class="note" role="note">Note，这是一个资料性注释。</p>
+    </div>
+    <script src="https://www.w3.org/scripts/TR/2021/fixup.js"></script>
+    <h2 class="no-num no-ref heading settled" id="index"><span class="content">索引</span><a class="self-link"
+            href="#index"></a></h2>
+    <h3 class="no-num no-ref heading settled" id="index-defined-here"><span class="content">本
+            规范定义的术语</span><a class="self-link" href="#index-defined-here"></a></h3>
+    <ul class="index">
+        <li><a href="#are-same-party-in-an-embedding-context">在嵌入上下文中属于同方</a><span>，见
+                § 5</span>
+        <li><a href="#related-website-set-associatedsites">associatedSites</a><span>，见 § 4</span>
+        <li><a href="#build-the-list-of-related-website-sets">构建相关网站集合的列表</a><span>，见
+                § 3</span>
+        <li><a href="#related-website-set-cctlds">ccTLDs</a><span>，见 § 4</span>
+        <li><a href="#determine-eligibility-for-an-associated-site">确定关联
+                站点的资格</a><span>，见 § 5</span>
+        <li><a href="#determine-the-member-type">确定成员类型</a><span>，见 § 5</span>
+        <li><a href="#eligible-for-same-party-membership-when-embedded-within">被嵌入于其中时
+                有资格成为同方成员</a><span>，见 § 5</span>
+        <li><a href="#equivalence-map">等价映射</a><span>，见 § 4</span>
+        <li><a href="#equivalent-to">等价于</a><span>，见 § 5</span>
+        <li><a href="#find-a-related-website-set">查找相关网站集合</a><span>，见 § 5</span>
+        <li><a href="#is-same-party-with-its-top-level-embedder">与其顶级嵌入器属于同方</a><span>，见
+                § 5</span>
+        <li><a href="#limit-for-associated-sites">关联站点的限制</a><span>，见 § 5</span>
+        <li><a href="#list-of-related-website-sets">相关网站集合的列表</a><span>，见 § 4</span>
+        <li><a href="#parse-and-validate-a-site">解析并验证站点</a><span>，见 § 4</span>
+        <li><a href="#parse-an-equivalence-map">解析等价映射</a><span>，见 § 4</span>
+        <li><a href="#parse-a-subset">解析子集</a><span>，见 § 4</span>
+        <li><a href="#related-website-set-primary">primary</a><span>，见 § 4</span>
+        <li><a href="#related-website-set">相关网站集合</a><span>，见 § 4</span>
+        <li><a href="#related-website-set-servicesites">serviceSites</a><span>，见 § 4</span>
+    </ul>
+    <h3 class="no-num no-ref heading settled" id="index-defined-elsewhere"><span class="content">由
+            引用定义的术语</span><a class="self-link" href="#index-defined-elsewhere"></a></h3>
+    <ul class="index">
+        <li>
+            <a data-link-type="biblio">[CLEAR-SITE-DATA]</a> 定义以下术语：
+            <ul>
+                <li><span class="dfn-paneled" id="9b4f1943">清除 origin 的缓存</span>
+                <li><span class="dfn-paneled" id="0fda77ac">清除 origin 的 cookies</span>
+                <li><span class="dfn-paneled" id="a0459604">清除 origin 的可由 DOM 访问的存储</span>
+            </ul>
+        <li>
+            <a data-link-type="biblio">[ENCODING]</a> 定义以下术语：
+            <ul>
+                <li><span class="dfn-paneled" id="bffb633e">UTF-8</span>
+            </ul>
+        <li>
+            <a data-link-type="biblio">[HTML]</a> 定义以下术语：
+            <ul>
+                <li><span class="dfn-paneled" id="3e12e042">环境设置对象</span>
+                <li><span class="dfn-paneled" id="77a2ee6e">host</span>
+                <li><span class="dfn-paneled" id="602b1a68">获取站点</span>
+                <li><span class="dfn-paneled" id="b01b1359">不透明 origin</span>
+                <li><span class="dfn-paneled" id="086e3aff">origin</span>
+                <li><span class="dfn-paneled" id="43ac8374">origin <small>（对于环境设置
+                            对象）</small></span>
+                <li><span class="dfn-paneled" id="48438eb3">排入全局任务</span>
+                <li><span class="dfn-paneled" id="9c4c1e66">相关设置对象</span>
+                <li><span class="dfn-paneled" id="fb9bb722">站点</span>
+                <li><span class="dfn-paneled" id="c63519ed">顶级 origin</span>
+            </ul>
+        <li>
+            <a data-link-type="biblio">[INFRA]</a> 定义以下术语：
+            <ul>
+                <li><span class="dfn-paneled" id="3de9e659">字节序列</span>
+                <li><span class="dfn-paneled" id="860300d4">由实现定义</span>
+                <li><span class="dfn-paneled" id="649608b9">列表</span>
+                <li><span class="dfn-paneled" id="84b454ff">有序映射</span>
+                <li><span class="dfn-paneled" id="0a78af08">将 JSON 字节解析为 Infra 值</span>
+                <li><span class="dfn-paneled" id="0698d556">字符串</span>
+                <li><span class="dfn-paneled" id="984221ca">结构</span>
+            </ul>
+        <li>
+            <a data-link-type="biblio">[PERMISSIONS]</a> 定义以下术语：
+            <ul>
+                <li><span class="dfn-paneled" id="ebb01253">PermissionDescriptor</span>
+                <li><span class="dfn-paneled" id="6821ab89">granted</span>
+                <li><span class="dfn-paneled" id="0310eecd">name</span>
+                <li><span class="dfn-paneled" id="03af1875">permissions 任务源</span>
+                <li><span class="dfn-paneled" id="56736c6d">移除权限存储项</span>
+                <li><span class="dfn-paneled" id="d357c753">请求使用权限</span>
+            </ul>
+        <li>
+            <a data-link-type="biblio">[PSL]</a> 定义以下术语：
+            <ul>
+                <li><span class="dfn-paneled" id="aba5485c">注册域</span>
+            </ul>
+        <li>
+            <a data-link-type="biblio">[REQUESTSTORAGEACCESSFOR]</a> 定义以下术语：
+            <ul>
+                <li><span class="dfn-paneled" id="09ba3f74">requestStorageAccessFor(requestedOrigin)</span>
+            </ul>
+        <li>
+            <a data-link-type="biblio">[STORAGE-ACCESS]</a> 定义以下术语：
+            <ul>
+                <li><span class="dfn-paneled" id="aa7820f7">requestStorageAccess()</span>
+            </ul>
+        <li>
+            <a data-link-type="biblio">[URL]</a> 定义以下术语：
+            <ul>
+                <li><span class="dfn-paneled" id="9ed8b710">基本 URL 解析器</span>
+                <li><span class="dfn-paneled" id="959ad97b">origin</span>
+                <li><span class="dfn-paneled" id="3a711be7">scheme</span>
+            </ul>
+        <li>
+            <a data-link-type="biblio">[WEBIDL]</a> 定义以下术语：
+            <ul>
+                <li><span class="dfn-paneled" id="3b90bdcd">resolve</span>
+            </ul>
+    </ul>
+    <h2 class="no-num no-ref heading settled" id="references"><span class="content">参考文献</span><a class="self-link"
+            href="#references"></a></h2>
+    <h3 class="no-num no-ref heading settled" id="normative"><span class="content">规范性参考文献</span><a class="self-link"
+            href="#normative"></a></h3>
+    <dl>
+        <dt id="biblio-clear-site-data">[CLEAR-SITE-DATA]
+        <dd>Mike West. <a href="https://w3c.github.io/webappsec-clear-site-data/"><cite>Clear Site Data</cite></a>. URL:
+            <a
+                href="https://w3c.github.io/webappsec-clear-site-data/">https://w3c.github.io/webappsec-clear-site-data/</a>
+        <dt id="biblio-encoding">[ENCODING]
+        <dd>Anne van Kesteren. <a href="https://encoding.spec.whatwg.org/"><cite>Encoding Standard</cite></a>. 现行
+            标准。URL: <a href="https://encoding.spec.whatwg.org/">https://encoding.spec.whatwg.org/</a>
+        <dt id="biblio-html">[HTML]
+        <dd>Anne van Kesteren; et al. <a href="https://html.spec.whatwg.org/multipage/"><cite>HTML Standard</cite></a>.
+            现行标准。URL: <a href="https://html.spec.whatwg.org/multipage/">https://html.spec.whatwg.org/multipage/</a>
+        <dt id="biblio-infra">[INFRA]
+        <dd>Anne van Kesteren; Domenic Denicola. <a href="https://infra.spec.whatwg.org/"><cite>Infra
+                    Standard</cite></a>. 现行标准。URL: <a
+                href="https://infra.spec.whatwg.org/">https://infra.spec.whatwg.org/</a>
+        <dt id="biblio-permissions">[PERMISSIONS]
+        <dd>Marcos Caceres; Mike Taylor. <a href="https://w3c.github.io/permissions/"><cite>Permissions</cite></a>. URL:
+            <a href="https://w3c.github.io/permissions/">https://w3c.github.io/permissions/</a>
+        <dt id="biblio-psl">[PSL]
+        <dd><cite><a href="https://publicsuffix.org/">Public Suffix List</a></cite>. Mozilla Foundation.
+        <dt id="biblio-requeststorageaccessfor">[REQUESTSTORAGEACCESSFOR]
+        <dd><a href="https://privacycg.github.io/requestStorageAccessFor/"><cite>requestStorageAccessFor API</cite></a>.
+            编辑草案。URL: <a
+                href="https://privacycg.github.io/requestStorageAccessFor/">https://privacycg.github.io/requestStorageAccessFor/</a>
+        <dt id="biblio-rfc2119">[RFC2119]
+        <dd>S. Bradner. <a href="https://datatracker.ietf.org/doc/html/rfc2119"><cite>用于在 RFC 中
+                    指示要求级别的关键词</cite></a>. 1997 年 3 月。最佳当前实践。URL: <a
+                href="https://datatracker.ietf.org/doc/html/rfc2119">https://datatracker.ietf.org/doc/html/rfc2119</a>
+        <dt id="biblio-storage-access">[STORAGE-ACCESS]
+        <dd><a href="https://privacycg.github.io/storage-access/"><cite>Storage Access API</cite></a>. CG 草案。URL: <a
+                href="https://privacycg.github.io/storage-access/">https://privacycg.github.io/storage-access/</a>
+        <dt id="biblio-url">[URL]
+        <dd>Anne van Kesteren. <a href="https://url.spec.whatwg.org/"><cite>URL Standard</cite></a>. 现行标准。
+            URL: <a href="https://url.spec.whatwg.org/">https://url.spec.whatwg.org/</a>
+        <dt id="biblio-webidl">[WEBIDL]
+        <dd>Edgar Chen; Timothy Gu. <a href="https://webidl.spec.whatwg.org/"><cite>Web IDL Standard</cite></a>. 现行
+            标准。URL: <a href="https://webidl.spec.whatwg.org/">https://webidl.spec.whatwg.org/</a>
+    </dl>
+    <h3 class="no-num no-ref heading settled" id="informative"><span class="content">资料性参考文献</span><a class="self-link"
+            href="#informative"></a></h3>
+    <dl>
+        <dt id="biblio-cache-probing">[CACHE-PROBING]
+        <dd><a href="https://xsleaks.dev/docs/attacks/cache-probing/"><cite>Cache Probing</cite></a>. URL: <a
+                href="https://xsleaks.dev/docs/attacks/cache-probing/">https://xsleaks.dev/docs/attacks/cache-probing/</a>
+        <dt id="biblio-csrf">[CSRF]
+        <dd><a href="https://owasp.org/www-community/attacks/csrf"><cite>Cross Site Request Forgery (CSRF)</cite></a>.
+            URL: <a href="https://owasp.org/www-community/attacks/csrf">https://owasp.org/www-community/attacks/csrf</a>
+        <dt id="biblio-json-schema">[JSON-SCHEMA]
+        <dd>Austin Wright; et al. <a href="https://datatracker.ietf.org/doc/html/draft-bhutton-json-schema"><cite>JSON
+                    Schema: A Media Type for Describing JSON Documents</cite></a>. 2022 年 6 月 10 日。Internet-Draft。URL:
+            <a
+                href="https://datatracker.ietf.org/doc/html/draft-bhutton-json-schema">https://datatracker.ietf.org/doc/html/draft-bhutton-json-schema</a>
+        <dt id="biblio-rws-list">[RWS-LIST]
+        <dd><a href="https://github.com/GoogleChrome/related-website-sets/blob/main/related_website_sets.JSON"><cite>Related
+                    Website Sets list</cite></a>. URL: <a
+                href="https://github.com/GoogleChrome/related-website-sets/blob/main/related_website_sets.JSON">https://github.com/GoogleChrome/related-website-sets/blob/main/related_website_sets.JSON</a>
+        <dt id="biblio-submission-guidelines">[SUBMISSION-GUIDELINES]
+        <dd><a href="https://github.com/GoogleChrome/related-website-sets/blob/main/RWS-Submission_Guidelines.md"><cite>Related
+                    Website Sets Submission Guidelines</cite></a>. URL: <a
+                href="https://github.com/GoogleChrome/related-website-sets/blob/main/RWS-Submission_Guidelines.md">https://github.com/GoogleChrome/related-website-sets/blob/main/RWS-Submission_Guidelines.md</a>
+    </dl>
+    <h2 class="no-num no-ref heading settled" id="issues-index"><span class="content">议题索引</span><a class="self-link"
+            href="#issues-index"></a></h2>
+    <div style="counter-reset:issue">
+        <div class="issue"> 我们可以在这里对更新间隔提出建议吗？ <a
+                href="https://github.com/wicg/first-party-sets/issues/122">[wicg/first-party-sets Issue #122]</a> <a
+                class="issue-return" href="#issue-2f53edbf" title="跳转到章节">↵</a></div>
+        <div class="issue"> 在服务器与客户端之间的 <a data-link-type="biblio" href="#biblio-psl"><cite>Public Suffix
+                    List</cite></a> 版本不同的情况下，可能需要客户端验证。 <a
+                href="https://github.com/wicg/first-party-sets/issues/125">[wicg/first-party-sets Issue #125]</a> <a
+                class="issue-return" href="#issue-bb862ccb" title="跳转到章节">↵</a></div>
+        <div class="issue"> 该规范目前建议跳过无效集合（缺少 primary 条目），而不是拒绝整个列表。
+            然而，鉴于服务器预期始终持有有效信息，完全拒绝可能会有益。 <a
+                href="https://github.com/wicg/first-party-sets/issues/126">[wicg/first-party-sets Issue #126]</a> <a
+                class="issue-return" href="#issue-f434ab32" title="跳转到章节">↵</a></div>
+        <div class="issue"> 是否应该重命名，以避免与数学上的等价关系混淆？ <a
+                href="https://github.com/wicg/first-party-sets/issues/123">[wicg/first-party-sets Issue #123]</a> <a
+                class="issue-return" href="#issue-7a693f54" title="跳转到章节">↵</a></div>
+        <div class="issue"> 本节应提供更多细节，说明用户代理如何判断站点何时
+            离开 RWS。 <a href="https://github.com/wicg/first-party-sets/issues/124">[wicg/first-party-sets Issue
+                #124]</a> <a class="issue-return" href="#issue-a87490bb" title="跳转到章节">↵</a></div>
+    </div>
+    <script>/* Boilerplate: script-dom-helper */
+        "use strict";
+        function query(sel) { return document.querySelector(sel); }
+
+        function queryAll(sel) { return [...document.querySelectorAll(sel)]; }
+
+        function iter(obj) {
+            if (!obj) return [];
+            var it = obj[Symbol.iterator];
+            if (it) return it;
+            return Object.entries(obj);
+        }
+
+        function mk(tagname, attrs, ...children) {
+            const el = document.createElement(tagname);
+            for (const [k, v] of iter(attrs)) {
+                if (k.slice(0, 3) == "_on") {
+                    const eventName = k.slice(3);
+                    el.addEventListener(eventName, v);
+                } else if (k[0] == "_") {
+                    // property, not attribute
+                    el[k.slice(1)] = v;
+                } else {
+                    if (v === false || v == null) {
+                        continue;
+                    } else if (v === true) {
+                        el.setAttribute(k, "");
+                        continue;
+                    } else {
+                        el.setAttribute(k, v);
+                    }
+                }
+            }
+            append(el, children);
+            return el;
+        }
+
+        /* Create shortcuts for every known HTML element */
+        [
+            "a",
+            "abbr",
+            "acronym",
+            "address",
+            "applet",
+            "area",
+            "article",
+            "aside",
+            "audio",
+            "b",
+            "base",
+            "basefont",
+            "bdo",
+            "big",
+            "blockquote",
+            "body",
+            "br",
+            "button",
+            "canvas",
+            "caption",
+            "center",
+            "cite",
+            "code",
+            "col",
+            "colgroup",
+            "datalist",
+            "dd",
+            "del",
+            "details",
+            "dfn",
+            "dialog",
+            "div",
+            "dl",
+            "dt",
+            "em",
+            "embed",
+            "fieldset",
+            "figcaption",
+            "figure",
+            "font",
+            "footer",
+            "form",
+            "frame",
+            "frameset",
+            "head",
+            "header",
+            "h1",
+            "h2",
+            "h3",
+            "h4",
+            "h5",
+            "h6",
+            "hr",
+            "html",
+            "i",
+            "iframe",
+            "img",
+            "input",
+            "ins",
+            "kbd",
+            "label",
+            "legend",
+            "li",
+            "link",
+            "main",
+            "map",
+            "mark",
+            "meta",
+            "meter",
+            "nav",
+            "nobr",
+            "noscript",
+            "object",
+            "ol",
+            "optgroup",
+            "option",
+            "output",
+            "p",
+            "param",
+            "pre",
+            "progress",
+            "q",
+            "s",
+            "samp",
+            "script",
+            "section",
+            "select",
+            "small",
+            "source",
+            "span",
+            "strike",
+            "strong",
+            "style",
+            "sub",
+            "summary",
+            "sup",
+            "table",
+            "tbody",
+            "td",
+            "template",
+            "textarea",
+            "tfoot",
+            "th",
+            "thead",
+            "time",
+            "title",
+            "tr",
+            "u",
+            "ul",
+            "var",
+            "video",
+            "wbr",
+            "xmp",
+        ].forEach(tagname => {
+            mk[tagname] = (...args) => mk(tagname, ...args);
+        });
+
+        function* nodesFromChildList(children) {
+            for (const child of children.flat(Infinity)) {
+                if (child instanceof Node) {
+                    yield child;
+                } else {
+                    yield new Text(child);
+                }
+            }
+        }
+        function append(el, ...children) {
+            for (const child of nodesFromChildList(children)) {
+                if (el instanceof Node) el.appendChild(child);
+                else el.push(child);
+            }
+            return el;
+        }
+
+        function insertAfter(el, ...children) {
+            for (const child of nodesFromChildList(children)) {
+                el.parentNode.insertBefore(child, el.nextSibling);
+            }
+            return el;
+        }
+
+        function clearContents(el) {
+            el.innerHTML = "";
+            return el;
+        }
+
+        function parseHTML(markup) {
+            if (markup.toLowerCase().trim().indexOf('<!doctype') === 0) {
+                const doc = document.implementation.createHTMLDocument("");
+                doc.documentElement.innerHTML = markup;
+                return doc;
+            } else {
+                const el = mk.template({});
+                el.innerHTML = markup;
+                return el.content;
+            }
+        }</script>
+    <script>/* Boilerplate: script-dfn-panel */
+        "use strict";
+        {
+            let dfnPanelData = {
+                "0310eecd": { "dfnID": "0310eecd", "dfnText": "name", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-dom-permissiondescriptor-name" }], "title": "7. Handling related website set changes" }], "url": "https://w3c.github.io/permissions/#dom-permissiondescriptor-name" },
+                "03af1875": { "dfnID": "03af1875", "dfnText": "permissions task source", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-permissions-task-source" }], "title": "6. Integration with the Storage Access API" }], "url": "https://w3c.github.io/permissions/#permissions-task-source" },
+                "0698d556": { "dfnID": "0698d556", "dfnText": "string", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-string" }], "title": "4. Data Structures" }], "url": "https://infra.spec.whatwg.org/#string" },
+                "086e3aff": { "dfnID": "086e3aff", "dfnText": "origin", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-concept-origin" }], "title": "5. Validating related website set inclusion" }], "url": "https://html.spec.whatwg.org/multipage/browsers.html#concept-origin" },
+                "09ba3f74": { "dfnID": "09ba3f74", "dfnText": "requestStorageAccessFor(requestedOrigin)", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-dom-document-requeststorageaccessfor" }], "title": "6. Integration with the Storage Access API" }], "url": "https://privacycg.github.io/requestStorageAccessFor/#dom-document-requeststorageaccessfor" },
+                "0a78af08": { "dfnID": "0a78af08", "dfnText": "parse JSON bytes to an Infra value", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-parse-json-bytes-to-an-infra-value" }], "title": "3. List consumption" }], "url": "https://infra.spec.whatwg.org/#parse-json-bytes-to-an-infra-value" },
+                "0fda77ac": { "dfnID": "0fda77ac", "dfnText": "clear cookies for origin", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-abstract-opdef-clear-cookies-for-origin" }], "title": "7. Handling related website set changes" }], "url": "https://www.w3.org/TR/clear-site-data/#abstract-opdef-clear-cookies-for-origin" },
+                "3a711be7": { "dfnID": "3a711be7", "dfnText": "scheme", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-concept-url-scheme" }], "title": "4. Data Structures" }], "url": "https://url.spec.whatwg.org/#concept-url-scheme" },
+                "3b90bdcd": { "dfnID": "3b90bdcd", "dfnText": "resolve", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-resolve" }], "title": "6. Integration with the Storage Access API" }], "url": "https://webidl.spec.whatwg.org/#resolve" },
+                "3de9e659": { "dfnID": "3de9e659", "dfnText": "byte sequence", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-byte-sequence" }], "title": "3. List consumption" }], "url": "https://infra.spec.whatwg.org/#byte-sequence" },
+                "3e12e042": { "dfnID": "3e12e042", "dfnText": "environment settings object", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-environment-settings-object" }, { "id": "ref-for-environment-settings-object\u2460" }], "title": "5. Validating related website set inclusion" }], "url": "https://html.spec.whatwg.org/multipage/webappapis.html#environment-settings-object" },
+                "43ac8374": { "dfnID": "43ac8374", "dfnText": "origin (for environment settings object)", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-concept-settings-object-origin" }], "title": "5. Validating related website set inclusion" }], "url": "https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-origin" },
+                "48438eb3": { "dfnID": "48438eb3", "dfnText": "queue a global task", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-queue-a-global-task" }], "title": "6. Integration with the Storage Access API" }], "url": "https://html.spec.whatwg.org/multipage/webappapis.html#queue-a-global-task" },
+                "56736c6d": { "dfnID": "56736c6d", "dfnText": "remove a permission store entry", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-dfn-remove-a-permission-store-entry" }], "title": "7. Handling related website set changes" }], "url": "https://w3c.github.io/permissions/#dfn-remove-a-permission-store-entry" },
+                "602b1a68": { "dfnID": "602b1a68", "dfnText": "obtain a site", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-obtain-a-site" }], "title": "4. Data Structures" }, { "refs": [{ "id": "ref-for-obtain-a-site\u2460" }, { "id": "ref-for-obtain-a-site\u2461" }, { "id": "ref-for-obtain-a-site\u2462" }, { "id": "ref-for-obtain-a-site\u2463" }], "title": "5. Validating related website set inclusion" }], "url": "https://html.spec.whatwg.org/multipage/browsers.html#obtain-a-site" },
+                "649608b9": { "dfnID": "649608b9", "dfnText": "list", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-list" }, { "id": "ref-for-list\u2460" }, { "id": "ref-for-list\u2461" }, { "id": "ref-for-list\u2462" }, { "id": "ref-for-list\u2463" }, { "id": "ref-for-list\u2464" }], "title": "4. Data Structures" }], "url": "https://infra.spec.whatwg.org/#list" },
+                "6821ab89": { "dfnID": "6821ab89", "dfnText": "granted", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-dfn-granted" }], "title": "6. Integration with the Storage Access API" }], "url": "https://w3c.github.io/permissions/#dfn-granted" },
+                "77a2ee6e": { "dfnID": "77a2ee6e", "dfnText": "host", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-concept-origin-host" }, { "id": "ref-for-concept-origin-host\u2460" }], "title": "7. Handling related website set changes" }], "url": "https://html.spec.whatwg.org/multipage/browsers.html#concept-origin-host" },
+                "84b454ff": { "dfnID": "84b454ff", "dfnText": "ordered map", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-ordered-map" }], "title": "3. List consumption" }, { "refs": [{ "id": "ref-for-ordered-map\u2460" }], "title": "4. Data Structures" }], "url": "https://infra.spec.whatwg.org/#ordered-map" },
+                "860300d4": { "dfnID": "860300d4", "dfnText": "implementation-defined", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-implementation-defined" }], "title": "5. Validating related website set inclusion" }, { "refs": [{ "id": "ref-for-implementation-defined\u2460" }], "title": "7. Handling related website set changes" }], "url": "https://infra.spec.whatwg.org/#implementation-defined" },
+                "959ad97b": { "dfnID": "959ad97b", "dfnText": "origin", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-concept-url-origin" }], "title": "4. Data Structures" }], "url": "https://url.spec.whatwg.org/#concept-url-origin" },
+                "984221ca": { "dfnID": "984221ca", "dfnText": "struct", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-struct" }], "title": "4. Data Structures" }], "url": "https://infra.spec.whatwg.org/#struct" },
+                "9b4f1943": { "dfnID": "9b4f1943", "dfnText": "clear cache for origin", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-abstract-opdef-clear-cache-for-origin" }], "title": "7. Handling related website set changes" }], "url": "https://www.w3.org/TR/clear-site-data/#abstract-opdef-clear-cache-for-origin" },
+                "9c4c1e66": { "dfnID": "9c4c1e66", "dfnText": "relevant settings object", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-relevant-settings-object" }, { "id": "ref-for-relevant-settings-object\u2460" }], "title": "6. Integration with the Storage Access API" }], "url": "https://html.spec.whatwg.org/multipage/webappapis.html#relevant-settings-object" },
+                "9ed8b710": { "dfnID": "9ed8b710", "dfnText": "basic URL parser", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-concept-basic-url-parser" }], "title": "4. Data Structures" }], "url": "https://url.spec.whatwg.org/#concept-basic-url-parser" },
+                "a0459604": { "dfnID": "a0459604", "dfnText": "clear dom-accessible storage for origin", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-abstract-opdef-clear-dom-accessible-storage-for-origin" }], "title": "7. Handling related website set changes" }], "url": "https://www.w3.org/TR/clear-site-data/#abstract-opdef-clear-dom-accessible-storage-for-origin" },
+                "aa7820f7": { "dfnID": "aa7820f7", "dfnText": "requestStorageAccess()", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-dom-document-requeststorageaccess" }], "title": "6. Integration with the Storage Access API" }], "url": "https://privacycg.github.io/storage-access/#dom-document-requeststorageaccess" },
+                "aba5485c": { "dfnID": "aba5485c", "dfnText": "registered domain", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-something" }], "title": "7. Handling related website set changes" }], "url": "https://publicsuffix.org/list/#" },
+                "are-same-party-in-an-embedding-context": { "dfnID": "are-same-party-in-an-embedding-context", "dfnText": "are same-party in an embedding context", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-are-same-party-in-an-embedding-context" }], "title": "6. Integration with the Storage Access API" }], "url": "#are-same-party-in-an-embedding-context" },
+                "b01b1359": { "dfnID": "b01b1359", "dfnText": "opaque origin", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-concept-origin-opaque" }], "title": "7. Handling related website set changes" }], "url": "https://html.spec.whatwg.org/multipage/browsers.html#concept-origin-opaque" },
+                "bffb633e": { "dfnID": "bffb633e", "dfnText": "UTF-8", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-utf-8" }], "title": "3. List consumption" }], "url": "https://encoding.spec.whatwg.org/#utf-8" },
+                "build-the-list-of-related-website-sets": { "dfnID": "build-the-list-of-related-website-sets", "dfnText": "build the list of related website sets", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-build-the-list-of-related-website-sets" }], "title": "3. List consumption" }], "url": "#build-the-list-of-related-website-sets" },
+                "c63519ed": { "dfnID": "c63519ed", "dfnText": "top-level origin", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-concept-environment-top-level-origin" }, { "id": "ref-for-concept-environment-top-level-origin\u2460" }], "title": "5. Validating related website set inclusion" }], "url": "https://html.spec.whatwg.org/multipage/webappapis.html#concept-environment-top-level-origin" },
+                "d357c753": { "dfnID": "d357c753", "dfnText": "requesting permission to use", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-dfn-request-permission-to-use" }, { "id": "ref-for-dfn-request-permission-to-use\u2460" }], "title": "6. Integration with the Storage Access API" }], "url": "https://w3c.github.io/permissions/#dfn-request-permission-to-use" },
+                "determine-eligibility-for-an-associated-site": { "dfnID": "determine-eligibility-for-an-associated-site", "dfnText": "determine eligibility for an associated site", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-determine-eligibility-for-an-associated-site" }, { "id": "ref-for-determine-eligibility-for-an-associated-site\u2460" }, { "id": "ref-for-determine-eligibility-for-an-associated-site\u2461" }], "title": "5. Validating related website set inclusion" }], "url": "#determine-eligibility-for-an-associated-site" },
+                "determine-the-member-type": { "dfnID": "determine-the-member-type", "dfnText": "determine the member type", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-determine-the-member-type" }, { "id": "ref-for-determine-the-member-type\u2460" }, { "id": "ref-for-determine-the-member-type\u2461" }], "title": "5. Validating related website set inclusion" }], "url": "#determine-the-member-type" },
+                "ebb01253": { "dfnID": "ebb01253", "dfnText": "PermissionDescriptor", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-dom-permissiondescriptor" }], "title": "7. Handling related website set changes" }], "url": "https://w3c.github.io/permissions/#dom-permissiondescriptor" },
+                "eligible-for-same-party-membership-when-embedded-within": { "dfnID": "eligible-for-same-party-membership-when-embedded-within", "dfnText": "eligible for same-party membership when embedded within", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-eligible-for-same-party-membership-when-embedded-within" }, { "id": "ref-for-eligible-for-same-party-membership-when-embedded-within\u2460" }], "title": "5. Validating related website set inclusion" }], "url": "#eligible-for-same-party-membership-when-embedded-within" },
+                "equivalence-map": { "dfnID": "equivalence-map", "dfnText": "equivalence map", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-equivalence-map" }, { "id": "ref-for-equivalence-map\u2460" }], "title": "4. Data Structures" }, { "refs": [{ "id": "ref-for-equivalence-map\u2461" }], "title": "5. Validating related website set inclusion" }], "url": "#equivalence-map" },
+                "equivalent-to": { "dfnID": "equivalent-to", "dfnText": "equivalent to", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-equivalent-to" }, { "id": "ref-for-equivalent-to\u2460" }, { "id": "ref-for-equivalent-to\u2461" }], "title": "5. Validating related website set inclusion" }], "url": "#equivalent-to" },
+                "fb9bb722": { "dfnID": "fb9bb722", "dfnText": "site", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-site" }, { "id": "ref-for-site\u2460" }, { "id": "ref-for-site\u2461" }, { "id": "ref-for-site\u2462" }, { "id": "ref-for-site\u2463" }], "title": "4. Data Structures" }, { "refs": [{ "id": "ref-for-site\u2464" }, { "id": "ref-for-site\u2465" }, { "id": "ref-for-site\u2466" }, { "id": "ref-for-site\u2467" }, { "id": "ref-for-site\u2468" }, { "id": "ref-for-site\u2460\u24ea" }, { "id": "ref-for-site\u2460\u2460" }], "title": "5. Validating related website set inclusion" }, { "refs": [{ "id": "ref-for-site\u2460\u2461" }], "title": "7. Handling related website set changes" }], "url": "https://html.spec.whatwg.org/multipage/browsers.html#site" },
+                "find-a-related-website-set": { "dfnID": "find-a-related-website-set", "dfnText": "find a related website set", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-find-a-related-website-set" }], "title": "5. Validating related website set inclusion" }], "url": "#find-a-related-website-set" },
+                "is-same-party-with-its-top-level-embedder": { "dfnID": "is-same-party-with-its-top-level-embedder", "dfnText": "is same-party with its top-level embedder", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-is-same-party-with-its-top-level-embedder" }], "title": "6. Integration with the Storage Access API" }], "url": "#is-same-party-with-its-top-level-embedder" },
+                "limit-for-associated-sites": { "dfnID": "limit-for-associated-sites", "dfnText": "limit for associated sites", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-limit-for-associated-sites" }], "title": "5. Validating related website set inclusion" }], "url": "#limit-for-associated-sites" },
+                "list-of-related-website-sets": { "dfnID": "list-of-related-website-sets", "dfnText": "list of related website sets", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-list-of-related-website-sets" }, { "id": "ref-for-list-of-related-website-sets\u2460" }], "title": "3. List consumption" }, { "refs": [{ "id": "ref-for-list-of-related-website-sets\u2461" }], "title": "5. Validating related website set inclusion" }, { "refs": [{ "id": "ref-for-list-of-related-website-sets\u2462" }], "title": "7. Handling related website set changes" }], "url": "#list-of-related-website-sets" },
+                "parse-a-subset": { "dfnID": "parse-a-subset", "dfnText": "parse a subset", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-parse-a-subset" }, { "id": "ref-for-parse-a-subset\u2460" }], "title": "3. List consumption" }], "url": "#parse-a-subset" },
+                "parse-an-equivalence-map": { "dfnID": "parse-an-equivalence-map", "dfnText": "parse an equivalence map", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-parse-an-equivalence-map" }], "title": "3. List consumption" }], "url": "#parse-an-equivalence-map" },
+                "parse-and-validate-a-site": { "dfnID": "parse-and-validate-a-site", "dfnText": "parse and validate a site", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-parse-and-validate-a-site" }, { "id": "ref-for-parse-and-validate-a-site\u2460" }, { "id": "ref-for-parse-and-validate-a-site\u2461" }], "title": "4. Data Structures" }], "url": "#parse-and-validate-a-site" },
+                "related-website-set": { "dfnID": "related-website-set", "dfnText": "related website set", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-related-website-set" }], "title": "3. List consumption" }, { "refs": [{ "id": "ref-for-related-website-set\u2460" }], "title": "4. Data Structures" }, { "refs": [{ "id": "ref-for-related-website-set\u2461" }, { "id": "ref-for-related-website-set\u2462" }, { "id": "ref-for-related-website-set\u2463" }], "title": "5. Validating related website set inclusion" }, { "refs": [{ "id": "ref-for-related-website-set\u2464" }], "title": "7. Handling related website set changes" }], "url": "#related-website-set" },
+                "related-website-set-associatedsites": { "dfnID": "related-website-set-associatedsites", "dfnText": "associatedSites", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-related-website-set-associatedsites" }], "title": "3. List consumption" }, { "refs": [{ "id": "ref-for-related-website-set-associatedsites\u2460" }, { "id": "ref-for-related-website-set-associatedsites\u2461" }, { "id": "ref-for-related-website-set-associatedsites\u2462" }], "title": "5. Validating related website set inclusion" }], "url": "#related-website-set-associatedsites" },
+                "related-website-set-cctlds": { "dfnID": "related-website-set-cctlds", "dfnText": "ccTLDs", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-related-website-set-cctlds" }, { "id": "ref-for-related-website-set-cctlds\u2460" }, { "id": "ref-for-related-website-set-cctlds\u2461" }], "title": "5. Validating related website set inclusion" }], "url": "#related-website-set-cctlds" },
+                "related-website-set-primary": { "dfnID": "related-website-set-primary", "dfnText": "primary", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-related-website-set-primary" }], "title": "3. List consumption" }, { "refs": [{ "id": "ref-for-related-website-set-primary\u2460" }], "title": "5. Validating related website set inclusion" }], "url": "#related-website-set-primary" },
+                "related-website-set-servicesites": { "dfnID": "related-website-set-servicesites", "dfnText": "serviceSites", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-related-website-set-servicesites" }], "title": "3. List consumption" }, { "refs": [{ "id": "ref-for-related-website-set-servicesites\u2460" }], "title": "5. Validating related website set inclusion" }], "url": "#related-website-set-servicesites" },
+            };
+
+            document.addEventListener("DOMContentLoaded", () => {
+                genAllDfnPanels();
+
+                document.body.addEventListener("click", (e) => {
+                    // If not handled already, just hide all dfn panels.
+                    hideAllDfnPanels();
+                });
+            });
+
+            window.addEventListener("resize", () => {
+                // Pin any visible dfn panel
+                queryAll(".dfn-panel.on, .dfn-panel.activated").forEach(el => positionDfnPanel(el));
+            });
+
+            function genAllDfnPanels() {
+                for (const panelData of Object.values(dfnPanelData)) {
+                    const dfnID = panelData.dfnID;
+                    const dfn = document.getElementById(dfnID);
+                    if (!dfn) {
+                        console.log(`Can't find dfn#${dfnID}.`, panelData);
+                        continue;
+                    }
+                    dfn.panelData = panelData;
+                    insertDfnPopupAction(dfn);
+                }
+            }
+
+            function genDfnPanel(dfn, { dfnID, url, dfnText, refSections, external }) {
+                const dfnPanel = mk.aside({
+                    class: "dfn-panel on",
+                    id: `infopanel-for-${dfnID}`,
+                    "data-for": dfnID,
+                    "aria-labelled-by": `infopaneltitle-for-${dfnID}`,
+                },
+                    mk.span({ id: `infopaneltitle-for-${dfnID}`, style: "display:none" },
+                        `Info about the '${dfnText}' ${external ? "external" : ""} reference.`),
+                    mk.a({ href: url, class: "dfn-link" }, url),
+                    refSections.length == 0 ? [] :
+                        mk.b({}, "Referenced in:"),
+                    mk.ul({},
+                        ...refSections.map(section =>
+                            mk.li({},
+                                ...section.refs.map((ref, refI) =>
+                                    [
+                                        mk.a({ href: `#${ref.id}` },
+                                            (refI == 0) ? section.title : `(${refI + 1})`
+                                        ),
+                                        " ",
+                                    ]
+                                ),
+                            ),
+                        ),
+                    ),
+                    genLinkingSyntaxes(dfn),
+                );
+
+                dfnPanel.addEventListener('click', (event) => {
+                    if (event.target.nodeName == 'A') {
+                        scrollToTargetAndHighlight(event);
+                        pinDfnPanel(dfnPanel);
+                    }
+                    event.stopPropagation();
+                    refocusOnTarget(event);
+                });
+                dfnPanel.addEventListener('keydown', (event) => {
+                    if (event.keyCode == 27) { // Escape key
+                        hideDfnPanel({ dfnPanel });
+                        event.stopPropagation();
+                        event.preventDefault();
+                    }
+                });
+
+                dfnPanel.dfn = dfn;
+                dfn.dfnPanel = dfnPanel;
+                return dfnPanel;
+            }
+
+
+
+            function hideAllDfnPanels() {
+                // Delete the currently-active dfn panel.
+                queryAll(".dfn-panel").forEach(dfnPanel => hideDfnPanel({ dfnPanel }));
+            }
+
+            function showDfnPanel(dfn) {
+                hideAllDfnPanels(); // Only display one at a time.
+
+                dfn.setAttribute("aria-expanded", "true");
+
+                const dfnPanel = genDfnPanel(dfn, dfn.panelData);
+
+                // Give the dfn a unique tabindex, and then
+                // give all the tabbable panel bits successive indexes.
+                let tabIndex = 100;
+                dfn.tabIndex = tabIndex++;
+                const tabbable = dfnPanel.querySelectorAll(":is(a, button)");
+                for (const el of tabbable) {
+                    el.tabIndex = tabIndex++;
+                }
+
+                append(document.body, dfnPanel);
+                positionDfnPanel(dfnPanel);
+            }
+
+            function positionDfnPanel(dfnPanel) {
+                const dfn = dfnPanel.dfn;
+                const dfnPos = getBounds(dfn);
+                dfnPanel.style.top = dfnPos.bottom + "px";
+                dfnPanel.style.left = dfnPos.left + "px";
+
+                const panelPos = dfnPanel.getBoundingClientRect();
+                const panelMargin = 8;
+                const maxRight = document.body.parentNode.clientWidth - panelMargin;
+                if (panelPos.right > maxRight) {
+                    const overflowAmount = panelPos.right - maxRight;
+                    const newLeft = Math.max(panelMargin, dfnPos.left - overflowAmount);
+                    dfnPanel.style.left = newLeft + "px";
+                }
+            }
+
+            function pinDfnPanel(dfnPanel) {
+                // Switch it to "activated" state, which pins it.
+                dfnPanel.classList.add("activated");
+                dfnPanel.style.position = "fixed";
+                dfnPanel.style.left = null;
+                dfnPanel.style.top = null;
+            }
+
+            function hideDfnPanel({ dfn, dfnPanel }) {
+                if (!dfnPanel) dfnPanel = dfn.dfnPanel;
+                if (!dfn) dfn = dfnPanel.dfn;
+                dfn.dfnPanel = undefined;
+                dfnPanel.dfn = undefined;
+                dfn.setAttribute("aria-expanded", "false");
+                dfn.tabIndex = undefined;
+                dfnPanel.remove()
+            }
+
+            function toggleDfnPanel(dfn) {
+                if (dfn.dfnPanel) {
+                    hideDfnPanel(dfn);
+                } else {
+                    showDfnPanel(dfn);
+                }
+            }
+
+            function insertDfnPopupAction(dfn) {
+                dfn.setAttribute('role', 'button');
+                dfn.setAttribute('aria-expanded', 'false')
+                dfn.tabIndex = 0;
+                dfn.classList.add('has-dfn-panel');
+                dfn.addEventListener('click', (event) => {
+                    toggleDfnPanel(dfn);
+                    event.stopPropagation();
+                });
+                dfn.addEventListener('keypress', (event) => {
+                    const kc = event.keyCode;
+                    // 32->Space, 13->Enter
+                    if (kc == 32 || kc == 13) {
+                        toggleDfnPanel(dfn);
+                        event.stopPropagation();
+                        event.preventDefault();
+                    }
+                });
+            }
+
+            function refocusOnTarget(event) {
+                const target = event.target;
+                setTimeout(() => {
+                    // Refocus on the event.target element.
+                    // This is needed after browser scrolls to the destination.
+                    target.focus();
+                });
+            }
+
+            // TODO: shared util
+            // Returns the root-level absolute position {left and top} of element.
+            function getBounds(el, relativeTo = document.body) {
+                const relativeRect = relativeTo.getBoundingClientRect();
+                const elRect = el.getBoundingClientRect();
+                const top = elRect.top - relativeRect.top;
+                const left = elRect.left - relativeRect.left;
+                return {
+                    top,
+                    left,
+                    bottom: top + elRect.height,
+                    right: left + elRect.width,
+                }
+            }
+
+            function scrollToTargetAndHighlight(event) {
+                let hash = event.target.hash;
+                if (hash) {
+                    hash = decodeURIComponent(hash.substring(1));
+                    const dest = document.getElementById(hash);
+                    if (dest) {
+                        dest.classList.add('highlighted');
+                        setTimeout(() => dest.classList.remove('highlighted'), 1000);
+                    }
+                }
+            }
+
+            // Functions, divided by link type, that wrap an autolink's
+            // contents with the appropriate outer syntax.
+            // Alternately, a string naming another type they format
+            // the same as.
+            function needsFor(type) {
+                switch (type) {
+                    case "descriptor":
+                    case "value":
+                    case "element-attr":
+                    case "attr-value":
+                    case "element-state":
+                    case "method":
+                    case "constructor":
+                    case "argument":
+                    case "attribute":
+                    case "const":
+                    case "dict-member":
+                    case "event":
+                    case "enum-value":
+                    case "stringifier":
+                    case "serializer":
+                    case "iterator":
+                    case "maplike":
+                    case "setlike":
+                    case "state":
+                    case "mode":
+                    case "context":
+                    case "facet": return true;
+
+                    default: return false;
+                }
+            }
+            function refusesFor(type) {
+                switch (type) {
+                    case "property":
+                    case "element":
+                    case "interface":
+                    case "namespace":
+                    case "callback":
+                    case "dictionary":
+                    case "enum":
+                    case "exception":
+                    case "typedef":
+                    case "http-header":
+                    case "permission": return true;
+
+                    default: return false;
+                }
+            }
+            function linkFormatterFromType(type) {
+                switch (type) {
+                    case 'scheme':
+                    case 'permission':
+                    case 'dfn': return (text) => `[=${text}=]`;
+
+                    case 'abstract-op': return (text) => `[\$${text}\$]`;
+
+                    case 'function':
+                    case 'at-rule':
+                    case 'selector':
+                    case 'value': return (text) => `''${text}''`;
+
+                    case 'http-header': return (text) => `[:${text}:]`;
+
+                    case 'interface':
+                    case 'constructor':
+                    case 'method':
+                    case 'argument':
+                    case 'attribute':
+                    case 'callback':
+                    case 'dictionary':
+                    case 'dict-member':
+                    case 'enum':
+                    case 'enum-value':
+                    case 'exception':
+                    case 'const':
+                    case 'typedef':
+                    case 'stringifier':
+                    case 'serializer':
+                    case 'iterator':
+                    case 'maplike':
+                    case 'setlike':
+                    case 'extended-attribute':
+                    case 'event':
+                    case 'idl': return (text) => `{{${text}}}`;
+
+                    case 'element-state':
+                    case 'element-attr':
+                    case 'attr-value':
+                    case 'element': return (element) => `<{${element}}>`;
+
+                    case 'grammar': return (text) => `${text} (within a <pre class=prod>)`;
+
+                    case 'type': return (text) => `<<${text}>>`;
+
+                    case 'descriptor':
+                    case 'property': return (text) => `'${text}'`;
+
+                    default: return;
+                };
+            };
+
+            function genLinkingSyntaxes(dfn) {
+                if (dfn.tagName != "DFN") return;
+
+                const type = dfn.getAttribute('data-dfn-type');
+                if (!type) {
+                    console.log(`<dfn> doesn't have a data-dfn-type:`, dfn);
+                    return [];
+                }
+
+                // Return a function that wraps link text based on the type
+                const linkFormatter = linkFormatterFromType(type);
+                if (!linkFormatter) {
+                    console.log(`<dfn> has an unknown data-dfn-type:`, dfn);
+                    return [];
+                }
+
+                let ltAlts;
+                if (dfn.hasAttribute('data-lt')) {
+                    ltAlts = dfn.getAttribute('data-lt')
+                        .split("|")
+                        .map(x => x.trim());
+                } else {
+                    ltAlts = [dfn.textContent.trim()];
+                }
+                if (type == "type") {
+                    // lt of "<foo>", but "foo" is the interior;
+                    // <<foo/bar>> is how you write it with a for,
+                    // not <foo/<bar>> or whatever.
+                    for (var i = 0; i < ltAlts.length; i++) {
+                        const lt = ltAlts[i];
+                        const match = /<(.*)>/.exec(lt);
+                        if (match) { ltAlts[i] = match[1]; }
+                    }
+                }
+
+                let forAlts;
+                if (dfn.hasAttribute('data-dfn-for')) {
+                    forAlts = dfn.getAttribute('data-dfn-for')
+                        .split(",")
+                        .map(x => x.trim());
+                } else {
+                    forAlts = [''];
+                }
+
+                let linkingSyntaxes = [];
+                if (!needsFor(type)) {
+                    for (const lt of ltAlts) {
+                        linkingSyntaxes.push(linkFormatter(lt));
+                    }
+                }
+                if (!refusesFor(type)) {
+                    for (const f of forAlts) {
+                        linkingSyntaxes.push(linkFormatter(`${f}/${ltAlts[0]}`))
+                    }
+                }
+                return [
+                    mk.b({}, 'Possible linking syntaxes:'),
+                    mk.ul({},
+                        ...linkingSyntaxes.map(link => {
+                            const copyLink = async () =>
+                                await navigator.clipboard.writeText(link);
+                            return mk.li({},
+                                mk.div({ class: 'link-item' },
+                                    mk.button({
+                                        class: 'copy-icon', title: 'Copy',
+                                        type: 'button',
+                                        _onclick: copyLink,
+                                        tabindex: 0,
+                                    }, mk.span({ class: 'icon' })),
+                                    mk.span({}, link)
+                                )
+                            );
+                        })
+                    )
+                ];
+            }
+        }
+    </script>
+    <script>/* Boilerplate: script-ref-hints */
+        "use strict";
+        {
+            let refsData = {
+                "#are-same-party-in-an-embedding-context": { "displayText": "are same-party in an embedding context", "export": true, "for_": [], "level": "", "normative": true, "shortname": "first-party-sets", "spec": "first-party-sets", "status": "local", "text": "are same-party in an embedding context", "type": "dfn", "url": "#are-same-party-in-an-embedding-context" },
+                "#build-the-list-of-related-website-sets": { "displayText": "build the list of related website sets", "export": true, "for_": [], "level": "", "normative": true, "shortname": "first-party-sets", "spec": "first-party-sets", "status": "local", "text": "build the list of related website sets", "type": "dfn", "url": "#build-the-list-of-related-website-sets" },
+                "#determine-eligibility-for-an-associated-site": { "displayText": "determine eligibility for an associated site", "export": true, "for_": [], "level": "", "normative": true, "shortname": "first-party-sets", "spec": "first-party-sets", "status": "local", "text": "determine eligibility for an associated site", "type": "dfn", "url": "#determine-eligibility-for-an-associated-site" },
+                "#determine-the-member-type": { "displayText": "determine the member type", "export": true, "for_": [], "level": "", "normative": true, "shortname": "first-party-sets", "spec": "first-party-sets", "status": "local", "text": "determine the member type", "type": "dfn", "url": "#determine-the-member-type" },
+                "#eligible-for-same-party-membership-when-embedded-within": { "displayText": "eligible for same-party membership when embedded within", "export": true, "for_": [], "level": "", "normative": true, "shortname": "first-party-sets", "spec": "first-party-sets", "status": "local", "text": "eligible for same-party membership when embedded within", "type": "dfn", "url": "#eligible-for-same-party-membership-when-embedded-within" },
+                "#equivalence-map": { "displayText": "equivalence map", "export": true, "for_": [], "level": "", "normative": true, "shortname": "first-party-sets", "spec": "first-party-sets", "status": "local", "text": "equivalence map", "type": "dfn", "url": "#equivalence-map" },
+                "#equivalent-to": { "displayText": "equivalent to", "export": true, "for_": [], "level": "", "normative": true, "shortname": "first-party-sets", "spec": "first-party-sets", "status": "local", "text": "equivalent to", "type": "dfn", "url": "#equivalent-to" },
+                "#find-a-related-website-set": { "displayText": "find a related website set", "export": true, "for_": [], "level": "", "normative": true, "shortname": "first-party-sets", "spec": "first-party-sets", "status": "local", "text": "find a related website set", "type": "dfn", "url": "#find-a-related-website-set" },
+                "#is-same-party-with-its-top-level-embedder": { "displayText": "is same-party with its top-level embedder", "export": true, "for_": [], "level": "", "normative": true, "shortname": "first-party-sets", "spec": "first-party-sets", "status": "local", "text": "is same-party with its top-level embedder", "type": "dfn", "url": "#is-same-party-with-its-top-level-embedder" },
+                "#limit-for-associated-sites": { "displayText": "limit for associated sites", "export": true, "for_": [], "level": "", "normative": true, "shortname": "first-party-sets", "spec": "first-party-sets", "status": "local", "text": "limit for associated sites", "type": "dfn", "url": "#limit-for-associated-sites" },
+                "#list-of-related-website-sets": { "displayText": "list of related website sets", "export": true, "for_": [], "level": "", "normative": true, "shortname": "first-party-sets", "spec": "first-party-sets", "status": "local", "text": "list of related website sets", "type": "dfn", "url": "#list-of-related-website-sets" },
+                "#parse-a-subset": { "displayText": "parse a subset", "export": true, "for_": [], "level": "", "normative": true, "shortname": "first-party-sets", "spec": "first-party-sets", "status": "local", "text": "parse a subset", "type": "dfn", "url": "#parse-a-subset" },
+                "#parse-an-equivalence-map": { "displayText": "parse an equivalence map", "export": true, "for_": [], "level": "", "normative": true, "shortname": "first-party-sets", "spec": "first-party-sets", "status": "local", "text": "parse an equivalence map", "type": "dfn", "url": "#parse-an-equivalence-map" },
+                "#parse-and-validate-a-site": { "displayText": "parse and validate a site", "export": true, "for_": [], "level": "", "normative": true, "shortname": "first-party-sets", "spec": "first-party-sets", "status": "local", "text": "parse and validate a site", "type": "dfn", "url": "#parse-and-validate-a-site" },
+                "#related-website-set": { "displayText": "related website set", "export": true, "for_": [], "level": "", "normative": true, "shortname": "first-party-sets", "spec": "first-party-sets", "status": "local", "text": "related website set", "type": "dfn", "url": "#related-website-set" },
+                "#related-website-set-associatedsites": { "displayText": "associatedsites", "export": true, "for_": ["related website set"], "level": "", "normative": true, "shortname": "first-party-sets", "spec": "first-party-sets", "status": "local", "text": "associatedsites", "type": "dfn", "url": "#related-website-set-associatedsites" },
+                "#related-website-set-cctlds": { "displayText": "cctlds", "export": true, "for_": ["related website set"], "level": "", "normative": true, "shortname": "first-party-sets", "spec": "first-party-sets", "status": "local", "text": "cctlds", "type": "dfn", "url": "#related-website-set-cctlds" },
+                "#related-website-set-primary": { "displayText": "primary", "export": true, "for_": ["related website set"], "level": "", "normative": true, "shortname": "first-party-sets", "spec": "first-party-sets", "status": "local", "text": "primary", "type": "dfn", "url": "#related-website-set-primary" },
+                "#related-website-set-servicesites": { "displayText": "servicesites", "export": true, "for_": ["related website set"], "level": "", "normative": true, "shortname": "first-party-sets", "spec": "first-party-sets", "status": "local", "text": "servicesites", "type": "dfn", "url": "#related-website-set-servicesites" },
+                "https://encoding.spec.whatwg.org/#utf-8": { "displayText": "UTF-8", "export": true, "for_": [], "level": "1", "normative": true, "shortname": "encoding", "spec": "encoding", "status": "current", "text": "utf-8", "type": "dfn", "url": "https://encoding.spec.whatwg.org/#utf-8" },
+                "https://html.spec.whatwg.org/multipage/browsers.html#concept-origin": { "displayText": "origin", "export": true, "for_": [], "level": "1", "normative": true, "shortname": "html", "spec": "html", "status": "current", "text": "origin", "type": "dfn", "url": "https://html.spec.whatwg.org/multipage/browsers.html#concept-origin" },
+                "https://html.spec.whatwg.org/multipage/browsers.html#concept-origin-host": { "displayText": "host", "export": true, "for_": ["origin"], "level": "1", "normative": true, "shortname": "html", "spec": "html", "status": "current", "text": "host", "type": "dfn", "url": "https://html.spec.whatwg.org/multipage/browsers.html#concept-origin-host" },
+                "https://html.spec.whatwg.org/multipage/browsers.html#concept-origin-opaque": { "displayText": "opaque origin", "export": true, "for_": [], "level": "1", "normative": true, "shortname": "html", "spec": "html", "status": "current", "text": "opaque origin", "type": "dfn", "url": "https://html.spec.whatwg.org/multipage/browsers.html#concept-origin-opaque" },
+                "https://html.spec.whatwg.org/multipage/browsers.html#obtain-a-site": { "displayText": "obtain a site", "export": true, "for_": [], "level": "1", "normative": true, "shortname": "html", "spec": "html", "status": "current", "text": "obtain a site", "type": "dfn", "url": "https://html.spec.whatwg.org/multipage/browsers.html#obtain-a-site" },
+                "https://html.spec.whatwg.org/multipage/browsers.html#site": { "displayText": "site", "export": true, "for_": [], "level": "1", "normative": true, "shortname": "html", "spec": "html", "status": "current", "text": "site", "type": "dfn", "url": "https://html.spec.whatwg.org/multipage/browsers.html#site" },
+                "https://html.spec.whatwg.org/multipage/webappapis.html#concept-environment-top-level-origin": { "displayText": "top-level origin", "export": true, "for_": ["environment"], "level": "1", "normative": true, "shortname": "html", "spec": "html", "status": "current", "text": "top-level origin", "type": "dfn", "url": "https://html.spec.whatwg.org/multipage/webappapis.html#concept-environment-top-level-origin" },
+                "https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-origin": { "displayText": "origin", "export": true, "for_": ["environment settings object"], "level": "1", "normative": true, "shortname": "html", "spec": "html", "status": "current", "text": "origin", "type": "dfn", "url": "https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-origin" },
+                "https://html.spec.whatwg.org/multipage/webappapis.html#environment-settings-object": { "displayText": "environment settings object", "export": true, "for_": [], "level": "1", "normative": true, "shortname": "html", "spec": "html", "status": "current", "text": "environment settings object", "type": "dfn", "url": "https://html.spec.whatwg.org/multipage/webappapis.html#environment-settings-object" },
+                "https://html.spec.whatwg.org/multipage/webappapis.html#queue-a-global-task": { "displayText": "queue a global task", "export": true, "for_": [], "level": "1", "normative": true, "shortname": "html", "spec": "html", "status": "current", "text": "queue a global task", "type": "dfn", "url": "https://html.spec.whatwg.org/multipage/webappapis.html#queue-a-global-task" },
+                "https://html.spec.whatwg.org/multipage/webappapis.html#relevant-settings-object": { "displayText": "relevant settings object", "export": true, "for_": [], "level": "1", "normative": true, "shortname": "html", "spec": "html", "status": "current", "text": "relevant settings object", "type": "dfn", "url": "https://html.spec.whatwg.org/multipage/webappapis.html#relevant-settings-object" },
+                "https://infra.spec.whatwg.org/#byte-sequence": { "displayText": "byte sequence", "export": true, "for_": [], "level": "1", "normative": true, "shortname": "infra", "spec": "infra", "status": "current", "text": "byte sequence", "type": "dfn", "url": "https://infra.spec.whatwg.org/#byte-sequence" },
+                "https://infra.spec.whatwg.org/#implementation-defined": { "displayText": "implementation-defined", "export": true, "for_": [], "level": "1", "normative": true, "shortname": "infra", "spec": "infra", "status": "current", "text": "implementation-defined", "type": "dfn", "url": "https://infra.spec.whatwg.org/#implementation-defined" },
+                "https://infra.spec.whatwg.org/#list": { "displayText": "list", "export": true, "for_": [], "level": "1", "normative": true, "shortname": "infra", "spec": "infra", "status": "current", "text": "list", "type": "dfn", "url": "https://infra.spec.whatwg.org/#list" },
+                "https://infra.spec.whatwg.org/#ordered-map": { "displayText": "ordered map", "export": true, "for_": [], "level": "1", "normative": true, "shortname": "infra", "spec": "infra", "status": "current", "text": "ordered map", "type": "dfn", "url": "https://infra.spec.whatwg.org/#ordered-map" },
+                "https://infra.spec.whatwg.org/#parse-json-bytes-to-an-infra-value": { "displayText": "parse JSON bytes to an Infra value", "export": true, "for_": [], "level": "1", "normative": true, "shortname": "infra", "spec": "infra", "status": "current", "text": "parse json bytes to an infra value", "type": "dfn", "url": "https://infra.spec.whatwg.org/#parse-json-bytes-to-an-infra-value" },
+                "https://infra.spec.whatwg.org/#string": { "displayText": "string", "export": true, "for_": [], "level": "1", "normative": true, "shortname": "infra", "spec": "infra", "status": "current", "text": "string", "type": "dfn", "url": "https://infra.spec.whatwg.org/#string" },
+                "https://infra.spec.whatwg.org/#struct": { "displayText": "struct", "export": true, "for_": [], "level": "1", "normative": true, "shortname": "infra", "spec": "infra", "status": "current", "text": "struct", "type": "dfn", "url": "https://infra.spec.whatwg.org/#struct" },
+                "https://privacycg.github.io/requestStorageAccessFor/#dom-document-requeststorageaccessfor": { "displayText": "requestStorageAccessFor(requestedOrigin)", "export": true, "for_": ["Document"], "level": "1", "normative": true, "shortname": "requeststorageaccessfor", "spec": "requeststorageaccessfor", "status": "current", "text": "requestStorageAccessFor(requestedOrigin)", "type": "method", "url": "https://privacycg.github.io/requestStorageAccessFor/#dom-document-requeststorageaccessfor" },
+                "https://privacycg.github.io/storage-access/#dom-document-requeststorageaccess": { "displayText": "requestStorageAccess()", "export": true, "for_": ["Document"], "level": "1", "normative": true, "shortname": "storage-access", "spec": "storage-access", "status": "current", "text": "requestStorageAccess()", "type": "method", "url": "https://privacycg.github.io/storage-access/#dom-document-requeststorageaccess" },
+                "https://publicsuffix.org/list/#": { "displayText": "registered domain", "export": true, "for_": [], "level": "", "normative": true, "shortname": "psl", "spec": "psl", "status": "anchor-block", "text": "registered domain", "type": "dfn", "url": "https://publicsuffix.org/list/#" },
+                "https://url.spec.whatwg.org/#concept-basic-url-parser": { "displayText": "basic URL parser", "export": true, "for_": [], "level": "1", "normative": true, "shortname": "url", "spec": "url", "status": "current", "text": "basic url parser", "type": "dfn", "url": "https://url.spec.whatwg.org/#concept-basic-url-parser" },
+                "https://url.spec.whatwg.org/#concept-url-origin": { "displayText": "origin", "export": true, "for_": ["url"], "level": "1", "normative": true, "shortname": "url", "spec": "url", "status": "current", "text": "origin", "type": "dfn", "url": "https://url.spec.whatwg.org/#concept-url-origin" },
+                "https://url.spec.whatwg.org/#concept-url-scheme": { "displayText": "scheme", "export": true, "for_": ["url"], "level": "1", "normative": true, "shortname": "url", "spec": "url", "status": "current", "text": "scheme", "type": "dfn", "url": "https://url.spec.whatwg.org/#concept-url-scheme" },
+                "https://w3c.github.io/permissions/#dfn-granted": { "displayText": "granted", "export": true, "for_": ["permission"], "level": "1", "normative": true, "shortname": "permissions", "spec": "permissions", "status": "current", "text": "granted", "type": "dfn", "url": "https://w3c.github.io/permissions/#dfn-granted" },
+                "https://w3c.github.io/permissions/#dfn-remove-a-permission-store-entry": { "displayText": "remove a permission store entry", "export": true, "for_": [], "level": "1", "normative": true, "shortname": "permissions", "spec": "permissions", "status": "current", "text": "remove a permission store entry", "type": "dfn", "url": "https://w3c.github.io/permissions/#dfn-remove-a-permission-store-entry" },
+                "https://w3c.github.io/permissions/#dfn-request-permission-to-use": { "displayText": "requesting permission to use", "export": true, "for_": [], "level": "1", "normative": true, "shortname": "permissions", "spec": "permissions", "status": "current", "text": "requesting permission to use", "type": "dfn", "url": "https://w3c.github.io/permissions/#dfn-request-permission-to-use" },
+                "https://w3c.github.io/permissions/#dom-permissiondescriptor": { "displayText": "PermissionDescriptor", "export": true, "for_": [], "level": "1", "normative": true, "shortname": "permissions", "spec": "permissions", "status": "current", "text": "PermissionDescriptor", "type": "dictionary", "url": "https://w3c.github.io/permissions/#dom-permissiondescriptor" },
+                "https://w3c.github.io/permissions/#dom-permissiondescriptor-name": { "displayText": "name", "export": true, "for_": ["PermissionDescriptor"], "level": "1", "normative": true, "shortname": "permissions", "spec": "permissions", "status": "current", "text": "name", "type": "dict-member", "url": "https://w3c.github.io/permissions/#dom-permissiondescriptor-name" },
+                "https://w3c.github.io/permissions/#permissions-task-source": { "displayText": "permissions task source", "export": true, "for_": [], "level": "", "normative": true, "shortname": "permissions", "spec": "permissions", "status": "anchor-block", "text": "permissions task source", "type": "dfn", "url": "https://w3c.github.io/permissions/#permissions-task-source" },
+                "https://webidl.spec.whatwg.org/#resolve": { "displayText": "resolve", "export": true, "for_": [], "level": "1", "normative": true, "shortname": "webidl", "spec": "webidl", "status": "current", "text": "resolve", "type": "dfn", "url": "https://webidl.spec.whatwg.org/#resolve" },
+                "https://www.w3.org/TR/clear-site-data/#abstract-opdef-clear-cache-for-origin": { "displayText": "clear cache for origin", "export": true, "for_": [], "level": "", "normative": true, "shortname": "clear-site-data", "spec": "clear-site-data", "status": "anchor-block", "text": "clear cache for origin", "type": "dfn", "url": "https://www.w3.org/TR/clear-site-data/#abstract-opdef-clear-cache-for-origin" },
+                "https://www.w3.org/TR/clear-site-data/#abstract-opdef-clear-cookies-for-origin": { "displayText": "clear cookies for origin", "export": true, "for_": [], "level": "", "normative": true, "shortname": "clear-site-data", "spec": "clear-site-data", "status": "anchor-block", "text": "clear cookies for origin", "type": "dfn", "url": "https://www.w3.org/TR/clear-site-data/#abstract-opdef-clear-cookies-for-origin" },
+                "https://www.w3.org/TR/clear-site-data/#abstract-opdef-clear-dom-accessible-storage-for-origin": { "displayText": "clear dom-accessible storage for origin", "export": true, "for_": [], "level": "", "normative": true, "shortname": "clear-site-data", "spec": "clear-site-data", "status": "anchor-block", "text": "clear dom-accessible storage for origin", "type": "dfn", "url": "https://www.w3.org/TR/clear-site-data/#abstract-opdef-clear-dom-accessible-storage-for-origin" },
+            };
+
+            function mkRefHint(link, ref) {
+                const linkText = link.textContent;
+                let dfnTextElements = '';
+                if (ref.displayText.toLowerCase() != linkText.toLowerCase()) {
+                    // Give the original term if it's being displayed in a different way.
+                    // But allow casing differences, they're insignificant.
+                    dfnTextElements =
+                        mk.li({},
+                            mk.b({}, "Term: "),
+                            mk.span({}, ref.displayText)
+                        );
+                }
+                const forList = ref.for_;
+                let forListElements;
+                if (forList.length == 0) {
+                    forListElements = [];
+                } else if (forList.length == 1) {
+                    forListElements = mk.li({},
+                        mk.b({}, "For: "),
+                        mk.span({}, forList[0]),
+                    );
+                } else {
+                    forListElements = mk.li({},
+                        mk.b({}, "For: "),
+                        mk.ul({},
+                            ...forList.map(forItem =>
+                                mk.li({},
+                                    mk.span({}, forItem)
+                                ),
+                            ),
+                        ),
+                    );
+                }
+                const url = ref.url;
+                const safeUrl = encodeURIComponent(url);
+                const hintPanel = mk.aside({
+                    class: "ref-hint",
+                    id: `ref-hint-for-${safeUrl}`,
+                    "data-for": url,
+                    "aria-labelled-by": `ref-hint-for-${safeUrl}`,
+                },
+                    mk.ul({},
+                        dfnTextElements,
+                        mk.li({},
+                            mk.b({}, "URL: "),
+                            mk.a({ href: url, class: "ref" }, url),
+                        ),
+                        mk.li({},
+                            mk.b({}, "Type: "),
+                            mk.span({}, `${ref.type}`),
+                        ),
+                        mk.li({},
+                            mk.b({}, "Spec: "),
+                            mk.span({}, `${ref.spec ? ref.spec : ''}`),
+                        ),
+                        forListElements
+                    ),
+                );
+                hintPanel.forLink = link;
+                setupRefHintEventListeners(link, hintPanel);
+                return hintPanel;
+            }
+
+            function hideAllRefHints() {
+                queryAll(".ref-hint").forEach(el => hideRefHint(el));
+            }
+
+            function hideRefHint(refHint) {
+                const link = refHint.forLink;
+                link.setAttribute("aria-expanded", "false");
+                if (refHint.teardownEventListeners) {
+                    refHint.teardownEventListeners();
+                }
+                refHint.remove();
+            }
+
+            function showRefHint(link) {
+                if (link.classList.contains("dfn-link")) return;
+                const url = link.getAttribute("href");
+                const refHintKey = link.getAttribute("data-refhint-key");
+                let key = url;
+                if (refHintKey) {
+                    key = refHintKey + "_" + url;
+                }
+                const ref = refsData[key];
+                if (!ref) return;
+
+                hideAllRefHints(); // Only display one at this time.
+
+                const refHint = mkRefHint(link, ref);
+                append(document.body, refHint);
+                link.setAttribute("aria-expanded", "true");
+                positionRefHint(refHint);
+            }
+
+            function setupRefHintEventListeners(link, refHint) {
+                if (refHint.teardownEventListeners) return;
+                // Add event handlers to hide the refHint after the user moves away
+                // from both the link and refHint, if not hovering either within one second.
+                let timeout = null;
+                const startHidingRefHint = (event) => {
+                    if (timeout) {
+                        clearTimeout(timeout);
+                    }
+                    timeout = setTimeout(() => {
+                        hideRefHint(refHint);
+                    }, 1000);
+                }
+                const resetHidingRefHint = (event) => {
+                    if (timeout) clearTimeout(timeout);
+                    timeout = null;
+                };
+                link.addEventListener("mouseleave", startHidingRefHint);
+                link.addEventListener("mouseenter", resetHidingRefHint);
+                link.addEventListener("blur", startHidingRefHint);
+                link.addEventListener("focus", resetHidingRefHint);
+                refHint.addEventListener("mouseleave", startHidingRefHint);
+                refHint.addEventListener("mouseenter", resetHidingRefHint);
+                refHint.addEventListener("blur", startHidingRefHint);
+                refHint.addEventListener("focus", resetHidingRefHint);
+
+                refHint.teardownEventListeners = () => {
+                    // remove event listeners
+                    resetHidingRefHint();
+                    link.removeEventListener("mouseleave", startHidingRefHint);
+                    link.removeEventListener("mouseenter", resetHidingRefHint);
+                    link.removeEventListener("blur", startHidingRefHint);
+                    link.removeEventListener("focus", resetHidingRefHint);
+                    refHint.removeEventListener("mouseleave", startHidingRefHint);
+                    refHint.removeEventListener("mouseenter", resetHidingRefHint);
+                    refHint.removeEventListener("blur", startHidingRefHint);
+                    refHint.removeEventListener("focus", resetHidingRefHint);
+                };
+            }
+
+            function positionRefHint(refHint) {
+                const link = refHint.forLink;
+                const linkPos = getBounds(link);
+                refHint.style.top = linkPos.bottom + "px";
+                refHint.style.left = linkPos.left + "px";
+
+                const panelPos = refHint.getBoundingClientRect();
+                const panelMargin = 8;
+                const maxRight = document.body.parentNode.clientWidth - panelMargin;
+                if (panelPos.right > maxRight) {
+                    const overflowAmount = panelPos.right - maxRight;
+                    const newLeft = Math.max(panelMargin, linkPos.left - overflowAmount);
+                    refHint.style.left = newLeft + "px";
+                }
+            }
+
+            // TODO: shared util
+            // Returns the root-level absolute position {left and top} of element.
+            function getBounds(el, relativeTo = document.body) {
+                const relativeRect = relativeTo.getBoundingClientRect();
+                const elRect = el.getBoundingClientRect();
+                const top = elRect.top - relativeRect.top;
+                const left = elRect.left - relativeRect.left;
+                return {
+                    top,
+                    left,
+                    bottom: top + elRect.height,
+                    right: left + elRect.width,
+                }
+            }
+
+            function showRefHintListener(e) {
+                // If the target isn't in a link (or is a link),
+                // just ignore it.
+                let link = e.target.closest("a");
+                if (!link) return;
+
+                // If the target is in a ref-hint panel
+                // (aka a link in the already-open one),
+                // also just ignore it.
+                if (link.closest(".ref-hint")) return;
+
+                // Otherwise, show the panel for the link.
+                showRefHint(link);
+            }
+
+            function hideAllHintsListener(e) {
+                // If the click is inside a ref-hint panel, ignore it.
+                if (e.target.closest(".ref-hint")) return;
+                // Otherwise, close all the current panels.
+                hideAllRefHints();
+            }
+
+            document.addEventListener("DOMContentLoaded", () => {
+                document.body.addEventListener("mousedown", showRefHintListener);
+                document.body.addEventListener("focus", showRefHintListener);
+
+                document.body.addEventListener("click", hideAllHintsListener);
+            });
+
+            window.addEventListener("resize", () => {
+                // Hide any open ref hint.
+                hideAllRefHints();
+            });
+        }
+    </script>
+    <script src="https://htmlspecs.com/dropdown.js"></script>
