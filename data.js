@@ -2569,14 +2569,14 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
-    // {
-    //     text: "Audiobooks",
-    //     href: "https://htmlspecs.com/audiobooks/",
-    //     src: "https://www.w3.org/TR/audiobooks/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "REC"
-    // },
+    {
+        text: "Audiobooks",
+        href: "https://htmlspecs.com/audiobooks/",
+        src: "https://www.w3.org/TR/2020/REC-audiobooks-20201110/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "REC"
+    },
 
     //### 开发者工具、测试与自动化|개발자 도구, 테스트 및 자동화|開発者ツール・テスト・自動化
     {
