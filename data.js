@@ -581,6 +581,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "Network Information API",
+    //     href: "https://htmlspecs.com/netinfo/",
+    //     src: "https://wicg.github.io/netinfo/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
 
     //### 离线、后台与通知|오프라인, 백그라운드 및 알림|オフライン・バックグラウンド・通知
     {
@@ -2331,6 +2339,22 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "Related Website Sets",
+    //     href: "https://htmlspecs.com/first-party-sets/",
+    //     src: "https://wicg.github.io/first-party-sets/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
+    // {
+    //     text: "Private Aggregation API",
+    //     href: "https://htmlspecs.com/private-aggregation-api/",
+    //     src: "https://patcg-individual-drafts.github.io/private-aggregation-api/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
 
     //### 支付与数字商品|결제 및 디지털 상품|決済・デジタル商品
     {
@@ -2519,6 +2543,40 @@ const links = [
         lang: "cjk",
         state: "DISC"
     },
+
+    //### 数字出版与电子书|디지털 출판 및 전자책|デジタル出版・電子書籍
+    // {
+    //     text: "EPUB 3.3",
+    //     href: "https://htmlspecs.com/epub-33/",
+    //     src: "https://www.w3.org/TR/epub-33/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "REC"
+    // },
+    // {
+    //     text: "EPUB Reading Systems 3.3",
+    //     href: "https://htmlspecs.com/epub-rs-33/",
+    //     src: "https://www.w3.org/TR/epub-rs-33/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "REC"
+    // },
+    // {
+    //     text: "Publication Manifest",
+    //     href: "https://htmlspecs.com/pub-manifest/",
+    //     src: "https://www.w3.org/TR/pub-manifest/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "REC"
+    // },
+    // {
+    //     text: "Audiobooks",
+    //     href: "https://htmlspecs.com/audiobooks/",
+    //     src: "https://www.w3.org/TR/audiobooks/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "REC"
+    // },
 
     //### 开发者工具、测试与自动化|개발자 도구, 테스트 및 자동화|開発者ツール・テスト・自動化
     {
