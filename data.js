@@ -2347,14 +2347,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
-    // {
-    //     text: "Private Aggregation API",
-    //     href: "https://htmlspecs.com/private-aggregation-api/",
-    //     src: "https://patcg-individual-drafts.github.io/private-aggregation-api/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "Private Aggregation API",
+        href: "https://htmlspecs.com/private-aggregation-api/",
+        src: "https://patcg-individual-drafts.github.io/private-aggregation-api/",
+        "last-modified": "Tue, 13 May 2025 15:21:23 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
 
     //### 支付与数字商品|결제 및 디지털 상품|決済・デジタル商品
     {
