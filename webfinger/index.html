@@ -1,0 +1,1354 @@
+<pre>互联网工程任务组 (IETF)                                      P. Jones
+请求评论：7033                                             G. Salgueiro
+类别：标准轨道                                             Cisco Systems
+ISSN: 2070-1721                                                 M. Jones
+                                                               Microsoft
+                                                                J. Smarr
+                                                                  Google
+                                                           2013 年 9 月
+
+
+                               <span class="h1">WebFinger</span>
+
+摘要
+
+   本规范定义了 WebFinger 协议，该协议可用于使用标准 HTTP
+   方法在互联网上发现有关人员或其他实体的信息。WebFinger
+   会发现某个 URI 的信息，该 URI 否则可能不能用作定位符，
+   例如账户或电子邮件 URI。
+
+本备忘录状态
+
+   这是一份互联网标准轨道文档。
+
+   本文档是互联网工程任务组 (IETF) 的产物。它代表了 IETF
+   社区的共识。它已经过公开审查，并已由互联网工程指导组
+   (IESG) 批准发布。有关互联网标准的更多信息可见
+   <a href="./rfc5741#section-2">RFC 5741 第&nbsp;2 节</a>。
+
+   有关本文档当前状态、任何勘误以及如何提供反馈的信息，
+   可从以下地址获得：
+   <a href="http://www.rfc-editor.org/info/rfc7033">http://www.rfc-editor.org/info/rfc7033</a>.
+
+Copyright Notice
+
+   Copyright (c) 2013 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to <a href="https://www.rfc-editor.org/bcp/bcp78">BCP 78</a> and the IETF Trust's Legal
+   Provisions Relating to IETF Documents
+   (<a href="http://trustee.ietf.org/license-info">http://trustee.ietf.org/license-info</a>) in effect on the date of
+   publication of this document.  Please review these documents
+   carefully, as they describe your rights and restrictions with respect
+   to this document.  Code Components extracted from this document must
+   include Simplified BSD License text as described in Section 4.e of
+   the Trust Legal Provisions and are provided without warranty as
+   described in the Simplified BSD License.
+
+
+
+<span class="grey">Jones 等人                标准轨道                    [第 1 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-2" ></span>
+<span class="grey"><a href="./rfc7033">RFC 7033</a>                        WebFinger                 2013 年 9 月</span>
+
+
+目录
+
+   <a href="#section-1">1</a>. 引言 .........................................................<a href="#page-3">3</a>
+   <a href="#section-2">2</a>. 术语 .........................................................<a href="#page-3">3</a>
+   <a href="#section-3">3</a>. WebFinger 的示例用途 .........................................<a href="#page-4">4</a>
+      <a href="#section-3.1">3.1</a>. OpenID Connect 的身份提供者发现 .........................<a href="#page-4">4</a>
+      <a href="#section-3.2">3.2</a>. 获取网页的作者和版权信息 ...............................<a href="#page-5">5</a>
+   <a href="#section-4">4</a>. WebFinger 协议 ................................................<a href="#page-7">7</a>
+        <a href="#section-4.1">4.1</a>. 构造请求 URI 的查询组件.................................<a href="#page-7">7</a>
+        <a href="#section-4.2">4.2</a>. 执行 WebFinger 查询.....................................<a href="#page-8">8</a>
+        <a href="#section-4.3">4.3</a>. "rel" 参数..............................................<a href="#page-9">9</a>
+        <a href="#section-4.4">4.4</a>. JSON Resource Descriptor (JRD)..........................<a href="#page-11">11</a>
+           <a href="#section-4.4.1">4.4.1</a>. subject.............................................<a href="#page-11">11</a>
+           <a href="#section-4.4.2">4.4.2</a>. aliases.............................................<a href="#page-11">11</a>
+           <a href="#section-4.4.3">4.4.3</a>. properties..........................................<a href="#page-12">12</a>
+           <a href="#section-4.4.4">4.4.4</a>. links...............................................<a href="#page-12">12</a>
+        <a href="#section-4.5">4.5</a>. WebFinger 和 URI........................................<a href="#page-14">14</a>
+   <a href="#section-5">5</a>. 跨源资源共享 (CORS) ..........................................<a href="#page-14">14</a>
+   <a href="#section-6">6</a>. 访问控制 .....................................................<a href="#page-15">15</a>
+   <a href="#section-7">7</a>. 托管式 WebFinger 服务 ........................................<a href="#page-15">15</a>
+   <a href="#section-8">8</a>. WebFinger 应用的定义 .........................................<a href="#page-16">16</a>
+      <a href="#section-8.1">8.1</a>. URI 方案和 URI 的规范 ..................................<a href="#page-17">17</a>
+      <a href="#section-8.2">8.2</a>. 主机解析 ...............................................<a href="#page-17">17</a>
+      <a href="#section-8.3">8.3</a>. 属性的规范 .............................................<a href="#page-17">17</a>
+      <a href="#section-8.4">8.4</a>. 链接的规范 .............................................<a href="#page-18">18</a>
+      <a href="#section-8.5">8.5</a>. 一个 URI，多个应用 .....................................<a href="#page-18">18</a>
+      <a href="#section-8.6">8.6</a>. 链接关系类型和属性的注册 ...............................<a href="#page-19">19</a>
+   <a href="#section-9">9</a>. 安全考虑 .....................................................<a href="#page-19">19</a>
+      <a href="#section-9.1">9.1</a>. 与传输相关的问题 .......................................<a href="#page-19">19</a>
+      <a href="#section-9.2">9.2</a>. 用户隐私考虑 ...........................................<a href="#page-19">19</a>
+      <a href="#section-9.3">9.3</a>. 滥用可能性 .............................................<a href="#page-21">21</a>
+      <a href="#section-9.4">9.4</a>. 信息可靠性 .............................................<a href="#page-21">21</a>
+   <a href="#section-10">10</a>. IANA 考虑 ..................................................<a href="#page-22">22</a>
+      <a href="#section-10.1">10.1</a>. Well-Known URI .........................................<a href="#page-22">22</a>
+      <a href="#section-10.2">10.2</a>. JSON Resource Descriptor (JRD) 媒体类型 ................<a href="#page-22">22</a>
+      <a href="#section-10.3">10.3</a>. 注册链接关系类型 ......................................<a href="#page-24">24</a>
+      <a href="#section-10.4">10.4</a>. 建立 "WebFinger Properties" 注册表 ....................<a href="#page-24">24</a>
+           <a href="#section-10.4.1">10.4.1</a>. 注册模板 .......................................<a href="#page-24">24</a>
+           <a href="#section-10.4.2">10.4.2</a>. 注册程序 .......................................<a href="#page-25">25</a>
+   <a href="#section-11">11</a>. 致谢 .......................................................<a href="#page-26">26</a>
+   <a href="#section-12">12</a>. 参考文献 ...................................................<a href="#page-26">26</a>
+      <a href="#section-12.1">12.1</a>. 规范性参考文献 ........................................<a href="#page-26">26</a>
+      <a href="#section-12.2">12.2</a>. 资料性参考文献 ........................................<a href="#page-27">27</a>
+
+
+
+
+
+
+
+
+<span class="grey">Jones 等人                标准轨道                    [第 2 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-3" ></span>
+<span class="grey"><a href="./rfc7033">RFC 7033</a>                        WebFinger                 2013 年 9 月</span>
+
+
+<span class="h2"><a class="selflink" id="section-1" href="#section-1">1</a>.  引言</span>
+
+   WebFinger 用于使用安全传输 [<a href="#ref-12" title="&quot;HTTP Over TLS&quot;">12</a>] 上的标准超文本传输协议
+   (HTTP) [<a href="#ref-2" title="&quot;Hypertext Transfer Protocol -- HTTP/1.1&quot;">2</a>] 方法，发现互联网上由 URI [<a href="#ref-6" title="&quot;Uniform Resource Identifier (URI): Generic Syntax&quot;">6</a>]
+   标识的人员或其他实体的信息。WebFinger 资源返回一个描述被查询实体的
+   JavaScript Object Notation (JSON) [<a href="#ref-5" title="&quot;The application/json Media Type for JavaScript Object Notation (JSON)&quot;">5</a>] 对象。
+   该 JSON 对象称为 JSON Resource Descriptor (JRD)。
+
+   对于人员，可以通过 WebFinger 发现的信息类型包括个人资料地址、身份服务、
+   电话号码或首选头像。对于互联网上的其他实体，WebFinger 资源可能返回
+   包含链接关系 [<a href="#ref-8" title="&quot;Link Relations&quot;">8</a>] 的 JRD，使客户端能够发现，例如，某台打印机
+   可以在 A4 纸上彩色打印、某台服务器的物理位置，或其他静态信息。
+
+   通过 WebFinger 返回的信息可能供人直接使用（例如查找某人的电话号码），
+   也可能由系统用于帮助执行某些操作（例如，在附加安全机制的辅助下，通过
+   确定用户的身份服务来协助登录某个网站）。这些信息本质上旨在是静态的，
+   因此，WebFinger 并不旨在用于返回动态信息，例如 CPU 的温度或激光打印机
+   中当前的碳粉余量。
+
+   WebFinger 协议被设计为可跨许多应用使用。希望利用 WebFinger 的应用
+   将需要指定适合该应用的属性、标题和链接关系类型。此外，应用还需要定义
+   用于查询目标的适当 URI 方案。
+
+   WebFinger 的使用在<a href="#section-3">第 3 节</a>中的示例中说明，并在<a href="#section-4">第 4 节</a>中
+   作更正式的描述。<a href="#section-8">第 8 节</a>描述了如何定义 WebFinger 的应用。
+
+<span class="h2"><a class="selflink" id="section-2" href="#section-2">2</a>.  术语</span>
+
+   本文档中的关键词 "MUST"、"MUST NOT"、"REQUIRED"、"SHALL"、"SHALL NOT"、
+   "SHOULD"、"SHOULD NOT"、"RECOMMENDED"、"MAY" 和 "OPTIONAL" 应按
+   <a href="./rfc2119">RFC 2119</a> [<a href="#ref-1" title="&quot;Key words for use in RFCs to Indicate Requirement Levels&quot;">1</a>] 中的描述解释。
+
+   WebFinger 大量使用“链接关系”。链接关系是一种属性-值对，其中属性标识
+   被链接实体或资源与值中指定的信息之间的关系类型。在 Web Linking [<a href="#ref-4" title="&quot;Web Linking&quot;">4</a>] 中，
+   链接关系使用名为 "Link" 的 HTTP entity-header 表示，其中 "rel" 属性指定
+   关系类型，而 "href"
+
+
+
+<span class="grey">Jones 等人                标准轨道                    [第 3 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-4" ></span>
+<span class="grey"><a href="./rfc7033">RFC 7033</a>                        WebFinger                 2013 年 9 月</span>
+
+
+   属性指定链接到该实体或资源的信息。在 WebFinger 中，同一概念使用
+   "links" 对象的 JSON 数组表示，其中每个名为 "rel" 的成员指定关系类型，
+   每个名为 "href" 的成员指定链接到该实体或资源的信息。注意，WebFinger
+   通过规定 "rel" 成员的值需要是单个 IANA 注册的链接关系类型 [<a href="#ref-8" title="&quot;Link Relations&quot;">8</a>]
+   或一个 URI [<a href="#ref-6" title="&quot;Uniform Resource Identifier (URI): Generic Syntax&quot;">6</a>]，将链接关系的范围收窄到超出 Web Linking
+   所定义的范围。
+
+   本文档中对 URI 的使用，指遵循 <a href="./rfc3986#section-3">RFC 3986 第&nbsp;3 节</a> [<a href="#ref-6" title="&quot;Uniform Resource Identifier (URI): Generic Syntax&quot;">6</a>] 所规定语法的
+   URI。具有 <a href="./rfc3986#section-4.2">RFC 3986 第&nbsp;4.2 节</a> 语法的相对 URI 不与 WebFinger 一起使用。
+
+<span class="h2"><a class="selflink" id="section-3" href="#section-3">3</a>.  WebFinger 的示例用途</span>
+
+   本节展示 WebFinger 的几个示例用途。WebFinger 的任何应用都将在本文档
+   之外指定，如<a href="#section-8">第 8 节</a>所述。本节中的示例应足够简单，即使未看过
+   这些应用的正式规范也能理解。
+
+<span class="h3"><a class="selflink" id="section-3.1" href="#section-3.1">3.1</a>.  OpenID Connect 的身份提供者发现</span>
+
+   假设 Carol 希望使用 OpenID Connect [<a href="#ref-15" title="&quot;OpenID Connect Messages 1.0&quot;">15</a>] 在她访问的某个网站上
+   进行身份验证。她会向该网站提供她的 OpenID Connect 标识符，例如
+   carol@example.com。被访问的网站会执行 WebFinger 查询以查找 OpenID
+   Connect 提供者。由于该站点只对一个特定链接关系感兴趣，WebFinger 资源
+   可以利用<a href="#section-4.3">第 4.3 节</a>中描述的 "rel" 参数：
+
+     GET /.well-known/webfinger?
+            resource=acct%3Acarol%40example.com&amp;
+            rel=http%3A%2F%2Fopenid.net%2Fspecs%2Fconnect%2F1.0%2Fissuer
+            HTTP/1.1
+     Host: example.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Jones 等人                标准轨道                    [第 4 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-5" ></span>
+<span class="grey"><a href="./rfc7033">RFC 7033</a>                        WebFinger                 2013 年 9 月</span>
+
+
+   服务器可能像这样响应：
+
+     HTTP/1.1 200 OK
+     Access-Control-Allow-Origin: *
+     Content-Type: application/jrd+json
+
+     {
+       "subject" : "acct:carol@example.com",
+       "links" :
+       [
+         {
+           "rel" : "<a href="http://openid.net/specs/connect/1.0/issuer">http://openid.net/specs/connect/1.0/issuer</a>",
+           "href" : "https://openid.example.com"
+         }
+       ]
+     }
+
+   由于 "rel" 参数仅用于过滤资源返回的链接关系，因此响应中的其他名称/值对，
+   包括任何 aliases 或 properties，都会被返回。此外，由于不保证支持
+   "rel" 参数，客户端不能假定 "links" 数组只会包含所请求的链接关系。
+
+<span class="h3"><a class="selflink" id="section-3.2" href="#section-3.2">3.2</a>.  获取网页的作者和版权信息</span>
+
+   假设定义了一个应用，用于检索有关网页 URL 的元数据信息，例如作者和
+   版权信息。为了检索这些信息，客户端可以利用 WebFinger 对特定 URL 发出
+   查询。假设感兴趣的 URL 是 http://blog.example.com/article/id/314。
+   客户端会发出类似如下的查询：
+
+     GET /.well-known/webfinger?
+          resource=http%3A%2F%2Fblog.example.com%2Farticle%2Fid%2F314
+          HTTP/1.1
+     Host: blog.example.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Jones 等人                标准轨道                    [第 5 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-6" ></span>
+<span class="grey"><a href="./rfc7033">RFC 7033</a>                        WebFinger                 2013 年 9 月</span>
+
+
+   然后服务器可能以这种方式回复：
+
+     HTTP/1.1 200 OK
+     Access-Control-Allow-Origin: *
+     Content-Type: application/jrd+json
+
+     {
+       "subject" : "http://blog.example.com/article/id/314",
+       "aliases" :
+       [
+         "http://blog.example.com/cool_new_thing",
+         "http://blog.example.com/steve/article/7"
+       ],
+       "properties" :
+       {
+         "http://blgx.example.net/ns/version" : "1.3",
+         "http://blgx.example.net/ns/ext" : null
+       },
+       "links" :
+       [
+         {
+           "rel" : "copyright",
+           "href" : "http://www.example.com/copyright"
+         },
+         {
+           "rel" : "author",
+           "href" : "http://blog.example.com/author/steve",
+           "titles" :
+           {
+             "en-us" : "The Magical World of Steve",
+             "fr" : "Le Monde Magique de Steve"
+           },
+           "properties" :
+           {
+             "http://example.com/role" : "editor"
+           }
+         }
+
+       ]
+     }
+
+   在上面的示例中，可以看到服务器返回了与 subject URL 相关的 aliases、
+   properties 和 links 列表。这些链接包含对每种链接关系类型信息的引用。
+   对于 author 链接，服务器提供了对作者博客的引用，以及该博客两种语言的
+   标题。服务器还返回了与作者相关的单个属性，表明该作者在博客中的角色是
+   editor。
+
+
+
+<span class="grey">Jones 等人                标准轨道                    [第 6 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-7" ></span>
+<span class="grey"><a href="./rfc7033">RFC 7033</a>                        WebFinger                 2013 年 9 月</span>
+
+
+   值得注意的是，虽然在此示例中服务器只在 "links" 数组中返回了两个链接，
+   但服务器在被查询时可以返回任意数量的链接。
+
+<span class="h2"><a class="selflink" id="section-4" href="#section-4">4</a>.  WebFinger 协议</span>
+
+   WebFinger 协议用于请求有关由查询目标（一个 URI）标识的实体的信息。
+   客户端可以选择指定一个或多个它希望接收信息的链接关系类型。
+
+   WebFinger 请求是发送到 WebFinger 资源的 HTTPS 请求。WebFinger 资源是
+   一个使用 HTTPS 方案的 well-known URI [<a href="#ref-3" title="&quot;Defining Well-Known Uniform Resource Identifiers (URIs)&quot;">3</a>]，它与必需的查询目标和可选的
+   链接关系类型一起构造。WebFinger 资源不得使用任何其他 URI 方案
+   （例如 HTTP）提供服务。
+
+   WebFinger 资源始终给定一个查询目标，该目标是另一个 URI，用于标识要
+   查找其信息的实体。对 WebFinger 资源的 GET 请求在 WebFinger URI 查询
+   字符串的 "resource" 参数中传递查询目标；详见<a href="#section-4.1">第</a>
+   <a href="#section-4.1">4.1</a> 节。
+
+   向其发出 WebFinger 查询的主机具有重要意义。如果查询目标包含 "host"
+   部分（<a href="./rfc3986#section-3.2.2">RFC 3986 第&nbsp;3.2.2 节</a>），则发出 WebFinger 查询的主机应该与
+   查询目标的 "host" 部分相同，除非客户端通过某种带外机制收到将查询发送
+   到另一主机的指示。如果查询目标不包含 "host" 部分，则客户端使用它拥有的
+   附加信息选择一个主机来向其发送查询。
+
+   WebFinger URI 的路径组件必须是 well-known 路径
+   "/.well-known/webfinger"。WebFinger URI 必须包含一个查询组件，该组件按
+   <a href="#section-4.1">第 4.1 节</a>中的规定编码查询目标和可选链接关系类型。
+
+   WebFinger 资源返回 JSON Resource Descriptor (JRD) 作为资源表示，以传达
+   互联网上某个实体的信息。此外，跨源资源共享 (CORS) [<a href="#ref-7" title="&quot;Cross-Origin Resource Sharing&quot;">7</a>] 规范被用于
+   促进通过 Web 浏览器进行的查询。
+
+<span class="h3"><a class="selflink" id="section-4.1" href="#section-4.1">4.1</a>.  构造请求 URI 的查询组件</span>
+
+   WebFinger URI 必须包含一个查询组件（参见 <a href="./rfc3986#section-3.4">RFC 3986 第&nbsp;3.4 节</a>）。
+   该查询组件必须包含一个 "resource" 参数，并且可以包含一个或多个 "rel"
+   参数。"resource"
+
+
+
+<span class="grey">Jones 等人                标准轨道                    [第 7 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-8" ></span>
+<span class="grey"><a href="./rfc7033">RFC 7033</a>                        WebFinger                 2013 年 9 月</span>
+
+
+   参数必须包含查询目标（URI），而 "rel" 参数必须按照本节所述的编码方式
+   包含经过编码的链接关系类型。
+
+   为构造查询组件，客户端执行以下步骤。首先，按照 <a href="./rfc3986#section-2.1">RFC 3986 第&nbsp;2.1 节</a>
+   对每个参数值进行百分号编码。执行该编码是为了符合该规范
+   <a href="#section-3.4">第 3.4 节</a>中的 query 产生式，并另外要求参数值中任何出现的 "=" 和 "&amp;"
+   字符也进行百分号编码。接下来，客户端通过将第一个参数的名称、等号
+   ("=") 和经过百分号编码的参数值连接起来，构造一个将放入查询组件中的
+   字符串。对于任何后续参数，客户端向该字符串追加一个与号 ("&amp;")、下一个
+   参数的名称、一个等号以及该参数值。客户端在构造字符串时不得插入任何空格。
+   客户端在查询组件中放置各个属性-值对的顺序，对查询组件的解释没有影响。
+
+<span class="h3"><a class="selflink" id="section-4.2" href="#section-4.2">4.2</a>.  执行 WebFinger 查询</span>
+
+   WebFinger 客户端使用 GET 方法向 well-known [<a href="#ref-3" title="&quot;Defining Well-Known Uniform Resource Identifiers (URIs)&quot;">3</a>] 资源发出查询，该资源
+   由一个 URI 标识，其路径组件是 "/.well-known/webfinger"，并且其查询组件
+   必须只包含一次 "resource" 参数，且将其设置为正在查找其信息的 URI 的值。
+
+   如果 "resource" 参数缺失或格式错误，WebFinger 资源必须按
+   <a href="./rfc2616#section-10.4.1">RFC 2616 第&nbsp;10.4.1 节</a> [<a href="#ref-2" title="&quot;Hypertext Transfer Protocol -- HTTP/1.1&quot;">2</a>] 指示该请求是错误请求。
+
+   如果 "resource" 参数是服务器没有信息的值，则服务器必须按
+   <a href="./rfc2616#section-10.4.5">RFC 2616 第&nbsp;10.4.5 节</a>指示其无法匹配该请求。
+
+   客户端必须仅使用 HTTPS 查询 WebFinger 资源。如果客户端确定该资源证书
+   无效、该资源返回 4xx 或 5xx 状态码，或者由于任何原因无法建立 HTTPS
+   连接，则客户端必须接受 WebFinger 查询已经失败，并且不得尝试使用非安全
+   连接上的 HTTP 重新发出 WebFinger 请求。
+
+   如果客户端没有通过 HTTP "Accept" 标头明确请求其他受支持格式，WebFinger
+   资源必须返回 JRD 作为该资源的表示。客户端可以包含 "Accept" 标头以指示
+   所需表示；JRD 以外的表示可能在未来规范中定义。WebFinger
+
+
+
+<span class="grey">Jones 等人                标准轨道                    [第 8 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-9" ></span>
+<span class="grey"><a href="./rfc7033">RFC 7033</a>                        WebFinger                 2013 年 9 月</span>
+
+
+   资源必须静默忽略它不理解或不支持的任何被请求表示。JSON Resource
+   Descriptor (JRD) 使用的媒体类型是 "application/jrd+json"（参见<a href="#section-10.2">第</a>
+   <a href="#section-10.2">10.2</a> 节）。
+
+   服务器在 JRD 中返回的 properties、titles 和链接关系类型可能多种多样且
+   数量众多。例如，服务器可能在回复中返回有关某人的博客、vCard [<a href="#ref-14" title="&quot;vCard Format Specification&quot;">14</a>]、
+   头像、OpenID Connect 提供者、RSS 或 ATOM feed 等信息。同样，如果服务器
+   没有可提供的信息，它可能返回一个带有空 "links" 数组或没有 "links" 数组的
+   JRD。
+
+   WebFinger 资源可以重定向客户端；如果这样做，重定向必须仅指向 "https"
+   URI，并且客户端在被重定向时必须再次执行证书验证。
+
+   WebFinger 资源可以在响应中包含缓存验证器，以便客户端进行条件请求，
+   并且/或者按 <a href="./rfc2616#section-13">RFC 2616 第&nbsp;13 节</a>设置过期时间。
+
+<span class="h3"><a class="selflink" id="section-4.3" href="#section-4.3">4.3</a>.  "rel" 参数</span>
+
+   在向 WebFinger 资源发出请求时，客户端可以利用 "rel" 参数仅请求若未提供
+   "rel" 参数时会返回的信息的一个子集。当使用并接受 "rel" 参数时，JRD 中
+   返回的 links 数组只包含与通过 "rel" 参数提供的链接关系类型相匹配的链接
+   关系类型。如果没有为该资源定义匹配的链接关系类型，则 JRD 中的 "links"
+   数组将不存在或为空。资源描述符中存在的所有其他信息仍然存在，即使使用了
+   "rel" 也是如此。
+
+   为了请求多个链接关系类型，"rel" 参数可以包含多次。
+
+   "rel" 参数的目的是返回资源描述符中原本会返回的“链接关系对象”
+   （参见<a href="#section-4.4.4">第 4.4.4 节</a>）的一个子集。使用该参数可能减少客户端或服务器的
+   处理需求，也可能减少传达部分资源描述符所需的带宽，特别是当给定
+   "resource" 值有许多链接关系值需要传达时。注意，如果客户端请求某个特定
+   链接关系类型而服务器对此没有信息，则服务器可以返回一个带有空 "links"
+   数组或没有 "links" 数组的 JRD。
+
+
+
+
+
+<span class="grey">Jones 等人                标准轨道                    [第 9 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-10" ></span>
+<span class="grey"><a href="./rfc7033">RFC 7033</a>                        WebFinger                 2013 年 9 月</span>
+
+
+   WebFinger 资源应该支持 "rel" 参数。如果资源不支持 "rel" 参数，则它必须
+   忽略该参数，并像没有任何 "rel" 参数值存在一样处理该请求。
+
+   以下示例使用 "rel" 参数来请求两种链接关系类型的链接：
+
+    GET /.well-known/webfinger?
+        resource=acct%3Abob%40example.com&amp;
+        rel=http%3A%2F%2Fwebfinger.example%2Frel%2Fprofile-page&amp;
+        rel=http%3A%2F%2Fwebfinger.example%2Frel%2Fbusinesscard HTTP/1.1
+    Host: example.com
+
+   在此示例中，客户端请求类型为
+   "http://webfinger.example/rel/profile-page" 和
+   "http://webfinger.example/rel/businesscard" 的链接关系。随后服务器以类似
+   如下的消息响应：
+
+     HTTP/1.1 200 OK
+     Access-Control-Allow-Origin: *
+     Content-Type: application/jrd+json
+
+     {
+       "subject" : "acct:bob@example.com",
+       "aliases" :
+       [
+         "https://www.example.com/~bob/"
+       ],
+       "properties" :
+       {
+           "http://example.com/ns/role" : "employee"
+       },
+       "links" :
+       [
+         {
+           "rel" : "http://webfinger.example/rel/profile-page",
+           "href" : "https://www.example.com/~bob/"
+         },
+         {
+           "rel" : "http://webfinger.example/rel/businesscard",
+           "href" : "https://www.example.com/~bob/bob.vcf"
+         }
+       ]
+     }
+
+
+
+
+
+
+<span class="grey">Jones 等人                标准轨道                   [第 10 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-11" ></span>
+<span class="grey"><a href="./rfc7033">RFC 7033</a>                        WebFinger                 2013 年 9 月</span>
+
+
+   如响应中所示，资源表示只包含客户端所请求且服务器有信息的类型的链接，
+   但 JRD 的其他部分仍然存在。还要注意，在上面的示例中，"links" 数组中
+   返回的链接都使用 HTTPS；如果需要安全地返回通过 WebFinger 间接获得的数据，
+   这一点很重要。
+
+<span class="h3"><a class="selflink" id="section-4.4" href="#section-4.4">4.4</a>.  JSON Resource Descriptor (JRD)</span>
+
+   JSON Resource Descriptor (JRD) 最初在 <a href="./rfc6415">RFC 6415</a> [<a href="#ref-16" title="&quot;Web Host Metadata&quot;">16</a>] 中引入，并基于
+   Extensible Resource Descriptor (XRD) 格式 [<a href="#ref-17" title="&quot;Extensible Resource Descriptor (XRD) Version 1.0&quot;">17</a>]，它是一个 JSON 对象，
+   由以下名称/值对组成：
+
+           o subject
+           o aliases
+           o properties
+           o links
+
+   成员 "subject" 是一个名称/值对，其值是字符串；"aliases" 是字符串数组；
+   "properties" 是由名称/值对组成的对象，其值为字符串；而 "links" 是包含
+   链接关系信息的对象数组。
+
+   在处理 JRD 时，客户端必须忽略任何未知成员，并且不得将未知成员的存在视为
+   错误。
+
+   下面更详细地描述 JRD 的这些成员。
+
+<span class="h4"><a class="selflink" id="section-4.4.1" href="#section-4.4.1">4.4.1</a>.  subject</span>
+
+   "subject" 成员的值是一个 URI，用于标识 JRD 所描述的实体。
+
+   WebFinger 资源返回的 "subject" 值可以不同于客户端请求中使用的
+   "resource" 参数值。例如，当 subject 的身份发生变化时（例如用户将其账户
+   移至另一服务）或当资源倾向于以规范形式表达 URI 时，就可能发生这种情况。
+
+   "subject" 成员应该存在于 JRD 中。
+
+<span class="h4"><a class="selflink" id="section-4.4.2" href="#section-4.4.2">4.4.2</a>.  aliases</span>
+
+   "aliases" 数组是由零个或多个 URI 字符串组成的数组，这些 URI 字符串标识
+   与 "subject" URI 相同的实体。
+
+   "aliases" 数组在 JRD 中是可选的。
+
+
+
+
+<span class="grey">Jones 等人                标准轨道                   [第 11 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-12" ></span>
+<span class="grey"><a href="./rfc7033">RFC 7033</a>                        WebFinger                 2013 年 9 月</span>
+
+
+<span class="h4"><a class="selflink" id="section-4.4.3" href="#section-4.4.3">4.4.3</a>.  properties</span>
+
+   "properties" 对象由零个或多个名称/值对组成，其名称是 URI（称为
+   “属性标识符”），其值是字符串或 null。Properties 用于传达有关 JRD 的
+   subject 的附加信息。作为示例，请考虑 "properties" 的这种用法：
+
+     "properties" : { "http://webfinger.example/ns/name" : "Bob Smith" }
+
+   "properties" 成员在 JRD 中是可选的。
+
+<span class="h4"><a class="selflink" id="section-4.4.4" href="#section-4.4.4">4.4.4</a>.  links</span>
+
+   "links" 数组包含任意数量的成员对象，每个对象表示一个链接 [<a href="#ref-4" title="&quot;Web Linking&quot;">4</a>]。
+   每个此类链接对象可以具有以下成员：
+
+           o rel
+           o type
+           o href
+           o titles
+           o properties
+
+   "rel" 和 "href" 成员是字符串，分别表示链接的关系类型和目标 URI。
+   链接的上下文是 "subject"（参见<a href="#section-4.4.1">第 4.4.1 节</a>）。
+
+   "type" 成员是一个字符串，指示解引用该链接所得结果应具有的媒体类型。
+
+   "links" 数组中元素的顺序可以解释为表示偏好顺序。因此，如果有两个或更多
+   具有相同 "rel" 值的链接关系，则第一个链接关系将表示用户的首选链接。
+
+   "links" 数组在 JRD 中是可选的。
+
+   下面更详细地描述 "links" 数组中对象的各个成员。"links" 数组中的每个
+   对象称为“链接关系对象”，它与数组中的任何其他对象完全独立；在链接关系
+   对象中包含某个给定成员的任何要求，只适用于该特定对象。
+
+
+
+
+
+
+
+<span class="grey">Jones 等人                标准轨道                   [第 12 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-13" ></span>
+<span class="grey"><a href="./rfc7033">RFC 7033</a>                        WebFinger                 2013 年 9 月</span>
+
+
+<span class="h5"><a class="selflink" id="section-4.4.4.1" href="#section-4.4.4.1">4.4.4.1</a>.  rel</span>
+
+   "rel" 成员的值是一个字符串，它要么是 URI，要么是已注册的关系类型
+   [<a href="#ref-8" title="&quot;Link Relations&quot;">8</a>]（参见 <a href="./rfc5988">RFC 5988</a> [<a href="#ref-4" title="&quot;Web Linking&quot;">4</a>]）。"rel" 成员的值必须恰好包含一个
+   URI 或已注册的关系类型。该 URI 或已注册的关系类型标识链接关系的类型。
+
+   对象的其他成员只有在链接关系类型被理解之后才有意义。在某些情况下，
+   链接关系会具有相关语义，使客户端能够查询互联网上的其他资源。在其他
+   情况下，链接关系会具有相关语义，使客户端能够在不获取其他外部资源的
+   情况下利用链接关系对象的其他成员。
+
+   URI 链接关系类型值使用 <a href="./rfc3986#section-6.2.1">RFC 3986 第&nbsp;6.2.1 节</a>的“简单字符串比较”
+   算法进行比较。
+
+   "rel" 成员必须存在于链接关系对象中。
+
+<span class="h5"><a class="selflink" id="section-4.4.4.2" href="#section-4.4.4.2">4.4.4.2</a>.  type</span>
+
+   "type" 成员的值是一个字符串，指示目标资源的媒体类型 [<a href="#ref-9" title="&quot;MIME Media Types&quot;">9</a>]
+   （参见 <a href="./rfc6838">RFC 6838</a> [<a href="#ref-10" title="&quot;Media Type Specifications and Registration Procedures&quot;">10</a>]）。
+
+   "type" 成员在链接关系对象中是可选的。
+
+<span class="h5"><a class="selflink" id="section-4.4.4.3" href="#section-4.4.4.3">4.4.4.3</a>.  href</span>
+
+   "href" 成员的值是一个包含 URI 的字符串，该 URI 指向目标资源。
+
+   "href" 成员在链接关系对象中是可选的。
+
+<span class="h5"><a class="selflink" id="section-4.4.4.4" href="#section-4.4.4.4">4.4.4.4</a>.  titles</span>
+
+   "titles" 对象由零个或多个名称/值对组成，其名称是语言标记 [<a href="#ref-11" title="&quot;Tags for Identifying Languages&quot;">11</a>]
+   或字符串 "und"。该字符串是人类可读的，并描述链接关系。可以为链接关系
+   提供多个标题，以便利用该链接关系的用户受益；并且如果使用，应适当地
+   使用语言标识符作为名称。如果语言未知或未指定，则名称为 "und"。
+
+   JRD 不应该在链接关系对象中包含超过一个用同一语言标记（或 "und"）标识的
+   标题。如果链接关系对象包含超过一个用同一语言标记（或 "und"）命名的标题，
+
+
+
+<span class="grey">Jones 等人                标准轨道                   [第 13 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-14" ></span>
+<span class="grey"><a href="./rfc7033">RFC 7033</a>                        WebFinger                 2013 年 9 月</span>
+
+
+   则其含义未定义，不过这不得被视为错误。客户端可以选择它希望利用的任何
+   一个或多个标题。
+
+   下面是 "titles" 对象的示例：
+
+     "titles" :
+     {
+       "en-us" : "The Magical World of Steve",
+       "fr" : "Le Monde Magique de Steve"
+     }
+
+   "titles" 成员在链接关系对象中是可选的。
+
+<span class="h5"><a class="selflink" id="section-4.4.4.5" href="#section-4.4.4.5">4.4.4.5</a>.  properties</span>
+
+   链接关系对象中的 "properties" 对象由零个或多个名称/值对组成，其名称是
+   URI（称为“属性标识符”），其值是字符串或 null。Properties 用于传达有关
+   链接关系的附加信息。作为示例，请考虑 "properties" 的这种用法：
+
+     "properties" : { "http://webfinger.example/mail/port" : "993" }
+
+   "properties" 成员在链接关系对象中是可选的。
+
+<span class="h3"><a class="selflink" id="section-4.5" href="#section-4.5">4.5</a>.  WebFinger 和 URI</span>
+
+   WebFinger 请求包含一个 "resource" 参数（参见<a href="#section-4.1">第 4.1 节</a>），用于指定
+   客户端请求其信息的查询目标（URI）。WebFinger 对此类 URI 的方案保持中立：
+   它可以是 "acct" URI [<a href="#ref-18" title="&quot;The 'acct' URI Scheme&quot;">18</a>]、"http" 或 "https" URI、"mailto"
+   URI [<a href="#ref-19" title="&quot;The 'mailto' URI Scheme&quot;">19</a>]，或某种其他方案。
+
+<span class="h2"><a class="selflink" id="section-5" href="#section-5">5</a>.  跨源资源共享 (CORS)</span>
+
+   由于“同源”策略，WebFinger 资源可能无法从 Web 浏览器访问。当前最佳实践是
+   通过跨源资源共享 (CORS) [<a href="#ref-7" title="&quot;Cross-Origin Resource Sharing&quot;">7</a>] 使资源可供浏览器访问，并且服务器必须在
+   响应中包含 Access-Control-Allow-Origin HTTP 标头。服务器应该支持限制
+   最少的设置，允许任何域访问 WebFinger 资源：
+
+      Access-Control-Allow-Origin: *
+
+
+
+
+
+
+<span class="grey">Jones 等人                标准轨道                   [第 14 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-15" ></span>
+<span class="grey"><a href="./rfc7033">RFC 7033</a>                        WebFinger                 2013 年 9 月</span>
+
+
+   在某些情况下，默认使用限制最少的设置并不合适。例如，内联网中提供敏感
+   公司信息的服务器不应该允许来自任何域的 CORS 请求，因为这可能允许该敏感
+   信息泄露。希望限制外部实体访问信息的服务器应该使用更具限制性的
+   Access-Control-Allow-Origin 标头。
+
+<span class="h2"><a class="selflink" id="section-6" href="#section-6">6</a>.  访问控制</span>
+
+   与所有 Web 资源一样，对 WebFinger 资源的访问可能需要身份验证。此外，
+   未能提供所需凭据可能导致服务器禁止访问，或者提供与客户端已向服务器
+   进行身份验证时不同的响应。
+
+   同样，WebFinger 资源可以基于其他因素向不同客户端提供不同响应，例如
+   客户端是在公司网络内部还是外部。作为一个具体示例，在公司内部网络上
+   执行的查询可能返回指向员工照片的链接关系，而面向外部实体时可能不提供
+   员工照片的链接关系。
+
+   此外，WebFinger 资源表示中提供的链接关系可能指向施加访问限制的 Web
+   资源。例如，前述公司服务器可以向内部和外部实体都提供员工照片的 URI，
+   但如果请求来自公司网络外部，则客户端为了访问照片资源可能还需要进一步
+   身份验证。
+
+   关于 WebFinger 资源向一个客户端与另一个客户端提供哪组链接关系、哪些
+   资源需要进一步身份验证，以及所采用的具体身份验证机制等方面的决定，
+   均超出本文档范围。
+
+<span class="h2"><a class="selflink" id="section-7" href="#section-7">7</a>.  托管式 WebFinger 服务</span>
+
+   与互联网上提供的大多数服务一样，域所有者可以利用“托管式”WebFinger
+   服务。举例来说，域所有者可能控制其域的大多数方面，但使用第三方托管服务
+   提供电子邮件。在电子邮件的情况下，邮件交换 (MX) 记录标识某个域的邮件
+   服务器。MX 记录指向应向其投递该域邮件的邮件服务器。对于发送服务器而言，
+   这些 MX 记录是指向目标域中的服务器还是另一个域中的服务器并不重要。
+
+
+
+<span class="grey">Jones 等人                标准轨道                   [第 15 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-16" ></span>
+<span class="grey"><a href="./rfc7033">RFC 7033</a>                        WebFinger                 2013 年 9 月</span>
+
+
+   同样，域所有者也可以利用第三方服务代表其用户提供 WebFinger 服务。正如
+   域所有者需要将 MX 记录插入 DNS 以允许托管式电子邮件服务一样，域所有者
+   需要重定向发往其域的 HTTP 查询，以允许托管式 WebFinger 服务。
+
+   当向 WebFinger 资源发出查询时，Web 服务器必须返回一个带有重定向状态码的
+   响应，其中包含 Location 标头，指向托管式 WebFinger 服务 URI 的位置。
+   该 WebFinger 服务 URI 不需要指向托管服务提供商服务器上的 well-known
+   WebFinger 位置。
+
+   作为示例，假设 example.com 的 WebFinger 服务由 wf.example.net 托管。
+   假设客户端像这样对 acct:alice@example.com 发出查询：
+
+     GET /.well-known/webfinger?
+                   resource=acct%3Aalice%40example.com HTTP/1.1
+     Host: example.com
+
+   服务器可能以如下方式响应：
+
+     HTTP/1.1 307 Temporary Redirect
+     Access-Control-Allow-Origin: *
+     Location: https://wf.example.net/example.com/webfinger?
+                   resource=acct%3Aalice%40example.com
+
+   客户端随后可以跟随该重定向，向 Location 标头中提供的 URI 重新发出请求。
+   注意，服务器将在 Location 标头值中包含任何所需的 URI 参数，这些参数可能
+   与客户端最初使用的 URI 参数不同。
+
+<span class="h2"><a class="selflink" id="section-8" href="#section-8">8</a>.  WebFinger 应用的定义</span>
+
+   本规范详细说明了用于查询某个域以获取有关 URI 信息的协议语法、响应该
+   查询返回的 JSON Resource Descriptor (JRD) 的语法、安全要求和考虑事项、
+   托管式 WebFinger 服务、各种预期的 HTTP 状态码，等等。然而，本规范并未
+   枚举在特定应用中可能与 WebFinger 结合使用的各种可能属性或链接关系类型，
+   也未定义在查询特定 URI 或 URI 方案时可能期望看到哪些属性或链接关系类型。
+   尽管如此，为了实现利用 WebFinger 协议且可互操作的应用，所有这些未指定的
+   元素都很重要，并且
+
+
+
+<span class="grey">Jones 等人                标准轨道                   [第 16 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-17" ></span>
+<span class="grey"><a href="./rfc7033">RFC 7033</a>                        WebFinger                 2013 年 9 月</span>
+
+
+   必须按照本节所述的程序，在定义使用 WebFinger 协议的特定应用的相关文档中
+   加以指定。
+
+<span class="h3"><a class="selflink" id="section-8.1" href="#section-8.1">8.1</a>.  URI 方案和 URI 的规范</span>
+
+   任何使用 WebFinger 的应用都必须指定 URI 方案，并在适当范围内指定 URI
+   可能采取的形式。例如，在查询某个域中用户账户的信息时，指定使用 "acct"
+   URI 方案 [<a href="#ref-18" title="&quot;The 'acct' URI Scheme&quot;">18</a>] 可能是合理的。在尝试获取网页版权信息时，指定使用
+   网页 URI（http 或 https）是合理的。
+
+   <a href="#section-3.1">第 3.1 节</a>和<a href="#section-3.2">第 3.2 节</a>中的示例说明了在 WebFinger 应用中使用不同
+   URI 方案的情况。在<a href="#section-3.1">第</a>
+   <a href="#section-3.1">3.1</a> 节的示例中，WebFinger 用于检索与 OpenID Connect 相关的信息。
+   在<a href="#section-3.2">第 3.2 节</a>的示例中，WebFinger 用于发现有关网页的元数据信息，
+   包括作者和版权信息。这些 WebFinger 应用中的每一个都需要完整指定，以确保
+   互操作性。
+
+<span class="h3"><a class="selflink" id="section-8.2" href="#section-8.2">8.2</a>.  主机解析</span>
+
+   如<a href="#section-4">第 4 节</a>所解释的，向其发出 WebFinger 查询的主机具有重要意义。
+   一般而言，WebFinger 应用会遵循<a href="#section-4">第 4 节</a>中描述的程序，以便正确地
+   定向 WebFinger 查询。
+
+   然而，某些 URI 方案没有主机部分，并且对于某些 WebFinger 应用，URI 的
+   主机部分可能无法使用或不应使用。在这种情况下，应用规范必须明确定义
+   主机解析程序，其中可能包括在客户端内预置一个查询所指向的“默认”主机。
+
+<span class="h3"><a class="selflink" id="section-8.3" href="#section-8.3">8.3</a>.  属性的规范</span>
+
+   WebFinger 定义了 subject 专用属性（即<a href="#section-4.4.3">第 4.4.3 节</a>中描述的、与
+   被查询其信息的 URI 相关的属性）以及链接专用属性（参见<a href="#section-4.4.4.5">第</a>
+   <a href="#section-4.4.4.5">4.4.4.5</a> 节）。本节指的是 subject 专用属性。
+
+   利用 subject 专用属性的应用必须定义用于标识这些属性的 URI，以及有效的
+   属性值。
+
+
+
+
+
+<span class="grey">Jones 等人                标准轨道                   [第 17 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-18" ></span>
+<span class="grey"><a href="./rfc7033">RFC 7033</a>                        WebFinger                 2013 年 9 月</span>
+
+
+   请考虑<a href="#section-3.2">第 3.2 节</a>示例中的 JRD 的这一部分。
+
+       "properties" :
+       {
+         "http://blgx.example.net/ns/version" : "1.3",
+         "http://blgx.example.net/ns/ext" : null
+       }
+
+   这里，WebFinger 响应中返回了两个属性。每个属性都将在 WebFinger 应用规范中
+   定义。这两个属性可能在同一个 WebFinger 应用规范中定义，也可能分别在不同
+   规范中定义。由于后者是可能的，因此重要的是，WebFinger 客户端不要假定
+   一个属性与另一个属性具有任何特定关系，除非在特定 WebFinger 应用规范中
+   显式定义了某种关系。
+
+<span class="h3"><a class="selflink" id="section-8.4" href="#section-8.4">8.4</a>.  链接的规范</span>
+
+   WebFinger 响应中返回的每个链接由若干信息片段组成，其中一些是可选的
+   （参见<a href="#section-4.4.4">第</a>
+   <a href="#section-4.4.4">4.4.4</a> 节）。WebFinger 应用规范必须定义每个链接以及与链接相关的
+   任何值，包括链接关系类型（"rel"）、预期媒体类型（"type"）、properties
+   和 titles。
+
+   链接所指向的目标 URI（即 "href"），如果存在，通常不会在应用规范中指定。
+   然而，URI 方案或 URI 的任何特殊特征通常会被指定。如果某个特定链接不需要
+   外部引用，则与使用该链接相关的所有语义都必须在应用规范中定义。此类链接
+   可能仅依赖链接中的 properties 或 titles 来传达含义。
+
+<span class="h3"><a class="selflink" id="section-8.5" href="#section-8.5">8.5</a>.  一个 URI，多个应用</span>
+
+   重要的是要注意这样一个事实：不同的 WebFinger 应用可能会指定使用相同的
+   URI 方案，并且实际上为不同目的使用相同的 URI。这不应成为问题，因为每个
+   属性标识符（参见<a href="#section-4.4.3">第 4.4.3 节</a>和 4.4.4.5）以及链接关系类型都将针对
+   特定应用唯一定义。
+
+   应注意，当客户端请求有关特定 URI 的信息，并收到包含若干不同属性标识符
+   或链接关系类型的响应时，该响应是在没有任何特定语义的情况下提供有关该
+   URI 的信息。
+
+
+
+<span class="grey">Jones 等人                标准轨道                   [第 18 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-19" ></span>
+<span class="grey"><a href="./rfc7033">RFC 7033</a>                        WebFinger                 2013 年 9 月</span>
+
+
+   客户端如何解释这些信息，应该符合客户端所实现的特定应用规范或规范集合。
+
+   客户端收到的任何语法有效但未被完全理解的 properties 或 links 都应该被
+   忽略，并且不应该导致客户端报告错误。
+
+<span class="h3"><a class="selflink" id="section-8.6" href="#section-8.6">8.6</a>.  链接关系类型和属性的注册</span>
+
+   应用规范可以将简单令牌定义为链接的链接关系类型。在这种情况下，链接关系
+   类型必须按<a href="#section-10.3">第 10.3 节</a>中的规定向 IANA 注册。
+
+   此外，任何已定义的属性都必须按<a href="#section-10.4">第 10.4 节</a>中的描述向 IANA 注册。
+
+<span class="h2"><a class="selflink" id="section-9" href="#section-9">9</a>.  安全考虑</span>
+
+<span class="h3"><a class="selflink" id="section-9.1" href="#section-9.1">9.1</a>.  与传输相关的问题</span>
+
+   由于本规范利用跨源资源共享 (CORS) [<a href="#ref-7" title="&quot;Cross-Origin Resource Sharing&quot;">7</a>]，适用于 CORS 的所有安全考虑
+   也适用于本规范。
+
+   要求使用 HTTPS，以确保信息在传输过程中不会被修改。应承认，在 Web 服务器
+   通常可用的环境中，存在这样一种可能性：受损网络可能会将运行在 HTTPS 上的
+   WebFinger 资源替换为仅运行在 HTTP 上的资源。因此，客户端不得通过非安全
+   连接发出查询。
+
+   客户端必须验证 HTTPS 连接上使用的证书有效（如 [<a href="#ref-12" title="&quot;HTTP Over TLS&quot;">12</a>] 中定义），并且
+   只有在证书有效时才接受响应。
+
+<span class="h3"><a class="selflink" id="section-9.2" href="#section-9.2">9.2</a>.  用户隐私考虑</span>
+
+   服务提供商和用户应意识到，将信息放到互联网上意味着任何用户都可以访问
+   该信息，而 WebFinger 可用于使发现这些信息变得更加容易。虽然 WebFinger
+   可以是发现某人的头像、博客或其他个人数据的极其有用的工具，但用户也应该
+   理解其中的风险。
+
+
+
+
+
+
+<span class="grey">Jones 等人                标准轨道                   [第 19 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-20" ></span>
+<span class="grey"><a href="./rfc7033">RFC 7033</a>                        WebFinger                 2013 年 9 月</span>
+
+
+   通过 WebFinger 暴露个人数据的系统或服务必须提供一个界面，使用户能够选择
+   哪些数据元素通过 WebFinger 界面暴露。例如，社交网站可能允许用户将某些
+   数据标记为“公开”，然后利用该标记作为确定通过 WebFinger 暴露哪些信息的
+   手段。因此，通过 WebFinger 发布的信息只会包含用户标记为公开的信息。此外，
+   用户能够通过移除此标记来将信息从 WebFinger 发布中移除。
+
+   不得使用 WebFinger 提供任何个人数据，除非相关服务通过 WebFinger 发布该
+   数据已由被共享信息所属的人明确授权。在互联网上访问受控或以其他方式受限
+   的环境中发布个人数据，并不等同于提供了通过 WebFinger 进一步发布该数据的
+   隐式授权。
+
+   对于可能揭示用户当前上下文（例如用户位置）的个人数据，值得再次强调通过
+   WebFinger 发布个人数据所带来的隐私和安全顾虑。WebFinger 的力量来自提供
+   一个单一位置，使他人可以找到指向某个人相关信息的指针，但服务提供商和
+   用户应注意所共享信息的性质，以及该信息可能可供全世界查看这一事实。例如，
+   共享位置信息可能会使一个人面临来自任何可能试图伤害该人的个人的危险。
+
+   用户应意识到，一个人可能发布的个人数据很容易以非预期方式被使用。在一项
+   与类似 WebFinger 的服务相关的研究中，Balduzzi 等人 [<a href="#ref-20" title="&quot;Abusing Social Networks for Automated User Profiling&quot;">20</a>] 采用了大量
+   泄露的电子邮件地址，并展示了若干潜在隐私问题，包括能够跨多个社交网络
+   交叉关联同一用户账户的能力。作者还描述了潜在的缓解策略。
+
+   通过 WebFinger 轻松访问用户信息是该协议的设计目标，而非限制。如果希望
+   限制对可通过 WebFinger 获得的信息的访问，例如供公司网络内部使用的
+   WebFinger 资源，网络管理员需要采取必要措施限制来自网络外部的访问。
+   使用保护 Web 资源的标准方法，网络管理员确实有能力控制对可能返回敏感信息
+   的资源的访问。此外，可以采用服务器要求身份验证，并防止向未授权实体披露
+   信息。
+
+
+
+
+<span class="grey">Jones 等人                标准轨道                   [第 20 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-21" ></span>
+<span class="grey"><a href="./rfc7033">RFC 7033</a>                        WebFinger                 2013 年 9 月</span>
+
+
+<span class="h3"><a class="selflink" id="section-9.3" href="#section-9.3">9.3</a>.  滥用可能性</span>
+
+   服务提供商应注意使用 WebFinger 进行滥用的可能性。
+
+   作为一个示例，人们可能查询 WebFinger 服务器只是为了发现给定 URI 是否
+   有效。通过这样的查询，此人可能推断出例如某个电子邮件标识符是有效的。
+   这种方法可以帮助垃圾邮件发送者维护一份当前已知电子邮件地址列表，并发现
+   新地址。
+
+   WebFinger 可用于将名称或其他个人数据与电子邮件地址关联起来，从而允许
+   垃圾邮件发送者编写更有说服力的电子邮件消息。这在网络钓鱼尝试中可能尤其
+   有价值。
+
+   建议 WebFinger 服务器软件的实现者采取措施缓解滥用，包括对服务器的恶意
+   过度使用以及对用户信息的收集。尽管没有任何机制能够保证可公开访问的
+   WebFinger 数据库不会被采集，但按 IP 地址进行速率限制将防止，或至少大幅
+   减缓没有僵尸网络或其他分布式系统访问能力的私人个体进行采集。这些缓解
+   策略不是强制性的，原因在于正确的缓解策略选择（如果有的话）在很大程度上
+   取决于上下文。实现者不应将此理解为他们不需要考虑是否使用缓解策略，以及
+   如果使用，应使用何种策略。
+
+   WebFinger 客户端开发者也应意识到垃圾邮件发送者或钓取用户信息者可能进行
+   的滥用。举例来说，假设邮件客户端被配置为自动对每封收到邮件消息的发送者
+   执行 WebFinger 查询。如果垃圾邮件发送者在 'From' 标头中使用唯一标识符
+   发送电子邮件，那么当执行 WebFinger 查询时，垃圾邮件发送者就能够将该请求
+   与特定用户的电子邮件地址关联起来。这将向垃圾邮件发送者提供信息，包括
+   用户的 IP 地址、该用户刚刚检查了电子邮件、该用户使用了哪种 WebFinger
+   客户端，等等。因此，强烈建议客户端不要执行 WebFinger 查询，除非用户授权
+   这样做。
+
+<span class="h3"><a class="selflink" id="section-9.4" href="#section-9.4">9.4</a>.  信息可靠性</span>
+
+   WebFinger 资源没有办法确保用户提供的信息是准确的。同样，资源或客户端
+   都不能绝对保证信息未在服务器处或客户端与服务器之间的通信路径上被操纵。
+
+
+
+<span class="grey">Jones 等人                标准轨道                   [第 21 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-22" ></span>
+<span class="grey"><a href="./rfc7033">RFC 7033</a>                        WebFinger                 2013 年 9 月</span>
+
+
+   使用 HTTPS 有助于解决通信路径上信息被操纵的一些顾虑，但它显然无法解决
+   资源提供不正确信息的问题，无论这种不正确信息是由于被提供了虚假信息，
+   还是由于服务器管理员的恶意行为。与互联网上可用的任何信息服务一样，用户
+   应谨慎对待从不可信来源收到的信息。
+
+<span class="h2"><a class="selflink" id="section-10" href="#section-10">10</a>.  IANA 考虑</span>
+
+<span class="h3"><a class="selflink" id="section-10.1" href="#section-10.1">10.1</a>.  Well-Known URI</span>
+
+   本规范将 "webfinger" well-known URI 注册到由 <a href="./rfc5785">RFC 5785</a> [<a href="#ref-3" title="&quot;Defining Well-Known Uniform Resource Identifiers (URIs)&quot;">3</a>] 定义的
+   "Well-Known URIs" 注册表中。
+
+   URI 后缀：  webfinger
+
+   变更控制者：  IETF
+
+   规范文档：  <a href="./rfc7033">RFC 7033</a>
+
+   相关信息：  对 WebFinger 资源的查询将在查询字符串中包含一个或多个参数；
+   参见 <a href="./rfc7033#section-4.1">RFC 7033 第&nbsp;4.1 节</a>。此位置的资源能够返回 JSON Resource
+   Descriptor (JRD)，如 <a href="./rfc7033#section-4.4">RFC 7033 第&nbsp;4.4 节</a>所述。
+
+<span class="h3"><a class="selflink" id="section-10.2" href="#section-10.2">10.2</a>.  JSON Resource Descriptor (JRD) 媒体类型</span>
+
+   本规范按照 <a href="./rfc6838">RFC 6838</a> [<a href="#ref-10" title="&quot;Media Type Specifications and Registration Procedures&quot;">10</a>] 中定义的媒体类型注册程序，注册媒体类型
+   application/jrd+json 以供 WebFinger 使用。
+
+   类型名称：application
+
+   子类型名称：jrd+json
+
+   必需参数：N/A
+
+   可选参数：N/A
+
+     特别是，由于 <a href="./rfc4627">RFC 4627</a> 已经定义了 JSON 的字符编码，因此不使用
+     "charset" 参数。
+
+   编码考虑：参见 <a href="./rfc6839#section-3.1">RFC 6839 第&nbsp;3.1 节</a>。
+
+
+
+
+
+
+<span class="grey">Jones 等人                标准轨道                   [第 22 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-23" ></span>
+<span class="grey"><a href="./rfc7033">RFC 7033</a>                        WebFinger                 2013 年 9 月</span>
+
+
+   安全考虑：
+
+     JSON Resource Descriptor (JRD) 是一个 JavaScript Object Notation
+     (JSON) 对象。它是一种文本格式，必须由希望利用该格式的实体解析。取决于
+     用于解析 JSON 对象的语言和机制，攻击者有可能将行为注入正在运行的程序。
+     因此，必须谨慎地正确解析收到的 JRD，以确保只存在有效的 JSON 对象，并且
+     不会意外注入或执行 JavaScript 或其他代码。
+
+   互操作性考虑：
+
+     此媒体类型是一个 JavaScript Object Notation (JSON) 对象，可由任何能够
+     使用 JSON 对象的软件应用使用。
+
+   已发布规范：<a href="./rfc7033">RFC 7033</a>
+
+   使用此媒体类型的应用：
+
+     JSON Resource Descriptor (JRD) 由 WebFinger 协议（<a href="./rfc7033">RFC 7033</a>）使用，
+     以支持客户端与 WebFinger 资源之间通过 HTTPS 交换信息。
+
+   片段标识符考虑：
+
+     片段标识符的语法和语义应该按照为 "application/json" 指定的内容。
+     （在本文档发布时，没有为 "application/json" 定义片段标识语法。）
+
+   附加信息：
+
+     此类型的已弃用别名：N/A
+
+     魔数：N/A
+
+     文件扩展名：jrd
+
+     Macintosh 文件类型代码：N/A
+
+   联系人及电子邮件地址，以获取更多信息：
+
+     Paul E. Jones &lt;paulej@packetizer.com&gt;
+
+   预期用途：COMMON
+
+
+
+
+<span class="grey">Jones 等人                标准轨道                   [第 23 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-24" ></span>
+<span class="grey"><a href="./rfc7033">RFC 7033</a>                        WebFinger                 2013 年 9 月</span>
+
+
+   使用限制：N/A
+
+   作者：Paul E. Jones &lt;paulej@packetizer.com&gt;
+
+   变更控制者：
+
+   IESG 对此注册拥有变更控制权。
+
+   临时注册？（仅标准树）：N/A
+
+<span class="h3"><a class="selflink" id="section-10.3" href="#section-10.3">10.3</a>.  注册链接关系类型</span>
+
+   <a href="./rfc5988">RFC 5988</a> 建立了一个 "Link Relation Types" 注册表，WebFinger 应用会
+   重用该注册表。
+
+   WebFinger 应用使用的链接关系类型按 <a href="./rfc5988#section-6.2.1">RFC 5988 第</a>
+   <a href="./rfc5988#section-6.2.1">6.2.1 节</a>的程序注册到 "Link Relation Types" 注册表中。注册的
+   "Notes" 条目应该说明与该链接关系类型相关联的属性值是否已注册到
+   "WebFinger Properties" 注册表，并附有指向该注册表的链接。
+
+<span class="h3"><a class="selflink" id="section-10.4" href="#section-10.4">10.4</a>.  建立 "WebFinger Properties" 注册表</span>
+
+   WebFinger 利用 URI 来标识 subject 或链接的属性及其相关值（参见<a href="#section-8.3">第 8.3 节</a>
+   和<a href="#section-8.6">第 8.6 节</a>）。本规范建立一个新的 "WebFinger Properties" 注册表，用于
+   记录属性标识符。
+
+<span class="h4"><a class="selflink" id="section-10.4.1" href="#section-10.4.1">10.4.1</a>.  注册模板</span>
+
+   WebFinger 属性的注册模板为：
+
+          o 属性标识符：
+
+          o 链接类型：
+
+          o 描述：
+
+          o 参考：
+
+          o 注释：[可选]
+
+   "Property Identifier" 必须是标识所注册属性的 URI。
+
+
+
+
+
+
+<span class="grey">Jones 等人                标准轨道                   [第 24 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-25" ></span>
+<span class="grey"><a href="./rfc7033">RFC 7033</a>                        WebFinger                 2013 年 9 月</span>
+
+
+   "Link Type" 包含与此属性标识符一起使用的链接关系类型名称。如果该属性是
+   subject 专用属性，则此字段指定为 "N/A"。
+
+   "Description" 旨在说明该属性的用途。
+
+   "Reference" 字段指向定义所注册属性的规范。
+
+   可选的 "Notes" 字段用于传达有关该属性的任何有用信息，这些信息可能对
+   实现者有价值。
+
+<span class="h4"><a class="selflink" id="section-10.4.2" href="#section-10.4.2">10.4.2</a>.  注册程序</span>
+
+   IETF 已创建一个邮件列表 webfinger@ietf.org，可用于公开讨论 WebFinger 协议
+   以及任何使用它的应用。在注册 WebFinger 属性之前，强烈鼓励在该邮件列表上
+   进行讨论。IESG 已任命指定专家 [<a href="#ref-13" title="">13</a>]，他们将监控
+   webfinger@ietf.org 邮件列表并审查注册。
+
+   WebFinger 属性在指定专家审查后，按 Specification Required（参见
+   <a href="./rfc5226">RFC 5226</a> [<a href="#ref-13" title="">13</a>]）进行注册。该审查通常预计需要大约两到四周。
+   但是，一旦指定专家确信某规范将会发布，指定专家可以在该规范发布之前批准
+   注册。在评估注册请求时，指定专家应该努力避免注册两个含义相同的不同属性。
+   如果拟议属性与已定义属性相似，指定专家应该坚持要求在模板的描述或注释
+   部分包含足够文本，以充分区分新属性与现有属性。
+
+   注册程序从将填写完成的注册模板（如上定义）发送到 webfinger@ietf.org
+   开始。一旦在邮件列表上达成共识，注册模板将发送到 iana@iana.org。
+   随后 IANA 将联系指定专家，并将结果告知注册人。WebFinger 邮件列表提供
+   社区讨论和输入的机会，指定专家可以利用这些输入来辅助其审查。拒绝应包含
+   解释，并且在适用时包含关于如何使重新提交的请求成功的建议。
+
+
+
+
+
+
+
+
+<span class="grey">Jones 等人                标准轨道                   [第 25 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-26" ></span>
+<span class="grey"><a href="./rfc7033">RFC 7033</a>                        WebFinger                 2013 年 9 月</span>
+
+
+   注册 WebFinger 属性的规范必须包含上面所示填写完成的注册模板。一旦注册
+   程序成功结束，IANA 会在 "WebFinger Properties" 注册表中创建或修改相应记录。
+
+<span class="h2"><a class="selflink" id="section-11" href="#section-11">11</a>.  致谢</span>
+
+   本文档受益于 APPSAWG 工作组许多成员的广泛讨论和审查。作者特别感谢
+   Eran Hammer-Lahav、Blaine Cook、Brad Fitzpatrick、Laurent-Walter Goix、
+   Joe Clarke、Peter Saint-Andre、Dick Hardt、Tim Bray、James Snell、Melvin
+   Carvalho、Evan Prodromou、Mark Nottingham、Elf Pavlik、Bjoern Hoehrmann、
+   Subramanian Moonesamy、Joe Gregorio、John Bradley，以及其他我们无疑但
+   无意遗漏的人所提供的宝贵意见。
+
+   作者还要向 APPSAWG 工作组主席表示感谢，尤其感谢 Salvatore Loreto 在推动
+   本文档过程中提供的帮助。我们还要感谢应用领域主任 Barry Leiba 和 Pete
+   Resnick 的支持和详尽审查。
+
+<span class="h2"><a class="selflink" id="section-12" href="#section-12">12</a>.  参考文献</span>
+
+<span class="h3"><a class="selflink" id="section-12.1" href="#section-12.1">12.1</a>.  规范性参考文献</span>
+
+   [<a id="ref-1">1</a>]   Bradner, S., “RFC 中用于指示要求级别的关键词”,
+         <a href="https://www.rfc-editor.org/bcp/bcp14">BCP 14</a>, <a href="./rfc2119">RFC 2119</a>, 1997 年 3 月。
+
+   [<a id="ref-2">2</a>]   Fielding, R., Gettys, J., Mogul, J., Frystyk, H., Masinter, L.,
+         Leach, P., and T. Berners-Lee, “超文本传输协议
+         -- HTTP/1.1”, <a href="./rfc2616">RFC 2616</a>, 1999 年 6 月。
+
+   [<a id="ref-3">3</a>]   Nottingham, M. and E. Hammer-Lahav, “定义 Well-Known
+         统一资源标识符 (URI)”, <a href="./rfc5785">RFC 5785</a>, 2010 年 4 月。
+
+   [<a id="ref-4">4</a>]   Nottingham, M., “Web Linking”, <a href="./rfc5988">RFC 5988</a>, 2010 年 10 月。
+
+   [<a id="ref-5">5</a>]   Crockford, D., “用于 JavaScript Object Notation (JSON) 的
+         application/json 媒体类型”, <a href="./rfc4627">RFC 4627</a>, 2006 年 7 月。
+
+   [<a id="ref-6">6</a>]   Berners-Lee, T., Fielding, R., and L. Masinter, “统一
+         资源标识符 (URI)：通用语法”, STD 66, <a href="./rfc3986">RFC 3986</a>,
+         2005 年 1 月。
+
+   [<a id="ref-7">7</a>]   Van Kesteren, A., “跨源资源共享”, W3C CORS,
+         2010 年 7 月, &lt;<a href="http://www.w3.org/TR/cors/">http://www.w3.org/TR/cors/</a>&gt;.
+
+
+
+
+<span class="grey">Jones 等人                标准轨道                   [第 26 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-27" ></span>
+<span class="grey"><a href="./rfc7033">RFC 7033</a>                        WebFinger                 2013 年 9 月</span>
+
+
+   [<a id="ref-8">8</a>]   IANA, “链接关系”,
+         &lt;<a href="http://www.iana.org/assignments/link-relations/">http://www.iana.org/assignments/link-relations/</a>&gt;.
+
+   [<a id="ref-9">9</a>]   IANA, “MIME 媒体类型”,
+         &lt;<a href="http://www.iana.org/assignments/media-types">http://www.iana.org/assignments/media-types</a>&gt;.
+
+   [<a id="ref-10">10</a>]  Freed, N., Klensin, J., and T. Hansen, “媒体类型
+         规范和注册程序”, <a href="https://www.rfc-editor.org/bcp/bcp13">BCP 13</a>, <a href="./rfc6838">RFC 6838</a>,
+         2013 年 1 月。
+
+   [<a id="ref-11">11</a>]  Phillips, A., Ed., and M. Davis, Ed., “用于标识
+         语言的标记”, <a href="https://www.rfc-editor.org/bcp/bcp47">BCP 47</a>, <a href="./rfc5646">RFC 5646</a>, 2009 年 9 月。
+
+   [<a id="ref-12">12</a>]  Rescorla, E., “TLS 上的 HTTP”, <a href="./rfc2818">RFC 2818</a>, 2000 年 5 月。
+
+   [<a id="ref-13">13</a>]  Narten, T. and H. Alvestrand, “RFC 中 IANA
+         考虑章节的撰写指南”, <a href="https://www.rfc-editor.org/bcp/bcp26">BCP 26</a>, <a href="./rfc5226">RFC 5226</a>, 2008 年 5 月。
+
+<span class="h3"><a class="selflink" id="section-12.2" href="#section-12.2">12.2</a>.  资料性参考文献</span>
+
+   [<a id="ref-14">14</a>]  Perreault, S., “vCard 格式规范”, <a href="./rfc6350">RFC 6350</a>, 2011 年 8 月。
+
+   [<a id="ref-15">15</a>]  Sakimura, N., Bradley, J., Jones, M., de Medeiros, B.,
+         Mortimore, C., and E. Jay, “OpenID Connect Messages 1.0”,
+         2013 年 7 月,
+         &lt;<a href="http://openid.net/specs/openid-connect-messages-1_0.html">http://openid.net/specs/openid-connect-messages-1_0.html</a>&gt;.
+
+   [<a id="ref-16">16</a>]  Hammer-Lahav, E., Ed., and B. Cook, “Web Host Metadata”, <a href="./rfc6415">RFC</a>
+         <a href="./rfc6415">6415</a>, 2011 年 10 月。
+
+   [<a id="ref-17">17</a>]  Hammer-Lahav, E. and W. Norris, “可扩展资源描述符
+         (XRD) 版本 1.0”,
+         &lt;<a href="http://docs.oasis-open.org/xri/xrd/v1.0/xrd-1.0.html">http://docs.oasis-open.org/xri/xrd/v1.0/xrd-1.0.html</a>&gt;.
+
+   [<a id="ref-18">18</a>]  Saint-Andre, P., <a style="text-decoration: none" href='https://www.google.com/search?sitesearch=datatracker.ietf.org%2Fdoc%2Fhtml%2F&amp;q=inurl:draft-+%22The+%27acct%27+URI+Scheme%22'>“'acct' URI 方案”</a>, 进行中的工作,
+         2013 年 7 月。
+
+   [<a id="ref-19">19</a>]  Duerst, M., Masinter, L., and J. Zawinski, “'mailto' URI
+         方案”, <a href="./rfc6068">RFC 6068</a>, 2010 年 10 月。
+
+   [<a id="ref-20">20</a>]  Balduzzi, M., Platzer, C., Thorsten, H., Kirda, E., Balzarotti,
+         D., and C. Kruegel “滥用社交网络进行自动化用户
+        画像”, Recent Advances in Intrusion Detection, Springer
+         Berlin Heidelberg, 2010 年 3 月,
+         &lt;<a href="https://www.eurecom.fr/en/publication/3042/download/rs-publi-3042_1.pdf">https://www.eurecom.fr/en/publication/3042/download/</a>
+         <a href="https://www.eurecom.fr/en/publication/3042/download/rs-publi-3042_1.pdf">rs-publi-3042_1.pdf</a>&gt;.
+
+
+
+
+<span class="grey">Jones 等人                标准轨道                   [第 27 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-28" ></span>
+<span class="grey"><a href="./rfc7033">RFC 7033</a>                        WebFinger                 2013 年 9 月</span>
+
+
+作者地址
+
+   Paul E. Jones
+   Cisco Systems, Inc.
+   7025 Kit Creek Rd.
+   Research Triangle Park, NC 27709
+   USA
+
+   电话：+1 919 476 2048
+   电子邮件：paulej@packetizer.com
+   IM: xmpp:paulej@packetizer.com
+
+
+   Gonzalo Salgueiro
+   Cisco Systems, Inc.
+   7025 Kit Creek Rd.
+   Research Triangle Park, NC 27709
+   USA
+
+   电话：+1 919 392 3266
+   电子邮件：gsalguei@cisco.com
+   IM: xmpp:gsalguei@cisco.com
+
+
+   Michael B. Jones
+   Microsoft
+
+   电子邮件：mbj@microsoft.com
+   URI: <a href="http://self-issued.info/">http://self-issued.info/</a>
+
+
+   Joseph Smarr
+   Google
+
+   电子邮件：jsmarr@google.com
+   URI: <a href="http://josephsmarr.com/">http://josephsmarr.com/</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Jones 等人                标准轨道                   [第 28 页]
+</pre>
+<script src="https://htmlspecs.com/dropdown.js"></script>
