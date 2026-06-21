@@ -44,6 +44,8 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [The I-JSON Message Format](https://htmlspecs.com/i-json/)（[Source](https://www.rfc-editor.org/rfc/rfc7493.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [JSON Canonicalization Scheme (JCS)](https://htmlspecs.com/json-canonicalization/)（[Source](https://www.rfc-editor.org/rfc/rfc8785.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [JSON Type Definition](https://htmlspecs.com/json-type-definition/)（[Source](https://www.rfc-editor.org/rfc/rfc8927.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [Concise Binary Object Representation (CBOR)](https://htmlspecs.com/cbor/)（[Source](https://www.rfc-editor.org/rfc/rfc8949.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [WebFinger](https://htmlspecs.com/webfinger/)（[Source](https://www.rfc-editor.org/rfc/rfc7033.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [ActivityPub](https://htmlspecs.com/activitypub/)（[Source](https://www.w3.org/TR/2018/REC-activitypub-20180123/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Activity Streams 2.0](https://htmlspecs.com/activitystreams-core/)（[Source](https://www.w3.org/TR/2017/REC-activitystreams-core-20170523/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Linked Data Notifications](https://htmlspecs.com/ldn/)（[Source](https://www.w3.org/TR/2017/REC-ldn-20170502/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
@@ -53,6 +55,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Data on the Web Best Practices](https://htmlspecs.com/dwbp/)（[Source](https://www.w3.org/TR/2017/REC-dwbp-20170131/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [GraphQL](https://htmlspecs.com/graphql/)（[Source](https://spec.graphql.org/draft/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [OpenAPI Specification v3.2.0](https://htmlspecs.com/openapi/)（[Source](https://spec.openapis.org/oas/latest.html) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
+- [URI Template](https://htmlspecs.com/uri-template/)（[Source](https://www.rfc-editor.org/rfc/rfc6570.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 
 ### 数学
 - [MathML Core](https://htmlspecs.com/mathml-core/)（[Source](https://www.w3.org/TR/2025/CR-mathml-core-20250624/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
@@ -160,6 +163,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Window Management](https://htmlspecs.com/window-management/)（[Source](https://www.w3.org/TR/2024/WD-window-management-20240607/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Web Printing API](https://htmlspecs.com/web-printing/)（[Source](https://wicg.github.io/web-printing/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Web Share API](https://htmlspecs.com/web-share/)（[Source](https://www.w3.org/TR/2023/REC-web-share-20230530/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
+- [Web Share Target API](https://htmlspecs.com/web-share-target/)（[Source](https://w3c.github.io/web-share-target/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 
 ### 音频、语音与媒体控制
 - [Web Speech API](https://htmlspecs.com/web-speech-api/)（[Source](https://webaudio.github.io/web-speech-api/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
@@ -292,12 +296,13 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Mixed Content](https://htmlspecs.com/mixed-content/)（[Source](https://www.w3.org/TR/2023/CRD-mixed-content-20230223/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [Trusted Types](https://htmlspecs.com/trusted-types/)（[Source](https://www.w3.org/TR/2026/WD-trusted-types-20260224/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Clear Site Data](https://htmlspecs.com/clear-site-data/)（[Source](https://www.w3.org/TR/2017/WD-clear-site-data-20171130/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
-- [JSON Web Token (JWT)](https://htmlspecs.com/jwt/)（[Source](https://www.rfc-editor.org/rfc/rfc7519) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
-- [JSON Web Signature (JWS)](https://htmlspecs.com/jws/)（[Source](https://www.rfc-editor.org/rfc/rfc7515) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
-- [JSON Web Encryption (JWE)](https://htmlspecs.com/jwe/)（[Source](https://www.rfc-editor.org/rfc/rfc7516) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
-- [JSON Web Key (JWK)](https://htmlspecs.com/jwk/)（[Source](https://www.rfc-editor.org/rfc/rfc7517) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
-- [JSON Web Algorithms (JWA)](https://htmlspecs.com/jwa/)（[Source](https://www.rfc-editor.org/rfc/rfc7518) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
-- [JWT Best Current Practices](https://htmlspecs.com/jwt-bcp/)（[Source](https://www.rfc-editor.org/rfc/rfc8725) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [JSON Web Token (JWT)](https://htmlspecs.com/jwt/)（[Source](https://www.rfc-editor.org/rfc/rfc7519.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [JSON Web Signature (JWS)](https://htmlspecs.com/jws/)（[Source](https://www.rfc-editor.org/rfc/rfc7515.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [JSON Web Encryption (JWE)](https://htmlspecs.com/jwe/)（[Source](https://www.rfc-editor.org/rfc/rfc7516.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [JSON Web Key (JWK)](https://htmlspecs.com/jwk/)（[Source](https://www.rfc-editor.org/rfc/rfc7517.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [JSON Web Algorithms (JWA)](https://htmlspecs.com/jwa/)（[Source](https://www.rfc-editor.org/rfc/rfc7518.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [JWT Best Current Practices](https://htmlspecs.com/jwt-bcp/)（[Source](https://www.rfc-editor.org/rfc/rfc8725.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [CBOR Object Signing and Encryption (COSE): Structures and Process](https://htmlspecs.com/cose/)（[Source](https://www.rfc-editor.org/rfc/rfc9052.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 
 ### 身份、认证与凭证
 - [WebOTP API](https://htmlspecs.com/web-otp/)（[Source](https://wicg.github.io/web-otp/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
@@ -308,6 +313,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Credential Management Level 1](https://htmlspecs.com/credential-management-1/)（[Source](https://www.w3.org/TR/2026/WD-credential-management-1-20260410/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Federated Credential Management API (FedCM)](https://htmlspecs.com/fedcm/)（[Source](https://www.w3.org/TR/2024/WD-fedcm-1-20240820/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Digital Credentials](https://htmlspecs.com/digital-credentials/)（[Source](https://www.w3.org/TR/2026/WD-digital-credentials-20260616/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Decentralized Identifiers (DIDs) v1.1](https://htmlspecs.com/did-1.1/)（[Source](https://www.w3.org/TR/2026/CR-did-1.1-20260305/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
 - [Verifiable Credentials Data Model v2.0](https://htmlspecs.com/vc-data-model-2.0/)（[Source](https://www.w3.org/TR/2025/REC-vc-data-model-2.0-20250515/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Securing Verifiable Credentials using JOSE and COSE](https://htmlspecs.com/vc-jose-cose/)（[Source](https://www.w3.org/TR/2025/REC-vc-jose-cose-20250515/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Verifiable Credential Rendering Methods v1.0](https://htmlspecs.com/vc-render-method/)（[Source](https://www.w3.org/TR/2026/WD-vc-render-method-20260405/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
@@ -545,6 +551,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Additional HTTP Status Codes](https://htmlspecs.com/http/rfc6585.html)（[Source](https://httpwg.org/specs/rfc6585.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [An HTTP Status Code to Report Legal Obstacles](https://htmlspecs.com/http/rfc7725.html)（[Source](https://httpwg.org/specs/rfc7725.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [An HTTP Status Code for Indicating Hints](https://htmlspecs.com/http/rfc8297.html)（[Source](https://httpwg.org/specs/rfc8297.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [Problem Details for HTTP APIs](https://htmlspecs.com/http/rfc9457.html)（[Source](https://www.rfc-editor.org/rfc/rfc9457.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 
 ### 缓存与重用
 - [HTTP Cache-Control Extensions for Stale Content](https://htmlspecs.com/http/rfc5861.html)（[Source](https://httpwg.org/specs/rfc5861.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
@@ -560,6 +567,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Use of the Content-Disposition Header Field in the Hypertext Transfer Protocol (HTTP)](https://htmlspecs.com/http/rfc6266.html)（[Source](https://httpwg.org/specs/rfc6266.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [Hypertext Transfer Protocol (HTTP) Client-Initiated Content-Encoding](https://htmlspecs.com/http/rfc7694.html)（[Source](https://httpwg.org/specs/rfc7694.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [Web Linking](https://htmlspecs.com/http/rfc8288.html)（[Source](https://httpwg.org/specs/rfc8288.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [Well-Known Uniform Resource Identifiers (URIs)](https://htmlspecs.com/http/rfc8615.html)（[Source](https://www.rfc-editor.org/rfc/rfc8615.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [Compression Dictionary Transport](https://htmlspecs.com/http/rfc9842.html)（[Source](https://httpwg.org/specs/rfc9842.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [Digest Fields](https://htmlspecs.com/http/rfc9530.html)（[Source](https://httpwg.org/specs/rfc9530.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 
@@ -585,4 +593,5 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Using Early Data in HTTP](https://htmlspecs.com/http/rfc8470.html)（[Source](https://httpwg.org/specs/rfc8470.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [HTTP Message Signatures](https://htmlspecs.com/http/rfc9421.html)（[Source](https://httpwg.org/specs/rfc9421.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [The Concealed HTTP Authentication Scheme](https://htmlspecs.com/http/rfc9729.html)（[Source](https://httpwg.org/specs/rfc9729.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [HTTP Strict Transport Security (HSTS)](https://htmlspecs.com/http/rfc6797.html)（[Source](https://www.rfc-editor.org/rfc/rfc6797.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 

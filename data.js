@@ -2241,14 +2241,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "Decentralized Identifiers (DIDs) v1.1",
-    //     href: "https://htmlspecs.com/did-1.1/",
-    //     src: "https://www.w3.org/TR/2026/CR-did-1.1-20260305/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "CR"
-    // },
+    {
+        text: "Decentralized Identifiers (DIDs) v1.1",
+        href: "https://htmlspecs.com/did-1.1/",
+        src: "https://www.w3.org/TR/2026/CR-did-1.1-20260305/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "CR"
+    },
     {
         text: "Verifiable Credentials Data Model v2.0",
         href: "https://htmlspecs.com/vc-data-model-2.0/",
@@ -3941,7 +3941,7 @@ const httpLinks = [
         href: "https://htmlspecs.com/http/no-vary-search.html",
         src: "https://httpwg.org/http-extensions/draft-ietf-httpbis-no-vary-search.html",
         "last-modified": "-",
-        etag: "6a36a513-1b5d3",
+        etag: "6a375264-1b5d3",
         lang: "cjk",
         state: "Draft"
     },
@@ -3961,7 +3961,7 @@ const httpLinks = [
         href: "https://htmlspecs.com/http/draft-ietf-httpbis-rfc6265bis.html",
         src: "https://httpwg.org/http-extensions/draft-ietf-httpbis-rfc6265bis.html",
         "last-modified": "-",
-        etag: "6a36a513-4498b",
+        etag: "6a375264-4498b",
         lang: "cjk",
         state: "Draft"
     },
