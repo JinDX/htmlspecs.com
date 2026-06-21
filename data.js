@@ -335,14 +335,14 @@ const links = [
         lang: "cjk",
         state: "RFC"
     },
-    // {
-    //     text: "WebFinger",
-    //     href: "https://htmlspecs.com/webfinger/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc7033.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
+    {
+        text: "WebFinger",
+        href: "https://htmlspecs.com/webfinger/",
+        src: "https://www.rfc-editor.org/rfc/rfc7033.html",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "RFC"
+    },
     {
         text: "ActivityPub",
         href: "https://htmlspecs.com/activitypub/",
