@@ -415,14 +415,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
-    // {
-    //     text: "URI Template",
-    //     href: "https://htmlspecs.com/uri-template/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc6570.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
+    {
+        text: "URI Template",
+        href: "https://htmlspecs.com/uri-template/",
+        src: "https://www.rfc-editor.org/rfc/rfc6570.html",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "RFC"
+    },
 
     //### 数学|수학|数学
     {
