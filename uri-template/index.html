@@ -1,0 +1,1736 @@
+<pre>互联网工程任务组（IETF）                                      J. Gregorio
+征求意见稿：6570                                                   Google
+类别：标准化路线                                             R. Fielding
+ISSN: 2070-1721                                                    Adobe
+                                                               M. Hadley
+                                                                   MITRE
+                                                           M. Nottingham
+                                                               Rackspace
+                                                              D. Orchard
+                                                          Salesforce.com
+                                                              2012 年 3 月
+
+
+                              <span class="h1">URI 模板</span>
+
+摘要
+
+   URI 模板是一种紧凑的字符序列，用于通过变量展开描述一系列
+   统一资源标识符。本规范定义 URI 模板语法，以及将 URI 模板展开
+   为 URI 引用的过程，并给出在 Internet 上使用 URI 模板的指南。
+
+本文档状态
+
+   本文档是 Internet 标准化路线文档。
+
+   本文档是互联网工程任务组（IETF）的产物。它代表了 IETF
+   社区的共识。它已接受公开审查，并已由 Internet 工程指导组
+   （IESG）批准发布。有关 Internet 标准的更多信息可参见
+   <a href="./rfc5741#section-2">RFC 5741 第&nbsp;2 节</a>。
+
+   有关本文档当前状态、任何勘误以及如何提供反馈的信息，可从
+   <a href="http://www.rfc-editor.org/info/rfc6570">http://www.rfc-editor.org/info/rfc6570</a> 获取。
+
+Copyright Notice
+
+   Copyright (c) 2012 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to <a href="https://www.rfc-editor.org/bcp/bcp78">BCP 78</a> and the IETF Trust's Legal
+   Provisions Relating to IETF Documents
+   (<a href="http://trustee.ietf.org/license-info">http://trustee.ietf.org/license-info</a>) in effect on the date of
+   publication of this document.  Please review these documents
+   carefully, as they describe your rights and restrictions with respect
+   to this document.  Code Components extracted from this document must
+
+
+
+<span class="grey">Gregorio 等                标准化路线                    [第 1 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-2" ></span>
+<span class="grey"><a href="./rfc6570">RFC 6570</a>                      URI 模板                    2012 年 3 月</span>
+
+
+   包含《信托法律条款》第 4.e 节中所述的简化 BSD 许可证文本，
+   并且按简化 BSD 许可证中的说明，不附带任何保证。
+
+目录
+
+   <a href="#section-1">1</a>. 引言 ..........................................................<a href="#page-3">3</a>
+      <a href="#section-1.1">1.1</a>. 概述 .....................................................<a href="#page-3">3</a>
+      <a href="#section-1.2">1.2</a>. 级别和表达式类型 .........................................<a href="#page-5">5</a>
+      <a href="#section-1.3">1.3</a>. 设计考虑 .................................................<a href="#page-9">9</a>
+      <a href="#section-1.4">1.4</a>. 限制 ....................................................<a href="#page-10">10</a>
+      <a href="#section-1.5">1.5</a>. 记法约定 ................................................<a href="#page-11">11</a>
+      <a href="#section-1.6">1.6</a>. 字符编码和 Unicode 规范化 ...............................<a href="#page-12">12</a>
+   <a href="#section-2">2</a>. 语法 ..........................................................<a href="#page-13">13</a>
+      <a href="#section-2.1">2.1</a>. 字面量 ..................................................<a href="#page-13">13</a>
+      <a href="#section-2.2">2.2</a>. 表达式 ..................................................<a href="#page-13">13</a>
+      <a href="#section-2.3">2.3</a>. 变量 ....................................................<a href="#page-14">14</a>
+      <a href="#section-2.4">2.4</a>. 值修饰符 ................................................<a href="#page-15">15</a>
+           <a href="#section-2.4.1">2.4.1</a>. 前缀值 ..........................................<a href="#page-15">15</a>
+           <a href="#section-2.4.2">2.4.2</a>. 复合值 ..........................................<a href="#page-16">16</a>
+   <a href="#section-3">3</a>. 展开 ..........................................................<a href="#page-18">18</a>
+      <a href="#section-3.1">3.1</a>. 字面量展开 ..............................................<a href="#page-18">18</a>
+      <a href="#section-3.2">3.2</a>. 表达式展开 ..............................................<a href="#page-18">18</a>
+           <a href="#section-3.2.1">3.2.1</a>. 变量展开 ........................................<a href="#page-19">19</a>
+           <a href="#section-3.2.2">3.2.2</a>. 简单字符串展开：{var} ............................<a href="#page-21">21</a>
+           <a href="#section-3.2.3">3.2.3</a>. 保留展开：{+var} ................................<a href="#page-22">22</a>
+           <a href="#section-3.2.4">3.2.4</a>. 片段展开：{#var} ................................<a href="#page-23">23</a>
+           <a href="#section-3.2.5">3.2.5</a>. 带点前缀的标签展开：{.var} .......................<a href="#page-24">24</a>
+           <a href="#section-3.2.6">3.2.6</a>. 路径段展开：{/var} ..............................<a href="#page-24">24</a>
+           <a href="#section-3.2.7">3.2.7</a>. 路径样式参数展开：{;var} ........................<a href="#page-25">25</a>
+           <a href="#section-3.2.8">3.2.8</a>. 表单样式查询展开：{?var} ........................<a href="#page-26">26</a>
+           <a href="#section-3.2.9">3.2.9</a>. 表单样式查询延续：{&amp;var} .........................<a href="#page-27">27</a>
+   <a href="#section-4">4</a>. 安全考虑 ......................................................<a href="#page-27">27</a>
+   <a href="#section-5">5</a>. 致谢 ..........................................................<a href="#page-28">28</a>
+   <a href="#section-6">6</a>. 参考文献 ......................................................<a href="#page-28">28</a>
+      <a href="#section-6.1">6.1</a>. 规范性参考文献 ..........................................<a href="#page-28">28</a>
+      <a href="#section-6.2">6.2</a>. 资料性参考文献 ..........................................<a href="#page-29">29</a>
+   <a href="#appendix-A">附录 A</a>. 实现提示 ................................................<a href="#page-30">30</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Gregorio 等                标准化路线                    [第 2 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-3" ></span>
+<span class="grey"><a href="./rfc6570">RFC 6570</a>                      URI 模板                    2012 年 3 月</span>
+
+
+<span class="h2"><a class="selflink" id="section-1" href="#section-1">1</a>.  引言</span>
+
+<span class="h3"><a class="selflink" id="section-1.1" href="#section-1.1">1.1</a>.  概述</span>
+
+   统一资源标识符（URI）[<a href="./rfc3986" title="&quot;统一资源标识符（URI）：通用语法&quot;">RFC3986</a>] 经常用于在相似资源的共同
+   空间中标识某个特定资源（非正式地称为“URI 空间”）。例如，个人
+   Web 空间通常使用一种共同模式来委托，例如
+
+     http://example.com/~fred/
+     http://example.com/~mark/
+
+   或者，一组词典条目可能按术语的首字母组织为一个层次结构，例如
+
+     http://example.com/dictionary/c/cat
+     http://example.com/dictionary/d/dog
+
+   或者，某个服务接口可能以共同模式，通过各种用户输入来调用，例如
+
+     http://example.com/search?q=cat&amp;lang=en
+     http://example.com/search?q=chien&amp;lang=fr
+
+   URI 模板是一种紧凑的字符序列，用于通过变量展开描述一系列
+   统一资源标识符。
+
+   URI 模板提供了一种抽象资源标识符空间的机制，使其中的变量部分
+   能够被轻松识别和描述。URI 模板有许多用途，包括发现可用服务、
+   配置资源映射、定义计算得出的链接、指定接口，以及与资源进行
+   其他形式的程序化交互。例如，上述资源可以由以下 URI 模板描述：
+
+     http://example.com/~{username}/
+     http://example.com/dictionary/{term:1}/{term}
+     http://example.com/search{?q,lang}
+
+   我们定义以下术语：
+
+   expression：  “{” 和 “}” 之间的文本，包括外围的大括号，
+      如<a href="#section-2">第 2 节</a>所定义。
+
+   expansion：  按照表达式类型、变量名列表和值修饰符处理模板
+      表达式后得到的字符串结果，如<a href="#section-3">第 3 节</a>所定义。
+
+
+
+
+<span class="grey">Gregorio 等                标准化路线                    [第 3 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-4" ></span>
+<span class="grey"><a href="./rfc6570">RFC 6570</a>                      URI 模板                    2012 年 3 月</span>
+
+
+   template processor：  一个程序或库，在给定 URI 模板以及一组
+      带值变量时，通过解析模板中的表达式，并将每个表达式替换为
+      其对应的展开，把模板字符串转换为 URI 引用。
+
+   URI 模板既提供 URI 空间的结构描述，也在提供变量值时，给出
+   机器可读的指令，说明如何构造与这些值对应的 URI。URI 模板通过
+   将每个带定界符的表达式替换为其值而转换成 URI 引用，该值由
+   表达式类型以及表达式中命名变量的值来定义。表达式类型的范围
+   从简单字符串展开到多个 name=value 列表。展开基于 URI 通用
+   语法，因此实现可以处理任何 URI 模板，而无需了解每种可能结果
+   URI 的特定于方案的要求。
+
+   例如，下面的 URI 模板包含一个表单样式参数表达式，这由出现在
+   变量名前面的 “?” 运算符表示。
+
+     http://www.example.com/foo{?query,number}
+
+   以问号（“?”）运算符开头的表达式，其展开过程遵循万维网上
+   表单样式接口的相同模式：
+
+     http://www.example.com/foo{?query,number}
+                               \_____________/
+                                  |
+                                  |
+             对 [ 'query', 'number' ] 中每个已定义变量，
+             如果它是第一次替换，则替换为 “?”，否则
+             替换为 “&amp;”，随后是变量名、“=” 和该
+             变量的值。
+
+   如果变量具有以下值
+
+     query  := "mycelium"
+     number := 100
+
+   那么上述 URI 模板的展开为
+
+     http://www.example.com/foo?query=mycelium&amp;number=100
+
+   或者，如果 'query' 未定义，则展开为
+
+     http://www.example.com/foo?number=100
+
+
+
+<span class="grey">Gregorio 等                标准化路线                    [第 4 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-5" ></span>
+<span class="grey"><a href="./rfc6570">RFC 6570</a>                      URI 模板                    2012 年 3 月</span>
+
+
+   或者，如果两个变量均未定义，则展开为
+
+     http://www.example.com/foo
+
+   URI 模板可以采用绝对形式提供，如上面的示例所示，也可以采用
+   相对形式。模板会在结果引用从相对形式解析为绝对形式之前展开。
+
+   尽管结果使用 URI 语法，模板字符串也允许包含可在国际化资源
+   标识符（IRI）引用 [<a href="./rfc3987" title="&quot;国际化资源标识符（IRI）&quot;">RFC3987</a>] 中找到的更广字符集。因此，
+   URI 模板也是 IRI 模板，并且模板处理的结果可以通过遵循
+   <a href="./rfc3987#section-3.2">[RFC3987] 第&nbsp;3.2 节</a>定义的过程转换为 IRI。
+
+<span class="h3"><a class="selflink" id="section-1.2" href="#section-1.2">1.2</a>.  级别和表达式类型</span>
+
+   URI 模板类似于一种具有固定宏定义集合的宏语言：表达式类型
+   决定展开过程。默认表达式类型是简单字符串展开，其中单个命名
+   变量在对不属于非保留 URI 字符集合（<a href="#section-1.5">第 1.5 节</a>）的字符进行
+   pct 编码后，被替换为其字符串值。
+
+   由于在本规范之前实现的大多数模板处理器只实现了默认表达式
+   类型，因此我们将这些称为 1 级模板。
+
+   .-----------------------------------------------------------------.
+   | 1 级示例，变量具有以下值                                       |
+   |                                                                 |
+   |             var   := "value"                                    |
+   |             hello := "Hello World!"                             |
+   |                                                                 |
+   |-----------------------------------------------------------------|
+   | 运算符  表达式                展开                               |
+   |-----------------------------------------------------------------|
+   |     | 简单字符串展开                              (第 3.2.2 节) |
+   |     |                                                           |
+   |     |    {var}                 value                            |
+   |     |    {hello}               Hello%20World%21                 |
+   `-----------------------------------------------------------------'
+
+   2 级模板添加了加号（“+”）运算符，用于展开允许包含保留 URI 字符
+   （<a href="#section-1.5">第 1.5 节</a>）的值，并添加了井号（“#”）运算符用于展开
+   片段标识符。
+
+
+
+
+<span class="grey">Gregorio 等                标准化路线                    [第 5 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-6" ></span>
+<span class="grey"><a href="./rfc6570">RFC 6570</a>                      URI 模板                    2012 年 3 月</span>
+
+
+   .-----------------------------------------------------------------.
+   | 2 级示例，变量具有以下值                                       |
+   |                                                                 |
+   |             var   := "value"                                    |
+   |             hello := "Hello World!"                             |
+   |             path  := "/foo/bar"                                 |
+   |                                                                 |
+   |-----------------------------------------------------------------|
+   | 运算符  表达式                展开                               |
+   |-----------------------------------------------------------------|
+   |  +  | 保留字符串展开                              (第 3.2.3 节) |
+   |     |                                                           |
+   |     |    {+var}                value                            |
+   |     |    {+hello}              Hello%20World!                   |
+   |     |    {+path}/here          /foo/bar/here                    |
+   |     |    here?ref={+path}      here?ref=/foo/bar                |
+   |-----+-----------------------------------------------------------|
+   |  #  | 片段展开，以井号为前缀                      (第 3.2.4 节) |
+   |     |                                                           |
+   |     |    X{#var}               X#value                          |
+   |     |    X{#hello}             X#Hello%20World!                 |
+   `-----------------------------------------------------------------'
+
+   3 级模板允许每个表达式中有多个变量，每个变量以逗号分隔，并添加
+   更复杂的运算符，用于带点前缀的标签、带斜杠前缀的路径段、带
+   分号前缀的路径参数，以及以表单样式构造查询语法，该语法由用
+   与号字符分隔的 name=value 对组成。
+
+   .-----------------------------------------------------------------.
+   | 3 级示例，变量具有以下值                                       |
+   |                                                                 |
+   |             var   := "value"                                    |
+   |             hello := "Hello World!"                             |
+   |             empty := ""                                         |
+   |             path  := "/foo/bar"                                 |
+   |             x     := "1024"                                     |
+   |             y     := "768"                                      |
+   |                                                                 |
+   |-----------------------------------------------------------------|
+   | 运算符  表达式                展开                               |
+   |-----------------------------------------------------------------|
+   |     | 多变量字符串展开                            (第 3.2.2 节) |
+   |     |                                                           |
+   |     |    map?{x,y}             map?1024,768                     |
+   |     |    {x,hello,y}           1024,Hello%20World%21,768        |
+   |     |                                                           |
+
+
+
+<span class="grey">Gregorio 等                标准化路线                    [第 6 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-7" ></span>
+<span class="grey"><a href="./rfc6570">RFC 6570</a>                      URI 模板                    2012 年 3 月</span>
+
+
+   |-----+-----------------------------------------------------------|
+   |  +  | 多变量保留展开                              (第 3.2.3 节) |
+   |     |                                                           |
+   |     |    {+x,hello,y}          1024,Hello%20World!,768          |
+   |     |    {+path,x}/here        /foo/bar,1024/here               |
+   |     |                                                           |
+   |-----+-----------------------------------------------------------|
+   |  #  | 多变量片段展开                              (第 3.2.4 节) |
+   |     |                                                           |
+   |     |    {#x,hello,y}          #1024,Hello%20World!,768         |
+   |     |    {#path,x}/here        #/foo/bar,1024/here              |
+   |     |                                                           |
+   |-----+-----------------------------------------------------------|
+   |  .  | 标签展开，带点前缀                          (第 3.2.5 节) |
+   |     |                                                           |
+   |     |    X{.var}               X.value                          |
+   |     |    X{.x,y}               X.1024.768                       |
+   |     |                                                           |
+   |-----+-----------------------------------------------------------|
+   |  /  | 路径段，带斜杠前缀                          (第 3.2.6 节) |
+   |     |                                                           |
+   |     |    {/var}                /value                           |
+   |     |    {/var,x}/here         /value/1024/here                 |
+   |     |                                                           |
+   |-----+-----------------------------------------------------------|
+   |  ;  | 路径样式参数，带分号前缀                    (第 3.2.7 节) |
+   |     |                                                           |
+   |     |    {;x,y}                ;x=1024;y=768                    |
+   |     |    {;x,y,empty}          ;x=1024;y=768;empty              |
+   |     |                                                           |
+   |-----+-----------------------------------------------------------|
+   |  ?  | 表单样式查询，以与号分隔                    (第 3.2.8 节) |
+   |     |                                                           |
+   |     |    {?x,y}                ?x=1024&amp;y=768                    |
+   |     |    {?x,y,empty}          ?x=1024&amp;y=768&amp;empty=             |
+   |     |                                                           |
+   |-----+-----------------------------------------------------------|
+   |  &amp;  | 表单样式查询延续                            (第 3.2.9 节) |
+   |     |                                                           |
+   |     |    ?fixed=yes{&amp;x}        ?fixed=yes&amp;x=1024                |
+   |     |    {&amp;x,y,empty}          &amp;x=1024&amp;y=768&amp;empty=             |
+   |     |                                                           |
+   `-----------------------------------------------------------------'
+
+   最后，4 级模板为每个变量名添加作为可选后缀的值修饰符。前缀
+   修饰符（“:”）表示展开只使用该值开头的有限数量字符
+   （<a href="#section-2.4.1">第 2.4.1 节</a>）。爆炸（“*”）修饰符
+
+
+
+<span class="grey">Gregorio 等                标准化路线                    [第 7 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-8" ></span>
+<span class="grey"><a href="./rfc6570">RFC 6570</a>                      URI 模板                    2012 年 3 月</span>
+
+
+   表示变量应被视为复合值，它由名称列表或 (name, value) 对的关联
+   数组组成，并按每个成员都是单独变量的方式展开
+   （<a href="#section-2.4.2">第 2.4.2 节</a>）。
+
+   .-----------------------------------------------------------------.
+   | 4 级示例，变量具有以下值                                       |
+   |                                                                 |
+   |             var   := "value"                                    |
+   |             hello := "Hello World!"                             |
+   |             path  := "/foo/bar"                                 |
+   |             list  := ("red", "green", "blue")                   |
+   |             keys  := [("semi",";"),("dot","."),("comma",",")]   |
+   |                                                                 |
+   | 运算符  表达式                展开                               |
+   |-----------------------------------------------------------------|
+   |     | 带值修饰符的字符串展开                      (第 3.2.2 节) |
+   |     |                                                           |
+   |     |    {var:3}               val                              |
+   |     |    {var:30}              value                            |
+   |     |    {list}                red,green,blue                   |
+   |     |    {list*}               red,green,blue                   |
+   |     |    {keys}                semi,%3B,dot,.,comma,%2C         |
+   |     |    {keys*}               semi=%3B,dot=.,comma=%2C         |
+   |     |                                                           |
+   |-----+-----------------------------------------------------------|
+   |  +  | 带值修饰符的保留展开                        (第 3.2.3 节) |
+   |     |                                                           |
+   |     |    {+path:6}/here        /foo/b/here                      |
+   |     |    {+list}               red,green,blue                   |
+   |     |    {+list*}              red,green,blue                   |
+   |     |    {+keys}               semi,;,dot,.,comma,,             |
+   |     |    {+keys*}              semi=;,dot=.,comma=,             |
+   |     |                                                           |
+   |-----+-----------------------------------------------------------|
+   |  #  | 带值修饰符的片段展开                        (第 3.2.4 节) |
+   |     |                                                           |
+   |     |    {#path:6}/here        #/foo/b/here                     |
+   |     |    {#list}               #red,green,blue                  |
+   |     |    {#list*}              #red,green,blue                  |
+   |     |    {#keys}               #semi,;,dot,.,comma,,            |
+   |     |    {#keys*}              #semi=;,dot=.,comma=,            |
+   |     |                                                           |
+   |-----+-----------------------------------------------------------|
+   |  .  | 标签展开，带点前缀                          (第 3.2.5 节) |
+   |     |                                                           |
+   |     |    X{.var:3}             X.val                            |
+   |     |    X{.list}              X.red,green,blue                 |
+
+
+
+<span class="grey">Gregorio 等                标准化路线                    [第 8 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-9" ></span>
+<span class="grey"><a href="./rfc6570">RFC 6570</a>                      URI 模板                    2012 年 3 月</span>
+
+
+   |     |    X{.list*}             X.red.green.blue                 |
+   |     |    X{.keys}              X.semi,%3B,dot,.,comma,%2C       |
+   |     |    X{.keys*}             X.semi=%3B.dot=..comma=%2C       |
+   |     |                                                           |
+   |-----+-----------------------------------------------------------|
+   |  /  | 路径段，带斜杠前缀                          (第 3.2.6 节) |
+   |     |                                                           |
+   |     |    {/var:1,var}          /v/value                         |
+   |     |    {/list}               /red,green,blue                  |
+   |     |    {/list*}              /red/green/blue                  |
+   |     |    {/list*,path:4}       /red/green/blue/%2Ffoo           |
+   |     |    {/keys}               /semi,%3B,dot,.,comma,%2C        |
+   |     |    {/keys*}              /semi=%3B/dot=./comma=%2C        |
+   |     |                                                           |
+   |-----+-----------------------------------------------------------|
+   |  ;  | 路径样式参数，带分号前缀                    (第 3.2.7 节) |
+   |     |                                                           |
+   |     |    {;hello:5}            ;hello=Hello                     |
+   |     |    {;list}               ;list=red,green,blue             |
+   |     |    {;list*}              ;list=red;list=green;list=blue   |
+   |     |    {;keys}               ;keys=semi,%3B,dot,.,comma,%2C   |
+   |     |    {;keys*}              ;semi=%3B;dot=.;comma=%2C        |
+   |     |                                                           |
+   |-----+-----------------------------------------------------------|
+   |  ?  | 表单样式查询，以与号分隔                    (第 3.2.8 节) |
+   |     |                                                           |
+   |     |    {?var:3}              ?var=val                         |
+   |     |    {?list}               ?list=red,green,blue             |
+   |     |    {?list*}              ?list=red&amp;list=green&amp;list=blue   |
+   |     |    {?keys}               ?keys=semi,%3B,dot,.,comma,%2C   |
+   |     |    {?keys*}              ?semi=%3B&amp;dot=.&amp;comma=%2C        |
+   |     |                                                           |
+   |-----+-----------------------------------------------------------|
+   |  &amp;  | 表单样式查询延续                            (第 3.2.9 节) |
+   |     |                                                           |
+   |     |    {&amp;var:3}              &amp;var=val                         |
+   |     |    {&amp;list}               &amp;list=red,green,blue             |
+   |     |    {&amp;list*}              &amp;list=red&amp;list=green&amp;list=blue   |
+   |     |    {&amp;keys}               &amp;keys=semi,%3B,dot,.,comma,%2C   |
+   |     |    {&amp;keys*}              &amp;semi=%3B&amp;dot=.&amp;comma=%2C        |
+   |     |                                                           |
+   `-----------------------------------------------------------------'
+
+<span class="h3"><a class="selflink" id="section-1.3" href="#section-1.3">1.3</a>.  设计考虑</span>
+
+   与 URI 模板类似的机制已经在若干规范中定义，包括 WSDL
+   [<a href="#ref-WSDL" title="&quot;Web 服务描述语言（WSDL）2.0 版第 1 部分：核心语言&quot;">WSDL</a>]、WADL [<a href="#ref-WADL" title="&quot;Web 应用描述语言&quot;">WADL</a>] 和 OpenSearch
+   [<a href="#ref-OpenSearch" title="&quot;OpenSearch 1.1&quot;">OpenSearch</a>]。本规范扩展并正式定义了
+
+
+
+<span class="grey">Gregorio 等                标准化路线                    [第 9 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-10" ></span>
+<span class="grey"><a href="./rfc6570">RFC 6570</a>                      URI 模板                    2012 年 3 月</span>
+
+
+   其语法，使 URI 模板可以在多个 Internet 应用以及 Internet 消息
+   字段中一致使用，同时保持与那些较早定义的兼容性。
+
+   URI 模板语法经过设计，以谨慎平衡强大展开机制的需求与易于实现
+   的需求。该语法被设计为易于解析，同时又提供足够的灵活性来表达
+   许多常见模板场景。实现能够在单次遍历中解析模板并执行展开。
+
+   模板在常见示例中使用时简单且可读，因为单字符运算符与 URI
+   通用语法定界符相匹配。当所列变量均未定义时，运算符关联的
+   定界符（“.”、“;”、“/”、“?”、“&amp;” 和 “#”）会被省略。同样，
+   “;”（路径样式参数）的展开过程会在变量值为空时省略 “=”，
+   而 “?”（表单样式参数）的过程则不会在值为空时省略 “=”。
+   如果某个运算符没有预定义的连接机制，多个变量和列表值会用 “,”
+   连接。“+” 和 “#” 运算符会替换变量值中出现的未编码保留字符；
+   其他运算符会在展开之前，对变量值中出现的保留字符进行 pct 编码。
+
+   URI 空间最常见的情形可以用 1 级模板表达式描述。如果我们只关心
+   URI 生成，那么模板语法可以限制为仅支持简单变量展开，因为更复杂
+   的形式可以通过改变变量值来生成。然而，URI 模板还有一个额外目标：
+   用既有数据值来描述标识符的布局。因此，模板语法包含了反映资源
+   标识符常见分配方式的运算符。同样，由于前缀子串常常用于划分
+   大规模资源空间，变量值上的修饰符提供了一种方式，可以用单个
+   变量名同时指定子串和完整值字符串。
+
+<span class="h3"><a class="selflink" id="section-1.4" href="#section-1.4">1.4</a>.  限制</span>
+
+   由于 URI 模板描述的是标识符的超集，并不意味着每个带定界符变量
+   表达式的每种可能展开，都对应于某个现有资源的 URI。我们的预期是，
+   根据模板构造 URI 的应用将获得一组适合用于替换变量的值，或者
+   至少获得一种对这些值的用户数据输入进行验证的方法。
+
+
+
+
+
+<span class="grey">Gregorio 等                标准化路线                   [第 10 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-11" ></span>
+<span class="grey"><a href="./rfc6570">RFC 6570</a>                      URI 模板                    2012 年 3 月</span>
+
+
+   URI 模板不是 URI：它们不标识抽象资源或物理资源，不按 URI 解析，
+   并且不应在期望 URI 的地方使用，除非模板表达式在使用前会由模板
+   处理器展开。应使用不同的字段、元素或属性名，以区分携带 URI
+   模板的协议元素和期望 URI 引用的协议元素。
+
+   一些 URI 模板可以反向使用，以进行变量匹配：将模板与完整形成的
+   URI 进行比较，以便从该 URI 中提取变量部分，并将它们赋给命名
+   变量。只有当模板表达式由 URI 的开头或结尾定界，或由不能成为
+   展开一部分的字符定界时，变量匹配才能很好地工作，例如围绕简单
+   字符串表达式的保留字符。一般来说，正则表达式语言更适合用于
+   变量匹配。
+
+<span class="h3"><a class="selflink" id="section-1.5" href="#section-1.5">1.5</a>.  记法约定</span>
+
+   本文档中的关键词 “MUST”、“MUST NOT”、“REQUIRED”、“SHALL”、
+   “SHALL NOT”、“SHOULD”、“SHOULD NOT”、“RECOMMENDED”、“MAY”
+   和 “OPTIONAL” 应按 [<a href="./rfc2119" title="&quot;用于 RFC 中表示要求级别的关键词&quot;">RFC2119</a>] 中的说明解释。
+
+   本规范使用 [<a href="./rfc5234" title="&quot;用于语法规范的扩充 BNF：ABNF&quot;">RFC5234</a>] 的扩充巴科斯-瑙尔范式（ABNF）
+   记法。以下 ABNF 规则从规范性参考文献 [<a href="./rfc5234" title="&quot;用于语法规范的扩充 BNF：ABNF&quot;">RFC5234</a>]、[<a href="./rfc3986" title="&quot;统一资源标识符（URI）：通用语法&quot;">RFC3986</a>]
+   和 [<a href="./rfc3987" title="&quot;国际化资源标识符（IRI）&quot;">RFC3987</a>] 导入。
+
+     ALPHA          =  %x41-5A / %x61-7A   ; A-Z / a-z
+     DIGIT          =  %x30-39             ; 0-9
+     HEXDIG         =  DIGIT / "A" / "B" / "C" / "D" / "E" / "F"
+                       ; 不区分大小写
+
+     pct-encoded    =  "%" HEXDIG HEXDIG
+     unreserved     =  ALPHA / DIGIT / "-" / "." / "_" / "~"
+     reserved       =  gen-delims / sub-delims
+     gen-delims     =  ":" / "/" / "?" / "#" / "[" / "]" / "@"
+     sub-delims     =  "!" / "$" / "&amp;" / "'" / "(" / ")"
+                    /  "*" / "+" / "," / ";" / "="
+
+     ucschar        =  %xA0-D7FF / %xF900-FDCF / %xFDF0-FFEF
+                    /  %x10000-1FFFD / %x20000-2FFFD / %x30000-3FFFD
+                    /  %x40000-4FFFD / %x50000-5FFFD / %x60000-6FFFD
+                    /  %x70000-7FFFD / %x80000-8FFFD / %x90000-9FFFD
+                    /  %xA0000-AFFFD / %xB0000-BFFFD / %xC0000-CFFFD
+                    /  %xD0000-DFFFD / %xE1000-EFFFD
+
+     iprivate       =  %xE000-F8FF / %xF0000-FFFFD / %x100000-10FFFD
+
+
+
+
+<span class="grey">Gregorio 等                标准化路线                   [第 11 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-12" ></span>
+<span class="grey"><a href="./rfc6570">RFC 6570</a>                      URI 模板                    2012 年 3 月</span>
+
+
+<span class="h3"><a class="selflink" id="section-1.6" href="#section-1.6">1.6</a>.  字符编码和 Unicode 规范化</span>
+
+   本规范使用术语“字符”、“字符编码方案”、“码点”、“编码字符集”、
+   “字形”、“非 ASCII”、“规范化”、“协议元素”和“正则表达式”，
+   其含义按 [<a href="./rfc6365" title="&quot;IETF 国际化中使用的术语&quot;">RFC6365</a>] 中的定义。
+
+   ABNF 记法将其终结值定义为非负整数（码点），它们是 US-ASCII
+   编码字符集 [<a href="#ref-ASCII" title="&quot;编码字符集 - 7 位美国信息交换标准代码&quot;">ASCII</a>] 的超集。本规范将终结值定义为
+   Unicode 编码字符集 [<a href="#ref-UNIV6" title="&quot;Unicode 标准，6.0.0 版&quot;">UNIV6</a>] 中的码点。
+
+   尽管语法和模板展开过程以 Unicode 码点来定义，但应当理解，
+   模板在实践中会以适合其出现上下文的任何形式或编码中的字符序列
+   出现，无论是嵌入网络协议元素中的八位位组，还是绘制在公交车
+   侧面的字形。本规范不强制规定任何特定字符编码方案，用于在 URI
+   模板字符与存储或传输这些字符所用八位位组之间进行映射。当 URI
+   模板出现在协议元素中时，字符编码方案由该协议定义；若无此类
+   定义，则假定 URI 模板使用与周围文本相同的字符编码方案。只有
+   在模板展开过程中，URI 模板中的字符串才被要求作为 Unicode 码点
+   序列处理。
+
+   Unicode 标准 [<a href="#ref-UNIV6" title="&quot;Unicode 标准，6.0.0 版&quot;">UNIV6</a>] 为各种目的定义了字符序列之间的各种
+   等价关系。Unicode 标准附录 #15 [<a href="#ref-UTR15" title="&quot;Unicode 规范化形式&quot;">UTR15</a>] 为这些等价关系定义了
+   各种规范化形式。规范化形式决定如何一致地编码等价字符串。理论上，
+   包括模板处理器在内的所有 URI 处理实现，在生成 URI 引用时都应
+   使用相同的规范化形式。实践中，它们并不这样做。如果某个值由与
+   资源相同的服务器提供，则可以假定该字符串已经处于该服务器期望的
+   形式。如果某个值由用户提供，例如通过数据输入对话框提供，则在
+   模板处理器的展开中使用之前，该字符串 SHOULD 被规范化为规范化
+   形式 C（NFC：规范分解后接规范组合）。
+
+   同样，当表示可读字符串的非 ASCII 数据为在 URI 引用中使用而进行
+   pct 编码时，模板处理器 MUST 首先将字符串编码为 UTF-8 [<a href="./rfc3629" title="&quot;UTF-8，ISO 10646 的一种转换格式&quot;">RFC3629</a>]，
+   然后对 URI 引用中不允许的任何八位位组进行 pct 编码。
+
+
+
+
+<span class="grey">Gregorio 等                标准化路线                   [第 12 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-13" ></span>
+<span class="grey"><a href="./rfc6570">RFC 6570</a>                      URI 模板                    2012 年 3 月</span>
+
+
+<span class="h2"><a class="selflink" id="section-2" href="#section-2">2</a>.  语法</span>
+
+   URI 模板是由可打印 Unicode 字符组成的字符串，其中包含零个或
+   多个嵌入的变量表达式，每个表达式都由一对匹配的大括号
+   （“{”、“}”）定界。
+
+     URI-Template  = *( literals / expression )
+
+   虽然上文按照四个渐进级别描述了模板（以及模板处理器实现），
+   但我们以 4 级的 ABNF 来定义 URI-Template 语法。仅限于较低级别
+   模板的模板处理器 MAY 排除只适用于较高级别的 ABNF 规则。然而，
+   RECOMMENDED 所有解析器实现完整语法，以便能向最终用户正确识别
+   不受支持的级别。
+
+<span class="h3"><a class="selflink" id="section-2.1" href="#section-2.1">2.1</a>.  字面量</span>
+
+   URI 模板字符串中位于表达式之外的字符，如果该字符在 URI 中允许
+   （reserved / unreserved / pct-encoded），则意在逐字复制到 URI
+   引用；如果不允许，则复制为与该字符 UTF-8 编码
+   [<a href="./rfc3629" title="&quot;UTF-8，ISO 10646 的一种转换格式&quot;">RFC3629</a>] 对应的 pct 编码三元组序列。
+
+     literals      =  %x21 / %x23-24 / %x26 / %x28-3B / %x3D / %x3F-5B
+                   /  %x5D / %x5F / %x61-7A / %x7E / ucschar / iprivate
+                   /  pct-encoded
+                        ; 除以下字符外的任何 Unicode 字符：CTL、SP、
+                        ;  DQUOTE、"'"、"%"（pct-encoded 除外）、
+                        ;  "&lt;"、"&gt;"、"\"、"^"、"`"、"{"、"|"、"}"
+
+<span class="h3"><a class="selflink" id="section-2.2" href="#section-2.2">2.2</a>.  表达式</span>
+
+   模板表达式是 URI 模板中参数化的部分。每个表达式包含一个可选
+   运算符，该运算符定义表达式类型及其对应的展开过程，随后是以
+   逗号分隔的变量说明符列表（变量名和可选值修饰符）。如果未提供
+   运算符，则表达式默认为对非保留值进行简单变量展开。
+
+     expression    =  "{" [ operator ] variable-list "}"
+     operator      =  op-level2 / op-level3 / op-reserve
+     op-level2     =  "+" / "#"
+     op-level3     =  "." / "/" / ";" / "?" / "&amp;"
+     op-reserve    =  "=" / "," / "!" / "@" / "|"
+
+
+
+
+<span class="grey">Gregorio 等                标准化路线                   [第 13 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-14" ></span>
+<span class="grey"><a href="./rfc6570">RFC 6570</a>                      URI 模板                    2012 年 3 月</span>
+
+
+   运算符字符的选择，是为了反映它们各自在 URI 通用语法中作为
+   保留字符的角色。本规范<a href="#section-3">第 3 节</a>中定义的运算符包括：
+
+      +   保留字符字符串；
+
+      #   以 “#” 为前缀的片段标识符；
+
+      .   以 “.” 为前缀的名称标签或扩展；
+
+      /   以 “/” 为前缀的路径段；
+
+      ;   以 “;” 为前缀的路径参数名或 name=value 对；
+
+      ?   以 “?” 开始并由以 “&amp;” 分隔的 name=value 对组成的
+          查询组件；以及，
+
+      &amp;   字面查询组件中查询样式 &amp;name=value 对的延续。
+
+   等号（“=”）、逗号（“,”）、感叹号（“!”）、at 符号（“@”）
+   和竖线（“|”）这些运算符字符保留用于未来扩展。
+
+   表达式语法特别排除了美元符号（“$”）和圆括号 [“(” 和 “)”]
+   字符的使用，使它们仍可在本规范范围之外使用。例如，某种宏语言
+   可能使用这些字符，在字符串被作为 URI 模板处理之前，对该字符串
+   应用宏替换。
+
+<span class="h3"><a class="selflink" id="section-2.3" href="#section-2.3">2.3</a>.  变量</span>
+
+   在运算符（如果有）之后，每个表达式包含一个或多个以逗号分隔的
+   变量说明符（varspec）列表。变量名具有多重用途：说明预期的值
+   类型；作为在模板处理器中关联值的标识符；以及在 name=value
+   展开中用作名称的字面字符串（爆炸关联数组时除外）。变量名区分
+   大小写，因为该名称可能在区分大小写的 URI 组件中展开。
+
+     variable-list =  varspec *( "," varspec )
+     varspec       =  varname [ modifier-level4 ]
+     varname       =  varchar *( ["."] varchar )
+     varchar       =  ALPHA / DIGIT / "_" / pct-encoded
+
+
+
+
+
+
+<span class="grey">Gregorio 等                标准化路线                   [第 14 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-15" ></span>
+<span class="grey"><a href="./rfc6570">RFC 6570</a>                      URI 模板                    2012 年 3 月</span>
+
+
+   varname MAY 包含一个或多个 pct 编码三元组。这些三元组被视为
+   变量名的必要组成部分，在处理期间不会被解码。包含 pct 编码
+   字符的 varname，与将这些相同字符解码后的 varname 不是同一个
+   变量。提供 URI 模板的应用应在变量名中一致地使用 pct 编码。
+
+   表达式 MAY 引用模板处理器未知的变量，或其值被设置为特殊
+   “undefined” 值的变量，例如 undef 或 null。展开过程会对此类
+   未定义变量作特殊处理（<a href="#section-3.2.1">第 3.2.1 节</a>）。
+
+   长度为零的字符串变量值不被视为未定义；它具有空字符串这一
+   已定义值。
+
+   在 4 级模板中，变量可以具有复合值，其形式为值列表，或
+   (name, value) 对的关联数组。此类值类型并不由模板语法直接
+   指示，但它们确实会影响展开过程（<a href="#section-3.2.1">第 3.2.1 节</a>）。
+
+   定义为列表值的变量，如果列表包含零个成员，则被视为未定义。
+   定义为 (name, value) 对的关联数组的变量，如果数组包含零个
+   成员，或数组中的所有成员名都关联到未定义值，则被视为未定义。
+
+<span class="h3"><a class="selflink" id="section-2.4" href="#section-2.4">2.4</a>.  值修饰符</span>
+
+   4 级模板表达式中的每个变量都可以有一个修饰符，指示其展开
+   限于变量值字符串的某个前缀，或者其展开会作为复合值爆炸展开，
+   该复合值的形式为值列表，或 (name, value) 对的关联数组。
+
+     modifier-level4 =  prefix / explode
+
+<span class="h4"><a class="selflink" id="section-2.4.1" href="#section-2.4.1">2.4.1</a>.  前缀值</span>
+
+   前缀修饰符表示变量展开限于变量值字符串的某个前缀。前缀修饰符
+   常用于按层次划分标识符空间，这在引用索引和基于哈希的存储中很
+   常见。它还用于将展开值限制为最大字符数。前缀修饰符不适用于
+   具有复合值的变量。
+
+
+
+
+
+<span class="grey">Gregorio 等                标准化路线                   [第 15 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-16" ></span>
+<span class="grey"><a href="./rfc6570">RFC 6570</a>                      URI 模板                    2012 年 3 月</span>
+
+
+     prefix        =  ":" max-length
+     max-length    =  %x31-39 0*3DIGIT   ; 正整数 &lt; 10000
+
+   max-length 是一个正整数，指变量值作为 Unicode 字符串时，从开头
+   计算的最大字符数。注意，此编号以字符为单位，而不是以八位位组
+   为单位，以避免在多八位位组编码字符的八位位组之间，或在一个
+   pct 编码三元组内部切分。如果 max-length 大于变量值的长度，则
+   使用整个值字符串。
+
+   例如，
+
+     给定变量赋值
+
+       var   := "value"
+       semi  := ";"
+
+     示例模板            展开
+
+       {var}              value
+       {var:20}           value
+       {var:3}            val
+       {semi}             %3B
+       {semi:2}           %3B
+
+<span class="h4"><a class="selflink" id="section-2.4.2" href="#section-2.4.2">2.4.2</a>.  复合值</span>
+
+   爆炸（“*”）修饰符表示变量应被视为复合值，该复合值由值列表或
+   (name, value) 对的关联数组组成。因此，展开过程会应用到复合值
+   的每个成员，就好像它被作为单独变量列出一样。这类变量说明相比
+   非爆炸变量明显不那么自解释，因为变量名与展开后 URI 引用的外观
+   之间对应关系较少。
+
+     explode       =  "*"
+
+   由于 URI 模板不包含类型或模式的指示，爆炸变量的类型假定由上下文
+   决定。例如，处理器可能以能够区分字符串、列表或关联数组的形式
+   获得值。同样，模板使用的上下文（脚本、标记语言、接口定义语言等）
+   可能定义将变量名与类型、结构或模式关联的规则。
+
+
+
+
+<span class="grey">Gregorio 等                标准化路线                   [第 16 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-17" ></span>
+<span class="grey"><a href="./rfc6570">RFC 6570</a>                      URI 模板                    2012 年 3 月</span>
+
+
+   爆炸修饰符提高了 URI 模板语法的简洁性。例如，为给定街道地址
+   提供地理地图的资源，可能接受地址输入字段的一百种排列，包括
+   部分地址（例如，仅城市或邮政编码）。这样的资源可以描述为一个
+   按顺序列出每一个地址组件的模板，也可以描述为一个简单得多的
+   模板，使用爆炸修饰符，如
+
+      /mapper{?address*}
+
+   并配合一些上下文，定义名为 “address” 的变量可以包含什么，例如
+   通过引用某个其他寻址标准（例如 [<a href="#ref-UPU-S42" title="&quot;国际邮政地址组件和模板&quot;">UPU-S42</a>]）。了解该模式的
+   接收者随后可以提供适当的展开，例如：
+
+      /mapper?city=Newport%20Beach&amp;state=CA
+
+   爆炸变量的展开过程既取决于所使用的运算符，也取决于复合值应被
+   视为值列表，还是 (name, value) 对的关联数组。结构按关联数组
+   处理，其中名称对应于结构定义中的字段，并使用 “.” 分隔符表示
+   子结构中的名称层次。
+
+   如果变量具有复合结构，并且该结构中只有部分字段具有已定义值，
+   则只有已定义的对会出现在展开中。这对包含大量潜在查询项的模板
+   可能很有用。
+
+   应用于列表变量的爆炸修饰符会使展开遍历列表的成员值。对于路径
+   和查询参数展开，每个成员值都会与变量名配对为一个 (varname, value)
+   对。这允许路径和查询参数针对多个值重复出现，例如
+
+     给定变量赋值
+
+       year  := ("1965", "2000", "2012")
+       dom   := ("example", "com")
+
+     示例模板            展开
+
+       find{?year*}       find?year=1965&amp;year=2000&amp;year=2012
+       www{.dom*}         www.example.com
+
+
+
+
+
+
+
+<span class="grey">Gregorio 等                标准化路线                   [第 17 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-18" ></span>
+<span class="grey"><a href="./rfc6570">RFC 6570</a>                      URI 模板                    2012 年 3 月</span>
+
+
+<span class="h2"><a class="selflink" id="section-3" href="#section-3">3</a>.  展开</span>
+
+   URI 模板展开的过程是从头到尾扫描模板字符串，复制字面字符，
+   并将每个表达式替换为把该表达式的运算符应用到表达式中命名的
+   每个变量值后得到的结果。每个变量的值 MUST 在模板展开之前形成。
+
+   对 URI 模板语法各方面展开的要求在本节中定义。关于整个展开过程
+   的非规范性算法见<a href="#appendix-A">附录 A</a>。
+
+   如果模板处理器在表达式之外遇到不匹配 &lt;URI-Template&gt; 语法的
+   字符序列，则模板处理 SHOULD 停止，URI 引用结果 SHOULD 包含模板
+   已展开的部分，后接未展开的其余部分，并且 SHOULD 向调用应用指示
+   错误的位置和类型。
+
+   如果在表达式中遇到错误，例如模板处理器不认识或尚不支持某个
+   运算符或值修饰符，或者发现 &lt;expression&gt; 语法不允许的字符，
+   则表达式中未处理的部分 SHOULD 未展开地复制到结果中，模板其余
+   部分的处理 SHOULD 继续，并且 SHOULD 向调用应用指示错误的位置和
+   类型。
+
+   如果发生错误，返回的结果可能不是有效的 URI 引用；它将是一个
+   展开不完整的模板字符串，仅用于诊断用途。
+
+<span class="h3"><a class="selflink" id="section-3.1" href="#section-3.1">3.1</a>.  字面量展开</span>
+
+   如果字面字符在 URI 语法中的任何位置都允许
+   （unreserved / reserved / pct-encoded），则它会被直接复制到
+   结果字符串。否则，将该字面字符先编码为 UTF-8 中的八位位组序列，
+   然后将每个此类八位位组编码为 pct 编码三元组，并把所得的 pct
+   编码等价形式复制到结果字符串。
+
+<span class="h3"><a class="selflink" id="section-3.2" href="#section-3.2">3.2</a>.  表达式展开</span>
+
+   每个表达式都由一个左大括号（“{”）字符表示，并持续到下一个
+   右大括号（“}”）。表达式不能嵌套。
+
+
+
+
+
+
+<span class="grey">Gregorio 等                标准化路线                   [第 18 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-19" ></span>
+<span class="grey"><a href="./rfc6570">RFC 6570</a>                      URI 模板                    2012 年 3 月</span>
+
+
+   表达式通过确定其表达式类型来展开，然后对表达式中每个以逗号
+   分隔的 varspec，遵循该类型的展开过程。1 级模板限于默认运算符
+   （简单字符串值展开），并且每个表达式只有一个变量。2 级模板限于
+   每个表达式只有一个 varspec。
+
+   表达式类型通过查看左大括号后的第一个字符来确定。如果该字符是
+   运算符，则记住所关联的表达式类型，以便后续作展开决策，并跳到
+   下一个字符开始 variable-list。如果第一个字符不是运算符，则
+   表达式类型为简单字符串展开，且第一个字符就是 variable-list 的
+   开始。
+
+   以下小节中的示例使用下列变量值定义：
+
+         count := ("one", "two", "three")
+         dom   := ("example", "com")
+         dub   := "me/too"
+         hello := "Hello World!"
+         half  := "50%"
+         var   := "value"
+         who   := "fred"
+         base  := "http://example.com/home/"
+         path  := "/foo/bar"
+         list  := ("red", "green", "blue")
+         keys  := [("semi",";"),("dot","."),("comma",",")]
+         v     := "6"
+         x     := "1024"
+         y     := "768"
+         empty := ""
+         empty_keys  := []
+         undef := null
+
+<span class="h4"><a class="selflink" id="section-3.2.1" href="#section-3.2.1">3.2.1</a>.  变量展开</span>
+
+   未定义的变量（<a href="#section-2.3">第 2.3 节</a>）没有值，并被展开过程忽略。如果
+   表达式中的所有变量都未定义，则该表达式的展开为空字符串。
+
+   已定义且非空值的变量展开会产生允许 URI 字符组成的子字符串。
+   如<a href="#section-1.6">第 1.6 节</a>所述，展开过程以 Unicode 码点定义，以确保
+   非 ASCII 字符在所得 URI 引用中被一致地 pct 编码。模板
+
+
+
+<span class="grey">Gregorio 等                标准化路线                   [第 19 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-20" ></span>
+<span class="grey"><a href="./rfc6570">RFC 6570</a>                      URI 模板                    2012 年 3 月</span>
+
+
+   处理器获得一致展开的一种方式是将值字符串转码为 UTF-8（如果它
+   尚不是 UTF-8），然后把每个不在允许集合中的八位位组转换为对应的
+   pct 编码三元组。另一种方式是从该值的本机字符编码直接映射到
+   允许 URI 字符集合，并将任何剩余的不允许字符映射为该字符按
+   UTF-8 [<a href="./rfc3629" title="&quot;UTF-8，ISO 10646 的一种转换格式&quot;">RFC3629</a>] 编码时对应八位位组的 pct 编码三元组序列。
+
+   给定展开的允许集合取决于表达式类型：保留（“+”）和片段（“#”）
+   展开允许 ( unreserved / reserved / pct-encoded ) 并集中的字符
+   不经 pct 编码直接通过，而所有其他表达式类型只允许非保留字符
+   不经 pct 编码直接通过。注意，百分号字符（“%”）只允许作为
+   pct 编码三元组的一部分，并且仅用于保留/片段展开：在所有其他
+   情况下，变量展开 MUST 将值字符 “%” pct 编码为 “%25”。
+
+   如果某个变量在表达式中出现多次，或在 URI 模板的多个表达式中
+   出现，则该变量的值 MUST 在整个展开过程中保持静态（即，为了计算
+   每次展开，该变量必须具有相同的值）。但是，如果该值中出现保留
+   字符或 pct 编码三元组，它们会被某些表达式类型 pct 编码，而被
+   其他表达式类型保留不变。
+
+   对于简单字符串值的变量，展开包括将编码后的值追加到结果字符串。
+   爆炸修饰符没有影响。前缀修饰符将展开限制为解码值的前 max-length
+   个字符。如果该值包含多八位位组字符或 pct 编码字符，必须注意
+   避免在字符中间切分该值：将每个 Unicode 码点计为一个字符。
+
+   对于关联数组变量，展开既取决于表达式类型，也取决于是否存在
+   爆炸修饰符。如果没有爆炸修饰符，展开包括追加每个具有已定义值的
+   (name, value) 对的逗号分隔串接。如果存在爆炸修饰符，展开包括
+   追加每个具有已定义值的对，形式为 “name=value”；或者，如果值为
+   空字符串且表达式类型不表示表单样式参数（即不是 “?” 或 “&amp;”
+   类型），则仅追加 “name”。name 和 value 字符串都按简单字符串值
+   的相同方式编码。根据表达式类型，在已定义的对之间追加分隔符
+   字符串，如下表所定义：
+
+
+
+
+<span class="grey">Gregorio 等                标准化路线                   [第 20 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-21" ></span>
+<span class="grey"><a href="./rfc6570">RFC 6570</a>                      URI 模板                    2012 年 3 月</span>
+
+
+      类型    分隔符
+                 ","     （默认）
+        +        ","
+        #        ","
+        .        "."
+        /        "/"
+        ;        ";"
+        ?        "&amp;"
+        &amp;        "&amp;"
+
+   对于值列表变量，展开既取决于表达式类型，也取决于是否存在爆炸
+   修饰符。如果没有爆炸修饰符，展开包括已定义成员字符串值的逗号
+   分隔串接。如果存在爆炸修饰符，并且表达式类型展开命名参数
+   （“;”、“?” 或 “&amp;”），则该列表按关联数组展开，其中每个成员值都
+   与该列表的 varname 配对。否则，该值会按单独变量值列表展开，
+   每个值由上表定义的表达式类型关联分隔符分隔。
+
+     示例模板            展开
+
+       {count}            one,two,three
+       {count*}           one,two,three
+       {/count}           /one,two,three
+       {/count*}          /one/two/three
+       {;count}           ;count=one,two,three
+       {;count*}          ;count=one;count=two;count=three
+       {?count}           ?count=one,two,three
+       {?count*}          ?count=one&amp;count=two&amp;count=three
+       {&amp;count*}          &amp;count=one&amp;count=two&amp;count=three
+
+<span class="h4"><a class="selflink" id="section-3.2.2" href="#section-3.2.2">3.2.2</a>.  简单字符串展开：{var}</span>
+
+   当未给出运算符时，简单字符串展开是默认表达式类型。
+
+   对 variable-list 中每个已定义变量，按<a href="#section-3.2.1">第 3.2.1 节</a>中的定义
+   执行变量展开，其中允许字符为 unreserved 集合中的字符。如果
+   多个变量具有已定义值，则向结果字符串追加逗号（“,”）作为变量
+   展开之间的分隔符。
+
+
+
+
+
+
+
+
+<span class="grey">Gregorio 等                标准化路线                   [第 21 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-22" ></span>
+<span class="grey"><a href="./rfc6570">RFC 6570</a>                      URI 模板                    2012 年 3 月</span>
+
+
+     示例模板            展开
+
+       {var}              value
+       {hello}            Hello%20World%21
+       {half}             50%25
+       O{empty}X          OX
+       O{undef}X          OX
+       {x,y}              1024,768
+       {x,hello,y}        1024,Hello%20World%21,768
+       ?{x,empty}         ?1024,
+       ?{x,undef}         ?1024
+       ?{undef,y}         ?768
+       {var:3}            val
+       {var:30}           value
+       {list}             red,green,blue
+       {list*}            red,green,blue
+       {keys}             semi,%3B,dot,.,comma,%2C
+       {keys*}            semi=%3B,dot=.,comma=%2C
+
+<span class="h4"><a class="selflink" id="section-3.2.3" href="#section-3.2.3">3.2.3</a>.  保留展开：{+var}</span>
+
+   保留展开由 2 级及以上模板的加号（“+”）运算符表示，除替换值也可
+   包含 pct 编码三元组和 reserved 集合中的字符外，它与简单字符串
+   展开相同。
+
+   对 variable-list 中每个已定义变量，按<a href="#section-3.2.1">第 3.2.1 节</a>中的定义
+   执行变量展开，其中允许字符为 (unreserved / reserved /
+   pct-encoded) 集合中的字符。如果多个变量具有已定义值，则向结果
+   字符串追加逗号（“,”）作为变量展开之间的分隔符。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Gregorio 等                标准化路线                   [第 22 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-23" ></span>
+<span class="grey"><a href="./rfc6570">RFC 6570</a>                      URI 模板                    2012 年 3 月</span>
+
+
+     示例模板               展开
+
+       {+var}                value
+       {+hello}              Hello%20World!
+       {+half}               50%25
+
+       {base}index           http%3A%2F%2Fexample.com%2Fhome%2Findex
+       {+base}index          http://example.com/home/index
+       O{+empty}X            OX
+       O{+undef}X            OX
+
+       {+path}/here          /foo/bar/here
+       here?ref={+path}      here?ref=/foo/bar
+       up{+path}{var}/here   up/foo/barvalue/here
+       {+x,hello,y}          1024,Hello%20World!,768
+       {+path,x}/here        /foo/bar,1024/here
+
+       {+path:6}/here        /foo/b/here
+       {+list}               red,green,blue
+       {+list*}              red,green,blue
+       {+keys}               semi,;,dot,.,comma,,
+       {+keys*}              semi=;,dot=.,comma=,
+
+<span class="h4"><a class="selflink" id="section-3.2.4" href="#section-3.2.4">3.2.4</a>.  片段展开：{#var}</span>
+
+   片段展开由 2 级及以上模板的井号（“#”）运算符表示，除如果任一
+   变量已定义，会先向结果字符串追加一个井号字符（片段定界符）外，
+   它与保留展开相同。
+
+     示例模板            展开
+
+       {#var}             #value
+       {#hello}           #Hello%20World!
+       {#half}            #50%25
+       foo{#empty}        foo#
+       foo{#undef}        foo
+       {#x,hello,y}       #1024,Hello%20World!,768
+       {#path,x}/here     #/foo/bar,1024/here
+       {#path:6}/here     #/foo/b/here
+       {#list}            #red,green,blue
+       {#list*}           #red,green,blue
+       {#keys}            #semi,;,dot,.,comma,,
+       {#keys*}           #semi=;,dot=.,comma=,
+
+
+
+
+
+
+
+<span class="grey">Gregorio 等                标准化路线                   [第 23 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-24" ></span>
+<span class="grey"><a href="./rfc6570">RFC 6570</a>                      URI 模板                    2012 年 3 月</span>
+
+
+<span class="h4"><a class="selflink" id="section-3.2.5" href="#section-3.2.5">3.2.5</a>.  带点前缀的标签展开：{.var}</span>
+
+   标签展开由 3 级及以上模板的点（“.”）运算符表示，有助于描述具有
+   不同域名或路径选择器（例如，文件名扩展名）的 URI 空间。
+
+   对 variable-list 中每个已定义变量，向结果字符串追加 “.”，
+   然后按<a href="#section-3.2.1">第 3.2.1 节</a>中的定义执行变量展开，其中允许字符为
+   unreserved 集合中的字符。
+
+   由于 “.” 属于 unreserved 集合，包含 “.” 的值会产生添加多个
+   标签的效果。
+
+     示例模板            展开
+
+       {.who}             .fred
+       {.who,who}         .fred.fred
+       {.half,who}        .50%25.fred
+       www{.dom*}         www.example.com
+       X{.var}            X.value
+       X{.empty}          X.
+       X{.undef}          X
+       X{.var:3}          X.val
+       X{.list}           X.red,green,blue
+       X{.list*}          X.red.green.blue
+       X{.keys}           X.semi,%3B,dot,.,comma,%2C
+       X{.keys*}          X.semi=%3B.dot=..comma=%2C
+       X{.empty_keys}     X
+       X{.empty_keys*}    X
+
+<span class="h4"><a class="selflink" id="section-3.2.6" href="#section-3.2.6">3.2.6</a>.  路径段展开：{/var}</span>
+
+   路径段展开由 3 级及以上模板中的斜杠（“/”）运算符表示，有助于
+   描述 URI 路径层次结构。
+
+   对 variable-list 中每个已定义变量，向结果字符串追加 “/”，
+   然后按<a href="#section-3.2.1">第 3.2.1 节</a>中的定义执行变量展开，其中允许字符为
+   unreserved 集合中的字符。
+
+   注意，除用 “/” 替代 “.” 外，路径段展开的展开过程与标签展开
+   相同。然而，与 “.” 不同，“/” 是保留字符，如果在值中发现，
+   将被 pct 编码。
+
+
+
+
+
+<span class="grey">Gregorio 等                标准化路线                   [第 24 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-25" ></span>
+<span class="grey"><a href="./rfc6570">RFC 6570</a>                      URI 模板                    2012 年 3 月</span>
+
+
+     示例模板            展开
+
+       {/who}             /fred
+       {/who,who}         /fred/fred
+       {/half,who}        /50%25/fred
+       {/who,dub}         /fred/me%2Ftoo
+       {/var}             /value
+       {/var,empty}       /value/
+       {/var,undef}       /value
+       {/var,x}/here      /value/1024/here
+       {/var:1,var}       /v/value
+       {/list}            /red,green,blue
+       {/list*}           /red/green/blue
+       {/list*,path:4}    /red/green/blue/%2Ffoo
+       {/keys}            /semi,%3B,dot,.,comma,%2C
+       {/keys*}           /semi=%3B/dot=./comma=%2C
+
+<span class="h4"><a class="selflink" id="section-3.2.7" href="#section-3.2.7">3.2.7</a>.  路径样式参数展开：{;var}</span>
+
+   路径样式参数展开由 3 级及以上模板中的分号（“;”）运算符表示，
+   有助于描述 URI 路径参数，例如 “path;property” 或
+   “path;name=value”。
+
+   对 variable-list 中每个已定义变量：
+
+   o  向结果字符串追加 “;”；
+
+   o  如果变量具有简单字符串值，或未给出爆炸修饰符，则：
+
+      *  向结果字符串追加变量名（按字面字符串的方式编码）；
+
+      *  如果变量的值非空，向结果字符串追加 “=”；
+
+   o  按<a href="#section-3.2.1">第 3.2.1 节</a>中的定义执行变量展开，其中允许字符为
+      unreserved 集合中的字符。
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Gregorio 等                标准化路线                   [第 25 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-26" ></span>
+<span class="grey"><a href="./rfc6570">RFC 6570</a>                      URI 模板                    2012 年 3 月</span>
+
+
+     示例模板            展开
+
+       {;who}             ;who=fred
+       {;half}            ;half=50%25
+       {;empty}           ;empty
+       {;v,empty,who}     ;v=6;empty;who=fred
+       {;v,bar,who}       ;v=6;who=fred
+       {;x,y}             ;x=1024;y=768
+       {;x,y,empty}       ;x=1024;y=768;empty
+       {;x,y,undef}       ;x=1024;y=768
+       {;hello:5}         ;hello=Hello
+       {;list}            ;list=red,green,blue
+       {;list*}           ;list=red;list=green;list=blue
+       {;keys}            ;keys=semi,%3B,dot,.,comma,%2C
+       {;keys*}           ;semi=%3B;dot=.;comma=%2C
+
+<span class="h4"><a class="selflink" id="section-3.2.8" href="#section-3.2.8">3.2.8</a>.  表单样式查询展开：{?var}</span>
+
+   表单样式查询展开由 3 级及以上模板中的问号（“?”）运算符表示，
+   有助于描述整个可选查询组件。
+
+   对 variable-list 中每个已定义变量：
+
+   o  如果这是第一个已定义值，则向结果字符串追加 “?”，
+      否则追加 “&amp;”；
+
+   o  如果变量具有简单字符串值，或未给出爆炸修饰符，则向结果
+      字符串追加变量名（按字面字符串的方式编码）和等号字符
+      （“=”）；以及，
+
+   o  按<a href="#section-3.2.1">第 3.2.1 节</a>中的定义执行变量展开，其中允许字符为
+      unreserved 集合中的字符。
+
+
+     示例模板            展开
+
+       {?who}             ?who=fred
+       {?half}            ?half=50%25
+       {?x,y}             ?x=1024&amp;y=768
+       {?x,y,empty}       ?x=1024&amp;y=768&amp;empty=
+       {?x,y,undef}       ?x=1024&amp;y=768
+       {?var:3}           ?var=val
+       {?list}            ?list=red,green,blue
+       {?list*}           ?list=red&amp;list=green&amp;list=blue
+       {?keys}            ?keys=semi,%3B,dot,.,comma,%2C
+       {?keys*}           ?semi=%3B&amp;dot=.&amp;comma=%2C
+
+
+
+<span class="grey">Gregorio 等                标准化路线                   [第 26 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-27" ></span>
+<span class="grey"><a href="./rfc6570">RFC 6570</a>                      URI 模板                    2012 年 3 月</span>
+
+
+<span class="h4"><a class="selflink" id="section-3.2.9" href="#section-3.2.9">3.2.9</a>.  表单样式查询延续：{&amp;var}</span>
+
+   表单样式查询延续由 3 级及以上模板中的与号（“&amp;”）运算符表示，
+   有助于描述已经包含带固定参数的字面查询组件的模板中的可选
+   &amp;name=value 对。
+
+   对 variable-list 中每个已定义变量：
+
+   o  向结果字符串追加 “&amp;”；
+
+   o  如果变量具有简单字符串值，或未给出爆炸修饰符，则向结果
+      字符串追加变量名（按字面字符串的方式编码）和等号字符
+      （“=”）；以及，
+
+   o  按<a href="#section-3.2.1">第 3.2.1 节</a>中的定义执行变量展开，其中允许字符为
+      unreserved 集合中的字符。
+
+
+     示例模板            展开
+
+       {&amp;who}             &amp;who=fred
+       {&amp;half}            &amp;half=50%25
+       ?fixed=yes{&amp;x}     ?fixed=yes&amp;x=1024
+       {&amp;x,y,empty}       &amp;x=1024&amp;y=768&amp;empty=
+       {&amp;x,y,undef}       &amp;x=1024&amp;y=768
+
+       {&amp;var:3}           &amp;var=val
+       {&amp;list}            &amp;list=red,green,blue
+       {&amp;list*}           &amp;list=red&amp;list=green&amp;list=blue
+       {&amp;keys}            &amp;keys=semi,%3B,dot,.,comma,%2C
+       {&amp;keys*}           &amp;semi=%3B&amp;dot=.&amp;comma=%2C
+
+<span class="h2"><a class="selflink" id="section-4" href="#section-4">4</a>.  安全考虑</span>
+
+   URI 模板不包含活动内容或可执行内容。然而，如果攻击者能够控制
+   模板，或控制某个表达式中的变量值，并且该表达式允许在展开中使用
+   保留字符，就可能构造出意料之外的 URI。在任一情况下，安全考虑
+   很大程度上取决于谁提供模板、谁提供模板中变量要使用的值、展开在
+   哪种执行上下文中发生（客户端或服务器），以及所得 URI 在何处使用。
+
+
+
+
+
+
+<span class="grey">Gregorio 等                标准化路线                   [第 27 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-28" ></span>
+<span class="grey"><a href="./rfc6570">RFC 6570</a>                      URI 模板                    2012 年 3 月</span>
+
+
+   本规范不限制 URI 模板可能被使用的位置。当前实现存在于服务器端
+   开发框架中，也存在于客户端 javascript 中，用于计算链接或表单。
+
+   在框架中，模板通常作为指南，说明数据可能出现在后续（请求时）
+   客户端请求 URI 的何处。因此，安全问题不在模板本身，而在于服务器
+   如何在普通 Web 请求中提取和处理用户提供的数据。
+
+   在客户端实现中，URI 模板具有许多与 HTML 表单相同的属性，只是
+   受限于 URI 字符，并且可能包含在 HTTP 标头字段值中，而不仅仅是
+   消息体内容。应注意确保潜在危险的 URI 引用字符串，例如以
+   “javascript:” 开头的字符串，不会出现在展开中，除非模板和值都由
+   可信来源提供。
+
+   其他安全考虑与 URI 的安全考虑相同，如 <a href="./rfc3986#section-7">[RFC3986] 第&nbsp;7 节</a>
+   所述。
+
+<span class="h2"><a class="selflink" id="section-5" href="#section-5">5</a>.  致谢</span>
+
+   以下人员对本规范作出了贡献：Mike Burrows、Michaeljohn Clement、
+   DeWitt Clinton、John Cowan、Stephen Farrell、Robbie Gates、
+   Vijay K. Gurbani、Peter Johanson、Murray S. Kucherawy、James H.
+   Manger、Tom Petch、Marc Portier、Pete Resnick、James Snell 和
+   Jiankang Yao。
+
+<span class="h2"><a class="selflink" id="section-6" href="#section-6">6</a>.  参考文献</span>
+
+<span class="h3"><a class="selflink" id="section-6.1" href="#section-6.1">6.1</a>.  规范性参考文献</span>
+
+   [<a id="ref-ASCII">ASCII</a>]       美国国家标准协会，“编码字符集 - 7 位美国信息交换
+                 标准代码”，ANSI X3.4，1986。
+
+   [<a id="ref-RFC2119">RFC2119</a>]     Bradner, S.，“用于 RFC 中表示要求级别的关键词”，
+                 <a href="https://www.rfc-editor.org/bcp/bcp14">BCP 14</a>，<a href="./rfc2119">RFC 2119</a>，1997 年 3 月。
+
+   [<a id="ref-RFC3629">RFC3629</a>]     Yergeau, F.，“UTF-8，ISO 10646 的一种转换格式”，
+                 STD 63，<a href="./rfc3629">RFC 3629</a>，2003 年 11 月。
+
+   [<a id="ref-RFC3986">RFC3986</a>]     Berners-Lee, T.、Fielding, R. 和 L. Masinter，
+                 “统一资源标识符（URI）：通用语法”，
+                 STD 66，<a href="./rfc3986">RFC 3986</a>，2005 年 1 月。
+
+
+
+
+<span class="grey">Gregorio 等                标准化路线                   [第 28 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-29" ></span>
+<span class="grey"><a href="./rfc6570">RFC 6570</a>                      URI 模板                    2012 年 3 月</span>
+
+
+   [<a id="ref-RFC3987">RFC3987</a>]     Duerst, M. 和 M. Suignard，“国际化资源标识符
+                 （IRI）”，<a href="./rfc3987">RFC 3987</a>，2005 年 1 月。
+
+   [<a id="ref-RFC5234">RFC5234</a>]     Crocker, D. 和 P. Overell，“用于语法规范的扩充
+                 BNF：ABNF”，STD 68，<a href="./rfc5234">RFC 5234</a>，2008 年 1 月。
+
+   [<a id="ref-RFC6365">RFC6365</a>]     Hoffman, P. 和 J. Klensin，“IETF 国际化中使用的
+                 术语”，<a href="https://www.rfc-editor.org/bcp/bcp166">BCP 166</a>，<a href="./rfc6365">RFC 6365</a>，
+                 2011 年 9 月。
+
+   [<a id="ref-UNIV6">UNIV6</a>]       Unicode 联盟，“Unicode 标准，6.0.0 版”，
+                 （Mountain View, CA：The Unicode Consortium，
+                 2011。ISBN 978-1-936213-01-6），
+                 &lt;<a href="http://www.unicode.org/versions/Unicode6.0.0/">http://www.unicode.org/versions/Unicode6.0.0/</a>&gt;。
+
+   [<a id="ref-UTR15">UTR15</a>]       Davis, M. 和 M. Duerst，“Unicode 规范化形式”，
+                 Unicode 标准附录 # 15，2003 年 4 月，
+                 &lt;<a href="http://www.unicode.org/unicode/reports/tr15/tr15-23.html">http://www.unicode.org/unicode/reports/tr15/</a>
+                 <a href="http://www.unicode.org/unicode/reports/tr15/tr15-23.html">tr15-23.html</a>&gt;。
+
+<span class="h3"><a class="selflink" id="section-6.2" href="#section-6.2">6.2</a>.  资料性参考文献</span>
+
+   [<a id="ref-OpenSearch">OpenSearch</a>]  Clinton, D.，“OpenSearch 1.1”，草案 5，2011 年 12 月，
+                 &lt;<a href="http://www.opensearch.org/Specifications/OpenSearch">http://www.opensearch.org/Specifications/OpenSearch</a>&gt;。
+
+   [<a id="ref-UPU-S42">UPU-S42</a>]     万国邮政联盟，“国际邮政地址组件和模板”，
+                 UPU S42-1，2002 年 11 月，
+                 &lt;<a href="http://www.upu.int/en/activities/addressing/standards.html">http://www.upu.int/en/activities/addressing/</a>
+                 <a href="http://www.upu.int/en/activities/addressing/standards.html">standards.html</a>&gt;。
+
+   [<a id="ref-WADL">WADL</a>]        Hadley, M.，“Web 应用描述语言”，
+                 万维网联盟成员提交
+                 SUBM-wadl-20090831，2009 年 8 月，
+                 &lt;<a href="http://www.w3.org/Submission/2009/SUBM-wadl-20090831/">http://www.w3.org/Submission/2009/</a>
+                 <a href="http://www.w3.org/Submission/2009/SUBM-wadl-20090831/">SUBM-wadl-20090831/</a>&gt;。
+
+   [<a id="ref-WSDL">WSDL</a>]        Weerawarana, S.、Moreau, J.、Ryman, A. 和 R.
+                 Chinnici，“Web 服务描述语言（WSDL）2.0 版
+                 第 1 部分：核心语言”，万维网联盟推荐标准
+                 REC-wsdl20-20070626，
+                 2007 年 6 月，&lt;<a href="http://www.w3.org/TR/2007/REC-wsdl20-20070626">http://www.w3.org/TR/2007/</a>
+                 <a href="http://www.w3.org/TR/2007/REC-wsdl20-20070626">REC-wsdl20-20070626</a>&gt;。
+
+
+
+
+
+
+
+
+
+<span class="grey">Gregorio 等                标准化路线                   [第 29 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-30" ></span>
+<span class="grey"><a href="./rfc6570">RFC 6570</a>                      URI 模板                    2012 年 3 月</span>
+
+
+<span class="h2"><a class="selflink" id="appendix-A" href="#appendix-A">附录 A</a>.  实现提示</span>
+
+   关于展开的规范性章节为描述清晰起见，分别用单独的展开过程描述
+   每个运算符。在实际实现中，我们预期表达式会按从左到右的顺序，
+   使用一个通用算法处理，该算法在每个运算符的处理上只有细微变化。
+   本非规范性附录描述这样一种算法。
+
+   初始化一个空结果字符串及其非错误状态。
+
+   扫描模板，并将字面量复制到结果字符串（如<a href="#section-3.1">第 3.1 节</a>），直到
+   由 “{” 表示一个表达式、由出现除 “{” 之外的非 literals 字符表示
+   一个错误，或模板结束。当模板结束时，返回结果字符串及其当前错误
+   或非错误状态。
+
+   o  如果发现表达式，则扫描模板直到下一个 “}”，并提取大括号之间
+      的字符。
+
+   o  如果模板在出现 “}” 之前结束，则将 “{” 和已提取的字符追加到
+      结果字符串，并返回，错误状态指示表达式格式错误。
+
+   检查提取出的表达式的第一个字符，看它是否为运算符。
+
+   o  如果表达式已结束（即为 “{}”）、发现未知或未实现的运算符，
+      或者该字符不在 varchar 集合中（<a href="#section-2.3">第 2.3 节</a>），则将 “{”、
+      已提取的表达式和 “}” 追加到结果字符串，记住结果处于错误状态，
+      然后返回去扫描模板的其余部分。
+
+   o  如果发现已知且已实现的运算符，则存储该运算符，并跳到下一个
+      字符以开始 varspec-list。
+
+   o  否则，将运算符存储为 NUL（简单字符串展开）。
+
+   使用以下值表按表达式类型运算符确定处理行为。“first” 项是在
+   表达式的任一变量已定义时首先追加到结果的字符串。“sep” 项是在
+   第二个（或后续）已定义变量展开之前追加到结果的分隔符。“named”
+   项是一个布尔值，表示未给出爆炸修饰符时，展开是否包含变量名或
+   键名。“ifemp” 项是在其对应值为空时追加到名称的字符串。“allow”
+   项指示哪些字符
+
+
+
+<span class="grey">Gregorio 等                标准化路线                   [第 30 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-31" ></span>
+<span class="grey"><a href="./rfc6570">RFC 6570</a>                      URI 模板                    2012 年 3 月</span>
+
+
+   允许在值展开中不经编码出现：(U) 表示任何不在 unreserved 集合中的
+   字符都会被编码；(U+R) 表示任何不在 (unreserved / reserved /
+   pct-encoding) 并集中的字符都会被编码；并且在两种情况下，每个
+   不允许字符都会先编码为其 UTF-8 八位位组序列，然后每个此类八位
+   位组会被编码为 pct 编码三元组。
+
+   .------------------------------------------------------------------.
+   |          NUL     +      .       /       ;      ?      &amp;      #   |
+   |------------------------------------------------------------------|
+   | first |  ""     ""     "."     "/"     ";"    "?"    "&amp;"    "#"  |
+   | sep   |  ","    ","    "."     "/"     ";"    "&amp;"    "&amp;"    ","  |
+   | named | false  false  false   false   true   true   true   false |
+   | ifemp |  ""     ""     ""      ""      ""     "="    "="    ""   |
+   | allow |   U     U+R     U       U       U      U      U     U+R  |
+   `------------------------------------------------------------------'
+
+   牢记上表，按如下方式处理 variable-list：
+
+   对每个 varspec，通过扫描 variable-list，直到发现不在 varname 集合
+   中的字符或到达表达式末尾，从表达式中提取变量名和可选修饰符。
+
+   o  如果已到达表达式末尾且 varname 为空，则返回去扫描模板的其余
+      部分。
+
+   o  如果尚未到达表达式末尾，且最后发现的字符表示修饰符（“*” 或
+      “:”），则记住该修饰符。如果它是爆炸（“*”），扫描下一个字符。
+      如果它是前缀（“:”），则继续扫描接下来一到四个字符，以十进制
+      整数表示 max-length；然后，如果仍未到达表达式末尾，则扫描
+      下一个字符。
+
+   o  如果尚未到达表达式末尾，且最后发现的字符不是逗号（“,”），
+      则将 “{”、已存储的运算符（如果有）、已扫描的 varname 和修饰符、
+      剩余表达式以及 “}” 追加到结果字符串，记住结果处于错误状态，
+      然后返回去扫描模板的其余部分。
+
+   查找已扫描变量名对应的值，然后
+
+   o  如果 varname 未知，或对应于具有未定义值的变量（<a href="#section-2.3">第 2.3 节</a>），
+      则跳到下一个 varspec。
+
+
+
+
+
+
+<span class="grey">Gregorio 等                标准化路线                   [第 31 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-32" ></span>
+<span class="grey"><a href="./rfc6570">RFC 6570</a>                      URI 模板                    2012 年 3 月</span>
+
+
+   o  如果这是此表达式的第一个已定义变量，则向结果字符串追加此
+      表达式类型的 first 字符串，并记住它已经完成。否则，向结果
+      字符串追加 sep 字符串。
+
+   o  如果此变量的值是字符串，则
+
+      *  如果 named 为 true，则使用与字面量相同的编码过程将 varname
+         追加到结果字符串，并且
+
+         +  如果值为空，则将 ifemp 字符串追加到结果字符串，并跳到
+            下一个 varspec；
+
+         +  否则，将 “=” 追加到结果字符串。
+
+      *  如果存在前缀修饰符，且前缀长度小于值字符串按 Unicode 字符
+         数计的长度，则将值字符串开头的该数量字符追加到结果字符串，
+         并对任何不在 allow 集合中的字符进行 pct 编码，同时注意不要
+         切分表示单个 Unicode 码点的多八位位组字符或 pct 编码三元组；
+
+      *  否则，在对任何不在 allow 集合中的字符进行 pct 编码后，
+         将值追加到结果字符串。
+
+   o  否则，如果未给出爆炸修饰符，则
+
+      *  如果 named 为 true，则使用与字面量相同的编码过程将 varname
+         追加到结果字符串，并且
+
+         +  如果值为空，则将 ifemp 字符串追加到结果字符串，并跳到
+            下一个 varspec；
+
+         +  否则，将 “=” 追加到结果字符串；并且
+
+      *  如果此变量的值是列表，则将每个已定义列表成员追加到结果
+         字符串，并对任何不在 allow 集合中的字符进行 pct 编码，同时
+         在每个已定义列表成员之间向结果追加逗号（“,”）；
+
+      *  如果此变量的值是关联数组，或任何其他形式的成对
+         (name, value) 结构，则将每个具有已定义值的对作为
+         “name,value” 追加到结果字符串，并对任何不在 allow 集合中的
+         字符进行 pct 编码，同时在每个已定义对之间向结果追加逗号
+         （“,”）。
+
+
+
+
+
+<span class="grey">Gregorio 等                标准化路线                   [第 32 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-33" ></span>
+<span class="grey"><a href="./rfc6570">RFC 6570</a>                      URI 模板                    2012 年 3 月</span>
+
+
+   o  否则，如果给出了爆炸修饰符，则
+
+      *  如果 named 为 true，则对每个具有已定义值的已定义列表成员或
+         数组 (name, value) 对执行：
+
+         +  如果这不是第一个已定义成员/值，则向结果字符串追加 sep
+            字符串；
+
+         +  如果这是列表，则使用与字面量相同的编码过程将 varname
+            追加到结果字符串；
+
+         +  如果这是一个对，则使用与字面量相同的编码过程将 name
+            追加到结果字符串；
+
+         +  如果该成员/值为空，则向结果字符串追加 ifemp 字符串；
+            否则，在对任何不在 allow 集合中的成员/值字符进行
+            pct 编码后，向结果字符串追加 “=” 和该成员/值。
+
+      *  否则，如果 named 为 false，则
+
+         +  如果这是列表，则将每个已定义列表成员追加到结果字符串，
+            并对任何不在 allow 集合中的字符进行 pct 编码，同时在每个
+            已定义列表成员之间向结果追加 sep 字符串。
+
+         +  如果这是 (name, value) 对数组，则将每个具有已定义值的对
+            作为 “name=value” 追加到结果字符串，并对任何不在 allow
+            集合中的字符进行 pct 编码，同时在每个已定义对之间向结果
+            追加 sep 字符串。
+
+   当此表达式的 variable-list 耗尽时，返回去扫描模板的其余部分。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Gregorio 等                标准化路线                   [第 33 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-34" ></span>
+<span class="grey"><a href="./rfc6570">RFC 6570</a>                      URI 模板                    2012 年 3 月</span>
+
+
+作者地址
+
+   Joe Gregorio
+   Google
+
+   EMail: joe@bitworking.org
+   URI:   <a href="http://bitworking.org/">http://bitworking.org/</a>
+
+
+   Roy T. Fielding
+   Adobe Systems Incorporated
+
+   EMail: fielding@gbiv.com
+   URI:   <a href="http://roy.gbiv.com/">http://roy.gbiv.com/</a>
+
+
+   Marc Hadley
+   The MITRE Corporation
+
+   EMail: mhadley@mitre.org
+   URI:   <a href="http://mitre.org/">http://mitre.org/</a>
+
+
+   Mark Nottingham
+   Rackspace
+
+   EMail: mnot@mnot.net
+   URI:   <a href="http://www.mnot.net/">http://www.mnot.net/</a>
+
+
+   David Orchard
+   Salesforce.com
+
+   EMail: orchard@pacificspirit.com
+   URI:   <a href="http://www.pacificspirit.com/">http://www.pacificspirit.com/</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Gregorio 等                标准化路线                   [第 34 页]
+</pre>
+<script src="https://htmlspecs.com/dropdown.js"></script>
