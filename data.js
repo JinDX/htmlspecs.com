@@ -2167,14 +2167,14 @@ const links = [
         lang: "cjk",
         state: "RFC"
     },
-    // {
-    //     text: "CBOR Object Signing and Encryption (COSE): Structures and Process",
-    //     href: "https://htmlspecs.com/cose/",
-    //     src: "http://rfc-editor.org/rfc/rfc9052.html,
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
+    {
+        text: "CBOR Object Signing and Encryption (COSE): Structures and Process",
+        href: "https://htmlspecs.com/cose/",
+        src: "https://www.rfc-editor.org/rfc/rfc9052.html",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "RFC"
+    },
 
     //### 身份、认证与凭证|신원, 인증 및 자격 증명|ID・認証・資格情報
     {
