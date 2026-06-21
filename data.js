@@ -3992,15 +3992,15 @@ const httpLinks = [
         lang: "cjk",
         state: "RFC"
     },
-    // {
-    //     text: "Well-Known Uniform Resource Identifiers (URIs)",
-    //     href: "https://htmlspecs.com/http/rfc8615.html",
-    //     src: "https://www.rfc-editor.org/rfc/rfc8615.html",
-    //     "last-modified": "-",
-    //     etag: null,
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
+    {
+        text: "Well-Known Uniform Resource Identifiers (URIs)",
+        href: "https://htmlspecs.com/http/rfc8615.html",
+        src: "https://www.rfc-editor.org/rfc/rfc8615.html",
+        "last-modified": "-",
+        etag: null,
+        lang: "cjk",
+        state: "RFC"
+    },
     {
         text: "Compression Dictionary Transport",
         href: "https://htmlspecs.com/http/rfc9842.html",
