@@ -22,6 +22,9 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Quirks Mode](https://htmlspecs.com/quirks/)（[Source](https://quirks.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [Minimum common web API](https://htmlspecs.com/min-common-api/)（[Source](https://min-common-api.proposal.wintertc.org/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 
+### 统一资源标识符与媒体类型
+- [Uniform Resource Identifier (URI): Generic Syntax](https://htmlspecs.com/uri/)（[Source](https://www.rfc-editor.org/rfc/rfc3986.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+
 ### 国际化与本地化
 - [ECMAScript® 2027 Internationalization API Specification](https://htmlspecs.com/ecma402/)（[Source](https://tc39.es/ecma402/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Language Tags and Locale Identifiers for the World Wide Web](https://htmlspecs.com/ltli/)（[Source](https://www.w3.org/TR/2020/WD-ltli-20201007) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）

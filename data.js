@@ -173,14 +173,14 @@ const links = [
     },
 
     //### 统一资源标识符与媒体类型|통합 자원 식별자 및 미디어 타입|統一資源識別子・メディアタイプ
-    // {
-    //     text: "Uniform Resource Identifier (URI): Generic Syntax",
-    //     href: "https://htmlspecs.com/uri/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc3986.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
+    {
+        text: "Uniform Resource Identifier (URI): Generic Syntax",
+        href: "https://htmlspecs.com/uri/",
+        src: "https://www.rfc-editor.org/rfc/rfc3986.html",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "RFC"
+    },
     // {
     //     text: "Internationalized Resource Identifiers (IRIs)",
     //     href: "https://htmlspecs.com/iri/",
