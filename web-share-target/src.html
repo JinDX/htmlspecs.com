@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>
+        Web Share Target API
+    </title>
+    <script src="https://www.w3.org/Tools/respec/respec-w3c" class="remove" defer></script>
+    <script class='remove'>
+        var respecConfig = {
+            specStatus: "unofficial", // until we publish a FPWD!
+            github: {
+                repoURL: "w3c/web-share-target",
+                branch: "main"
+            },
+            group: "webapps",
+            editors: [{
+                name: "Matt Giuca",
+                company: "Google Inc.",
+                companyURL: "https://google.com",
+                w3cid: 91260
+            },
+            {
+                name: "Eric Willigers",
+                company: "Google Inc.",
+                companyURL: "https://google.com",
+                w3cid: 67534
+            }],
+            // eventually add mdn: true, and caniuse: "web-share-target"
+            xref: "web-platform",
+        };
+    </script>
+</head>
+
+<body data-cite="Web-Share encoding secure-contexts appmanifest">
+    <section id="abstract">
+        <p>
+            This specification defines an API that allows websites to declare
+            themselves as <a>web share targets</a>, which can receive shared
+            content from either the [[[Web-Share]]], or system events (e.g., shares
+            from native apps).
+        </p>
+        <p>
+            This is a similar mechanism to
+            {{NavigatorContentUtils/registerProtocolHandler()}}, in that it works
+            by registering the website with the user agent, to later be
+            <a>invoked</a> from another site or native application via the user
+            agent (possibly at the discretion of the user). The difference is that
+            {{NavigatorContentUtils/registerProtocolHandler()}} registers the
+            handler via a programmatic API, whereas a Web Share Target is declared
+            in the [[[appmanifest]]], to be registered at a time of the user agent
+            or user's choosing.
+        </p>
+    </section>
+    <section id="sotd">
+        <p>
+            This is an early draft of the Web Share Target spec.
+        </p>
+    </section>
+    <section>
+        <h2>
+            Prerequisites
+        </h2>
+        <p>
+            In order to implement this API, a the user agent MUST support
+            [[[appmanifest]]]. This spec also re-uses some definitions from the
+            [[[Web-Share]]] spec. However, support for the [[[Web-Share]]] is
+            OPTIONAL.
+        </p>
+    </section>
+    <section class="informative">
+        <h2>
+            Usage Example
+        </h2>
+        <p>
+            To register a site as a share target, a [=manifest/share_target=] entry
+            is added to the [[[appmanifest]]], as shown:
+        </p>
+        <pre class="example json" title="manifest.webmanifest">
+      {
+        "name": "Includinator",
+        "share_target": {
+          "action": "share.html",
+          "params": {
+            "title": "name",
+            "text": "description",
+            "url": "link"
+          }
+        }
+      }
+      </pre>
+        <p>
+            The [=ShareTarget/params=] keys correspond to the key names in
+            {{ShareData}} from [[[Web-Share]]], while the values are arbitrary
+            names that will be used as query parameters when the target is
+            launched.
+        </p>
+        <p>
+            When a share takes place, if the user selects this share target, the
+            user agent opens a new browsing context at the `action` URL, with query
+            parameter values containing the shared data, just like an HTML form
+            submission.
+        </p>
+        <p>
+            For the purpose of this example, we assume the manifest is located at
+            `https://example.org/includinator/manifest.webmanifest`.
+        </p>
+        <pre class="example html" title="share.html">
+      &lt;html&gt;
+      &lt;link rel="manifest" href="manifest.webmanifest"&gt;
+      &lt;script&gt;
+        window.addEventListener('load', () =&gt; {
+          const parsedUrl = new URL(window.location);
+          const { searchParams } = parsedUrl;
+          console.log("Title shared:", searchParams.get('name'));
+          console.log("Text shared:", searchParams.get('description'));
+          console.log("URL shared:", searchParams.get('link'));
+        });
+      &lt;/script&gt;
+      </pre>
+        <p>
+            If an incoming share contains the title "My News" and the URL
+            `http://example.com/news`, the user agent will open a new window or tab
+            and navigate to:
+        </p>
+        <pre>
+https://example.org/includinator/share.html?name=My+News&amp;link=http%3A%2F%2Fexample.com%2Fnews
+</pre>
+        <p class="warning">
+            U+0020 (SPACE) characters are encoded as "`+`", due to the use of
+            [=`application\/x-www-form-urlencoded`=] encoding, not "`%20`" as might
+            be expected. Processors must take care to decode U+002B (+) characters
+            as U+0020 (SPACE), which some URL decoding libraries, including
+            ECMAScript's <a data-cite="ECMASCRIPT#sec-decodeuricomponent-encodeduricomponent">`decodeURIComponent`</a>
+            function, may not do automatically.
+        </p>
+        <p>
+            The query parameters are populated with information from the
+            {{ShareData}} being shared. If the {{ShareData}} contains no
+            information for a given member, the query parameter is omitted.
+        </p>
+        <p>
+            A share target might only be interested in a subset of the
+            {{ShareData}} members. This example also shows a share target that
+            receives data as a `POST` request, which should be the case if the
+            request causes an immediate side effect.
+        </p>
+        <pre class="example json" title="manifest.webmanifest">
+      {
+        "name": "Bookmark",
+        "share_target": {
+          "action": "/bookmark",
+          "method": "POST",
+          "enctype": "multipart/form-data",
+          "params": {
+            "url": "link"
+          }
+        }
+      }
+      </pre>
+        <p data-cite="service-workers-1">
+            The shared information might be read by a [=service worker=], rather
+            than being sent over the network to the server.
+        </p>
+        <pre class="example javascript" title="sw.js">
+        self.addEventListener("fetch", (event) =&gt; {
+          if (event.request.method !== "POST") {
+            event.respondWith(fetch(event.request));
+            return;
+          }
+
+          const formDataPromise = event.request.formData();
+          event.respondWith(
+            formDataPromise.then((formData) =&gt; {
+              const link = formData.get("link") || "";
+              saveBookmark(link);
+              return new Response(`Bookmark saved: ${link}`);
+            })
+          );
+        });
+      </pre>
+        <p>
+            How the handler deals with the shared data is at the handler's
+            discretion, and will generally depend on the type of app. Here are some
+            suggestions:
+        </p>
+        <ul>
+            <li>An email client might draft a new email, using `title` as the
+                subject of an email, with `text` and `url` concatenated together as the
+                body.
+            </li>
+            <li>A social networking app might draft a new post, ignoring `title`,
+                using `text` as the body of the message and adding `url` as a link. If
+                `text` is missing, it might use `url` in the body as well. If `url` is
+                missing, it might scan `text` looking for a URL and add that as a link.
+            </li>
+            <li>A text messaging app might draft a new message, ignoring `title`
+                and using `text` and `url` concatenated together. It might truncate the
+                text or replace `url` with a short link to fit into the message size.
+            </li>
+        </ul>
+    </section>
+    <section>
+        <h2>
+            Extension to the Web App Manifest
+        </h2>
+        <p>
+            As a [=manifest=] is <abbr title="JavaScript Object Notation">JSON</abbr>, this specification relies on
+            the types defined in the [[JSON]] specification: namely <dfn data-cite="JSON#section-4">object</dfn> and
+            <dfn data-cite="JSON#section-7">string</dfn>.
+        </p>
+        <p>
+            The following steps are added to the [=processing extension-point of
+            web manifest=]:
+        </p>
+        <ol class="algorithm">
+            <li>Let |json| and |manifest| be the corresponding variables from
+                [=processing a manifest=].
+            </li>
+            <li>[=Process the `share_target` member=] with |json| and |manifest|.
+            </li>
+        </ol>
+        <section>
+            <h3>
+                `share_target` member
+            </h3>
+            <p>
+                The <code><dfn data-dfn-for="manifest">share_target</dfn></code>
+                member of the manifest is an [=object=]. When present, it declares
+                this application to be a <a>web share target</a>, and describes how
+                the application receives share data.
+            </p>
+            <p>
+                A <dfn data-export="">web share target</dfn> is a web site with a
+                valid [=manifest=] containing a [=manifest/share_target=] member.
+            </p>
+            <p>
+                A web share target is a type of <a>share target</a> (other types can
+                be available, e.g., some system applications).
+            </p>
+            <p>
+                To <dfn>process the `share_target` member</dfn> given [=object=]
+                |json:JSON| and [=ordered map=] |manifest:ordered map|:
+            </p>
+            <ol class="algorithm">
+                <li>If |json|["share_target"] is not an [=object=], return.
+                </li>
+                <li>Let |target:object| be |json|["share_target"].
+                </li>
+                <li>If |target|["action"] or |target|["params"] is missing, return.
+                </li>
+                <li>Process [=ShareTarget/action=]:
+                    <ol>
+                        <li>Let |action:URL| be the result of [=URL parser|parsing=]
+                            |share target|["action"] relative to the |manifest URL| and with
+                            no encoding override. If the result is failure, return.
+                        </li>
+                        <li>If |action| is not [=URL/within scope=] of the
+                            |manifest|["scope"], return.
+                        </li>
+                        <li>If the [=url/origin=] of |action| is not a [=potentially
+                            trustworthy origin=], return.
+                        </li>
+                    </ol>
+                </li>
+                <li>Let |method:string| be "GET".
+                </li>
+                <li>If |target|["method"] is present, process [=ShareTarget/method=]:
+                    <ol>
+                        <li>If |target|["method"] is neither an [=ASCII
+                            case-insensitive=] match for the strings `"GET"` nor `"POST"`,
+                            return.
+                        </li>
+                        <li>Set |method| to [=ASCII uppercase=] |target|["method"].
+                        </li>
+                    </ol>
+                </li>
+                <li>Let |enctype:string| be "application/x-www-form-urlencoded".
+                </li>
+                <li>If |method| is `"POST"`:
+                    <ol>
+                        <li>If |target|["enctype"] is neither an [=ASCII
+                            case-insensitive=] match for the strings
+                            `"application/x-www-form-urlencoded"` nor
+                            `"multipart/form-data"`, return.
+                        </li>
+                        <li>Set |enctype| to [=ASCII lowercase=] |target|["enctype"].
+                        </li>
+                    </ol>
+                </li>
+                <li>Let |params:ordered map| be a new [=ordered map=].
+                </li>
+                <li>Process [=ShareTarget/params=]:
+                    <ol>
+                        <li>[=List/For each=] |member:string| of « "title", "text", "url"
+                            »:
+                            <ol>
+                                <li>If |target|["param"] doesn't have a property |member|,
+                                    continue.
+                                </li>
+                                <li>If |target|["param"][member] is not a [=string=], return.
+                                </li>
+                                <li>Set |params|[member] to |target|["param"][member].
+                                </li>
+                            </ol>
+                        </li>
+                    </ol>
+                </li>
+                <li>Set |manifest|["share_target"] to [=ordered map=] «[<br>
+                    "action" → [=URL serializer|serialize=] |action|,<br>
+                    "enctype" → |enctype|,<br>
+                    "method" → |method|,<br>
+                    "params" → |params|,<br>
+                    ]».
+                </li>
+            </ol>
+        </section>
+        <section>
+            <h3>
+                `ShareTarget` and its members
+            </h3>
+            <p>
+                The <dfn>ShareTarget</dfn> [=object=] can have the following members:
+            </p>
+            <dl>
+                <dt>
+                    <code><dfn data-dfn-for="ShareTarget">action</dfn></code> member
+                </dt>
+                <dd>
+                    A [=string=] that specifies the [=URL=] for the [=web share
+                    target=].
+                </dd>
+                <dt>
+                    <code><dfn data-dfn-for="ShareTarget">method</dfn></code> member
+                </dt>
+                <dd>
+                    A [=string=] that specifies the HTTP [=request=] [=request/method=]
+                    for the [=web share target=].
+                    <aside class="note">
+                        A use case for `GET` requests is when the share target drafts a
+                        message for subsequent user approval. Otherwise, use `POST` if
+                        the share target performs a side-effect without any user
+                        interaction.
+                    </aside>
+                </dd>
+                <dt>
+                    <code><dfn data-dfn-for="ShareTarget">enctype</dfn></code> member
+                </dt>
+                <dd>
+                    A [=string=] that specifies how the share data is encoded in the
+                    body of a `POST` request. It is ignored when [=method=] is `"GET"`.
+                </dd>
+                <dt>
+                    <code><dfn data-dfn-for="ShareTarget">params</dfn></code> member
+                </dt>
+                <dd>
+                    A <a>ShareTargetParams</a> [=object=].
+                </dd>
+            </dl>
+        </section>
+        <section>
+            <h3>
+                `ShareTargetParams` and its members
+            </h3>
+            <p>
+                The <dfn>ShareTargetParams</dfn> [=object=] can have the following
+                members:
+            </p>
+            <dl>
+                <dt>
+                    <code><dfn data-dfn-for="ShareTargetParams">title</dfn></code>
+                    member
+                </dt>
+                <dd>
+                    A [=string=] that specifies the name of the query parameter used
+                    for the title of the document being shared.
+                </dd>
+                <dt>
+                    <code><dfn data-dfn-for="ShareTargetParams">text</dfn></code>
+                    member
+                </dt>
+                <dd>
+                    A [=string=] that specifies the name of the query parameter used
+                    for the arbitrary text that forms the body of the message being
+                    shared.
+                </dd>
+                <dt>
+                    <code><dfn data-dfn-for="ShareTargetParams">url</dfn></code> member
+                </dt>
+                <dd>
+                    A [=string=] that specifies the name of the query parameter used
+                    for the URL string referring to a resource being shared.
+                </dd>
+            </dl>
+        </section>
+    </section>
+    <section>
+        <h2>
+            Registration of web share targets
+        </h2>
+        <p>
+            How and when <a>web share targets</a> are "registered" is at the
+            discretion of the user agent and/or the end user. In fact,
+            "registration" is a user-agent-specific concept that is not formally
+            defined here; user agents are NOT REQUIRED to "register" web share
+            targets at all; they are only REQUIRED to provide some mechanism to
+            convey shared data to a web share target of the end user's choosing.
+            User agents MAY consider a web share target "registered" even if it is
+            not [=installed web application|installed=]
+        </p>
+        <p>
+            The user agent MAY automatically register all <a>web share targets</a>
+            as the user visits the site, but it is RECOMMENDED that more discretion
+            is applied, to avoid overwhelming the user with the choice of a large
+            number of targets.
+        </p>
+        <div class="note">
+            <p>
+                Examples of registration strategies that user agents can employ are:
+            </p>
+            <ul>
+                <li>Only register a web share target once it is [=installed web
+                    application|installed=].
+                </li>
+                <li>Only register a web share target once the end user has used the
+                    site for some period of time.
+                </li>
+                <li>Explicitly prompt the user to register a web share target
+                    (perhaps using the same UI as
+                    {{NavigatorContentUtils/registerProtocolHandler()}}).
+                </li>
+                <li>Only register a web share target if it has a service worker.
+                </li>
+            </ul>
+        </div>
+        <p>
+            When presenting the end user with a list of <a>web share targets</a>,
+            the user agent MAY use an online service which has pre-indexed
+            manifests, and therefore show the user targets that they have never
+            visited or explicitly registered.
+        </p>
+        <div class="issue" data-number="26"></div>
+    </section>
+    <section>
+        <h2>
+            Handling incoming shares
+        </h2>
+        <p>
+            A <a>web share target</a> is <dfn data-lt="invoke|invocation">invoked</dfn> when the end user is sharing
+            some
+            data intended for a generic application, and indicates that specific
+            web share target as the receiver of the data.
+        </p>
+        <p>
+            It is not specified where the data comes from, or how the end user
+            indicates the web share target as the receiver. However, one possible
+            source is a call to {{Navigator}}'s {{Navigator/share()}} method in the
+            same user agent.
+        </p>
+        <div class="note">
+            <p>
+                Examples of other possible sources of a <a>web share target</a>
+                invocation are:
+            </p>
+            <ul>
+                <li>From the built-in UI of the user agent (<i>e.g.</i>, the end user
+                    picks "Share" from a browser's menu, to share the current page title
+                    as "`title`" and the current page URL as "`url`").
+                </li>
+                <li>A share action triggered from a native application (via a
+                    proprietary share system), followed by the end user choosing a web
+                    share target as the receiver.
+                </li>
+            </ul>
+        </div>
+        <section>
+            <h3>
+                Obtaining a `ShareData`
+            </h3>
+            <p>
+                When a <a>web share target</a> is <a>invoked</a>, the data MAY be in
+                an unspecified format. The user agent MUST first convert the data
+                into a {{ShareData}} object, if it is not already, by mapping to the
+                members of `ShareData` from equivalent concepts in the host system.
+                If the source was a call to {{Navigator/share()}}, the user agent
+                SHOULD use the {{ShareData}} argument unmodified (but this is not
+                always possible, as it might have to round-trip through some other
+                format in a lossy manner). The user agent MAY employ heuristics to
+                map the data onto the `ShareData` fields as well as possible.
+            </p>
+            <p class="note">
+                For example, the host share system may not have a dedicated URL
+                field, but a convention that both plain text and URLs are sometimes
+                transmitted in a "text" field. This is the case on Android. The user
+                agent can check whether all or part of the "text" field is a [=valid
+                URL string=], and if so, move that part of the "text" field to the
+                {{ShareData}}'s {{ShareData/url}} member.
+            </p>
+        </section>
+        <section>
+            <h3>
+                Launching the web share target
+            </h3>
+            <p>
+                When <a>web share target</a> having [=ordered map=] |manifest| is
+                <a>invoked</a> with {{ShareData}} |data|, run the following steps:
+            </p>
+            <ol class="algorithm">
+                <li>Let |url:URL| be the result of [=URL parser|parsing=]
+                    |manifest|["share_target"]["action"].
+                </li>
+                <li>Let |entries:list| be a new empty [=list=].
+                </li>
+                <li>[=List/For each=] |member:string| of « "title", "text", "url" »:
+                    <ol>
+                        <li>Let |name:string| be the value of
+                            |manifest|["share_target"]["params"][|member|].
+                        </li>
+                        <li>If |name| is `undefined` or the empty string, continue.
+                        </li>
+                        <li>If |data|[|member|] is `undefined`, continue.
+                        </li>
+                        <li>Let |value:string| be <a data-cite="ecma262#sec-tostring">ToString</a>(|data|[|member|]).
+                        </li>
+                        <li>[=List/Append=] [=tuple=] (|name|, |value|) to |entry list|.
+                        </li>
+                    </ol>
+                </li>
+                <li>Let |header list| be a newly created [=Headers/header list=].
+                </li>
+                <li>Let |method:string| be |manifest|["share_target"]["method"].
+                </li>
+                <li>Let |enctype:string| be |manifest|["share_target"]["enctype"].
+                </li>
+                <li>If |method| is `"GET"`:
+                    <ol>
+                        <li>Let |query| be the result of running the [=urlencoded
+                            serializer=] with |entries| and no encoding override.
+                        </li>
+                        <li>Set |url|'s [=URL/query=] component to |query|.
+                        </li>
+                        <li>Let |body| be null.
+                        </li>
+                    </ol>
+                </li>
+                <li>Otherwise, if |method| is `"POST"` and |enctype| is
+                    `"application/x-www-form-urlencoded"`:
+                    <ol>
+                        <li>Let |body:string| be the result of running the [=urlencoded
+                            serializer=] with |entries| and no encoding override.
+                        </li>
+                        <li>Set |body| to the result of [=UTF-8 encode=] |body|.
+                        </li>
+                        <li>[=header list/Append=]
+                            `"Content-Type"`/`"application/x-www-form-urlencoded"` to |header
+                            list|.
+                        </li>
+                    </ol>
+                </li>
+                <li>Otherwise, if |method| is `"POST"` and | enctype| is
+                    `"multipart/form-data"`:
+                    <ol>
+                        <li>Let |body| be the result of running the
+                            <a>multipart/form-data encoding algorithm</a> with |entries| and
+                            the [=UTF-8=] encoding.
+                        </li>
+                        <li>Let |MIME type:string| be the concatenation of the string
+                            `"multipart/form-data;"`, a U+0020 SPACE character, the string
+                            `"boundary="`, and the [=`multipart\/form-data` boundary string=]
+                            generated by the [=`multipart\/form-data` encoding algorithm=].
+                        </li>
+                        <li>[=header list/Append=] `"Content-Type"`/|MIME type| to
+                            |header list|.
+                        </li>
+                    </ol>
+                </li>
+                <li>Let |browsing context| be the result of creating a
+                    <a data-cite="HTML#creating-a-new-browsing-context">new</a>
+                    [=top-level browsing context=].
+                </li>
+                <li>Let |request:Request| be a new [=Request=] whose method is
+                    |method|, url is |url|, header list is |header list|, and body is
+                    |body|.
+                </li>
+                <li>[=Navigate=] |browsing context| to |request =|
+                </li>
+            </ol>
+            <p class="note">
+                This algorithm assumes that |manifest| has had the [=process the
+                `share_target` member=] algorithm run on it and still has a
+                [=manifest/share_target=] afterwards.
+            </p>
+        </section>
+    </section>
+    <section class="informative">
+        <h2>
+            Accessibility
+        </h2>
+        <p>
+            This specification has no known accessibility considerations.
+        </p>
+    </section>
+    <section class="informative">
+        <h2>
+            Security and privacy considerations
+        </h2>
+        <ul>
+            <li>Invoking a <a>web share target</a> means potentially sending
+                private user data to a third-party website. Implementors are to take
+                every precaution that the user understands which party the data is
+                being sent to (<i>e.g.</i>, communicating the web share target's
+                origin), before running the <a>invocation</a> algorithm.
+            </li>
+            <li>Of particular concern is spoofing: a web share target presenting
+                itself as a different party (by setting its name and icon accordingly).
+            </li>
+            <li>The spoofing risk is heightened if web share targets are chosen
+                from an online index, rather than a set of targets that the end user
+                has explicitly installed or registered.
+            </li>
+            <li>The requirement that the web share target's origin be a
+                [=potentially trustworthy origin=] is to prevent private user data from
+                being transmitted to a party that does not control the origin in
+                question, or in clear text over the network.
+            </li>
+            <li>A source site using Web Share API, and a receipient site using Web
+                Share Target, could cooperate to join user ids. The source site could
+                use `navigator.share(text: my_id_for_this_user)`, and the (user-chosen)
+                recipient could use that information to join its own user ID with the
+                source origin's user ID. Both sides of the transfer would need to write
+                code to accomplish the transfer, and the user would need to pick the
+                recipient.
+            </li>
+        </ul>
+    </section>
+    <section id="conformance"></section>
+    <section class="appendix informative">
+        <h2>
+            Acknowledgments
+        </h2>
+        <p>
+            Thanks to the [[[WEBINTENTS]]] team, who laid the groundwork for the
+            web app interoperability use cases. In particular, <a href="https://paul.kinlan.me/">Paul Kinlan</a>, who
+            did a lot of early
+            advocacy for Web Share and Web Share Target.
+        </p>
+        <p>
+            Thanks to Connie Pyromallis, who wrote an early draft of this spec, and
+            helped design and prototype the API.
+        </p>
+        <p>
+            Thanks to Alex Russell and David Baron, for their feedback on early
+            drafts of this spec.
+        </p>
+    </section>
+    <section id="index"></section>
+</body>
+
+</html>
