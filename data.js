@@ -327,14 +327,14 @@ const links = [
         lang: "cjk",
         state: "RFC"
     },
-    // {
-    //     text: "Concise Binary Object Representation (CBOR)",
-    //     href: "https://htmlspecs.com/cbor/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc8949.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
+    {
+        text: "Concise Binary Object Representation (CBOR)",
+        href: "https://htmlspecs.com/cbor/",
+        src: "https://www.rfc-editor.org/rfc/rfc8949.html",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "RFC"
+    },
     // {
     //     text: "WebFinger",
     //     href: "https://htmlspecs.com/webfinger/",
