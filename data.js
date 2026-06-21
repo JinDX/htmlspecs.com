@@ -3880,15 +3880,15 @@ const httpLinks = [
         lang: "cjk",
         state: "RFC"
     },
-    // {
-    //     text: "Problem Details for HTTP APIs",
-    //     href: "https://htmlspecs.com/http/rfc9457.html",
-    //     src: "https://www.rfc-editor.org/rfc/rfc9457.html",
-    //     "last-modified": "-",
-    //     etag: null,
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
+    {
+        text: "Problem Details for HTTP APIs",
+        href: "https://htmlspecs.com/http/rfc9457.html",
+        src: "https://www.rfc-editor.org/rfc/rfc9457.html",
+        "last-modified": "-",
+        etag: null,
+        lang: "cjk",
+        state: "RFC"
+    },
 
     //### 缓存与重用|캐시 및 재사용|キャッシュと再利用
     {
