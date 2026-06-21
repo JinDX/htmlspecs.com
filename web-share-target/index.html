@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="zh-hans">
+
+<head>
+    <meta charset="utf-8">
+    <title>
+        Web 共享目标 API
+    </title>
+    <script src="https://www.w3.org/Tools/respec/respec-w3c" class="remove" defer></script>
+    <script class='remove'>
+        var respecConfig = {
+            specStatus: "unofficial", // until we publish a FPWD!
+            github: {
+                repoURL: "w3c/web-share-target",
+                branch: "main"
+            },
+            group: "webapps",
+            editors: [{
+                name: "Matt Giuca",
+                company: "Google Inc.",
+                companyURL: "https://google.com",
+                w3cid: 91260
+            },
+            {
+                name: "Eric Willigers",
+                company: "Google Inc.",
+                companyURL: "https://google.com",
+                w3cid: 67534
+            }],
+            // eventually add mdn: true, and caniuse: "web-share-target"
+            xref: "web-platform",
+        };
+    </script>
+</head>
+
+<body data-cite="Web-Share encoding secure-contexts appmanifest">
+    <section id="abstract">
+        <p>
+            本规范定义了一个 API，允许网站将自身声明为
+            <a>Web 共享目标</a>，从而可以接收来自 [[[Web-Share]]] 或系统事件（例如来自
+            原生应用的共享）的共享内容。
+        </p>
+        <p>
+            这是一种类似于
+            {{NavigatorContentUtils/registerProtocolHandler()}} 的机制，因为它通过向用户代理注册网站来工作，
+            以便稍后由另一个网站或原生应用通过用户代理（可能由用户酌情决定）<a>调用</a>。
+            不同之处在于，{{NavigatorContentUtils/registerProtocolHandler()}} 通过编程 API 注册处理器，
+            而 Web 共享目标是在 [[[appmanifest]]] 中声明的，并在用户代理或用户选择的时间注册。
+        </p>
+    </section>
+    <section id="sotd">
+        <p>
+            这是 Web Share Target 规范的早期草案。
+        </p>
+    </section>
+    <section>
+        <h2>
+            前提条件
+        </h2>
+        <p>
+            为了实现此 API，用户代理必须支持
+            [[[appmanifest]]]。本规范还复用了 [[[Web-Share]]] 规范中的一些定义。
+            但是，对 [[[Web-Share]]] 的支持是可选的。
+        </p>
+    </section>
+    <section class="informative">
+        <h2>
+            使用示例
+        </h2>
+        <p>
+            要将站点注册为共享目标，需要向 [[[appmanifest]]] 添加一个 [=manifest/share_target=] 条目，
+            如下所示：
+        </p>
+        <pre class="example json" title="manifest.webmanifest">
+      {
+        "name": "Includinator",
+        "share_target": {
+          "action": "share.html",
+          "params": {
+            "title": "name",
+            "text": "description",
+            "url": "link"
+          }
+        }
+      }
+      </pre>
+        <p>
+            [=ShareTarget/params=] 键对应于 [[[Web-Share]]] 中 {{ShareData}} 的键名，
+            而值是共享目标启动时将用作查询参数的任意名称。
+        </p>
+        <p>
+            发生共享时，如果用户选择了此共享目标，用户代理会在 `action` URL 处打开一个新的浏览上下文，
+            查询参数值包含共享的数据，就像 HTML 表单提交一样。
+        </p>
+        <p>
+            在本示例中，我们假设清单位于
+            `https://example.org/includinator/manifest.webmanifest`。
+        </p>
+        <pre class="example html" title="share.html">
+      &lt;html&gt;
+      &lt;link rel="manifest" href="manifest.webmanifest"&gt;
+      &lt;script&gt;
+        window.addEventListener('load', () =&gt; {
+          const parsedUrl = new URL(window.location);
+          const { searchParams } = parsedUrl;
+          console.log("Title shared:", searchParams.get('name'));
+          console.log("Text shared:", searchParams.get('description'));
+          console.log("URL shared:", searchParams.get('link'));
+        });
+      &lt;/script&gt;
+      </pre>
+        <p>
+            如果传入的共享包含标题 "My News" 和 URL
+            `http://example.com/news`，用户代理将打开一个新窗口或标签页并导航到：
+        </p>
+        <pre>
+https://example.org/includinator/share.html?name=My+News&amp;link=http%3A%2F%2Fexample.com%2Fnews
+</pre>
+        <p class="warning">
+            由于使用了 [=`application\/x-www-form-urlencoded`=] 编码，U+0020 (SPACE) 字符会被编码为 "`+`"，
+            而不是可能预期的 "`%20`"。处理器必须注意将 U+002B (+) 字符解码为 U+0020 (SPACE)，
+            一些 URL 解码库，包括 ECMAScript 的
+            <a data-cite="ECMASCRIPT#sec-decodeuricomponent-encodeduricomponent">`decodeURIComponent`</a>
+            函数，可能不会自动这样做。
+        </p>
+        <p>
+            查询参数会用正在共享的 {{ShareData}} 中的信息填充。如果 {{ShareData}} 不包含某个给定成员的信息，
+            则省略该查询参数。
+        </p>
+        <p>
+            共享目标可能只关注 {{ShareData}} 成员的一个子集。本示例还展示了一个以 `POST` 请求接收数据的共享目标；
+            如果请求会造成即时副作用，就应当采用这种方式。
+        </p>
+        <pre class="example json" title="manifest.webmanifest">
+      {
+        "name": "Bookmark",
+        "share_target": {
+          "action": "/bookmark",
+          "method": "POST",
+          "enctype": "multipart/form-data",
+          "params": {
+            "url": "link"
+          }
+        }
+      }
+      </pre>
+        <p data-cite="service-workers-1">
+            共享的信息可以由 [=service worker=] 读取，而不是通过网络发送到服务器。
+        </p>
+        <pre class="example javascript" title="sw.js">
+        self.addEventListener("fetch", (event) =&gt; {
+          if (event.request.method !== "POST") {
+            event.respondWith(fetch(event.request));
+            return;
+          }
+
+          const formDataPromise = event.request.formData();
+          event.respondWith(
+            formDataPromise.then((formData) =&gt; {
+              const link = formData.get("link") || "";
+              saveBookmark(link);
+              return new Response(`Bookmark saved: ${link}`);
+            })
+          );
+        });
+      </pre>
+        <p>
+            处理器如何处理共享数据由处理器自行决定，并且通常取决于应用的类型。下面是一些建议：
+        </p>
+        <ul>
+            <li>电子邮件客户端可以起草一封新邮件，将 `title` 用作邮件主题，
+                并将 `text` 和 `url` 拼接在一起作为正文。
+            </li>
+            <li>社交网络应用可以起草一篇新帖子，忽略 `title`，
+                将 `text` 用作消息正文，并将 `url` 作为链接添加。如果
+                `text` 缺失，它也可以在正文中使用 `url`。如果 `url` 缺失，
+                它可以扫描 `text` 查找 URL，并将其作为链接添加。
+            </li>
+            <li>短信应用可以起草一条新消息，忽略 `title`，
+                并将 `text` 和 `url` 拼接在一起。它可以截断文本或将 `url` 替换为短链接，
+                以适应消息大小。
+            </li>
+        </ul>
+    </section>
+    <section>
+        <h2>
+            对 Web App Manifest 的扩展
+        </h2>
+        <p>
+            由于 [=manifest=] 是 <abbr title="JavaScript Object Notation">JSON</abbr>，本规范依赖于
+            [[JSON]] 规范中定义的类型：即 <dfn data-cite="JSON#section-4">object</dfn> 和
+            <dfn data-cite="JSON#section-7">string</dfn>。
+        </p>
+        <p>
+            将以下步骤添加到 [=processing extension-point of
+            web manifest=]：
+        </p>
+        <ol class="algorithm">
+            <li>令 |json| 和 |manifest| 为来自
+                [=processing a manifest=] 的对应变量。
+            </li>
+            <li>使用 |json| 和 |manifest| [=Process the `share_target` member=]。
+            </li>
+        </ol>
+        <section>
+            <h3>
+                `share_target` 成员
+            </h3>
+            <p>
+                清单的 <code><dfn data-dfn-for="manifest">share_target</dfn></code>
+                成员是一个 [=object=]。当存在时，它声明此应用为一个 <a>Web 共享目标</a>，
+                并描述应用如何接收共享数据。
+            </p>
+            <p>
+                <dfn data-export="">Web 共享目标</dfn> 是一个具有有效 [=manifest=] 且包含
+                [=manifest/share_target=] 成员的网站。
+            </p>
+            <p>
+                Web 共享目标是一种 <a>share target</a>（还可以有其他类型，例如某些系统应用）。
+            </p>
+            <p>
+                给定 [=object=] |json:JSON| 和 [=ordered map=] |manifest:ordered map|，
+                要<dfn>处理 `share_target` 成员</dfn>：
+            </p>
+            <ol class="algorithm">
+                <li>如果 |json|["share_target"] 不是 [=object=]，则返回。
+                </li>
+                <li>令 |target:object| 为 |json|["share_target"]。
+                </li>
+                <li>如果 |target|["action"] 或 |target|["params"] 缺失，则返回。
+                </li>
+                <li>处理 [=ShareTarget/action=]：
+                    <ol>
+                        <li>令 |action:URL| 为以 |manifest URL| 为基准、且不使用编码覆盖，
+                            [=URL parser|parsing=] |share target|["action"] 的结果。
+                            如果结果为失败，则返回。
+                        </li>
+                        <li>如果 |action| 不在 |manifest|["scope"] 的
+                            [=URL/within scope=] 内，则返回。
+                        </li>
+                        <li>如果 |action| 的 [=url/origin=] 不是
+                            [=potentially trustworthy origin=]，则返回。
+                        </li>
+                    </ol>
+                </li>
+                <li>令 |method:string| 为 "GET"。
+                </li>
+                <li>如果 |target|["method"] 存在，则处理 [=ShareTarget/method=]：
+                    <ol>
+                        <li>如果 |target|["method"] 既不是与字符串 `"GET"` 的
+                            [=ASCII case-insensitive=] 匹配，也不是与 `"POST"` 的匹配，
+                            则返回。
+                        </li>
+                        <li>将 |method| 设置为 [=ASCII uppercase=] |target|["method"]。
+                        </li>
+                    </ol>
+                </li>
+                <li>令 |enctype:string| 为 "application/x-www-form-urlencoded"。
+                </li>
+                <li>如果 |method| 为 `"POST"`：
+                    <ol>
+                        <li>如果 |target|["enctype"] 既不是与字符串
+                            `"application/x-www-form-urlencoded"` 的 [=ASCII
+                            case-insensitive=] 匹配，也不是与
+                            `"multipart/form-data"` 的匹配，则返回。
+                        </li>
+                        <li>将 |enctype| 设置为 [=ASCII lowercase=] |target|["enctype"]。
+                        </li>
+                    </ol>
+                </li>
+                <li>令 |params:ordered map| 为一个新的 [=ordered map=]。
+                </li>
+                <li>处理 [=ShareTarget/params=]：
+                    <ol>
+                        <li>[=List/For each=] |member:string| of « "title", "text", "url"
+                            »：
+                            <ol>
+                                <li>如果 |target|["param"] 不具有属性 |member|，
+                                    则继续。
+                                </li>
+                                <li>如果 |target|["param"][member] 不是 [=string=]，则返回。
+                                </li>
+                                <li>将 |params|[member] 设置为 |target|["param"][member]。
+                                </li>
+                            </ol>
+                        </li>
+                    </ol>
+                </li>
+                <li>将 |manifest|["share_target"] 设置为 [=ordered map=] «[<br>
+                    "action" → [=URL serializer|serialize=] |action|,<br>
+                    "enctype" → |enctype|,<br>
+                    "method" → |method|,<br>
+                    "params" → |params|,<br>
+                    ]»。
+                </li>
+            </ol>
+        </section>
+        <section>
+            <h3>
+                `ShareTarget` 及其成员
+            </h3>
+            <p>
+                <dfn>ShareTarget</dfn> [=object=] 可以具有以下成员：
+            </p>
+            <dl>
+                <dt>
+                    <code><dfn data-dfn-for="ShareTarget">action</dfn></code> 成员
+                </dt>
+                <dd>
+                    一个 [=string=]，用于指定 [=web share
+                    target=] 的 [=URL=]。
+                </dd>
+                <dt>
+                    <code><dfn data-dfn-for="ShareTarget">method</dfn></code> 成员
+                </dt>
+                <dd>
+                    一个 [=string=]，用于指定 [=web share target=] 的 HTTP [=request=]
+                    [=request/method=]。
+                    <aside class="note">
+                        `GET` 请求的一个用例是共享目标为后续用户批准而起草消息。
+                        否则，如果共享目标在没有任何用户交互的情况下执行副作用，请使用 `POST`。
+                    </aside>
+                </dd>
+                <dt>
+                    <code><dfn data-dfn-for="ShareTarget">enctype</dfn></code> 成员
+                </dt>
+                <dd>
+                    一个 [=string=]，用于指定在 `POST` 请求的正文中如何编码共享数据。
+                    当 [=method=] 为 `"GET"` 时，它会被忽略。
+                </dd>
+                <dt>
+                    <code><dfn data-dfn-for="ShareTarget">params</dfn></code> 成员
+                </dt>
+                <dd>
+                    一个 <a>ShareTargetParams</a> [=object=]。
+                </dd>
+            </dl>
+        </section>
+        <section>
+            <h3>
+                `ShareTargetParams` 及其成员
+            </h3>
+            <p>
+                <dfn>ShareTargetParams</dfn> [=object=] 可以具有以下成员：
+            </p>
+            <dl>
+                <dt>
+                    <code><dfn data-dfn-for="ShareTargetParams">title</dfn></code>
+                    成员
+                </dt>
+                <dd>
+                    一个 [=string=]，用于指定共享文档标题所使用的查询参数名称。
+                </dd>
+                <dt>
+                    <code><dfn data-dfn-for="ShareTargetParams">text</dfn></code>
+                    成员
+                </dt>
+                <dd>
+                    一个 [=string=]，用于指定构成被共享消息正文的任意文本所使用的查询参数名称。
+                </dd>
+                <dt>
+                    <code><dfn data-dfn-for="ShareTargetParams">url</dfn></code> 成员
+                </dt>
+                <dd>
+                    一个 [=string=]，用于指定引用被共享资源的 URL 字符串所使用的查询参数名称。
+                </dd>
+            </dl>
+        </section>
+    </section>
+    <section>
+        <h2>
+            Web 共享目标的注册
+        </h2>
+        <p>
+            <a>Web 共享目标</a>如何以及何时被“注册”，由用户代理和/或最终用户自行决定。事实上，
+            “注册”是一个用户代理特有的概念，此处并未正式定义；用户代理完全不要求“注册”Web 共享目标；
+            它们只被要求提供某种机制，将共享数据传递给最终用户所选择的 Web 共享目标。
+            即使 Web 共享目标不是 [=installed web application|installed=]，用户代理也可以认为它已“注册”。
+        </p>
+        <p>
+            用户代理可以在用户访问站点时自动注册所有 <a>Web 共享目标</a>，但建议采用更多酌情判断，
+            以避免让大量目标选项压倒用户。
+        </p>
+        <div class="note">
+            <p>
+                用户代理可以采用的注册策略示例包括：
+            </p>
+            <ul>
+                <li>仅在 Web 共享目标成为 [=installed web
+                    application|installed=] 后注册它。
+                </li>
+                <li>仅在最终用户已经使用该站点一段时间后注册 Web 共享目标。
+                </li>
+                <li>明确提示用户注册 Web 共享目标
+                    （可能使用与 {{NavigatorContentUtils/registerProtocolHandler()}} 相同的 UI）。
+                </li>
+                <li>仅当 Web 共享目标具有 service worker 时才注册它。
+                </li>
+            </ul>
+        </div>
+        <p>
+            在向最终用户呈现 <a>Web 共享目标</a> 列表时，用户代理可以使用已预先索引清单的在线服务，
+            从而向用户显示他们从未访问或明确注册过的目标。
+        </p>
+        <div class="issue" data-number="26"></div>
+    </section>
+    <section>
+        <h2>
+            处理传入共享
+        </h2>
+        <p>
+            当最终用户正在共享一些面向通用应用的数据，并指明特定 Web 共享目标作为该数据的接收者时，
+            <a>Web 共享目标</a>就会被<dfn data-lt="invoke|invocation">调用</dfn>。
+        </p>
+        <p>
+            数据来自何处，或最终用户如何指明 Web 共享目标作为接收者，并未被指定。不过，一个可能的来源是
+            在同一用户代理中调用 {{Navigator}} 的 {{Navigator/share()}} 方法。
+        </p>
+        <div class="note">
+            <p>
+                <a>Web 共享目标</a>调用的其他可能来源示例包括：
+            </p>
+            <ul>
+                <li>来自用户代理的内置 UI（<i>例如</i>，最终用户从浏览器菜单中选择“共享”，
+                    将当前页面标题作为 "`title`"，并将当前页面 URL 作为 "`url`" 进行共享）。
+                </li>
+                <li>由原生应用触发的共享操作（通过专有共享系统），随后由最终用户选择一个 Web
+                    共享目标作为接收者。
+                </li>
+            </ul>
+        </div>
+        <section>
+            <h3>
+                获取 `ShareData`
+            </h3>
+            <p>
+                当 <a>Web 共享目标</a>被<a>调用</a>时，数据可以采用未指定的格式。
+                用户代理必须首先将数据转换为 {{ShareData}} 对象（如果它还不是），
+                方法是从宿主系统中的等价概念映射到 `ShareData` 的成员。如果来源是对
+                {{Navigator/share()}} 的调用，用户代理应当原样使用 {{ShareData}} 实参
+                （但这并不总是可能，因为它可能必须以有损方式在某种其他格式中往返）。
+                用户代理可以采用启发式方法，尽可能好地将数据映射到 `ShareData` 字段。
+            </p>
+            <p class="note">
+                例如，宿主共享系统可能没有专门的 URL 字段，而是采用一种约定：
+                纯文本和 URL 有时都会在 "text" 字段中传输。Android 就是这种情况。
+                用户代理可以检查 "text" 字段的全部或部分是否为 [=valid
+                URL string=]，如果是，则将该部分从 "text" 字段移动到 {{ShareData}} 的
+                {{ShareData/url}} 成员。
+            </p>
+        </section>
+        <section>
+            <h3>
+                启动 Web 共享目标
+            </h3>
+            <p>
+                当具有 [=ordered map=] |manifest| 的 <a>Web 共享目标</a> 使用 {{ShareData}} |data|
+                被<a>调用</a>时，运行以下步骤：
+            </p>
+            <ol class="algorithm">
+                <li>令 |url:URL| 为 [=URL parser|parsing=]
+                    |manifest|["share_target"]["action"] 的结果。
+                </li>
+                <li>令 |entries:list| 为一个新的空 [=list=]。
+                </li>
+                <li>[=List/For each=] |member:string| of « "title", "text", "url" »：
+                    <ol>
+                        <li>令 |name:string| 为
+                            |manifest|["share_target"]["params"][|member|] 的值。
+                        </li>
+                        <li>如果 |name| 为 `undefined` 或空字符串，则继续。
+                        </li>
+                        <li>如果 |data|[|member|] 为 `undefined`，则继续。
+                        </li>
+                        <li>令 |value:string| 为 <a data-cite="ecma262#sec-tostring">ToString</a>(|data|[|member|])。
+                        </li>
+                        <li>将 [=tuple=] (|name|, |value|) [=List/Append=] 到 |entry list|。
+                        </li>
+                    </ol>
+                </li>
+                <li>令 |header list| 为一个新创建的 [=Headers/header list=]。
+                </li>
+                <li>令 |method:string| 为 |manifest|["share_target"]["method"]。
+                </li>
+                <li>令 |enctype:string| 为 |manifest|["share_target"]["enctype"]。
+                </li>
+                <li>如果 |method| 为 `"GET"`：
+                    <ol>
+                        <li>令 |query| 为在 |entries| 上运行 [=urlencoded
+                            serializer=] 且不使用编码覆盖的结果。
+                        </li>
+                        <li>将 |url| 的 [=URL/query=] 组件设置为 |query|。
+                        </li>
+                        <li>令 |body| 为 null。
+                        </li>
+                    </ol>
+                </li>
+                <li>否则，如果 |method| 为 `"POST"` 且 |enctype| 为
+                    `"application/x-www-form-urlencoded"`：
+                    <ol>
+                        <li>令 |body:string| 为在 |entries| 上运行 [=urlencoded
+                            serializer=] 且不使用编码覆盖的结果。
+                        </li>
+                        <li>将 |body| 设置为 [=UTF-8 encode=] |body| 的结果。
+                        </li>
+                        <li>将
+                            `"Content-Type"`/`"application/x-www-form-urlencoded"` [=header list/Append=] 到 |header
+                            list|。
+                        </li>
+                    </ol>
+                </li>
+                <li>否则，如果 |method| 为 `"POST"` 且 | enctype| 为
+                    `"multipart/form-data"`：
+                    <ol>
+                        <li>令 |body| 为使用 |entries| 和 [=UTF-8=] 编码运行
+                            <a>multipart/form-data encoding algorithm</a> 的结果。
+                        </li>
+                        <li>令 |MIME type:string| 为字符串
+                            `"multipart/form-data;"`、一个 U+0020 SPACE 字符、字符串
+                            `"boundary="`，以及由 [=`multipart\/form-data` encoding algorithm=]
+                            生成的 [=`multipart\/form-data` boundary string=] 的拼接结果。
+                        </li>
+                        <li>将 `"Content-Type"`/|MIME type| [=header list/Append=] 到
+                            |header list|。
+                        </li>
+                    </ol>
+                </li>
+                <li>令 |browsing context| 为创建一个
+                    <a data-cite="HTML#creating-a-new-browsing-context">新的</a>
+                    [=top-level browsing context=] 的结果。
+                </li>
+                <li>令 |request:Request| 为一个新的 [=Request=]，其 method 为
+                    |method|，url 为 |url|，header list 为 |header list|，body 为
+                    |body|。
+                </li>
+                <li>[=Navigate=] |browsing context| 到 |request =|
+                </li>
+            </ol>
+            <p class="note">
+                此算法假设 |manifest| 已经对其运行过 [=process the
+                `share_target` member=] 算法，并且之后仍具有
+                [=manifest/share_target=]。
+            </p>
+        </section>
+    </section>
+    <section class="informative">
+        <h2>
+            无障碍
+        </h2>
+        <p>
+            本规范没有已知的无障碍注意事项。
+        </p>
+    </section>
+    <section class="informative">
+        <h2>
+            安全与隐私注意事项
+        </h2>
+        <ul>
+            <li>调用 <a>Web 共享目标</a> 意味着可能会将用户的私有数据发送给第三方网站。
+                实现者应采取一切预防措施，确保用户在运行<a>调用</a>算法之前，
+                理解数据正在被发送给哪一方（<i>例如</i>，传达 Web 共享目标的源）。
+            </li>
+            <li>特别需要关注的是欺骗：Web 共享目标通过相应地设置其名称和图标，
+                将自己呈现为另一个主体。
+            </li>
+            <li>如果 Web 共享目标是从在线索引中选择的，而不是从最终用户明确安装或注册的一组目标中选择的，
+                欺骗风险会增加。
+            </li>
+            <li>要求 Web 共享目标的源为 [=potentially trustworthy origin=]，
+                是为了防止私有用户数据被传输给不控制相关源的主体，或以明文形式在网络上传输。
+            </li>
+            <li>使用 Web Share API 的来源站点和使用 Web Share Target 的接收方站点可以合作关联用户 ID。
+                来源站点可以使用 `navigator.share(text: my_id_for_this_user)`，
+                而（由用户选择的）接收方可以使用该信息将自己的用户 ID 与来源源的用户 ID 关联起来。
+                传输双方都需要编写代码来完成该传输，并且用户需要选择接收方。
+            </li>
+        </ul>
+    </section>
+    <section id="conformance"></section>
+    <section class="appendix informative">
+        <h2>
+            致谢
+        </h2>
+        <p>
+            感谢 [[[WEBINTENTS]]] 团队，他们为 Web 应用互操作用例奠定了基础。特别感谢
+            <a href="https://paul.kinlan.me/">Paul Kinlan</a>，
+            他为 Web Share 和 Web Share Target 做了大量早期倡导工作。
+        </p>
+        <p>
+            感谢 Connie Pyromallis，她撰写了本规范的早期草案，并帮助设计和原型化此 API。
+        </p>
+        <p>
+            感谢 Alex Russell 和 David Baron 对本规范早期草案的反馈。
+        </p>
+    </section>
+    <section id="index"></section>
+    <script src="https://htmlspecs.com/dropdown.js"></script>
+</body>
+
+</html>
