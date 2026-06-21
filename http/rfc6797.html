@@ -1,0 +1,2317 @@
+<pre>Internet 工程任务组 (IETF)                                J. Hodges
+请求评议：6797                                               PayPal
+类别：标准轨道                                            C. Jackson
+ISSN: 2070-1721                                      卡内基梅隆大学
+                                                                A. Barth
+                                                            Google, Inc.
+                                                           2012 年 11 月
+
+
+                 <span class="h1">HTTP 严格传输安全 (HSTS)</span>
+
+摘要
+
+   本规范定义了一种机制，使 Web 站点能够声明其自身只能
+   通过安全连接访问，和/或使用户能够指示其用户代理
+   仅通过安全连接与给定站点交互。此整体策略称为
+   HTTP 严格传输安全（HSTS）。该策略由 Web 站点通过
+   Strict-Transport-Security HTTP 响应头字段声明，和/或
+   通过其他方式声明，例如用户代理配置。
+
+本备忘录状态
+
+   这是一份 Internet 标准轨道文档。
+
+   本文档是 Internet 工程任务组（IETF）的产物。它代表了
+   IETF 社群的共识。它已接受公众审查，并已获
+   Internet 工程指导组（IESG）批准发布。关于 Internet 标准的
+   更多信息可见 <a href="./rfc5741#section-2">RFC 5741 第&nbsp;2 节</a>。
+
+   关于本文档当前状态、任何勘误以及如何提供反馈的信息，
+   可在以下地址获取：
+   <a href="http://www.rfc-editor.org/info/rfc6797">http://www.rfc-editor.org/info/rfc6797</a>。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Hodges 等                    标准轨道                         [第 1 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-2" ></span>
+<span class="grey"><a href="./rfc6797">RFC 6797</a>          HTTP 严格传输安全 (HSTS)        2012 年 11 月</span>
+
+
+Copyright Notice
+
+   Copyright (c) 2012 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to <a href="https://www.rfc-editor.org/bcp/bcp78">BCP 78</a> and the IETF Trust's Legal
+   Provisions Relating to IETF Documents
+   (<a href="http://trustee.ietf.org/license-info">http://trustee.ietf.org/license-info</a>) in effect on the date of
+   publication of this document.  Please review these documents
+   carefully, as they describe your rights and restrictions with respect
+   to this document.  Code Components extracted from this document must
+   include Simplified BSD License text as described in Section 4.e of
+   the Trust Legal Provisions and are provided without warranty as
+   described in the Simplified BSD License.
+
+Table of Contents
+
+   <a href="#section-1">1</a>. 引言 ........................................................<a href="#page-4">4</a>
+      <a href="#section-1.1">1.1</a>. 本规范的组织结构 .........................................<a href="#page-6">6</a>
+      <a href="#section-1.2">1.2</a>. 文档约定 .................................................<a href="#page-6">6</a>
+   <a href="#section-2">2</a>. 概述 ........................................................<a href="#page-6">6</a>
+      <a href="#section-2.1">2.1</a>. 用例 .....................................................<a href="#page-6">6</a>
+      <a href="#section-2.2">2.2</a>. HTTP 严格传输安全策略效果 ...............................<a href="#page-6">6</a>
+      <a href="#section-2.3">2.3</a>. 威胁模型 .................................................<a href="#page-6">6</a>
+           <a href="#section-2.3.1">2.3.1</a>. 所应对的威胁 ...................................<a href="#page-7">7</a>
+                  <a href="#section-2.3.1.1">2.3.1.1</a>. 被动网络攻击者 ........................<a href="#page-7">7</a>
+                  <a href="#section-2.3.1.2">2.3.1.2</a>. 主动网络攻击者 ........................<a href="#page-7">7</a>
+                  <a href="#section-2.3.1.3">2.3.1.3</a>. 网站开发和部署缺陷 ....................<a href="#page-8">8</a>
+           <a href="#section-2.3.2">2.3.2</a>. 未应对的威胁 ...................................<a href="#page-8">8</a>
+                  <a href="#section-2.3.2.1">2.3.2.1</a>. 网络钓鱼 ..............................<a href="#page-8">8</a>
+                  <a href="#section-2.3.2.2">2.3.2.2</a>. 恶意软件和浏览器漏洞 ..................<a href="#page-8">8</a>
+      <a href="#section-2.4">2.4</a>. 需求 .....................................................<a href="#page-9">9</a>
+           <a href="#section-2.4.1">2.4.1</a>. 总体需求 .......................................<a href="#page-9">9</a>
+                  <a href="#section-2.4.1.1">2.4.1.1</a>. 详细核心需求 ..........................<a href="#page-9">9</a>
+                  <a href="#section-2.4.1.2">2.4.1.2</a>. 详细辅助需求 .........................<a href="#page-10">10</a>
+   <a href="#section-3">3</a>. 一致性准则 ..................................................<a href="#page-10">10</a>
+   <a href="#section-4">4</a>. 术语 ........................................................<a href="#page-11">11</a>
+   <a href="#section-5">5</a>. HSTS 机制概述 ...............................................<a href="#page-13">13</a>
+      <a href="#section-5.1">5.1</a>. HSTS 主机声明 ............................................<a href="#page-13">13</a>
+      <a href="#section-5.2">5.2</a>. HSTS 策略 ................................................<a href="#page-13">13</a>
+      <a href="#section-5.3">5.3</a>. 用户代理对 HSTS 策略的存储和维护 ........................<a href="#page-14">14</a>
+      <a href="#section-5.4">5.4</a>. 用户代理的 HSTS 策略执行 ................................<a href="#page-14">14</a>
+   <a href="#section-6">6</a>. 语法 ........................................................<a href="#page-14">14</a>
+      <a href="#section-6.1">6.1</a>. Strict-Transport-Security HTTP 响应头字段 ................<a href="#page-15">15</a>
+           <a href="#section-6.1.1">6.1.1</a>. max-age 指令 ...................................<a href="#page-16">16</a>
+           <a href="#section-6.1.2">6.1.2</a>. includeSubDomains 指令 .........................<a href="#page-16">16</a>
+      <a href="#section-6.2">6.2</a>. 示例 ....................................................<a href="#page-16">16</a>
+
+
+
+
+<span class="grey">Hodges 等                    标准轨道                         [第 2 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-3" ></span>
+<span class="grey"><a href="./rfc6797">RFC 6797</a>          HTTP 严格传输安全 (HSTS)        2012 年 11 月</span>
+
+
+   <a href="#section-7">7</a>. 服务器处理模型 ..............................................<a href="#page-17">17</a>
+      <a href="#section-7.1">7.1</a>. 基于安全传输的 HTTP 请求类型 ............................<a href="#page-17">17</a>
+      <a href="#section-7.2">7.2</a>. HTTP 请求类型 ............................................<a href="#page-18">18</a>
+   <a href="#section-8">8</a>. 用户代理处理模型 ............................................<a href="#page-18">18</a>
+      8.1. Strict-Transport-Security 响应头字段
+           处理 ....................................................<a href="#page-19">19</a>
+           <a href="#section-8.1.1">8.1.1</a>. 记录 HSTS 主机 - 存储模型 ......................<a href="#page-20">20</a>
+      <a href="#section-8.2">8.2</a>. 已知 HSTS 主机域名匹配 ...................................<a href="#page-20">20</a>
+      <a href="#section-8.3">8.3</a>. URI 加载和端口映射 .......................................<a href="#page-21">21</a>
+      <a href="#section-8.4">8.4</a>. 安全传输建立中的错误 ....................................<a href="#page-22">22</a>
+      <a href="#section-8.5">8.5</a>. HTTP-Equiv &lt;Meta&gt; 元素属性 ..............................<a href="#page-22">22</a>
+      <a href="#section-8.6">8.6</a>. 缺失 Strict-Transport-Security 响应头字段 .................<a href="#page-23">23</a>
+   <a href="#section-9">9</a>. 构造有效请求 URI ............................................<a href="#page-23">23</a>
+      <a href="#section-9.1">9.1</a>. ERU 基本定义 .............................................<a href="#page-23">23</a>
+      <a href="#section-9.2">9.2</a>. 确定有效请求 URI .........................................<a href="#page-24">24</a>
+           <a href="#section-9.2.1">9.2.1</a>. 有效请求 URI 示例 ..............................<a href="#page-24">24</a>
+   <a href="#section-10">10</a>. 域名 IDNA 规范化 ............................................<a href="#page-25">25</a>
+   <a href="#section-11">11</a>. 服务器实现和部署建议 .......................................<a href="#page-26">26</a>
+      <a href="#section-11.1">11.1</a>. 非一致性用户代理注意事项 ...............................<a href="#page-26">26</a>
+      <a href="#section-11.2">11.2</a>. HSTS 策略过期时间注意事项 ..............................<a href="#page-26">26</a>
+      11.3. 将 HSTS 与自签名公钥证书
+            结合使用 ................................................<a href="#page-27">27</a>
+      <a href="#section-11.4">11.4</a>. includeSubDomains 的影响 .................................<a href="#page-28">28</a>
+            11.4.1. 在 HSTS 主机的备用端口或子域上
+                    提供不安全 HTTP 服务的注意事项 .................<a href="#page-28">28</a>
+            11.4.2. 在 HSTS 主机的子域上
+                    提供 Web 应用程序的注意事项 ....................<a href="#page-29">29</a>
+   <a href="#section-12">12</a>. 用户代理实现建议 ...........................................<a href="#page-30">30</a>
+      <a href="#section-12.1">12.1</a>. 不给用户补救途径 .......................................<a href="#page-30">30</a>
+      <a href="#section-12.2">12.2</a>. 用户声明的 HSTS 策略 ....................................<a href="#page-30">30</a>
+      <a href="#section-12.3">12.3</a>. HSTS 预加载列表 .........................................<a href="#page-31">31</a>
+      <a href="#section-12.4">12.4</a>. 禁止加载混合安全上下文 .................................<a href="#page-31">31</a>
+      <a href="#section-12.5">12.5</a>. HSTS 策略删除 ...........................................<a href="#page-31">31</a>
+   13. 国际化域名应用（IDNA）：
+       依赖和迁移 ..................................................<a href="#page-32">32</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Hodges 等                    标准轨道                         [第 3 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-4" ></span>
+<span class="grey"><a href="./rfc6797">RFC 6797</a>          HTTP 严格传输安全 (HSTS)        2012 年 11 月</span>
+
+
+   <a href="#section-14">14</a>. 安全考虑事项 ...............................................<a href="#page-32">32</a>
+      <a href="#section-14.1">14.1</a>. 底层安全传输注意事项 ...................................<a href="#page-32">32</a>
+      <a href="#section-14.2">14.2</a>. 非一致性用户代理的影响 .................................<a href="#page-33">33</a>
+      14.3. 仅通过无错误安全传输建立 HSTS 策略的
+            后果 ....................................................<a href="#page-33">33</a>
+      <a href="#section-14.4">14.4</a>. includeSubDomains 的必要性 ...............................<a href="#page-34">34</a>
+      <a href="#section-14.5">14.5</a>. 拒绝服务 .................................................<a href="#page-35">35</a>
+      <a href="#section-14.6">14.6</a>. 引导阶段 MITM 漏洞 ......................................<a href="#page-36">36</a>
+      <a href="#section-14.7">14.7</a>. 网络时间攻击 ............................................<a href="#page-37">37</a>
+      14.8. 伪造根 CA 证书钓鱼加 DNS 缓存
+            投毒攻击 ................................................<a href="#page-37">37</a>
+      <a href="#section-14.9">14.9</a>. 对 HSTS 策略存储的创造性操纵 ...........................<a href="#page-37">37</a>
+      <a href="#section-14.10">14.10</a>. 国际化域名 .............................................<a href="#page-38">38</a>
+   <a href="#section-15">15</a>. IANA 考虑事项 ...............................................<a href="#page-39">39</a>
+   <a href="#section-16">16</a>. 参考文献 ....................................................<a href="#page-39">39</a>
+      <a href="#section-16.1">16.1</a>. 规范性参考文献 .........................................<a href="#page-39">39</a>
+      <a href="#section-16.2">16.2</a>. 资料性参考文献 .........................................<a href="#page-40">40</a>
+   <a href="#appendix-A">附录 A</a>. 设计决策说明 ...........................................<a href="#page-44">44</a>
+   <a href="#appendix-B">附录 B</a>. HSTS 策略与同源
+               策略之间的差异 ......................................<a href="#page-45">45</a>
+   <a href="#appendix-C">附录 C</a>. 致谢 ...................................................<a href="#page-46">46</a>
+
+<span class="h2"><a class="selflink" id="section-1" href="#section-1">1</a>.  引言</span>
+
+   HTTP [<a href="./rfc2616" title="&quot;Hypertext Transfer Protocol -- HTTP/1.1&quot;">RFC2616</a>] 可以通过各种传输层使用，典型情况下是
+   传输控制协议（TCP）。然而，TCP 不提供
+   信道完整性保护、保密性或安全的主机
+   标识。因此，安全套接字层（SSL）协议
+   [<a href="./rfc6101" title="&quot;The Secure Sockets Layer (SSL) Protocol Version 3.0&quot;">RFC6101</a>] 及其后继者传输层安全性（TLS）[<a href="./rfc5246" title="&quot;The Transport Layer Security (TLS) Protocol Version 1.2&quot;">RFC5246</a>]
+   被开发出来以提供面向信道的安全性，并且
+   通常位于应用协议和 TCP 之间。[<a href="./rfc2818" title="&quot;HTTP Over TLS&quot;">RFC2818</a>]
+   规定了如何将 HTTP 分层到 TLS 之上，并定义了
+   "https" 的统一资源标识符（URI）方案（不过实践中，
+   HTTP 用户代理（UA）通常会使用 TLS 或 SSL3，具体取决于
+   与服务器协商和用户偏好的组合）。
+
+   UA 会根据其与 Web 资源交互的特征采用各种本地安全策略，
+   这部分取决于它们是使用 HTTP 还是基于安全传输的 HTTP
+   与给定 Web 资源的主机通信。例如，cookie
+   （[<a href="./rfc6265" title="&quot;HTTP State Management Mechanism&quot;">RFC6265</a>]）可以被标记为 Secure。UA 应仅通过
+   安全传输向其目标主机发送此类 Secure cookie。这与
+   非 Secure cookie 形成对比，后者无论传输方式如何都会
+   返回给主机（尽管还受其他规则约束）。
+
+
+
+
+
+<span class="grey">Hodges 等                    标准轨道                         [第 4 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-5" ></span>
+<span class="grey"><a href="./rfc6797">RFC 6797</a>          HTTP 严格传输安全 (HSTS)        2012 年 11 月</span>
+
+
+   UA 通常会向其用户提示安全连接建立过程中的任何问题，
+   例如无法验证 TLS 服务器证书信任链、TLS 服务器证书
+   已过期，或 TLS 主机的域名在 TLS 服务器证书中似乎不正确
+   （见 <a href="./rfc2818#section-3.1">[RFC2818] 第&nbsp;3.1 节</a>）。通常，UA 会允许用户
+   在面对这些问题时选择继续与 Web 资源的主机交互。
+   这种行为有时称为“点击通过”安全
+   [<a href="#ref-GoodDhamijaEtAl05">GoodDhamijaEtAl05</a>]
+   [<a href="#ref-SunshineEgelmanEtAl09">SunshineEgelmanEtAl09</a>]；因此，它可被描述为“点击通过式
+   不安全”。
+
+   由点击通过式不安全导致的一个关键漏洞，是泄露 Web 资源
+   可能用于管理用户会话的任何 cookie。此处的威胁是，攻击者
+   可能获取这些 cookie，然后在冒充用户的同时与合法
+   Web 资源交互。
+
+   Jackson 和 Barth 在 [<a href="#ref-ForceHTTPS">ForceHTTPS</a>] 中提出了一种方法，使
+   Web 资源能够声明：UA 与该 Web 资源的任何交互都必须
+   以安全方式进行，并且建立安全传输会话时的任何问题都应
+   被视为致命错误，且不提供直接的用户补救途径。其目标是
+   防止点击通过式不安全，并应对其他潜在威胁。
+
+   本规范体现并细化了 [<a href="#ref-ForceHTTPS">ForceHTTPS</a>] 中提出的方法。
+   例如，它不是使用 cookie 将策略从 Web 资源的主机传达给
+   UA，而是为此目的定义了一个 HTTP 响应头字段。此外，
+   Web 资源的主机可以声明其策略适用于以其主机名为根的
+   整个域名子树。这使 HTTP 严格传输安全（HSTS）能够保护
+   所谓的“域 cookie”，即那些应用于给定 Web 资源主机名的
+   所有子域的 cookie。
+
+   本规范还吸收了 [<a href="#ref-JacksonBarth2008">JacksonBarth2008</a>] 中的概念，即策略按
+   “整台主机”为基础应用：它适用于发布该策略的主机在
+   任意 TCP 端口上的 HTTP（仅限 HTTP）。
+
+   注意，本规范定义的策略与“The Web Origin
+   Concept” [<a href="./rfc6454" title="&quot;The Web Origin Concept&quot;">RFC6454</a>] 中定义的“同源策略”明显不同。
+   这些差异在<a href="#appendix-B">附录 B</a> 中总结。
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Hodges 等                    标准轨道                         [第 5 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-6" ></span>
+<span class="grey"><a href="./rfc6797">RFC 6797</a>          HTTP 严格传输安全 (HSTS)        2012 年 11 月</span>
+
+
+<span class="h3"><a class="selflink" id="section-1.1" href="#section-1.1">1.1</a>.  本规范的组织结构</span>
+
+   本规范首先概述 HSTS 的用例、策略效果、威胁模型和需求
+   （见<a href="#section-2">第 2 节</a>）。然后，<a href="#section-3">第 3 节</a> 定义一致性要求。
+   <a href="#section-4">第 4 节</a> 定义与本文档相关的术语。HSTS 机制本身在
+   第 <a href="#section-5">5</a> 节至第 <a href="#section-15">15</a> 节中正式规定。
+
+<span class="h3"><a class="selflink" id="section-1.2" href="#section-1.2">1.2</a>.  文档约定</span>
+
+   注意：这是给读者的注释。这些是应当明确牢记和/或
+          加以考虑的要点。
+
+<span class="h2"><a class="selflink" id="section-2" href="#section-2">2</a>.  概述</span>
+
+   本节讨论用例，总结 HSTS 策略，并继续讨论威胁模型、
+   未应对的威胁以及由此推导出的需求。
+
+<span class="h3"><a class="selflink" id="section-2.1" href="#section-2.1">2.1</a>.  用例</span>
+
+   高层用例是以下内容的组合：
+
+   o  Web 浏览器用户希望以安全方式与各种网站（一些是
+      任意网站，一些是已知网站）交互。
+
+   o  网站部署者希望以明确安全的方式提供其站点，
+      以使自己及其用户受益。
+
+<span class="h3"><a class="selflink" id="section-2.2" href="#section-2.2">2.2</a>.  HTTP 严格传输安全策略效果</span>
+
+   HSTS 策略由符合要求的 UA 在与持有该策略的 Web 资源主机
+   （称为 HSTS 主机）交互时应用，其效果概括如下：
+
+   1.  UA 在解引用不安全的 URI 引用之前，会将其转换为
+       指向 HSTS 主机的安全 URI 引用。
+
+   2.  一旦出现任何和所有安全传输错误或警告，UA 就终止
+       任何安全传输连接尝试。
+
+<span class="h3"><a class="selflink" id="section-2.3" href="#section-2.3">2.3</a>.  威胁模型</span>
+
+   HSTS 关注三类威胁：被动网络攻击者、主动网络攻击者以及
+   不完美的 Web 开发人员。然而，它明确不是另外两类威胁的
+   补救措施：网络钓鱼和恶意软件。下面简要讨论所应对的
+   威胁以及未应对的威胁。
+
+
+
+<span class="grey">Hodges 等                    标准轨道                         [第 6 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-7" ></span>
+<span class="grey"><a href="./rfc6797">RFC 6797</a>          HTTP 严格传输安全 (HSTS)        2012 年 11 月</span>
+
+
+   读者可参阅 [<a href="#ref-ForceHTTPS">ForceHTTPS</a>] 第 2 节，以了解详情以及相关引用。
+
+<span class="h4"><a class="selflink" id="section-2.3.1" href="#section-2.3.1">2.3.1</a>.  所应对的威胁</span>
+
+<span class="h5"><a class="selflink" id="section-2.3.1.1" href="#section-2.3.1.1">2.3.1.1</a>.  被动网络攻击者</span>
+
+   当用户在本地无线网络（例如，基于 802.11 的无线局域网）
+   上浏览 Web 时，附近的攻击者可能能够窃听用户未加密的
+   基于 Internet 协议的连接，例如 HTTP，而无论本地无线网络
+   本身是否已受保护 [<a href="#ref-BeckTews09">BeckTews09</a>]。免费可获得的无线嗅探
+   工具包（例如 [<a href="#ref-Aircrack-ng">Aircrack-ng</a>]）使此类被动窃听攻击成为可能，
+   即使本地无线网络以安全方式运行也是如此。使用此类工具的
+   被动网络攻击者可以窃取会话标识符/cookie，并通过获取包含
+   认证凭据的 cookie 来劫持用户的 Web 会话 [<a href="#ref-ForceHTTPS">ForceHTTPS</a>]。
+   例如，存在广泛可得的工具，例如 Firesheep（一个 Web 浏览器
+   扩展）[<a href="#ref-Firesheep">Firesheep</a>]，可使其使用者获取其他本地用户用于各种
+   Web 应用程序的会话 cookie。
+
+   为缓解此类威胁，一些网站支持但通常不会强制使用端到端
+   安全传输进行访问——例如，通过使用 "https" 方案构造的
+   URI 来表示 [<a href="./rfc2818" title="&quot;HTTP Over TLS&quot;">RFC2818</a>]。这可能导致用户认为，使用安全传输访问
+   此类服务可以保护他们免受被动网络攻击者的侵害。不幸的是，
+   在现实世界部署中情况往往并非如此，因为会话标识符通常
+   存储在非 Secure cookie 中，以便与通过不安全传输提供的
+   服务版本互操作（“Secure cookie”是包含 "Secure" 属性的
+   cookie [<a href="./rfc6265" title="&quot;HTTP State Management Mechanism&quot;">RFC6265</a>]）。例如，如果某个网站（比如电子邮件服务）的
+   会话标识符存储在非 Secure cookie 中，那么只要用户的 UA
+   向该站点发起一次不安全的 HTTP 请求，就会允许攻击者劫持
+   用户的会话。
+
+<span class="h5"><a class="selflink" id="section-2.3.1.2" href="#section-2.3.1.2">2.3.1.2</a>.  主动网络攻击者</span>
+
+   有决心的攻击者可以发动主动攻击，方式可以是冒充用户的
+   DNS 服务器，或者在无线网络中伪造网络帧，或提供一个
+   名称相似的恶意双胞胎接入点。如果用户位于无线家庭路由器
+   之后，攻击者可以尝试使用默认密码和其他漏洞重新配置该
+   路由器。一些站点，例如银行，依赖端到端安全传输来保护
+   自身和其用户免受此类主动攻击者侵害。不幸的是，浏览器
+   允许其用户轻易地选择退出这些保护，以便能够使用那些错误
+   部署安全传输的站点，
+
+
+
+<span class="grey">Hodges 等                    标准轨道                         [第 7 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-8" ></span>
+<span class="grey"><a href="./rfc6797">RFC 6797</a>          HTTP 严格传输安全 (HSTS)        2012 年 11 月</span>
+
+
+   例如自行生成并自签名证书（而不同时向用户的浏览器分发其
+   认证机构（CA）证书）的站点。
+
+<span class="h5"><a class="selflink" id="section-2.3.1.3" href="#section-2.3.1.3">2.3.1.3</a>.  网站开发和部署缺陷</span>
+
+   一个本来统一安全的站点（即其全部内容都通过 "https" URI
+   具现化）可能会因一个简单错误而被主动攻击者完全破坏，
+   例如通过不安全连接加载层叠样式表或 SWF（Shockwave Flash）
+   影片（层叠样式表和 SWF 影片都可以对嵌入页面编写脚本，
+   这出乎许多 Web 开发者的意料；此外，一些浏览器在通过
+   不安全连接嵌入 SWF 文件时不会发出所谓的“混合内容警告”）。
+   即使站点开发者仔细检查其登录页面是否存在“混合内容”，
+   整个站点中任何位置的一处不安全嵌入都会破坏其登录页面的
+   安全性，因为攻击者可以通过向另一个不安全加载的站点页面
+   注入代码（例如脚本）来对登录页面编写脚本（即控制它）。
+
+   注意：上文所用的“混合内容”（另见
+          [<a href="#ref-W3C.REC-wsc-ui-20100812">W3C.REC-wsc-ui-20100812</a>] 第 5.3 节）指的是本规范中称为
+          “混合安全上下文”的概念，不应与 XML 和 HTML 等标记语言
+          语境中使用的同一个“混合内容”术语混淆。
+
+<span class="h4"><a class="selflink" id="section-2.3.2" href="#section-2.3.2">2.3.2</a>.  未应对的威胁</span>
+
+<span class="h5"><a class="selflink" id="section-2.3.2.1" href="#section-2.3.2.1">2.3.2.1</a>.  网络钓鱼</span>
+
+   网络钓鱼攻击发生在攻击者通过托管位于与真实站点不同域名
+   上的假站点来向用户诱取认证凭据时，也许还会通过在电子邮件
+   消息中发送链接来把流量引向该假站点。网络钓鱼攻击可以非常
+   有效，因为用户很难区分真实站点和假站点。HSTS 本身并不是
+   针对网络钓鱼的防御；相反，它通过指示浏览器保护会话完整性
+   和长期认证令牌，补充许多现有的网络钓鱼防御 [<a href="#ref-ForceHTTPS">ForceHTTPS</a>]。
+
+<span class="h5"><a class="selflink" id="section-2.3.2.2" href="#section-2.3.2.2">2.3.2.2</a>.  恶意软件和浏览器漏洞</span>
+
+   由于 HSTS 是作为浏览器安全机制实现的，它依赖用户系统的
+   可信性来保护会话。无论是否使用 HSTS，在用户系统上执行的
+   恶意代码都可能破坏浏览器会话。
+
+
+
+
+<span class="grey">Hodges 等                    标准轨道                         [第 8 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-9" ></span>
+<span class="grey"><a href="./rfc6797">RFC 6797</a>          HTTP 严格传输安全 (HSTS)        2012 年 11 月</span>
+
+
+<span class="h3"><a class="selflink" id="section-2.4" href="#section-2.4">2.4</a>.  需求</span>
+
+   本节识别并列举从上述用例和威胁中推导出的各种需求，并列出
+   HTTP 严格传输安全所应对的详细核心需求，以及未被直接应对的
+   辅助需求。
+
+<span class="h4"><a class="selflink" id="section-2.4.1" href="#section-2.4.1">2.4.1</a>.  总体需求</span>
+
+   o  对 Web 浏览器用户和网站部署者而言，尽量降低源自被动和
+      主动网络攻击者、网站开发和部署缺陷以及不安全用户操作的
+      风险。
+
+<span class="h5"><a class="selflink" id="section-2.4.1.1" href="#section-2.4.1.1">2.4.1.1</a>.  详细核心需求</span>
+
+   这些核心需求源自总体需求，并由本规范加以应对。
+
+   1.  网站需要能够向 UA 声明它们应当使用严格安全策略进行访问。
+
+   2.  网站需要能够指示以不安全方式联系它们的 UA 改用安全方式。
+
+   3.  UA 需要在网站声明的时间跨度内，保留关于那些发出严格安全
+       策略启用信号的网站的持久数据。此外，UA 需要缓存“最新”的
+       严格安全策略信息，以便允许网站更新该信息。
+
+   4.  对于已启用安全策略的网站，UA 需要将所有不安全的 UA
+       "http" URI 加载重写为使用 "https" 安全方案。
+
+   5.  网站管理员需要能够向更高级域名的子域发出严格安全策略
+       应用信号，而 UA 需要执行此类策略；这些更高级域名本身
+       已启用严格安全策略。
+
+       例如，example.com 和 foo.example.com 都可以为
+       bar.foo.example.com 设置策略。
+
+
+
+
+
+
+
+
+
+<span class="grey">Hodges 等                    标准轨道                         [第 9 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-10" ></span>
+<span class="grey"><a href="./rfc6797">RFC 6797</a>          HTTP 严格传输安全 (HSTS)        2012 年 11 月</span>
+
+
+   6.  UA 需要禁止已启用严格安全策略的域将安全策略应用到对等域
+       和/或更高级域。
+
+       例如，bar.foo.example.com 和 foo.example.com 都不能为
+       example.com 设置策略，bar.foo.example.com 也不能为
+       foo.example.com 设置策略。此外，foo.example.com 不能为
+       sibling.example.com 设置策略。
+
+   7.  UA 需要防止用户“点击通过”安全警告。在出现安全传输异常时
+       中止连接尝试是可接受的。另见<a href="#section-12.1">第 12.1 节</a>（“不给用户
+       补救途径”）。
+
+   注意：本规范并未具体应对一种可统一且安全地满足上述第一个
+          核心需求的手段（见<a href="#section-14.6">第 14.6 节</a>（“引导阶段 MITM
+          漏洞”））。它可能由本规范的未来修订版或其他规范来处理。
+          还应注意，UA 实现可以通过一些手段更充分地满足第一个
+          核心需求；见<a href="#section-12">第 12 节</a>（“用户代理实现建议”）。
+
+<span class="h5"><a class="selflink" id="section-2.4.1.2" href="#section-2.4.1.2">2.4.1.2</a>.  详细辅助需求</span>
+
+   这些辅助需求同样源自总体需求。它们在本规范中不作规范性处理，
+   但可由 UA 实现根据其实现者的酌情决定来满足，尽管满足这些
+   需求可能较为复杂。
+
+   1.  禁止“混合安全上下文”加载（见<a href="#section-2.3.1.3">第 2.3.1.3 节</a>）。
+
+   2.  便利用户声明启用严格安全策略的网站，而不论这些站点是否
+       发出 HSTS 策略信号。
+
+<span class="h2"><a class="selflink" id="section-3" href="#section-3">3</a>.  一致性准则</span>
+
+   本规范面向主机和用户代理编写。
+
+   一致性主机是指实现了本规范中列出的、适用于主机的所有要求的
+   主机。
+
+   一致性用户代理是指实现了本规范中列出的、适用于用户代理的
+   所有要求的用户代理。
+
+
+
+
+
+<span class="grey">Hodges 等                    标准轨道                        [第 10 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-11" ></span>
+<span class="grey"><a href="./rfc6797">RFC 6797</a>          HTTP 严格传输安全 (HSTS)        2012 年 11 月</span>
+
+
+   本文档中的关键词 "MUST"、"MUST NOT"、"REQUIRED"、"SHALL"、
+   "SHALL NOT"、"SHOULD"、"SHOULD NOT"、"RECOMMENDED"、"MAY" 和
+   "OPTIONAL" 应按 [<a href="./rfc2119" title="&quot;Key words for use in RFCs to Indicate Requirement Levels&quot;">RFC2119</a>] 中的描述解释。
+
+<span class="h2"><a class="selflink" id="section-4" href="#section-4">4</a>.  术语</span>
+
+   本节定义术语。
+
+   ASCII 大小写不敏感比较：
+
+      指精确地逐码位比较两个字符串，但范围 U+0041 ..  U+005A
+      内的字符（即 LATIN CAPITAL LETTER A 到 LATIN CAPITAL
+      LETTER Z）和范围 U+0061 ..  U+007A 内的相应字符（即
+      LATIN SMALL LETTER A 到 LATIN SMALL LETTER Z）也被视为
+      匹配。详见 [<a href="#ref-Unicode" title="&quot;The Unicode Standard&quot;">Unicode</a>]。
+
+   码位：
+
+      是 Code Point 的口语化缩写，指 Unicode 码空间中的任何值；
+      即从 0 到 10FFFF（十六进制）的整数范围 [<a href="#ref-Unicode" title="&quot;The Unicode Standard&quot;">Unicode</a>]。
+
+   域名：
+
+      也称为“DNS 名称”，在 [<a href="./rfc1035" title="&quot;Domain names - implementation and specification&quot;">RFC1035</a>] 中定义为在 DNS 协议本身
+      （及其实现）之外表示为由点分隔的一系列标签，例如
+      "example.com" 或 "yet.another.example.org"。在本规范的语境中，
+      域名出现在 URI 中满足 [<a href="./rfc3986" title="&quot;Uniform Resource Identifier (URI): Generic Syntax&quot;">RFC3986</a>] 的“Appendix A.  Collected
+      ABNF for URI”中 reg-name 产生式的那部分，以及
+      <a href="./rfc2616#section-14.23">[RFC2616] 第&nbsp;14.23 节</a>中的 Host HTTP 头字段产生式的 host
+      组件中。
+
+      注意：出现在实际 URI 实例中并匹配上述产生式组件的域名，
+             可以是也可以不是完全限定域名。
+
+   域名标签：
+
+      指域名中出现在“点之间”的那部分，即考虑 "foo.example.com"：
+      "foo"、"example" 和 "com" 都是域名标签。
+
+
+
+
+
+
+
+
+<span class="grey">Hodges 等                    标准轨道                        [第 11 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-12" ></span>
+<span class="grey"><a href="./rfc6797">RFC 6797</a>          HTTP 严格传输安全 (HSTS)        2012 年 11 月</span>
+
+
+   有效请求 URI：
+
+      是一个标识目标资源的 URI，可由 HTTP 主机针对其收到的任何
+      给定 HTTP 请求推断出来。之所以需要这种推断，是因为 HTTP
+      请求通常不包含标识目标资源的完整“绝对”URI。见
+      <a href="#section-9">第 9 节</a>（“构造有效请求 URI”）。
+
+   HTTP 严格传输安全：
+
+      是本规范定义的 UA 端和服务器端组合安全策略的总名称。
+
+   HTTP 严格传输安全主机：
+
+      是实现 HSTS 策略中 HTTP 服务器方面的一致性主机。这意味着
+      HSTS 主机在通过安全传输发送的 HTTP 响应消息中返回
+      "Strict-Transport-Security" HTTP 响应头字段。
+
+   HTTP 严格传输安全策略：
+
+      是本规范所定义行为中 UA 端和服务器端组合整体方面的名称。
+
+   HSTS：
+
+      见 HTTP 严格传输安全。
+
+   HSTS 主机：
+
+      见 HTTP 严格传输安全主机。
+
+   HSTS 策略：
+
+      见 HTTP 严格传输安全策略。
+
+   已知 HSTS 主机：
+
+      是 UA 对其已有生效 HSTS 策略的 HSTS 主机；即，UA 已将该
+      主机记录为已知 HSTS 主机。详见<a href="#section-8.1.1">第 8.1.1 节</a>
+      （“记录 HSTS 主机 - 存储模型”）。
+
+   本地策略：
+
+      包含由部署者指定的策略规则，并且通常体现为配置设置。
+
+
+
+<span class="grey">Hodges 等                    标准轨道                        [第 12 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-13" ></span>
+<span class="grey"><a href="./rfc6797">RFC 6797</a>          HTTP 严格传输安全 (HSTS)        2012 年 11 月</span>
+
+
+   MITM：
+
+      是“中间人”的缩写。见 [<a href="./rfc4949" title="&quot;Internet Security Glossary, Version 2&quot;">RFC4949</a>] 中的“man-in-the-middle
+      attack”。
+
+   请求 URI：
+
+      是用于使 UA 发出 HTTP 请求消息的 URI。另见“有效请求 URI”。
+
+   UA：
+
+      是“用户代理”的缩写。就本规范而言，UA 是通常由用户主动
+      操作的 HTTP 客户端应用程序 [<a href="./rfc2616" title="&quot;Hypertext Transfer Protocol -- HTTP/1.1&quot;">RFC2616</a>]。
+
+   未知 HSTS 主机：
+
+      是用户代理尚未记录的 HSTS 主机。
+
+<span class="h2"><a class="selflink" id="section-5" href="#section-5">5</a>.  HSTS 机制概述</span>
+
+   本节概述 HSTS 主机向 UA 传达其 HSTS 策略的机制，以及 UA 如何
+   处理从 HSTS 主机接收的 HSTS 策略。机制细节在第 <a href="#section-6">6</a> 节至
+   第 <a href="#section-15">15</a> 节中规定。
+
+<span class="h3"><a class="selflink" id="section-5.1" href="#section-5.1">5.1</a>.  HSTS 主机声明</span>
+
+   HTTP 主机通过向 UA 发布 HSTS 策略来声明自己是 HSTS 主机，该
+   策略通过安全传输（例如 TLS）上的 Strict-Transport-Security
+   HTTP 响应头字段表示并传达。一致性 UA 在无错误接收并处理
+   此头字段后，会将该主机视为已知 HSTS 主机。
+
+<span class="h3"><a class="selflink" id="section-5.2" href="#section-5.2">5.2</a>.  HSTS 策略</span>
+
+   HSTS 策略指示 UA 仅通过安全传输与已知 HSTS 主机通信，并指定
+   策略保留时长。
+
+   在没有 HSTS 策略时，URI 引用、用户输入（例如通过“地址栏”）
+   或其他信息可能会导致 UA 以不安全方式与已知 HSTS 主机通信；
+   HSTS 策略会明确覆盖 UA 对这些内容的处理。
+
+
+
+
+
+
+<span class="grey">Hodges 等                    标准轨道                        [第 13 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-14" ></span>
+<span class="grey"><a href="./rfc6797">RFC 6797</a>          HTTP 严格传输安全 (HSTS)        2012 年 11 月</span>
+
+
+   HSTS 策略可以包含一个可选指令 -- includeSubDomains -- 指定此
+   HSTS 策略也适用于其域名是已知 HSTS 主机域名子域的任何主机。
+
+<span class="h3"><a class="selflink" id="section-5.3" href="#section-5.3">5.3</a>.  用户代理对 HSTS 策略的存储和维护</span>
+
+   UA 严格基于发布 HSTS 主机的域名来存储和索引 HSTS 策略。
+
+   这意味着，UA 将单独维护任何给定 HSTS 主机的 HSTS 策略，使其
+   独立于由任何其他 HSTS 主机发布的 HSTS 策略，即使这些其他
+   HSTS 主机的域名是给定 HSTS 主机域名的上级域或子域。只有该
+   给定 HSTS 主机可以更新或导致删除其发布的 HSTS 策略。它通过
+   向 UA 发送带有策略时长和子域适用性新值的
+   Strict-Transport-Security HTTP 响应头字段来完成此操作。因此，
+   UA 会代表 HSTS 主机缓存“最新”的 HSTS 策略信息。指定零时长会
+   向 UA 发出信号，要求删除该 HSTS 主机的 HSTS 策略（包括任何已
+   断言的 includeSubDomains 指令）。详见<a href="#section-8.1">第 8.1 节</a>
+   （“Strict-Transport-Security 响应头字段处理”）。此外，
+   <a href="#section-6.2">第 6.2 节</a> 给出了 Strict-Transport-Security HTTP 响应头字段的
+   示例。
+
+<span class="h3"><a class="selflink" id="section-5.4" href="#section-5.4">5.4</a>.  用户代理的 HSTS 策略执行</span>
+
+   当以任何方式发起到给定主机的 HTTP 连接时，UA 会检查其已知
+   HSTS 主机缓存，查看是否存在其域名为该给定主机域名的上级域的
+   主机。如果找到，并且其中任何一个断言了 includeSubDomains
+   指令，则 HSTS 策略适用于该给定主机。否则，只有当该给定主机
+   本身被 UA 知道为 HSTS 主机时，HSTS 策略才适用于该给定主机。
+   详见<a href="#section-8.3">第 8.3 节</a>（“URI 加载和端口映射”）。
+
+<span class="h2"><a class="selflink" id="section-6" href="#section-6">6</a>.  语法</span>
+
+   本节定义 Strict-Transport-Security HTTP 响应头字段及其指令的
+   语法，并给出一些示例。
+
+   <a href="#section-7">第 7 节</a>（“服务器处理模型”）随后详细说明主机如何使用此头字段
+   来声明其 HSTS 策略，<a href="#section-8">第 8 节</a>（“用户代理处理模型”）详细说明
+   用户代理如何处理该头字段并应用 HSTS 策略。
+
+
+
+
+
+
+
+<span class="grey">Hodges 等                    标准轨道                        [第 14 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-15" ></span>
+<span class="grey"><a href="./rfc6797">RFC 6797</a>          HTTP 严格传输安全 (HSTS)        2012 年 11 月</span>
+
+
+<span class="h3"><a class="selflink" id="section-6.1" href="#section-6.1">6.1</a>.  Strict-Transport-Security HTTP 响应头字段</span>
+
+   Strict-Transport-Security HTTP 响应头字段（STS 头字段）
+   向 UA 表明，UA MUST 对发出包含此头字段的响应消息的
+   主机执行 HSTS 策略。
+
+   STS 头字段的 ABNF（扩充巴科斯-诺尔范式）语法如下所示。
+   它基于<a href="./rfc2616#section-2">[RFC2616] 第&nbsp;2 节</a>中定义的通用语法（其中包括
+   “隐含线性空白”的概念，也称为“隐含 *LWS”）。
+
+     Strict-Transport-Security = "Strict-Transport-Security" ":"
+                                 [ directive ]  *( ";" [ directive ] )
+
+     directive                 = directive-name [ "=" directive-value ]
+     directive-name            = token
+     directive-value           = token | quoted-string
+
+   其中：
+
+     token          = &lt;token, defined in <a href="./rfc2616#section-2.2">[RFC2616], Section&nbsp;2.2</a>&gt;
+     quoted-string  = &lt;quoted-string, defined in <a href="./rfc2616#section-2.2">[RFC2616], Section&nbsp;2.2</a>&gt;
+
+   本规范中定义的两个指令如下所述。指令的总体要求为：
+
+   1.  指令出现的顺序并不重要。
+
+   2.  所有指令 MUST 在一个 STS 头字段中只出现一次。
+       指令是可选还是必需，由其定义规定。
+
+   3.  指令名称大小写不敏感。
+
+   4.  UA MUST 忽略任何包含不符合本规范所定义语法的指令
+       或其他头字段值数据的 STS 头字段。
+
+   5.  如果 STS 头字段包含 UA 不识别的指令，UA MUST 忽略
+       未识别的指令；并且如果 STS 头字段在其他方面满足上述
+       要求（1 到 4），UA MUST 处理已识别的指令。
+
+   扩展 STS 头字段语义功能的附加指令可以在其他规范中定义，
+   并在届时为其定义一个注册表（该注册表具有 IETF Review
+   [<a href="./rfc5226" title="">RFC5226</a>] 的 IANA 策略定义）。
+
+
+
+<span class="grey">Hodges 等                    标准轨道                        [第 15 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-16" ></span>
+<span class="grey"><a href="./rfc6797">RFC 6797</a>          HTTP 严格传输安全 (HSTS)        2012 年 11 月</span>
+
+
+   注意：此类未来指令将被仅实现本规范的 UA 以及通常不符合规范的
+          UA 忽略。进一步讨论见<a href="#section-14.2">第 14.2 节</a>（“非一致性用户
+          代理的影响”）。
+
+<span class="h4"><a class="selflink" id="section-6.1.1" href="#section-6.1.1">6.1.1</a>.  max-age 指令</span>
+
+   REQUIRED 的 "max-age" 指令指定在接收 STS 头字段后，UA 将
+   发送该消息的主机视为已知 HSTS 主机的秒数。另见
+   <a href="#section-8.1.1">第 8.1.1 节</a>（“记录 HSTS 主机 - 存储模型”）。
+   delta-seconds 产生式在 [<a href="./rfc2616" title="&quot;Hypertext Transfer Protocol -- HTTP/1.1&quot;">RFC2616</a>] 中规定。
+
+   max-age 指令的 REQUIRED 值的语法（必要时在 quoted-string
+   反转义之后）定义为：
+
+    max-age-value = delta-seconds
+
+    delta-seconds = &lt;1*DIGIT, defined in <a href="./rfc2616#section-3.3.2">[RFC2616], Section&nbsp;3.3.2</a>&gt;
+
+   注意：max-age 值为零（即 "max-age=0"）会向 UA 发出信号，
+          使其停止将该主机视为已知 HSTS 主机，包括
+          includeSubDomains 指令（如果对该 HSTS 主机已断言）。
+          另见<a href="#section-8.1">第 8.1 节</a>（“Strict-Transport-Security 响应
+          头字段处理”）。
+
+<span class="h4"><a class="selflink" id="section-6.1.2" href="#section-6.1.2">6.1.2</a>.  includeSubDomains 指令</span>
+
+   OPTIONAL 的 "includeSubDomains" 指令是一个无值指令；如果存在
+   （即它被“断言”），则向 UA 表明 HSTS 策略适用于此 HSTS 主机，
+   以及该主机域名的任何子域。
+
+<span class="h3"><a class="selflink" id="section-6.2" href="#section-6.2">6.2</a>.  示例</span>
+
+   下面的 HSTS 头字段规定 HSTS 策略将保持有效一年（一年大约有
+   31536000 秒），并且该策略只适用于发布它的 HSTS 主机的域：
+
+     Strict-Transport-Security: max-age=31536000
+
+   下面的 HSTS 头字段规定 HSTS 策略将保持有效约六个月，并且
+   该策略适用于发布它的 HSTS 主机的域及其所有子域：
+
+     Strict-Transport-Security: max-age=15768000 ; includeSubDomains
+
+
+
+<span class="grey">Hodges 等                    标准轨道                        [第 16 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-17" ></span>
+<span class="grey"><a href="./rfc6797">RFC 6797</a>          HTTP 严格传输安全 (HSTS)        2012 年 11 月</span>
+
+
+   max-age 指令值可以选择加引号：
+
+     Strict-Transport-Security: max-age="31536000"
+
+   下面的 HSTS 头字段表示 UA 必须删除与发送该头字段的 HSTS 主机
+   关联的整个 HSTS 策略：
+
+     Strict-Transport-Security: max-age=0
+
+   下面的 HSTS 头字段与紧邻其上的那个具有完全相同的效果，因为
+   当 max-age 为零时，HSTS 头字段中存在 includeSubDomains 指令会被
+   忽略：
+
+     Strict-Transport-Security: max-age=0; includeSubDomains
+
+<span class="h2"><a class="selflink" id="section-7" href="#section-7">7</a>.  服务器处理模型</span>
+
+   本节描述 HSTS 主机实现的处理模型。该模型包含两个方面：
+   第一个是针对通过安全传输（TLS [<a href="./rfc5246" title="&quot;The Transport Layer Security (TLS) Protocol Version 1.2&quot;">RFC5246</a>] 或 SSL [<a href="./rfc6101" title="&quot;The Secure Sockets Layer (SSL) Protocol Version 3.0&quot;">RFC6101</a>]；
+   另见<a href="#section-14.1">第 14.1 节</a>（“底层安全传输注意事项”））接收的 HTTP
+   请求消息的处理规则；第二个是针对通过非安全传输（如 TCP）
+   接收的 HTTP 请求消息的处理规则。
+
+<span class="h3"><a class="selflink" id="section-7.1" href="#section-7.1">7.1</a>.  基于安全传输的 HTTP 请求类型</span>
+
+   当回复通过安全传输传达的 HTTP 请求时，HSTS 主机 SHOULD 在其
+   响应消息中包含一个 STS 头字段，该字段 MUST 满足上文
+   <a href="#section-6.1">第 6.1 节</a>（“Strict-Transport-Security HTTP 响应头字段”）中
+   指定的语法。如果包含 STS 头字段，HSTS 主机 MUST 只包含一个
+   这样的头字段。
+
+   在给定 UA 的语境中，将给定主机确立为已知 HSTS 主机，MAY 通过
+   运行在安全传输之上的 HTTP 来完成，方法是按照本规范向 UA
+   正确返回至少一个有效的 STS 头字段。其他机制也 MAY 使用，
+   例如客户端侧预加载的已知 HSTS 主机列表；例如，见<a href="#section-12">第 12 节</a>
+   （“用户代理实现建议”）。
+
+   注意：将包含 STS 头字段规定为 "SHOULD"，是为了适应各种服务器端
+          和网络端缓存及负载均衡配置；在这些配置中，可能难以代表
+          给定 HSTS 主机统一发出 STS 头字段。
+
+
+
+<span class="grey">Hodges 等                    标准轨道                        [第 17 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-18" ></span>
+<span class="grey"><a href="./rfc6797">RFC 6797</a>          HTTP 严格传输安全 (HSTS)        2012 年 11 月</span>
+
+
+<span class="h3"><a class="selflink" id="section-7.2" href="#section-7.2">7.2</a>.  HTTP 请求类型</span>
+
+   如果 HSTS 主机通过非安全传输接收 HTTP 请求消息，它 SHOULD 发送
+   一个 HTTP 响应消息，其中包含表示永久重定向的状态码，例如
+   状态码 301（<a href="./rfc2616#section-10.3.2">[RFC2616] 第&nbsp;10.3.2 节</a>），以及一个 Location 头字段值；
+   该值包含 HTTP 请求的原始有效请求 URI（见<a href="#section-9">第 9 节</a>
+   （“构造有效请求 URI”））经必要修改后使其 URI 方案为 "https"，
+   或者包含按照本地策略生成、且 URI 方案为 "https" 的 URI。
+
+   注意：上述行为是 "SHOULD" 而不是 "MUST"，原因如下：
+
+      *  服务器端从非安全到安全的重定向存在风险
+         [<a href="#ref-OWASP-TLSGuide">OWASP-TLSGuide</a>]。
+
+      *  站点部署特征。例如，包含第三方组件的站点，在通过
+         非安全传输访问时执行服务器端从非安全到安全的重定向
+         可能无法正确运行，但在统一通过安全传输访问时却能正确
+         运行。后一种情况出现在具备 HSTS 能力的 UA 已经通过某种
+         方式（例如先前交互或 UA 配置）将该站点记录为已知 HSTS
+         主机时。
+
+   HSTS 主机 MUST NOT 在通过非安全传输传达的 HTTP 响应中包含
+   STS 头字段。
+
+<span class="h2"><a class="selflink" id="section-8" href="#section-8">8</a>.  用户代理处理模型</span>
+
+   本节描述 UA 的 HTTP 严格传输安全处理模型。该模型有若干方面，
+   在以下小节中列举。
+
+   此处理模型假定 UA 实现了 IDNA2008 [<a href="./rfc5890" title="&quot;Internationalized Domain Names for Applications (IDNA): Definitions and Document Framework&quot;">RFC5890</a>]，或可能实现了
+   IDNA2003 [<a href="./rfc3490" title="&quot;Internationalizing Domain Names in Applications (IDNA)&quot;">RFC3490</a>]，如<a href="#section-13">第 13 节</a>（“国际化域名应用（IDNA）：
+   依赖和迁移”）所述。它还假定在本规范语境中操作的所有域名，
+   在本节规定的处理之前，已经按照<a href="#section-10">第 10 节</a>（“域名 IDNA 规范化”）
+   中概述的方式进行了 IDNA 规范化。
+
+      注意：引用 [<a href="./rfc3490" title="&quot;Internationalizing Domain Names in Applications (IDNA)&quot;">RFC3490</a>] 是因为它在可预见的未来仍然与实际部署
+             相关。
+
+   上述假定意味着，此处理模型还特别假定，在本节规定的处理之前，
+   已结合域名的 IDNA 规范化，对域名进行了适当的 IDNA 和 Unicode
+   验证以及字符列表测试，
+
+
+
+<span class="grey">Hodges 等                    标准轨道                        [第 18 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-19" ></span>
+<span class="grey"><a href="./rfc6797">RFC 6797</a>          HTTP 严格传输安全 (HSTS)        2012 年 11 月</span>
+
+
+   再进行本节规定的处理。其理由和更多细节见<a href="#section-14.10">第 14.10 节</a>
+   （“国际化域名”）中关于 IDNA 的安全考虑事项。
+
+<span class="h3"><a class="selflink" id="section-8.1" href="#section-8.1">8.1</a>.  Strict-Transport-Security 响应头字段处理</span>
+
+   如果通过安全传输接收的 HTTP 响应包含一个 STS 头字段，且该字段
+   符合<a href="#section-6.1">第 6.1 节</a>（“Strict-Transport-Security HTTP 响应头字段”）
+   中指定的语法，并且不存在底层安全传输错误或警告（见
+   <a href="#section-8.4">第 8.4 节</a>），则 UA MUST 执行以下二者之一：
+
+   o  如果尚未记录该主机，则将其记录为已知 HSTS 主机
+      （见<a href="#section-8.1.1">第 8.1.1 节</a>（“记录 HSTS 主机 - 存储模型”）），
+
+   或
+
+   o  如果 max-age 和 includeSubDomains 头字段值令牌中的任一项或
+      二者传达的信息不同于 UA 已维护的信息，则更新 UA 为该已知
+      HSTS 主机缓存的信息。
+
+      max-age 值本质上是相对于接收 STS 头字段时间的“生存时间”
+      值。
+
+      如果 max-age 头字段值令牌的值为零，则如果 HSTS 主机已知，
+      UA MUST 移除其缓存的 HSTS 策略信息（包括 includeSubDomains
+      指令，如果已断言）；如果该 HSTS 主机尚未知，UA MUST NOT
+      记录此 HSTS 主机。
+
+      如果 UA 在通过安全传输收到的 HTTP 响应消息中接收到多个
+      STS 头字段，则 UA MUST 只处理第一个这样的头字段。
+
+   否则：
+
+   o  如果 HTTP 响应是通过不安全传输接收的，UA MUST 忽略任何
+      存在的 STS 头字段。
+
+   o  UA MUST 忽略任何不符合<a href="#section-6.1">第 6.1 节</a>（“Strict-Transport-Security
+      HTTP 响应头字段”）中指定语法的 STS 头字段。
+
+
+
+
+
+
+
+<span class="grey">Hodges 等                    标准轨道                        [第 19 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-20" ></span>
+<span class="grey"><a href="./rfc6797">RFC 6797</a>          HTTP 严格传输安全 (HSTS)        2012 年 11 月</span>
+
+
+<span class="h4"><a class="selflink" id="section-8.1.1" href="#section-8.1.1">8.1.1</a>.  记录 HSTS 主机 - 存储模型</span>
+
+   如果来自 Request-URI（即主机所响应的消息中的 Request-URI）的、
+   匹配 host 产生式的子字符串，在语法上匹配
+   <a href="./rfc3986#section-3.2.2">[RFC3986] 第&nbsp;3.2.2 节</a>中的 IP-literal 或 IPv4address 产生式，
+   则 UA MUST NOT 将此主机记录为已知 HSTS 主机。
+
+   否则，如果该子字符串没有按照<a href="#section-8.2">第 8.2 节</a>（“已知 HSTS 主机
+   域名匹配”）中指定的匹配过程，与已知 HSTS 主机的域名一致
+   匹配，则 UA MUST 将此主机记录为已知 HSTS 主机，缓存该 HSTS
+   主机的域名，并同时记录此信息的过期时间（按给定 max-age 值
+   实际规定），以及 includeSubDomains 指令是否已断言。另见
+   <a href="#section-11.2">第 11.2 节</a>（“HSTS 策略过期时间注意事项”）。
+
+   UA MUST NOT 修改任何匹配到的上级域已知 HSTS 主机的过期时间或
+   includeSubDomains 指令。
+
+   如果已知 HSTS 主机的缓存条目的过期日期在过去，则该已知 HSTS
+   主机为“已过期”。如果缓存中在任何时候存在已过期的已知 HSTS
+   主机，UA MUST 从其缓存中驱逐所有已过期的已知 HSTS 主机。
+
+<span class="h3"><a class="selflink" id="section-8.2" href="#section-8.2">8.2</a>.  已知 HSTS 主机域名匹配</span>
+
+   给定域名可以通过两种方式之一或二者匹配已知 HSTS 主机的域名：
+   一致匹配或上级域匹配。或者，也可能没有匹配。
+
+   下面的步骤确定是否存在任何匹配，以及如果存在，属于哪种方式：
+
+      将给定域名与 UA 的每个未过期已知 HSTS 主机的域名进行比较。
+      对于每个已知 HSTS 主机的域名，都将其与给定域名按标签逐一
+      （只比较标签）进行比较，使用 ASCII 大小写不敏感比较，从
+      最右侧标签开始并从右向左继续。另见
+      <a href="./rfc5890#section-2.3.2.4">[RFC5890] 第&nbsp;2.3.2.4 节</a>。
+
+      *  上级域匹配
+
+         如果发现整个已知 HSTS 主机的域名与给定域名的右侧部分
+         逐标签匹配，则此已知 HSTS 主机的域名是给定域名的
+         上级域匹配。一个给定域名可能有多个上级域匹配。
+
+
+
+<span class="grey">Hodges 等                    标准轨道                        [第 20 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-21" ></span>
+<span class="grey"><a href="./rfc6797">RFC 6797</a>          HTTP 严格传输安全 (HSTS)        2012 年 11 月</span>
+
+
+         例如：
+
+            给定域名（DN）：             qaz.bar.foo.example.com
+
+            上级域匹配的
+            已知 HSTS 主机 DN：           bar.foo.example.com
+
+            上级域匹配的
+            已知 HSTS 主机 DN：               foo.example.com
+
+
+      *  一致匹配
+
+         如果发现已知 HSTS 主机的域名与给定域名逐标签匹配——即
+         没有更多标签可比较——则给定域名与此已知 HSTS 主机
+         一致匹配。
+
+         例如：
+
+            给定域名：                    foo.example.com
+
+            一致匹配的
+            已知 HSTS 主机 DN：           foo.example.com
+
+
+      *  否则，如果未发现匹配，则给定域名不表示已知 HSTS 主机。
+
+<span class="h3"><a class="selflink" id="section-8.3" href="#section-8.3">8.3</a>.  URI 加载和端口映射</span>
+
+   每当 UA 准备“加载”（也称为“解引用”）任何 "http" URI
+   [<a href="./rfc3986" title="&quot;Uniform Resource Identifier (URI): Generic Syntax&quot;">RFC3986</a>]（包括在跟随 HTTP 重定向 [<a href="./rfc2616" title="&quot;Hypertext Transfer Protocol -- HTTP/1.1&quot;">RFC2616</a>] 时），UA MUST
+   首先使用以下步骤确定 URI 中是否给出了域名，以及它是否匹配
+   已知 HSTS 主机：
+
+   1.  从 URI 中提取由 URI 的 authority 组件的 host 组件描述的
+       任何子字符串。
+
+   2.  如果该子字符串为空，则不与任何已知 HSTS 主机匹配。
+
+   3.  否则，如果该子字符串非空，并且在语法上匹配
+       <a href="./rfc3986#section-3.2.2">[RFC3986] 第&nbsp;3.2.2 节</a>中的 IP-literal 或 IPv4address 产生式，
+       则不与任何已知 HSTS 主机匹配。
+
+
+
+
+
+<span class="grey">Hodges 等                    标准轨道                        [第 21 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-22" ></span>
+<span class="grey"><a href="./rfc6797">RFC 6797</a>          HTTP 严格传输安全 (HSTS)        2012 年 11 月</span>
+
+
+   4.  否则，该子字符串是一个给定域名，MUST 使用<a href="#section-8.2">第 8.2 节</a>
+       （“已知 HSTS 主机域名匹配”）中的过程，将其与 UA 的已知
+       HSTS 主机进行匹配。
+
+   5.  如果在执行域名匹配时，发现任何断言了 includeSubDomains
+       指令的上级域匹配；或者，如果未发现带有已断言
+       includeSubDomains 指令的上级域匹配，但发现了一致匹配
+       （无论是否断言 includeSubDomains 指令），则在继续加载之前：
+
+          UA MUST 将 URI 方案替换为 "https" [<a href="./rfc2818" title="&quot;HTTP Over TLS&quot;">RFC2818</a>]，并且
+
+          如果 URI 包含值为 "80" 的显式端口组件，则 UA MUST 将
+          端口组件转换为 "443"，或者
+
+          如果 URI 包含一个不等于 "80" 的显式端口组件，则端口
+          组件值 MUST 保留；否则，
+
+          如果 URI 不包含显式端口组件，则 UA MUST NOT 添加一个。
+
+          注意：这些步骤确保 HSTS 策略适用于 HSTS 主机任意 TCP
+                 端口上的 HTTP。
+
+   注意：在提供显式端口的情况下（以及在较小程度上，对于子域），
+          指定端口上实际上很可能运行着 HTTP（即非安全）服务器，
+          因而 HTTPS 请求会失败（见<a href="#appendix-A">附录 A</a>（“设计决策说明”）
+          中的第 6 项）。
+
+<span class="h3"><a class="selflink" id="section-8.4" href="#section-8.4">8.4</a>.  安全传输建立中的错误</span>
+
+   当连接到已知 HSTS 主机时，如果底层安全传输存在任何错误，无论是
+   “警告”、“致命”还是任何其他错误级别，UA MUST 终止连接（另见
+   <a href="#section-12">第 12 节</a>（“用户代理实现建议”））。例如，这包括 UA 所采用的
+   证书有效性检查中发现的任何错误，例如通过证书吊销列表（CRL）
+   [<a href="./rfc5280" title="&quot;Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile&quot;">RFC5280</a>]，或通过在线证书状态协议（OCSP）[<a href="./rfc2560" title="&quot;X.509 Internet Public Key Infrastructure Online Certificate Status Protocol - OCSP&quot;">RFC2560</a>]，以及
+   通过 TLS 服务器身份检查 [<a href="./rfc6125" title="&quot;Representation and Verification of Domain-Based Application Service Identity within Internet Public Key Infrastructure Using X.509 (PKIX) Certificates in the Context of Transport Layer Security (TLS)&quot;">RFC6125</a>] 发现的错误。
+
+<span class="h3"><a class="selflink" id="section-8.5" href="#section-8.5">8.5</a>.  HTTP-Equiv &lt;Meta&gt; 元素属性</span>
+
+   UA MUST NOT 理会接收到的内容中 &lt;meta&gt; 元素
+   [<a href="#ref-W3C.REC-html401-19991224">W3C.REC-html401-19991224</a>] 上的
+   http-equiv="Strict-Transport-Security" 属性设置。
+
+
+
+<span class="grey">Hodges 等                    标准轨道                        [第 22 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-23" ></span>
+<span class="grey"><a href="./rfc6797">RFC 6797</a>          HTTP 严格传输安全 (HSTS)        2012 年 11 月</span>
+
+
+<span class="h3"><a class="selflink" id="section-8.6" href="#section-8.6">8.6</a>.  缺失 Strict-Transport-Security 响应头字段</span>
+
+   如果 UA 通过安全信道从已知 HSTS 主机接收 HTTP 响应，但这些
+   响应缺少 STS 头字段，则 UA MUST 继续将该主机视为已知 HSTS
+   主机，直到关于该已知 HSTS 主机的知识的 max-age 值到达为止。
+   注意，对于给定的已知 HSTS 主机，max-age 值实际上可能是无限的。
+   例如，如果该已知 HSTS 主机是某个预配置列表的一部分，且该列表
+   实现为其中的条目永不“老化退出”，就会出现这种情况。
+
+<span class="h2"><a class="selflink" id="section-9" href="#section-9">9</a>.  构造有效请求 URI</span>
+
+   本节规定 HSTS 主机必须如何为收到的 HTTP 请求构造有效请求 URI。
+
+   HTTP 请求通常不携带目标资源的 absoluteURI；相反，需要从
+   Request-URI、Host 头字段以及连接上下文中推断 URI（[<a href="./rfc2616" title="&quot;Hypertext Transfer Protocol -- HTTP/1.1&quot;">RFC2616</a>]，
+   第 <a href="#section-3.2.1">3.2.1</a>、5.1.2 和 5.2 节）。此过程的结果称为“有效请求 URI
+   （ERU）”。“目标资源”是由有效请求 URI 标识的资源。
+
+<span class="h3"><a class="selflink" id="section-9.1" href="#section-9.1">9.1</a>.  ERU 基本定义</span>
+
+   HTTP 请求消息的第一行 Request-Line 由<a href="./rfc2616#section-5.1">[RFC2616] 第&nbsp;5.1 节</a>中的
+   以下 ABNF 指定：
+
+     Request-Line   = Method SP Request-URI SP HTTP-Version CRLF
+
+   Request-Line 中的 Request-URI 由<a href="./rfc2616#section-5.1.2">[RFC2616] 第&nbsp;5.1.2 节</a>中的
+   以下 ABNF 指定：
+
+     Request-URI    = "*" | absoluteURI | abs_path | authority
+
+   Host 请求头字段由<a href="./rfc2616#section-14.23">[RFC2616] 第&nbsp;14.23 节</a>中的以下 ABNF 指定：
+
+     Host = "Host" ":" host [ ":" port ]
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Hodges 等                    标准轨道                        [第 23 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-24" ></span>
+<span class="grey"><a href="./rfc6797">RFC 6797</a>          HTTP 严格传输安全 (HSTS)        2012 年 11 月</span>
+
+
+<span class="h3"><a class="selflink" id="section-9.2" href="#section-9.2">9.2</a>.  确定有效请求 URI</span>
+
+   如果 Request-URI 是 absoluteURI，则有效请求 URI 就是 Request-URI。
+
+   如果 Request-URI 使用 abs_path 形式或星号形式，且存在 Host
+   头字段，则有效请求 URI 通过连接以下内容构造：
+
+   o  方案名称：如果请求是通过不安全 TCP 连接接收的，则为 "http"；
+      如果通过 TLS/SSL 保护的 TCP 连接接收，则为 "https"；以及
+
+   o  八位组序列 "://"；以及
+
+   o  来自 Host 头字段的 host 和 port（如果存在）；以及
+
+   o  从 Request-Line 获得的 Request-URI，除非 Request-URI 只是
+      星号 "*"。
+
+   如果 Request-URI 使用 abs_path 形式或星号形式，且 Host 头字段
+   不存在，则有效请求 URI 未定义。
+
+   否则，当 Request-URI 使用 authority 形式时，有效请求 URI
+   未定义。
+
+   有效请求 URI 使用<a href="./rfc2616#section-3.2.3">[RFC2616] 第&nbsp;3.2.3 节</a>中描述的规则进行比较，
+   但空 path 组件 MUST NOT 被视为等同于绝对路径 "/"。
+
+<span class="h4"><a class="selflink" id="section-9.2.1" href="#section-9.2.1">9.2.1</a>.  有效请求 URI 示例</span>
+
+   示例 1：消息
+
+     GET /pub/WWW/TheProject.html HTTP/1.1
+     Host: www.example.org:8080
+
+   的有效请求 URI（通过不安全 TCP 连接接收）是 "http"，加上
+   "://"，加上 authority 组件 "www.example.org:8080"，再加上
+   request-target "/pub/WWW/TheProject.html"。因此，它是
+   "<a href="http://www.example.org:8080/pub/WWW/TheProject.html">http://www.example.org:8080/pub/WWW/TheProject.html</a>"。
+
+
+
+
+
+
+
+
+<span class="grey">Hodges 等                    标准轨道                        [第 24 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-25" ></span>
+<span class="grey"><a href="./rfc6797">RFC 6797</a>          HTTP 严格传输安全 (HSTS)        2012 年 11 月</span>
+
+
+   示例 2：消息
+
+     OPTIONS * HTTP/1.1
+     Host: www.example.org
+
+   的有效请求 URI（通过 SSL/TLS 保护的 TCP 连接接收）是 "https"，
+   加上 "://"，加上 authority 组件 "www.example.org"。因此，它是
+   "https://www.example.org"。
+
+<span class="h2"><a class="selflink" id="section-10" href="#section-10">10</a>.  域名 IDNA 规范化</span>
+
+   IDNA 规范化域名是由以下步骤生成的输出字符串。输入是一个假定的
+   域名字符串，表面上由 "A-labels"、"U-labels" 和 "NR-LDH labels"
+   （见<a href="./rfc5890#section-2">[RFC5890] 第&nbsp;2 节</a>）的任意组合构成，并使用某种分隔符
+   字符（通常为 "."）连接。
+
+   1.  将输入的假定域名字符串转换为保持顺序的单个标签字符串序列。
+
+   2.  在实现 IDNA2008 时，使用 [<a href="./rfc5891" title="&quot;Internationalized Domain Names in Applications (IDNA): Protocol&quot;">RFC5891</a>] 第 <a href="#section-5.3">5.3</a> 节至第 <a href="#section-5.5">5.5</a> 节中
+       定义的过程，对单个标签字符串序列中发现的每个 A-label 和
+       U-label 进行转换、验证和测试。
+
+       否则，在实现 IDNA2003 时，使用<a href="./rfc3490#section-4">[RFC3490] 第&nbsp;4 节</a>中的
+       "ToASCII" 转换来转换每个标签（另见<a href="./rfc3490#section-2">[RFC3490] 第&nbsp;2 节</a>中
+       “标签等价性”的定义）。
+
+   3.  如果在前述步骤中没有发生错误，则按顺序将该序列中的所有
+       标签连接成一个字符串，每个标签与下一个标签之间用 %x2E
+       （"."）字符分隔。所得字符串称为 IDNA 规范化域名，适合在
+       <a href="#section-8">第 8 节</a>（“用户代理处理模型”）的语境中使用。
+
+       否则，发生了错误。输入的假定域名字符串未能成功进行 IDNA
+       规范化。调用此过程者应尝试适当的错误恢复。
+
+   另见本规范第 <a href="#section-13">13</a> 节（“国际化域名应用（IDNA）：依赖和迁移”）
+   和第 14.10 节（“国际化域名”），以了解更多细节和注意事项。
+
+
+
+
+
+
+
+<span class="grey">Hodges 等                    标准轨道                        [第 25 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-26" ></span>
+<span class="grey"><a href="./rfc6797">RFC 6797</a>          HTTP 严格传输安全 (HSTS)        2012 年 11 月</span>
+
+
+<span class="h2"><a class="selflink" id="section-11" href="#section-11">11</a>.  服务器实现和部署建议</span>
+
+   本节为非规范性内容。
+
+<span class="h3"><a class="selflink" id="section-11.1" href="#section-11.1">11.1</a>.  非一致性用户代理注意事项</span>
+
+   非一致性 UA 会忽略 Strict-Transport-Security 头字段；因此，
+   非一致性用户代理不会应对<a href="#section-2.3.1">第 2.3.1 节</a>（“所应对的威胁”）中
+   描述的威胁。进一步讨论请参阅<a href="#section-14.2">第 14.2 节</a>（“非一致性
+   用户代理的影响”）。
+
+<span class="h3"><a class="selflink" id="section-11.2" href="#section-11.2">11.2</a>.  HSTS 策略过期时间注意事项</span>
+
+   服务器实现和部署网站需要考虑，它们设置的是未来某个恒定值作为
+   过期时间，还是设置某个固定时间点作为过期时间。
+
+   “未来某个恒定值”方法可以通过不断向 UA 发送相同的 max-age 值
+   来实现。
+
+   例如，7776000 秒的 max-age 值为 90 天：
+
+     Strict-Transport-Security: max-age=7776000
+
+   注意，UA 每次接收到此头字段时，都需要更新其关于何时必须删除
+   此已知 HSTS 主机知识的认识。
+
+   “固定时间点”方法可以通过发送表示到所需过期时间为止剩余时间的
+   max-age 值来实现。这将要求 HSTS 主机在每个 HTTP 响应中发送
+   新计算的 max-age 值。
+
+   此处的一个考虑因素是，部署者是否希望发出的 HSTS 策略过期时间
+   与网站域证书的过期时间相匹配。
+
+   此外，服务器实现者应考虑在其部署配置系统中采用默认 max-age
+   值为零。这将要求部署者有意设置 max-age，UA 才会为其主机执行
+   HSTS 策略，并且可保护他们避免以某个任意非零时长无意启用 HSTS。
+
+
+
+
+
+
+
+
+<span class="grey">Hodges 等                    标准轨道                        [第 26 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-27" ></span>
+<span class="grey"><a href="./rfc6797">RFC 6797</a>          HTTP 严格传输安全 (HSTS)        2012 年 11 月</span>
+
+
+<span class="h3"><a class="selflink" id="section-11.3" href="#section-11.3">11.3</a>.  将 HSTS 与自签名公钥结合使用</span>
+<span class="h3">       证书</span>
+
+   如果以下四个条件全部为真……
+
+   o  某个网站/组织/企业正在为网站生成自己的安全传输公钥证书，
+      并且
+
+   o  该组织的根认证机构（CA）证书通常默认未嵌入浏览器和/或
+      操作系统 CA 证书存储中，并且
+
+   o  HSTS 策略在某个主机上启用，该主机使用由该组织的 CA 签名的
+      证书（即“自签名证书”）来标识自己，并且
+
+   o  此证书不匹配可用的 TLS 证书关联（由 TLSA 协议规范
+      [<a href="./rfc6698" title="&quot;The DNS-Based Authentication of Named Entities (DANE) Transport Layer Security (TLS) Protocol: TLSA&quot;">RFC6698</a>] 第 <a href="#section-4">4</a> 节定义），
+
+   ……那么，根据 HSTS 设计，到该站点的安全连接将失败。这是为了
+   防御如上所述的各种主动攻击。
+
+   然而，如果该组织希望结合 HSTS 使用自己的 CA 和自签名证书，
+   它可以通过将其根 CA 证书部署到用户的浏览器或操作系统 CA 根
+   证书存储来实现。它还可以另外或转而向用户的浏览器分发特定
+   主机的终端实体证书。实现这一点有多种方式（细节不在本规范
+   范围内）。一旦其根 CA 证书安装到浏览器中，它就可以在其站点上
+   采用 HSTS 策略。
+
+   另一种做法是，该组织可以部署 TLSA 协议；所有也使用 TLSA 的
+   浏览器随后都能够信任由可用 TLS 证书关联标识的证书，如通过
+   TLSA 表示的那样。
+
+   注意：以交互方式向用户分发根 CA 证书，例如通过电子邮件，并让
+          用户安装它们，可以说是在训练用户易受某种形式的网络钓鱼
+          攻击影响。见<a href="#section-14.8">第 14.8 节</a>（“伪造根 CA 证书钓鱼加
+          DNS 缓存投毒攻击”）。因此，在此类证书分发和安装到用户
+          系统及浏览器的方式上应格外谨慎。
+
+
+
+
+
+<span class="grey">Hodges 等                    标准轨道                        [第 27 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-28" ></span>
+<span class="grey"><a href="./rfc6797">RFC 6797</a>          HTTP 严格传输安全 (HSTS)        2012 年 11 月</span>
+
+
+<span class="h3"><a class="selflink" id="section-11.4" href="#section-11.4">11.4</a>.  includeSubDomains 的影响</span>
+
+   includeSubDomains 指令具有值得仔细考虑的实际影响；两个示例场景为：
+
+   o  HSTS 主机在备用端口或其 HSTS 主机域名的各种子域上提供
+      不安全的基于 HTTP 的服务。
+
+   o  不同的 Web 应用程序在 HSTS 主机的不同子域上提供，以至于
+      UA 常常直接与这些子域 Web 应用程序交互，而不一定已经与
+      HSTS 主机域名处提供的 Web 应用程序（如果有）交互过。
+
+   以下各节依次讨论这些场景。
+
+<span class="h4"><a class="selflink" id="section-11.4.1" href="#section-11.4.1">11.4.1</a>.  在 HSTS 主机的备用端口或子域上提供</span>
+<span class="h4">         不安全 HTTP 服务的注意事项</span>
+
+   例如，认证机构通常通过普通 HTTP 提供其 CRL 分发和 OCSP 服务
+   [<a href="./rfc2560" title="&quot;X.509 Internet Public Key Infrastructure Online Certificate Status Protocol - OCSP&quot;">RFC2560</a>]，有时还位于一个可由公众访问、可能由 TLS/SSL 保护的
+   Web 应用程序的子域上。例如，&lt;https://ca.example.com/&gt; 是
+   “Example CA”这个认证机构的一个可公开访问的 Web 应用程序。
+   客户使用此 Web 应用程序注册其公钥并获取证书。"Example CA"
+   为客户生成的证书在 "CRL Distribution Points" 和 "Authority
+   Information Access:OCSP" 证书字段中包含
+   &lt;<a href="http://crl-and-ocsp.ca.example.com/">http://crl-and-ocsp.ca.example.com/</a>&gt; 作为其值。
+
+   如果 ca.example.com 发布带有 includeSubDomains 指令的 HSTS 策略，
+   那么已与 ca.example.com Web 应用程序交互过、并实现 HSTS 的
+   基于 HTTP 的用户代理，将无法获取 CRL，也无法为证书检查 OCSP，
+   因为这些服务是通过普通 HTTP 提供的。
+
+   在这种情况下，Example CA 可以：
+
+   o  不使用 includeSubDomains 指令，或者
+
+   o  确保在 ca.example.com 的子域上提供的基于 HTTP 的服务也
+      统一通过 TLS/SSL 提供，或者
+
+
+
+
+
+
+
+
+<span class="grey">Hodges 等                    标准轨道                        [第 28 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-29" ></span>
+<span class="grey"><a href="./rfc6797">RFC 6797</a>          HTTP 严格传输安全 (HSTS)        2012 年 11 月</span>
+
+
+   o  在不同的域名上提供基于普通 HTTP 的服务，例如
+      crl-and-ocsp.ca.example.NET，或者
+
+   o  利用一种替代方法来分发证书状态信息，从而无需通过普通 HTTP
+      提供 CRL 分发和 OCSP 服务（例如，“Certificate Status Request”
+      TLS 扩展 [<a href="./rfc6066" title="&quot;Transport Layer Security (TLS) Extensions: Extension Definitions&quot;">RFC6066</a>]，通常俗称为“OCSP Stapling”）。
+
+   注意：上述要点明确只是示例，并不声称处理所有相关复杂性。
+          例如，在部署“OCSP Stapling”这类方法时，涉及许多
+          认证机构、证书部署者和应用程序（例如浏览器）方面的
+          考虑事项。此类问题不在本规范范围内。
+
+<span class="h4"><a class="selflink" id="section-11.4.2" href="#section-11.4.2">11.4.2</a>.  在 HSTS 主机的子域上提供 Web 应用程序的</span>
+<span class="h4">         注意事项</span>
+
+   在此场景中，HSTS 主机声明一个带有 includeSubDomains 指令的
+   HSTS 策略，并且还存在位于 HSTS 主机不同子域上的不同 Web
+   应用程序，使得 UA 常常直接与这些子域 Web 应用程序交互，而
+   不一定已经与 HSTS 主机交互过。在这种情况下，UA 将不会接收或
+   执行 HSTS 策略。
+
+   例如，HSTS 主机是 "example.com"，并被配置为发出带有
+   includeSubDomains 指令的 STS 头字段。然而，example.com 的实际
+   Web 应用程序位于 "www.example.com"，而 example.com 只是将用户
+   代理重定向到 "https://www.example.com/"。
+
+   如果 STS 头字段只由 "example.com" 发出，但 UA 通常将
+   "www.example.com" 加入书签，并且（来自 Web 上任何位置的）链接
+   通常也建立到 "www.example.com"，而 "example.com" 在某个非零
+   百分比的交互中并未被所有用户代理直接联系，那么一定数量的 UA
+   将不会把 "example.com" 记录为 HSTS 主机，并且一定数量的
+   "www.example.com" 用户将不受 HSTS 策略保护。
+
+   为解决此问题，HSTS 主机应配置为在构成其 Web 应用程序的知名
+   “入口点”的每个 HSTS 主机域名或子域名处直接发出 STS 头字段，
+   无论是否采用 includeSubDomains 指令。
+
+
+
+
+
+<span class="grey">Hodges 等                    标准轨道                        [第 29 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-30" ></span>
+<span class="grey"><a href="./rfc6797">RFC 6797</a>          HTTP 严格传输安全 (HSTS)        2012 年 11 月</span>
+
+
+   因此，在我们的示例中，如果 STS 头字段同时从 "example.com" 和
+   "www.example.com" 发出，则此问题将得到解决。此外，如果还有
+   由 "example.com" 提供的 Web 应用程序的任何其他知名入口点，
+   例如 "foo.example.com"，它们也应被配置为发出 STS 头字段。
+
+<span class="h2"><a class="selflink" id="section-12" href="#section-12">12</a>.  用户代理实现建议</span>
+
+   本节为非规范性内容。
+
+   为了向用户和网站提供更有效的保护，并提供用于管理其 UA 对
+   HSTS 策略缓存的控制，UA 实现者应考虑包含如下功能：
+
+<span class="h3"><a class="selflink" id="section-12.1" href="#section-12.1">12.1</a>.  不给用户补救途径</span>
+
+   在任何警告或错误（根据<a href="#section-8.4">第 8.4 节</a>（“安全传输建立中的错误”））
+   上使安全连接建立失败，应当以“不给用户补救途径”的方式完成。
+   这意味着不应向用户呈现一个允许她选择继续的对话框。相反，
+   它应被类似地视为一种服务器错误，在与目标 Web 应用程序交互
+   方面，用户除了等待并重试之外，无法再做任何事情。
+
+   本质上，“任何警告或错误”意味着会导致 UA 实现向用户提示连接
+   建立中有某些内容并非完全正确的任何情况。
+
+   不这样做，即允许用户补救，例如“点击通过警告/错误对话框”，
+   是中间人攻击的配方。如果 Web 应用程序发布 HSTS 策略，那么它
+   就隐式选择采用“不给用户补救途径”的方法，在此方法下，所有
+   证书错误或警告都会导致连接终止，没有机会“诱骗”用户作出错误
+   决定并损害自身安全。
+
+<span class="h3"><a class="selflink" id="section-12.2" href="#section-12.2">12.2</a>.  用户声明的 HSTS 策略</span>
+
+   用户声明的 HSTS 策略，是指用户能够明确声明某个给定域名表示
+   一个 HSTS 主机，从而在与其进行任何实际交互之前，将其作为
+   已知 HSTS 主机进行预置。这将有助于防范<a href="#section-14.6">第 14.6 节</a>
+   （“引导阶段 MITM 漏洞”）中讨论的引导阶段 MITM 漏洞。
+
+
+
+
+
+
+
+<span class="grey">Hodges 等                    标准轨道                        [第 30 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-31" ></span>
+<span class="grey"><a href="./rfc6797">RFC 6797</a>          HTTP 严格传输安全 (HSTS)        2012 年 11 月</span>
+
+
+   注意：这样的功能很难在逐站点基础上正确实现。
+          见 [<a href="#ref-ForceHTTPS">ForceHTTPS</a>] 第 5.5 节中关于“重写规则”的讨论。
+          例如，任意 Web 站点可能并不使用 "https" 方案
+          具现化其所有 URI，因此，如果 UA 尝试只使用此类 URI
+          访问该站点，站点可能会“损坏”。还应注意，此功能会补充
+          “HSTS 预加载列表”功能（见<a href="#section-12.3">第 12.3 节</a>），
+          但与之独立。
+
+<span class="h3"><a class="selflink" id="section-12.3" href="#section-12.3">12.3</a>.  HSTS 预加载列表</span>
+
+   HSTS 预加载列表是一种设施，借此网站管理员可以让 UA 供应商
+   将其站点的 HSTS 策略预先配置到 UA 中——即所谓的“预加载列表”——
+   其方式类似于根 CA 证书在浏览器“出厂”时被嵌入的方式。
+   这将有助于防范引导阶段 MITM 漏洞（<a href="#section-14.6">第 14.6 节</a>）。
+
+   注意：这样的设施会补充“用户声明的 HSTS 策略”功能
+          （<a href="#section-12.2">第 12.2 节</a>）。
+
+<span class="h3"><a class="selflink" id="section-12.4" href="#section-12.4">12.4</a>.  禁止混合安全上下文加载</span>
+
+   “混合安全上下文”加载发生在 Web 应用程序资源由 UA 通过安全传输
+   获取之后，又导致在不使用安全传输的情况下获取一个或多个其他
+   资源时。这通常也称为“混合内容”加载（见
+   [<a href="#ref-W3C.REC-wsc-ui-20100812">W3C.REC-wsc-ui-20100812</a>] 中的<a href="#section-5.3">第 5.3 节</a>（“Mixed Content”）），
+   但不应与 XML 和 HTML 等标记语言语境中也使用的同一个
+   “混合内容”术语混淆。
+
+   注意：为了在各 UA 实现之间提供行为一致性，混合安全上下文的
+          概念将需要进一步的标准化工作，例如更清楚地定义术语，
+          并定义与其相关的具体行为。
+
+<span class="h3"><a class="selflink" id="section-12.5" href="#section-12.5">12.5</a>.  HSTS 策略删除</span>
+
+   HSTS 策略删除是指能够按每个 HSTS 主机删除 UA 缓存的
+   HSTS 策略。
+
+   注意：添加这样的功能时，无论在用户界面还是安全意义上都应
+          非常谨慎。删除已知 HSTS 主机的缓存条目应当是一个非常
+          有意且经过充分考虑的行为——它不应成为用户习以为常的
+          例行操作：例如，仅仅为了完成工作而“点击
+
+
+
+<span class="grey">Hodges 等                    标准轨道                        [第 31 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-32" ></span>
+<span class="grey"><a href="./rfc6797">RFC 6797</a>          HTTP 严格传输安全 (HSTS)        2012 年 11 月</span>
+
+
+          通过”。此外，实现需要防止允许攻击者将代码（例如
+          ECMAscript）注入 UA，并以静默且程序化的方式从 UA 的
+          已知 HSTS 主机缓存中移除条目。
+
+<span class="h2"><a class="selflink" id="section-13" href="#section-13">13</a>.  国际化域名应用（IDNA）：依赖</span>
+<span class="h2">     和迁移</span>
+
+   现代 Internet 上的文本域名可能包含一个或多个“国际化”域名标签。
+   这样的域名称为“国际化域名”（IDN）。定义 IDN 及其使用协议的
+   规范套件称为“国际化域名应用（IDNA）”。目前有两个这样的规范
+   套件：IDNA2008 [<a href="./rfc5890" title="&quot;Internationalized Domain Names for Applications (IDNA): Definitions and Document Framework&quot;">RFC5890</a>] 及其前身 IDNA2003 [<a href="./rfc3490" title="&quot;Internationalizing Domain Names in Applications (IDNA)&quot;">RFC3490</a>]。
+
+   IDNA2008 废止了 IDNA2003，但这两个规范之间存在差异，因此，
+   对在其中一个规范下注册的域名标签和在另一个规范下注册的域名
+   标签进行处理（例如转换）时也可能存在差异。在一段过渡期内，
+   基于 IDNA2003 的域名标签会继续存在于实际环境中。为了便利其
+   IDNA 迁移，用户代理 SHOULD 实现 IDNA2008 [<a href="./rfc5890" title="&quot;Internationalized Domain Names for Applications (IDNA): Definitions and Document Framework&quot;">RFC5890</a>]，并且
+   MAY 实现 [<a href="./rfc5895" title="&quot;Mapping Characters for Internationalized Domain Names in Applications (IDNA) 2008&quot;">RFC5895</a>]（另见 <a href="./rfc5894#section-7">[RFC5894] 第&nbsp;7 节</a>）或 [<a href="#ref-UTS46" title="&quot;Unicode IDNA Compatibility Processing&quot;">UTS46</a>]。
+   如果用户代理未实现 IDNA2008，则用户代理 MUST 实现 IDNA2003。
+
+<span class="h2"><a class="selflink" id="section-14" href="#section-14">14</a>.  安全考虑事项</span>
+
+   本规范涉及 HSTS 策略的表达、传达和执行。总体 HSTS 策略威胁
+   模型，包括已应对和未应对的威胁，见<a href="#section-2.3">第 2.3 节</a>
+   （“威胁模型”）。
+
+   此外，以下各节讨论 HSTS 策略的运行后果，提供功能理由，
+   讨论 HSTS 策略的潜在误用，并突出 HSTS 策略体制中的一些
+   已知漏洞。
+
+<span class="h3"><a class="selflink" id="section-14.1" href="#section-14.1">14.1</a>.  底层安全传输注意事项</span>
+
+   本规范被设计为独立于 HTTP 底层的安全传输。然而，<a href="#section-2">第 2 节</a>
+   （“概述”）中的威胁分析和需求事实上假定 TLS 或 SSL 作为底层
+   安全传输。因此，在 HTTP 运行于某种其他安全传输协议之上的
+   语境中使用 HSTS，需要结合 HTTP 如何分层在该安全传输协议之上
+
+
+
+<span class="grey">Hodges 等                    标准轨道                        [第 32 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-33" ></span>
+<span class="grey"><a href="./rfc6797">RFC 6797</a>          HTTP 严格传输安全 (HSTS)        2012 年 11 月</span>
+
+
+   的具体细节，评估该安全传输协议的安全模型，以便评估 HSTS
+   在该语境中的后续安全属性。
+
+<span class="h3"><a class="selflink" id="section-14.2" href="#section-14.2">14.2</a>.  非一致性用户代理的影响</span>
+
+   非一致性用户代理会忽略 Strict-Transport-Security 头字段；
+   因此，非一致性用户代理不会应对<a href="#section-2.3.1">第 2.3.1 节</a>
+   （“所应对的威胁”）中描述的威胁。
+
+   这意味着，Web 应用程序及其使用非一致性 UA 的用户将容易受到
+   以下两者的影响：
+
+   o  由于网站开发和部署缺陷导致的被动网络攻击：
+
+         例如，如果 Web 应用程序包含对 Web 应用程序服务器的任何
+         不安全引用（例如 "http"），并且并非其所有 cookie 都被标记
+         为 "Secure"，那么其 cookie 将容易受到被动网络嗅探，并可能
+         随后导致用户凭据被滥用。
+
+   o  主动网络攻击：
+
+         例如，如果攻击者能够放置一个“中间人”，安全传输连接尝试
+         很可能会向用户产生警告，但在未执行 HSTS 策略的情况下，
+         当前常见做法是允许用户“点击通过”并继续。这会使用户以及
+         可能的 Web 应用程序暴露给此类攻击者的滥用。
+
+   在没有 HSTS 策略的情况下，这基本上是所有 Web 应用程序及其
+   用户的现状。由于 Web 应用程序提供者通常无法控制与其 Web
+   应用程序交互的 UA 类型或版本，因此其含义是，HSTS 主机部署者
+   通常必须采取与未断言 HSTS 策略时相同程度的谨慎，以避免网站
+   开发和部署缺陷（见<a href="#section-2.3.1.3">第 2.3.1.3 节</a>）。
+
+<span class="h3"><a class="selflink" id="section-14.3" href="#section-14.3">14.3</a>.  仅通过无错误安全传输建立 HSTS 策略的后果</span>
+<span class="h3">       </span>
+
+   <a href="#section-8">第 8 节</a>（“用户代理处理模型”）中定义的用户代理处理模型规定，
+   只有当 UA 通过没有底层安全传输错误或警告的安全传输连接接收到
+   STS 头字段时，主机才会最初被记录为已知 HSTS 主机，或者才会
+   更新已知 HSTS 主机的缓存信息。
+
+
+
+<span class="grey">Hodges 等                    标准轨道                        [第 33 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-34" ></span>
+<span class="grey"><a href="./rfc6797">RFC 6797</a>          HTTP 严格传输安全 (HSTS)        2012 年 11 月</span>
+
+
+   其背后的理由是，如果存在“中间人”（MITM）——无论是合法部署的
+   代理还是非法实体——它都可能造成各种破坏（另见<a href="#appendix-A">附录 A</a>
+   （“设计决策说明”）第 3 项，以及<a href="#section-14.6">第 14.6 节</a>（“引导阶段
+   MITM 漏洞”））；例如：
+
+   o  未经授权地将主机记录为已知 HSTS 主机；如果该主机并未统一
+      通过安全传输提供其服务，这可能导致拒绝服务情况（另见
+      <a href="#section-14.5">第 14.5 节</a>（“拒绝服务”））。
+
+   o  通过操纵返回给 UA 的 max-age 头字段参数值，重置该主机作为
+      已知 HSTS 主机指定的生存时间。如果 max-age 以零返回，这将
+      导致 UA 停止将该主机视为已知 HSTS 主机，进而导致到该主机的
+      不安全连接，或者如果该主机只通过安全传输提供其服务，则可能
+      导致拒绝服务。
+
+   然而，这意味着，如果 UA 位于 MITM 非透明 TLS 代理“之后”——
+   例如在企业内部网中——并与代理之外的未知 HSTS 主机交互，用户
+   可能会看到旧式安全连接错误对话框。即使风险被接受且用户
+   “点击通过”，该主机也不会被记录为 HSTS 主机。因此，只要 UA
+   位于这样的代理之后，用户就会处于脆弱状态，并且可能会针对
+   尚未知的 HSTS 主机看到旧式安全连接错误对话框。
+
+   一旦 UA 通过无错误安全传输成功连接到未知 HSTS 主机，该主机
+   将被记录为已知 HSTS 主机。这将导致随后从干扰性代理之后发起的
+   连接尝试失败。
+
+   上述讨论涉及<a href="#section-12">第 12 节</a>（“用户代理实现建议”）中的建议：
+   只要存在警告和错误且该主机为已知 HSTS 主机，就应以
+   “不给用户补救途径”的方式终止安全连接。这样的姿态可保护用户
+   免于“点击通过”安全警告并使自己面临风险。
+
+<span class="h3"><a class="selflink" id="section-14.4" href="#section-14.4">14.4</a>.  includeSubDomains 的必要性</span>
+
+   如果没有 includeSubDomains 指令，Web 应用程序将无法充分保护
+   所谓的“域 cookie”（即使这些 cookie 设置了 "Secure" 标志，
+   因而只在安全信道上传送）。这些 cookie 是 Web 应用程序期望
+   UA 返回给该 Web 应用程序的任何及所有子域的 cookie。
+
+
+
+<span class="grey">Hodges 等                    标准轨道                        [第 34 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-35" ></span>
+<span class="grey"><a href="./rfc6797">RFC 6797</a>          HTTP 严格传输安全 (HSTS)        2012 年 11 月</span>
+
+
+   例如，假设 example.com 表示某个 Web 应用程序的顶级 DNS 名称。
+   再假设此 cookie 是为整个 example.com 域设置的，即它是一个
+   “域 cookie”，并且它设置了 Secure 标志。假设 example.com 对此
+   UA 是已知 HSTS 主机，但未设置 includeSubDomains 指令。
+
+   现在，如果攻击者使 UA 请求一个不太可能已存在于该 Web 应用程序
+   中的子域名，例如 "https://uxdhbpahpdsf.example.com/"，但攻击者
+   已设法在 DNS 中注册该名称并将其指向攻击者控制下的 HTTP 服务器，
+   那么：
+
+   1.  UA 不太可能已经为 "uxdhbpahpdsf.example.com" 建立 HSTS 策略。
+
+   2.  发送到 uxdhbpahpdsf.example.com 的 HTTP 请求将包含带有
+       Secure 标志的域 cookie。
+
+   3.  如果 "uxdhbpahpdsf.example.com" 在 TLS 建立期间返回证书，
+       并且用户“点击通过”可能出现的任何警告（有可能但不确定能够
+       为这样的域名获得所需证书，使得警告可能出现也可能不出现），
+       那么攻击者就可以获取表面上正被保护的带 Secure 标志的
+       域 cookie。
+
+   如果没有 "includeSubDomains" 指令，HSTS 无法保护此类带有
+   Secure 标志的域 cookie。
+
+<span class="h3"><a class="selflink" id="section-14.5" href="#section-14.5">14.5</a>.  拒绝服务</span>
+
+   HSTS 可能被用于针对网站发动某些形式的拒绝服务（DoS）攻击。
+   DoS 攻击是指一个或多个网络实体以受害实体为目标，并试图阻止
+   受害实体执行有用工作的攻击。本节从 HSTS 角度讨论此类场景，
+   但此列表并非穷尽。另见 [<a href="./rfc4732" title="&quot;Internet Denial-of- Service Considerations&quot;">RFC4732</a>]，其中讨论了整体 Internet
+   DoS 考虑事项。
+
+   o  可通过 HTTP 使用的 Web 应用程序
+
+      对于仅通过没有安全传输的 HTTP 提供的 Web 应用程序（或其
+      关键部分），如果攻击者能够导致 UA 为此类 Web 应用程序的
+      主机设置 HSTS 策略，就存在实施 DoS 攻击的机会。
+
+      这是因为一旦 UA 为 Web 应用程序的主机设置了 HSTS 策略，
+      UA 就只会使用安全传输与该主机通信。如果该主机未使用安全
+
+
+
+<span class="grey">Hodges 等                    标准轨道                        [第 35 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-36" ></span>
+<span class="grey"><a href="./rfc6797">RFC 6797</a>          HTTP 严格传输安全 (HSTS)        2012 年 11 月</span>
+
+
+      传输，或者未对其 Web 应用程序的关键部分使用安全传输，那么
+      该 Web 应用程序将对 UA 用户变得不可用。
+
+      注意：这是 UA 提供“HSTS 策略删除”功能的一个用例，如
+             <a href="#section-12.5">第 12.5 节</a>（“HSTS 策略删除”）所述。
+
+      可以通过多种方式为受害主机设置 HSTS 策略：
+
+      *  如果 Web 应用程序存在 HTTP 响应拆分漏洞 [<a href="#ref-CWE-113" title="&quot;CWE-113: Improper Neutralization of CRLF Sequences in HTTP Headers ('HTTP Response Splitting')&quot;">CWE-113</a>]
+         （该漏洞可被滥用以促成“HTTP 头注入”）。
+
+      *  如果攻击者能够伪造从不安全受害站点（例如
+         &lt;http://example.com/&gt;）到 &lt;https://example.com/&gt; 的
+         重定向，而后者由攻击者控制并具有表面上有效的证书。
+         在这种情况下，攻击者随后可以为 example.com 以及
+         example.com 的所有子域设置 HSTS 策略。
+
+      *  如果攻击者能够说服用户为受害主机手动配置 HSTS 策略。
+         这假定其 UA 提供这样的能力（见<a href="#section-12">第 12 节</a>
+         （“用户代理实现建议”））。或者，如果这样的 UA 配置是
+         可脚本化的，那么攻击者可以使 UA 执行其脚本，并为任意
+         期望的域设置 HSTS 策略。
+
+   o  无意使用 includeSubDomains
+
+      includeSubDomains 指令会指示 UA 自动将给定 HSTS 主机的所有
+      子域视为已知 HSTS 主机。如果任何这样的子域不支持正确配置的
+      安全传输，那么它们将从此类 UA 处变得不可达。
+
+<span class="h3"><a class="selflink" id="section-14.6" href="#section-14.6">14.6</a>.  引导阶段 MITM 漏洞</span>
+
+   引导阶段 MITM（中间人）漏洞，是用户和 HSTS 主机在以下情况下
+   遇到的漏洞：用户手动输入或跟随一个使用 "http" URI 而非
+   "https" URI 指向未知 HSTS 主机的链接。由于 UA 在与指定服务器
+   的初始交互尝试中使用不安全信道，因此这种初始交互容易受到
+   各种攻击（见 [<a href="#ref-ForceHTTPS">ForceHTTPS</a>] 第 5.3 节）。
+
+   注意：UA 实现可以采用各种功能/设施来缓解此漏洞。请参见
+          <a href="#section-12">第 12 节</a>（“用户代理实现建议”）。
+
+
+
+<span class="grey">Hodges 等                    标准轨道                        [第 36 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-37" ></span>
+<span class="grey"><a href="./rfc6797">RFC 6797</a>          HTTP 严格传输安全 (HSTS)        2012 年 11 月</span>
+
+
+<span class="h3"><a class="selflink" id="section-14.7" href="#section-14.7">14.7</a>.  网络时间攻击</span>
+
+   主动网络攻击可以颠覆网络时间协议（例如网络时间协议（NTP）
+   [<a href="./rfc5905" title="&quot;Network Time Protocol Version 4: Protocol and Algorithms Specification&quot;">RFC5905</a>]）——这会使 HSTS 对信任 NTP 或缺少实时时钟的客户端
+   不那么有效。网络时间攻击不在本规范范围内。注意，现代操作系统
+   默认使用 NTP。另见 <a href="./rfc4732#section-2.10">[RFC4732] 第&nbsp;2.10 节</a>。
+
+<span class="h3"><a class="selflink" id="section-14.8" href="#section-14.8">14.8</a>.  伪造根 CA 证书钓鱼加 DNS 缓存投毒攻击</span>
+
+   攻击者可以设想通过伪造根 CA 证书钓鱼加 DNS 缓存投毒攻击，
+   获取属于受害 HSTS 保护 Web 应用程序的用户登录凭据。
+
+   例如，攻击者可以先说服受 HSTS 策略保护的受害 Web 应用程序的
+   用户安装攻击者版本的根 CA 证书，该证书声称（虚假地）代表受害
+   Web 应用程序的 CA。这可以通过向用户发送一封包含此类证书链接的
+   钓鱼电子邮件来完成；如果点击该链接，用户的浏览器可能会提供
+   安装该证书的选项。
+
+   然后，如果攻击者能够攻击用户的 DNS 服务器（例如通过缓存投毒），
+   并为其虚假 Web 应用程序开启 HSTS 策略，则受影响用户的浏览器会
+   访问攻击者的 Web 应用程序，而不是合法的 Web 应用程序。
+
+   这种类型的攻击利用了 HSTS 范围之外的向量。然而，通过在 Web
+   应用程序的整体部署方法中，除 HSTS 外适当采用安全设施，例如
+   DNS 安全扩展 [<a href="./rfc4033" title="&quot;DNS Security Introduction and Requirements&quot;">RFC4033</a>]，以及阻止电子邮件钓鱼和伪造证书注入的
+   技术，可以缓解此类威胁的可行性。
+
+<span class="h3"><a class="selflink" id="section-14.9" href="#section-14.9">14.9</a>.  对 HSTS 策略存储的创造性操纵</span>
+
+   由于 HSTS 主机可以选择其自己的主机名及其子域，而这些信息会被
+   缓存在一致性 UA 的 HSTS 策略存储中，因此控制一个或多个 HSTS
+   主机的人可以将信息编码到其控制的域名中，并在记录 HSTS 主机的
+   过程中使此类 UA 按惯例缓存此信息。其他主机可以通过巧妙构造并
+   加载的 Web 资源检索此信息，使 UA 向（编码域名的变体）发送查询。
+   这样的查询可以揭示 UA 以前是否访问过原始 HSTS 主机（及子域）。
+
+
+
+<span class="grey">Hodges 等                    标准轨道                        [第 37 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-38" ></span>
+<span class="grey"><a href="./rfc6797">RFC 6797</a>          HTTP 严格传输安全 (HSTS)        2012 年 11 月</span>
+
+
+   这样的技术可能被滥用为另一种形式的“Web 跟踪”[<a href="#ref-WebTracking">WebTracking</a>]。
+
+<span class="h3"><a class="selflink" id="section-14.10" href="#section-14.10">14.10</a>.  国际化域名</span>
+
+   Internet 安全在一定程度上依赖 DNS 及其托管的域名。域名由用户
+   用于识别并连接到 Internet 主机和其他网络资源。例如，如果用户
+   输入国际化域名（IDN）时，基于对该 IDN 的不同解释而连接到不同
+   主机，则 Internet 安全会受到损害。
+
+   本规范中指定的处理模型假定它们操作的域名已进行 IDNA 规范化，
+   并且规范化过程已按照必要规范正确执行所有适当的 IDNA 和 Unicode
+   验证以及字符列表测试（例如，如<a href="#section-10">第 10 节</a>（“域名 IDNA
+   规范化”）中所述）。这些步骤对于避免各种可能造成损害的情况是
+   必要的。
+
+   简言之，缺乏谨慎且一致的 Unicode 和 IDNA 验证可能导致的问题示例
+   包括意外的处理异常、截断错误和缓冲区溢出，以及假阳性和/或
+   假阴性的域名匹配结果。上述任何问题都可能以各种方式被攻击者利用。
+
+   此外，IDNA2008 [<a href="./rfc5890" title="&quot;Internationalized Domain Names for Applications (IDNA): Definitions and Document Framework&quot;">RFC5890</a>] 与 IDNA2003 [<a href="./rfc3490" title="&quot;Internationalizing Domain Names in Applications (IDNA)&quot;">RFC3490</a>] 在禁止字符和
+   字符映射约定方面不同。这种情况也可能导致假阳性和/或假阴性的
+   域名匹配结果，例如导致用户可能与非预期主机通信，或无法访问
+   预期主机。
+
+   有关细节，请参阅 [<a href="./rfc5890" title="&quot;Internationalized Domain Names for Applications (IDNA): Definitions and Document Framework&quot;">RFC5890</a>]、[<a href="./rfc5891" title="&quot;Internationalized Domain Names in Applications (IDNA): Protocol&quot;">RFC5891</a>] 和 [<a href="./rfc3490" title="&quot;Internationalizing Domain Names in Applications (IDNA)&quot;">RFC3490</a>] 的安全考虑事项
+   章节，以及它们规范性引用的规范。此外，[<a href="./rfc5894" title="&quot;Internationalized Domain Names for Applications (IDNA): Background, Explanation, and Rationale&quot;">RFC5894</a>] 提供了
+   特别针对 IDNA2008 的详细背景和理由，以及 IDNA 及其一般问题的
+   详细背景和理由，应结合前述规范一起查阅。
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Hodges 等                    标准轨道                        [第 38 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-39" ></span>
+<span class="grey"><a href="./rfc6797">RFC 6797</a>          HTTP 严格传输安全 (HSTS)        2012 年 11 月</span>
+
+
+<span class="h2"><a class="selflink" id="section-15" href="#section-15">15</a>.  IANA 考虑事项</span>
+
+   以下是根据 [<a href="./rfc3864" title="&quot;Registration Procedures for Message Header Fields&quot;">RFC3864</a>] 提供的 Internet Assigned Numbers Authority
+   （IANA）永久消息头字段注册信息。
+
+     头字段名称：                 Strict-Transport-Security
+     适用协议：                   http
+     状态：                       standard
+     作者/变更控制者：            IETF
+     规范文档：                   本文档
+
+<span class="h2"><a class="selflink" id="section-16" href="#section-16">16</a>.  参考文献</span>
+
+<span class="h3"><a class="selflink" id="section-16.1" href="#section-16.1">16.1</a>.  规范性参考文献</span>
+
+   [<a id="ref-RFC2119">RFC2119</a>]  Bradner, S., “用于 RFC 中表示要求级别的关键词”，
+              <a href="https://www.rfc-editor.org/bcp/bcp14">BCP 14</a>, <a href="./rfc2119">RFC 2119</a>, 1997 年 3 月。
+
+   [<a id="ref-RFC2616">RFC2616</a>]  Fielding, R., Gettys, J., Mogul, J., Frystyk, H.,
+              Masinter, L., Leach, P., and T. Berners-Lee, “超文本
+              传输协议 -- HTTP/1.1”，<a href="./rfc2616">RFC 2616</a>, 1999 年 6 月。
+
+   [<a id="ref-RFC2818">RFC2818</a>]  Rescorla, E., “TLS 上的 HTTP”，<a href="./rfc2818">RFC 2818</a>, 2000 年 5 月。
+
+   [<a id="ref-RFC3490">RFC3490</a>]  Faltstrom, P., Hoffman, P., and A. Costello,
+              “应用中的国际化域名（IDNA）”，
+              <a href="./rfc3490">RFC 3490</a>, 2003 年 3 月。
+
+   [<a id="ref-RFC3864">RFC3864</a>]  Klyne, G., Nottingham, M., and J. Mogul, “消息头字段的
+              注册过程”，<a href="https://www.rfc-editor.org/bcp/bcp90">BCP 90</a>, <a href="./rfc3864">RFC 3864</a>,
+              2004 年 9 月。
+
+   [<a id="ref-RFC3986">RFC3986</a>]  Berners-Lee, T., Fielding, R., and L. Masinter, “统一
+              资源标识符（URI）：通用语法”，STD 66,
+              <a href="./rfc3986">RFC 3986</a>, 2005 年 1 月。
+
+   [<a id="ref-RFC5246">RFC5246</a>]  Dierks, T. and E. Rescorla, “传输层安全性
+              （TLS）协议版本 1.2”，<a href="./rfc5246">RFC 5246</a>, 2008 年 8 月。
+
+   [<a id="ref-RFC5890">RFC5890</a>]  Klensin, J., “应用中的国际化域名（IDNA）：定义和
+              文档框架”，
+              <a href="./rfc5890">RFC 5890</a>, 2010 年 8 月。
+
+   [<a id="ref-RFC5891">RFC5891</a>]  Klensin, J., “应用中的国际化域名
+              （IDNA）：协议”，<a href="./rfc5891">RFC 5891</a>, 2010 年 8 月。
+
+
+
+
+
+
+<span class="grey">Hodges 等                    标准轨道                        [第 39 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-40" ></span>
+<span class="grey"><a href="./rfc6797">RFC 6797</a>          HTTP 严格传输安全 (HSTS)        2012 年 11 月</span>
+
+
+   [<a id="ref-RFC5895">RFC5895</a>]  Resnick, P. and P. Hoffman, “应用中的国际化域名
+              （IDNA）2008 的字符映射”，<a href="./rfc5895">RFC 5895</a>, 2010 年 9 月。
+
+   [<a id="ref-RFC6698">RFC6698</a>]  Hoffman, P. and J. Schlyter, “命名实体的基于 DNS 的认证
+              （DANE）传输层安全性（TLS）协议：TLSA”，<a href="./rfc6698">RFC 6698</a>,
+              2012 年 8 月。
+
+   [<a id="ref-UTS46">UTS46</a>]    Davis, M. and M. Suignard, “Unicode IDNA 兼容性
+              处理”，Unicode 技术标准 #46,
+              &lt;<a href="http://unicode.org/reports/tr46/">http://unicode.org/reports/tr46/</a>&gt;.
+
+   [<a id="ref-Unicode">Unicode</a>]  The Unicode Consortium, “Unicode 标准”，
+              &lt;<a href="http://www.unicode.org/versions/latest/">http://www.unicode.org/versions/latest/</a>&gt;.
+
+   [<a id="ref-W3C.REC-html401-19991224">W3C.REC-html401-19991224</a>]
+              Raggett, D., Le Hors, A., and I. Jacobs, “HTML 4.01
+              规范”，World Wide Web Consortium Recommendation
+              REC-html401-19991224, 1999 年 12 月,
+              &lt;<a href="http://www.w3.org/TR/1999/REC-html401-19991224/">http://www.w3.org/TR/1999/REC-html401-19991224/</a>&gt;.
+
+<span class="h3"><a class="selflink" id="section-16.2" href="#section-16.2">16.2</a>.  资料性参考文献</span>
+
+   [<a id="ref-Aircrack-ng">Aircrack-ng</a>]
+              d'Otreppe, T., “Aircrack-ng”, 访问日期：2010 年 7 月 11 日,
+              &lt;<a href="http://www.aircrack-ng.org/">http://www.aircrack-ng.org/</a>&gt;.
+
+   [<a id="ref-BeckTews09">BeckTews09</a>]
+              Beck, M. and E. Tews, “针对 WEP 和 WPA 的实用攻击”，
+              第二届 ACM Wireless Network Security Conference，
+              瑞士苏黎世，2009 年，
+              &lt;<a href="http://dl.acm.org/citation.cfm?id=1514286">http://dl.acm.org/citation.cfm?id=1514286</a>&gt;.
+
+   [<a id="ref-CWE-113">CWE-113</a>]  “CWE-113：HTTP 头中 CRLF 序列的不当中和
+              （‘HTTP 响应拆分’）”，Common Weakness Enumeration
+              &lt;<a href="http://cwe.mitre.org/">http://cwe.mitre.org/</a>&gt;, The Mitre
+              Corporation &lt;<a href="http://www.mitre.org/">http://www.mitre.org/</a>&gt;,
+              &lt;<a href="http://cwe.mitre.org/data/definitions/113.html">http://cwe.mitre.org/data/definitions/113.html</a>&gt;.
+
+   [<a id="ref-Firesheep">Firesheep</a>]
+              Various, “Firesheep”, Wikipedia Online, ongoing, &lt;<a href="https://secure.wikimedia.org/wikipedia/en/w/index.php?title=Firesheep&amp;oldid=517474182">https://</a>
+              <a href="https://secure.wikimedia.org/wikipedia/en/w/index.php?title=Firesheep&amp;oldid=517474182">secure.wikimedia.org/wikipedia/en/w/</a>
+              <a href="https://secure.wikimedia.org/wikipedia/en/w/index.php?title=Firesheep&amp;oldid=517474182">index.php?title=Firesheep&amp;oldid=517474182</a>&gt;.
+
+
+
+
+
+
+
+
+<span class="grey">Hodges 等                    标准轨道                        [第 40 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-41" ></span>
+<span class="grey"><a href="./rfc6797">RFC 6797</a>          HTTP 严格传输安全 (HSTS)        2012 年 11 月</span>
+
+
+   [<a id="ref-ForceHTTPS">ForceHTTPS</a>]
+              Jackson, C. and A. Barth, “ForceHTTPS：保护高安全性
+              Web 站点免受网络攻击”，收录于第 17 届国际 World Wide
+              Web Conference（WWW2008）会议论文集，2008 年，
+              &lt;<a href="https://crypto.stanford.edu/forcehttps/">https://crypto.stanford.edu/forcehttps/</a>&gt;.
+
+   [<a id="ref-GoodDhamijaEtAl05">GoodDhamijaEtAl05</a>]
+              Good, N., Dhamija, R., Grossklags, J., Thaw, D.,
+              Aronowitz, S., Mulligan, D., and J. Konstan, “在入口处
+              阻止间谍软件：关于隐私、通知和间谍软件的用户研究”，
+              收录于 Symposium On Usable Privacy and Security（SOUPS）
+              会议论文集，美国宾夕法尼亚州匹兹堡，2005 年 7 月，
+              &lt;<a href="http://www.law.berkeley.edu/files/Spyware_at_the_Gate.pdf">http://www.law.berkeley.edu/files/</a>
+              <a href="http://www.law.berkeley.edu/files/Spyware_at_the_Gate.pdf">Spyware_at_the_Gate.pdf</a>&gt;.
+
+   [<a id="ref-HTTP1_1-UPD">HTTP1_1-UPD</a>]
+              Fielding, R., Ed., and J. Reschke, Ed., “超文本
+              传输协议（HTTP/1.1）：消息语法和路由”，
+              进行中的工作，2012 年 10 月。
+
+   [<a id="ref-JacksonBarth2008">JacksonBarth2008</a>]
+              Jackson, C. and A. Barth, “Beware of Finer-Grained
+              Origins”，Web 2.0 Security and Privacy Workshop，
+              美国加利福尼亚州奥克兰，2008 年，
+              &lt;<a href="http://seclab.stanford.edu/websec/origins/fgo.pdf">http://seclab.stanford.edu/websec/origins/fgo.pdf</a>&gt;.
+
+   [<a id="ref-OWASP-TLSGuide">OWASP-TLSGuide</a>]
+              Coates, M., Wichers, D., Boberski, M., and T. Reguly,
+              “传输层保护速查表”，
+              访问日期：2010 年 7 月 11 日, &lt;<a href="http://www.owasp.org/index.php/Transport_Layer_Protection_Cheat_Sheet">http://www.owasp.org/index.php/</a>
+              <a href="http://www.owasp.org/index.php/Transport_Layer_Protection_Cheat_Sheet">Transport_Layer_Protection_Cheat_Sheet</a>&gt;.
+
+   [<a id="ref-RFC1035">RFC1035</a>]  Mockapetris, P., “域名——实现和规范”，
+              STD 13, <a href="./rfc1035">RFC 1035</a>, 1987 年 11 月。
+
+   [<a id="ref-RFC2560">RFC2560</a>]  Myers, M., Ankney, R., Malpani, A., Galperin, S., and C.
+              Adams, “X.509 Internet 公钥基础设施在线证书状态协议 -
+              OCSP”，<a href="./rfc2560">RFC 2560</a>, 1999 年 6 月。
+
+   [<a id="ref-RFC4033">RFC4033</a>]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
+              Rose, “DNS 安全介绍和需求”，
+              <a href="./rfc4033">RFC 4033</a>, 2005 年 3 月。
+
+   [<a id="ref-RFC4732">RFC4732</a>]  Handley, M., Rescorla, E., and IAB, “Internet 拒绝服务
+              考虑事项”，<a href="./rfc4732">RFC 4732</a>, 2006 年 12 月。
+
+
+
+
+
+<span class="grey">Hodges 等                    标准轨道                        [第 41 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-42" ></span>
+<span class="grey"><a href="./rfc6797">RFC 6797</a>          HTTP 严格传输安全 (HSTS)        2012 年 11 月</span>
+
+
+   [<a id="ref-RFC4949">RFC4949</a>]  Shirey, R., “Internet 安全术语表，第 2 版”，
+              <a href="./rfc4949">RFC 4949</a>, 2007 年 8 月。
+
+   [<a id="ref-RFC5226">RFC5226</a>]  Narten, T. and H. Alvestrand, “RFC 中 IANA 考虑事项
+              章节的编写指南”，<a href="https://www.rfc-editor.org/bcp/bcp26">BCP 26</a>, <a href="./rfc5226">RFC 5226</a>,
+              2008 年 5 月。
+
+   [<a id="ref-RFC5280">RFC5280</a>]  Cooper, D., Santesson, S., Farrell, S., Boeyen, S.,
+              Housley, R., and W. Polk, “Internet X.509 公钥基础设施
+              证书和证书吊销列表（CRL）配置文件”，<a href="./rfc5280">RFC 5280</a>,
+              2008 年 5 月。
+
+   [<a id="ref-RFC5894">RFC5894</a>]  Klensin, J., “应用中的国际化域名（IDNA）：背景、
+              解释和理由”，<a href="./rfc5894">RFC 5894</a>, 2010 年 8 月。
+
+   [<a id="ref-RFC5905">RFC5905</a>]  Mills, D., Martin, J., Burbank, J., and W. Kasch, “网络
+              时间协议版本 4：协议和算法规范”，<a href="./rfc5905">RFC 5905</a>,
+              2010 年 6 月。
+
+   [<a id="ref-RFC6066">RFC6066</a>]  Eastlake, D., “传输层安全性（TLS）扩展：
+              扩展定义”，<a href="./rfc6066">RFC 6066</a>, 2011 年 1 月。
+
+   [<a id="ref-RFC6101">RFC6101</a>]  Freier, A., Karlton, P., and P. Kocher, “安全
+              套接字层（SSL）协议版本 3.0”，<a href="./rfc6101">RFC 6101</a>,
+              2011 年 8 月。
+
+   [<a id="ref-RFC6125">RFC6125</a>]  Saint-Andre, P. and J. Hodges, “在传输层安全性
+              （TLS）语境中使用 X.509（PKIX）证书表示和验证
+              Internet 公钥基础设施内基于域的应用服务身份”，
+              <a href="./rfc6125">RFC 6125</a>, 2011 年 3 月。
+
+   [<a id="ref-RFC6265">RFC6265</a>]  Barth, A., “HTTP 状态管理机制”，<a href="./rfc6265">RFC 6265</a>,
+              2011 年 4 月。
+
+   [<a id="ref-RFC6454">RFC6454</a>]  Barth, A., “Web 源概念”，<a href="./rfc6454">RFC 6454</a>,
+              2011 年 12 月。
+
+   [<a id="ref-SunshineEgelmanEtAl09">SunshineEgelmanEtAl09</a>]
+              Sunshine, J., Egelman, S., Almuhimedi, H., Atri, N., and
+              L. Cranor, “狼来了：SSL 警告有效性的实证研究”，
+              收录于第 18 届 USENIX Security Symposium 会议论文集，
+              加拿大蒙特利尔，2009 年 8 月, &lt;<a href="http://www.usenix.org/events/sec09/tech/full_papers/sunshine.pdf">http://</a>
+              <a href="http://www.usenix.org/events/sec09/tech/full_papers/sunshine.pdf">www.usenix.org/events/sec09/tech/full_papers/</a>
+              <a href="http://www.usenix.org/events/sec09/tech/full_papers/sunshine.pdf">sunshine.pdf</a>&gt;.
+
+
+
+
+
+<span class="grey">Hodges 等                    标准轨道                        [第 42 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-43" ></span>
+<span class="grey"><a href="./rfc6797">RFC 6797</a>          HTTP 严格传输安全 (HSTS)        2012 年 11 月</span>
+
+
+   [<a id="ref-W3C.REC-wsc-ui-20100812">W3C.REC-wsc-ui-20100812</a>]
+              Roessler, T. and A. Saldhana, “Web 安全上下文：用户
+              界面指南”，World Wide Web Consortium Recommendation
+              REC-wsc-ui-20100812, 2010 年 8 月,
+              &lt;<a href="http://www.w3.org/TR/2010/REC-wsc-ui-20100812">http://www.w3.org/TR/2010/REC-wsc-ui-20100812</a>&gt;.
+
+   [<a id="ref-WebTracking">WebTracking</a>]
+              Schmucker, N., “Web 跟踪”，SNET2 Seminar Paper
+              - Summer Term, 2011, &lt;<a href="http://www.snet.tu-berlin.de/fileadmin/fg220/courses/SS11/snet-project/web-tracking_schmuecker.pdf">http://www.snet.tu-berlin.de/</a>
+              <a href="http://www.snet.tu-berlin.de/fileadmin/fg220/courses/SS11/snet-project/web-tracking_schmuecker.pdf">fileadmin/fg220/courses/SS11/snet-project/</a>
+              <a href="http://www.snet.tu-berlin.de/fileadmin/fg220/courses/SS11/snet-project/web-tracking_schmuecker.pdf">web-tracking_schmuecker.pdf</a>&gt;.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Hodges 等                    标准轨道                        [第 43 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-44" ></span>
+<span class="grey"><a href="./rfc6797">RFC 6797</a>          HTTP 严格传输安全 (HSTS)        2012 年 11 月</span>
+
+
+<span class="h2"><a class="selflink" id="appendix-A" href="#appendix-A">附录 A</a>.  设计决策说明</span>
+
+   本附录记录各种设计决策。
+
+   1.  Cookie 不适合用于表达 HSTS 策略，因为它们（在 UA 中存储时）
+       可能是可变的；因此，采用 HTTP 头字段。
+
+   2.  我们选择不尝试规定如何处理“混合安全上下文加载”（也称为
+       “混合内容加载”），这是出于 UA 实现考虑以及分类困难。
+
+   3.  HSTS 主机可以通过新的 HSTS 头字段参数值更新 UA 对 HSTS 策略
+       的认识。我们选择让 UA 采用从服务器收到的“最新”信息，因为
+       Web 站点可能会发出错误的 HSTS 策略，例如多年期 max-age 值，
+       和/或不正确的 includeSubDomains 指令。如果 HSTS 主机不能通过
+       协议纠正此类错误，就需要某种形式向用户公告，并由用户进行
+       手动干预，这对于 Web 应用程序提供者及其用户而言都可能是
+       一个并不简单的问题。
+
+   4.  HSTS 主机仅通过域名标识——所有形式的显式 IP 地址标识都被
+       排除。这样做是为了简化，同时也是认识到将直接 IP 地址标识
+       与基于 PKI 的安全结合使用时存在各种问题。
+
+   5.  选择 max-age 方法，让 HSTS 主机为缓存的 HSTS 策略生存时间值
+       提供一个简单的整数秒数，而不是采用说明未来某个过期时间的
+       方法，有各种原因。这些原因包括无需时钟同步、无需定义日期和
+       时间值语法（规范简单性），以及实现简单性。
+
+   6.  在确定是否采用端口映射时，曾考虑过仅拒绝解引用任何带有显式
+       端口的 URL 这一选项。不过，我们认为，要解引用的 URI 有可能是
+       不正确的（且该端口上确实有一个有效的 HTTPS 服务器），这一点
+       值得付出可能向 HTTP 服务器发起浪费性 HTTPS 获取的小代价。
+
+
+
+
+
+
+
+<span class="grey">Hodges 等                    标准轨道                        [第 44 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-45" ></span>
+<span class="grey"><a href="./rfc6797">RFC 6797</a>          HTTP 严格传输安全 (HSTS)        2012 年 11 月</span>
+
+
+<span class="h2"><a class="selflink" id="appendix-B" href="#appendix-B">附录 B</a>.  HSTS 策略与同源策略之间的差异</span>
+
+   HSTS 策略具有以下主要特征：
+
+      HSTS 策略按每个主机规定 UA 到主机连接建立的安全特征要求。
+
+      主机向 UA 明确声明 HSTS 策略。一致性 UA 有义务实现主机声明的
+      HSTS 策略。
+
+      HSTS 策略通过协议从主机传达到 UA。
+
+      UA 维护已知 HSTS 主机缓存。
+
+      每当向已知 HSTS 主机建立 HTTP 连接时，UA 都会应用 HSTS 策略，
+      无论主机端口号如何；也就是说，它适用于已知 HSTS 主机上的
+      所有端口。主机无法影响 HSTS 策略的这一方面。
+
+      主机可以选择声明其 HSTS 策略适用于其主机域名的所有子域。
+
+   相比之下，同源策略（SOP）[<a href="./rfc6454" title="&quot;The Web Origin Concept&quot;">RFC6454</a>] 具有以下主要特征：
+
+      源是标识资源的 URI 的方案、主机和端口。
+
+      UA 可以解引用 URI，从而加载该 URI 所标识资源的表示。
+      UA 使用从其 URI 推导出的源为资源表示加标签。
+
+      SOP 指由 UA 内部实现的一组原则，用于支配 UA 内资源表示之间的
+      隔离和通信，以及资源表示对网络资源的访问。
+
+   总之，虽然 HSTS 策略和 SOP 都由 UA 执行，但 HSTS 策略由主机
+   选择性声明且不基于源，而 SOP 适用于一致性 UA 从所有主机加载的
+   所有资源表示。
+
+
+
+
+
+
+
+
+
+<span class="grey">Hodges 等                    标准轨道                        [第 45 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-46" ></span>
+<span class="grey"><a href="./rfc6797">RFC 6797</a>          HTTP 严格传输安全 (HSTS)        2012 年 11 月</span>
+
+
+<span class="h2"><a class="selflink" id="appendix-C" href="#appendix-C">附录 C</a>.  致谢</span>
+
+   作者感谢 Devdatta Akhawe、Michael Barrett、Ben Campbell、
+   Tobias Gondrom、Paul Hoffman、Murray Kucherawy、Barry Leiba、James
+   Manger、Alexey Melnikov、Haevard Molland、Yoav Nir、Yngve N.
+   Pettersen、Laksh Raghavan、Marsh Ray、Julian Reschke、Eric Rescorla、
+   Tom Ritter、Peter Saint-Andre、Brian Smith、Robert Sparks、Maciej
+   Stachowiak、Sid Stamm、Andy Steingrubl、Brandon Sterne、Martin
+   Thomson、Daniel Veditz 和 Jan Wrobel，以及所有 websec 工作组
+   参与者和其他人员，感谢他们的各种审阅和有益贡献。
+
+   感谢 Julian Reschke 对有效请求 URI 文本进行优雅重写，这是他在
+   将 ERU 概念纳入 HTTP/1.1 更新 [<a href="#ref-HTTP1_1-UPD">HTTP1_1-UPD</a>] 时完成的。
+   随后，本规范中的 ERU 文本取自 Julian 在更新后的 HTTP/1.1
+   （第 1 部分）规范中的工作，并适配为 [<a href="./rfc2616" title="&quot;Hypertext Transfer Protocol -- HTTP/1.1&quot;">RFC2616</a>] ABNF。
+
+作者地址
+
+   Jeff Hodges
+   PayPal
+   2211 North First Street
+   San Jose, California  95131
+   美国
+
+   电子邮件：Jeff.Hodges@PayPal.com
+
+
+   Collin Jackson
+   Carnegie Mellon University
+
+   电子邮件：collin.jackson@sv.cmu.edu
+
+
+   Adam Barth
+   Google, Inc.
+
+   电子邮件：ietf@adambarth.com
+   URI:   <a href="http://www.adambarth.com/">http://www.adambarth.com/</a>
+
+
+
+
+
+
+
+
+
+
+
+Hodges 等                    标准轨道                        [第 46 页]
+</pre>
+<script src="https://htmlspecs.com/dropdown.js"></script>

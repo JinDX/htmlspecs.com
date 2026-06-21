@@ -4186,16 +4186,16 @@ const httpLinks = [
         etag: "695b0d14-11b87",
         lang: "cjk",
         state: "RFC"
+    },
+    {
+        text: "HTTP Strict Transport Security (HSTS)",
+        href: "https://htmlspecs.com/http/rfc6797.html",
+        src: "https://www.rfc-editor.org/rfc/rfc6797.html",
+        "last-modified": "-",
+        etag: null,
+        lang: "cjk",
+        state: "RFC"
     }
-    //, {
-    //     text: "HTTP Strict Transport Security (HSTS)",
-    //     href: "https://htmlspecs.com/http/rfc6797.html",
-    //     src: "https://www.rfc-editor.org/rfc/rfc6797.html",
-    //     "last-modified": "-",
-    //     etag: null,
-    //     lang: "cjk",
-    //     state: "RFC"
-    // }
 ];
 
 if (typeof module !== 'undefined' && module.exports) {
