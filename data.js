@@ -172,6 +172,32 @@ const links = [
         state: "Draft"
     },
 
+    //### 统一资源标识符与媒体类型|통합 자원 식별자 및 미디어 타입|統一資源識別子・メディアタイプ
+    // {
+    //     text: "Uniform Resource Identifier (URI): Generic Syntax",
+    //     href: "https://htmlspecs.com/uri/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc3986.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
+    // {
+    //     text: "Internationalized Resource Identifiers (IRIs)",
+    //     href: "https://htmlspecs.com/iri/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc3987.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
+    // {
+    //     text: "Media Type Specifications and Registration Procedures",
+    //     href: "https://htmlspecs.com/media-types/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc6838.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
+
     //### 国际化与本地化|국제화 및 지역화|国際化とローカライゼーション
     {
         text: "ECMAScript® 2027 Internationalization API Specification",
@@ -229,6 +255,14 @@ const links = [
         lang: "cjk",
         state: "DNOTE"
     },
+    // {
+    //     text: "Tags for Identifying Languages (BCP 47)",
+    //     href: "https://htmlspecs.com/bcp47/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc5646.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
 
     //### 数据格式、语义 Web 与 API 描述|데이터 형식, 시맨틱 웹 및 API 설명|データ形式・セマンティック Web・API 記述
     {
@@ -423,6 +457,32 @@ const links = [
         lang: "cjk",
         state: "RFC"
     },
+
+    //### 语法记法与时间格式|구문 표기법 및 시간 형식|構文記法・時刻フォーマット
+    // {
+    //     text: "Augmented BNF for Syntax Specifications: ABNF",
+    //     href: "https://htmlspecs.com/abnf/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc5234.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
+    // {
+    //     text: "Case-Sensitive String Support in ABNF",
+    //     href: "https://htmlspecs.com/abnf-case-sensitive/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc7405.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
+    // {
+    //     text: "Date and Time on the Internet: Timestamps",
+    //     href: "https://htmlspecs.com/rfc3339/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc3339.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
 
     //### 数学|수학|数学
     {
@@ -2273,6 +2333,64 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+
+    //### OAuth 与授权协议|OAuth 및 인가 프로토콜|OAuth・認可プロトコル
+    // {
+    //     text: "The OAuth 2.0 Authorization Framework",
+    //     href: "https://htmlspecs.com/oauth2/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc6749.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
+    // {
+    //     text: "The OAuth 2.0 Authorization Framework: Bearer Token Usage",
+    //     href: "https://htmlspecs.com/oauth2-bearer/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc6750.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
+    // {
+    //     text: "Proof Key for Code Exchange by OAuth Public Clients",
+    //     href: "https://htmlspecs.com/pkce/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc7636.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
+    // {
+    //     text: "Best Current Practice for OAuth 2.0 Security",
+    //     href: "https://htmlspecs.com/oauth2-security-bcp/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc9700.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
+    // {
+    //     text: "OAuth 2.0 Demonstrating Proof of Possession (DPoP)",
+    //     href: "https://htmlspecs.com/dpop/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc9449.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
+    // {
+    //     text: "OAuth 2.0 Authorization Server Metadata",
+    //     href: "https://htmlspecs.com/oauth2-as-metadata/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc8414.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
+    // {
+    //     text: "OAuth 2.0 Dynamic Client Registration Protocol",
+    //     href: "https://htmlspecs.com/oauth2-dyn-reg/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc7591.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
 
     //### 隐私、权限与反跟踪|프라이버시, 권한 및 추적 방지|プライバシー・権限・トラッキング対策
     {
@@ -4196,6 +4314,75 @@ const httpLinks = [
         lang: "cjk",
         state: "RFC"
     }
+    // ,
+
+    //### 传输层与连接安全|전송 계층 및 연결 보안|トランスポート層・接続セキュリティ
+    // {
+    //     text: "QUIC: A UDP-Based Multiplexed and Secure Transport",
+    //     href: "https://htmlspecs.com/quic/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc9000.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
+    // {
+    //     text: "Using TLS to Secure QUIC",
+    //     href: "https://htmlspecs.com/quic-tls/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc9001.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
+    // {
+    //     text: "QUIC Loss Detection and Congestion Control",
+    //     href: "https://htmlspecs.com/quic-recovery/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc9002.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
+    // {
+    //     text: "Version-Independent Properties of QUIC",
+    //     href: "https://htmlspecs.com/quic-invariants/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc8999.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
+    // {
+    //     text: "The Transport Layer Security (TLS) Protocol Version 1.3",
+    //     href: "https://htmlspecs.com/tls13/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc8446.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
+    // {
+    //     text: "The WebSocket Protocol",
+    //     href: "https://htmlspecs.com/websocket-protocol/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc6455.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
+
+    //### 演进中的 HTTP 扩展草案|진행 중인 HTTP 확장 초안|進行中の HTTP 拡張ドラフト
+    // {
+    //     text: "RateLimit header fields for HTTP",
+    //     href: "https://htmlspecs.com/http/draft-ietf-httpapi-ratelimit-headers.html",
+    //     src: "https://httpwg.org/http-extensions/draft-ietf-httpapi-ratelimit-headers.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
+    // {
+    //     text: "The Idempotency-Key HTTP Header Field",
+    //     href: "https://htmlspecs.com/http/draft-ietf-httpapi-idempotency-key-header.html",
+    //     src: "https://httpwg.org/http-extensions/draft-ietf-httpapi-idempotency-key-header.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // }
 ];
 
 if (typeof module !== 'undefined' && module.exports) {
