@@ -2335,14 +2335,14 @@ const links = [
     },
 
     //### OAuth 与授权协议|OAuth 및 인가 프로토콜|OAuth・認可プロトコル
-    // {
-    //     text: "The OAuth 2.0 Authorization Framework",
-    //     href: "https://htmlspecs.com/oauth2/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc6749.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
+    {
+        text: "The OAuth 2.0 Authorization Framework",
+        href: "https://htmlspecs.com/oauth2/",
+        src: "https://www.rfc-editor.org/rfc/rfc6749.html",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "RFC"
+    },
     // {
     //     text: "The OAuth 2.0 Authorization Framework: Bearer Token Usage",
     //     href: "https://htmlspecs.com/oauth2-bearer/",

@@ -1,0 +1,3689 @@
+<pre>互联网工程任务组 (IETF)                              D. Hardt, Ed.
+征求意见稿：6749                                             Microsoft
+废止：<a href="./rfc5849">5849</a>                                             2012 年 10 月
+类别：标准轨道
+ISSN: 2070-1721
+
+
+                 <span class="h1">OAuth 2.0 授权框架</span>
+
+摘要
+
+   OAuth 2.0 授权框架使第三方应用程序能够获取对 HTTP 服务的
+   受限访问权限，既可以代表资源所有者，通过协调资源所有者与
+   HTTP 服务之间的批准交互来实现，也可以允许第三方应用程序
+   代表自身获取访问权限。本规范取代并废止
+   <a href="./rfc5849">RFC 5849</a> 中描述的 OAuth 1.0 协议。
+
+本文档状态
+
+   本文档是一份互联网标准轨道文档。
+
+   本文档是互联网工程任务组 (IETF) 的产物。它代表了 IETF
+   社区的共识。它已经接受公开审查，并已由互联网工程指导组
+   (IESG) 批准发布。关于互联网标准的更多信息可见
+   <a href="./rfc5741#section-2">RFC 5741 第&nbsp;2 节</a>。
+
+   关于本文档的当前状态、任何勘误以及如何提供反馈的信息，
+   可从
+   <a href="http://www.rfc-editor.org/info/rfc6749">http://www.rfc-editor.org/info/rfc6749</a> 获得。
+
+Copyright Notice
+
+   Copyright (c) 2012 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to <a href="https://www.rfc-editor.org/bcp/bcp78">BCP 78</a> and the IETF Trust's Legal
+   Provisions Relating to IETF Documents
+   (<a href="http://trustee.ietf.org/license-info">http://trustee.ietf.org/license-info</a>) in effect on the date of
+   publication of this document.  Please review these documents
+   carefully, as they describe your rights and restrictions with respect
+   to this document.  Code Components extracted from this document must
+   include Simplified BSD License text as described in Section 4.e of
+   the Trust Legal Provisions and are provided without warranty as
+   described in the Simplified BSD License.
+
+
+
+
+<span class="grey">Hardt                        标准轨道                    [Page 1]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-2" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+目录
+
+   <a href="#section-1">1</a>. 引言 ........................................................<a href="#page-4">4</a>
+      <a href="#section-1.1">1.1</a>. 角色 ..................................................<a href="#page-6">6</a>
+      <a href="#section-1.2">1.2</a>. 协议流程 ..............................................<a href="#page-7">7</a>
+      <a href="#section-1.3">1.3</a>. 授权许可 ..............................................<a href="#page-8">8</a>
+           <a href="#section-1.3.1">1.3.1</a>. 授权码 ........................................<a href="#page-8">8</a>
+           <a href="#section-1.3.2">1.3.2</a>. 隐式 ..........................................<a href="#page-8">8</a>
+           <a href="#section-1.3.3">1.3.3</a>. 资源所有者密码凭据 ............................<a href="#page-9">9</a>
+           <a href="#section-1.3.4">1.3.4</a>. 客户端凭据 ....................................<a href="#page-9">9</a>
+      <a href="#section-1.4">1.4</a>. 访问令牌 .............................................<a href="#page-10">10</a>
+      <a href="#section-1.5">1.5</a>. 刷新令牌 .............................................<a href="#page-10">10</a>
+      <a href="#section-1.6">1.6</a>. TLS 版本 .............................................<a href="#page-12">12</a>
+      <a href="#section-1.7">1.7</a>. HTTP 重定向 ..........................................<a href="#page-12">12</a>
+      <a href="#section-1.8">1.8</a>. 互操作性 ............................................<a href="#page-12">12</a>
+      <a href="#section-1.9">1.9</a>. 记法约定 ............................................<a href="#page-13">13</a>
+   <a href="#section-2">2</a>. 客户端注册 .................................................<a href="#page-13">13</a>
+      <a href="#section-2.1">2.1</a>. 客户端类型 ...........................................<a href="#page-14">14</a>
+      <a href="#section-2.2">2.2</a>. 客户端标识符 .........................................<a href="#page-15">15</a>
+      <a href="#section-2.3">2.3</a>. 客户端认证 ...........................................<a href="#page-16">16</a>
+           <a href="#section-2.3.1">2.3.1</a>. 客户端密码 ...................................<a href="#page-16">16</a>
+           <a href="#section-2.3.2">2.3.2</a>. 其他认证方法 .................................<a href="#page-17">17</a>
+      <a href="#section-2.4">2.4</a>. 未注册客户端 .........................................<a href="#page-17">17</a>
+   <a href="#section-3">3</a>. 协议端点 ...................................................<a href="#page-18">18</a>
+      <a href="#section-3.1">3.1</a>. 授权端点 .............................................<a href="#page-18">18</a>
+           <a href="#section-3.1.1">3.1.1</a>. 响应类型 .....................................<a href="#page-19">19</a>
+           <a href="#section-3.1.2">3.1.2</a>. 重定向端点 ...................................<a href="#page-19">19</a>
+      <a href="#section-3.2">3.2</a>. 令牌端点 .............................................<a href="#page-21">21</a>
+           <a href="#section-3.2.1">3.2.1</a>. 客户端认证 ...................................<a href="#page-22">22</a>
+      <a href="#section-3.3">3.3</a>. 访问令牌范围 .........................................<a href="#page-23">23</a>
+   <a href="#section-4">4</a>. 获取授权 ...................................................<a href="#page-23">23</a>
+      <a href="#section-4.1">4.1</a>. 授权码许可 ...........................................<a href="#page-24">24</a>
+           <a href="#section-4.1.1">4.1.1</a>. 授权请求 .....................................<a href="#page-25">25</a>
+           <a href="#section-4.1.2">4.1.2</a>. 授权响应 .....................................<a href="#page-26">26</a>
+           <a href="#section-4.1.3">4.1.3</a>. 访问令牌请求 .................................<a href="#page-29">29</a>
+           <a href="#section-4.1.4">4.1.4</a>. 访问令牌响应 .................................<a href="#page-30">30</a>
+      <a href="#section-4.2">4.2</a>. 隐式许可 .............................................<a href="#page-31">31</a>
+           <a href="#section-4.2.1">4.2.1</a>. 授权请求 .....................................<a href="#page-33">33</a>
+           <a href="#section-4.2.2">4.2.2</a>. 访问令牌响应 .................................<a href="#page-35">35</a>
+      <a href="#section-4.3">4.3</a>. 资源所有者密码凭据许可 ...............................<a href="#page-37">37</a>
+           <a href="#section-4.3.1">4.3.1</a>. 授权请求和响应 ...............................<a href="#page-39">39</a>
+           <a href="#section-4.3.2">4.3.2</a>. 访问令牌请求 .................................<a href="#page-39">39</a>
+           <a href="#section-4.3.3">4.3.3</a>. 访问令牌响应 .................................<a href="#page-40">40</a>
+      <a href="#section-4.4">4.4</a>. 客户端凭据许可 .......................................<a href="#page-40">40</a>
+           <a href="#section-4.4.1">4.4.1</a>. 授权请求和响应 ...............................<a href="#page-41">41</a>
+           <a href="#section-4.4.2">4.4.2</a>. 访问令牌请求 .................................<a href="#page-41">41</a>
+           <a href="#section-4.4.3">4.4.3</a>. 访问令牌响应 .................................<a href="#page-42">42</a>
+      <a href="#section-4.5">4.5</a>. 扩展许可 .............................................<a href="#page-42">42</a>
+
+
+
+<span class="grey">Hardt                        标准轨道                    [Page 2]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-3" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+   <a href="#section-5">5</a>. 颁发访问令牌 ...............................................<a href="#page-43">43</a>
+      <a href="#section-5.1">5.1</a>. 成功响应 .............................................<a href="#page-43">43</a>
+      <a href="#section-5.2">5.2</a>. 错误响应 .............................................<a href="#page-45">45</a>
+   <a href="#section-6">6</a>. 刷新访问令牌 ...............................................<a href="#page-47">47</a>
+   <a href="#section-7">7</a>. 访问受保护资源 .............................................<a href="#page-48">48</a>
+      <a href="#section-7.1">7.1</a>. 访问令牌类型 .........................................<a href="#page-49">49</a>
+      <a href="#section-7.2">7.2</a>. 错误响应 .............................................<a href="#page-49">49</a>
+   <a href="#section-8">8</a>. 可扩展性 ...................................................<a href="#page-50">50</a>
+      <a href="#section-8.1">8.1</a>. 定义访问令牌类型 .....................................<a href="#page-50">50</a>
+      <a href="#section-8.2">8.2</a>. 定义新的端点参数 .....................................<a href="#page-50">50</a>
+      <a href="#section-8.3">8.3</a>. 定义新的授权许可类型 .................................<a href="#page-51">51</a>
+      <a href="#section-8.4">8.4</a>. 定义新的授权端点响应类型 .............................<a href="#page-51">51</a>
+      <a href="#section-8.5">8.5</a>. 定义附加错误码 .......................................<a href="#page-51">51</a>
+   <a href="#section-9">9</a>. 原生应用程序 ...............................................<a href="#page-52">52</a>
+   <a href="#section-10">10</a>. 安全考虑 ..................................................<a href="#page-53">53</a>
+      <a href="#section-10.1">10.1</a>. 客户端认证 ..........................................<a href="#page-53">53</a>
+      <a href="#section-10.2">10.2</a>. 客户端冒充 ..........................................<a href="#page-54">54</a>
+      <a href="#section-10.3">10.3</a>. 访问令牌 ............................................<a href="#page-55">55</a>
+      <a href="#section-10.4">10.4</a>. 刷新令牌 ............................................<a href="#page-55">55</a>
+      <a href="#section-10.5">10.5</a>. 授权码 ..............................................<a href="#page-56">56</a>
+      <a href="#section-10.6">10.6</a>. 授权码重定向 URI 操纵 ...............................<a href="#page-56">56</a>
+      <a href="#section-10.7">10.7</a>. 资源所有者密码凭据 .................................<a href="#page-57">57</a>
+      <a href="#section-10.8">10.8</a>. 请求机密性 ..........................................<a href="#page-58">58</a>
+      <a href="#section-10.9">10.9</a>. 确保端点真实性 ......................................<a href="#page-58">58</a>
+      <a href="#section-10.10">10.10</a>. 凭据猜测攻击 .......................................<a href="#page-58">58</a>
+      <a href="#section-10.11">10.11</a>. 网络钓鱼攻击 .......................................<a href="#page-58">58</a>
+      <a href="#section-10.12">10.12</a>. 跨站请求伪造 .......................................<a href="#page-59">59</a>
+      <a href="#section-10.13">10.13</a>. 点击劫持 ...........................................<a href="#page-60">60</a>
+      <a href="#section-10.14">10.14</a>. 代码注入和输入验证 .................................<a href="#page-60">60</a>
+      <a href="#section-10.15">10.15</a>. 开放重定向器 .......................................<a href="#page-60">60</a>
+      10.16. 在隐式流程中误用访问令牌以冒充资源
+             所有者 ...............................................<a href="#page-61">61</a>
+   <a href="#section-11">11</a>. IANA 考虑事项 ..............................................<a href="#page-62">62</a>
+      <a href="#section-11.1">11.1</a>. OAuth 访问令牌类型注册表 ............................<a href="#page-62">62</a>
+           <a href="#section-11.1.1">11.1.1</a>. 注册模板 ...................................<a href="#page-62">62</a>
+      <a href="#section-11.2">11.2</a>. OAuth 参数注册表 ....................................<a href="#page-63">63</a>
+           <a href="#section-11.2.1">11.2.1</a>. 注册模板 ...................................<a href="#page-63">63</a>
+           <a href="#section-11.2.2">11.2.2</a>. 初始注册表内容 .............................<a href="#page-64">64</a>
+      <a href="#section-11.3">11.3</a>. OAuth 授权端点响应类型注册表 ........................<a href="#page-66">66</a>
+           <a href="#section-11.3.1">11.3.1</a>. 注册模板 ...................................<a href="#page-66">66</a>
+           <a href="#section-11.3.2">11.3.2</a>. 初始注册表内容 .............................<a href="#page-67">67</a>
+      <a href="#section-11.4">11.4</a>. OAuth 扩展错误注册表 ................................<a href="#page-67">67</a>
+           <a href="#section-11.4.1">11.4.1</a>. 注册模板 ...................................<a href="#page-68">68</a>
+   <a href="#section-12">12</a>. 参考文献 ..................................................<a href="#page-68">68</a>
+      <a href="#section-12.1">12.1</a>. 规范性参考文献 ......................................<a href="#page-68">68</a>
+      <a href="#section-12.2">12.2</a>. 资料性参考文献 ......................................<a href="#page-70">70</a>
+
+
+
+
+
+<span class="grey">Hardt                        标准轨道                    [Page 3]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-4" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+   <a href="#appendix-A">附录 A</a>. 增广巴科斯-瑙尔范式 (ABNF) 语法 .................<a href="#page-71">71</a>
+     <a href="#appendix-A.1">A.1</a>.  "client_id" 语法 .....................................<a href="#page-71">71</a>
+     <a href="#appendix-A.2">A.2</a>.  "client_secret" 语法 .................................<a href="#page-71">71</a>
+     <a href="#appendix-A.3">A.3</a>.  "response_type" 语法 .................................<a href="#page-71">71</a>
+     <a href="#appendix-A.4">A.4</a>.  "scope" 语法 .........................................<a href="#page-72">72</a>
+     <a href="#appendix-A.5">A.5</a>.  "state" 语法 .........................................<a href="#page-72">72</a>
+     <a href="#appendix-A.6">A.6</a>.  "redirect_uri" 语法 ..................................<a href="#page-72">72</a>
+     <a href="#appendix-A.7">A.7</a>.  "error" 语法 .........................................<a href="#page-72">72</a>
+     <a href="#appendix-A.8">A.8</a>.  "error_description" 语法 .............................<a href="#page-72">72</a>
+     <a href="#appendix-A.9">A.9</a>.  "error_uri" 语法 .....................................<a href="#page-72">72</a>
+     <a href="#appendix-A.10">A.10</a>. "grant_type" 语法 ....................................<a href="#page-73">73</a>
+     <a href="#appendix-A.11">A.11</a>. "code" 语法 ..........................................<a href="#page-73">73</a>
+     <a href="#appendix-A.12">A.12</a>. "access_token" 语法 ..................................<a href="#page-73">73</a>
+     <a href="#appendix-A.13">A.13</a>. "token_type" 语法 ....................................<a href="#page-73">73</a>
+     <a href="#appendix-A.14">A.14</a>. "expires_in" 语法 ....................................<a href="#page-73">73</a>
+     <a href="#appendix-A.15">A.15</a>. "username" 语法 ......................................<a href="#page-73">73</a>
+     <a href="#appendix-A.16">A.16</a>. "password" 语法 ......................................<a href="#page-73">73</a>
+     <a href="#appendix-A.17">A.17</a>. "refresh_token" 语法 .................................<a href="#page-74">74</a>
+     <a href="#appendix-A.18">A.18</a>. 端点参数语法 .........................................<a href="#page-74">74</a>
+   <a href="#appendix-B">附录 B</a>. application/x-www-form-urlencoded 媒体类型的使用 ...<a href="#page-74">74</a>
+   <a href="#appendix-C">附录 C</a>. 致谢 ................................................<a href="#page-75">75</a>
+
+<span class="h2"><a class="selflink" id="section-1" href="#section-1">1</a>.  引言</span>
+
+   在传统的客户端-服务器认证模型中，客户端通过使用资源所有者的
+   凭据向服务器进行认证，请求服务器上的访问受限资源（受保护
+   资源）。为了让第三方应用程序访问受限资源，资源所有者会将其
+   凭据共享给第三方。这会产生若干问题和限制：
+
+   o  第三方应用程序需要存储资源所有者的凭据以备将来使用，
+      通常是明文密码。
+
+   o  服务器需要支持密码认证，尽管密码本身存在固有的安全弱点。
+
+   o  第三方应用程序获得对资源所有者受保护资源的过宽访问权限，
+      使资源所有者无法限制访问持续时间或将访问限制为资源的
+      有限子集。
+
+   o  资源所有者无法撤销某一个第三方的访问权限而不撤销所有
+      第三方的访问权限，并且必须通过更改第三方的密码来实现。
+
+
+
+
+
+<span class="grey">Hardt                        标准轨道                    [Page 4]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-5" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+   o  任何第三方应用程序遭到攻陷，都会导致最终用户密码以及该密码
+      所保护的所有数据遭到攻陷。
+
+   OAuth 通过引入授权层并将客户端的角色与资源所有者的角色分离，
+   来解决这些问题。在 OAuth 中，客户端请求访问由资源所有者控制、
+   并托管在资源服务器上的资源，并被颁发一组不同于资源所有者
+   凭据的凭据。
+
+   客户端不是使用资源所有者的凭据访问受保护资源，而是获得一个
+   访问令牌 -- 一个表示特定范围、生命周期和其他访问属性的字符串。
+   访问令牌由授权服务器在资源所有者批准后颁发给第三方客户端。
+   客户端使用访问令牌访问托管在资源服务器上的受保护资源。
+
+   例如，最终用户（资源所有者）可以授予打印服务（客户端）访问
+   她存储在照片共享服务（资源服务器）上的受保护照片，而无需与
+   打印服务共享她的用户名和密码。相反，她直接向照片共享服务信任
+   的服务器（授权服务器）进行认证，该服务器向打印服务颁发特定于
+   委派的凭据（访问令牌）。
+
+   本规范设计为与 HTTP ([<a href="./rfc2616" title="&quot;Hypertext Transfer Protocol -- HTTP/1.1&quot;">RFC2616</a>]) 一起使用。在除 HTTP 以外的任何协议上
+   使用 OAuth 均不在范围内。
+
+   OAuth 1.0 协议 ([<a href="./rfc5849" title="&quot;The OAuth 1.0 Protocol&quot;">RFC5849</a>]) 作为资料性文档发布，是一个小型
+   临时社区努力的结果。本标准轨道规范基于 OAuth 1.0 的部署经验，
+   以及从更广泛的 IETF 社区收集到的其他用例和可扩展性需求。
+   OAuth 2.0 协议不向后兼容 OAuth 1.0。两个版本可以在网络上
+   共存，并且实现可以选择同时支持两者。但是，本规范的意图是，
+   新实现按本文档规定支持 OAuth 2.0，而 OAuth 1.0 仅用于支持
+   现有部署。OAuth 2.0 协议与 OAuth 1.0 协议共享的实现细节很少。
+   熟悉 OAuth 1.0 的实现者应在不对其结构和细节作任何假设的情况下
+   阅读本文档。
+
+
+
+
+
+
+
+
+<span class="grey">Hardt                        标准轨道                    [Page 5]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-6" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+<span class="h3"><a class="selflink" id="section-1.1" href="#section-1.1">1.1</a>.  角色</span>
+
+   OAuth 定义四种角色：
+
+   资源所有者
+      能够授予对受保护资源访问权限的实体。当资源所有者是个人时，
+      称为最终用户。
+
+   资源服务器
+      托管受保护资源的服务器，能够接受并响应使用访问令牌发出的
+      受保护资源请求。
+
+   客户端
+      代表资源所有者并在其授权下发出受保护资源请求的应用程序。
+      “客户端”一词并不意味着任何特定的实现特征（例如，该应用程序
+      是在服务器、桌面还是其他设备上执行）。
+
+   授权服务器
+      在成功认证资源所有者并获得授权后，向客户端颁发访问令牌的
+      服务器。
+
+   授权服务器与资源服务器之间的交互超出本规范范围。授权服务器
+   可以与资源服务器是同一服务器，也可以是独立实体。单个授权
+   服务器可以颁发被多个资源服务器接受的访问令牌。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Hardt                        标准轨道                    [Page 6]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-7" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+<span class="h3"><a class="selflink" id="section-1.2" href="#section-1.2">1.2</a>.  协议流程</span>
+
+     +--------+                               +---------------+
+     |        |--(A)- Authorization Request -&gt;|   Resource    |
+     |        |                               |     Owner     |
+     |        |&lt;-(B)-- Authorization Grant ---|               |
+     |        |                               +---------------+
+     |        |
+     |        |                               +---------------+
+     |        |--(C)-- Authorization Grant --&gt;| Authorization |
+     | Client |                               |     Server    |
+     |        |&lt;-(D)----- Access Token -------|               |
+     |        |                               +---------------+
+     |        |
+     |        |                               +---------------+
+     |        |--(E)----- Access Token ------&gt;|    Resource   |
+     |        |                               |     Server    |
+     |        |&lt;-(F)--- Protected Resource ---|               |
+     +--------+                               +---------------+
+
+                     图 1：抽象协议流程
+
+   图 1 所示的抽象 OAuth 2.0 流程描述了四种角色之间的交互，
+   并包括以下步骤：
+
+   (A)  客户端向资源所有者请求授权。授权请求可以直接发送给
+        资源所有者（如图所示），或者最好通过授权服务器作为中介
+        间接发送。
+
+   (B)  客户端收到授权许可，它是表示资源所有者授权的凭据，
+        使用本规范定义的四种许可类型之一表示，或者使用扩展许可
+        类型表示。授权许可类型取决于客户端用来请求授权的方法
+        以及授权服务器支持的类型。
+
+   (C)  客户端通过向授权服务器进行认证并出示授权许可来请求访问
+        令牌。
+
+   (D)  授权服务器认证客户端并验证授权许可，如果有效，则颁发访问
+        令牌。
+
+
+
+
+
+
+
+
+<span class="grey">Hardt                        标准轨道                    [Page 7]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-8" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+   (E)  客户端向资源服务器请求受保护资源，并通过出示访问令牌进行
+        认证。
+
+   (F)  资源服务器验证访问令牌，如果有效，则为该请求提供服务。
+
+   客户端从资源所有者获得授权许可的首选方法（如步骤 (A) 和 (B)
+   所示）是使用授权服务器作为中介，如 <a href="#section-4.1">第 4.1 节</a> 的图 3 所示。
+
+<span class="h3"><a class="selflink" id="section-1.3" href="#section-1.3">1.3</a>.  授权许可</span>
+
+   授权许可是表示资源所有者授权（访问其受保护资源）的凭据，
+   客户端使用它来获得访问令牌。本规范定义四种许可类型 -- 授权码、
+   隐式、资源所有者密码凭据和客户端凭据 -- 以及用于定义附加类型
+   的可扩展机制。
+
+<span class="h4"><a class="selflink" id="section-1.3.1" href="#section-1.3.1">1.3.1</a>.  授权码</span>
+
+   授权码通过使用授权服务器作为客户端和资源所有者之间的中介来
+   获得。客户端不是直接向资源所有者请求授权，而是将资源所有者
+   引导到授权服务器（通过其用户代理，如 [<a href="./rfc2616" title="&quot;Hypertext Transfer Protocol -- HTTP/1.1&quot;">RFC2616</a>] 所定义），
+   授权服务器随后携带授权码将资源所有者引导回客户端。
+
+   在携带授权码将资源所有者引导回客户端之前，授权服务器会认证
+   资源所有者并获得授权。由于资源所有者只向授权服务器认证，
+   资源所有者的凭据绝不会与客户端共享。
+
+   授权码提供若干重要的安全优势，例如认证客户端的能力，以及将
+   访问令牌直接传输给客户端，而不经过资源所有者的用户代理并可能
+   暴露给其他方（包括资源所有者）的能力。
+
+<span class="h4"><a class="selflink" id="section-1.3.2" href="#section-1.3.2">1.3.2</a>.  隐式</span>
+
+   隐式许可是一个简化的授权码流程，针对使用 JavaScript 等脚本语言
+   在浏览器中实现的客户端进行了优化。在隐式流程中，授权服务器
+   不是向客户端颁发授权码，而是直接向客户端颁发访问令牌
+
+
+
+
+<span class="grey">Hardt                        标准轨道                    [Page 8]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-9" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+   （作为资源所有者授权的结果）。该许可类型是隐式的，因为不会
+   颁发中间凭据（例如授权码）（并随后使用它来获得访问令牌）。
+
+   在隐式许可流程期间颁发访问令牌时，授权服务器不会认证客户端。
+   在某些情况下，可以通过用于向客户端传递访问令牌的重定向 URI
+   来验证客户端身份。访问令牌可能暴露给资源所有者，或者暴露给
+   能够访问资源所有者用户代理的其他应用程序。
+
+   隐式许可提高了某些客户端（例如作为浏览器内应用程序实现的
+   客户端）的响应性和效率，因为它减少了获得访问令牌所需的往返
+   次数。然而，应将这种便利性与使用隐式许可的安全影响进行权衡，
+   例如 <a href="#section-10.3">10.3</a> 和 <a href="#section-10.16">10.16</a> 节中描述的影响，尤其是在授权码
+   许可类型可用时。
+
+<span class="h4"><a class="selflink" id="section-1.3.3" href="#section-1.3.3">1.3.3</a>.  资源所有者密码凭据</span>
+
+   资源所有者密码凭据（即用户名和密码）可以直接作为授权许可
+   使用，以获得访问令牌。只有在资源所有者和客户端之间具有高度
+   信任（例如，客户端是设备操作系统的一部分或高度特权的应用程序），
+   并且其他授权许可类型不可用（例如授权码）时，才应使用这些凭据。
+
+   即使此许可类型要求客户端直接访问资源所有者凭据，资源所有者
+   凭据也只用于单个请求，并被交换为访问令牌。通过将凭据交换为
+   长期有效的访问令牌或刷新令牌，此许可类型可以消除客户端为将来
+   使用而存储资源所有者凭据的需要。
+
+<span class="h4"><a class="selflink" id="section-1.3.4" href="#section-1.3.4">1.3.4</a>.  客户端凭据</span>
+
+   当授权范围限于客户端控制下的受保护资源，或限于此前与授权
+   服务器约定的受保护资源时，可以将客户端凭据（或其他形式的客户端
+   认证）用作授权许可。客户端凭据通常在客户端代表自身行事（客户端
+   也是资源所有者）时，或在客户端基于此前与授权服务器约定的授权
+   请求访问受保护资源时，用作授权许可。
+
+
+
+
+<span class="grey">Hardt                        标准轨道                    [Page 9]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-10" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+<span class="h3"><a class="selflink" id="section-1.4" href="#section-1.4">1.4</a>.  访问令牌</span>
+
+   访问令牌是用于访问受保护资源的凭据。访问令牌是表示颁发给
+   客户端的一项授权的字符串。该字符串通常对客户端是不透明的。
+   令牌表示由资源所有者授予、并由资源服务器和授权服务器强制执行
+   的特定访问范围和持续时间。
+
+   令牌可以表示一个用于检索授权信息的标识符，或者可以以可验证的
+   方式自包含授权信息（即，由某些数据和签名组成的令牌字符串）。
+   为了让客户端使用令牌，可能还需要额外的认证凭据，这超出本规范
+   范围。
+
+   访问令牌提供了一个抽象层，用资源服务器理解的单个令牌替换不同
+   的授权构造（例如用户名和密码）。这种抽象使得可以颁发比用于
+   获得它们的授权许可限制更严格的访问令牌，并消除了资源服务器
+   理解大量认证方法的需要。
+
+   访问令牌可以根据资源服务器的安全要求具有不同的格式、结构和
+   使用方法（例如加密属性）。访问令牌属性以及用于访问受保护资源
+   的方法超出本规范范围，并由配套规范（例如 [<a href="./rfc6750" title="&quot;The OAuth 2.0 Authorization Framework: Bearer Token Usage&quot;">RFC6750</a>]）定义。
+
+<span class="h3"><a class="selflink" id="section-1.5" href="#section-1.5">1.5</a>.  刷新令牌</span>
+
+   刷新令牌是用于获得访问令牌的凭据。刷新令牌由授权服务器颁发给
+   客户端，并用于在当前访问令牌失效或过期时获得新的访问令牌，
+   或者获得具有相同或更窄范围的附加访问令牌（访问令牌可能具有
+   比资源所有者授权的更短生命周期和更少权限）。是否颁发刷新令牌
+   由授权服务器自行决定。如果授权服务器颁发刷新令牌，则在颁发
+   访问令牌时包含它（即图 1 中的步骤 (D)）。
+
+   刷新令牌是表示资源所有者授予客户端的授权的字符串。该字符串
+   通常对客户端是不透明的。令牌表示一个用于检索
+
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 10]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-11" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+   授权信息的标识符。与访问令牌不同，刷新令牌仅打算与授权服务器
+   一起使用，并且绝不会发送给资源服务器。
+
+  +--------+                                           +---------------+
+  |        |--(A)------- Authorization Grant ---------&gt;|               |
+  |        |                                           |               |
+  |        |&lt;-(B)----------- Access Token -------------|               |
+  |        |               &amp; Refresh Token             |               |
+  |        |                                           |               |
+  |        |                            +----------+   |               |
+  |        |--(C)---- Access Token ----&gt;|          |   |               |
+  |        |                            |          |   |               |
+  |        |&lt;-(D)- Protected Resource --| Resource |   | Authorization |
+  | Client |                            |  Server  |   |     Server    |
+  |        |--(E)---- Access Token ----&gt;|          |   |               |
+  |        |                            |          |   |               |
+  |        |&lt;-(F)- Invalid Token Error -|          |   |               |
+  |        |                            +----------+   |               |
+  |        |                                           |               |
+  |        |--(G)----------- Refresh Token -----------&gt;|               |
+  |        |                                           |               |
+  |        |&lt;-(H)----------- Access Token -------------|               |
+  +--------+           &amp; Optional Refresh Token        +---------------+
+
+               图 2：刷新已过期的访问令牌
+
+   图 2 所示的流程包括以下步骤：
+
+   (A)  客户端通过向授权服务器进行认证并出示授权许可来请求访问
+        令牌。
+
+   (B)  授权服务器认证客户端并验证授权许可，如果有效，则颁发访问
+        令牌和刷新令牌。
+
+   (C)  客户端通过出示访问令牌，向资源服务器发出受保护资源请求。
+
+   (D)  资源服务器验证访问令牌，如果有效，则为该请求提供服务。
+
+   (E)  步骤 (C) 和 (D) 重复，直到访问令牌过期。如果客户端知道
+        访问令牌已过期，则跳到步骤 (G)；否则，它会发出另一个
+        受保护资源请求。
+
+   (F)  由于访问令牌无效，资源服务器返回无效令牌错误。
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 11]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-12" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+   (G)  客户端通过向授权服务器进行认证并出示刷新令牌来请求新的
+        访问令牌。客户端认证要求基于客户端类型和授权服务器策略。
+
+   (H)  授权服务器认证客户端并验证刷新令牌，如果有效，则颁发新的
+        访问令牌（并且可选地颁发新的刷新令牌）。
+
+   步骤 (C)、(D)、(E) 和 (F) 超出本规范范围，如 <a href="#section-7">第 7 节</a> 所述。
+
+<span class="h3"><a class="selflink" id="section-1.6" href="#section-1.6">1.6</a>.  TLS 版本</span>
+
+   每当本规范使用传输层安全性 (TLS) 时，适当的 TLS 版本（或多个
+   版本）会随着时间推移而变化，取决于广泛部署情况和已知安全漏洞。
+   在撰写本文时，TLS 版本 1.2 [<a href="./rfc5246" title="&quot;The Transport Layer Security (TLS) Protocol Version 1.2&quot;">RFC5246</a>] 是最新版本，但部署基础
+   非常有限，并且可能不易用于实现。TLS 版本 1.0 [<a href="./rfc2246" title="&quot;The TLS Protocol Version 1.0&quot;">RFC2246</a>] 是
+   最广泛部署的版本，并将提供最广泛的互操作性。
+
+   实现 MAY 也支持满足其安全要求的其他传输层安全机制。
+
+<span class="h3"><a class="selflink" id="section-1.7" href="#section-1.7">1.7</a>.  HTTP 重定向</span>
+
+   本规范广泛使用 HTTP 重定向，其中客户端或授权服务器将资源所有者
+   的用户代理引导到另一个目的地。虽然本规范中的示例展示了 HTTP
+   302 状态码的使用，但允许使用用户代理可用的任何其他方法来完成
+   此重定向，并且这被视为实现细节。
+
+<span class="h3"><a class="selflink" id="section-1.8" href="#section-1.8">1.8</a>.  互操作性</span>
+
+   OAuth 2.0 提供了一个具有明确定义安全属性的丰富授权框架。然而，
+   作为一个丰富且高度可扩展、包含许多可选组件的框架，本规范本身
+   很可能产生各种不可互操作的实现。
+
+   此外，本规范使若干必需组件部分或完全未定义（例如客户端注册、
+   授权服务器能力、端点发现）。没有这些组件，客户端必须针对特定的
+
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 12]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-13" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+   授权服务器和资源服务器进行手动且专门的配置，才能实现互操作。
+
+   设计此框架时，有一个明确预期：未来工作将定义实现完整 Web 规模
+   互操作性所需的规定性配置文件和扩展。
+
+<span class="h3"><a class="selflink" id="section-1.9" href="#section-1.9">1.9</a>.  记法约定</span>
+
+   本规范中的关键词 "MUST"、"MUST NOT"、"REQUIRED"、"SHALL"、
+   "SHALL NOT"、"SHOULD"、"SHOULD NOT"、"RECOMMENDED"、"MAY"
+   和 "OPTIONAL" 应按 [<a href="./rfc2119" title="&quot;Key words for use in RFCs to Indicate Requirement Levels&quot;">RFC2119</a>] 中的描述解释。
+
+   本规范使用 [<a href="./rfc5234" title="&quot;Augmented BNF for Syntax Specifications: ABNF&quot;">RFC5234</a>] 的增广巴科斯-瑙尔范式 (ABNF) 记法。
+   此外，还包含来自 "Uniform Resource Identifier (URI): Generic
+   Syntax" [<a href="./rfc3986" title="&quot;Uniform Resource Identifier (URI): Generic Syntax&quot;">RFC3986</a>] 的规则 URI-reference。
+
+   某些安全相关术语应按照 [<a href="./rfc4949" title="&quot;Internet Security Glossary, Version 2&quot;">RFC4949</a>] 中定义的含义理解。这些术语
+   包括但不限于 "attack"、"authentication"、"authorization"、
+   "certificate"、"confidentiality"、"credential"、"encryption"、
+   "identity"、"sign"、"signature"、"trust"、"validate" 和
+   "verify"。
+
+   除非另有说明，所有协议参数名称和值均区分大小写。
+
+<span class="h2"><a class="selflink" id="section-2" href="#section-2">2</a>.  客户端注册</span>
+
+   在发起协议之前，客户端向授权服务器注册。客户端向授权服务器
+   注册的方式超出本规范范围，但通常涉及最终用户与 HTML 注册表单
+   的交互。
+
+   客户端注册不需要客户端与授权服务器之间的直接交互。在授权服务器
+   支持时，注册可以依赖其他方式来建立信任并获得所需的客户端属性
+   （例如重定向 URI、客户端类型）。例如，注册可以通过使用自签发
+   或第三方签发的断言来完成，或者由授权服务器使用受信通道执行
+   客户端发现来完成。
+
+
+
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 13]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-14" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+   注册客户端时，客户端开发者 SHALL：
+
+   o  指定 <a href="#section-2.1">第 2.1 节</a> 所述的客户端类型，
+
+   o  提供 <a href="#section-3.1.2">第 3.1.2 节</a> 所述的客户端重定向 URI，
+      并且
+
+   o  包含授权服务器要求的任何其他信息（例如应用程序名称、网站、
+      描述、徽标图像、对法律条款的接受）。
+
+<span class="h3"><a class="selflink" id="section-2.1" href="#section-2.1">2.1</a>.  客户端类型</span>
+
+   OAuth 根据客户端与授权服务器安全认证的能力（即维护其客户端凭据
+   机密性的能力），定义两种客户端类型：
+
+   机密
+      能够维护其凭据机密性的客户端（例如，在具有受限访问客户端
+      凭据的安全服务器上实现的客户端），或者能够使用其他方式进行
+      安全客户端认证的客户端。
+
+   公开
+      无法维护其凭据机密性的客户端（例如，在资源所有者使用的设备
+      上执行的客户端，如已安装的原生应用程序或基于 Web 浏览器的
+      应用程序），并且无法通过任何其他方式进行安全客户端认证。
+
+   客户端类型指定基于授权服务器对安全认证的定义及其对客户端凭据
+   可接受暴露级别的定义。授权服务器 SHOULD NOT 对客户端类型作出
+   假设。
+
+   客户端可以实现为一组分布式组件，每个组件具有不同的客户端类型
+   和安全上下文（例如，一个分布式客户端同时具有机密的基于服务器
+   的组件和公开的基于浏览器的组件）。如果授权服务器不为此类客户端
+   提供支持，或未就其注册提供指导，则客户端 SHOULD 将每个组件注册
+   为单独的客户端。
+
+
+
+
+
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 14]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-15" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+   本规范围绕以下客户端配置文件设计：
+
+   Web 应用程序
+      Web 应用程序是在 Web 服务器上运行的机密客户端。资源所有者
+      通过在其所用设备上的用户代理中呈现的 HTML 用户界面访问客户端。
+      客户端凭据以及颁发给客户端的任何访问令牌都存储在 Web 服务器
+      上，不会暴露给资源所有者，也不能被资源所有者访问。
+
+   基于用户代理的应用程序
+      基于用户代理的应用程序是公开客户端，其中客户端代码从 Web
+      服务器下载，并在资源所有者所用设备上的用户代理（例如 Web
+      浏览器）内执行。协议数据和凭据很容易被资源所有者访问（并且
+      通常可见）。由于此类应用程序驻留在用户代理内，因此在请求授权时，
+      它们可以无缝使用用户代理能力。
+
+   原生应用程序
+      原生应用程序是安装并执行在资源所有者所用设备上的公开客户端。
+      协议数据和凭据可被资源所有者访问。假定应用程序中包含的任何
+      客户端认证凭据都可以被提取。另一方面，动态颁发的凭据（例如
+      访问令牌或刷新令牌）可以获得可接受级别的保护。至少，这些
+      凭据受到保护，不会被应用程序可能与之交互的恶意服务器获取。
+      在某些平台上，这些凭据可能受到保护，不会被驻留在同一设备上的
+      其他应用程序获取。
+
+<span class="h3"><a class="selflink" id="section-2.2" href="#section-2.2">2.2</a>.  客户端标识符</span>
+
+   授权服务器向已注册客户端颁发客户端标识符 -- 一个表示客户端
+   提供的注册信息的唯一字符串。客户端标识符不是秘密；它暴露给
+   资源所有者，并且 MUST NOT 单独用于客户端认证。客户端标识符在
+   授权服务器内是唯一的。
+
+   本规范未定义客户端标识符字符串大小。客户端应避免对标识符大小
+   作出假设。授权服务器 SHOULD 记录它所颁发的任何标识符的大小。
+
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 15]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-16" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+<span class="h3"><a class="selflink" id="section-2.3" href="#section-2.3">2.3</a>.  客户端认证</span>
+
+   如果客户端类型为机密，则客户端和授权服务器会建立一种适合授权
+   服务器安全要求的客户端认证方法。授权服务器 MAY 接受满足其安全
+   要求的任何形式的客户端认证。
+
+   机密客户端通常被颁发（或建立）一组客户端凭据，用于向授权服务器
+   进行认证（例如密码、公钥/私钥对）。
+
+   授权服务器 MAY 与公开客户端建立客户端认证方法。然而，授权服务器
+   MUST NOT 依赖公开客户端认证来识别客户端。
+
+   客户端 MUST NOT 在每个请求中使用超过一种认证方法。
+
+<span class="h4"><a class="selflink" id="section-2.3.1" href="#section-2.3.1">2.3.1</a>.  客户端密码</span>
+
+   持有客户端密码的客户端 MAY 使用 [<a href="./rfc2617" title="&quot;HTTP Authentication: Basic and Digest Access Authentication&quot;">RFC2617</a>] 中定义的 HTTP Basic
+   认证方案向授权服务器认证。客户端标识符按照 <a href="#appendix-B">附录 B</a> 中的
+   "application/x-www-form-urlencoded" 编码算法进行编码，并将编码后的
+   值用作用户名；客户端密码使用同一算法编码并用作密码。授权服务器
+   MUST 支持 HTTP Basic 认证方案，以认证已被颁发客户端密码的客户端。
+
+   例如（仅为显示目的添加额外换行）：
+
+     Authorization: Basic czZCaGRSa3F0Mzo3RmpmcDBaQnIxS3REUmJuZlZkbUl3
+
+   或者，授权服务器 MAY 支持使用以下参数在请求体中包含客户端凭据：
+
+   client_id
+         REQUIRED。注册过程中颁发给客户端的客户端标识符，如
+         <a href="#section-2.2">第 2.2 节</a> 所述。
+
+   client_secret
+         REQUIRED。客户端秘密。如果客户端秘密为空字符串，客户端
+         MAY 省略该参数。
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 16]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-17" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+   使用这两个参数在请求体中包含客户端凭据是 NOT RECOMMENDED，
+   并且 SHOULD 限于无法直接利用 HTTP Basic 认证方案（或其他基于
+   密码的 HTTP 认证方案）的客户端。这些参数只能在请求体中传输，
+   MUST NOT 包含在请求 URI 中。
+
+   例如，使用正文参数刷新访问令牌（<a href="#section-6">第 6 节</a>）的请求（仅为显示目的
+   添加额外换行）：
+
+     POST /token HTTP/1.1
+     Host: server.example.com
+     Content-Type: application/x-www-form-urlencoded
+
+     grant_type=refresh_token&amp;refresh_token=tGzv3JOkF0XG5Qx2TlKWIA
+     &amp;client_id=s6BhdRkqt3&amp;client_secret=7Fjfp0ZBr1KtDRbnfVdmIw
+
+   授权服务器 MUST 要求在使用密码认证发送请求时，按 <a href="#section-1.6">第 1.6 节</a>
+   所述使用 TLS。
+
+   由于此客户端认证方法涉及密码，授权服务器 MUST 保护任何利用该
+   方法的端点免受暴力破解攻击。
+
+<span class="h4"><a class="selflink" id="section-2.3.2" href="#section-2.3.2">2.3.2</a>.  其他认证方法</span>
+
+   授权服务器 MAY 支持任何符合其安全要求的合适 HTTP 认证方案。
+   使用其他认证方法时，授权服务器 MUST 定义客户端标识符（注册记录）
+   与认证方案之间的映射。
+
+<span class="h3"><a class="selflink" id="section-2.4" href="#section-2.4">2.4</a>.  未注册客户端</span>
+
+   本规范不排除使用未注册客户端。然而，此类客户端的使用超出本规范
+   范围，并且需要额外的安全分析以及对其互操作性影响的审查。
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 17]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-18" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+<span class="h2"><a class="selflink" id="section-3" href="#section-3">3</a>.  协议端点</span>
+
+   授权过程使用两个授权服务器端点（HTTP 资源）：
+
+   o  授权端点 - 客户端用来通过用户代理重定向从资源所有者获得
+      授权。
+
+   o  令牌端点 - 客户端用来将授权许可交换为访问令牌，通常伴随
+      客户端认证。
+
+   以及一个客户端端点：
+
+   o  重定向端点 - 授权服务器用来通过资源所有者用户代理，将包含
+      授权凭据的响应返回给客户端。
+
+   并非每种授权许可类型都使用这两个端点。扩展许可类型 MAY 根据
+   需要定义附加端点。
+
+<span class="h3"><a class="selflink" id="section-3.1" href="#section-3.1">3.1</a>.  授权端点</span>
+
+   授权端点用于与资源所有者交互并获得授权许可。授权服务器 MUST
+   首先验证资源所有者的身份。授权服务器认证资源所有者的方式
+   （例如用户名和密码登录、会话 cookie）超出本规范范围。
+
+   客户端获得授权端点位置的方式超出本规范范围，但该位置通常在
+   服务文档中提供。
+
+   端点 URI MAY 包含一个按 "application/x-www-form-urlencoded" 格式
+   化（依 <a href="#appendix-B">附录 B</a>）的查询组件（<a href="./rfc3986#section-3.4">[RFC3986] 第&nbsp;3.4 节</a>），
+   在添加附加查询参数时 MUST 保留该组件。端点 URI MUST NOT 包含
+   片段组件。
+
+   由于发送到授权端点的请求会导致用户认证以及明文凭据（在 HTTP
+   响应中）的传输，授权服务器 MUST 要求在向授权端点发送请求时，
+   按 <a href="#section-1.6">第 1.6 节</a> 所述使用 TLS。
+
+   授权服务器 MUST 支持对授权端点使用 HTTP "GET" 方法 [<a href="./rfc2616" title="&quot;Hypertext Transfer Protocol -- HTTP/1.1&quot;">RFC2616</a>]，
+   也 MAY 支持使用 "POST" 方法。
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 18]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-19" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+   发送时没有值的参数 MUST 被视为已从请求中省略。授权服务器 MUST
+   忽略无法识别的请求参数。请求和响应参数 MUST NOT 包含超过一次。
+
+<span class="h4"><a class="selflink" id="section-3.1.1" href="#section-3.1.1">3.1.1</a>.  响应类型</span>
+
+   授权端点由授权码许可类型和隐式许可类型流程使用。客户端使用
+   以下参数通知授权服务器所需的许可类型：
+
+   response_type
+         REQUIRED。其值 MUST 为 "code"（用于按 <a href="#section-4.1.1">第 4.1.1 节</a> 所述请求
+         授权码）、"token"（用于按 <a href="#section-4.2.1">第 4.2.1 节</a> 所述请求访问令牌
+         （隐式许可）），或按 <a href="#section-8.4">第 8.4 节</a> 所述的已注册扩展值之一。
+
+   扩展响应类型 MAY 包含以空格分隔 (%x20) 的值列表，其中值的顺序
+   无关紧要（例如，响应类型 "a b" 与 "b a" 相同）。此类复合响应
+   类型的含义由其各自的规范定义。
+
+   如果授权请求缺少 "response_type" 参数，或者响应类型无法理解，
+   授权服务器 MUST 按 <a href="#section-4.1.2.1">第 4.1.2.1 节</a> 所述返回错误响应。
+
+<span class="h4"><a class="selflink" id="section-3.1.2" href="#section-3.1.2">3.1.2</a>.  重定向端点</span>
+
+   完成与资源所有者的交互后，授权服务器将资源所有者的用户代理
+   引导回客户端。授权服务器将用户代理重定向到客户端的重定向端点，
+   该端点在客户端注册过程中，或在发出授权请求时，已预先与授权
+   服务器建立。
+
+   重定向端点 URI MUST 是 <a href="./rfc3986#section-4.3">[RFC3986] 第&nbsp;4.3 节</a> 定义的绝对 URI。
+   端点 URI MAY 包含一个按 "application/x-www-form-urlencoded"
+   格式化（依 <a href="#appendix-B">附录 B</a>）的查询组件（<a href="./rfc3986#section-3.4">[RFC3986] 第&nbsp;3.4 节</a>），
+   在添加附加查询参数时 MUST 保留该组件。端点 URI MUST NOT 包含
+   片段组件。
+
+
+
+
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 19]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-20" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+<span class="h5"><a class="selflink" id="section-3.1.2.1" href="#section-3.1.2.1">3.1.2.1</a>.  端点请求机密性</span>
+
+   当请求的响应类型为 "code" 或 "token"，或者当重定向请求会导致
+   敏感凭据通过开放网络传输时，重定向端点 SHOULD 按 <a href="#section-1.6">第 1.6 节</a>
+   所述要求使用 TLS。本规范未强制使用 TLS，因为在撰写本文时，
+   要求客户端部署 TLS 对许多客户端开发者而言是一个重大障碍。如果
+   TLS 不可用，授权服务器 SHOULD 在重定向之前警告资源所有者该端点
+   不安全（例如，在授权请求期间显示一条消息）。
+
+   缺少传输层安全性可能会严重影响客户端以及其被授权访问的受保护
+   资源的安全。当授权过程被客户端用作一种委派式最终用户认证形式
+   （例如第三方登录服务）时，使用传输层安全性尤为关键。
+
+<span class="h5"><a class="selflink" id="section-3.1.2.2" href="#section-3.1.2.2">3.1.2.2</a>.  注册要求</span>
+
+   授权服务器 MUST 要求以下客户端注册其重定向端点：
+
+   o  公开客户端。
+
+   o  使用隐式许可类型的机密客户端。
+
+   授权服务器 SHOULD 要求所有客户端在使用授权端点之前注册其
+   重定向端点。
+
+   授权服务器 SHOULD 要求客户端提供完整的重定向 URI（客户端 MAY
+   使用 "state" 请求参数来实现每请求定制）。如果无法要求注册完整的
+   重定向 URI，授权服务器 SHOULD 要求注册 URI 的方案、权限和路径
+   （允许客户端在请求授权时仅动态改变重定向 URI 的查询组件）。
+
+   授权服务器 MAY 允许客户端注册多个重定向端点。
+
+   缺少重定向 URI 注册要求可能使攻击者能够将授权端点用作开放
+   重定向器，如 <a href="#section-10.15">第 10.15 节</a> 所述。
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 20]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-21" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+<span class="h5"><a class="selflink" id="section-3.1.2.3" href="#section-3.1.2.3">3.1.2.3</a>.  动态配置</span>
+
+   如果已注册多个重定向 URI，如果只注册了重定向 URI 的一部分，
+   或者如果未注册重定向 URI，则客户端 MUST 在授权请求中使用
+   "redirect_uri" 请求参数包含一个重定向 URI。
+
+   当授权请求中包含重定向 URI 时，授权服务器 MUST 将接收到的值
+   与至少一个已注册的重定向 URI（或 URI 组件）进行比较并匹配，
+   如 <a href="./rfc3986#section-6">[RFC3986] 第&nbsp;6 节</a> 所定义，如果已注册任何重定向
+   URI。如果客户端注册包含完整的重定向 URI，则授权服务器 MUST
+   使用 <a href="./rfc3986#section-6.2.1">[RFC3986] 第&nbsp;6.2.1 节</a> 中定义的简单字符串比较来比较
+   这两个 URI。
+
+<span class="h5"><a class="selflink" id="section-3.1.2.4" href="#section-3.1.2.4">3.1.2.4</a>.  无效端点</span>
+
+   如果授权请求因缺失、无效或不匹配的重定向 URI 而验证失败，
+   授权服务器 SHOULD 将错误告知资源所有者，并且 MUST NOT 自动将
+   用户代理重定向到无效的重定向 URI。
+
+<span class="h5"><a class="selflink" id="section-3.1.2.5" href="#section-3.1.2.5">3.1.2.5</a>.  端点内容</span>
+
+   发送到客户端端点的重定向请求通常会产生一个由用户代理处理的
+   HTML 文档响应。如果 HTML 响应作为重定向请求的直接结果提供，
+   HTML 文档中包含的任何脚本都将执行，并可完全访问重定向 URI
+   及其包含的凭据。
+
+   客户端 SHOULD NOT 在重定向端点响应中包含任何第三方脚本（例如，
+   第三方分析、社交插件、广告网络）。相反，它 SHOULD 从 URI 中提取
+   凭据，并再次将用户代理重定向到另一个端点，而不暴露凭据
+   （在 URI 中或其他地方）。如果包含第三方脚本，客户端 MUST 确保
+   其自身脚本（用于从 URI 中提取并移除凭据）会首先执行。
+
+<span class="h3"><a class="selflink" id="section-3.2" href="#section-3.2">3.2</a>.  令牌端点</span>
+
+   令牌端点由客户端用于通过出示其授权许可或刷新令牌来获得访问
+   令牌。除隐式许可类型外，令牌端点用于每一种授权许可（因为隐式
+   许可类型会直接颁发访问令牌）。
+
+
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 21]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-22" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+   客户端获得令牌端点位置的方式超出本规范范围，但该位置通常在
+   服务文档中提供。
+
+   端点 URI MAY 包含一个按 "application/x-www-form-urlencoded" 格式
+   化（依 <a href="#appendix-B">附录 B</a>）的查询组件（<a href="./rfc3986#section-3.4">[RFC3986] 第&nbsp;3.4 节</a>），
+   在添加附加查询参数时 MUST 保留该组件。端点 URI MUST NOT 包含
+   片段组件。
+
+   由于发送到令牌端点的请求会导致明文凭据（在 HTTP 请求和响应中）
+   的传输，授权服务器 MUST 要求在向令牌端点发送请求时，按
+   <a href="#section-1.6">第 1.6 节</a> 所述使用 TLS。
+
+   客户端在发出访问令牌请求时 MUST 使用 HTTP "POST" 方法。
+
+   发送时没有值的参数 MUST 被视为已从请求中省略。授权服务器 MUST
+   忽略无法识别的请求参数。请求和响应参数 MUST NOT 包含超过一次。
+
+<span class="h4"><a class="selflink" id="section-3.2.1" href="#section-3.2.1">3.2.1</a>.  客户端认证</span>
+
+   机密客户端或其他已被颁发客户端凭据的客户端，在向令牌端点发出
+   请求时，MUST 按 <a href="#section-2.3">第 2.3 节</a> 所述向授权服务器认证。客户端
+   认证用于：
+
+   o  强制刷新令牌和授权码绑定到被颁发这些令牌和授权码的客户端。
+      当授权码通过不安全通道传输到重定向端点，或者重定向 URI
+      尚未完整注册时，客户端认证至关重要。
+
+   o  通过禁用客户端或更改其凭据，从客户端遭到攻陷中恢复，从而
+      防止攻击者滥用被盗的刷新令牌。更改单组客户端凭据明显快于
+      撤销整组刷新令牌。
+
+   o  实现认证管理最佳实践，该实践要求定期轮换凭据。轮换整组
+      刷新令牌可能很有挑战，而轮换单组客户端凭据明显更容易。
+
+
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 22]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-23" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+   客户端 MAY 在向令牌端点发送请求时使用 "client_id" 请求参数来标识
+   自身。在向令牌端点发送的 "authorization_code" "grant_type" 请求中，
+   未认证客户端 MUST 发送其 "client_id"，以防止自己无意中接受一个
+   原本发给具有不同 "client_id" 的客户端的代码。这保护客户端免受
+   认证码替换攻击。（它不会为受保护资源提供额外安全性。）
+
+<span class="h3"><a class="selflink" id="section-3.3" href="#section-3.3">3.3</a>.  访问令牌范围</span>
+
+   授权端点和令牌端点允许客户端使用 "scope" 请求参数指定访问请求
+   的范围。授权服务器随后使用 "scope" 响应参数告知客户端所颁发
+   访问令牌的范围。
+
+   scope 参数的值表示为一个由空格分隔、区分大小写的字符串列表。
+   字符串由授权服务器定义。如果值包含多个空格分隔的字符串，其顺序
+   无关紧要，并且每个字符串都会向所请求的范围添加一个额外访问范围。
+
+     scope       = scope-token *( SP scope-token )
+     scope-token = 1*( %x21 / %x23-5B / %x5D-7E )
+
+   授权服务器 MAY 基于授权服务器策略或资源所有者的指示，完全或部分
+   忽略客户端请求的范围。如果颁发的访问令牌范围与客户端请求的范围
+   不同，授权服务器 MUST 包含 "scope" 响应参数，以告知客户端实际
+   授予的范围。
+
+   如果客户端在请求授权时省略 scope 参数，授权服务器 MUST 要么使用
+   预定义默认值处理该请求，要么使请求失败并指示范围无效。授权服务器
+   SHOULD 记录其范围要求和默认值（如果已定义）。
+
+<span class="h2"><a class="selflink" id="section-4" href="#section-4">4</a>.  获取授权</span>
+
+   为了请求访问令牌，客户端从资源所有者获得授权。授权以授权许可的
+   形式表示，客户端使用它来请求访问令牌。OAuth 定义四种许可类型：
+   授权码、隐式、资源所有者密码凭据和客户端凭据。它还提供一种扩展
+   机制，用于定义附加许可类型。
+
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 23]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-24" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+<span class="h3"><a class="selflink" id="section-4.1" href="#section-4.1">4.1</a>.  授权码许可</span>
+
+   授权码许可类型用于获得访问令牌和刷新令牌，并针对机密客户端进行了
+   优化。由于这是一个基于重定向的流程，客户端必须能够与资源所有者的
+   用户代理（通常是 Web 浏览器）交互，并且能够接收来自授权服务器的
+   传入请求（通过重定向）。
+
+     +----------+
+     | Resource |
+     |   Owner  |
+     |          |
+     +----------+
+          ^
+          |
+         (B)
+     +----|-----+          Client Identifier      +---------------+
+     |         -+----(A)-- &amp; Redirection URI ----&gt;|               |
+     |  User-   |                                 | Authorization |
+     |  Agent  -+----(B)-- User authenticates ---&gt;|     Server    |
+     |          |                                 |               |
+     |         -+----(C)-- Authorization Code ---&lt;|               |
+     +-|----|---+                                 +---------------+
+       |    |                                         ^      v
+      (A)  (C)                                        |      |
+       |    |                                         |      |
+       ^    v                                         |      |
+     +---------+                                      |      |
+     |         |&gt;---(D)-- Authorization Code ---------'      |
+     |  Client |          &amp; Redirection URI                  |
+     |         |                                             |
+     |         |&lt;---(E)----- Access Token -------------------'
+     +---------+       (w/ Optional Refresh Token)
+
+   注：图示步骤 (A)、(B) 和 (C) 的线条在经过用户代理时被拆成两部分。
+
+                     图 3：授权码流程
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 24]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-25" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+   图 3 所示的流程包括以下步骤：
+
+   (A)  客户端通过将资源所有者的用户代理引导到授权端点来发起流程。
+        客户端包含其客户端标识符、请求的范围、本地状态，以及在授予
+        （或拒绝）访问后授权服务器将用户代理发送回去的重定向 URI。
+
+   (B)  授权服务器（通过用户代理）认证资源所有者，并确定资源所有者
+        是否授予或拒绝客户端的访问请求。
+
+   (C)  假设资源所有者授予访问权限，授权服务器使用此前提供的重定向
+        URI（在请求中或在客户端注册期间）将用户代理重定向回客户端。
+        重定向 URI 包含授权码以及客户端此前提供的任何本地状态。
+
+   (D)  客户端通过包含上一步收到的授权码，从授权服务器的令牌端点
+        请求访问令牌。发出请求时，客户端向授权服务器认证。客户端
+        包含用于获得授权码的重定向 URI，以供验证。
+
+   (E)  授权服务器认证客户端、验证授权码，并确保收到的重定向 URI
+        与步骤 (C) 中用于重定向客户端的 URI 匹配。如果有效，授权
+        服务器返回访问令牌，并可选地返回刷新令牌。
+
+<span class="h4"><a class="selflink" id="section-4.1.1" href="#section-4.1.1">4.1.1</a>.  授权请求</span>
+
+   客户端通过按 <a href="#appendix-B">附录 B</a> 使用 "application/x-www-form-urlencoded"
+   格式向授权端点 URI 的查询组件添加以下参数来构造请求 URI：
+
+   response_type
+         REQUIRED。值 MUST 设置为 "code"。
+
+   client_id
+         REQUIRED。<a href="#section-2.2">第 2.2 节</a> 所述的客户端标识符。
+
+   redirect_uri
+         OPTIONAL。如 <a href="#section-3.1.2">第 3.1.2 节</a> 所述。
+
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 25]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-26" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+   scope
+         OPTIONAL。<a href="#section-3.3">第 3.3 节</a> 所述的访问请求范围。
+
+   state
+         RECOMMENDED。客户端用于在请求和回调之间维护状态的不透明值。
+         授权服务器在将用户代理重定向回客户端时包含此值。该参数
+         SHOULD 用于防止 <a href="#section-10.12">第 10.12 节</a> 所述的跨站请求伪造。
+
+   客户端使用 HTTP 重定向响应，或通过用户代理可用的其他方式，将资源
+   所有者引导到构造好的 URI。
+
+   例如，客户端引导用户代理使用 TLS 发出以下 HTTP 请求（仅为显示目的
+   添加额外换行）：
+
+    GET /authorize?response_type=code&amp;client_id=s6BhdRkqt3&amp;state=xyz
+        &amp;redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb HTTP/1.1
+    Host: server.example.com
+
+   授权服务器验证请求，以确保所有必需参数均存在且有效。如果请求有效，
+   授权服务器认证资源所有者并获得授权决定（通过询问资源所有者，或通过
+   其他方式建立批准）。
+
+   当作出决定后，授权服务器使用 HTTP 重定向响应，或通过用户代理可用的
+   其他方式，将用户代理引导到所提供的客户端重定向 URI。
+
+<span class="h4"><a class="selflink" id="section-4.1.2" href="#section-4.1.2">4.1.2</a>.  授权响应</span>
+
+   如果资源所有者授予访问请求，授权服务器会颁发授权码，并通过按
+   <a href="#appendix-B">附录 B</a> 使用 "application/x-www-form-urlencoded" 格式向重定向
+   URI 的查询组件添加以下参数，将其传递给客户端：
+
+   code
+         REQUIRED。授权服务器生成的授权码。授权码 MUST 在颁发后不久
+         过期，以降低泄漏风险。RECOMMENDED 的最大授权码生命周期为
+         10 分钟。客户端 MUST NOT 使用授权码超过一次。
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 26]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-27" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+         如果授权码被使用超过一次，授权服务器 MUST 拒绝该请求，并且
+         SHOULD 撤销（在可能时）此前基于该授权码颁发的所有令牌。
+         授权码绑定到客户端标识符和重定向 URI。
+
+   state
+         如果客户端授权请求中存在 "state" 参数，则 REQUIRED。
+         从客户端收到的精确值。
+
+   例如，授权服务器通过发送以下 HTTP 响应来重定向用户代理：
+
+     HTTP/1.1 302 Found
+     Location: https://client.example.com/cb?code=SplxlOBeZQQYbYS6WxSbIA
+               &amp;state=xyz
+
+   客户端 MUST 忽略无法识别的响应参数。本规范未定义授权码字符串大小。
+   客户端应避免对 code 值大小作出假设。授权服务器 SHOULD 记录其颁发
+   的任何值的大小。
+
+<span class="h5"><a class="selflink" id="section-4.1.2.1" href="#section-4.1.2.1">4.1.2.1</a>.  错误响应</span>
+
+   如果请求因缺失、无效或不匹配的重定向 URI 而失败，或者客户端
+   标识符缺失或无效，授权服务器 SHOULD 将错误告知资源所有者，并且
+   MUST NOT 自动将用户代理重定向到无效的重定向 URI。
+
+   如果资源所有者拒绝访问请求，或者请求因缺失或无效的重定向 URI
+   以外的原因而失败，授权服务器会通过按 <a href="#appendix-B">附录 B</a> 使用
+   "application/x-www-form-urlencoded" 格式向重定向 URI 的查询组件
+   添加以下参数来告知客户端：
+
+   error
+         REQUIRED。来自以下内容的单个 ASCII [<a href="#ref-USASCII" title="&quot;Coded Character Set -- 7-bit American Standard Code for Information Interchange&quot;">USASCII</a>] 错误码：
+
+         invalid_request
+               请求缺少必需参数、包含无效参数值、多次包含同一参数，
+               或者存在其他格式错误。
+
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 27]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-28" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+         unauthorized_client
+               客户端未被授权使用此方法请求授权码。
+
+         access_denied
+               资源所有者或授权服务器拒绝了请求。
+
+         unsupported_response_type
+               授权服务器不支持使用此方法获得授权码。
+
+         invalid_scope
+               请求的范围无效、未知或格式错误。
+
+         server_error
+               授权服务器遇到意外状况，导致无法完成请求。
+               （需要此错误码是因为 500 Internal Server Error HTTP
+               状态码无法通过 HTTP 重定向返回给客户端。）
+
+         temporarily_unavailable
+               授权服务器当前因服务器临时过载或维护而无法处理请求。
+               （需要此错误码是因为 503 Service Unavailable HTTP 状态码
+               无法通过 HTTP 重定向返回给客户端。）
+
+         "error" 参数的值 MUST NOT 包含集合 %x20-21 / %x23-5B /
+         %x5D-7E 之外的字符。
+
+   error_description
+         OPTIONAL。提供附加信息的人类可读 ASCII [<a href="#ref-USASCII" title="&quot;Coded Character Set -- 7-bit American Standard Code for Information Interchange&quot;">USASCII</a>] 文本，用于帮助
+         客户端开发者理解发生的错误。
+         "error_description" 参数的值 MUST NOT 包含集合 %x20-21 /
+         %x23-5B / %x5D-7E 之外的字符。
+
+   error_uri
+         OPTIONAL。标识一个包含错误相关信息的人类可读网页的 URI，
+         用于向客户端开发者提供有关错误的附加信息。
+         "error_uri" 参数的值 MUST 符合 URI-reference 语法，因此
+         MUST NOT 包含集合 %x21 / %x23-5B / %x5D-7E 之外的字符。
+
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 28]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-29" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+   state
+         如果客户端授权请求中存在 "state" 参数，则 REQUIRED。
+         从客户端收到的精确值。
+
+   例如，授权服务器通过发送以下 HTTP 响应来重定向用户代理：
+
+   HTTP/1.1 302 Found
+   Location: https://client.example.com/cb?error=access_denied&amp;state=xyz
+
+<span class="h4"><a class="selflink" id="section-4.1.3" href="#section-4.1.3">4.1.3</a>.  访问令牌请求</span>
+
+   客户端通过在 HTTP 请求实体主体中，按 <a href="#appendix-B">附录 B</a> 使用
+   "application/x-www-form-urlencoded" 格式并采用 UTF-8 字符编码发送
+   以下参数，向令牌端点发出请求：
+
+   grant_type
+         REQUIRED。值 MUST 设置为 "authorization_code"。
+
+   code
+         REQUIRED。从授权服务器收到的授权码。
+
+   redirect_uri
+         如果 <a href="#section-4.1.1">第 4.1.1 节</a> 所述的授权请求中包含 "redirect_uri" 参数，
+         则 REQUIRED，并且它们的值 MUST 相同。
+
+   client_id
+         如果客户端未按 <a href="#section-3.2.1">第 3.2.1 节</a> 所述向授权服务器认证，则
+         REQUIRED。
+
+   如果客户端类型为机密，或者客户端已被颁发客户端凭据（或被分配
+   其他认证要求），客户端 MUST 按 <a href="#section-3.2.1">第 3.2.1 节</a> 所述向授权
+   服务器认证。
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 29]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-30" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+   例如，客户端使用 TLS 发出以下 HTTP 请求（仅为显示目的添加额外换行）：
+
+     POST /token HTTP/1.1
+     Host: server.example.com
+     Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
+     Content-Type: application/x-www-form-urlencoded
+
+     grant_type=authorization_code&amp;code=SplxlOBeZQQYbYS6WxSbIA
+     &amp;redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
+
+   授权服务器 MUST：
+
+   o  对机密客户端或任何已被颁发客户端凭据（或具有其他认证要求）的
+      客户端要求客户端认证，
+
+   o  如果包含客户端认证，则认证客户端，
+
+   o  确保授权码颁发给了已认证的机密客户端；或者如果客户端是公开
+      客户端，则确保该代码颁发给了请求中的 "client_id"，
+
+   o  验证授权码有效，并且
+
+   o  确保如果初始授权请求中按 <a href="#section-4.1.1">第 4.1.1 节</a> 所述包含了
+      "redirect_uri" 参数，则存在 "redirect_uri" 参数；如果包含，
+      则确保它们的值相同。
+
+<span class="h4"><a class="selflink" id="section-4.1.4" href="#section-4.1.4">4.1.4</a>.  访问令牌响应</span>
+
+   如果访问令牌请求有效且已授权，授权服务器按 <a href="#section-5.1">第 5.1 节</a> 所述
+   颁发访问令牌和可选的刷新令牌。如果请求的客户端认证失败或无效，
+   授权服务器按 <a href="#section-5.2">第 5.2 节</a> 所述返回错误响应。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 30]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-31" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+   成功响应示例：
+
+     HTTP/1.1 200 OK
+     Content-Type: application/json;charset=UTF-8
+     Cache-Control: no-store
+     Pragma: no-cache
+
+     {
+       "access_token":"2YotnFZFEjr1zCsicMWpAA",
+       "token_type":"example",
+       "expires_in":3600,
+       "refresh_token":"tGzv3JOkF0XG5Qx2TlKWIA",
+       "example_parameter":"example_value"
+     }
+
+<span class="h3"><a class="selflink" id="section-4.2" href="#section-4.2">4.2</a>.  隐式许可</span>
+
+   隐式许可类型用于获得访问令牌（它不支持颁发刷新令牌），并针对已知
+   运行特定重定向 URI 的公开客户端进行了优化。这些客户端通常使用
+   JavaScript 等脚本语言在浏览器中实现。
+
+   由于这是一个基于重定向的流程，客户端必须能够与资源所有者的用户
+   代理（通常是 Web 浏览器）交互，并且能够接收来自授权服务器的传入
+   请求（通过重定向）。
+
+   与授权码许可类型不同，在授权码许可类型中客户端分别发出授权请求和
+   访问令牌请求；在隐式许可类型中，客户端作为授权请求的结果收到访问
+   令牌。
+
+   隐式许可类型不包含客户端认证，而是依赖资源所有者的存在以及重定向
+   URI 的注册。由于访问令牌被编码到重定向 URI 中，它可能暴露给资源
+   所有者以及驻留在同一设备上的其他应用程序。
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 31]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-32" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+     +----------+
+     | Resource |
+     |  Owner   |
+     |          |
+     +----------+
+          ^
+          |
+         (B)
+     +----|-----+          Client Identifier     +---------------+
+     |         -+----(A)-- &amp; Redirection URI ---&gt;|               |
+     |  User-   |                                | Authorization |
+     |  Agent  -|----(B)-- User authenticates --&gt;|     Server    |
+     |          |                                |               |
+     |          |&lt;---(C)--- Redirection URI ----&lt;|               |
+     |          |          with Access Token     +---------------+
+     |          |            in Fragment
+     |          |                                +---------------+
+     |          |----(D)--- Redirection URI ----&gt;|   Web-Hosted  |
+     |          |          without Fragment      |     Client    |
+     |          |                                |    Resource   |
+     |     (F)  |&lt;---(E)------- Script ---------&lt;|               |
+     |          |                                +---------------+
+     +-|--------+
+       |    |
+      (A)  (G) Access Token
+       |    |
+       ^    v
+     +---------+
+     |         |
+     |  Client |
+     |         |
+     +---------+
+
+   注：图示步骤 (A) 和 (B) 的线条在经过用户代理时被拆成两部分。
+
+                       图 4：隐式许可流程
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 32]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-33" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+   图 4 所示的流程包括以下步骤：
+
+   (A)  客户端通过将资源所有者的用户代理引导到授权端点来发起流程。
+        客户端包含其客户端标识符、请求的范围、本地状态，以及在授予
+        （或拒绝）访问后授权服务器将用户代理发送回去的重定向 URI。
+
+   (B)  授权服务器（通过用户代理）认证资源所有者，并确定资源所有者
+        是否授予或拒绝客户端的访问请求。
+
+   (C)  假设资源所有者授予访问权限，授权服务器使用此前提供的重定向
+        URI 将用户代理重定向回客户端。重定向 URI 在 URI 片段中包含
+        访问令牌。
+
+   (D)  用户代理通过向 Web 托管的客户端资源发出请求来遵循重定向指令
+        （依 [<a href="./rfc2616" title="&quot;Hypertext Transfer Protocol -- HTTP/1.1&quot;">RFC2616</a>]，该请求不包含片段）。用户代理在本地保留片段信息。
+
+   (E)  Web 托管的客户端资源返回一个网页（通常是带有嵌入脚本的
+        HTML 文档），该网页能够访问包含用户代理所保留片段的完整
+        重定向 URI，并提取片段中包含的访问令牌（和其他参数）。
+
+   (F)  用户代理在本地执行 Web 托管的客户端资源提供的脚本，该脚本
+        提取访问令牌。
+
+   (G)  用户代理将访问令牌传递给客户端。
+
+   关于使用隐式许可的背景，请参见 <a href="#section-1.3.2">1.3.2</a> 和 <a href="#section-9">9</a> 节。
+   关于使用隐式许可时的重要安全考虑，请参见 <a href="#section-10.3">10.3</a> 和
+   <a href="#section-10.16">10.16</a> 节。
+
+<span class="h4"><a class="selflink" id="section-4.2.1" href="#section-4.2.1">4.2.1</a>.  授权请求</span>
+
+   客户端通过按 <a href="#appendix-B">附录 B</a> 使用 "application/x-www-form-urlencoded"
+   格式向授权端点 URI 的查询组件添加以下参数来构造请求 URI：
+
+   response_type
+         REQUIRED。值 MUST 设置为 "token"。
+
+   client_id
+         REQUIRED。<a href="#section-2.2">第 2.2 节</a> 所述的客户端标识符。
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 33]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-34" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+   redirect_uri
+         OPTIONAL。如 <a href="#section-3.1.2">第 3.1.2 节</a> 所述。
+
+   scope
+         OPTIONAL。<a href="#section-3.3">第 3.3 节</a> 所述的访问请求范围。
+
+   state
+         RECOMMENDED。客户端用于在请求和回调之间维护状态的不透明值。
+         授权服务器在将用户代理重定向回客户端时包含此值。该参数
+         SHOULD 用于防止 <a href="#section-10.12">第 10.12 节</a> 所述的跨站请求伪造。
+
+   客户端使用 HTTP 重定向响应，或通过用户代理可用的其他方式，将资源
+   所有者引导到构造好的 URI。
+
+   例如，客户端引导用户代理使用 TLS 发出以下 HTTP 请求（仅为显示目的
+   添加额外换行）：
+
+    GET /authorize?response_type=token&amp;client_id=s6BhdRkqt3&amp;state=xyz
+        &amp;redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb HTTP/1.1
+    Host: server.example.com
+
+   授权服务器验证请求，以确保所有必需参数均存在且有效。授权服务器
+   MUST 验证其将访问令牌重定向到的重定向 URI 是否匹配客户端按
+   <a href="#section-3.1.2">第 3.1.2 节</a> 所述注册的重定向 URI。
+
+   如果请求有效，授权服务器认证资源所有者并获得授权决定（通过询问
+   资源所有者，或通过其他方式建立批准）。
+
+   当作出决定后，授权服务器使用 HTTP 重定向响应，或通过用户代理可用的
+   其他方式，将用户代理引导到所提供的客户端重定向 URI。
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 34]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-35" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+<span class="h4"><a class="selflink" id="section-4.2.2" href="#section-4.2.2">4.2.2</a>.  访问令牌响应</span>
+
+   如果资源所有者授予访问请求，授权服务器会颁发访问令牌，并通过按
+   <a href="#appendix-B">附录 B</a> 使用 "application/x-www-form-urlencoded" 格式向重定向
+   URI 的片段组件添加以下参数，将其传递给客户端：
+
+   access_token
+         REQUIRED。授权服务器颁发的访问令牌。
+
+   token_type
+         REQUIRED。按 <a href="#section-7.1">第 7.1 节</a> 所述颁发的令牌类型。值不区分
+         大小写。
+
+   expires_in
+         RECOMMENDED。访问令牌的生命周期，以秒为单位。例如，值
+         "3600" 表示访问令牌将在响应生成时起一小时后过期。如果省略，
+         授权服务器 SHOULD 通过其他方式提供过期时间，或记录默认值。
+
+   scope
+         如果与客户端请求的范围相同，则 OPTIONAL；否则 REQUIRED。
+         <a href="#section-3.3">第 3.3 节</a> 所述的访问令牌范围。
+
+   state
+         如果客户端授权请求中存在 "state" 参数，则 REQUIRED。
+         从客户端收到的精确值。
+
+   授权服务器 MUST NOT 颁发刷新令牌。
+
+   例如，授权服务器通过发送以下 HTTP 响应来重定向用户代理（仅为
+   显示目的添加额外换行）：
+
+     HTTP/1.1 302 Found
+     Location: http://example.com/cb#access_token=2YotnFZFEjr1zCsicMWpAA
+               &amp;state=xyz&amp;token_type=example&amp;expires_in=3600
+
+   开发者应注意，一些用户代理不支持在 HTTP "Location" 响应头字段中
+   包含片段组件。此类客户端将需要使用 3xx 重定向响应以外的其他方法
+   来重定向客户端 -- 例如，返回一个 HTML 页面，其中包含一个操作链接到
+   重定向 URI 的 'continue' 按钮。
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 35]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-36" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+   客户端 MUST 忽略无法识别的响应参数。本规范未定义访问令牌字符串大小。
+   客户端应避免对值大小作出假设。授权服务器 SHOULD 记录其颁发的任何
+   值的大小。
+
+<span class="h5"><a class="selflink" id="section-4.2.2.1" href="#section-4.2.2.1">4.2.2.1</a>.  错误响应</span>
+
+   如果请求因缺失、无效或不匹配的重定向 URI 而失败，或者客户端标识符
+   缺失或无效，授权服务器 SHOULD 将错误告知资源所有者，并且 MUST NOT
+   自动将用户代理重定向到无效的重定向 URI。
+
+   如果资源所有者拒绝访问请求，或者请求因缺失或无效的重定向 URI 以外
+   的原因而失败，授权服务器会通过按 <a href="#appendix-B">附录 B</a> 使用
+   "application/x-www-form-urlencoded" 格式向重定向 URI 的片段组件添加
+   以下参数来告知客户端：
+
+   error
+         REQUIRED。来自以下内容的单个 ASCII [<a href="#ref-USASCII" title="&quot;Coded Character Set -- 7-bit American Standard Code for Information Interchange&quot;">USASCII</a>] 错误码：
+
+         invalid_request
+               请求缺少必需参数、包含无效参数值、多次包含同一参数，
+               或者存在其他格式错误。
+
+         unauthorized_client
+               客户端未被授权使用此方法请求访问令牌。
+
+         access_denied
+               资源所有者或授权服务器拒绝了请求。
+
+         unsupported_response_type
+               授权服务器不支持使用此方法获得访问令牌。
+
+         invalid_scope
+               请求的范围无效、未知或格式错误。
+
+
+
+
+
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 36]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-37" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+         server_error
+               授权服务器遇到意外状况，导致无法完成请求。
+               （需要此错误码是因为 500 Internal Server Error HTTP
+               状态码无法通过 HTTP 重定向返回给客户端。）
+
+         temporarily_unavailable
+               授权服务器当前因服务器临时过载或维护而无法处理请求。
+               （需要此错误码是因为 503 Service Unavailable HTTP 状态码
+               无法通过 HTTP 重定向返回给客户端。）
+
+         "error" 参数的值 MUST NOT 包含集合 %x20-21 / %x23-5B /
+         %x5D-7E 之外的字符。
+
+   error_description
+         OPTIONAL。提供附加信息的人类可读 ASCII [<a href="#ref-USASCII" title="&quot;Coded Character Set -- 7-bit American Standard Code for Information Interchange&quot;">USASCII</a>] 文本，用于帮助
+         客户端开发者理解发生的错误。
+         "error_description" 参数的值 MUST NOT 包含集合 %x20-21 /
+         %x23-5B / %x5D-7E 之外的字符。
+
+   error_uri
+         OPTIONAL。标识一个包含错误相关信息的人类可读网页的 URI，
+         用于向客户端开发者提供有关错误的附加信息。
+         "error_uri" 参数的值 MUST 符合 URI-reference 语法，因此
+         MUST NOT 包含集合 %x21 / %x23-5B / %x5D-7E 之外的字符。
+
+   state
+         如果客户端授权请求中存在 "state" 参数，则 REQUIRED。
+         从客户端收到的精确值。
+
+   例如，授权服务器通过发送以下 HTTP 响应来重定向用户代理：
+
+   HTTP/1.1 302 Found
+   Location: https://client.example.com/cb#error=access_denied&amp;state=xyz
+
+<span class="h3"><a class="selflink" id="section-4.3" href="#section-4.3">4.3</a>.  资源所有者密码凭据许可</span>
+
+   资源所有者密码凭据许可类型适用于资源所有者与客户端存在信任关系的
+   情况，例如设备操作系统或高度特权的
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 37]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-38" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+   应用程序。授权服务器在启用此许可类型时应特别谨慎，并且仅在其他流程
+   不可行时允许使用。
+
+   此许可类型适用于能够获得资源所有者凭据（用户名和密码，通常使用
+   交互式表单）的客户端。它还用于将使用直接认证方案（例如 HTTP Basic
+   或 Digest 认证）的现有客户端迁移到 OAuth，方法是将存储的凭据转换为
+   访问令牌。
+
+     +----------+
+     | Resource |
+     |  Owner   |
+     |          |
+     +----------+
+          v
+          |    Resource Owner
+         (A) Password Credentials
+          |
+          v
+     +---------+                                  +---------------+
+     |         |&gt;--(B)---- Resource Owner -------&gt;|               |
+     |         |         Password Credentials     | Authorization |
+     | Client  |                                  |     Server    |
+     |         |&lt;--(C)---- Access Token ---------&lt;|               |
+     |         |    (w/ Optional Refresh Token)   |               |
+     +---------+                                  +---------------+
+
+            图 5：资源所有者密码凭据流程
+
+   图 5 所示的流程包括以下步骤：
+
+   (A)  资源所有者向客户端提供其用户名和密码。
+
+   (B)  客户端通过包含从资源所有者收到的凭据，从授权服务器的令牌
+        端点请求访问令牌。发出请求时，客户端向授权服务器认证。
+
+   (C)  授权服务器认证客户端并验证资源所有者凭据，如果有效，则颁发
+        访问令牌。
+
+
+
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 38]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-39" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+<span class="h4"><a class="selflink" id="section-4.3.1" href="#section-4.3.1">4.3.1</a>.  授权请求和响应</span>
+
+   客户端获得资源所有者凭据的方法超出本规范范围。客户端在获得访问
+   令牌后 MUST 丢弃这些凭据。
+
+<span class="h4"><a class="selflink" id="section-4.3.2" href="#section-4.3.2">4.3.2</a>.  访问令牌请求</span>
+
+   客户端通过在 HTTP 请求实体主体中，按 <a href="#appendix-B">附录 B</a> 使用
+   "application/x-www-form-urlencoded" 格式并采用 UTF-8 字符编码添加
+   以下参数，向令牌端点发出请求：
+
+   grant_type
+         REQUIRED。值 MUST 设置为 "password"。
+
+   username
+         REQUIRED。资源所有者用户名。
+
+   password
+         REQUIRED。资源所有者密码。
+
+   scope
+         OPTIONAL。<a href="#section-3.3">第 3.3 节</a> 所述的访问请求范围。
+
+   如果客户端类型为机密，或者客户端已被颁发客户端凭据（或被分配
+   其他认证要求），客户端 MUST 按 <a href="#section-3.2.1">第 3.2.1 节</a> 所述向授权
+   服务器认证。
+
+   例如，客户端使用传输层安全性发出以下 HTTP 请求（仅为显示目的添加
+   额外换行）：
+
+     POST /token HTTP/1.1
+     Host: server.example.com
+     Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
+     Content-Type: application/x-www-form-urlencoded
+
+     grant_type=password&amp;username=johndoe&amp;password=A3ddj3w
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 39]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-40" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+   授权服务器 MUST：
+
+   o  对机密客户端或任何已被颁发客户端凭据（或具有其他认证要求）的
+      客户端要求客户端认证，
+
+   o  如果包含客户端认证，则认证客户端，并且
+
+   o  使用其现有的密码验证算法验证资源所有者密码凭据。
+
+   由于此访问令牌请求使用资源所有者的密码，授权服务器 MUST 保护端点
+   免受暴力破解攻击（例如，使用速率限制或生成警报）。
+
+<span class="h4"><a class="selflink" id="section-4.3.3" href="#section-4.3.3">4.3.3</a>.  访问令牌响应</span>
+
+   如果访问令牌请求有效且已授权，授权服务器按 <a href="#section-5.1">第 5.1 节</a> 所述
+   颁发访问令牌和可选的刷新令牌。如果请求的客户端认证失败或无效，
+   授权服务器按 <a href="#section-5.2">第 5.2 节</a> 所述返回错误响应。
+
+   成功响应示例：
+
+     HTTP/1.1 200 OK
+     Content-Type: application/json;charset=UTF-8
+     Cache-Control: no-store
+     Pragma: no-cache
+
+     {
+       "access_token":"2YotnFZFEjr1zCsicMWpAA",
+       "token_type":"example",
+       "expires_in":3600,
+       "refresh_token":"tGzv3JOkF0XG5Qx2TlKWIA",
+       "example_parameter":"example_value"
+     }
+
+<span class="h3"><a class="selflink" id="section-4.4" href="#section-4.4">4.4</a>.  客户端凭据许可</span>
+
+   当客户端请求访问其控制下的受保护资源，或者请求访问另一资源所有者的
+   受保护资源且已事先与授权服务器约定（其方法超出本规范范围）时，
+   客户端可以仅使用其客户端凭据（或其他受支持的认证方式）请求访问
+   令牌。
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 40]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-41" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+   客户端凭据许可类型 MUST 仅由机密客户端使用。
+
+     +---------+                                  +---------------+
+     |         |                                  |               |
+     |         |&gt;--(A)- Client Authentication ---&gt;| Authorization |
+     | Client  |                                  |     Server    |
+     |         |&lt;--(B)---- Access Token ---------&lt;|               |
+     |         |                                  |               |
+     +---------+                                  +---------------+
+
+                     图 6：客户端凭据流程
+
+   图 6 所示的流程包括以下步骤：
+
+   (A)  客户端向授权服务器认证，并从令牌端点请求访问令牌。
+
+   (B)  授权服务器认证客户端，如果有效，则颁发访问令牌。
+
+<span class="h4"><a class="selflink" id="section-4.4.1" href="#section-4.4.1">4.4.1</a>.  授权请求和响应</span>
+
+   由于客户端认证被用作授权许可，因此不需要附加授权请求。
+
+<span class="h4"><a class="selflink" id="section-4.4.2" href="#section-4.4.2">4.4.2</a>.  访问令牌请求</span>
+
+   客户端通过在 HTTP 请求实体主体中，按 <a href="#appendix-B">附录 B</a> 使用
+   "application/x-www-form-urlencoded" 格式并采用 UTF-8 字符编码添加
+   以下参数，向令牌端点发出请求：
+
+   grant_type
+         REQUIRED。值 MUST 设置为 "client_credentials"。
+
+   scope
+         OPTIONAL。<a href="#section-3.3">第 3.3 节</a> 所述的访问请求范围。
+
+   客户端 MUST 按 <a href="#section-3.2.1">第 3.2.1 节</a> 所述向授权服务器认证。
+
+
+
+
+
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 41]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-42" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+   例如，客户端使用传输层安全性发出以下 HTTP 请求（仅为显示目的添加
+   额外换行）：
+
+     POST /token HTTP/1.1
+     Host: server.example.com
+     Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
+     Content-Type: application/x-www-form-urlencoded
+
+     grant_type=client_credentials
+
+   授权服务器 MUST 认证客户端。
+
+<span class="h4"><a class="selflink" id="section-4.4.3" href="#section-4.4.3">4.4.3</a>.  访问令牌响应</span>
+
+   如果访问令牌请求有效且已授权，授权服务器按 <a href="#section-5.1">第 5.1 节</a> 所述
+   颁发访问令牌。SHOULD NOT 包含刷新令牌。如果请求的客户端认证失败
+   或无效，授权服务器按 <a href="#section-5.2">第 5.2 节</a> 所述返回错误响应。
+
+   成功响应示例：
+
+     HTTP/1.1 200 OK
+     Content-Type: application/json;charset=UTF-8
+     Cache-Control: no-store
+     Pragma: no-cache
+
+     {
+       "access_token":"2YotnFZFEjr1zCsicMWpAA",
+       "token_type":"example",
+       "expires_in":3600,
+       "example_parameter":"example_value"
+     }
+
+<span class="h3"><a class="selflink" id="section-4.5" href="#section-4.5">4.5</a>.  扩展许可</span>
+
+   客户端通过将一个绝对 URI（由授权服务器定义）指定为令牌端点
+   "grant_type" 参数的值，并添加任何必要的附加参数，来使用扩展许可
+   类型。
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 42]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-43" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+   例如，要使用 [<a href="#ref-OAuth-SAML2">OAuth-SAML2</a>] 定义的 Security Assertion Markup
+   Language (SAML) 2.0 断言许可类型请求访问令牌，客户端可以使用 TLS
+   发出以下 HTTP 请求（仅为显示目的添加额外换行）：
+
+     POST /token HTTP/1.1
+     Host: server.example.com
+     Content-Type: application/x-www-form-urlencoded
+
+     grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Asaml2-
+     bearer&amp;assertion=PEFzc2VydGlvbiBJc3N1ZUluc3RhbnQ9IjIwMTEtMDU
+     [...omitted for brevity...]aG5TdGF0ZW1lbnQ-PC9Bc3NlcnRpb24-
+
+   如果访问令牌请求有效且已授权，授权服务器按 <a href="#section-5.1">第 5.1 节</a> 所述
+   颁发访问令牌和可选的刷新令牌。如果请求的客户端认证失败或无效，
+   授权服务器按 <a href="#section-5.2">第 5.2 节</a> 所述返回错误响应。
+
+<span class="h2"><a class="selflink" id="section-5" href="#section-5">5</a>.  颁发访问令牌</span>
+
+   如果访问令牌请求有效且已授权，授权服务器按 <a href="#section-5.1">第 5.1 节</a> 所述
+   颁发访问令牌和可选的刷新令牌。如果请求的客户端认证失败或无效，
+   授权服务器按 <a href="#section-5.2">第 5.2 节</a> 所述返回错误响应。
+
+<span class="h3"><a class="selflink" id="section-5.1" href="#section-5.1">5.1</a>.  成功响应</span>
+
+   授权服务器颁发访问令牌和可选的刷新令牌，并通过向 HTTP 响应的实体
+   主体中添加以下参数来构造响应，响应状态码为 200 (OK)：
+
+   access_token
+         REQUIRED。授权服务器颁发的访问令牌。
+
+   token_type
+         REQUIRED。按 <a href="#section-7.1">第 7.1 节</a> 所述颁发的令牌类型。值不区分
+         大小写。
+
+   expires_in
+         RECOMMENDED。访问令牌的生命周期，以秒为单位。例如，值
+         "3600" 表示访问令牌将在响应生成时起一小时后过期。
+         如果省略，授权服务器 SHOULD 通过其他方式提供过期时间，或记录
+         默认值。
+
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 43]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-44" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+   refresh_token
+         OPTIONAL。刷新令牌，可用于按 <a href="#section-6">第 6 节</a> 所述使用相同的授权
+         许可获得新的访问令牌。
+
+   scope
+         如果与客户端请求的范围相同，则 OPTIONAL；否则 REQUIRED。
+         <a href="#section-3.3">第 3.3 节</a> 所述的访问令牌范围。
+
+   参数使用 [<a href="./rfc4627" title="&quot;The application/json Media Type for JavaScript Object Notation (JSON)&quot;">RFC4627</a>] 定义的 "application/json" 媒体类型包含在 HTTP 响应的
+   实体主体中。参数通过在最高结构层级添加每个参数，序列化为
+   JavaScript Object Notation (JSON) 结构。参数名称和字符串值包含为
+   JSON 字符串。数值包含为 JSON 数字。参数顺序无关紧要，并且可以变化。
+
+   授权服务器 MUST 在任何包含令牌、凭据或其他敏感信息的响应中包含
+   HTTP "Cache-Control" 响应头字段 [<a href="./rfc2616" title="&quot;Hypertext Transfer Protocol -- HTTP/1.1&quot;">RFC2616</a>]，其值为 "no-store"，
+   以及 "Pragma" 响应头字段 [<a href="./rfc2616" title="&quot;Hypertext Transfer Protocol -- HTTP/1.1&quot;">RFC2616</a>]，其值为 "no-cache"。
+
+   例如：
+
+     HTTP/1.1 200 OK
+     Content-Type: application/json;charset=UTF-8
+     Cache-Control: no-store
+     Pragma: no-cache
+
+     {
+       "access_token":"2YotnFZFEjr1zCsicMWpAA",
+       "token_type":"example",
+       "expires_in":3600,
+       "refresh_token":"tGzv3JOkF0XG5Qx2TlKWIA",
+       "example_parameter":"example_value"
+     }
+
+   客户端 MUST 忽略响应中无法识别的值名称。从授权服务器收到的令牌和
+   其他值的大小未定义。客户端应避免对值大小作出假设。授权服务器
+   SHOULD 记录其颁发的任何值的大小。
+
+
+
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 44]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-45" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+<span class="h3"><a class="selflink" id="section-5.2" href="#section-5.2">5.2</a>.  错误响应</span>
+
+   授权服务器以 HTTP 400 (Bad Request) 状态码响应（除非另有规定），
+   并在响应中包含以下参数：
+
+   error
+         REQUIRED。来自以下内容的单个 ASCII [<a href="#ref-USASCII" title="&quot;Coded Character Set -- 7-bit American Standard Code for Information Interchange&quot;">USASCII</a>] 错误码：
+
+         invalid_request
+               请求缺少必需参数、包含不受支持的参数值（许可类型除外）、
+               重复某个参数、包含多个凭据、使用超过一种机制认证客户端，
+               或者存在其他格式错误。
+
+         invalid_client
+               客户端认证失败（例如，未知客户端、未包含客户端认证，
+               或认证方法不受支持）。授权服务器 MAY 返回 HTTP 401
+               (Unauthorized) 状态码，以指明支持哪些 HTTP 认证方案。
+               如果客户端尝试通过 "Authorization" 请求头字段进行认证，
+               授权服务器 MUST 以 HTTP 401 (Unauthorized) 状态码响应，
+               并包含与客户端使用的认证方案匹配的 "WWW-Authenticate"
+               响应头字段。
+
+         invalid_grant
+               提供的授权许可（例如授权码、资源所有者凭据）或刷新令牌
+               无效、已过期、已撤销、与授权请求中使用的重定向 URI 不匹配，
+               或颁发给了另一个客户端。
+
+         unauthorized_client
+               已认证客户端未被授权使用此授权许可类型。
+
+         unsupported_grant_type
+               授权服务器不支持该授权许可类型。
+
+
+
+
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 45]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-46" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+         invalid_scope
+               请求的范围无效、未知、格式错误，或超出资源所有者授予的
+               范围。
+
+         "error" 参数的值 MUST NOT 包含集合 %x20-21 / %x23-5B /
+         %x5D-7E 之外的字符。
+
+   error_description
+         OPTIONAL。提供附加信息的人类可读 ASCII [<a href="#ref-USASCII" title="&quot;Coded Character Set -- 7-bit American Standard Code for Information Interchange&quot;">USASCII</a>] 文本，用于帮助
+         客户端开发者理解发生的错误。
+         "error_description" 参数的值 MUST NOT 包含集合 %x20-21 /
+         %x23-5B / %x5D-7E 之外的字符。
+
+   error_uri
+         OPTIONAL。标识一个包含错误相关信息的人类可读网页的 URI，
+         用于向客户端开发者提供有关错误的附加信息。
+         "error_uri" 参数的值 MUST 符合 URI-reference 语法，因此
+         MUST NOT 包含集合 %x21 / %x23-5B / %x5D-7E 之外的字符。
+
+   参数使用 [<a href="./rfc4627" title="&quot;The application/json Media Type for JavaScript Object Notation (JSON)&quot;">RFC4627</a>] 定义的 "application/json" 媒体类型包含在 HTTP 响应的
+   实体主体中。参数通过在最高结构层级添加每个参数，序列化为 JSON 结构。
+   参数名称和字符串值包含为 JSON 字符串。数值包含为 JSON 数字。参数
+   顺序无关紧要，并且可以变化。
+
+   例如：
+
+     HTTP/1.1 400 Bad Request
+     Content-Type: application/json;charset=UTF-8
+     Cache-Control: no-store
+     Pragma: no-cache
+
+     {
+       "error":"invalid_request"
+     }
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 46]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-47" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+<span class="h2"><a class="selflink" id="section-6" href="#section-6">6</a>.  刷新访问令牌</span>
+
+   如果授权服务器向客户端颁发了刷新令牌，则客户端通过在 HTTP 请求
+   实体主体中，按 <a href="#appendix-B">附录 B</a> 使用 "application/x-www-form-urlencoded"
+   格式并采用 UTF-8 字符编码添加以下参数，向令牌端点发出刷新请求：
+
+   grant_type
+         REQUIRED。值 MUST 设置为 "refresh_token"。
+
+   refresh_token
+         REQUIRED。颁发给客户端的刷新令牌。
+
+   scope
+         OPTIONAL。<a href="#section-3.3">第 3.3 节</a> 所述的访问请求范围。请求的范围
+         MUST NOT 包含资源所有者最初未授予的任何范围；如果省略，
+         则视为等同于资源所有者最初授予的范围。
+
+   由于刷新令牌通常是用于请求附加访问令牌的长期凭据，因此刷新令牌
+   绑定到被颁发它的客户端。如果客户端类型为机密，或者客户端已被
+   颁发客户端凭据（或被分配其他认证要求），客户端 MUST 按
+   <a href="#section-3.2.1">第 3.2.1 节</a> 所述向授权服务器认证。
+
+   例如，客户端使用传输层安全性发出以下 HTTP 请求（仅为显示目的添加
+   额外换行）：
+
+     POST /token HTTP/1.1
+     Host: server.example.com
+     Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
+     Content-Type: application/x-www-form-urlencoded
+
+     grant_type=refresh_token&amp;refresh_token=tGzv3JOkF0XG5Qx2TlKWIA
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 47]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-48" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+   授权服务器 MUST：
+
+   o  对机密客户端或任何已被颁发客户端凭据（或具有其他认证要求）的
+      客户端要求客户端认证，
+
+   o  如果包含客户端认证，则认证客户端，并确保刷新令牌是颁发给已
+      认证客户端的，并且
+
+   o  验证刷新令牌。
+
+   如果有效且已授权，授权服务器按 <a href="#section-5.1">第 5.1 节</a> 所述颁发访问
+   令牌。如果请求验证失败或无效，授权服务器按 <a href="#section-5.2">第 5.2 节</a> 所述
+   返回错误响应。
+
+   授权服务器 MAY 颁发新的刷新令牌；在这种情况下，客户端 MUST 丢弃
+   旧刷新令牌并用新刷新令牌替换它。授权服务器 MAY 在向客户端颁发
+   新刷新令牌后撤销旧刷新令牌。如果颁发了新的刷新令牌，则刷新令牌
+   范围 MUST 与客户端在请求中包含的刷新令牌的范围相同。
+
+<span class="h2"><a class="selflink" id="section-7" href="#section-7">7</a>.  访问受保护资源</span>
+
+   客户端通过向资源服务器出示访问令牌来访问受保护资源。资源服务器
+   MUST 验证访问令牌，并确保其尚未过期且其范围覆盖所请求的资源。
+   资源服务器用于验证访问令牌的方法（以及任何错误响应）超出本规范
+   范围，但通常涉及资源服务器与授权服务器之间的交互或协调。
+
+   客户端利用访问令牌向资源服务器认证的方法取决于授权服务器颁发的
+   访问令牌类型。通常，它涉及使用 HTTP "Authorization" 请求头字段
+   [<a href="./rfc2617" title="&quot;HTTP Authentication: Basic and Digest Access Authentication&quot;">RFC2617</a>]，并配合所用访问令牌类型规范定义的认证方案，例如
+   [<a href="./rfc6750" title="&quot;The OAuth 2.0 Authorization Framework: Bearer Token Usage&quot;">RFC6750</a>]。
+
+
+
+
+
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 48]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-49" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+<span class="h3"><a class="selflink" id="section-7.1" href="#section-7.1">7.1</a>.  访问令牌类型</span>
+
+   访问令牌类型向客户端提供成功利用访问令牌发出受保护资源请求所需的
+   信息（以及特定于类型的属性）。如果客户端不理解令牌类型，则
+   MUST NOT 使用访问令牌。
+
+   例如，[<a href="./rfc6750" title="&quot;The OAuth 2.0 Authorization Framework: Bearer Token Usage&quot;">RFC6750</a>] 中定义的 "bearer" 令牌类型，只需在请求中包含
+   访问令牌字符串即可使用：
+
+     GET /resource/1 HTTP/1.1
+     Host: example.com
+     Authorization: Bearer mF_9.B5f-4.1JqM
+
+   而 [<a href="#ref-OAuth-HTTP-MAC">OAuth-HTTP-MAC</a>] 中定义的 "mac" 令牌类型，则通过同时颁发
+   Message Authentication Code (MAC) 密钥和访问令牌来使用，该密钥用于
+   对 HTTP 请求的某些组件进行签名：
+
+     GET /resource/1 HTTP/1.1
+     Host: example.com
+     Authorization: MAC id="h480djs93hd8",
+                        nonce="274312:dj83hs9s",
+                        mac="kDZvddkndxvhGRXZhvuDjEWhGeE="
+
+   上述示例仅用于说明。建议开发者在使用前查阅 [<a href="./rfc6750" title="&quot;The OAuth 2.0 Authorization Framework: Bearer Token Usage&quot;">RFC6750</a>] 和
+   [<a href="#ref-OAuth-HTTP-MAC">OAuth-HTTP-MAC</a>] 规范。
+
+   每个访问令牌类型定义都会指定随 "access_token" 响应参数一起发送给
+   客户端的附加属性（如有）。它还定义在发出受保护资源请求时用于包含
+   访问令牌的 HTTP 认证方法。
+
+<span class="h3"><a class="selflink" id="section-7.2" href="#section-7.2">7.2</a>.  错误响应</span>
+
+   如果资源访问请求失败，资源服务器 SHOULD 将错误告知客户端。虽然此类
+   错误响应的细节超出本规范范围，但本文档在 <a href="#section-11.4">第 11.4 节</a> 中建立了
+   一个通用注册表，用于在 OAuth 令牌认证方案之间共享错误值。
+
+   主要为 OAuth 令牌认证设计的新认证方案 SHOULD 定义一种机制，用于向
+   客户端提供错误状态码，其中允许的错误值注册在本规范建立的错误注册表中。
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 49]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-50" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+   此类方案 MAY 将有效错误码集合限制为已注册值的子集。如果错误码使用
+   命名参数返回，则参数名 SHOULD 为 "error"。
+
+   其他能够用于 OAuth 令牌认证、但并非主要为此目的设计的方案，MAY
+   以相同方式将其错误值绑定到该注册表。
+
+   新认证方案 MAY 也选择指定使用 "error_description" 和 "error_uri"
+   参数，以与本规范中这些参数的用法相平行的方式返回错误信息。
+
+<span class="h2"><a class="selflink" id="section-8" href="#section-8">8</a>.  可扩展性</span>
+
+<span class="h3"><a class="selflink" id="section-8.1" href="#section-8.1">8.1</a>.  定义访问令牌类型</span>
+
+   访问令牌类型可以通过两种方式之一来定义：注册到 Access Token Types
+   注册表（遵循 <a href="#section-11.1">第 11.1 节</a> 中的程序），或者使用唯一的绝对 URI 作为
+   其名称。
+
+   使用 URI 名称的类型 SHOULD 限于不具有普遍适用性的供应商特定实现，
+   并且特定于使用它们的资源服务器的实现细节。
+
+   所有其他类型 MUST 注册。类型名称 MUST 符合 type-name ABNF。如果类型
+   定义包含新的 HTTP 认证方案，则类型名称 SHOULD 与 HTTP 认证方案名称
+   （如 [<a href="./rfc2617" title="&quot;HTTP Authentication: Basic and Digest Access Authentication&quot;">RFC2617</a>] 所定义）相同。令牌类型 "example" 保留用于示例。
+
+     type-name  = 1*name-char
+     name-char  = "-" / "." / "_" / DIGIT / ALPHA
+
+<span class="h3"><a class="selflink" id="section-8.2" href="#section-8.2">8.2</a>.  定义新的端点参数</span>
+
+   与授权端点或令牌端点一起使用的新请求或响应参数，按照 <a href="#section-11.2">第 11.2 节</a>
+   中的程序在 OAuth Parameters 注册表中定义和注册。
+
+   参数名称 MUST 符合 param-name ABNF，并且参数值语法 MUST 明确定义
+   （例如，使用 ABNF，或引用现有参数的语法）。
+
+     param-name  = 1*name-char
+     name-char   = "-" / "." / "_" / DIGIT / ALPHA
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 50]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-51" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+   不具有普遍适用性、且特定于其所用授权服务器实现细节的未注册供应商
+   特定参数扩展，SHOULD 使用一个不太可能与其他已注册值冲突的供应商
+   特定前缀（例如，以 'companyname_' 开头）。
+
+<span class="h3"><a class="selflink" id="section-8.3" href="#section-8.3">8.3</a>.  定义新的授权许可类型</span>
+
+   新的授权许可类型可以通过为其分配一个唯一的绝对 URI 作为
+   "grant_type" 参数的值来定义。如果扩展许可类型需要附加令牌端点参数，
+   这些参数 MUST 按 <a href="#section-11.2">第 11.2 节</a> 所述注册到 OAuth Parameters
+   注册表中。
+
+<span class="h3"><a class="selflink" id="section-8.4" href="#section-8.4">8.4</a>.  定义新的授权端点响应类型</span>
+
+   用于授权端点的新响应类型，按照 <a href="#section-11.3">第 11.3 节</a> 中的程序在
+   Authorization Endpoint Response Types 注册表中定义和注册。响应类型
+   名称 MUST 符合 response-type ABNF。
+
+     response-type  = response-name *( SP response-name )
+     response-name  = 1*response-char
+     response-char  = "_" / DIGIT / ALPHA
+
+   如果响应类型包含一个或多个空格字符 (%x20)，则将其作为以空格分隔
+   的值列表进行比较，其中值的顺序无关紧要。只能注册一种值顺序，该顺序
+   覆盖同一组值的所有其他排列。
+
+   例如，响应类型 "token code" 在本规范中未定义。然而，扩展可以定义并
+   注册 "token code" 响应类型。一旦注册，同一组合不能再注册为
+   "code token"，但这两个值都可以用于表示相同的响应类型。
+
+<span class="h3"><a class="selflink" id="section-8.5" href="#section-8.5">8.5</a>.  定义附加错误码</span>
+
+   在协议扩展（即访问令牌类型、扩展参数或扩展许可类型）要求将附加
+   错误码用于授权码许可错误响应（<a href="#section-4.1.2.1">第 4.1.2.1 节</a>）、隐式许可错误响应
+   （<a href="#section-4.2.2.1">第 4.2.2.1 节</a>）、令牌错误响应（<a href="#section-5.2">第 5.2 节</a>）或资源访问错误响应
+   （<a href="#section-7.2">第 7.2 节</a>）的情况下，此类错误码 MAY 被定义。
+
+
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 51]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-52" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+   如果扩展错误码与注册的访问令牌类型、注册的端点参数或扩展许可类型
+   结合使用，则扩展错误码 MUST 注册（遵循 <a href="#section-11.4">第 11.4 节</a> 中的程序）。
+   与未注册扩展一起使用的错误码 MAY 注册。
+
+   错误码 MUST 符合 error ABNF，并且在可能时 SHOULD 加上标识性名称
+   作为前缀。例如，标识扩展参数 "example" 被设置为无效值的错误
+   SHOULD 命名为 "example_invalid"。
+
+     error      = 1*error-char
+     error-char = %x20-21 / %x23-5B / %x5D-7E
+
+<span class="h2"><a class="selflink" id="section-9" href="#section-9">9</a>.  原生应用程序</span>
+
+   原生应用程序是安装并执行在资源所有者所用设备上的客户端（即桌面
+   应用程序、原生移动应用程序）。原生应用程序需要在安全性、平台能力
+   和整体最终用户体验方面作特别考虑。
+
+   授权端点要求客户端与资源所有者的用户代理之间进行交互。原生应用程序
+   可以调用外部用户代理，或在应用程序内嵌入用户代理。例如：
+
+   o  外部用户代理 - 原生应用程序可以使用在操作系统中注册了方案、可将
+      客户端作为处理程序调用的重定向 URI，从授权服务器捕获响应；手动
+      复制并粘贴凭据；运行本地 Web 服务器；安装用户代理扩展；或者提供
+      标识客户端控制下的服务器托管资源的重定向 URI，该资源随后使响应
+      可供原生应用程序使用。
+
+   o  嵌入式用户代理 - 原生应用程序通过直接与嵌入式用户代理通信来获得
+      响应，例如监控资源加载期间发出的状态变化，或访问用户代理的
+      cookie 存储。
+
+   在外部用户代理和嵌入式用户代理之间选择时，开发者应考虑以下内容：
+
+   o  外部用户代理可能提高完成率，因为资源所有者可能已经与授权服务器
+      建立了活动会话，从而无需重新认证。它提供熟悉的最终用户体验和
+      功能。资源所有者
+
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 52]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-53" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+      还可以依赖用户代理功能或扩展来辅助认证（例如密码管理器、双因素
+      设备读取器）。
+
+   o  嵌入式用户代理可能提供更好的可用性，因为它消除了切换上下文和打开
+      新窗口的需要。
+
+   o  嵌入式用户代理带来安全挑战，因为资源所有者是在无法识别的窗口中
+      认证，不能访问大多数外部用户代理中存在的视觉保护。嵌入式用户代理
+      会教育最终用户信任无法识别的认证请求（使网络钓鱼攻击更容易执行）。
+
+   在隐式许可类型和授权码许可类型之间选择时，应考虑以下内容：
+
+   o  使用授权码许可类型的原生应用程序 SHOULD 在不使用客户端凭据的情况下
+      这样做，因为原生应用程序无法保持客户端凭据机密。
+
+   o  使用隐式许可类型流程时，不会返回刷新令牌，这要求在访问令牌过期后
+      重新执行授权过程。
+
+<span class="h2"><a class="selflink" id="section-10" href="#section-10">10</a>.  安全考虑</span>
+
+   作为一个灵活且可扩展的框架，OAuth 的安全考虑取决于许多因素。以下
+   各节为实现者提供安全指南，重点关注 <a href="#section-2.1">第 2.1 节</a> 中描述的三种客户端
+   配置文件：Web 应用程序、基于用户代理的应用程序和原生应用程序。
+
+   [<a href="#ref-OAuth-THREATMODEL">OAuth-THREATMODEL</a>] 提供了全面的 OAuth 安全模型和分析，以及协议
+   设计的背景。
+
+<span class="h3"><a class="selflink" id="section-10.1" href="#section-10.1">10.1</a>.  客户端认证</span>
+
+   授权服务器为了客户端认证而与 Web 应用程序客户端建立客户端凭据。
+   鼓励授权服务器考虑比客户端密码更强的客户端认证方式。Web 应用程序
+   客户端 MUST 确保客户端密码和其他客户端凭据的机密性。
+
+
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 53]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-54" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+   授权服务器 MUST NOT 为客户端认证目的向原生应用程序或基于用户代理的
+   应用程序客户端颁发客户端密码或其他客户端凭据。授权服务器 MAY 为
+   特定设备上原生应用程序客户端的特定安装颁发客户端密码或其他凭据。
+
+   当客户端认证不可行时，授权服务器 SHOULD 采用其他方式验证客户端身份
+   -- 例如，要求注册客户端重定向 URI，或让资源所有者参与确认身份。
+   在请求资源所有者授权时，有效的重定向 URI 不足以验证客户端身份，
+   但可用于防止在获得资源所有者授权后将凭据传递给伪造客户端。
+
+   授权服务器必须考虑与未认证客户端交互的安全影响，并采取措施限制颁发
+   给此类客户端的其他凭据（例如刷新令牌）可能暴露的风险。
+
+<span class="h3"><a class="selflink" id="section-10.2" href="#section-10.2">10.2</a>.  客户端冒充</span>
+
+   如果被冒充客户端未能或无法保持其客户端凭据机密，恶意客户端可以冒充
+   另一个客户端并获得对受保护资源的访问权限。
+
+   授权服务器 MUST 在可能时认证客户端。如果授权服务器由于客户端性质而
+   无法认证客户端，授权服务器 MUST 要求注册用于接收授权响应的任何
+   重定向 URI，并且 SHOULD 使用其他方式保护资源所有者免受此类潜在恶意
+   客户端的影响。例如，授权服务器可以让资源所有者参与，以帮助识别客户端
+   及其来源。
+
+   授权服务器 SHOULD 强制显式资源所有者认证，并向资源所有者提供有关
+   客户端以及所请求授权范围和生命周期的信息。资源所有者负责在当前
+   客户端的上下文中审查这些信息，并授权或拒绝该请求。
+
+   授权服务器 SHOULD NOT 在不认证客户端或不依赖其他措施以确保重复请求
+   来自原始客户端而非冒充者的情况下，自动处理重复的授权请求（即没有
+   资源所有者主动交互）。
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 54]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-55" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+<span class="h3"><a class="selflink" id="section-10.3" href="#section-10.3">10.3</a>.  访问令牌</span>
+
+   访问令牌凭据（以及任何机密访问令牌属性）MUST 在传输和存储中保持
+   机密，并且只能在授权服务器、该访问令牌对其有效的资源服务器以及被
+   颁发该访问令牌的客户端之间共享。访问令牌凭据 MUST 仅使用
+   <a href="#section-1.6">第 1.6 节</a> 所述的 TLS 传输，并使用 [<a href="./rfc2818" title="&quot;HTTP Over TLS&quot;">RFC2818</a>] 定义的服务器认证。
+
+   使用隐式许可类型时，访问令牌在 URI 片段中传输，这可能会使其暴露给
+   未授权方。
+
+   授权服务器 MUST 确保未授权方无法生成、修改或猜测出有效访问令牌。
+
+   客户端 SHOULD 请求具有必要最小范围的访问令牌。授权服务器在选择如何
+   履行所请求范围时 SHOULD 考虑客户端身份，并且 MAY 颁发权限少于请求
+   权限的访问令牌。
+
+   本规范未提供任何方法，使资源服务器能够确保向其出示的访问令牌是由
+   授权服务器颁发给某个给定客户端的。
+
+<span class="h3"><a class="selflink" id="section-10.4" href="#section-10.4">10.4</a>.  刷新令牌</span>
+
+   授权服务器 MAY 向 Web 应用程序客户端和原生应用程序客户端颁发刷新
+   令牌。
+
+   刷新令牌 MUST 在传输和存储中保持机密，并且只能在授权服务器和被颁发
+   刷新令牌的客户端之间共享。授权服务器 MUST 维护刷新令牌与被颁发该
+   刷新令牌的客户端之间的绑定。刷新令牌 MUST 仅使用 <a href="#section-1.6">第 1.6 节</a> 所述的
+   TLS 传输，并使用 [<a href="./rfc2818" title="&quot;HTTP Over TLS&quot;">RFC2818</a>] 定义的服务器认证。
+
+   每当可以认证客户端身份时，授权服务器 MUST 验证刷新令牌与客户端身份
+   之间的绑定。当客户端认证不可行时，授权服务器 SHOULD 部署其他方式来
+   检测刷新令牌滥用。
+
+   例如，授权服务器可以采用刷新令牌轮换，即在每次访问令牌刷新响应中
+   颁发新的刷新令牌。先前的刷新令牌会失效，
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 55]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-56" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+   但由授权服务器保留。如果刷新令牌遭到攻陷，并随后被攻击者和合法客户端
+   同时使用，其中一方将出示已失效的刷新令牌，这会让授权服务器知悉该
+   侵害事件。
+
+   授权服务器 MUST 确保未授权方无法生成、修改或猜测出有效刷新令牌。
+
+<span class="h3"><a class="selflink" id="section-10.5" href="#section-10.5">10.5</a>.  授权码</span>
+
+   授权码的传输 SHOULD 通过安全通道进行；如果客户端的重定向 URI 标识
+   网络资源，客户端 SHOULD 要求该重定向 URI 使用 TLS。由于授权码通过
+   用户代理重定向传输，它们可能会通过用户代理历史记录和 HTTP referrer
+   头泄露。
+
+   授权码作为明文 bearer 凭据运行，用于验证在授权服务器授予授权的
+   资源所有者与返回客户端完成流程的资源所有者是同一个。因此，如果客户端
+   依赖授权码进行自身的资源所有者认证，客户端重定向端点 MUST 要求使用
+   TLS。
+
+   授权码 MUST 生命周期短且只能使用一次。如果授权服务器观察到多次尝试
+   将同一授权码交换为访问令牌，授权服务器 SHOULD 尝试撤销所有已基于
+   该受损授权码授予的访问令牌。
+
+   如果客户端可以被认证，授权服务器 MUST 认证客户端，并确保授权码颁发
+   给同一客户端。
+
+<span class="h3"><a class="selflink" id="section-10.6" href="#section-10.6">10.6</a>.  授权码重定向 URI 操纵</span>
+
+   使用授权码许可类型请求授权时，客户端可以通过 "redirect_uri" 参数
+   指定重定向 URI。如果攻击者能够操纵重定向 URI 的值，就可能使授权
+   服务器将资源所有者用户代理连同授权码一起重定向到攻击者控制下的 URI。
+
+   攻击者可以在合法客户端创建账户并发起授权流程。当攻击者的用户代理被
+   发送到授权服务器以授予访问权限时，攻击者抓取合法客户端提供的授权
+   URI，并将
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 56]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-57" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+   客户端的重定向 URI 替换为攻击者控制下的 URI。随后，攻击者诱骗受害者
+   跟随被操纵的链接，以授权对合法客户端的访问。
+
+   到达授权服务器后，受害者会看到一个代表合法且受信客户端的正常、有效
+   请求，并授权该请求。随后受害者被重定向到攻击者控制下的端点，并携带
+   授权码。攻击者通过使用客户端提供的原始重定向 URI 将授权码发送给
+   客户端来完成授权流程。客户端将授权码交换为访问令牌，并将其链接到
+   攻击者的客户端账户，该账户现在可以访问受害者授权的受保护资源
+   （通过客户端）。
+
+   为防止此类攻击，授权服务器 MUST 确保用于获得授权码的重定向 URI 与
+   交换授权码以获取访问令牌时提供的重定向 URI 相同。授权服务器 MUST
+   要求公开客户端注册其重定向 URI，并且 SHOULD 要求机密客户端注册其
+   重定向 URI。如果请求中提供了重定向 URI，授权服务器 MUST 根据已注册
+   值验证它。
+
+<span class="h3"><a class="selflink" id="section-10.7" href="#section-10.7">10.7</a>.  资源所有者密码凭据</span>
+
+   资源所有者密码凭据许可类型通常出于遗留或迁移原因使用。它降低了
+   客户端存储用户名和密码的总体风险，但并未消除向客户端暴露高权限凭据
+   的需要。
+
+   此许可类型比其他许可类型风险更高，因为它保留了本协议试图避免的
+   密码反模式。客户端可能滥用密码，或者密码可能被无意中披露给攻击者
+   （例如，通过日志文件或客户端保留的其他记录）。
+
+   此外，由于资源所有者无法控制授权过程（资源所有者的参与在其将凭据
+   交给客户端时即结束），客户端可能获得范围比资源所有者期望更宽的访问
+   令牌。授权服务器应考虑通过此许可类型颁发的访问令牌的范围和生命周期。
+
+   授权服务器和客户端 SHOULD 尽量减少此许可类型的使用，并在可能时使用
+   其他许可类型。
+
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 57]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-58" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+<span class="h3"><a class="selflink" id="section-10.8" href="#section-10.8">10.8</a>.  请求机密性</span>
+
+   访问令牌、刷新令牌、资源所有者密码和客户端凭据 MUST NOT 以明文传输。
+   授权码 SHOULD NOT 以明文传输。
+
+   "state" 和 "scope" 参数 SHOULD NOT 以纯文本包含敏感的客户端或资源
+   所有者信息，因为它们可能通过不安全通道传输或被不安全地存储。
+
+<span class="h3"><a class="selflink" id="section-10.9" href="#section-10.9">10.9</a>.  确保端点真实性</span>
+
+   为防止中间人攻击，授权服务器 MUST 要求发送到授权端点和令牌端点的
+   任何请求使用 TLS，并按 [<a href="./rfc2818" title="&quot;HTTP Over TLS&quot;">RFC2818</a>] 定义进行服务器认证。客户端 MUST
+   按 [<a href="./rfc6125" title="&quot;Representation and Verification of Domain-Based Application Service Identity within Internet Public Key Infrastructure Using X.509 (PKIX) Certificates in the Context of Transport Layer Security (TLS)&quot;">RFC6125</a>] 的定义，并根据其服务器身份认证要求，验证授权服务器的
+   TLS 证书。
+
+<span class="h3"><a class="selflink" id="section-10.10" href="#section-10.10">10.10</a>.  凭据猜测攻击</span>
+
+   授权服务器 MUST 防止攻击者猜测访问令牌、授权码、刷新令牌、资源
+   所有者密码和客户端凭据。
+
+   攻击者猜中生成的令牌（以及其他并非用于由最终用户处理的凭据）的概率
+   MUST 小于或等于 2^(-128)，并且 SHOULD 小于或等于 2^(-160)。
+
+   授权服务器 MUST 使用其他方式保护 intended for end-user usage 的凭据。
+
+<span class="h3"><a class="selflink" id="section-10.11" href="#section-10.11">10.11</a>.  网络钓鱼攻击</span>
+
+   本协议及类似协议的广泛部署，可能会使最终用户习惯于被重定向到要求
+   他们输入密码的网站。如果最终用户在输入凭据前不谨慎验证这些网站的
+   真实性，攻击者就可能利用这种做法窃取资源所有者的密码。
+
+   服务提供者应尝试教育最终用户了解网络钓鱼攻击带来的风险，并应提供
+   使最终用户易于确认其站点真实性的机制。客户端开发者应考虑其与用户代理
+   交互方式（例如外部、嵌入式）的安全影响，以及最终用户验证授权服务器
+   真实性的能力。
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 58]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-59" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+   为降低网络钓鱼攻击风险，授权服务器 MUST 要求每个用于最终用户交互的
+   端点使用 TLS。
+
+<span class="h3"><a class="selflink" id="section-10.12" href="#section-10.12">10.12</a>.  跨站请求伪造</span>
+
+   跨站请求伪造 (CSRF) 是一种利用方式，其中攻击者使受害最终用户的
+   用户代理跟随恶意 URI（例如，以误导性链接、图像或重定向的形式提供给
+   用户代理）到一个受信服务器（通常通过存在有效会话 cookie 建立）。
+
+   针对客户端重定向 URI 的 CSRF 攻击允许攻击者注入其自己的授权码或访问
+   令牌，这可能导致客户端使用与攻击者受保护资源相关联的访问令牌，而非
+   受害者的访问令牌（例如，将受害者的银行账户信息保存到攻击者控制的
+   受保护资源中）。
+
+   客户端 MUST 为其重定向 URI 实现 CSRF 保护。这通常通过要求发送到
+   重定向 URI 端点的任何请求包含一个将该请求绑定到用户代理已认证状态的
+   值来实现（例如，用于认证用户代理的会话 cookie 的哈希）。客户端
+   SHOULD 在发出授权请求时利用 "state" 请求参数将该值传递给授权服务器。
+
+   从最终用户获得授权后，授权服务器会将最终用户的用户代理连同包含在
+   "state" 参数中的所需绑定值一起重定向回客户端。绑定值使客户端能够
+   通过将绑定值与用户代理的已认证状态进行匹配来验证请求的有效性。
+   用于 CSRF 保护的绑定值 MUST 包含不可猜测值（如 <a href="#section-10.10">第 10.10 节</a> 所述），
+   并且用户代理的已认证状态（例如会话 cookie、HTML5 local storage）
+   MUST 保存在只有客户端和用户代理可访问的位置（即受同源策略保护）。
+
+   针对授权服务器授权端点的 CSRF 攻击可能导致攻击者在不涉及或不提醒
+   最终用户的情况下，为恶意客户端获得最终用户授权。
+
+   授权服务器 MUST 为其授权端点实现 CSRF 保护，并确保恶意客户端不能在
+   资源所有者不知情且未明确同意的情况下获得授权。
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 59]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-60" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+<span class="h3"><a class="selflink" id="section-10.13" href="#section-10.13">10.13</a>.  点击劫持</span>
+
+   在点击劫持攻击中，攻击者注册一个合法客户端，然后构造一个恶意站点，
+   在该站点中将授权服务器的授权端点网页加载到透明 iframe 中，并覆盖在
+   一组虚假按钮之上，这些虚假按钮经过精心构造，正好位于授权页面上重要
+   按钮的正下方。当最终用户点击一个误导性的可见按钮时，最终用户实际上
+   点击的是授权页面上的一个不可见按钮（例如 "Authorize" 按钮）。这使
+   攻击者能够在最终用户不知情的情况下诱骗资源所有者向其客户端授予访问
+   权限。
+
+   为防止这种形式的攻击，原生应用程序在请求最终用户授权时 SHOULD 使用
+   外部浏览器，而不是在应用程序内嵌入浏览器。对于多数较新的浏览器，
+   授权服务器可以使用（非标准的）"x-frame-options" 头来强制避免 iframe。
+   此头可以有两个值："deny" 和 "sameorigin"，分别会阻止任何 framing，
+   或阻止不同源站点的 framing。对于较旧浏览器，可以使用 JavaScript
+   frame-busting 技术，但该技术可能并非在所有浏览器中都有效。
+
+<span class="h3"><a class="selflink" id="section-10.14" href="#section-10.14">10.14</a>.  代码注入和输入验证</span>
+
+   当输入或其他外部变量未经清理即被应用程序使用，并导致应用程序逻辑被
+   修改时，就会发生代码注入攻击。这可能允许攻击者访问应用程序设备或其
+   数据、造成拒绝服务，或引入各种恶意副作用。
+
+   授权服务器和客户端 MUST 清理（并在可能时验证）任何接收到的值 --
+   特别是 "state" 和 "redirect_uri" 参数的值。
+
+<span class="h3"><a class="selflink" id="section-10.15" href="#section-10.15">10.15</a>.  开放重定向器</span>
+
+   授权服务器、授权端点和客户端重定向端点可能配置不当并作为开放
+   重定向器运行。开放重定向器是使用参数将用户代理自动重定向到参数值
+   指定位置的端点，且不进行任何验证。
+
+   开放重定向器可用于网络钓鱼攻击，或被攻击者用于通过熟悉且受信目的地
+   的 URI authority 组件诱使最终用户访问恶意站点。此外，如果授权服务器
+   允许客户端只注册重定向 URI 的一部分，攻击者就可以使用由
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 60]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-61" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+   客户端运行的开放重定向器来构造一个能够通过授权服务器验证、但会将
+   授权码或访问令牌发送到攻击者控制下端点的重定向 URI。
+
+<span class="h3"><a class="selflink" id="section-10.16" href="#section-10.16">10.16</a>.  在隐式流程中误用访问令牌以冒充资源所有者</span>
+<span class="h3">        Flow</span>
+
+   对于使用隐式流程的公开客户端，本规范未提供任何方法，使客户端能够
+   确定访问令牌是颁发给哪个客户端的。
+
+   资源所有者可能愿意通过向攻击者的恶意客户端授予访问令牌来委派对资源
+   的访问。这可能是由于网络钓鱼或其他借口。攻击者也可能通过其他机制窃取
+   令牌。随后，攻击者可能尝试通过向合法公开客户端提供访问令牌来冒充资源
+   所有者。
+
+   在隐式流程 (response_type=token) 中，攻击者可以轻易切换授权服务器
+   响应中的令牌，用此前颁发给攻击者的访问令牌替换真实访问令牌。
+
+   与原生应用程序通信的服务器，如果依赖通过后端通道传递的访问令牌来识别
+   客户端用户，也可能被攻击者以创建可注入任意被盗访问令牌的受损应用程序
+   的方式攻陷。
+
+   任何公开客户端如果假设只有资源所有者才能向其出示该资源的有效访问令牌，
+   都容易受到此类攻击。
+
+   此类攻击可能会使合法客户端中有关资源所有者的信息暴露给攻击者（恶意
+   客户端）。这还会允许攻击者在合法客户端上以最初授予访问令牌或授权码的
+   资源所有者相同的权限执行操作。
+
+   对客户端认证资源所有者超出本规范范围。任何将授权过程用作委派式最终用户
+   向客户端认证形式（例如第三方登录服务）的规范，MUST NOT 在没有附加安全
+   机制的情况下使用隐式流程；这些附加安全机制应能使客户端确定访问令牌是否
+   是为其使用而颁发的（例如，对访问令牌进行 audience 限制）。
+
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 61]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-62" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+<span class="h2"><a class="selflink" id="section-11" href="#section-11">11</a>.  IANA 考虑事项</span>
+
+<span class="h3"><a class="selflink" id="section-11.1" href="#section-11.1">11.1</a>.  OAuth 访问令牌类型注册表</span>
+
+   本规范建立 OAuth Access Token Types 注册表。
+
+   访问令牌类型在 oauth-ext-review@ietf.org 邮件列表上经过两周审查期后，
+   根据一位或多位指定专家的建议，以 Specification Required
+   ([<a href="./rfc5226" title="">RFC5226</a>]) 方式注册。然而，为了允许在发布前分配值，指定专家可以
+   在确信此类规范将会发布后批准注册。
+
+   注册请求必须发送到 oauth-ext-review@ietf.org 邮件列表以供审查和评论，
+   并带有适当的主题（例如，"Request for access token type: example"）。
+
+   在审查期内，指定专家将批准或拒绝注册请求，并将此决定传达给审查列表
+   和 IANA。拒绝应包含解释，并在适用时包含如何使请求成功的建议。
+
+   IANA 只能接受来自指定专家的注册表更新，并应将所有注册请求引导到审查
+   邮件列表。
+
+<span class="h4"><a class="selflink" id="section-11.1.1" href="#section-11.1.1">11.1.1</a>.  注册模板</span>
+
+   类型名称：
+      请求的名称（例如，"example"）。
+
+   附加令牌端点响应参数：
+      与 "access_token" 参数一起返回的附加响应参数。新参数 MUST 按
+      <a href="#section-11.2">第 11.2 节</a> 所述单独注册到 OAuth Parameters 注册表中。
+
+   HTTP 认证方案：
+      使用此类型访问令牌认证受保护资源请求时使用的 HTTP 认证方案名称
+      （如有）。
+
+   变更控制者：
+      对于标准轨道 RFC，填写 "IETF"。对于其他情况，给出负责方名称。
+      也可以包含其他详细信息（例如邮政地址、电子邮件地址、主页 URI）。
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 62]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-63" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+   规范文档：
+      指向指定该参数的文档的引用，最好包含可用于检索文档副本的 URI。
+      也可以包含相关章节的说明，但并非必需。
+
+<span class="h3"><a class="selflink" id="section-11.2" href="#section-11.2">11.2</a>.  OAuth 参数注册表</span>
+
+   本规范建立 OAuth Parameters 注册表。
+
+   用于包含在授权端点请求、授权端点响应、令牌端点请求或令牌端点响应中的
+   附加参数，在 oauth-ext-review@ietf.org 邮件列表上经过两周审查期后，
+   根据一位或多位指定专家的建议，以 Specification Required
+   ([<a href="./rfc5226" title="">RFC5226</a>]) 方式注册。然而，为了允许在发布前分配值，指定专家可以
+   在确信此类规范将会发布后批准注册。
+
+   注册请求必须发送到 oauth-ext-review@ietf.org 邮件列表以供审查和评论，
+   并带有适当的主题（例如，"Request for parameter: example"）。
+
+   在审查期内，指定专家将批准或拒绝注册请求，并将此决定传达给审查列表
+   和 IANA。拒绝应包含解释，并在适用时包含如何使请求成功的建议。
+
+   IANA 只能接受来自指定专家的注册表更新，并应将所有注册请求引导到审查
+   邮件列表。
+
+<span class="h4"><a class="selflink" id="section-11.2.1" href="#section-11.2.1">11.2.1</a>.  注册模板</span>
+
+   参数名称：
+      请求的名称（例如，"example"）。
+
+   参数使用位置：
+      可使用参数的位置。可能的位置包括 authorization request、
+      authorization response、token request 或 token response。
+
+   变更控制者：
+      对于标准轨道 RFC，填写 "IETF"。对于其他情况，给出负责方名称。
+      也可以包含其他详细信息（例如邮政地址、电子邮件地址、主页 URI）。
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 63]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-64" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+   规范文档：
+      指向指定该参数的文档的引用，最好包含可用于检索文档副本的 URI。
+      也可以包含相关章节的说明，但并非必需。
+
+<span class="h4"><a class="selflink" id="section-11.2.2" href="#section-11.2.2">11.2.2</a>.  初始注册表内容</span>
+
+   OAuth Parameters 注册表的初始内容为：
+
+   o  Parameter name: client_id
+   o  Parameter usage location: authorization request, token request
+   o  Change controller: IETF
+   o  Specification document(s): <a href="./rfc6749">RFC 6749</a>
+
+   o  Parameter name: client_secret
+   o  Parameter usage location: token request
+   o  Change controller: IETF
+   o  Specification document(s): <a href="./rfc6749">RFC 6749</a>
+
+   o  Parameter name: response_type
+   o  Parameter usage location: authorization request
+   o  Change controller: IETF
+   o  Specification document(s): <a href="./rfc6749">RFC 6749</a>
+
+   o  Parameter name: redirect_uri
+   o  Parameter usage location: authorization request, token request
+   o  Change controller: IETF
+   o  Specification document(s): <a href="./rfc6749">RFC 6749</a>
+
+   o  Parameter name: scope
+   o  Parameter usage location: authorization request, authorization
+      response, token request, token response
+   o  Change controller: IETF
+   o  Specification document(s): <a href="./rfc6749">RFC 6749</a>
+
+   o  Parameter name: state
+   o  Parameter usage location: authorization request, authorization
+      response
+   o  Change controller: IETF
+   o  Specification document(s): <a href="./rfc6749">RFC 6749</a>
+
+   o  Parameter name: code
+   o  Parameter usage location: authorization response, token request
+   o  Change controller: IETF
+   o  Specification document(s): <a href="./rfc6749">RFC 6749</a>
+
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 64]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-65" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+   o  Parameter name: error_description
+   o  Parameter usage location: authorization response, token response
+   o  Change controller: IETF
+   o  Specification document(s): <a href="./rfc6749">RFC 6749</a>
+
+   o  Parameter name: error_uri
+   o  Parameter usage location: authorization response, token response
+   o  Change controller: IETF
+   o  Specification document(s): <a href="./rfc6749">RFC 6749</a>
+
+   o  Parameter name: grant_type
+   o  Parameter usage location: token request
+   o  Change controller: IETF
+   o  Specification document(s): <a href="./rfc6749">RFC 6749</a>
+
+   o  Parameter name: access_token
+   o  Parameter usage location: authorization response, token response
+   o  Change controller: IETF
+   o  Specification document(s): <a href="./rfc6749">RFC 6749</a>
+
+   o  Parameter name: token_type
+   o  Parameter usage location: authorization response, token response
+   o  Change controller: IETF
+   o  Specification document(s): <a href="./rfc6749">RFC 6749</a>
+
+   o  Parameter name: expires_in
+   o  Parameter usage location: authorization response, token response
+   o  Change controller: IETF
+   o  Specification document(s): <a href="./rfc6749">RFC 6749</a>
+
+   o  Parameter name: username
+   o  Parameter usage location: token request
+   o  Change controller: IETF
+   o  Specification document(s): <a href="./rfc6749">RFC 6749</a>
+
+   o  Parameter name: password
+   o  Parameter usage location: token request
+   o  Change controller: IETF
+   o  Specification document(s): <a href="./rfc6749">RFC 6749</a>
+
+   o  Parameter name: refresh_token
+   o  Parameter usage location: token request, token response
+   o  Change controller: IETF
+   o  Specification document(s): <a href="./rfc6749">RFC 6749</a>
+
+
+
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 65]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-66" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+<span class="h3"><a class="selflink" id="section-11.3" href="#section-11.3">11.3</a>.  OAuth 授权端点响应类型注册表</span>
+
+   本规范建立 OAuth Authorization Endpoint Response Types 注册表。
+
+   用于授权端点的附加响应类型，在 oauth-ext-review@ietf.org 邮件列表上
+   经过两周审查期后，根据一位或多位指定专家的建议，以
+   Specification Required ([<a href="./rfc5226" title="">RFC5226</a>]) 方式注册。然而，为了允许在发布前
+   分配值，指定专家可以在确信此类规范将会发布后批准注册。
+
+   注册请求必须发送到 oauth-ext-review@ietf.org 邮件列表以供审查和评论，
+   并带有适当的主题（例如，"Request for response type: example"）。
+
+   在审查期内，指定专家将批准或拒绝注册请求，并将此决定传达给审查列表
+   和 IANA。拒绝应包含解释，并在适用时包含如何使请求成功的建议。
+
+   IANA 只能接受来自指定专家的注册表更新，并应将所有注册请求引导到审查
+   邮件列表。
+
+<span class="h4"><a class="selflink" id="section-11.3.1" href="#section-11.3.1">11.3.1</a>.  注册模板</span>
+
+   响应类型名称：
+      请求的名称（例如，"example"）。
+
+   变更控制者：
+      对于标准轨道 RFC，填写 "IETF"。对于其他情况，给出负责方名称。
+      也可以包含其他详细信息（例如邮政地址、电子邮件地址、主页 URI）。
+
+   规范文档：
+      指向指定该类型的文档的引用，最好包含可用于检索文档副本的 URI。
+      也可以包含相关章节的说明，但并非必需。
+
+
+
+
+
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 66]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-67" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+<span class="h4"><a class="selflink" id="section-11.3.2" href="#section-11.3.2">11.3.2</a>.  初始注册表内容</span>
+
+   OAuth Authorization Endpoint Response Types 注册表的初始内容为：
+
+   o  Response type name: code
+   o  Change controller: IETF
+   o  Specification document(s): <a href="./rfc6749">RFC 6749</a>
+
+   o  Response type name: token
+   o  Change controller: IETF
+   o  Specification document(s): <a href="./rfc6749">RFC 6749</a>
+
+<span class="h3"><a class="selflink" id="section-11.4" href="#section-11.4">11.4</a>.  OAuth 扩展错误注册表</span>
+
+   本规范建立 OAuth Extensions Error 注册表。
+
+   与其他协议扩展（即扩展许可类型、访问令牌类型或扩展参数）一起使用的
+   附加错误码，在 oauth-ext-review@ietf.org 邮件列表上经过两周审查期后，
+   根据一位或多位指定专家的建议，以 Specification Required
+   ([<a href="./rfc5226" title="">RFC5226</a>]) 方式注册。然而，为了允许在发布前分配值，指定专家可以
+   在确信此类规范将会发布后批准注册。
+
+   注册请求必须发送到 oauth-ext-review@ietf.org 邮件列表以供审查和评论，
+   并带有适当的主题（例如，"Request for error code: example"）。
+
+   在审查期内，指定专家将批准或拒绝注册请求，并将此决定传达给审查列表
+   和 IANA。拒绝应包含解释，并在适用时包含如何使请求成功的建议。
+
+   IANA 只能接受来自指定专家的注册表更新，并应将所有注册请求引导到审查
+   邮件列表。
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 67]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-68" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+<span class="h4"><a class="selflink" id="section-11.4.1" href="#section-11.4.1">11.4.1</a>.  注册模板</span>
+
+   错误名称：
+      请求的名称（例如，"example"）。错误名称的值 MUST NOT 包含集合
+      %x20-21 / %x23-5B / %x5D-7E 之外的字符。
+
+   错误使用位置：
+      可使用该错误的位置。可能的位置包括授权码许可错误响应
+      （<a href="#section-4.1.2.1">第 4.1.2.1 节</a>）、隐式许可错误响应（<a href="#section-4.2.2.1">第 4.2.2.1 节</a>）、
+      令牌错误响应（<a href="#section-5.2">第 5.2 节</a>）或资源访问错误响应（<a href="#section-7.2">第 7.2 节</a>）。
+
+   相关协议扩展：
+      与该错误码结合使用的扩展许可类型、访问令牌类型或扩展参数的名称。
+
+   变更控制者：
+      对于标准轨道 RFC，填写 "IETF"。对于其他情况，给出负责方名称。
+      也可以包含其他详细信息（例如邮政地址、电子邮件地址、主页 URI）。
+
+   规范文档：
+      指向指定该错误码的文档的引用，最好包含可用于检索文档副本的 URI。
+      也可以包含相关章节的说明，但并非必需。
+
+<span class="h2"><a class="selflink" id="section-12" href="#section-12">12</a>.  参考文献</span>
+
+<span class="h3"><a class="selflink" id="section-12.1" href="#section-12.1">12.1</a>.  规范性参考文献</span>
+
+   [<a id="ref-RFC2119">RFC2119</a>]  Bradner, S., "RFC 中用于表示要求级别的关键词",
+              <a href="https://www.rfc-editor.org/bcp/bcp14">BCP 14</a>, <a href="./rfc2119">RFC 2119</a>, 1997 年 3 月。
+
+   [<a id="ref-RFC2246">RFC2246</a>]  Dierks, T. and C. Allen, "TLS 协议版本 1.0",
+              <a href="./rfc2246">RFC 2246</a>, 1999 年 1 月。
+
+   [<a id="ref-RFC2616">RFC2616</a>]  Fielding, R., Gettys, J., Mogul, J., Frystyk, H.,
+              Masinter, L., Leach, P., and T. Berners-Lee, "超文本
+              传输协议 -- HTTP/1.1", <a href="./rfc2616">RFC 2616</a>, 1999 年 6 月。
+
+   [<a id="ref-RFC2617">RFC2617</a>]  Franks, J., Hallam-Baker, P., Hostetler, J., Lawrence, S.,
+              Leach, P., Luotonen, A., and L. Stewart, "HTTP
+              认证：Basic 和 Digest 访问认证",
+              <a href="./rfc2617">RFC 2617</a>, 1999 年 6 月。
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 68]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-69" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+   [<a id="ref-RFC2818">RFC2818</a>]  Rescorla, E., "HTTP Over TLS", <a href="./rfc2818">RFC 2818</a>, 2000 年 5 月。
+
+   [<a id="ref-RFC3629">RFC3629</a>]  Yergeau, F., "UTF-8, a transformation format of
+              ISO 10646", STD 63, <a href="./rfc3629">RFC 3629</a>, 2003 年 11 月。
+
+   [<a id="ref-RFC3986">RFC3986</a>]  Berners-Lee, T., Fielding, R., and L. Masinter, "统一
+              资源标识符 (URI)：通用语法", STD 66,
+              <a href="./rfc3986">RFC 3986</a>, 2005 年 1 月。
+
+   [<a id="ref-RFC4627">RFC4627</a>]  Crockford, D., "JavaScript Object Notation (JSON) 的
+              application/json 媒体类型", <a href="./rfc4627">RFC 4627</a>, 2006 年 7 月。
+
+   [<a id="ref-RFC4949">RFC4949</a>]  Shirey, R., "互联网安全术语表，版本 2",
+              <a href="./rfc4949">RFC 4949</a>, 2007 年 8 月。
+
+   [<a id="ref-RFC5226">RFC5226</a>]  Narten, T. and H. Alvestrand, "RFC 中 IANA 考虑事项
+              章节的编写指南", <a href="https://www.rfc-editor.org/bcp/bcp26">BCP 26</a>, <a href="./rfc5226">RFC 5226</a>,
+              2008 年 5 月。
+
+   [<a id="ref-RFC5234">RFC5234</a>]  Crocker, D. and P. Overell, "语法规范的增广 BNF：
+              ABNF", STD 68, <a href="./rfc5234">RFC 5234</a>, 2008 年 1 月。
+
+   [<a id="ref-RFC5246">RFC5246</a>]  Dierks, T. and E. Rescorla, "传输层安全性
+              (TLS) 协议版本 1.2", <a href="./rfc5246">RFC 5246</a>, 2008 年 8 月。
+
+   [<a id="ref-RFC6125">RFC6125</a>]  Saint-Andre, P. and J. Hodges, "在传输层安全性
+              (TLS) 上下文中，使用 X.509 (PKIX) 证书在互联网
+              公钥基础设施内表示和验证基于域的应用服务身份",
+              <a href="./rfc6125">RFC 6125</a>, 2011 年 3 月。
+
+   [<a id="ref-USASCII">USASCII</a>]  American National Standards Institute, "编码字符
+              集 -- 7 位美国信息交换标准代码",
+              ANSI X3.4, 1986。
+
+   [<a id="ref-W3C.REC-html401-19991224">W3C.REC-html401-19991224</a>]
+              Raggett, D., Le Hors, A., and I. Jacobs, "HTML 4.01
+              规范", World Wide Web Consortium
+              Recommendation REC-html401-19991224, 1999 年 12 月,
+              &lt;<a href="http://www.w3.org/TR/1999/REC-html401-19991224">http://www.w3.org/TR/1999/REC-html401-19991224</a>&gt;.
+
+   [<a id="ref-W3C.REC-xml-20081126">W3C.REC-xml-20081126</a>]
+              Bray, T., Paoli, J., Sperberg-McQueen, C., Maler, E.,
+              and F. Yergeau, "可扩展标记语言 (XML) 1.0
+              （第五版）", World Wide Web Consortium
+               Recommendation REC-xml-20081126, 2008 年 11 月,
+              &lt;<a href="http://www.w3.org/TR/2008/REC-xml-20081126">http://www.w3.org/TR/2008/REC-xml-20081126</a>&gt;.
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 69]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-70" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+<span class="h3"><a class="selflink" id="section-12.2" href="#section-12.2">12.2</a>.  资料性参考文献</span>
+
+   [<a id="ref-OAuth-HTTP-MAC">OAuth-HTTP-MAC</a>]
+              Hammer-Lahav, E., Ed., "HTTP Authentication: MAC Access
+              Authentication", 进行中的工作, 2012 年 2 月。
+
+   [<a id="ref-OAuth-SAML2">OAuth-SAML2</a>]
+              Campbell, B. and C. Mortimore, "OAuth 2.0 的 SAML 2.0
+              Bearer Assertion Profiles", 进行中的工作, 2012 年 9 月。
+
+   [<a id="ref-OAuth-THREATMODEL">OAuth-THREATMODEL</a>]
+              Lodderstedt, T., Ed., McGloin, M., and P. Hunt, "OAuth 2.0
+              威胁模型和安全考虑", 进行中的工作,
+              2012 年 10 月。
+
+   [<a id="ref-OAuth-WRAP">OAuth-WRAP</a>]
+              Hardt, D., Ed., Tom, A., Eaton, B., and Y. Goland, "OAuth
+              Web Resource Authorization Profiles", 进行中的工作,
+              2010 年 1 月。
+
+   [<a id="ref-RFC5849">RFC5849</a>]  Hammer-Lahav, E., "OAuth 1.0 协议", <a href="./rfc5849">RFC 5849</a>,
+              2010 年 4 月。
+
+   [<a id="ref-RFC6750">RFC6750</a>]  Jones, M. and D. Hardt, "OAuth 2.0 授权框架：
+              Bearer 令牌用法", <a href="./rfc6750">RFC 6750</a>, 2012 年 10 月。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 70]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-71" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+<span class="h2"><a class="selflink" id="appendix-A" href="#appendix-A">附录 A</a>.  增广巴科斯-瑙尔范式 (ABNF) 语法</span>
+
+   本节为本规范中定义的元素提供增广巴科斯-瑙尔范式 (ABNF) 语法描述，
+   使用 [<a href="./rfc5234" title="&quot;Augmented BNF for Syntax Specifications: ABNF&quot;">RFC5234</a>] 的记法。下面的 ABNF 以 Unicode 码点
+   [<a href="#ref-W3C.REC-xml-20081126">W3C.REC-xml-20081126</a>] 定义；这些字符通常以 UTF-8 编码。
+   元素按首次定义的顺序呈现。
+
+   以下某些定义使用 [<a href="./rfc3986" title="&quot;Uniform Resource Identifier (URI): Generic Syntax&quot;">RFC3986</a>] 中的 "URI-reference" 定义。
+
+   以下某些定义使用这些通用定义：
+
+     VSCHAR     = %x20-7E
+     NQCHAR     = %x21 / %x23-5B / %x5D-7E
+     NQSCHAR    = %x20-21 / %x23-5B / %x5D-7E
+     UNICODECHARNOCRLF = %x09 /%x20-7E / %x80-D7FF /
+                         %xE000-FFFD / %x10000-10FFFF
+
+   （UNICODECHARNOCRLF 定义基于 [<a href="#ref-W3C.REC-xml-20081126">W3C.REC-xml-20081126</a>] 第 2.2 节中的
+   Char 定义，但省略了 Carriage Return 和 Linefeed 字符。）
+
+<span class="h3"><a class="selflink" id="appendix-A.1" href="#appendix-A.1">A.1</a>.  "client_id" 语法</span>
+
+   "client_id" 元素在 <a href="#section-2.3.1">第 2.3.1 节</a> 中定义：
+
+     client-id     = *VSCHAR
+
+<span class="h3"><a class="selflink" id="appendix-A.2" href="#appendix-A.2">A.2</a>.  "client_secret" 语法</span>
+
+   "client_secret" 元素在 <a href="#section-2.3.1">第 2.3.1 节</a> 中定义：
+
+     client-secret = *VSCHAR
+
+<span class="h3"><a class="selflink" id="appendix-A.3" href="#appendix-A.3">A.3</a>.  "response_type" 语法</span>
+
+   "response_type" 元素在 <a href="#section-3.1.1">3.1.1</a> 和 <a href="#section-8.4">8.4</a> 节中定义：
+
+     response-type = response-name *( SP response-name )
+     response-name = 1*response-char
+     response-char = "_" / DIGIT / ALPHA
+
+
+
+
+
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 71]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-72" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+<span class="h3"><a class="selflink" id="appendix-A.4" href="#appendix-A.4">A.4</a>.  "scope" 语法</span>
+
+   "scope" 元素在 <a href="#section-3.3">第 3.3 节</a> 中定义：
+
+     scope       = scope-token *( SP scope-token )
+     scope-token = 1*NQCHAR
+
+<span class="h3"><a class="selflink" id="appendix-A.5" href="#appendix-A.5">A.5</a>.  "state" 语法</span>
+
+   "state" 元素在 <a href="#section-4.1.1">4.1.1</a>、<a href="#section-4.1.2">4.1.2</a>、<a href="#section-4.1.2.1">4.1.2.1</a>、
+   4.2.1、4.2.2 和 4.2.2.1 节中定义：
+
+     state      = 1*VSCHAR
+
+<span class="h3"><a class="selflink" id="appendix-A.6" href="#appendix-A.6">A.6</a>.  "redirect_uri" 语法</span>
+
+   "redirect_uri" 元素在 <a href="#section-4.1.1">4.1.1</a>、<a href="#section-4.1.3">4.1.3</a> 和
+   4.2.1 节中定义：
+
+     redirect-uri      = URI-reference
+
+<span class="h3"><a class="selflink" id="appendix-A.7" href="#appendix-A.7">A.7</a>.  "error" 语法</span>
+
+   "error" 元素在 <a href="#section-4.1.2.1">4.1.2.1</a>、<a href="#section-4.2.2.1">4.2.2.1</a>、<a href="#section-5.2">5.2</a>、
+   7.2 和 8.5 节中定义：
+
+     error             = 1*NQSCHAR
+
+<span class="h3"><a class="selflink" id="appendix-A.8" href="#appendix-A.8">A.8</a>.  "error_description" 语法</span>
+
+   "error_description" 元素在 <a href="#section-4.1.2.1">4.1.2.1</a>、
+   4.2.2.1、5.2 和 7.2 节中定义：
+
+     error-description = 1*NQSCHAR
+
+<span class="h3"><a class="selflink" id="appendix-A.9" href="#appendix-A.9">A.9</a>.  "error_uri" 语法</span>
+
+   "error_uri" 元素在 <a href="#section-4.1.2.1">4.1.2.1</a>、<a href="#section-4.2.2.1">4.2.2.1</a>、<a href="#section-5.2">5.2</a>
+   和 7.2 节中定义：
+
+     error-uri         = URI-reference
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 72]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-73" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+<span class="h3"><a class="selflink" id="appendix-A.10" href="#appendix-A.10">A.10</a>.  "grant_type" 语法</span>
+
+   "grant_type" 元素在 <a href="#section-4.1.3">4.1.3</a>、<a href="#section-4.3.2">4.3.2</a>、<a href="#section-4.4.2">4.4.2</a>、
+   4.5 和 6 节中定义：
+
+     grant-type = grant-name / URI-reference
+     grant-name = 1*name-char
+     name-char  = "-" / "." / "_" / DIGIT / ALPHA
+
+<span class="h3"><a class="selflink" id="appendix-A.11" href="#appendix-A.11">A.11</a>.  "code" 语法</span>
+
+   "code" 元素在 <a href="#section-4.1.3">第 4.1.3 节</a> 中定义：
+
+     code       = 1*VSCHAR
+
+<span class="h3"><a class="selflink" id="appendix-A.12" href="#appendix-A.12">A.12</a>.  "access_token" 语法</span>
+
+   "access_token" 元素在 <a href="#section-4.2.2">4.2.2</a> 和 <a href="#section-5.1">5.1</a> 节中定义：
+
+     access-token = 1*VSCHAR
+
+<span class="h3"><a class="selflink" id="appendix-A.13" href="#appendix-A.13">A.13</a>.  "token_type" 语法</span>
+
+   "token_type" 元素在 <a href="#section-4.2.2">4.2.2</a>、<a href="#section-5.1">5.1</a> 和 <a href="#section-8.1">8.1</a> 节中定义：
+
+     token-type = type-name / URI-reference
+     type-name  = 1*name-char
+     name-char  = "-" / "." / "_" / DIGIT / ALPHA
+
+<span class="h3"><a class="selflink" id="appendix-A.14" href="#appendix-A.14">A.14</a>.  "expires_in" 语法</span>
+
+   "expires_in" 元素在 <a href="#section-4.2.2">4.2.2</a> 和 <a href="#section-5.1">5.1</a> 节中定义：
+
+     expires-in = 1*DIGIT
+
+<span class="h3"><a class="selflink" id="appendix-A.15" href="#appendix-A.15">A.15</a>.  "username" 语法</span>
+
+   "username" 元素在 <a href="#section-4.3.2">第 4.3.2 节</a> 中定义：
+
+     username = *UNICODECHARNOCRLF
+
+<span class="h3"><a class="selflink" id="appendix-A.16" href="#appendix-A.16">A.16</a>.  "password" 语法</span>
+
+   "password" 元素在 <a href="#section-4.3.2">第 4.3.2 节</a> 中定义：
+
+     password = *UNICODECHARNOCRLF
+
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 73]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-74" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+<span class="h3"><a class="selflink" id="appendix-A.17" href="#appendix-A.17">A.17</a>.  "refresh_token" 语法</span>
+
+   "refresh_token" 元素在 <a href="#section-5.1">5.1</a> 和 <a href="#section-6">6</a> 节中定义：
+
+     refresh-token = 1*VSCHAR
+
+<span class="h3"><a class="selflink" id="appendix-A.18" href="#appendix-A.18">A.18</a>.  端点参数语法</span>
+
+   新端点参数的语法在 <a href="#section-8.2">第 8.2 节</a> 中定义：
+
+     param-name = 1*name-char
+     name-char  = "-" / "." / "_" / DIGIT / ALPHA
+
+<span class="h2"><a class="selflink" id="appendix-B" href="#appendix-B">附录 B</a>.  application/x-www-form-urlencoded 媒体类型的使用</span>
+
+   在本规范发布时，"application/x-www-form-urlencoded" 媒体类型在
+   [<a href="#ref-W3C.REC-html401-19991224">W3C.REC-html401-19991224</a>] 第 17.13.4 节中定义，但未在 IANA
+   MIME Media Types 注册表中注册
+   (&lt;<a href="http://www.iana.org/assignments/media-types">http://www.iana.org/assignments/media-types</a>&gt;)。此外，该定义并不完整，
+   因为它没有考虑非 US-ASCII 字符。
+
+   为解决使用此媒体类型生成有效载荷时的这一缺陷，名称和值 MUST 首先
+   使用 UTF-8 字符编码方案 [<a href="./rfc3629" title="&quot;UTF-8, a transformation format of ISO 10646&quot;">RFC3629</a>] 编码；随后得到的八位字节序列还
+   需要使用 [<a href="#ref-W3C.REC-html401-19991224">W3C.REC-html401-19991224</a>] 中定义的转义规则进一步编码。
+
+   解析使用此媒体类型的有效载荷中的数据时，通过反转名称/值编码得到的
+   名称和值因此需要作为八位字节序列处理，并使用 UTF-8 字符编码方案解码。
+
+   例如，由六个 Unicode 码点组成的值
+   (1) U+0020 (SPACE), (2) U+0025 (PERCENT SIGN),
+   (3) U+0026 (AMPERSAND), (4) U+002B (PLUS SIGN),
+   (5) U+00A3 (POUND SIGN), and (6) U+20AC (EURO SIGN) 会被编码
+   为下面的八位字节序列（使用十六进制记法）：
+
+     20 25 26 2B C2 A3 E2 82 AC
+
+   然后在有效载荷中表示为：
+
+     +%25%26%2B%C2%A3%E2%82%AC
+
+
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 74]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-75" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+<span class="h2"><a class="selflink" id="appendix-C" href="#appendix-C">附录 C</a>.  致谢</span>
+
+   最初的 OAuth 2.0 协议规范由 David Recordon 编辑，基于此前两份出版物：
+   OAuth 1.0 社区规范 [<a href="./rfc5849" title="&quot;The OAuth 1.0 Protocol&quot;">RFC5849</a>] 和 OAuth WRAP（OAuth Web Resource
+   Authorization Profiles）[<a href="#ref-OAuth-WRAP">OAuth-WRAP</a>]。随后 Eran Hammer 编辑了许多
+   演进成本 RFC 的中间草案。安全考虑章节由 Torsten Lodderstedt、Mark
+   McGloin、Phil Hunt、Anthony Nadalin 和 John Bradley 起草。关于使用
+   "application/x-www-form-urlencoded" 媒体类型的章节由 Julian Reschke
+   起草。ABNF 章节由 Michael B. Jones 起草。
+
+   OAuth 1.0 社区规范由 Eran Hammer 编辑，并由 Mark Atwood、Dirk Balfanz、
+   Darren Bounds、Richard M. Conlan、Blaine Cook、Leah Culver、
+   Breno de Medeiros、Brian Eaton、Kellan Elliott-McCrea、Larry Halff、
+   Eran Hammer、Ben Laurie、Chris Messina、John Panzer、Sam Quigley、
+   David Recordon、Eran Sandler、Jonathan Sergent、Todd Sieling、
+   Brian Slesinsky 和 Andy Smith 编写。
+
+   OAuth WRAP 规范由 Dick Hardt 编辑，并由 Brian Eaton、Yaron Y. Goland、
+   Dick Hardt 和 Allen Tom 编写。
+
+   本规范是 OAuth 工作组的成果，该工作组包括数十位积极且专注的参与者。
+   特别是，以下个人贡献了想法、反馈和措辞，塑造并形成了最终规范：
+
+   Michael Adams, Amanda Anganes, Andrew Arnott, Dirk Balfanz, Aiden
+   Bell, John Bradley, Marcos Caceres, Brian Campbell, Scott Cantor,
+   Blaine Cook, Roger Crew, Leah Culver, Bill de hOra, Andre DeMarre,
+   Brian Eaton, Wesley Eddy, Wolter Eldering, Brian Ellin, Igor
+   Faynberg, George Fletcher, Tim Freeman, Luca Frosini, Evan Gilbert,
+   Yaron Y. Goland, Brent Goldman, Kristoffer Gronowski, Eran Hammer,
+   Dick Hardt, Justin Hart, Craig Heath, Phil Hunt, Michael B. Jones,
+   Terry Jones, John Kemp, Mark Kent, Raffi Krikorian, Chasen Le Hara,
+   Rasmus Lerdorf, Torsten Lodderstedt, Hui-Lan Lu, Casey Lucas, Paul
+   Madsen, Alastair Mair, Eve Maler, James Manger, Mark McGloin,
+   Laurence Miao, William Mills, Chuck Mortimore, Anthony Nadalin,
+   Julian Reschke, Justin Richer, Peter Saint-Andre, Nat Sakimura, Rob
+   Sayre, Marius Scurtescu, Naitik Shah, Luke Shepard, Vlad Skvortsov,
+   Justin Smith, Haibin Song, Niv Steingarten, Christian Stuebner,
+   Jeremy Suriel, Paul Tarjan, Christopher Thomas, Henry S. Thompson,
+   Allen Tom, Franklin Tse, Nick Walker, Shane Weeden, and Skylar
+   Woodward.
+
+
+
+
+
+
+<span class="grey">Hardt                        标准轨道                   [Page 75]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-76" ></span>
+<span class="grey"><a href="./rfc6749">RFC 6749</a>                        OAuth 2.0                   2012 年 10 月</span>
+
+
+   本文档在 Blaine Cook、Peter Saint-Andre、Hannes Tschofenig、Barry
+   Leiba 和 Derek Atkins 的主持下完成。领域主任包括 Lisa Dusseault、
+   Peter Saint-Andre 和 Stephen Farrell。
+
+作者地址
+
+   Dick Hardt（编辑）
+   Microsoft
+
+   EMail: dick.hardt@gmail.com
+   URI:   <a href="http://dickhardt.org/">http://dickhardt.org/</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Hardt                        标准轨道                   [Page 76]
+</pre>
+<script src="https://htmlspecs.com/dropdown.js"></script>
