@@ -4324,22 +4324,22 @@ const httpLinks = [
         lang: "cjk",
         state: "RFC"
     },
-    // {
-    //     text: "Using TLS to Secure QUIC",
-    //     href: "https://htmlspecs.com/quic-tls/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc9001.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
-    // {
-    //     text: "QUIC Loss Detection and Congestion Control",
-    //     href: "https://htmlspecs.com/quic-recovery/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc9002.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
+    {
+        text: "Using TLS to Secure QUIC",
+        href: "https://htmlspecs.com/quic-tls/",
+        src: "https://www.rfc-editor.org/rfc/rfc9001.html",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "RFC"
+    },
+    {
+        text: "QUIC Loss Detection and Congestion Control",
+        href: "https://htmlspecs.com/quic-recovery/",
+        src: "https://www.rfc-editor.org/rfc/rfc9002.html",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "RFC"
+    },
     // {
     //     text: "Version-Independent Properties of QUIC",
     //     href: "https://htmlspecs.com/quic-invariants/",
