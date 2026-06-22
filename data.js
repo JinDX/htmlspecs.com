@@ -4356,14 +4356,14 @@ const httpLinks = [
         lang: "cjk",
         state: "RFC"
     },
-    // {
-    //     text: "The WebSocket Protocol",
-    //     href: "https://htmlspecs.com/http/rfc6455.html",
-    //     src: "https://www.rfc-editor.org/rfc/rfc6455.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
+    {
+        text: "The WebSocket Protocol",
+        href: "https://htmlspecs.com/http/rfc6455.html",
+        src: "https://www.rfc-editor.org/rfc/rfc6455.html",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "RFC"
+    },
 ];
 
 if (typeof module !== 'undefined' && module.exports) {
