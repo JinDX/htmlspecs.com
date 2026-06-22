@@ -2833,7 +2833,7 @@ const cssLinks = [
     {
         text: "CSS Snapshot 2026",
         href: "https://htmlspecs.com/css/css-2026/",
-        src: "https://www.w3.org/TR/2026/NOTE-css-2026-20260326/",
+        src: "https://www.w3.org/TR/2026/NOTE-css-2026-20260622/",
         "last-modified": "-",
         lang: "cjk",
         state: "NOTE"

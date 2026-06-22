@@ -401,7 +401,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [CSS Snapshot 2023](https://htmlspecs.com/css/css-2023/)（[Source](https://www.w3.org/TR/2023/NOTE-css-2023-20231207/) ![Note](https://img.shields.io/badge/NOTE-309c40)）
 - [CSS Snapshot 2024](https://htmlspecs.com/css/css-2024/)（[Source](https://www.w3.org/TR/2025/NOTE-css-2024-20250225/) ![Note](https://img.shields.io/badge/NOTE-309c40)）
 - [CSS Snapshot 2025](https://htmlspecs.com/css/css-2025/)（[Source](https://www.w3.org/TR/2025/NOTE-css-2025-20250918/) ![Note](https://img.shields.io/badge/NOTE-309c40)）
-- [CSS Snapshot 2026](https://htmlspecs.com/css/css-2026/)（[Source](https://www.w3.org/TR/2026/NOTE-css-2026-20260326/) ![Note](https://img.shields.io/badge/NOTE-309c40)）
+- [CSS Snapshot 2026](https://htmlspecs.com/css/css-2026/)（[Source](https://www.w3.org/TR/2026/NOTE-css-2026-20260622/) ![Note](https://img.shields.io/badge/NOTE-309c40)）
 
 ### 语法、级联、选择器与值
 - [CSS Namespaces Module Level 3](https://htmlspecs.com/css/css-namespaces-3/)（[Source](https://www.w3.org/TR/2014/REC-css-namespaces-3-20140320/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
