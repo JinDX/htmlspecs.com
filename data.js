@@ -2343,14 +2343,14 @@ const links = [
         lang: "cjk",
         state: "RFC"
     },
-    // {
-    //     text: "The OAuth 2.0 Authorization Framework: Bearer Token Usage",
-    //     href: "https://htmlspecs.com/oauth2-bearer/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc6750.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
+    {
+        text: "The OAuth 2.0 Authorization Framework: Bearer Token Usage",
+        href: "https://htmlspecs.com/oauth2-bearer/",
+        src: "https://www.rfc-editor.org/rfc/rfc6750.html",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "RFC"
+    },
     // {
     //     text: "Proof Key for Code Exchange by OAuth Public Clients",
     //     href: "https://htmlspecs.com/pkce/",
