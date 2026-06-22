@@ -2383,14 +2383,14 @@ const links = [
         lang: "cjk",
         state: "RFC"
     },
-    // {
-    //     text: "OAuth 2.0 Dynamic Client Registration Protocol",
-    //     href: "https://htmlspecs.com/oauth2-dyn-reg/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc7591.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
+    {
+        text: "OAuth 2.0 Dynamic Client Registration Protocol",
+        href: "https://htmlspecs.com/oauth2-dyn-reg/",
+        src: "https://www.rfc-editor.org/rfc/rfc7591.html",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "RFC"
+    },
 
     //### 隐私、权限与反跟踪|프라이버시, 권한 및 추적 방지|プライバシー・権限・トラッキング対策
     {
