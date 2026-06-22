@@ -2351,14 +2351,14 @@ const links = [
         lang: "cjk",
         state: "RFC"
     },
-    // {
-    //     text: "Proof Key for Code Exchange by OAuth Public Clients",
-    //     href: "https://htmlspecs.com/pkce/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc7636.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
+    {
+        text: "Proof Key for Code Exchange by OAuth Public Clients",
+        href: "https://htmlspecs.com/pkce/",
+        src: "https://www.rfc-editor.org/rfc/rfc7636.html",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "RFC"
+    },
     // {
     //     text: "Best Current Practice for OAuth 2.0 Security",
     //     href: "https://htmlspecs.com/oauth2-security-bcp/",
