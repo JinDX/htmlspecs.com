@@ -189,14 +189,14 @@ const links = [
         lang: "cjk",
         state: "RFC"
     },
-    // {
-    //     text: "Media Type Specifications and Registration Procedures",
-    //     href: "https://htmlspecs.com/media-types/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc6838.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
+    {
+        text: "Media Type Specifications and Registration Procedures",
+        href: "https://htmlspecs.com/media-types/",
+        src: "https://www.rfc-editor.org/rfc/rfc6838.html",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "RFC"
+    },
 
     //### 国际化与本地化|국제화 및 지역화|国際化とローカライゼーション
     {
