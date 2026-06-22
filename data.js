@@ -4365,24 +4365,6 @@ const httpLinks = [
     //     lang: "cjk",
     //     state: "RFC"
     // },
-
-    //### 演进中的 HTTP 扩展草案|진행 중인 HTTP 확장 초안|進行中の HTTP 拡張ドラフト
-    // {
-    //     text: "RateLimit header fields for HTTP",
-    //     href: "https://htmlspecs.com/http/draft-ietf-httpapi-ratelimit-headers.html",
-    //     src: "https://httpwg.org/http-extensions/draft-ietf-httpapi-ratelimit-headers.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
-    // {
-    //     text: "The Idempotency-Key HTTP Header Field",
-    //     href: "https://htmlspecs.com/http/draft-ietf-httpapi-idempotency-key-header.html",
-    //     src: "https://httpwg.org/http-extensions/draft-ietf-httpapi-idempotency-key-header.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // }
 ];
 
 if (typeof module !== 'undefined' && module.exports) {
