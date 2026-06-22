@@ -1,0 +1,1192 @@
+<pre>互联网工程任务组 (IETF)                                          M. Jones
+请求评论：8414                                                  Microsoft
+类别：标准跟踪                                                N. Sakimura
+ISSN：2070-1721                                                      NRI
+                                                              J. Bradley
+                                                                  Yubico
+                                                               2018年6月
+
+
+                <span class="h1">OAuth 2.0 授权服务器元数据</span>
+
+摘要
+
+   本规范定义了一种元数据格式，OAuth 2.0 客户端可以使用该格式
+   获取与 OAuth 2.0 授权服务器交互所需的信息，包括其端点位置
+   和授权服务器能力。
+
+本备忘录状态
+
+   本文档是互联网标准跟踪文档。
+
+   本文档是互联网工程任务组 (IETF) 的产物。它代表了 IETF
+   社区的共识。它已经过公开审查，并已由互联网工程指导组
+   (IESG) 批准发布。有关互联网标准的更多信息可在
+   <a href="./rfc7841#section-2">RFC 7841 第&nbsp;2 节</a>中获得。
+
+   有关本文档当前状态、任何勘误以及如何提供反馈的信息，
+   可在 <a href="https://www.rfc-editor.org/info/rfc8414">https://www.rfc-editor.org/info/rfc8414</a> 获得。
+
+Copyright Notice
+
+   Copyright (c) 2018 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to <a href="https://www.rfc-editor.org/bcp/bcp78">BCP 78</a> and the IETF Trust's Legal
+   Provisions Relating to IETF Documents
+   (<a href="https://trustee.ietf.org/license-info">https://trustee.ietf.org/license-info</a>) in effect on the date of
+   publication of this document.  Please review these documents
+   carefully, as they describe your rights and restrictions with respect
+   to this document.  Code Components extracted from this document must
+   include Simplified BSD License text as described in Section 4.e of
+   the Trust Legal Provisions and are provided without warranty as
+   described in the Simplified BSD License.
+
+
+
+
+
+<span class="grey">Jones 等                    标准跟踪                         [第 1 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-2" ></span>
+<span class="grey"><a href="./rfc8414">RFC 8414</a>         OAuth 2.0 授权服务器元数据                 2018年6月</span>
+
+
+目录
+
+   <a href="#section-1">1</a>. 引言 ..........................................................<a href="#page-2">2</a>
+      <a href="#section-1.1">1.1</a>. 需求表示法和约定 ..........................................<a href="#page-3">3</a>
+      <a href="#section-1.2">1.2</a>. 术语 ......................................................<a href="#page-3">3</a>
+   <a href="#section-2">2</a>. 授权服务器元数据 ..............................................<a href="#page-4">4</a>
+      <a href="#section-2.1">2.1</a>. 已签名的授权服务器元数据 ..................................<a href="#page-8">8</a>
+   <a href="#section-3">3</a>. 获取授权服务器元数据 ..........................................<a href="#page-8">8</a>
+      <a href="#section-3.1">3.1</a>. 授权服务器元数据请求 ......................................<a href="#page-9">9</a>
+      <a href="#section-3.2">3.2</a>. 授权服务器元数据响应 .....................................<a href="#page-10">10</a>
+      <a href="#section-3.3">3.3</a>. 授权服务器元数据验证 .....................................<a href="#page-11">11</a>
+   <a href="#section-4">4</a>. 字符串操作 ...................................................<a href="#page-11">11</a>
+   <a href="#section-5">5</a>. 兼容性说明 ...................................................<a href="#page-11">11</a>
+   <a href="#section-6">6</a>. 安全注意事项 .................................................<a href="#page-12">12</a>
+      <a href="#section-6.1">6.1</a>. TLS 要求 .................................................<a href="#page-12">12</a>
+      <a href="#section-6.2">6.2</a>. 冒充攻击 .................................................<a href="#page-12">12</a>
+      <a href="#section-6.3">6.3</a>. 以标准格式发布元数据 .....................................<a href="#page-13">13</a>
+      <a href="#section-6.4">6.4</a>. 受保护资源 ...............................................<a href="#page-13">13</a>
+   <a href="#section-7">7</a>. IANA 注意事项 ................................................<a href="#page-14">14</a>
+      <a href="#section-7.1">7.1</a>. OAuth 授权服务器元数据注册表 .............................<a href="#page-14">14</a>
+           <a href="#section-7.1.1">7.1.1</a>. 注册模板 .........................................<a href="#page-15">15</a>
+           <a href="#section-7.1.2">7.1.2</a>. 初始注册表内容 .................................<a href="#page-16">16</a>
+      <a href="#section-7.2">7.2</a>. 更新的注册说明 ...........................................<a href="#page-19">19</a>
+      <a href="#section-7.3">7.3</a>. Well-Known URI 注册表 ....................................<a href="#page-19">19</a>
+           <a href="#section-7.3.1">7.3.1</a>. 注册表内容 .....................................<a href="#page-19">19</a>
+   <a href="#section-8">8</a>. 参考文献 .....................................................<a href="#page-20">20</a>
+      <a href="#section-8.1">8.1</a>. 规范性参考文献 ...........................................<a href="#page-20">20</a>
+      <a href="#section-8.2">8.2</a>. 资料性参考文献 ...........................................<a href="#page-22">22</a>
+   致谢 ...........................................................<a href="#page-23">23</a>
+   作者地址 .......................................................<a href="#page-23">23</a>
+
+<span class="h2"><a class="selflink" id="section-1" href="#section-1">1</a>.  引言</span>
+
+   本规范以一种兼容 OpenID Connect Discovery 的方式，泛化了
+   “OpenID Connect Discovery 1.0” [<a href="#ref-OpenID.Discovery">OpenID.Discovery</a>] 定义的元数据格式，
+   同时使其适用于更广泛的 OAuth 2.0 用例。这是有意与
+   “OAuth 2.0 Dynamic Client Registration Protocol” [<a href="./rfc7591" title="&quot;OAuth 2.0 Dynamic Client Registration Protocol&quot;">RFC7591</a>]
+   泛化 “OpenID Connect Dynamic Client Registration 1.0”
+   [<a href="#ref-OpenID.Registration">OpenID.Registration</a>] 所定义的动态客户端注册机制的方式相并行，
+   并与其兼容。
+
+   授权服务器的元数据作为 JSON [<a href="./rfc8259" title="&quot;The JavaScript Object Notation (JSON) Data Interchange Format&quot;">RFC8259</a>] 文档从 well-
+   known 位置取得，该文档声明其端点位置和授权服务器能力。此
+   过程在<a href="#section-3">第 3 节</a>中描述。
+
+
+
+
+
+<span class="grey">Jones 等                    标准跟踪                         [第 2 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-3" ></span>
+<span class="grey"><a href="./rfc8414">RFC 8414</a>         OAuth 2.0 授权服务器元数据                 2018年6月</span>
+
+
+   此元数据既可以由服务器源通过 HTTPS 以自声明方式传达，也
+   可以作为一组已签名的元数据值传达，这些值在 JSON Web Token
+   (JWT) [<a href="#ref-JWT" title="&quot;JSON Web Token (JWT)&quot;">JWT</a>] 中表示为声明。在 JWT 情况下，签发者为有关
+   授权服务器的数据的有效性作担保。这类似于 Software
+   Statement 在 OAuth Dynamic Client Registration [<a href="./rfc7591" title="&quot;OAuth 2.0 Dynamic Client Registration Protocol&quot;">RFC7591</a>]
+   中所起的作用。
+
+   客户端选择授权服务器的方式超出本文档范围。在某些情况下，
+   其签发者标识符可以被手动配置到客户端中。在其他情况下，
+   它可以被动态发现，例如通过使用 WebFinger [<a href="./rfc7033" title="&quot;WebFinger&quot;">RFC7033</a>]，
+   如 “OpenID Connect Discovery 1.0”
+   [<a href="#ref-OpenID.Discovery">OpenID.Discovery</a>] <a href="#section-2">第 2 节</a>所述。
+
+<span class="h3"><a class="selflink" id="section-1.1" href="#section-1.1">1.1</a>.  需求表示法和约定</span>
+
+   本文档中的关键词 “MUST”、“MUST NOT”、“REQUIRED”、“SHALL”、
+   “SHALL NOT”、“SHOULD”、“SHOULD NOT”、“RECOMMENDED”、
+   “NOT RECOMMENDED”、“MAY” 和 “OPTIONAL”，当且仅当它们按此处
+   所示以全大写形式出现时，应按
+   <a href="https://www.rfc-editor.org/bcp/bcp14">BCP 14</a> [<a href="./rfc2119" title="&quot;Key words for use in RFCs to Indicate Requirement Levels&quot;">RFC2119</a>] [<a href="./rfc8174" title="&quot;Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words&quot;">RFC8174</a>] 中的描述来解释。
+
+   本规范中对 JSON Web Signature (JWS) [<a href="#ref-JWS" title="&quot;JSON Web Signature (JWS)&quot;">JWS</a>] 和 JSON Web
+   Encryption (JWE) [<a href="#ref-JWE" title="&quot;JSON Web Encryption (JWE)&quot;">JWE</a>] 数据结构的所有使用，均采用 JWS Compact
+   Serialization 或 JWE Compact Serialization；不使用 JWS JSON
+   Serialization 和 JWE JSON Serialization。
+
+<span class="h3"><a class="selflink" id="section-1.2" href="#section-1.2">1.2</a>.  术语</span>
+
+   本规范使用 OAuth 2.0 [<a href="./rfc6749" title="&quot;The OAuth 2.0 Authorization Framework&quot;">RFC6749</a>] 定义的术语 “Access Token”、
+   “Authorization Code”、“Authorization Endpoint”、“Authorization Grant”、
+   “Authorization Server”、“Client”、“Client Authentication”、“Client
+   Identifier”、“Client Secret”、“Grant Type”、“Protected Resource”、
+   “Redirection URI”、“Refresh Token”、“Resource Owner”、“Resource
+   Server”、“Response Type” 和 “Token Endpoint”；使用 JSON Web Token
+   (JWT) [<a href="#ref-JWT" title="&quot;JSON Web Token (JWT)&quot;">JWT</a>] 定义的术语 “Claim Name”、“Claim Value” 和
+   “JSON Web Token (JWT)”；以及 “OAuth 2.0 Multiple Response Type
+   Encoding Practices” [<a href="#ref-OAuth.Responses">OAuth.Responses</a>] 定义的术语 “Response
+   Mode”。
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Jones 等                    标准跟踪                         [第 3 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-4" ></span>
+<span class="grey"><a href="./rfc8414">RFC 8414</a>         OAuth 2.0 授权服务器元数据                 2018年6月</span>
+
+
+<span class="h2"><a class="selflink" id="section-2" href="#section-2">2</a>.  授权服务器元数据</span>
+
+   授权服务器可以具有描述其配置的元数据。以下授权服务器元数据
+   值由本规范使用，并注册在 IANA “OAuth Authorization Server
+   Metadata” 注册表中，该注册表由<a href="#section-7.1">第 7.1 节</a>建立：
+
+   issuer
+      REQUIRED.  授权服务器的签发者标识符，它是一个使用 "https"
+      方案且没有查询或片段组件的 URL。授权服务器元数据发布在
+      一个根据 <a href="./rfc5785">RFC 5785</a> [<a href="./rfc5785" title="&quot;Defining Well-Known Uniform Resource Identifiers (URIs)&quot;">RFC5785</a>] 属于 ".well-known" 的位置，
+      该位置由此签发者标识符派生而来，如<a href="#section-3">第 3 节</a>所述。
+      签发者标识符用于防止授权服务器混淆攻击，如 “OAuth 2.0
+      Mix-Up Mitigation” [<a href="#ref-MIX-UP" title="&quot;OAuth 2.0 Mix-Up Mitigation&quot;">MIX-UP</a>] 中所述。
+
+   authorization_endpoint
+      授权服务器的授权端点 [<a href="./rfc6749" title="&quot;The OAuth 2.0 Authorization Framework&quot;">RFC6749</a>] 的 URL。除非不支持
+      使用授权端点的授权类型，否则这是 REQUIRED。
+
+   token_endpoint
+      授权服务器的令牌端点 [<a href="./rfc6749" title="&quot;The OAuth 2.0 Authorization Framework&quot;">RFC6749</a>] 的 URL。除非仅支持
+      隐式授权类型，否则这是 REQUIRED。
+
+   jwks_uri
+      OPTIONAL.  授权服务器的 JWK Set [<a href="#ref-JWK" title="&quot;JSON Web Key (JWK)&quot;">JWK</a>] 文档的 URL。被引用
+      的文档包含签名密钥，客户端使用这些密钥验证来自授权
+      服务器的签名。此 URL MUST 使用 "https" 方案。JWK Set MAY
+      还包含服务器的加密密钥，这些密钥由客户端用于加密发送给
+      服务器的请求。当签名密钥和加密密钥均可用时，对于被引用
+      的 JWK Set 中的所有密钥，REQUIRED 提供一个 "use"（公钥用途）
+      参数值，以指明每个密钥的预期用途。
+
+   registration_endpoint
+      OPTIONAL.  授权服务器的 OAuth 2.0 Dynamic Client Registration
+      端点 [<a href="./rfc7591" title="&quot;OAuth 2.0 Dynamic Client Registration Protocol&quot;">RFC7591</a>] 的 URL。
+
+   scopes_supported
+      RECOMMENDED.  JSON 数组，包含此授权服务器所支持的 OAuth 2.0
+      [<a href="./rfc6749" title="&quot;The OAuth 2.0 Authorization Framework&quot;">RFC6749</a>] "scope" 值列表。即使使用了此参数，服务器 MAY
+      选择不公布某些受支持的 scope 值。
+
+
+
+
+
+<span class="grey">Jones 等                    标准跟踪                         [第 4 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-5" ></span>
+<span class="grey"><a href="./rfc8414">RFC 8414</a>         OAuth 2.0 授权服务器元数据                 2018年6月</span>
+
+
+   response_types_supported
+      REQUIRED.  JSON 数组，包含此授权服务器所支持的 OAuth 2.0
+      "response_type" 值列表。所使用的数组值与 “OAuth 2.0 Dynamic
+      Client Registration Protocol” [<a href="./rfc7591" title="&quot;OAuth 2.0 Dynamic Client Registration Protocol&quot;">RFC7591</a>] 定义的
+      "response_types" 参数所使用的值相同。
+
+   response_modes_supported
+      OPTIONAL.  JSON 数组，包含此授权服务器所支持的 OAuth 2.0
+      "response_mode" 值列表，如 “OAuth 2.0 Multiple Response Type
+      Encoding Practices” [<a href="#ref-OAuth.Responses">OAuth.Responses</a>] 中所规定。如果省略，
+      默认值为 "["query", "fragment"]"。响应模式值 "form_post"
+      也在 “OAuth 2.0 Form Post Response Mode” [<a href="#ref-OAuth.Post">OAuth.Post</a>] 中定义。
+
+   grant_types_supported
+      OPTIONAL.  JSON 数组，包含此授权服务器所支持的 OAuth 2.0 授权
+      类型值列表。所使用的数组值与 “OAuth 2.0 Dynamic Client
+      Registration Protocol” [<a href="./rfc7591" title="&quot;OAuth 2.0 Dynamic Client Registration Protocol&quot;">RFC7591</a>] 定义的 "grant_types"
+      参数所使用的值相同。如果省略，默认值为
+      "["authorization_code", "implicit"]"。
+
+   token_endpoint_auth_methods_supported
+      OPTIONAL.  JSON 数组，包含此 token endpoint 支持的客户端认证
+      方法列表。客户端认证方法值用于 <a href="./rfc7591#section-2">[RFC7591] 的第&nbsp;2 节</a>
+      定义的 "token_endpoint_auth_method" 参数。如果省略，默认值为
+      "client_secret_basic" -- 即 OAuth 2.0 [<a href="./rfc6749" title="&quot;The OAuth 2.0 Authorization Framework&quot;">RFC6749</a>]
+      <a href="#section-2.3.1">第 2.3.1 节</a>规定的 HTTP Basic Authentication Scheme。
+
+   token_endpoint_auth_signing_alg_values_supported
+      OPTIONAL.  JSON 数组，包含 token endpoint 支持的 JWS 签名
+      算法（"alg" 值）列表，这些算法用于在 "private_key_jwt" 和
+      "client_secret_jwt" 认证方法中，用来在 token endpoint 认证
+      客户端的 JWT [<a href="#ref-JWT" title="&quot;JSON Web Token (JWT)&quot;">JWT</a>] 上的签名。如果在
+      "token_endpoint_auth_methods_supported" 条目中指定了其中任一
+      认证方法，则此元数据条目 MUST 出现。如果省略此条目，则
+      不暗示任何默认算法。服务器 SHOULD 支持 "RS256"。值 "none"
+      MUST NOT 使用。
+
+   service_documentation
+      OPTIONAL.  包含人类可读信息的页面 URL，开发者在使用授权
+      服务器时可能希望或需要了解这些信息。特别是，如果授权服务器
+
+
+
+
+
+<span class="grey">Jones 等                    标准跟踪                         [第 5 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-6" ></span>
+<span class="grey"><a href="./rfc8414">RFC 8414</a>         OAuth 2.0 授权服务器元数据                 2018年6月</span>
+
+
+      不支持 Dynamic Client Registration，那么需要在此文档中提供
+      如何注册客户端的信息。
+
+   ui_locales_supported
+      OPTIONAL.  用户界面支持的语言和书写系统，表示为来自
+      <a href="https://www.rfc-editor.org/bcp/bcp47">BCP 47</a> [<a href="./rfc5646" title="&quot;Tags for Identifying Languages&quot;">RFC5646</a>] 的语言标签值的 JSON 数组。如果省略，
+      则支持的语言和书写系统集合未指定。
+
+   op_policy_uri
+      OPTIONAL.  授权服务器提供给注册客户端的人员阅读的 URL，用于
+      了解授权服务器关于客户端如何使用授权服务器所提供数据的
+      要求。如果给出了该 URL，注册过程 SHOULD 向注册客户端的人员
+      显示该 URL。如<a href="#section-5">第 5 节</a>所述，尽管标识符
+      "op_policy_uri" 看起来是 OpenID 专用的，但其在本规范中的
+      用法实际上指的是一个通用的 OAuth 2.0 功能，并非 OpenID
+      Connect 专用。
+
+   op_tos_uri
+      OPTIONAL.  授权服务器提供给注册客户端的人员阅读的 URL，用于
+      了解授权服务器的服务条款。如果给出了该 URL，注册过程 SHOULD
+      向注册客户端的人员显示该 URL。如<a href="#section-5">第 5 节</a>所述，
+      尽管标识符 "op_tos_uri" 看起来是 OpenID 专用的，但其在本
+      规范中的用法实际上指的是一个通用的 OAuth 2.0 功能，并非
+      OpenID Connect 专用。
+
+   revocation_endpoint
+      OPTIONAL.  授权服务器的 OAuth 2.0 撤销端点 [<a href="./rfc7009" title="&quot;OAuth 2.0 Token Revocation&quot;">RFC7009</a>] 的 URL。
+
+   revocation_endpoint_auth_methods_supported
+      OPTIONAL.  JSON 数组，包含此 revocation endpoint 支持的客户端
+      认证方法列表。有效的客户端认证方法值是注册在 IANA
+      “OAuth Token Endpoint Authentication Methods” 注册表
+      [<a href="#ref-IANA.OAuth.Parameters">IANA.OAuth.Parameters</a>] 中的值。如果省略，默认值为
+      "client_secret_basic" -- 即 OAuth 2.0 [<a href="./rfc6749" title="&quot;The OAuth 2.0 Authorization Framework&quot;">RFC6749</a>]
+      <a href="#section-2.3.1">第 2.3.1 节</a>规定的 HTTP Basic Authentication Scheme。
+
+   revocation_endpoint_auth_signing_alg_values_supported
+      OPTIONAL.  JSON 数组，包含 revocation endpoint 支持的 JWS 签名
+      算法（"alg" 值）列表，这些算法用于在 revocation endpoint 上
+      认证客户端所用的 JWT [<a href="#ref-JWT" title="&quot;JSON Web Token (JWT)&quot;">JWT</a>] 上的签名，适用于
+
+
+
+<span class="grey">Jones 等                    标准跟踪                         [第 6 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-7" ></span>
+<span class="grey"><a href="./rfc8414">RFC 8414</a>         OAuth 2.0 授权服务器元数据                 2018年6月</span>
+
+
+      "private_key_jwt" 和 "client_secret_jwt" 认证方法。如果在
+      "revocation_endpoint_auth_methods_supported" 条目中指定了其中
+      任一认证方法，则此元数据条目 MUST 出现。如果省略此条目，
+      则不暗示任何默认算法。值 "none" MUST NOT 使用。
+
+   introspection_endpoint
+      OPTIONAL.  授权服务器的 OAuth 2.0 introspection endpoint
+      [<a href="./rfc7662" title="&quot;OAuth 2.0 Token Introspection&quot;">RFC7662</a>] 的 URL。
+
+   introspection_endpoint_auth_methods_supported
+      OPTIONAL.  JSON 数组，包含此 introspection endpoint 支持的
+      客户端认证方法列表。有效的客户端认证方法值是注册在 IANA
+      “OAuth Token Endpoint Authentication Methods” 注册表
+      [<a href="#ref-IANA.OAuth.Parameters">IANA.OAuth.Parameters</a>] 中的值，或注册在 IANA “OAuth
+      Access Token Types” 注册表 [<a href="#ref-IANA.OAuth.Parameters">IANA.OAuth.Parameters</a>] 中的值。
+      （由于<a href="#section-7.2">第 7.2 节</a>，这些值现在并将继续保持不同。）如果
+      省略，则受支持的认证方法集合 MUST 通过其他方式确定。
+
+   introspection_endpoint_auth_signing_alg_values_supported
+      OPTIONAL.  JSON 数组，包含 introspection endpoint 支持的 JWS
+      签名算法（"alg" 值）列表，这些算法用于在 introspection
+      endpoint 上对客户端进行认证时所用 JWT [<a href="#ref-JWT" title="&quot;JSON Web Token (JWT)&quot;">JWT</a>] 上的签名，
+      适用于 "private_key_jwt" 和 "client_secret_jwt" 认证方法。
+      如果在 "introspection_endpoint_auth_methods_supported" 条目中
+      指定了其中任一认证方法，则此元数据条目 MUST 出现。如果
+      省略此条目，则不暗示任何默认算法。值 "none" MUST NOT 使用。
+
+   code_challenge_methods_supported
+      OPTIONAL.  JSON 数组，包含此授权服务器支持的 Proof Key for Code
+      Exchange (PKCE) [<a href="./rfc7636" title="&quot;Proof Key for Code Exchange by OAuth Public Clients&quot;">RFC7636</a>] code challenge 方法列表。Code
+      challenge 方法值用于 <a href="./rfc7636#section-4.3">[RFC7636] 的第&nbsp;4.3 节</a>定义的
+      "code_challenge_method" 参数。有效的 code challenge 方法值
+      是注册在 IANA “PKCE Code Challenge Methods” 注册表
+      [<a href="#ref-IANA.OAuth.Parameters">IANA.OAuth.Parameters</a>] 中的值。如果省略，则授权服务器
+      不支持 PKCE。
+
+   也可以使用其他授权服务器元数据参数。其中一些由其他规范
+   定义，例如 OpenID Connect Discovery 1.0
+   [<a href="#ref-OpenID.Discovery">OpenID.Discovery</a>]。
+
+
+
+
+
+<span class="grey">Jones 等                    标准跟踪                         [第 7 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-8" ></span>
+<span class="grey"><a href="./rfc8414">RFC 8414</a>         OAuth 2.0 授权服务器元数据                 2018年6月</span>
+
+
+<span class="h3"><a class="selflink" id="section-2.1" href="#section-2.1">2.1</a>.  已签名的授权服务器元数据</span>
+
+   除 JSON 元素外，元数据值 MAY 还可以作为 "signed_metadata" 值
+   提供，该值是一个 JSON Web Token (JWT) [<a href="#ref-JWT" title="&quot;JSON Web Token (JWT)&quot;">JWT</a>]，以一组
+   声明的形式断言有关授权服务器的元数据值。可用于 signed metadata
+   的声明集合在<a href="#section-2">第 2 节</a>中定义。Signed metadata MUST 使用
+   JSON Web Signature (JWS) [<a href="#ref-JWS" title="&quot;JSON Web Signature (JWS)&quot;">JWS</a>] 进行数字签名或 MAC，并且 MUST
+   包含一个 "iss"（issuer）声明，表示为 signed metadata 中的声明
+   作证的一方。元数据的使用者如果不支持此功能，MAY 忽略
+   signed metadata。如果元数据的使用者支持 signed metadata，则
+   signed metadata 中传达的元数据值 MUST 优先于使用普通 JSON 元素
+   传达的对应值。
+
+   Signed metadata 使用此 OPTIONAL 成员包含在授权服务器元数据 JSON
+   对象中：
+
+   signed_metadata
+      包含有关授权服务器的元数据值作为声明的 JWT。这是一个字符串
+      值，由整个已签名 JWT 组成。"signed_metadata" 元数据值 SHOULD
+      NOT 作为 JWT 中的声明出现。
+
+<span class="h2"><a class="selflink" id="section-3" href="#section-3">3</a>.  获取授权服务器元数据</span>
+
+   支持元数据的授权服务器 MUST 在一个路径处提供包含<a href="#section-2">第 2 节</a>
+   所规定元数据的 JSON 文档，该路径通过将 well-known URI 字符串
+   插入到授权服务器的 issuer identifier 中的主机组件和路径组件
+   （如有）之间而形成。默认使用的 well-known URI 字符串是
+   "/.well-known/oauth-authorization-server"。此路径 MUST 使用
+   "https" 方案。".well-known" 的语法和语义在
+   <a href="./rfc5785">RFC 5785</a> [<a href="./rfc5785" title="&quot;Defining Well-Known Uniform Resource Identifiers (URIs)&quot;">RFC5785</a>] 中定义。所使用的 well-known URI suffix
+   MUST 注册在 IANA “Well-Known URIs” 注册表
+   [<a href="#ref-IANA.well-known">IANA.well-known</a>] 中。
+
+   以特定于应用的方式使用 OAuth 授权服务器的不同应用，可以定义
+   并注册不同的 well-known URI suffix，用于按这些应用的需要发布
+   授权服务器元数据。例如，如果示例应用以示例专用的方式使用
+   OAuth 授权服务器，并且它需要发布示例专用的元数据值，那么它
+   可能注册并使用 "example-configuration" URI suffix，并在通过将
+   "/.well-known/example-configuration" 插入到授权服务器的 issuer
+   identifier 的主机和路径组件之间所形成的路径处发布元数据文档。
+   或者，许多此类应用会使用默认的 well-known
+
+
+
+<span class="grey">Jones 等                    标准跟踪                         [第 8 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-9" ></span>
+<span class="grey"><a href="./rfc8414">RFC 8414</a>         OAuth 2.0 授权服务器元数据                 2018年6月</span>
+
+
+   URI 字符串 "/.well-known/oauth-authorization-server"，这是通用
+   OAuth 授权服务器的正确选择，而不会注册特定于应用的字符串。
+
+   使用本规范的 OAuth 2.0 应用 MUST 指定其将为此目的使用哪个
+   well-known URI suffix。同一授权服务器 MAY 选择在从其 issuer
+   identifier 派生出的多个 well-known 位置发布其元数据，例如，
+   同时在 "/.well-known/example-configuration" 和
+   "/.well-known/oauth-authorization-server" 发布元数据。
+
+   某些 OAuth 应用会选择使用 well-known URI suffix
+   "openid-configuration"。如<a href="#section-5">第 5 节</a>所述，尽管标识符
+   "/.well-known/openid-configuration" 看起来是 OpenID 专用的，
+   但其在本规范中的用法实际上指的是一个通用的 OAuth 2.0 功能，
+   并非 OpenID Connect 专用。
+
+<span class="h3"><a class="selflink" id="section-3.1" href="#section-3.1">3.1</a>.  授权服务器元数据请求</span>
+
+   授权服务器元数据文档 MUST 使用 HTTP "GET" 请求，在先前指定的
+   路径处查询。
+
+   当 issuer identifier 为 "https://example.com" 且 well-known URI
+   suffix 为 "oauth-authorization-server" 时，由于 issuer
+   identifier 不包含路径组件，客户端将发出以下请求以获取元数据：
+
+     GET /.well-known/oauth-authorization-server HTTP/1.1
+     Host: example.com
+
+   如果 issuer identifier 值包含路径组件，则在主机组件和路径组件
+   之间插入 "/.well-known/" 以及 well-known URI suffix 之前，任何
+   结尾的 "/" MUST 被移除。当 issuer identifier 为
+   "https://example.com/issuer1" 且 well-known URI suffix 为
+   "oauth-authorization-server" 时，由于 issuer identifier 包含路径
+   组件，客户端将发出以下请求以获取元数据：
+
+     GET /.well-known/oauth-authorization-server/issuer1 HTTP/1.1
+     Host: example.com
+
+   使用路径组件使得每个主机支持多个 issuer 成为可能。这在某些
+   多租户托管配置中是必需的。这里对 ".well-known" 的使用是为了
+   支持每个主机多个 issuer；与其在 <a href="./rfc5785">RFC 5785</a> [<a href="./rfc5785" title="&quot;Defining Well-Known Uniform Resource Identifiers (URIs)&quot;">RFC5785</a>]
+   中的用法不同，它不提供关于主机的一般信息。
+
+
+
+
+<span class="grey">Jones 等                    标准跟踪                         [第 9 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-10" ></span>
+<span class="grey"><a href="./rfc8414">RFC 8414</a>         OAuth 2.0 授权服务器元数据                 2018年6月</span>
+
+
+<span class="h3"><a class="selflink" id="section-3.2" href="#section-3.2">3.2</a>.  授权服务器元数据响应</span>
+
+   响应是一组关于授权服务器配置的声明，包括所有必要的端点和
+   公钥位置信息。成功响应 MUST 使用 200 OK HTTP 状态码，并返回
+   使用 "application/json" 内容类型的 JSON 对象，该对象包含一组
+   声明作为其成员，这些声明是<a href="#section-2">第 2 节</a>定义的元数据值的子集。
+   也 MAY 返回其他声明。
+
+   返回多个值的声明表示为 JSON 数组。具有零个元素的声明 MUST
+   从响应中省略。
+
+   错误响应使用适用的 HTTP 状态码值。
+
+   以下是一个非规范性示例响应：
+
+     HTTP/1.1 200 OK
+     Content-Type: application/json
+
+     {
+      "issuer":
+        "https://server.example.com",
+      "authorization_endpoint":
+        "https://server.example.com/authorize",
+      "token_endpoint":
+        "https://server.example.com/token",
+      "token_endpoint_auth_methods_supported":
+        ["client_secret_basic", "private_key_jwt"],
+      "token_endpoint_auth_signing_alg_values_supported":
+        ["RS256", "ES256"],
+      "userinfo_endpoint":
+        "https://server.example.com/userinfo",
+      "jwks_uri":
+        "https://server.example.com/jwks.json",
+      "registration_endpoint":
+        "https://server.example.com/register",
+      "scopes_supported":
+        ["openid", "profile", "email", "address",
+         "phone", "offline_access"],
+      "response_types_supported":
+        ["code", "code token"],
+      "service_documentation":
+        "http://server.example.com/service_documentation.html",
+      "ui_locales_supported":
+        ["en-US", "en-GB", "en-CA", "fr-FR", "fr-CA"]
+     }
+
+
+
+
+<span class="grey">Jones 等                    标准跟踪                        [第 10 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-11" ></span>
+<span class="grey"><a href="./rfc8414">RFC 8414</a>         OAuth 2.0 授权服务器元数据                 2018年6月</span>
+
+
+<span class="h3"><a class="selflink" id="section-3.3" href="#section-3.3">3.3</a>.  授权服务器元数据验证</span>
+
+   返回的 "issuer" 值 MUST 与授权服务器的 issuer identifier 值完全
+   相同，该值中插入了 well-known URI 字符串以创建用于取得元数据
+   的 URL。如果这些值不完全相同，则响应中包含的数据 MUST NOT
+   被使用。
+
+<span class="h2"><a class="selflink" id="section-4" href="#section-4">4</a>.  字符串操作</span>
+
+   处理某些 OAuth 2.0 消息需要将消息中的值与已知值进行比较。
+   例如，元数据响应中的成员名称可能会与特定成员名称（如
+   "issuer"）进行比较。然而，比较 Unicode [<a href="#ref-UNICODE" title="&quot;The Unicode Standard&quot;">UNICODE</a>] 字符串
+   具有重要的安全影响。
+
+   因此，JSON 字符串与其他 Unicode 字符串之间的比较 MUST 按如下
+   方式执行：
+
+   1.  移除任何由 JSON 应用的转义，以生成 Unicode code point
+       数组。
+
+   2.  Unicode Normalization [<a href="#ref-USA15" title="&quot;Unicode Normalization Forms&quot;">USA15</a>] MUST NOT 在任何时候应用于
+       JSON 字符串或要与其比较的字符串。
+
+   3.  两个字符串之间的比较 MUST 作为 Unicode code-point-to-code-
+       point 相等性比较来执行。
+
+   请注意，这与 <a href="./rfc8259#section-8.3">[RFC8259] 的第&nbsp;8.3 节</a>中描述的相等性比较
+   过程相同。
+
+<span class="h2"><a class="selflink" id="section-5" href="#section-5">5</a>.  兼容性说明</span>
+
+   标识符 "/.well-known/openid-configuration"、"op_policy_uri" 和
+   "op_tos_uri" 包含引用 OpenID Connect [<a href="#ref-OpenID.Core">OpenID.Core</a>] 规范族的
+   字符串，这些标识符最初由 “OpenID Connect Discovery 1.0”
+   [<a href="#ref-OpenID.Discovery">OpenID.Discovery</a>] 定义。尽管复用了这些看起来是 OpenID
+   专用的标识符，但其在本规范中的用法实际上指的是通用的 OAuth
+   2.0 功能，并非 OpenID Connect 专用。
+
+   <a href="#section-3">第 3 节</a>定义的将 issuer identifier 转换为授权服务器元数据位置的
+   算法，与 “OpenID Connect Discovery 1.0” [<a href="#ref-OpenID.Discovery">OpenID.Discovery</a>]
+   <a href="#section-4">第 4 节</a>中定义的对应转换等效，前提是 issuer identifier 不包含
+   路径组件。然而，当存在路径组件时，二者不同，因为 OpenID Connect
+
+
+
+<span class="grey">Jones 等                    标准跟踪                        [第 11 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-12" ></span>
+<span class="grey"><a href="./rfc8414">RFC 8414</a>         OAuth 2.0 授权服务器元数据                 2018年6月</span>
+
+
+   Discovery 1.0 规定将 well-known URI 字符串追加到 issuer
+   identifier 后面（例如，
+   "https://example.com/issuer1/.well-known/openid-configuration"），
+   而本规范规定将 well-known URI 字符串插入到 issuer identifier
+   的路径组件之前（例如，
+   "https://example.com/.well-known/openid-configuration/issuer1"）。
+
+   今后，OAuth 授权服务器元数据位置应使用本规范定义的转换。
+   然而，在已经使用 OpenID Connect Discovery 1.0 转换的旧环境中
+   部署时，在过渡期内，可能需要在两个位置为包含路径组件的
+   issuer identifier 发布元数据。在此过渡期内，应用应首先应用
+   本规范定义的转换，并尝试从得到的位置取得授权服务器元数据；
+   只有在从该位置取得失败时，才应回退到尝试从使用 OpenID
+   Connect Discovery 1.0 所定义转换得到的备用位置取得它。这种
+   向后兼容行为应只在应用采用的 well-known URI suffix 为
+   "openid-configuration" 时才是必要的。
+
+<span class="h2"><a class="selflink" id="section-6" href="#section-6">6</a>.  安全注意事项</span>
+
+<span class="h3"><a class="selflink" id="section-6.1" href="#section-6.1">6.1</a>.  TLS 要求</span>
+
+   实现 MUST 支持 TLS。应实现哪个版本将随时间变化，并取决于
+   实现时的广泛部署情况和已知安全漏洞。授权服务器 MUST 支持
+   TLS 版本 1.2 [<a href="./rfc5246" title="&quot;The Transport Layer Security (TLS) Protocol Version 1.2&quot;">RFC5246</a>]，并 MAY 支持满足其安全要求的其他 TLS
+   机制。使用 TLS 时，客户端 MUST 按 <a href="./rfc6125">RFC 6125</a> [<a href="./rfc6125" title="&quot;Representation and Verification of Domain-Based Application Service Identity within Internet Public Key Infrastructure Using X.509 (PKIX) Certificates in the Context of Transport Layer Security (TLS)&quot;">RFC6125</a>]
+   执行 TLS/SSL 服务器证书检查。实现安全注意事项可在
+   “Recommendations for Secure Use of Transport Layer Security (TLS) and
+   Datagram Transport Layer Security (DTLS)” [<a href="#ref-BCP195" title="&quot;Recommendations for Secure Use of Transport Layer Security (TLS) and Datagram Transport Layer Security (DTLS)&quot;">BCP195</a>] 中找到。
+
+   为防止信息泄露和篡改，MUST 使用提供机密性和完整性保护的
+   cipher suite，通过 TLS 应用机密性保护。
+
+<span class="h3"><a class="selflink" id="section-6.2" href="#section-6.2">6.2</a>.  冒充攻击</span>
+
+   在发出授权服务器元数据请求时，客户端 MUST 按<a href="#section-6.1">第 6.1 节</a>所述
+   执行 TLS 证书检查。检查服务器证书对 issuer identifier URL 有效，
+   可防止中间人攻击和基于 DNS 的
+
+
+
+<span class="grey">Jones 等                    标准跟踪                        [第 12 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-13" ></span>
+<span class="grey"><a href="./rfc8414">RFC 8414</a>         OAuth 2.0 授权服务器元数据                 2018年6月</span>
+
+
+   攻击。这些攻击可能导致客户端受骗而使用攻击者的密钥和端点，
+   从而使其能够冒充合法授权服务器。如果攻击者能够做到这一点，
+   他们就可以使用其冒充的授权服务器，访问受影响客户端有权访问
+   的资源。
+
+   攻击者也可能尝试通过发布包含 "issuer" 声明的元数据文档来
+   冒充授权服务器，该声明使用被冒充授权服务器的 issuer identifier
+   URL，但带有攻击者自己的端点和签名密钥。如果客户端接受该文档，
+   这将使攻击者能够冒充该授权服务器。为防止这种情况，客户端 MUST
+   确保其用作元数据请求前缀的 issuer identifier URL 与客户端收到
+   的授权服务器元数据文档中的 "issuer" 元数据值完全匹配。
+
+<span class="h3"><a class="selflink" id="section-6.3" href="#section-6.3">6.3</a>.  以标准格式发布元数据</span>
+
+   以标准格式发布有关授权服务器的信息，使合法客户端和攻击者都
+   更容易使用授权服务器。无论授权服务器是以临时方式发布其元数据，
+   还是以本规范定义的标准格式发布其元数据，都应应用相同的防御，
+   来抵御可能利用这些信息发起的攻击。
+
+<span class="h3"><a class="selflink" id="section-6.4" href="#section-6.4">6.4</a>.  受保护资源</span>
+
+   安全地确定在所有用例中与授权服务器一起使用的适当受保护资源，
+   超出本规范范围。本规范假定客户端具有一种方式来确定与授权服务器
+   一起使用的适当受保护资源，并且客户端正在为每个授权服务器使用
+   正确的元数据。实现者需要注意，如果客户端使用了不适当的受保护
+   资源，攻击者可能能够充当通向有效受保护资源的中间人代理，而不被
+   授权服务器或客户端检测到。
+
+   确定与授权服务器一起使用的适当受保护资源的方式，通常取决于
+   应用。例如，某些授权服务器与固定的受保护资源或一组受保护资源
+   一起使用，这些资源的位置可能是众所周知的，也可能由授权服务器
+   作为元数据值发布。在其他情况下，可与授权服务器一起使用的资源
+   集合可以通过管理操作动态更改。确定授权服务器与受保护资源之间
+   适当关联的许多其他方式也是可能的。
+
+
+
+<span class="grey">Jones 等                    标准跟踪                        [第 13 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-14" ></span>
+<span class="grey"><a href="./rfc8414">RFC 8414</a>         OAuth 2.0 授权服务器元数据                 2018年6月</span>
+
+
+<span class="h2"><a class="selflink" id="section-7" href="#section-7">7</a>.  IANA 注意事项</span>
+
+   以下注册过程用于本规范所建立的注册表。
+
+   值基于 Specification Required [<a href="./rfc8126" title="">RFC8126</a>] 原则进行注册，
+   在 oauth-ext-review@ietf.org 邮件列表上经过两周审查期后，
+   根据一名或多名指定专家的建议完成注册。不过，为了允许在
+   规范发布之前分配值，一旦指定专家确信此类规范将会发布，
+   便可以批准注册。
+
+   发送到邮件列表供审查的注册请求应使用适当的主题（例如，
+   "Request to register OAuth Authorization Server Metadata: example"）。
+
+   在审查期内，指定专家将批准或拒绝注册请求，并将此决定通知
+   审查列表和 IANA。拒绝应包含解释，并在适用时给出如何使请求
+   成功的建议。超过 21 天仍未确定的注册请求，可以提交给 IESG
+   处理（使用 iesg@ietf.org 邮件列表）。
+
+   指定专家应适用的标准包括：确定拟议注册是否重复现有功能，
+   确定它是否可能具有一般适用性，还是仅对单个应用有用，以及
+   该注册是否合理。
+
+   IANA 只能接受来自指定专家的注册表更新，并应将所有注册请求
+   引导到审查邮件列表。
+
+   建议任命多名指定专家，他们能够代表使用本规范的不同应用的
+   视角，以便对注册决定进行具有广泛信息基础的审查。在某项注册
+   决定可能被认为会给特定指定专家造成利益冲突的情况下，该指定
+   专家应服从其他指定专家的判断。
+
+<span class="h3"><a class="selflink" id="section-7.1" href="#section-7.1">7.1</a>.  OAuth 授权服务器元数据注册表</span>
+
+   本规范建立 IANA “OAuth Authorization Server Metadata” 注册表，
+   用于 OAuth 2.0 授权服务器元数据名称。该注册表记录授权服务器
+   元数据成员以及定义该成员的规范引用。
+
+
+
+<span class="grey">Jones 等                    标准跟踪                        [第 14 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-15" ></span>
+<span class="grey"><a href="./rfc8414">RFC 8414</a>         OAuth 2.0 授权服务器元数据                 2018年6月</span>
+
+
+   指定专家必须：
+
+   (a) 要求被注册的元数据名称和值仅使用可打印 ASCII 字符，
+   不包括双引号（'"'）和反斜杠（'\'）（即码点为 U+0021、
+   U+0023 到 U+005B，以及 U+005D 到 U+007E 的 Unicode 字符），或
+
+   (b) 如果定义了使用其他码点的新元数据成员或值，则要求其定义
+   精确指定用于表示它们的 Unicode 码点序列。此外，使用只能在
+   JSON 字符串中表示为转义字符的 Unicode 码点的拟议注册，必须
+   不被接受。
+
+<span class="h4"><a class="selflink" id="section-7.1.1" href="#section-7.1.1">7.1.1</a>.  注册模板</span>
+
+   Metadata Name:
+      所请求的名称（例如，"issuer"）。此名称区分大小写。名称不得
+      以不区分大小写的方式与其他已注册名称匹配（也就是如果对两个
+      字符串都应用 Unicode toLowerCase() 操作会导致匹配的方式），
+      除非指定专家声明有令人信服的理由允许例外。
+
+   Metadata Description:
+      元数据的简要描述（例如，"Issuer identifier URL"）。
+
+   Change Controller:
+      对于标准跟踪 RFC，列出 "IESG"。对于其他文档，给出负责方
+      的名称。也可以包含其他详细信息（例如，邮政地址、电子邮件
+      地址、主页 URI）。
+
+   Specification Document(s):
+      对规定该参数的一个或多个文档的引用，最好包括可用于获取
+      文档副本的 URI。也可以包含相关章节的说明，但不是必需的。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Jones 等                    标准跟踪                        [第 15 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-16" ></span>
+<span class="grey"><a href="./rfc8414">RFC 8414</a>         OAuth 2.0 授权服务器元数据                 2018年6月</span>
+
+
+<span class="h4"><a class="selflink" id="section-7.1.2" href="#section-7.1.2">7.1.2</a>.  初始注册表内容</span>
+
+   o  Metadata Name: issuer
+   o  Metadata Description: 授权服务器的 issuer identifier URL
+   o  Change Controller: IESG
+   o  Specification Document(s): <a href="./rfc8414#section-2">RFC 8414 第&nbsp;2 节</a>
+
+   o  Metadata Name: authorization_endpoint
+   o  Metadata Description: 授权服务器的 authorization endpoint
+      的 URL
+   o  Change Controller: IESG
+   o  Specification Document(s): <a href="./rfc8414#section-2">RFC 8414 第&nbsp;2 节</a>
+
+   o  Metadata Name: token_endpoint
+   o  Metadata Description: 授权服务器的 token endpoint 的 URL
+   o  Change Controller: IESG
+   o  Specification Document(s): <a href="./rfc8414#section-2">RFC 8414 第&nbsp;2 节</a>
+
+   o  Metadata Name: jwks_uri
+   o  Metadata Description: 授权服务器的 JWK Set 文档的 URL
+   o  Change Controller: IESG
+   o  Specification Document(s): <a href="./rfc8414#section-2">RFC 8414 第&nbsp;2 节</a>
+
+   o  Metadata Name: registration_endpoint
+   o  Metadata Description: 授权服务器的 OAuth 2.0 Dynamic Client
+      Registration Endpoint 的 URL
+   o  Change Controller: IESG
+   o  Specification Document(s): <a href="./rfc8414#section-2">RFC 8414 第&nbsp;2 节</a>
+
+   o  Metadata Name: scopes_supported
+   o  Metadata Description: JSON 数组，包含此授权服务器支持的 OAuth
+      2.0 "scope" 值列表
+   o  Change Controller: IESG
+   o  Specification Document(s): <a href="./rfc8414#section-2">RFC 8414 第&nbsp;2 节</a>
+
+   o  Metadata Name: response_types_supported
+   o  Metadata Description: JSON 数组，包含此授权服务器支持的 OAuth
+      2.0 "response_type" 值列表
+   o  Change Controller: IESG
+   o  Specification Document(s): <a href="./rfc8414#section-2">RFC 8414 第&nbsp;2 节</a>
+
+   o  Metadata Name: response_modes_supported
+   o  Metadata Description: JSON 数组，包含此授权服务器支持的 OAuth
+      2.0 "response_mode" 值列表
+   o  Change Controller: IESG
+   o  Specification Document(s): <a href="./rfc8414#section-2">RFC 8414 第&nbsp;2 节</a>
+
+
+
+<span class="grey">Jones 等                    标准跟踪                        [第 16 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-17" ></span>
+<span class="grey"><a href="./rfc8414">RFC 8414</a>         OAuth 2.0 授权服务器元数据                 2018年6月</span>
+
+
+   o  Metadata Name: grant_types_supported
+   o  Metadata Description: JSON 数组，包含此授权服务器支持的 OAuth
+      2.0 授权类型值列表
+   o  Change Controller: IESG
+   o  Specification Document(s): <a href="./rfc8414#section-2">RFC 8414 第&nbsp;2 节</a>
+
+   o  Metadata Name: token_endpoint_auth_methods_supported
+   o  Metadata Description: JSON 数组，包含此 token endpoint 支持的
+      客户端认证方法列表
+   o  Change Controller: IESG
+   o  Specification Document(s): <a href="./rfc8414#section-2">RFC 8414 第&nbsp;2 节</a>
+
+   o  Metadata Name: token_endpoint_auth_signing_alg_values_supported
+   o  Metadata Description: JSON 数组，包含 token endpoint 支持的 JWS
+      签名算法列表，这些算法用于认证客户端在 token endpoint
+      使用的 JWT 上的签名
+   o  Change Controller: IESG
+   o  Specification Document(s): <a href="./rfc8414#section-2">RFC 8414 第&nbsp;2 节</a>
+
+   o  Metadata Name: service_documentation
+   o  Metadata Description: 包含人类可读信息的页面 URL，开发者在使用
+      授权服务器时可能希望或需要了解这些信息
+   o  Change Controller: IESG
+   o  Specification Document(s): <a href="./rfc8414#section-2">RFC 8414 第&nbsp;2 节</a>
+
+   o  Metadata Name: ui_locales_supported
+   o  Metadata Description: 用户界面支持的语言和书写系统，表示为来自
+      <a href="https://www.rfc-editor.org/bcp/bcp47">BCP 47</a> 的语言标签值的 JSON 数组
+   o  Change Controller: IESG
+   o  Specification Document(s): <a href="./rfc8414#section-2">RFC 8414 第&nbsp;2 节</a>
+
+   o  Metadata Name: op_policy_uri
+   o  Metadata Description: 授权服务器提供给注册客户端的人员阅读的
+      URL，用于了解授权服务器关于客户端如何使用授权服务器提供的
+      数据的要求
+   o  Change Controller: IESG
+   o  Specification Document(s): <a href="./rfc8414#section-2">RFC 8414 第&nbsp;2 节</a>
+
+   o  Metadata Name: op_tos_uri
+   o  Metadata Description: 授权服务器提供给注册客户端的人员阅读的
+      URL，用于了解授权服务器的服务条款
+   o  Change Controller: IESG
+   o  Specification Document(s): <a href="./rfc8414#section-2">RFC 8414 第&nbsp;2 节</a>
+
+
+
+<span class="grey">Jones 等                    标准跟踪                        [第 17 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-18" ></span>
+<span class="grey"><a href="./rfc8414">RFC 8414</a>         OAuth 2.0 授权服务器元数据                 2018年6月</span>
+
+
+   o  Metadata Name: revocation_endpoint
+   o  Metadata Description: 授权服务器的 OAuth 2.0 revocation endpoint
+      的 URL
+   o  Change Controller: IESG
+   o  Specification Document(s): <a href="./rfc8414#section-2">RFC 8414 第&nbsp;2 节</a>
+
+   o  Metadata Name: revocation_endpoint_auth_methods_supported
+   o  Metadata Description: JSON 数组，包含此 revocation endpoint
+      支持的客户端认证方法列表
+   o  Change Controller: IESG
+   o  Specification Document(s): <a href="./rfc8414#section-2">RFC 8414 第&nbsp;2 节</a>
+
+   o  Metadata Name:
+      revocation_endpoint_auth_signing_alg_values_supported
+   o  Metadata Description: JSON 数组，包含 revocation endpoint 支持的
+      JWS 签名算法列表，这些算法用于认证客户端在 revocation
+      endpoint 使用的 JWT 上的签名
+   o  Change Controller: IESG
+   o  Specification Document(s): <a href="./rfc8414#section-2">RFC 8414 第&nbsp;2 节</a>
+
+   o  Metadata Name: introspection_endpoint
+   o  Metadata Description: 授权服务器的 OAuth 2.0 introspection
+      endpoint 的 URL
+   o  Change Controller: IESG
+   o  Specification Document(s): <a href="./rfc8414#section-2">RFC 8414 第&nbsp;2 节</a>
+
+   o  Metadata Name: introspection_endpoint_auth_methods_supported
+   o  Metadata Description: JSON 数组，包含此 introspection endpoint
+      支持的客户端认证方法列表
+   o  Change Controller: IESG
+   o  Specification Document(s): <a href="./rfc8414#section-2">RFC 8414 第&nbsp;2 节</a>
+
+   o  Metadata Name:
+      introspection_endpoint_auth_signing_alg_values_supported
+   o  Metadata Description: JSON 数组，包含 introspection endpoint 支持的
+      JWS 签名算法列表，这些算法用于认证客户端在 introspection
+      endpoint 使用的 JWT 上的签名
+   o  Change Controller: IESG
+   o  Specification Document(s): <a href="./rfc8414#section-2">RFC 8414 第&nbsp;2 节</a>
+
+   o  Metadata Name: code_challenge_methods_supported
+   o  Metadata Description: 此授权服务器支持的 PKCE code challenge 方法
+   o  Change Controller: IESG
+   o  Specification Document(s): <a href="./rfc8414#section-2">RFC 8414 第&nbsp;2 节</a>
+
+
+
+
+<span class="grey">Jones 等                    标准跟踪                        [第 18 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-19" ></span>
+<span class="grey"><a href="./rfc8414">RFC 8414</a>         OAuth 2.0 授权服务器元数据                 2018年6月</span>
+
+
+   o  Metadata Name: signed_metadata
+   o  Metadata Description: 已签名 JWT，包含关于授权服务器的元数据值
+      作为声明
+   o  Change Controller: IESG
+   o  Specification Document(s): <a href="./rfc8414#section-2.1">RFC 8414 第&nbsp;2.1 节</a>
+
+<span class="h3"><a class="selflink" id="section-7.2" href="#section-7.2">7.2</a>.  更新的注册说明</span>
+
+   本规范为以下 IANA 注册表的指定专家说明增加内容，这两个注册表
+   均位于 “OAuth Parameters” 注册表 [<a href="#ref-IANA.OAuth.Parameters">IANA.OAuth.Parameters</a>] 中：
+
+   o  OAuth Access Token Types
+   o  OAuth Token Endpoint Authentication Methods
+
+   IANA 已在这些注册表的 Reference 部分添加了指向本规范的链接。
+
+   对于这些注册表，指定专家必须拒绝在一个注册表中注册已出现在
+   另一个注册表中的值的请求。这是必要的，因为
+   "introspection_endpoint_auth_methods_supported" 参数允许使用任一
+   注册表中的值。这样，由于两个注册表中的值将继续互斥，因此不会
+   产生歧义。
+
+<span class="h3"><a class="selflink" id="section-7.3" href="#section-7.3">7.3</a>.  Well-Known URI 注册表</span>
+
+   本规范在由 <a href="./rfc5785">RFC 5785</a> [<a href="./rfc5785" title="&quot;Defining Well-Known Uniform Resource Identifiers (URIs)&quot;">RFC5785</a>] 建立的 IANA
+   “Well-Known URIs” 注册表 [<a href="#ref-IANA.well-known">IANA.well-known</a>] 中，注册了
+   <a href="#section-3">第 3 节</a>定义的 well-known URI。
+
+<span class="h4"><a class="selflink" id="section-7.3.1" href="#section-7.3.1">7.3.1</a>.  注册表内容</span>
+
+   o  URI suffix: oauth-authorization-server
+   o  Change controller: IESG
+   o  Specification document: <a href="./rfc8414#section-3">RFC 8414 第&nbsp;3 节</a>
+   o  Related information: （无）
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Jones 等                    标准跟踪                        [第 19 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-20" ></span>
+<span class="grey"><a href="./rfc8414">RFC 8414</a>         OAuth 2.0 授权服务器元数据                 2018年6月</span>
+
+
+<span class="h2"><a class="selflink" id="section-8" href="#section-8">8</a>.  参考文献</span>
+
+<span class="h3"><a class="selflink" id="section-8.1" href="#section-8.1">8.1</a>.  规范性参考文献</span>
+
+   [<a id="ref-BCP195">BCP195</a>]   Sheffer, Y., Holz, R., and P. Saint-Andre,
+              "安全使用传输层安全性 (TLS) 和数据报传输层安全性
+              (DTLS) 的建议", <a href="https://www.rfc-editor.org/bcp/bcp195">BCP 195</a>, <a href="./rfc7525">RFC 7525</a>, 2015年5月,
+              &lt;<a href="http://www.rfc-editor.org/info/bcp195">http://www.rfc-editor.org/info/bcp195</a>&gt;.
+
+   [<a id="ref-IANA.OAuth.Parameters">IANA.OAuth.Parameters</a>]
+              IANA, "OAuth Parameters",
+              &lt;<a href="https://www.iana.org/assignments/oauth-parameters">https://www.iana.org/assignments/oauth-parameters</a>&gt;.
+
+   [<a id="ref-JWE">JWE</a>]      Jones, M. and J. Hildebrand, "JSON Web Encryption (JWE)",
+              <a href="./rfc7516">RFC 7516</a>, DOI 10.17487/RFC7516, 2015年5月,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc7516">https://www.rfc-editor.org/info/rfc7516</a>&gt;.
+
+   [<a id="ref-JWK">JWK</a>]      Jones, M., "JSON Web Key (JWK)", <a href="./rfc7517">RFC 7517</a>,
+              DOI 10.17487/RFC7517, 2015年5月,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc7517">https://www.rfc-editor.org/info/rfc7517</a>&gt;.
+
+   [<a id="ref-JWS">JWS</a>]      Jones, M., Bradley, J., and N. Sakimura, "JSON Web
+              Signature (JWS)", <a href="./rfc7515">RFC 7515</a>, DOI 10.17487/RFC7515,
+              2015年5月, &lt;<a href="https://www.rfc-editor.org/info/rfc7515">https://www.rfc-editor.org/info/rfc7515</a>&gt;.
+
+   [<a id="ref-JWT">JWT</a>]      Jones, M., Bradley, J., and N. Sakimura, "JSON Web Token
+              (JWT)", <a href="./rfc7519">RFC 7519</a>, DOI 10.17487/RFC7519, 2015年5月,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc7519">https://www.rfc-editor.org/info/rfc7519</a>&gt;.
+
+   [<a id="ref-OAuth.Post">OAuth.Post</a>]
+              Jones, M. and B. Campbell, "OAuth 2.0 Form Post Response
+              Mode", 2015年4月, &lt;<a href="http://openid.net/specs/oauth-v2-form-post-response-mode-1_0.html">http://openid.net/specs/</a>
+              <a href="http://openid.net/specs/oauth-v2-form-post-response-mode-1_0.html">oauth-v2-form-post-response-mode-1_0.html</a>&gt;.
+
+   [<a id="ref-OAuth.Responses">OAuth.Responses</a>]
+              de Medeiros, B., Ed., Scurtescu, M., Tarjan, P., and M.
+              Jones, "OAuth 2.0 Multiple Response Type Encoding
+              Practices", 2014年2月, &lt;<a href="http://openid.net/specs/oauth-v2-multiple-response-types-1_0.html">http://openid.net/specs/</a>
+              <a href="http://openid.net/specs/oauth-v2-multiple-response-types-1_0.html">oauth-v2-multiple-response-types-1_0.html</a>&gt;.
+
+   [<a id="ref-RFC2119">RFC2119</a>]  Bradner, S., "用于在 RFC 中指示需求级别的关键词",
+              <a href="https://www.rfc-editor.org/bcp/bcp14">BCP 14</a>, <a href="./rfc2119">RFC 2119</a>,
+              DOI 10.17487/RFC2119, 1997年3月,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc2119">https://www.rfc-editor.org/info/rfc2119</a>&gt;.
+
+
+
+
+
+
+<span class="grey">Jones 等                    标准跟踪                        [第 20 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-21" ></span>
+<span class="grey"><a href="./rfc8414">RFC 8414</a>         OAuth 2.0 授权服务器元数据                 2018年6月</span>
+
+
+   [<a id="ref-RFC5246">RFC5246</a>]  Dierks, T. and E. Rescorla, "传输层安全性 (TLS) 协议
+              版本 1.2", <a href="./rfc5246">RFC 5246</a>,
+              DOI 10.17487/RFC5246, 2008年8月,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc5246">https://www.rfc-editor.org/info/rfc5246</a>&gt;.
+
+   [<a id="ref-RFC5646">RFC5646</a>]  Phillips, A., Ed. and M. Davis, Ed., "用于标识语言的
+              标签", <a href="https://www.rfc-editor.org/bcp/bcp47">BCP 47</a>, <a href="./rfc5646">RFC 5646</a>, DOI 10.17487/RFC5646,
+              2009年9月, &lt;<a href="https://www.rfc-editor.org/info/rfc5646">https://www.rfc-editor.org/info/rfc5646</a>&gt;.
+
+   [<a id="ref-RFC5785">RFC5785</a>]  Nottingham, M. and E. Hammer-Lahav, "定义 Well-Known
+              统一资源标识符 (URI)", <a href="./rfc5785">RFC 5785</a>,
+              DOI 10.17487/RFC5785, 2010年4月,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc5785">https://www.rfc-editor.org/info/rfc5785</a>&gt;.
+
+   [<a id="ref-RFC6125">RFC6125</a>]  Saint-Andre, P. and J. Hodges, "在传输层安全性 (TLS)
+              上下文中，使用 X.509 (PKIX) 证书的互联网公钥基础设施
+              对基于域的应用服务身份进行表示和验证", <a href="./rfc6125">RFC 6125</a>,
+              DOI 10.17487/RFC6125, 2011年3月,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc6125">https://www.rfc-editor.org/info/rfc6125</a>&gt;.
+
+   [<a id="ref-RFC6749">RFC6749</a>]  Hardt, D., Ed., "OAuth 2.0 授权框架",
+              <a href="./rfc6749">RFC 6749</a>, DOI 10.17487/RFC6749, 2012年10月,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc6749">https://www.rfc-editor.org/info/rfc6749</a>&gt;.
+
+   [<a id="ref-RFC7009">RFC7009</a>]  Lodderstedt, T., Ed., Dronia, S., and M. Scurtescu,
+              "OAuth 2.0 令牌撤销", <a href="./rfc7009">RFC 7009</a>,
+              DOI 10.17487/RFC7009, 2013年8月,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc7009">https://www.rfc-editor.org/info/rfc7009</a>&gt;.
+
+   [<a id="ref-RFC7033">RFC7033</a>]  Jones, P., Salgueiro, G., Jones, M., and J. Smarr,
+              "WebFinger", <a href="./rfc7033">RFC 7033</a>, DOI 10.17487/RFC7033,
+              2013年9月, &lt;<a href="https://www.rfc-editor.org/info/rfc7033">https://www.rfc-editor.org/info/rfc7033</a>&gt;.
+
+   [<a id="ref-RFC7591">RFC7591</a>]  Richer, J., Ed., Jones, M., Bradley, J., Machulak, M., and
+              P. Hunt, "OAuth 2.0 Dynamic Client Registration Protocol",
+              <a href="./rfc7591">RFC 7591</a>, DOI 10.17487/RFC7591, 2015年7月,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc7591">https://www.rfc-editor.org/info/rfc7591</a>&gt;.
+
+   [<a id="ref-RFC7636">RFC7636</a>]  Sakimura, N., Ed., Bradley, J., and N. Agarwal, "OAuth
+              公共客户端的 Proof Key for Code Exchange", <a href="./rfc7636">RFC 7636</a>,
+              DOI 10.17487/RFC7636, 2015年9月,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc7636">https://www.rfc-editor.org/info/rfc7636</a>&gt;.
+
+   [<a id="ref-RFC7662">RFC7662</a>]  Richer, J., Ed., "OAuth 2.0 令牌内省",
+              <a href="./rfc7662">RFC 7662</a>, DOI 10.17487/RFC7662, 2015年10月,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc7662">https://www.rfc-editor.org/info/rfc7662</a>&gt;.
+
+
+
+
+
+<span class="grey">Jones 等                    标准跟踪                        [第 21 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-22" ></span>
+<span class="grey"><a href="./rfc8414">RFC 8414</a>         OAuth 2.0 授权服务器元数据                 2018年6月</span>
+
+
+   [<a id="ref-RFC8126">RFC8126</a>]  Cotton, M., Leiba, B., and T. Narten, "编写 RFC 中
+              IANA 注意事项章节的指南", <a href="https://www.rfc-editor.org/bcp/bcp26">BCP 26</a>,
+              <a href="./rfc8126">RFC 8126</a>, DOI 10.17487/RFC8126, 2017年6月,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc8126">https://www.rfc-editor.org/info/rfc8126</a>&gt;.
+
+   [<a id="ref-RFC8174">RFC8174</a>]  Leiba, B., "<a href="./rfc2119">RFC</a> <a href="./rfc2119">2119</a> 关键词中大写与小写的歧义",
+              <a href="https://www.rfc-editor.org/bcp/bcp14">BCP 14</a>, <a href="./rfc8174">RFC 8174</a>, DOI 10.17487/RFC8174,
+              2017年5月, &lt;<a href="https://www.rfc-editor.org/info/rfc8174">https://www.rfc-editor.org/info/rfc8174</a>&gt;.
+
+   [<a id="ref-RFC8259">RFC8259</a>]  Bray, T., Ed., "JavaScript Object Notation (JSON) 数据
+              交换格式", STD 90, <a href="./rfc8259">RFC 8259</a>,
+              DOI 10.17487/RFC8259, 2017年12月,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc8259">https://www.rfc-editor.org/info/rfc8259</a>&gt;.
+
+   [<a id="ref-UNICODE">UNICODE</a>]  The Unicode Consortium, "The Unicode Standard",
+              &lt;<a href="http://www.unicode.org/versions/latest/">http://www.unicode.org/versions/latest/</a>&gt;.
+
+   [<a id="ref-USA15">USA15</a>]    Davis, M., Ed. and K. Whistler, Ed., "Unicode
+              Normalization Forms", Unicode Standard Annex #15,
+              2018年5月, &lt;<a href="http://www.unicode.org/reports/tr15/">http://www.unicode.org/reports/tr15/</a>&gt;.
+
+<span class="h3"><a class="selflink" id="section-8.2" href="#section-8.2">8.2</a>.  资料性参考文献</span>
+
+   [<a id="ref-IANA.well-known">IANA.well-known</a>]
+              IANA, "Well-Known URIs",
+              &lt;<a href="https://www.iana.org/assignments/well-known-uris">https://www.iana.org/assignments/well-known-uris</a>&gt;.
+
+   [<a id="ref-MIX-UP">MIX-UP</a>]   Jones, M., Bradley, J., and N. Sakimura, "OAuth 2.0
+              Mix-Up Mitigation", 进行中的工作,
+              <a href="./draft-ietf-oauth-mix-up-mitigation-01">draft-ietf-oauth-mix-up-</a>
+              <a href="./draft-ietf-oauth-mix-up-mitigation-01">mitigation-01</a>, 2016年7月。
+
+   [<a id="ref-OpenID.Core">OpenID.Core</a>]
+              Sakimura, N., Bradley, J., Jones, M., de Medeiros, B., and
+              C. Mortimore, "OpenID Connect Core 1.0", 2014年11月,
+              &lt;<a href="http://openid.net/specs/openid-connect-core-1_0.html">http://openid.net/specs/openid-connect-core-1_0.html</a>&gt;.
+
+   [<a id="ref-OpenID.Discovery">OpenID.Discovery</a>]
+              Sakimura, N., Bradley, J., Jones, M., and E. Jay, "OpenID
+              Connect Discovery 1.0", 2014年11月,
+              &lt;<a href="http://openid.net/specs/openid-connect-discovery-1_0.html">http://openid.net/specs/</a>
+              <a href="http://openid.net/specs/openid-connect-discovery-1_0.html">openid-connect-discovery-1_0.html</a>&gt;.
+
+   [<a id="ref-OpenID.Registration">OpenID.Registration</a>]
+              Sakimura, N., Bradley, J., and M. Jones, "OpenID Connect
+              Dynamic Client Registration 1.0", 2014年11月,
+              &lt;<a href="http://openid.net/specs/openid-connect-registration-1_0.html">http://openid.net/specs/</a>
+              <a href="http://openid.net/specs/openid-connect-registration-1_0.html">openid-connect-registration-1_0.html</a>&gt;.
+
+
+
+
+<span class="grey">Jones 等                    标准跟踪                        [第 22 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-23" ></span>
+<span class="grey"><a href="./rfc8414">RFC 8414</a>         OAuth 2.0 授权服务器元数据                 2018年6月</span>
+
+
+致谢
+
+   本规范基于 OpenID Connect Discovery 1.0 规范，该规范由 OpenID
+   Foundation 的 OpenID Connect 工作组制定。本规范将 OpenID
+   Connect Discovery 所定义元数据格式用于发布 OAuth 授权服务器
+   元数据的事实用法标准化。
+
+   作者感谢以下人员对本规范进行审查：Shwetha Bhandari、Ben
+   Campbell、Brian Campbell、Brian Carpenter、William Denniss、
+   Vladimir Dzhuvinov、Donald Eastlake、Samuel Erdtman、George
+   Fletcher、Dick Hardt、Phil Hunt、Alexey Melnikov、Tony Nadalin、
+   Mark Nottingham、Eric Rescorla、Justin Richer、Adam Roach、
+   Hannes Tschofenig 和 Hans Zandbelt。
+
+作者地址
+
+   Michael B. Jones
+   Microsoft
+
+   Email: mbj@microsoft.com
+   URI:   <a href="http://self-issued.info/">http://self-issued.info/</a>
+
+
+   Nat Sakimura
+   Nomura Research Institute, Ltd.
+
+   Email: n-sakimura@nri.co.jp
+   URI:   <a href="http://nat.sakimura.org/">http://nat.sakimura.org/</a>
+
+
+   John Bradley
+   Yubico
+
+   Email: <a href="./rfc8414">RFC8414</a>@ve7jtb.com
+   URI:   <a href="http://www.thread-safe.com/">http://www.thread-safe.com/</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Jones 等                    标准跟踪                        [第 23 页]
+</pre>
+<script src="https://htmlspecs.com/dropdown.js"></script>

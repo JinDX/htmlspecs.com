@@ -2375,14 +2375,14 @@ const links = [
         lang: "cjk",
         state: "RFC"
     },
-    // {
-    //     text: "OAuth 2.0 Authorization Server Metadata",
-    //     href: "https://htmlspecs.com/oauth2-as-metadata/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc8414.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
+    {
+        text: "OAuth 2.0 Authorization Server Metadata",
+        href: "https://htmlspecs.com/oauth2-as-metadata/",
+        src: "https://www.rfc-editor.org/rfc/rfc8414.html",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "RFC"
+    },
     // {
     //     text: "OAuth 2.0 Dynamic Client Registration Protocol",
     //     href: "https://htmlspecs.com/oauth2-dyn-reg/",
