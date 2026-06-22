@@ -459,14 +459,14 @@ const links = [
     },
 
     //### 语法记法与时间格式|구문 표기법 및 시간 형식|構文記法・時刻フォーマット
-    // {
-    //     text: "Augmented BNF for Syntax Specifications: ABNF",
-    //     href: "https://htmlspecs.com/abnf/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc5234.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
+    {
+        text: "Augmented BNF for Syntax Specifications: ABNF",
+        href: "https://htmlspecs.com/abnf/",
+        src: "https://www.rfc-editor.org/rfc/rfc5234.html",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "RFC"
+    },
     // {
     //     text: "Case-Sensitive String Support in ABNF",
     //     href: "https://htmlspecs.com/abnf-case-sensitive/",
