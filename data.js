@@ -467,14 +467,14 @@ const links = [
         lang: "cjk",
         state: "RFC"
     },
-    // {
-    //     text: "Case-Sensitive String Support in ABNF",
-    //     href: "https://htmlspecs.com/abnf-case-sensitive/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc7405.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
+    {
+        text: "Case-Sensitive String Support in ABNF",
+        href: "https://htmlspecs.com/abnf-case-sensitive/",
+        src: "https://www.rfc-editor.org/rfc/rfc7405.html",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "RFC"
+    },
     // {
     //     text: "Date and Time on the Internet: Timestamps",
     //     href: "https://htmlspecs.com/rfc3339/",
