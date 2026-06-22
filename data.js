@@ -4318,7 +4318,7 @@ const httpLinks = [
     //### 传输层与连接安全|전송 계층 및 연결 보안|トランスポート層・接続セキュリティ
     {
         text: "QUIC: A UDP-Based Multiplexed and Secure Transport",
-        href: "https://htmlspecs.com/quic/",
+        href: "https://htmlspecs.com/http/rfc9000.html",
         src: "https://www.rfc-editor.org/rfc/rfc9000.html",
         "last-modified": "-",
         lang: "cjk",
@@ -4326,7 +4326,7 @@ const httpLinks = [
     },
     {
         text: "Using TLS to Secure QUIC",
-        href: "https://htmlspecs.com/quic-tls/",
+        href: "https://htmlspecs.com/http/rfc9001.html",
         src: "https://www.rfc-editor.org/rfc/rfc9001.html",
         "last-modified": "-",
         lang: "cjk",
@@ -4334,7 +4334,7 @@ const httpLinks = [
     },
     {
         text: "QUIC Loss Detection and Congestion Control",
-        href: "https://htmlspecs.com/quic-recovery/",
+        href: "https://htmlspecs.com/http/rfc9002.html",
         src: "https://www.rfc-editor.org/rfc/rfc9002.html",
         "last-modified": "-",
         lang: "cjk",
@@ -4342,7 +4342,7 @@ const httpLinks = [
     },
     // {
     //     text: "Version-Independent Properties of QUIC",
-    //     href: "https://htmlspecs.com/quic-invariants/",
+    //     href: "https://htmlspecs.com/http/rfc8999.html",
     //     src: "https://www.rfc-editor.org/rfc/rfc8999.html",
     //     "last-modified": "-",
     //     lang: "cjk",
@@ -4350,7 +4350,7 @@ const httpLinks = [
     // },
     // {
     //     text: "The Transport Layer Security (TLS) Protocol Version 1.3",
-    //     href: "https://htmlspecs.com/tls13/",
+    //     href: "https://htmlspecs.com/http/rfc8446.html",
     //     src: "https://www.rfc-editor.org/rfc/rfc8446.html",
     //     "last-modified": "-",
     //     lang: "cjk",
@@ -4358,7 +4358,7 @@ const httpLinks = [
     // },
     // {
     //     text: "The WebSocket Protocol",
-    //     href: "https://htmlspecs.com/websocket-protocol/",
+    //     href: "https://htmlspecs.com/http/rfc6455.html",
     //     src: "https://www.rfc-editor.org/rfc/rfc6455.html",
     //     "last-modified": "-",
     //     lang: "cjk",
