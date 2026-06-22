@@ -1,0 +1,1040 @@
+<pre>互联网工程任务组 (IETF)                         N. Sakimura, Ed.
+征求意见稿：7636                         Nomura Research Institute
+类别：标准轨道                                           J. Bradley
+ISSN: 2070-1721                                      Ping Identity
+                                                              N. Agarwal
+                                                                  Google
+                                                          2015 年 9 月
+
+
+          <span class="h1">OAuth 公共客户端的代码交换证明密钥</span>
+
+摘要
+
+   使用授权码授权的 OAuth 2.0 公共客户端容易受到授权码拦截攻击。
+   本规范描述了该攻击，以及一种通过使用代码交换证明密钥
+   （PKCE，发音为 "pixy"）来缓解该威胁的技术。
+
+本备忘录状态
+
+   这是一份互联网标准轨道文档。
+
+   本文档是互联网工程任务组 (IETF) 的产物。它代表了 IETF 社区
+   的共识。它已经过公开审查，并已由互联网工程指导组 (IESG)
+   批准发布。有关互联网标准的更多信息可见
+   <a href="./rfc5741#section-2">RFC 5741 第&nbsp;2 节</a>。
+
+   关于本文档的当前状态、任何勘误以及如何提供反馈的信息，可在
+   <a href="http://www.rfc-editor.org/info/rfc7636">http://www.rfc-editor.org/info/rfc7636</a> 获取。
+
+Copyright Notice
+
+   Copyright (c) 2015 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to <a href="https://www.rfc-editor.org/bcp/bcp78">BCP 78</a> and the IETF Trust's Legal
+   Provisions Relating to IETF Documents
+   (<a href="http://trustee.ietf.org/license-info">http://trustee.ietf.org/license-info</a>) in effect on the date of
+   publication of this document.  Please review these documents
+   carefully, as they describe your rights and restrictions with respect
+   to this document.  Code Components extracted from this document must
+   include Simplified BSD License text as described in Section 4.e of
+   the Trust Legal Provisions and are provided without warranty as
+   described in the Simplified BSD License.
+
+
+
+
+<span class="grey">Sakimura 等人             标准轨道                    [第 1 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-2" ></span>
+<span class="grey"><a href="./rfc7636">RFC 7636</a>                       OAUTH PKCE                 2015 年 9 月</span>
+
+
+目录
+
+   <a href="#section-1">1</a>. 引言 ........................................................<a href="#page-3">3</a>
+      <a href="#section-1.1">1.1</a>. 协议流程 ................................................<a href="#page-5">5</a>
+   <a href="#section-2">2</a>. 记号约定 ....................................................<a href="#page-6">6</a>
+   <a href="#section-3">3</a>. 术语 ........................................................<a href="#page-7">7</a>
+      <a href="#section-3.1">3.1</a>. 缩写 ....................................................<a href="#page-7">7</a>
+   <a href="#section-4">4</a>. 协议 ........................................................<a href="#page-8">8</a>
+      <a href="#section-4.1">4.1</a>. 客户端创建代码验证器 ....................................<a href="#page-8">8</a>
+      <a href="#section-4.2">4.2</a>. 客户端创建代码质询 ......................................<a href="#page-8">8</a>
+      4.3. 客户端随授权请求发送代码质询
+           ......................................................<a href="#page-9">9</a>
+      <a href="#section-4.4">4.4</a>. 服务器返回代码 ..........................................<a href="#page-9">9</a>
+           <a href="#section-4.4.1">4.4.1</a>. 错误响应 ........................................<a href="#page-9">9</a>
+      4.5. 客户端将授权码和代码验证器发送到
+           令牌端点 ..............................................<a href="#page-10">10</a>
+      4.6. 服务器在返回令牌之前验证 code_verifier
+           ......................................................<a href="#page-10">10</a>
+   <a href="#section-5">5</a>. 兼容性 .....................................................<a href="#page-11">11</a>
+   <a href="#section-6">6</a>. IANA 考虑事项 ..............................................<a href="#page-11">11</a>
+      <a href="#section-6.1">6.1</a>. OAuth 参数注册表 ........................................<a href="#page-11">11</a>
+      <a href="#section-6.2">6.2</a>. PKCE 代码质询方法注册表 .................................<a href="#page-11">11</a>
+           <a href="#section-6.2.1">6.2.1</a>. 注册模板 ........................................<a href="#page-12">12</a>
+           <a href="#section-6.2.2">6.2.2</a>. 初始注册表内容 ..................................<a href="#page-13">13</a>
+   <a href="#section-7">7</a>. 安全考虑事项 ...............................................<a href="#page-13">13</a>
+      <a href="#section-7.1">7.1</a>. code_verifier 的熵 ......................................<a href="#page-13">13</a>
+      <a href="#section-7.2">7.2</a>. 防止窃听者 .............................................<a href="#page-13">13</a>
+      <a href="#section-7.3">7.3</a>. 对 code_challenge 加盐 .................................<a href="#page-14">14</a>
+      <a href="#section-7.4">7.4</a>. OAuth 安全考虑事项 .....................................<a href="#page-14">14</a>
+      <a href="#section-7.5">7.5</a>. TLS 安全考虑事项 .......................................<a href="#page-15">15</a>
+   <a href="#section-8">8</a>. 参考文献 ...................................................<a href="#page-15">15</a>
+      <a href="#section-8.1">8.1</a>. 规范性参考文献 .........................................<a href="#page-15">15</a>
+      <a href="#section-8.2">8.2</a>. 资料性参考文献 .........................................<a href="#page-16">16</a>
+   <a href="#appendix-A">附录 A</a>.  无填充 Base64url 编码的实现说明
+                ................................................<a href="#page-17">17</a>
+   <a href="#appendix-B">附录 B</a>.  S256 code_challenge_method 的示例 ...................<a href="#page-17">17</a>
+   致谢 .........................................................<a href="#page-19">19</a>
+   作者地址 .....................................................<a href="#page-20">20</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Sakimura 等人             标准轨道                    [第 2 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-3" ></span>
+<span class="grey"><a href="./rfc7636">RFC 7636</a>                       OAUTH PKCE                 2015 年 9 月</span>
+
+
+<span class="h2"><a class="selflink" id="section-1" href="#section-1">1</a>.  引言</span>
+
+   OAuth 2.0 [<a href="./rfc6749" title="&quot;The OAuth 2.0 Authorization Framework&quot;">RFC6749</a>] 公共客户端容易受到授权码拦截攻击。
+
+   在这种攻击中，攻击者会在未受传输层安全性 (TLS) 保护的通信
+   路径内拦截从授权端点返回的授权码，例如客户端操作系统内的
+   应用间通信。
+
+   一旦攻击者获得了授权码，就可以使用它来获取访问令牌。
+
+   图 1 以图形方式展示了该攻击。在步骤 (1) 中，在终端设备
+   （例如智能手机）上运行的原生应用通过浏览器/操作系统发出
+   OAuth 2.0 授权请求。在这种情况下，重定向端点 URI 通常使用
+   自定义 URI 方案。步骤 (1) 通过无法被拦截的安全 API 发生，
+   尽管在高级攻击场景中它可能会被观察到。随后，请求在步骤 (2)
+   中被转发到 OAuth 2.0 授权服务器。由于 OAuth 要求使用 TLS，
+   因此该通信受 TLS 保护，无法被拦截。授权服务器在步骤 (3)
+   中返回授权码。在步骤 (4) 中，授权码通过步骤 (1) 中提供的
+   重定向端点 URI 返回给请求者。
+
+   请注意，恶意应用有可能将自身注册为该自定义方案的处理程序，
+   同时合法 OAuth 2.0 应用也使用该方案。一旦这样做，恶意应用
+   现在便能够在步骤 (4) 中拦截授权码。这允许攻击者分别在步骤
+   (5) 和 (6) 中请求并获取访问令牌。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Sakimura 等人             标准轨道                    [第 3 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-4" ></span>
+<span class="grey"><a href="./rfc7636">RFC 7636</a>                       OAUTH PKCE                 2015 年 9 月</span>
+
+
+    +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+
+    | 终端设备（例如，智能手机）     |
+    |                                |
+    | +-------------+   +----------+ | (6) 访问令牌    +----------+
+    | |合法         |   | 恶意     |&lt;--------------------|          |
+    | |OAuth 2.0 应用|  | 应用     |--------------------&gt;|          |
+    | +-------------+   +----------+ | (5) 授权        |          |
+    |        |    ^          ^       |        授权      |          |
+    |        |     \         |       |                   |          |
+    |        |      \   (4)  |       |                   |          |
+    |    (1) |       \  Authz|       |                   |          |
+    |   Authz|        \ Code |       |                   |  Authz   |
+    | Request|         \     |       |                   |  Server  |
+    |        |          \    |       |                   |          |
+    |        |           \   |       |                   |          |
+    |        v            \  |       |                   |          |
+    | +----------------------------+ |                   |          |
+    | |                            | | (3) Authz Code    |          |
+    | |       操作系统/            |&lt;--------------------|          |
+    | |         浏览器             |--------------------&gt;|          |
+    | |                            | | (2) Authz Request |          |
+    | +----------------------------+ |                   +----------+
+    +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+
+
+             图 1：授权码拦截攻击
+
+   要使此攻击生效，需要满足若干前提条件：
+
+   1. 攻击者设法在客户端设备上注册恶意应用程序，并注册一个也被
+      另一个应用程序使用的自定义 URI 方案。操作系统必须允许多个
+      应用程序注册同一个自定义 URI 方案。
+
+   2. 使用 OAuth 2.0 授权码授权。
+
+   3. 攻击者能够访问 OAuth 2.0 [<a href="./rfc6749" title="&quot;The OAuth 2.0 Authorization Framework&quot;">RFC6749</a>] "client_id" 和
+      "client_secret"（如果已预置）。所有 OAuth 2.0 原生应用
+      客户端实例都使用相同的 "client_id"。在客户端二进制应用中
+      预置的密钥不能被视为机密。
+
+   4. 满足以下任一条件：
+
+      4a. 攻击者（通过已安装的应用程序）只能观察来自授权端点的
+          响应。当 "code_challenge_method" 值为 "plain" 时，只有
+          此攻击被缓解。
+
+
+
+
+
+<span class="grey">Sakimura 等人             标准轨道                    [第 4 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-5" ></span>
+<span class="grey"><a href="./rfc7636">RFC 7636</a>                       OAUTH PKCE                 2015 年 9 月</span>
+
+
+      4b. 更复杂的攻击场景允许攻击者观察到发往授权端点的请求
+          （以及响应）。但是，攻击者无法充当中间人。这是由于 OS
+          中泄露 http 日志信息造成的。为缓解这一点，
+          "code_challenge_method" 值必须设置为 "S256"，或设置为
+          由加密安全的 "code_challenge_method" 扩展定义的值。
+
+   尽管这是一长串前提条件，但所描述的攻击已在真实环境中被观察
+   到，并且必须在 OAuth 2.0 部署中加以考虑。虽然 OAuth 2.0
+   威胁模型（<a href="./rfc6819#section-4.4.1">[RFC6819] 第&nbsp;4.4.1 节</a>）描述了缓解技术，但遗憾的是，
+   它们并不适用，因为它们依赖于每个客户端实例的密钥或每个客户端
+   实例的重定向 URI。
+
+   为缓解此攻击，本扩展使用一个动态创建的加密随机密钥，称为
+   "code verifier"。每个授权请求都会创建一个唯一的 code verifier，
+   并将其转换后的值（称为 "code challenge"）发送给授权服务器以
+   获取授权码。随后，将获得的授权码连同 "code verifier" 发送到
+   令牌端点，服务器将其与先前收到的请求代码进行比较，从而执行
+   客户端对 "code verifier" 的持有证明。这之所以能够作为缓解措施，
+   是因为攻击者不知道这个一次性密钥，因为它是通过 TLS 发送且无法
+   被拦截的。
+
+<span class="h3"><a class="selflink" id="section-1.1" href="#section-1.1">1.1</a>.  协议流程</span>
+
+                                                 +-------------------+
+                                                 |   Authz Server    |
+       +--------+                                | +---------------+ |
+       |        |--(A)- Authorization Request ----&gt;|               | |
+       |        |       + t(code_verifier), t_m  | | Authorization | |
+       |        |                                | |    Endpoint   | |
+       |        |&lt;-(B)---- Authorization Code -----|               | |
+       |        |                                | +---------------+ |
+       | Client |                                |                   |
+       |        |                                | +---------------+ |
+       |        |--(C)-- Access Token Request ----&gt;|               | |
+       |        |          + code_verifier       | |    Token      | |
+       |        |                                | |   Endpoint    | |
+       |        |&lt;-(D)------ Access Token ---------|               | |
+       +--------+                                | +---------------+ |
+                                                 +-------------------+
+
+                     图 2：抽象协议流程
+
+
+
+<span class="grey">Sakimura 等人             标准轨道                    [第 5 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-6" ></span>
+<span class="grey"><a href="./rfc7636">RFC 7636</a>                       OAUTH PKCE                 2015 年 9 月</span>
+
+
+   本规范向 OAuth 2.0 授权请求和访问令牌请求添加了额外参数，
+   其抽象形式如图 2 所示。
+
+   A. 客户端创建并记录一个名为 "code_verifier" 的秘密，并派生出
+      一个转换后的版本 "t(code_verifier)"（称为 "code_challenge"），
+      它会随转换方法 "t_m" 一起在 OAuth 2.0 授权请求中发送。
+
+   B. 授权端点照常响应，但会记录 "t(code_verifier)" 和转换方法。
+
+   C. 客户端随后照常在访问令牌请求中发送授权码，但包括在 (A)
+      中生成的 "code_verifier" 秘密。
+
+   D. 授权服务器转换 "code_verifier"，并将其与来自 (B) 的
+      "t(code_verifier)" 进行比较。如果它们不相等，则拒绝访问。
+
+   在 (B) 处拦截授权码的攻击者无法将其兑换为访问令牌，因为其并未
+   持有 "code_verifier" 秘密。
+
+<span class="h2"><a class="selflink" id="section-2" href="#section-2">2</a>.  记号约定</span>
+
+   本文档中的关键词 "MUST"、"MUST NOT"、"REQUIRED"、"SHALL"、
+   "SHALL NOT"、"SHOULD"、"SHOULD NOT"、"RECOMMENDED"、
+   "NOT RECOMMENDED"、"MAY" 和 "OPTIONAL" 应按
+   "Key words for use in RFCs to Indicate Requirement Levels"
+   [<a href="./rfc2119" title="&quot;Key words for use in RFCs to Indicate Requirement Levels&quot;">RFC2119</a>] 中的描述进行解释。如果这些词使用时未以大写拼写，
+   则应按其自然语言含义解释。
+
+   本规范使用 [<a href="./rfc5234" title="&quot;Augmented BNF for Syntax Specifications: ABNF&quot;">RFC5234</a>] 的增广巴科斯-瑙尔范式 (ABNF) 记号。
+
+   STRING 表示由零个或多个 ASCII [<a href="./rfc20" title="&quot;ASCII format for network interchange&quot;">RFC20</a>] 字符组成的序列。
+
+   OCTETS 表示由零个或多个八位组组成的序列。
+
+   ASCII(STRING) 表示 STRING 的 ASCII [<a href="./rfc20" title="&quot;ASCII format for network interchange&quot;">RFC20</a>] 表示形式的八位组，其中
+   STRING 是由零个或多个 ASCII 字符组成的序列。
+
+   BASE64URL-ENCODE(OCTETS) 表示按 <a href="#appendix-A">附录 A</a> 对 OCTETS 进行 base64url
+   编码，生成一个 STRING。
+
+
+
+
+
+<span class="grey">Sakimura 等人             标准轨道                    [第 6 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-7" ></span>
+<span class="grey"><a href="./rfc7636">RFC 7636</a>                       OAUTH PKCE                 2015 年 9 月</span>
+
+
+   BASE64URL-DECODE(STRING) 表示按 <a href="#appendix-A">附录 A</a> 对 STRING 进行 base64url
+   解码，生成一个八位组序列。
+
+   SHA256(OCTETS) 表示 OCTETS 的 SHA2 256 位散列 [<a href="./rfc6234" title="&quot;US Secure Hash Algorithms (SHA and SHA-based HMAC and HKDF)&quot;">RFC6234</a>]。
+
+<span class="h2"><a class="selflink" id="section-3" href="#section-3">3</a>.  术语</span>
+
+   除 OAuth 2.0 [<a href="./rfc6749" title="&quot;The OAuth 2.0 Authorization Framework&quot;">RFC6749</a>] 中定义的术语外，本规范定义以下术语：
+
+   code verifier
+      一个加密随机字符串，用于将授权请求与令牌请求关联起来。
+
+   code challenge
+      从 code verifier 派生出的质询，在授权请求中发送，供之后验证。
+
+   code challenge method
+      用于派生 code challenge 的方法。
+
+   Base64url Encoding
+      使用 <a href="./rfc4648#section-5">[RFC4648] 第&nbsp;5 节</a> 中定义的 URL 和文件名安全字符集进行的
+      Base64 编码，省略所有尾随的 '=' 字符（如 <a href="./rfc4648#section-3.2">[RFC4648] 第&nbsp;3.2 节</a>
+      所允许），并且不包含任何换行、空白或其他附加字符。
+      （有关实现无填充 base64url 编码的说明，请参见 <a href="#appendix-A">附录 A</a>。）
+
+<span class="h3"><a class="selflink" id="section-3.1" href="#section-3.1">3.1</a>.  缩写</span>
+
+   ABNF   增广巴科斯-瑙尔范式
+
+   Authz  授权
+
+   PKCE   代码交换证明密钥
+
+   MITM   中间人
+
+   MTI    强制实现
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Sakimura 等人             标准轨道                    [第 7 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-8" ></span>
+<span class="grey"><a href="./rfc7636">RFC 7636</a>                       OAUTH PKCE                 2015 年 9 月</span>
+
+
+<span class="h2"><a class="selflink" id="section-4" href="#section-4">4</a>.  协议</span>
+
+<span class="h3"><a class="selflink" id="section-4.1" href="#section-4.1">4.1</a>.  客户端创建代码验证器</span>
+
+   客户端首先按以下方式为每个 OAuth 2.0 [<a href="./rfc6749" title="&quot;The OAuth 2.0 Authorization Framework&quot;">RFC6749</a>] 授权请求创建一个
+   代码验证器 "code_verifier"：
+
+   code_verifier = 高熵加密随机 STRING，使用
+   <a href="./rfc3986#section-2.3">[RFC3986] 第&nbsp;2.3 节</a> 中的未保留字符
+   [A-Z] / [a-z] / [0-9] / "-" / "." / "_" / "~"，
+   最小长度为 43 个字符，最大长度为 128 个字符。
+
+   "code_verifier" 的 ABNF 如下。
+
+   code-verifier = 43*128unreserved
+   unreserved = ALPHA / DIGIT / "-" / "." / "_" / "~"
+   ALPHA = %x41-5A / %x61-7A
+   DIGIT = %x30-39
+
+   注意：代码验证器 SHOULD 具有足够的熵，使其值难以被猜测。
+   RECOMMENDED 使用合适的随机数生成器的输出创建一个 32 八位组
+   序列。然后对该八位组序列进行 base64url 编码，以生成一个
+   43 八位组的 URL 安全字符串，用作代码验证器。
+
+<span class="h3"><a class="selflink" id="section-4.2" href="#section-4.2">4.2</a>.  客户端创建代码质询</span>
+
+   客户端随后通过对代码验证器使用以下某一种转换，从代码验证器派生
+   出代码质询：
+
+   plain
+      code_challenge = code_verifier
+
+   S256
+      code_challenge = BASE64URL-ENCODE(SHA256(ASCII(code_verifier)))
+
+   如果客户端能够使用 "S256"，它 MUST 使用 "S256"，因为服务器上
+   "S256" 是强制实现 (MTI) 的。只有当客户端出于某种技术原因无法
+   支持 "S256"，并且通过带外配置知道服务器支持 "plain" 时，才允许
+   客户端使用 "plain"。
+
+   plain 转换用于与现有部署兼容，也用于无法使用 S256 转换的受限
+   环境。
+
+
+
+
+
+<span class="grey">Sakimura 等人             标准轨道                    [第 8 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-9" ></span>
+<span class="grey"><a href="./rfc7636">RFC 7636</a>                       OAUTH PKCE                 2015 年 9 月</span>
+
+
+   "code_challenge" 的 ABNF 如下。
+
+   code-challenge = 43*128unreserved
+   unreserved = ALPHA / DIGIT / "-" / "." / "_" / "~"
+   ALPHA = %x41-5A / %x61-7A
+   DIGIT = %x30-39
+
+<span class="h3"><a class="selflink" id="section-4.3" href="#section-4.3">4.3</a>.  客户端随授权请求发送代码质询</span>
+
+   客户端使用以下额外参数，将代码质询作为 OAuth 2.0 授权请求
+   （<a href="./rfc6749#section-4.1.1">[RFC6749] 第&nbsp;4.1.1 节</a>）的一部分发送：
+
+   code_challenge
+      REQUIRED.  代码质询。
+
+   code_challenge_method
+      OPTIONAL，如果请求中不存在则默认为 "plain"。代码验证器转换
+      方法为 "S256" 或 "plain"。
+
+<span class="h3"><a class="selflink" id="section-4.4" href="#section-4.4">4.4</a>.  服务器返回代码</span>
+
+   当服务器在授权响应中颁发授权码时，它 MUST 将 "code_challenge"
+   和 "code_challenge_method" 值与授权码关联起来，以便以后能够
+   验证。
+
+   通常，"code_challenge" 和 "code_challenge_method" 值会以加密
+   形式存储在 "code" 本身中，但也可以存储在服务器上并与该 code
+   关联。服务器 MUST NOT 以其他实体可提取的形式在客户端请求中包含
+   "code_challenge" 值。
+
+   服务器用于将 "code_challenge" 与已颁发的 "code" 关联起来的
+   具体方法不在本规范范围内。
+
+<span class="h4"><a class="selflink" id="section-4.4.1" href="#section-4.4.1">4.4.1</a>.  错误响应</span>
+
+   如果服务器要求 OAuth 公共客户端使用代码交换证明密钥 (PKCE)，
+   而客户端未在请求中发送 "code_challenge"，则授权端点 MUST 返回
+   授权错误响应，并将 "error" 值设置为 "invalid_request"。
+   "error_description" 或 "error_uri" 的响应 SHOULD 说明错误的
+   性质，例如，需要 code challenge。
+
+
+
+
+
+
+<span class="grey">Sakimura 等人             标准轨道                    [第 9 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-10" ></span>
+<span class="grey"><a href="./rfc7636">RFC 7636</a>                       OAUTH PKCE                 2015 年 9 月</span>
+
+
+   如果支持 PKCE 的服务器不支持所请求的转换，则授权端点 MUST 返回
+   授权错误响应，并将 "error" 值设置为 "invalid_request"。
+   "error_description" 或 "error_uri" 的响应 SHOULD 说明错误的
+   性质，例如，转换算法不受支持。
+
+<span class="h3"><a class="selflink" id="section-4.5" href="#section-4.5">4.5</a>.  客户端将授权码和代码验证器发送到</span>
+<span class="h3">      令牌端点</span>
+
+   收到授权码后，客户端将访问令牌请求发送到令牌端点。除 OAuth 2.0
+   访问令牌请求（<a href="./rfc6749#section-4.1.3">[RFC6749] 第&nbsp;4.1.3 节</a>）中定义的参数外，它还
+   发送以下参数：
+
+   code_verifier
+      REQUIRED.  代码验证器
+
+   当授权码被颁发时，"code_challenge_method" 会绑定到授权码。
+   这就是令牌端点 MUST 用来验证 "code_verifier" 的方法。
+
+<span class="h3"><a class="selflink" id="section-4.6" href="#section-4.6">4.6</a>.  服务器在返回令牌之前验证 code_verifier</span>
+
+   在令牌端点收到请求后，服务器通过根据客户端指定的
+   "code_challenge_method" 方法，先对收到的 "code_verifier" 进行
+   转换，计算出代码质询，并将其与先前关联的 "code_challenge" 进行
+   比较，从而验证它。
+
+   如果来自 <a href="#section-4.3">第 4.3 节</a> 的 "code_challenge_method" 是 "S256"，则收到的
+   "code_verifier" 会通过 SHA-256 进行散列，再进行 base64url 编码，
+   然后与 "code_challenge" 比较，即：
+
+   BASE64URL-ENCODE(SHA256(ASCII(code_verifier))) == code_challenge
+
+   如果来自 <a href="#section-4.3">第 4.3 节</a> 的 "code_challenge_method" 是 "plain"，则它们会
+   直接比较，即：
+
+   code_verifier == code_challenge.
+
+   如果这些值相等，令牌端点 MUST 继续按正常方式处理（如 OAuth 2.0
+   [<a href="./rfc6749" title="&quot;The OAuth 2.0 Authorization Framework&quot;">RFC6749</a>] 所定义）。如果这些值不相等，则 MUST 返回一个错误响应，
+   按 <a href="./rfc6749#section-5.2">[RFC6749] 第&nbsp;5.2 节</a> 所述指示 "invalid_grant"。
+
+
+
+
+
+
+<span class="grey">Sakimura 等人             标准轨道                   [第 10 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-11" ></span>
+<span class="grey"><a href="./rfc7636">RFC 7636</a>                       OAUTH PKCE                 2015 年 9 月</span>
+
+
+<span class="h2"><a class="selflink" id="section-5" href="#section-5">5</a>.  兼容性</span>
+
+   本规范的服务器实现 MAY 接受未实现此扩展的 OAuth2.0 客户端。
+   如果未从授权请求中的客户端收到 "code_verifier"，支持向后兼容的
+   服务器会恢复到不带此扩展的 OAuth 2.0 [<a href="./rfc6749" title="&quot;The OAuth 2.0 Authorization Framework&quot;">RFC6749</a>] 协议。
+
+   由于 OAuth 2.0 [<a href="./rfc6749" title="&quot;The OAuth 2.0 Authorization Framework&quot;">RFC6749</a>] 服务器响应不会被本规范改变，因此本规范
+   的客户端实现不需要知道服务器是否已实现本规范，并且 SHOULD 按
+   <a href="#section-4">第 4 节</a> 中定义的方式向所有服务器发送额外参数。
+
+<span class="h2"><a class="selflink" id="section-6" href="#section-6">6</a>.  IANA 考虑事项</span>
+
+   IANA 已根据本文档进行了以下注册。
+
+<span class="h3"><a class="selflink" id="section-6.1" href="#section-6.1">6.1</a>.  OAuth 参数注册表</span>
+
+   本规范在 OAuth 2.0 [<a href="./rfc6749" title="&quot;The OAuth 2.0 Authorization Framework&quot;">RFC6749</a>] 中定义的 IANA "OAuth Parameters"
+   注册表中注册以下参数。
+
+   o  参数名称：code_verifier
+   o  参数使用位置：token request
+   o  变更控制者：IESG
+   o  规范文档：<a href="./rfc7636">RFC 7636</a>（本文档）
+
+   o  参数名称：code_challenge
+   o  参数使用位置：authorization request
+   o  变更控制者：IESG
+   o  规范文档：<a href="./rfc7636">RFC 7636</a>（本文档）
+
+   o  参数名称：code_challenge_method
+   o  参数使用位置：authorization request
+   o  变更控制者：IESG
+   o  规范文档：<a href="./rfc7636">RFC 7636</a>（本文档）
+
+<span class="h3"><a class="selflink" id="section-6.2" href="#section-6.2">6.2</a>.  PKCE 代码质询方法注册表</span>
+
+   本规范建立 "PKCE Code Challenge Methods" 注册表。新注册表应作为
+   "OAuth Parameters" 注册表的子注册表。
+
+   与授权端点一起使用的额外 "code_challenge_method" 类型使用
+   Specification Required 策略 [<a href="./rfc5226" title="">RFC5226</a>] 注册，该策略包括由一名或
+   多名指定专家 (DE) 对请求进行审查。DE 将确保该请求在
+   oauth-ext-
+
+
+
+<span class="grey">Sakimura 等人             标准轨道                   [第 11 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-12" ></span>
+<span class="grey"><a href="./rfc7636">RFC 7636</a>                       OAUTH PKCE                 2015 年 9 月</span>
+
+
+   review@ietf.org 邮件列表上至少经过两周审查，并且该列表上的任何
+   讨论都在他们回应请求之前达成收敛。为允许在发布前分配值，一旦
+   指定专家对可接受的规范将被发布感到满意，即可批准注册。
+
+   注册请求以及 oauth-ext-review@ietf.org 邮件列表上的讨论应使用
+   适当的主题，例如 "Request for PKCE code_challenge_method:
+   example"。
+
+   指定专家在评估注册请求时，应考虑邮件列表上的讨论，以及该质询
+   方法的整体安全属性。新方法不应在发往授权端点的请求中泄露
+   code_verifier 的值。拒绝应包括解释，并在适用时给出如何使请求
+   成功的建议。
+
+<span class="h4"><a class="selflink" id="section-6.2.1" href="#section-6.2.1">6.2.1</a>.  注册模板</span>
+
+   Code Challenge Method Parameter Name:
+      所请求的名称（例如，"example"）。由于本规范的核心目标之一是
+      使所得表示保持紧凑，因此 RECOMMENDED 该名称较短——无充分理由
+      不应超过 8 个字符。该名称区分大小写。名称不得以不区分大小写
+      的方式匹配其他已注册名称，除非指定专家说明在这一特定情况下
+      有充分理由允许例外。
+
+   Change Controller:
+      对于标准轨道 RFC，填写 "IESG"。对于其他文档，给出责任方名称。
+      也可以包括其他详细信息（例如，邮政地址、电子邮件地址和主页
+      URI）。
+
+   Specification Document(s):
+      指向规定该参数的文档的引用，最好包括可用于获取文档副本的
+      URI。也可以包括相关章节的说明，但不是必需的。
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Sakimura 等人             标准轨道                   [第 12 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-13" ></span>
+<span class="grey"><a href="./rfc7636">RFC 7636</a>                       OAUTH PKCE                 2015 年 9 月</span>
+
+
+<span class="h4"><a class="selflink" id="section-6.2.2" href="#section-6.2.2">6.2.2</a>.  初始注册表内容</span>
+
+   根据本文档，IANA 已在此注册表中注册 <a href="#section-4.2">第 4.2 节</a> 中定义的代码质询
+   方法参数名称。
+
+   o  Code Challenge Method Parameter Name: plain
+   o  Change Controller: IESG
+   o  Specification Document(s): <a href="./rfc7636#section-4.2">RFC 7636 第&nbsp;4.2 节</a>（本文档）
+
+   o  Code Challenge Method Parameter Name: S256
+   o  Change Controller: IESG
+   o  Specification Document(s): <a href="./rfc7636#section-4.2">RFC 7636 第&nbsp;4.2 节</a>（本文档）
+
+<span class="h2"><a class="selflink" id="section-7" href="#section-7">7</a>.  安全考虑事项</span>
+
+<span class="h3"><a class="selflink" id="section-7.1" href="#section-7.1">7.1</a>.  code_verifier 的熵</span>
+
+   安全模型依赖于这样一个事实：攻击者没有获知或猜中代码验证器。
+   遵守这一原则至关重要。因此，代码验证器必须以加密随机且具有
+   高熵的方式创建，使攻击者不可能实际猜到它。
+
+   客户端 SHOULD 创建至少具有 256 位熵的 "code_verifier"。这可以
+   通过让合适的随机数生成器创建一个 32 八位组序列来完成。随后可
+   对该八位组序列进行 base64url 编码，以生成一个 43 八位组的
+   URL 安全字符串，用作具有所需熵的 "code_challenge"。
+
+<span class="h3"><a class="selflink" id="section-7.2" href="#section-7.2">7.2</a>.  防止窃听者</span>
+
+   客户端 MUST NOT 在尝试 "S256" 方法后降级到 "plain"。支持 PKCE
+   的服务器要求支持 "S256"，而不支持 PKCE 的服务器只会忽略未知的
+   "code_verifier"。因此，当提供 "S256" 时出现错误只能意味着服务器
+   有故障，或者 MITM 攻击者正在尝试降级攻击。
+
+   "S256" 方法可防止观察或拦截 "code_challenge" 的窃听者，因为
+   该质询在没有验证器的情况下无法使用。使用 "plain" 方法时，
+   攻击者有机会在设备上或 http 请求中观察到 "code_challenge"。
+   由于在这种情况下 code challenge 与 code verifier 相同，
+   "plain" 方法不能防止初始请求被窃听。
+
+   使用 "S256" 可防止 "code_verifier" 值泄露给攻击者。
+
+
+
+<span class="grey">Sakimura 等人             标准轨道                   [第 13 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-14" ></span>
+<span class="grey"><a href="./rfc7636">RFC 7636</a>                       OAUTH PKCE                 2015 年 9 月</span>
+
+
+   因此，"plain" SHOULD NOT 被使用，并且仅为了兼容请求路径已经受到
+   保护的已部署实现而存在。新实现 SHOULD NOT 使用 "plain" 方法，
+   除非它们由于某种技术原因无法支持 "S256"。
+
+   SHOULD 使用 "S256" 代码质询方法或其他加密安全的代码质询方法
+   扩展。"plain" 代码质询方法依赖操作系统和传输安全性不向攻击者
+   泄露请求。
+
+   如果代码质询方法是 "plain"，并且为了实现无状态服务器而要在
+   授权 "code" 内返回代码质询，则 MUST 以只有服务器能够解密并提取
+   它的方式对其进行加密。
+
+<span class="h3"><a class="selflink" id="section-7.3" href="#section-7.3">7.3</a>.  对 code_challenge 加盐</span>
+
+   为降低实现复杂度，在生成代码质询时不使用加盐，因为代码验证器
+   包含足够的熵，可以防止暴力破解攻击。将一个公开已知的值连接到
+   代码验证器（包含 256 位熵）后再用 SHA256 对其进行散列以生成
+   代码质询，不会增加暴力破解有效 code verifier 值所需的尝试次数。
+
+   虽然 "S256" 转换类似于对密码进行散列，但二者存在重要差异。
+   密码往往是熵相对较低的词，可以离线散列并在字典中查找该散列。
+   通过在散列前将一个唯一但公开的值连接到每个密码，攻击者需要
+   搜索的字典空间会大幅扩展。
+
+   现代图形处理器现在允许攻击者实时计算散列，其速度快于从磁盘
+   查找。这消除了盐在增加暴力破解攻击复杂度方面的价值，即使对于
+   低熵密码也是如此。
+
+<span class="h3"><a class="selflink" id="section-7.4" href="#section-7.4">7.4</a>.  OAuth 安全考虑事项</span>
+
+   [<a href="./rfc6819" title="&quot;OAuth 2.0 Threat Model and Security Considerations&quot;">RFC6819</a>] 中给出的所有 OAuth 安全分析都适用，因此读者 SHOULD
+   仔细遵循该文档。
+
+
+
+
+
+
+
+
+
+<span class="grey">Sakimura 等人             标准轨道                   [第 14 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-15" ></span>
+<span class="grey"><a href="./rfc7636">RFC 7636</a>                       OAUTH PKCE                 2015 年 9 月</span>
+
+
+<span class="h3"><a class="selflink" id="section-7.5" href="#section-7.5">7.5</a>.  TLS 安全考虑事项</span>
+
+   当前的安全考虑事项可见 "Recommendations for Secure Use of
+   Transport Layer Security (TLS) and Datagram Transport Layer Security
+   (DTLS)" [<a href="#ref-BCP195" title="&quot;Recommendations for Secure Use of Transport Layer Security (TLS) and Datagram Transport Layer Security (DTLS)&quot;">BCP195</a>]。这取代了 OAuth 2.0 [<a href="./rfc6749" title="&quot;The OAuth 2.0 Authorization Framework&quot;">RFC6749</a>] 中关于 TLS 版本的建议。
+
+<span class="h2"><a class="selflink" id="section-8" href="#section-8">8</a>.  参考文献</span>
+
+<span class="h3"><a class="selflink" id="section-8.1" href="#section-8.1">8.1</a>.  规范性参考文献</span>
+
+   [<a id="ref-BCP195">BCP195</a>]   Sheffer, Y., Holz, R., and P. Saint-Andre,
+              "Recommendations for Secure Use of Transport Layer
+              Security (TLS) and Datagram Transport Layer Security
+              (DTLS)", <a href="https://www.rfc-editor.org/bcp/bcp195">BCP 195</a>, <a href="./rfc7525">RFC 7525</a>, 2015 年 5 月，
+              &lt;<a href="http://www.rfc-editor.org/info/bcp195">http://www.rfc-editor.org/info/bcp195</a>&gt;.
+
+   [<a id="ref-RFC20">RFC20</a>]    Cerf, V., "ASCII format for network interchange", STD 80,
+              <a href="./rfc20">RFC 20</a>, DOI 10.17487/RFC0020, 1969 年 10 月，
+              &lt;<a href="http://www.rfc-editor.org/info/rfc20">http://www.rfc-editor.org/info/rfc20</a>&gt;.
+
+   [<a id="ref-RFC2119">RFC2119</a>]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", <a href="https://www.rfc-editor.org/bcp/bcp14">BCP 14</a>, <a href="./rfc2119">RFC 2119</a>,
+              DOI 10.17487/RFC2119, 1997 年 3 月，
+              &lt;<a href="http://www.rfc-editor.org/info/rfc2119">http://www.rfc-editor.org/info/rfc2119</a>&gt;.
+
+   [<a id="ref-RFC3986">RFC3986</a>]  Berners-Lee, T., Fielding, R., and L. Masinter, "Uniform
+              Resource Identifier (URI): Generic Syntax", STD 66, <a href="./rfc3986">RFC</a>
+              <a href="./rfc3986">3986</a>, DOI 10.17487/RFC3986, 2005 年 1 月，
+              &lt;<a href="http://www.rfc-editor.org/info/rfc3986">http://www.rfc-editor.org/info/rfc3986</a>&gt;.
+
+   [<a id="ref-RFC4648">RFC4648</a>]  Josefsson, S., "The Base16, Base32, and Base64 Data
+              Encodings", <a href="./rfc4648">RFC 4648</a>, DOI 10.17487/RFC4648, 2006 年 10 月，
+              &lt;<a href="http://www.rfc-editor.org/info/rfc4648">http://www.rfc-editor.org/info/rfc4648</a>&gt;.
+
+   [<a id="ref-RFC5226">RFC5226</a>]  Narten, T. and H. Alvestrand, "Guidelines for Writing an
+              IANA Considerations Section in RFCs", <a href="https://www.rfc-editor.org/bcp/bcp26">BCP 26</a>, <a href="./rfc5226">RFC 5226</a>,
+              DOI 10.17487/RFC5226, 2008 年 5 月，
+              &lt;<a href="http://www.rfc-editor.org/info/rfc5226">http://www.rfc-editor.org/info/rfc5226</a>&gt;.
+
+   [<a id="ref-RFC5234">RFC5234</a>]  Crocker, D., Ed. and P. Overell, "Augmented BNF for Syntax
+              Specifications: ABNF", STD 68, <a href="./rfc5234">RFC 5234</a>,
+              DOI 10.17487/RFC5234, 2008 年 1 月，
+              &lt;<a href="http://www.rfc-editor.org/info/rfc5234">http://www.rfc-editor.org/info/rfc5234</a>&gt;.
+
+
+
+
+
+
+
+<span class="grey">Sakimura 等人             标准轨道                   [第 15 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-16" ></span>
+<span class="grey"><a href="./rfc7636">RFC 7636</a>                       OAUTH PKCE                 2015 年 9 月</span>
+
+
+   [<a id="ref-RFC6234">RFC6234</a>]  Eastlake 3rd, D. and T. Hansen, "US Secure Hash Algorithms
+              (SHA and SHA-based HMAC and HKDF)", <a href="./rfc6234">RFC 6234</a>,
+              DOI 10.17487/RFC6234, 2011 年 5 月，
+              &lt;<a href="http://www.rfc-editor.org/info/rfc6234">http://www.rfc-editor.org/info/rfc6234</a>&gt;.
+
+   [<a id="ref-RFC6749">RFC6749</a>]  Hardt, D., Ed., "The OAuth 2.0 Authorization Framework",
+              <a href="./rfc6749">RFC 6749</a>, DOI 10.17487/RFC6749, 2012 年 10 月，
+              &lt;<a href="http://www.rfc-editor.org/info/rfc6749">http://www.rfc-editor.org/info/rfc6749</a>&gt;.
+
+<span class="h3"><a class="selflink" id="section-8.2" href="#section-8.2">8.2</a>.  资料性参考文献</span>
+
+   [<a id="ref-RFC6819">RFC6819</a>]  Lodderstedt, T., Ed., McGloin, M., and P. Hunt, "OAuth 2.0
+              Threat Model and Security Considerations", <a href="./rfc6819">RFC 6819</a>,
+              DOI 10.17487/RFC6819, 2013 年 1 月，
+              &lt;<a href="http://www.rfc-editor.org/info/rfc6819">http://www.rfc-editor.org/info/rfc6819</a>&gt;.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Sakimura 等人             标准轨道                   [第 16 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-17" ></span>
+<span class="grey"><a href="./rfc7636">RFC 7636</a>                       OAUTH PKCE                 2015 年 9 月</span>
+
+
+<span class="h2"><a class="selflink" id="appendix-A" href="#appendix-A">附录 A</a>.  无填充 Base64url 编码的实现说明</span>
+
+   本附录描述如何基于使用填充的标准 base64 编码函数，实现无填充的
+   base64url 编码函数。
+
+   为具体起见，下面展示了实现这些函数的 C# 示例代码。类似代码也可
+   用于其他语言。
+
+     static string base64urlencode(byte [] arg)
+     {
+       string s = Convert.ToBase64String(arg); // 常规 base64 编码器
+       s = s.Split('=')[0]; // 移除任何尾随的 '='
+       s = s.Replace('+', '-'); // 编码的第 62 个字符
+       s = s.Replace('/', '_'); // 编码的第 63 个字符
+       return s;
+     }
+
+   未编码值与编码值之间的示例对应关系如下。下面的八位组序列编码为
+   下面的字符串，该字符串在解码后会再现该八位组序列。
+
+   3 236 255 224 193
+
+   A-z_4ME
+
+<span class="h2"><a class="selflink" id="appendix-B" href="#appendix-B">附录 B</a>.  S256 code_challenge_method 的示例</span>
+
+   客户端使用合适的随机数生成器的输出创建一个 32 八位组序列。
+   本示例中表示该值的八位组（使用 JSON 数组记法）为：
+
+      [116, 24, 223, 180, 151, 153, 224, 37, 79, 250, 96, 125, 216, 173,
+      187, 186, 22, 212, 37, 77, 105, 214, 191, 240, 91, 88, 5, 88, 83,
+      132, 141, 121]
+
+   将该八位组序列编码为 base64url 会得到 code_verifier 的值：
+
+       dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk
+
+   然后通过 SHA256 散列函数对 code_verifier 进行散列，生成：
+
+     [19, 211, 30, 150, 26, 26, 216, 236, 47, 22, 177, 12, 76, 152, 46,
+      8, 118, 168, 120, 173, 109, 241, 68, 86, 110, 225, 137, 74, 203,
+      112, 249, 195]
+
+
+
+
+<span class="grey">Sakimura 等人             标准轨道                   [第 17 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-18" ></span>
+<span class="grey"><a href="./rfc7636">RFC 7636</a>                       OAUTH PKCE                 2015 年 9 月</span>
+
+
+   将该八位组序列编码为 base64url 会得到 code_challenge 的值：
+
+       E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM
+
+   授权请求包括：
+
+       code_challenge=E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM
+       &amp;code_challenge_method=S256
+
+   授权服务器随后将 code_challenge 和 code_challenge_method 连同
+   授予客户端的 code 一起记录。
+
+   在发往 token_endpoint 的请求中，客户端包括在授权响应中收到的
+   code，以及额外参数：
+
+       code_verifier=dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk
+
+   授权服务器检索 code grant 的信息。基于记录的 code_challenge_method
+   为 S256，它随后对 code_verifier 的值进行散列和 base64url 编码：
+
+   BASE64URL-ENCODE(SHA256(ASCII(code_verifier)))
+
+   然后将计算出的值与 "code_challenge" 的值进行比较：
+
+   BASE64URL-ENCODE(SHA256(ASCII(code_verifier))) == code_challenge
+
+   如果两个值相等，则只要请求中没有其他错误，授权服务器就可以提供
+   令牌。如果这些值不相等，则必须拒绝该请求，并返回错误。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Sakimura 等人             标准轨道                   [第 18 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-19" ></span>
+<span class="grey"><a href="./rfc7636">RFC 7636</a>                       OAUTH PKCE                 2015 年 9 月</span>
+
+
+致谢
+
+   本规范的初始草案版本由 OpenID Foundation 的 OpenID AB/Connect
+   Working Group 创建。
+
+   本规范是 OAuth Working Group 的工作成果，该工作组包括数十名活跃
+   且投入的参与者。特别是，以下个人贡献了构想、反馈和措辞，塑造
+   并形成了最终规范：
+
+      Anthony Nadalin, Microsoft
+      Axel Nenker, Deutsche Telekom
+      Breno de Medeiros, Google
+      Brian Campbell, Ping Identity
+      Chuck Mortimore, Salesforce
+      Dirk Balfanz, Google
+      Eduardo Gueiros, Jive Communications
+      Hannes Tschonfenig, ARM
+      James Manger, Telstra
+      Justin Richer, MIT Kerberos
+      Josh Mandel, Boston Children's Hospital
+      Lewis Adam, Motorola Solutions
+      Madjid Nakhjiri, Samsung
+      Michael B. Jones, Microsoft
+      Paul Madsen, Ping Identity
+      Phil Hunt, Oracle
+      Prateek Mishra, Oracle
+      Ryo Ito, mixi
+      Scott Tomilson, Ping Identity
+      Sergey Beryozkin
+      Takamichi Saito
+      Torsten Lodderstedt, Deutsche Telekom
+      William Denniss, Google
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Sakimura 等人             标准轨道                   [第 19 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-20" ></span>
+<span class="grey"><a href="./rfc7636">RFC 7636</a>                       OAUTH PKCE                 2015 年 9 月</span>
+
+
+作者地址
+
+   Nat Sakimura（编辑）
+   Nomura Research Institute
+   1-6-5 Marunouchi, Marunouchi Kitaguchi Bldg.
+   Chiyoda-ku, Tokyo  100-0005
+   Japan
+
+   电话：+81-3-5533-2111
+   电子邮件：n-sakimura@nri.co.jp
+   URI:   <a href="http://nat.sakimura.org/">http://nat.sakimura.org/</a>
+
+
+   John Bradley
+   Ping Identity
+   Casilla 177, Sucursal Talagante
+   Talagante, RM
+   Chile
+
+   电话：+44 20 8133 3718
+   电子邮件：ve7jtb@ve7jtb.com
+   URI:   <a href="http://www.thread-safe.com/">http://www.thread-safe.com/</a>
+
+
+   Naveen Agarwal
+   Google
+   1600 Amphitheatre Parkway
+   Mountain View, CA  94043
+   United States
+
+   电话：+1 650-253-0000
+   电子邮件：naa@google.com
+   URI:   <a href="http://google.com/">http://google.com/</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Sakimura 等人             标准轨道                   [第 20 页]
+</pre>
+<script src="https://htmlspecs.com/dropdown.js"></script>
