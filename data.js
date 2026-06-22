@@ -4313,18 +4313,17 @@ const httpLinks = [
         etag: null,
         lang: "cjk",
         state: "RFC"
-    }
-    // ,
+    },
 
     //### 传输层与连接安全|전송 계층 및 연결 보안|トランスポート層・接続セキュリティ
-    // {
-    //     text: "QUIC: A UDP-Based Multiplexed and Secure Transport",
-    //     href: "https://htmlspecs.com/quic/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc9000.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
+    {
+        text: "QUIC: A UDP-Based Multiplexed and Secure Transport",
+        href: "https://htmlspecs.com/quic/",
+        src: "https://www.rfc-editor.org/rfc/rfc9000.html",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "RFC"
+    },
     // {
     //     text: "Using TLS to Secure QUIC",
     //     href: "https://htmlspecs.com/quic-tls/",
