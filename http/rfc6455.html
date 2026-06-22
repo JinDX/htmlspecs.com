@@ -1,0 +1,3553 @@
+<pre>Internet Engineering Task Force (IETF)                          I. Fette
+Request for Comments: 6455                                  Google, Inc.
+Category: Standards Track                                    A. Melnikov
+ISSN: 2070-1721                                               Isode Ltd.
+                                                           December 2011
+
+
+                         <span class="h1">WebSocket 协议</span>
+
+摘要
+
+   WebSocket 协议使在受控环境中运行不受信任代码的客户端
+   能够与已选择接受来自该代码通信的远程主机进行双向通信。
+   为此使用的安全模型是 Web 浏览器中常用的基于源的安全模型。
+   该协议由一个开启握手以及随后的基本消息分帧组成，
+   分层于 TCP 之上。此技术的目标是为需要与服务器进行
+   双向通信的基于浏览器的应用提供一种机制，而不依赖于
+   打开多个 HTTP 连接（例如，使用 XMLHttpRequest 或
+   &lt;iframe&gt; 和长轮询）。
+
+本备忘录状态
+
+   本文档是 Internet 标准跟踪文档。
+
+   本文档是 Internet Engineering Task Force (IETF) 的产物。
+   它代表了 IETF 社区的共识。它已经过公开审查，并已由
+   Internet Engineering Steering Group (IESG) 批准发布。
+   有关 Internet 标准的更多信息可见 <a href="./rfc5741#section-2">RFC 5741 第&nbsp;2 节</a>。
+
+   有关本文档当前状态、任何勘误以及如何提供反馈的信息，
+   可在以下位置获取：
+   <a href="http://www.rfc-editor.org/info/rfc6455">http://www.rfc-editor.org/info/rfc6455</a>.
+
+Copyright Notice
+
+   Copyright (c) 2011 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to <a href="https://www.rfc-editor.org/bcp/bcp78">BCP 78</a> and the IETF Trust's Legal
+   Provisions Relating to IETF Documents
+   (<a href="http://trustee.ietf.org/license-info">http://trustee.ietf.org/license-info</a>) in effect on the date of
+   publication of this document.  Please review these documents
+   carefully, as they describe your rights and restrictions with respect
+   to this document.  Code Components extracted from this document must
+
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                    [第 1 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-2" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+   包含信托法律条款第 4.e 节所述的简化 BSD 许可证文本，
+   并且按简化 BSD 许可证所述不提供任何保证。
+
+目录
+
+   <a href="#section-1">1</a>.  引言 . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-4">4</a>
+     <a href="#section-1.1">1.1</a>.  背景 . . . . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-4">4</a>
+     <a href="#section-1.2">1.2</a>.  协议概述  . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-5">5</a>
+     <a href="#section-1.3">1.3</a>.  开启握手  . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-6">6</a>
+     <a href="#section-1.4">1.4</a>.  关闭握手  . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-9">9</a>
+     <a href="#section-1.5">1.5</a>.  设计理念  . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-9">9</a>
+     <a href="#section-1.6">1.6</a>.  安全模型 . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-10">10</a>
+     <a href="#section-1.7">1.7</a>.  与 TCP 和 HTTP 的关系 . . . . . . . . . . . . . . . . <a href="#page-11">11</a>
+     <a href="#section-1.8">1.8</a>.  建立连接  . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-11">11</a>
+     <a href="#section-1.9">1.9</a>.  使用 WebSocket 协议的子协议  . . . . . . . . . . . . . <a href="#page-12">12</a>
+   <a href="#section-2">2</a>.  一致性要求 . . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-12">12</a>
+     <a href="#section-2.1">2.1</a>.  术语和其他约定  . . . . . . . . . . . . . . . . . . . <a href="#page-13">13</a>
+   <a href="#section-3">3</a>.  WebSocket URI . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-14">14</a>
+   <a href="#section-4">4</a>.  开启握手  . . . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-14">14</a>
+     <a href="#section-4.1">4.1</a>.  客户端要求  . . . . . . . . . . . . . . . . . . . . . . <a href="#page-14">14</a>
+     <a href="#section-4.2">4.2</a>.  服务器端要求 . . . . . . . . . . . . . . . . . . . . . <a href="#page-20">20</a>
+       <a href="#section-4.2.1">4.2.1</a>.  读取客户端的开启握手 . . . . . . . . . . . . . . . <a href="#page-21">21</a>
+       <a href="#section-4.2.2">4.2.2</a>.  发送服务器的开启握手 . . . . . . . . . . . . . . . <a href="#page-22">22</a>
+     <a href="#section-4.3">4.3</a>.  握手中使用的新首部字段的汇总 ABNF . . . . . . . . . <a href="#page-25">25</a>
+     <a href="#section-4.4">4.4</a>.  支持多个版本的 WebSocket 协议 . . . . . . . . . . . . <a href="#page-26">26</a>
+   <a href="#section-5">5</a>.  数据分帧 . . . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-27">27</a>
+     <a href="#section-5.1">5.1</a>.  概述 . . . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-27">27</a>
+     <a href="#section-5.2">5.2</a>.  基本分帧协议  . . . . . . . . . . . . . . . . . . . . <a href="#page-28">28</a>
+     <a href="#section-5.3">5.3</a>.  客户端到服务器的掩码处理 . . . . . . . . . . . . . . <a href="#page-32">32</a>
+     <a href="#section-5.4">5.4</a>.  分片  . . . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-33">33</a>
+     <a href="#section-5.5">5.5</a>.  控制帧 . . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-36">36</a>
+       <a href="#section-5.5.1">5.5.1</a>.  Close  . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-36">36</a>
+       <a href="#section-5.5.2">5.5.2</a>.  Ping . . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-37">37</a>
+       <a href="#section-5.5.3">5.5.3</a>.  Pong . . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-37">37</a>
+     <a href="#section-5.6">5.6</a>.  数据帧  . . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-38">38</a>
+     <a href="#section-5.7">5.7</a>.  示例 . . . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-38">38</a>
+     <a href="#section-5.8">5.8</a>.  可扩展性  . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-39">39</a>
+   <a href="#section-6">6</a>.  发送和接收数据 . . . . . . . . . . . . . . . . . . . . . . <a href="#page-39">39</a>
+     <a href="#section-6.1">6.1</a>.  发送数据 . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-39">39</a>
+     <a href="#section-6.2">6.2</a>.  接收数据 . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-40">40</a>
+   <a href="#section-7">7</a>.  关闭连接 . . . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-41">41</a>
+     <a href="#section-7.1">7.1</a>.  定义  . . . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-41">41</a>
+       <a href="#section-7.1.1">7.1.1</a>.  关闭 WebSocket 连接 . . . . . . . . . . . . . . . . <a href="#page-41">41</a>
+       <a href="#section-7.1.2">7.1.2</a>.  启动 WebSocket 关闭握手  . . . . . . . . . . . . . <a href="#page-42">42</a>
+       <a href="#section-7.1.3">7.1.3</a>.  WebSocket 关闭握手已启动 . . . . . . . . . . . . . <a href="#page-42">42</a>
+       <a href="#section-7.1.4">7.1.4</a>.  WebSocket 连接已关闭 . . . . . . . . . . . . . . . <a href="#page-42">42</a>
+       <a href="#section-7.1.5">7.1.5</a>.  WebSocket 连接关闭代码  . . . . . . . . . . . . . <a href="#page-42">42</a>
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                    [第 2 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-3" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+       <a href="#section-7.1.6">7.1.6</a>.  WebSocket 连接关闭原因  . . . . . . . . . . . . . . <a href="#page-43">43</a>
+       <a href="#section-7.1.7">7.1.7</a>.  使 WebSocket 连接失败  . . . . . . . . . . . . . . <a href="#page-43">43</a>
+     <a href="#section-7.2">7.2</a>.  异常关闭  . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-44">44</a>
+       <a href="#section-7.2.1">7.2.1</a>.  客户端发起的关闭 . . . . . . . . . . . . . . . . . <a href="#page-44">44</a>
+       <a href="#section-7.2.2">7.2.2</a>.  服务器发起的关闭 . . . . . . . . . . . . . . . . . <a href="#page-44">44</a>
+       <a href="#section-7.2.3">7.2.3</a>.  从异常关闭中恢复 . . . . . . . . . . . . . . . . . <a href="#page-44">44</a>
+     <a href="#section-7.3">7.3</a>.  连接的正常关闭  . . . . . . . . . . . . . . . . . . . <a href="#page-45">45</a>
+     <a href="#section-7.4">7.4</a>.  状态代码 . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-45">45</a>
+       <a href="#section-7.4.1">7.4.1</a>.  已定义的状态代码 . . . . . . . . . . . . . . . . . <a href="#page-45">45</a>
+       <a href="#section-7.4.2">7.4.2</a>.  保留的状态代码范围  . . . . . . . . . . . . . . . <a href="#page-47">47</a>
+   <a href="#section-8">8</a>.  错误处理 . . . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-48">48</a>
+     <a href="#section-8.1">8.1</a>.  处理 UTF-8 编码数据中的错误  . . . . . . . . . . . . <a href="#page-48">48</a>
+   <a href="#section-9">9</a>.  扩展 . . . . . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-48">48</a>
+     <a href="#section-9.1">9.1</a>.  协商扩展 . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-48">48</a>
+     <a href="#section-9.2">9.2</a>.  已知扩展 . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-50">50</a>
+   <a href="#section-10">10</a>. 安全考虑事项  . . . . . . . . . . . . . . . . . . . . . . <a href="#page-50">50</a>
+     <a href="#section-10.1">10.1</a>. 非浏览器客户端  . . . . . . . . . . . . . . . . . . . <a href="#page-50">50</a>
+     <a href="#section-10.2">10.2</a>. Origin 考虑事项  . . . . . . . . . . . . . . . . . . . <a href="#page-50">50</a>
+     <a href="#section-10.3">10.3</a>. 对基础设施的攻击（掩码）  . . . . . . . . . . . . . <a href="#page-51">51</a>
+     <a href="#section-10.4">10.4</a>. 实现特定限制 . . . . . . . . . . . . . . . . . . . . <a href="#page-52">52</a>
+     <a href="#section-10.5">10.5</a>. WebSocket 客户端认证  . . . . . . . . . . . . . . . . <a href="#page-53">53</a>
+     <a href="#section-10.6">10.6</a>. 连接机密性和完整性 . . . . . . . . . . . . . . . . . <a href="#page-53">53</a>
+     <a href="#section-10.7">10.7</a>. 无效数据的处理 . . . . . . . . . . . . . . . . . . . <a href="#page-53">53</a>
+     <a href="#section-10.8">10.8</a>. WebSocket 握手对 SHA-1 的使用  . . . . . . . . . . . <a href="#page-54">54</a>
+   <a href="#section-11">11</a>. IANA 考虑事项  . . . . . . . . . . . . . . . . . . . . . . <a href="#page-54">54</a>
+     <a href="#section-11.1">11.1</a>. 新 URI 方案的注册  . . . . . . . . . . . . . . . . . . <a href="#page-54">54</a>
+       <a href="#section-11.1.1">11.1.1</a>. "ws" 方案的注册  . . . . . . . . . . . . . . . . . <a href="#page-54">54</a>
+       <a href="#section-11.1.2">11.1.2</a>. "wss" 方案的注册 . . . . . . . . . . . . . . . . . <a href="#page-55">55</a>
+     <a href="#section-11.2">11.2</a>. "WebSocket" HTTP Upgrade 关键字的注册 . . . . . . . . <a href="#page-56">56</a>
+     <a href="#section-11.3">11.3</a>. 新 HTTP 首部字段的注册 . . . . . . . . . . . . . . . <a href="#page-57">57</a>
+       <a href="#section-11.3.1">11.3.1</a>. Sec-WebSocket-Key  . . . . . . . . . . . . . . . . . <a href="#page-57">57</a>
+       <a href="#section-11.3.2">11.3.2</a>. Sec-WebSocket-Extensions . . . . . . . . . . . . . . <a href="#page-58">58</a>
+       <a href="#section-11.3.3">11.3.3</a>. Sec-WebSocket-Accept . . . . . . . . . . . . . . . . <a href="#page-58">58</a>
+       <a href="#section-11.3.4">11.3.4</a>. Sec-WebSocket-Protocol . . . . . . . . . . . . . . . <a href="#page-59">59</a>
+       <a href="#section-11.3.5">11.3.5</a>. Sec-WebSocket-Version  . . . . . . . . . . . . . . . <a href="#page-60">60</a>
+     <a href="#section-11.4">11.4</a>. WebSocket 扩展名注册表  . . . . . . . . . . . . . . . <a href="#page-61">61</a>
+     <a href="#section-11.5">11.5</a>. WebSocket 子协议名注册表  . . . . . . . . . . . . . . <a href="#page-61">61</a>
+     <a href="#section-11.6">11.6</a>. WebSocket 版本号注册表  . . . . . . . . . . . . . . . <a href="#page-62">62</a>
+     <a href="#section-11.7">11.7</a>. WebSocket 关闭代码号注册表 . . . . . . . . . . . . . <a href="#page-64">64</a>
+     <a href="#section-11.8">11.8</a>. WebSocket 操作码注册表  . . . . . . . . . . . . . . . <a href="#page-65">65</a>
+     <a href="#section-11.9">11.9</a>. WebSocket 分帧首部位注册表 . . . . . . . . . . . . . <a href="#page-66">66</a>
+   <a href="#section-12">12</a>. 从其他规范使用 WebSocket 协议 . . . . . . . . . . . . . . <a href="#page-66">66</a>
+   <a href="#section-13">13</a>. 致谢 . . . . . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-67">67</a>
+   <a href="#section-14">14</a>. 参考文献 . . . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-68">68</a>
+     <a href="#section-14.1">14.1</a>. 规范性参考文献 . . . . . . . . . . . . . . . . . . . <a href="#page-68">68</a>
+     <a href="#section-14.2">14.2</a>. 资料性参考文献 . . . . . . . . . . . . . . . . . . . <a href="#page-69">69</a>
+
+
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                    [第 3 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-4" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+<span class="h2"><a class="selflink" id="section-1" href="#section-1">1</a>.  引言</span>
+
+<span class="h3"><a class="selflink" id="section-1.1" href="#section-1.1">1.1</a>.  背景</span>
+
+   _本节为非规范性内容。_
+
+   从历史上看，创建需要客户端与服务器之间双向通信的 Web 应用
+   （例如，即时消息传递和游戏应用）一直需要滥用 HTTP，
+   通过轮询服务器来获取更新，同时将上行通知作为独立的
+   HTTP 调用发送 [<a href="./rfc6202" title="&quot;Known Issues and Best Practices for the Use of Long Polling and Streaming in Bidirectional HTTP&quot;">RFC6202</a>]。
+
+   这会导致各种问题：
+
+   o  服务器被迫为每个客户端使用若干不同的底层 TCP
+      连接：一个用于向客户端发送信息，并且每个传入消息
+      都需要一个新的连接。
+
+   o  线路协议具有很高的开销，因为每条客户端到服务器的
+      消息都带有 HTTP 首部。
+
+   o  客户端脚本被迫维护从传出连接到传入连接的映射，
+      以跟踪回复。
+
+   更简单的解决方案是使用单个 TCP 连接承载两个方向的流量。
+   这正是 WebSocket 协议所提供的内容。结合 WebSocket API
+   [<a href="#ref-WSAPI" title="&quot;The WebSocket API&quot;">WSAPI</a>]，它为从网页到远程服务器的双向通信提供了
+   HTTP 轮询的替代方案。
+
+   同样的技术可用于各种 Web 应用：游戏、股票行情器、
+   具有同步编辑能力的多用户应用、实时公开服务器端服务的
+   用户界面等。
+
+   WebSocket 协议旨在取代现有的双向通信技术，这些技术使用
+   HTTP 作为传输层，以受益于现有基础设施（代理、过滤、
+   认证）。这些技术是在效率和可靠性之间进行权衡而实现的，
+   因为 HTTP 最初并不是为了用于双向通信而设计的（进一步
+   讨论见 [<a href="./rfc6202" title="&quot;Known Issues and Best Practices for the Use of Long Polling and Streaming in Bidirectional HTTP&quot;">RFC6202</a>]）。WebSocket 协议试图在现有
+   HTTP 基础设施的背景下解决现有双向 HTTP 技术的目标；
+   因此，它被设计为既能在 HTTP 端口 80 和 443 上工作，
+   又能支持 HTTP 代理和中间设备，即使这意味着当前环境
+   特有的一些复杂性。然而，该设计并不将 WebSocket 限制于
+   HTTP，并且未来的实现可以在专用端口上使用更简单的握手，
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                    [第 4 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-5" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+   而无需重新发明整个协议。这一点很重要，因为交互式消息传递
+   的流量模式并不十分匹配标准 HTTP 流量，并且可能在某些
+   组件上引发异常负载。
+
+<span class="h3"><a class="selflink" id="section-1.2" href="#section-1.2">1.2</a>.  协议概述</span>
+
+   _本节为非规范性内容。_
+
+   该协议有两部分：握手和数据传输。
+
+   来自客户端的握手如下所示：
+
+        GET /chat HTTP/1.1
+        Host: server.example.com
+        Upgrade: websocket
+        Connection: Upgrade
+        Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==
+        Origin: http://example.com
+        Sec-WebSocket-Protocol: chat, superchat
+        Sec-WebSocket-Version: 13
+
+   来自服务器的握手如下所示：
+
+        HTTP/1.1 101 Switching Protocols
+        Upgrade: websocket
+        Connection: Upgrade
+        Sec-WebSocket-Accept: s3pPLMBiTxaQ9kYGzzhZRbK+xOo=
+        Sec-WebSocket-Protocol: chat
+
+   客户端的起始行遵循 Request-Line 格式。服务器的起始行遵循
+   Status-Line 格式。Request-Line 和 Status-Line 产生式定义于
+   [<a href="./rfc2616" title="&quot;Hypertext Transfer Protocol -- HTTP/1.1&quot;">RFC2616</a>]。
+
+   在这两种情况下，起始行之后都是一组无序的首部字段。
+   这些首部字段的含义在本文档<a href="#section-4">第 4 节</a>中规定。也可以存在
+   其他首部字段，例如 cookies [<a href="./rfc6265" title="&quot;HTTP State Management Mechanism&quot;">RFC6265</a>]。首部的格式和解析
+   如 [<a href="./rfc2616" title="&quot;Hypertext Transfer Protocol -- HTTP/1.1&quot;">RFC2616</a>] 中所定义。
+
+   一旦客户端和服务器都发送了各自的握手，并且握手成功，
+   数据传输部分就开始。这是一个双向通信信道，其中每一方都
+   可以独立于另一方随意发送数据。
+
+   成功握手后，客户端和服务器以本规范中称为“消息”的概念
+   单元来回传输数据。在线路上，一条消息由一个或多个
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                    [第 5 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-6" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+   帧组成。WebSocket 消息不一定对应于特定的网络层分帧，
+   因为分片消息可能会被中间设备合并或拆分。
+
+   帧具有关联的类型。属于同一消息的每个帧包含相同类型的数据。
+   广义而言，存在用于文本数据的类型（解释为 UTF-8 [<a href="./rfc3629" title="&quot;UTF-8, a transformation format of ISO 10646&quot;">RFC3629</a>]
+   文本）、二进制数据的类型（其解释留给应用），以及控制帧
+   （它们并不旨在承载应用的数据，而是用于协议级信令，例如
+   表示连接应被关闭）。此版本的协议定义了六种帧类型，并
+   保留了十种供将来使用。
+
+<span class="h3"><a class="selflink" id="section-1.3" href="#section-1.3">1.3</a>.  开启握手</span>
+
+   _本节为非规范性内容。_
+
+   开启握手旨在与基于 HTTP 的服务器端软件和中间设备兼容，
+   以便同一个端口既可供与该服务器通信的 HTTP 客户端使用，
+   也可供与该服务器通信的 WebSocket 客户端使用。为此，
+   WebSocket 客户端的握手是一个 HTTP Upgrade 请求：
+
+        GET /chat HTTP/1.1
+        Host: server.example.com
+        Upgrade: websocket
+        Connection: Upgrade
+        Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==
+        Origin: http://example.com
+        Sec-WebSocket-Protocol: chat, superchat
+        Sec-WebSocket-Version: 13
+
+   根据 [<a href="./rfc2616" title="&quot;Hypertext Transfer Protocol -- HTTP/1.1&quot;">RFC2616</a>]，握手中的首部字段可以由客户端以任何顺序
+   发送，因此接收不同首部字段的顺序并不重要。
+
+   GET 方法的 "Request-URI" [<a href="./rfc2616" title="&quot;Hypertext Transfer Protocol -- HTTP/1.1&quot;">RFC2616</a>] 用于标识 WebSocket 连接的
+   端点，既允许从一个 IP 地址提供多个域，也允许由单个服务器
+   提供多个 WebSocket 端点。
+
+   客户端按照 [<a href="./rfc2616" title="&quot;Hypertext Transfer Protocol -- HTTP/1.1&quot;">RFC2616</a>] 在其握手的 |Host| 首部字段中包含主机名，
+   以便客户端和服务器都能验证它们对正在使用哪个主机达成一致。
+
+
+
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                    [第 6 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-7" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+   其他首部字段用于在 WebSocket 协议中选择选项。此版本中
+   可用的典型选项包括子协议选择器
+   (|Sec-WebSocket-Protocol|)、客户端支持的扩展列表
+   (|Sec-WebSocket-Extensions|)、|Origin| 首部字段等。
+   |Sec-WebSocket-Protocol| 请求首部字段可用于指示客户端可接受
+   哪些子协议（分层在 WebSocket 协议之上的应用级协议）。
+   服务器从可接受的协议中选择一个或不选择，并在其握手中回显
+   该值，以指示它选择了该协议。
+
+        Sec-WebSocket-Protocol: chat
+
+   |Origin| 首部字段 [<a href="./rfc6454" title="&quot;The Web Origin Concept&quot;">RFC6454</a>] 用于防止 Web 浏览器中使用
+   WebSocket API 的脚本未经授权跨源使用 WebSocket 服务器。
+   服务器会被告知生成 WebSocket 连接请求的脚本源。如果服务器
+   不希望接受来自此源的连接，它可以选择通过发送适当的 HTTP
+   错误代码来拒绝连接。该首部字段由浏览器客户端发送；对于
+   非浏览器客户端，如果在这些客户端的语境中有意义，则可以
+   发送该首部字段。
+
+   最后，服务器必须向客户端证明它收到了客户端的 WebSocket
+   握手，以便服务器不会接受并非 WebSocket 连接的连接。这可以
+   防止攻击者使用 XMLHttpRequest [<a href="#ref-XMLHttpRequest">XMLHttpRequest</a>] 或表单提交发送
+   精心构造的数据包来欺骗 WebSocket 服务器。
+
+   为了证明收到了握手，服务器必须取得两段信息并将其组合成
+   一个响应。第一段信息来自客户端握手中的 |Sec-WebSocket-Key|
+   首部字段：
+
+        Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==
+
+   对于此首部字段，服务器必须取其值（如首部字段中呈现的值，
+   例如 base64 编码的 [<a href="./rfc4648" title="&quot;The Base16, Base32, and Base64 Data Encodings&quot;">RFC4648</a>] 版本，减去任何前导和尾随空白），
+   并将其与字符串形式的全局唯一标识符（GUID，[<a href="./rfc4122" title="&quot;A Universally Unique IDentifier (UUID) URN Namespace&quot;">RFC4122</a>]）
+   "258EAFA5-E914-47DA-
+   95CA-C5AB0DC85B11" 拼接，该标识符不太可能被不理解
+   WebSocket 协议的网络端点使用。随后在服务器的握手中返回此
+   拼接结果的 SHA-1 哈希（160 位）[<a href="#ref-FIPS.180-3">FIPS.180-3</a>] 的 base64 编码
+   （见 <a href="./rfc4648#section-4">[RFC4648] 第&nbsp;4 节</a>）。
+
+
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                    [第 7 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-8" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+   具体而言，如果如上例所示，|Sec-WebSocket-Key| 首部字段的值
+   为 "dGhlIHNhbXBsZSBub25jZQ=="，服务器将拼接字符串
+   "258EAFA5-E914-47DA-95CA-C5AB0DC85B11" 以形成字符串
+   "dGhlIHNhbXBsZSBub25jZQ==258EAFA5-E914-47DA-95CA-
+   C5AB0DC85B11"。然后服务器会计算其 SHA-1 哈希，得到值
+   0xb3 0x7a 0x4f 0x2c 0xc0 0x62 0x4f 0x16 0x90 0xf6
+   0x46 0x06 0xcf 0x38 0x59 0x45 0xb2 0xbe 0xc4 0xea。随后将
+   该值进行 base64 编码（见 <a href="./rfc4648#section-4">[RFC4648] 第&nbsp;4 节</a>），得到值
+   "s3pPLMBiTxaQ9kYGzzhZRbK+xOo="。随后该值会在
+   |Sec-WebSocket-Accept| 首部字段中回显。
+
+   服务器的握手比客户端握手简单得多。第一行是 HTTP Status-Line，
+   状态代码为 101：
+
+        HTTP/1.1 101 Switching Protocols
+
+   任何不是 101 的状态代码都表示 WebSocket 握手尚未完成，
+   并且 HTTP 的语义仍然适用。首部跟随在状态代码之后。
+
+   |Connection| 和 |Upgrade| 首部字段完成 HTTP Upgrade。
+   |Sec-WebSocket-Accept| 首部字段表示服务器是否愿意接受该连接。
+   如果存在，该首部字段必须包含客户端在 |Sec-WebSocket-Key| 中
+   发送的 nonce 与预定义 GUID 拼接后的哈希。任何其他值都不得
+   被解释为服务器接受连接。
+
+        HTTP/1.1 101 Switching Protocols
+        Upgrade: websocket
+        Connection: Upgrade
+        Sec-WebSocket-Accept: s3pPLMBiTxaQ9kYGzzhZRbK+xOo=
+
+   这些字段由用于脚本页面的 WebSocket 客户端检查。如果
+   |Sec-WebSocket-Accept| 值与预期值不匹配，如果该首部字段缺失，
+   或者如果 HTTP 状态代码不是 101，则连接不会建立，并且不会
+   发送 WebSocket 帧。
+
+   也可以包含选项字段。在此版本的协议中，主要的选项字段是
+   |Sec-WebSocket-Protocol|，它指示服务器已选择的子协议。
+   WebSocket 客户端会验证服务器包含了 WebSocket 客户端握手中
+   指定的值之一。支持多个子协议的服务器必须确保它基于客户端
+   的握手选择一个子协议，并在其握手中指定该子协议。
+
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                    [第 8 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-9" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+        Sec-WebSocket-Protocol: chat
+
+   服务器还可以设置与 cookie 相关的选项字段来 _set_ cookies，
+   如 [<a href="./rfc6265" title="&quot;HTTP State Management Mechanism&quot;">RFC6265</a>] 中所述。
+
+<span class="h3"><a class="selflink" id="section-1.4" href="#section-1.4">1.4</a>.  关闭握手</span>
+
+   _本节为非规范性内容。_
+
+   关闭握手比开启握手简单得多。
+
+   任一对等方都可以发送一个控制帧，其中的数据包含指定的
+   控制序列，以开始关闭握手（详见<a href="#section-5.5.1">第 5.5.1 节</a>）。
+   收到此类帧后，另一对等方会发送一个 Close 帧作为响应，
+   如果它尚未发送的话。收到 _该_ 控制帧后，第一个对等方
+   随后关闭连接，并确信不会再有更多数据到来。
+
+   在发送表示连接应被关闭的控制帧之后，对等方不再发送任何
+   数据；在收到表示连接应被关闭的控制帧之后，对等方会丢弃
+   随后收到的任何数据。
+
+   双方同时发起此握手是安全的。
+
+   关闭握手旨在补充 TCP 关闭握手（FIN/ACK），其依据是 TCP
+   关闭握手并不总是端到端可靠，尤其是在存在拦截代理和其他
+   中间设备的情况下。
+
+   通过发送 Close 帧并等待响应中的 Close 帧，可以避免某些
+   数据可能被不必要丢失的情况。例如，在某些平台上，如果
+   套接字在接收队列中仍有数据时被关闭，就会发送 RST 数据包，
+   这随后会导致收到 RST 的一方的 recv() 失败，即使还有数据
+   等待读取。
+
+<span class="h3"><a class="selflink" id="section-1.5" href="#section-1.5">1.5</a>.  设计理念</span>
+
+   _本节为非规范性内容。_
+
+   WebSocket 协议的设计原则是应该具有最小化的分帧（存在的
+   唯一分帧，是为了使协议基于帧而不是基于流，并支持 Unicode
+   文本与二进制帧之间的区分）。预期元数据将由应用层分层在
+   WebSocket 之上，
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                    [第 9 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-10" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+   与元数据由应用层分层在 TCP 之上的方式相同（例如，HTTP）。
+
+   从概念上说，WebSocket 实际上只是 TCP 之上的一层，它执行
+   以下操作：
+
+   o  为浏览器增加基于 Web 源的安全模型
+
+   o  增加寻址和协议命名机制，以支持一个端口上的多个服务
+      以及一个 IP 地址上的多个主机名
+
+   o  在 TCP 之上分层一个分帧机制，以回到 TCP 所基于的 IP
+      数据包机制，但没有长度限制
+
+   o  包含一个额外的带内关闭握手，其设计目标是在存在代理和
+      其他中间设备的情况下工作
+
+   除此之外，WebSocket 不添加任何内容。基本上，在 Web 的
+   约束下，它旨在尽可能接近于仅仅向脚本公开原始 TCP。
+   它还被设计为其服务器可以与 HTTP 服务器共享端口，方法是
+   让它的握手成为有效的 HTTP Upgrade 请求。从概念上讲，
+   可以使用其他协议来建立客户端-服务器消息传递，但 WebSocket
+   的意图是提供一个相对简单的协议，它可以与 HTTP 以及已部署
+   的 HTTP 基础设施（如代理）共存，并且在考虑安全因素和此类
+   基础设施的前提下，尽可能接近 TCP，同时有针对性地增加内容
+   以简化使用并让简单的事情保持简单（例如增加消息语义）。
+
+   该协议旨在具有可扩展性；未来版本很可能引入其他概念，
+   例如多路复用。
+
+<span class="h3"><a class="selflink" id="section-1.6" href="#section-1.6">1.6</a>.  安全模型</span>
+
+   _本节为非规范性内容。_
+
+   当 WebSocket 协议从网页中使用时，WebSocket 协议使用 Web
+   浏览器所使用的源模型来限制哪些网页可以联系 WebSocket
+   服务器。自然地，当 WebSocket 协议由专用客户端直接使用时
+   （即，不是通过 Web 浏览器从网页中使用），源模型并不有用，
+   因为客户端可以提供任意源字符串。
+
+   本协议旨在与 SMTP [<a href="./rfc5321" title="&quot;Simple Mail Transfer Protocol&quot;">RFC5321</a>] 和 HTTP 等既有协议的服务器
+   建立连接失败，同时允许 HTTP 服务器在需要时选择加入对本
+   协议的支持。这通过严格而精细的握手来实现，并通过限制握手
+   完成之前可以插入连接的数据来实现（从而限制服务器可能受到的影响）。
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 10 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-11" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+   同样，当来自其他协议的数据，尤其是 HTTP，被发送到
+   WebSocket 服务器时，本协议也旨在建立连接失败，例如，如果
+   HTML "form" 被提交到 WebSocket 服务器时可能发生的情况。
+   这主要通过要求服务器证明它读取了握手来实现，而服务器只有在
+   握手包含适当部分时才能做到这一点，而这些部分只能由
+   WebSocket 客户端发送。特别是，在编写本规范时，以 |Sec-|
+   开头的字段不能由攻击者仅使用 HTML 和 JavaScript API
+   （如 XMLHttpRequest [<a href="#ref-XMLHttpRequest">XMLHttpRequest</a>]）从 Web 浏览器中设置。
+
+<span class="h3"><a class="selflink" id="section-1.7" href="#section-1.7">1.7</a>.  与 TCP 和 HTTP 的关系</span>
+
+   _本节为非规范性内容。_
+
+   WebSocket 协议是一个独立的、基于 TCP 的协议。它与 HTTP 的
+   唯一关系是其握手会被 HTTP 服务器解释为 Upgrade 请求。
+
+   默认情况下，WebSocket 协议对常规 WebSocket 连接使用端口
+   80，对通过传输层安全（TLS）[<a href="./rfc2818" title="&quot;HTTP Over TLS&quot;">RFC2818</a>] 隧道传输的 WebSocket
+   连接使用端口 443。
+
+<span class="h3"><a class="selflink" id="section-1.8" href="#section-1.8">1.8</a>.  建立连接</span>
+
+   _本节为非规范性内容。_
+
+   当连接将被建立到与 HTTP 服务器共享的端口时（这种情况很
+   可能发生在到端口 80 和 443 的流量中），对 HTTP 服务器而言，
+   该连接看起来会是一个带有 Upgrade 提议的常规 GET 请求。
+   在只有一个 IP 地址、并且由单个服务器处理单个主机名的所有
+   流量的相对简单部署中，这可能为基于 WebSocket 协议的系统
+   提供一种可行的部署方式。在更复杂的部署中（例如，带有负载
+   均衡器和多个服务器），使用一组与 HTTP 服务器分离的专用
+   WebSocket 连接主机可能更容易管理。在编写本规范时，需要注意
+   端口 80 和 443 上连接的成功率明显不同，其中端口 443 上的
+   连接明显更可能成功，尽管这可能会随时间变化。
+
+
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 11 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-12" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+<span class="h3"><a class="selflink" id="section-1.9" href="#section-1.9">1.9</a>.  使用 WebSocket 协议的子协议</span>
+
+   _本节为非规范性内容。_
+
+   客户端可以通过在其握手中包含 |Sec-WebSocket-Protocol| 字段，
+   请求服务器使用特定子协议。如果指定了该字段，服务器需要在其
+   响应中包含相同字段以及选定子协议值之一，连接才能建立。
+
+   这些子协议名称应按<a href="#section-11.5">第 11.5 节</a>注册。为避免潜在冲突，
+   建议使用包含该子协议发起者域名 ASCII 版本的名称。例如，
+   如果 Example Corporation 创建了一个将在 Web 上许多服务器中
+   实现的 Chat 子协议，它可以将其命名为 "chat.example.com"。
+   如果 Example Organization 将其竞争性子协议称为
+   "chat.example.org"，那么这两个子协议可以由服务器同时实现，
+   服务器根据客户端发送的值动态选择要使用哪个子协议。
+
+   子协议可以通过更改子协议名称以向后不兼容的方式进行版本化，
+   例如，从 "bookings.example.net" 改为 "v2.bookings.example.net"。
+   WebSocket 客户端会将这些子协议视为完全独立的协议。向后兼容的
+   版本化可以通过重用相同的子协议字符串来实现，但需要仔细设计
+   实际的子协议，以支持这种可扩展性。
+
+<span class="h2"><a class="selflink" id="section-2" href="#section-2">2</a>.  一致性要求</span>
+
+   本规范中的所有图示、示例和注释都是非规范性的，所有明确标记
+   为非规范性的章节也是如此。本规范中的其他所有内容都是规范性的。
+
+   本文档中的关键词 "MUST"、"MUST NOT"、"REQUIRED"、"SHALL"、
+   "SHALL NOT"、"SHOULD"、"SHOULD NOT"、"RECOMMENDED"、"MAY" 和
+   "OPTIONAL" 应按 [<a href="./rfc2119" title="&quot;Key words for use in RFCs to Indicate Requirement Levels&quot;">RFC2119</a>] 中的描述解释。
+
+   作为算法一部分以祈使句表述的要求（例如“去除任何前导空格
+   字符”或“返回 false 并中止这些步骤”）应解释为具有引入该
+   算法时所使用关键词（"MUST"、"SHOULD"、"MAY" 等）的含义。
+
+
+
+
+
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 12 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-13" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+   以算法或具体步骤表述的一致性要求可以以任何方式实现，
+   只要最终结果等价即可。（特别是，本规范中定义的算法旨在
+   易于遵循，而不是旨在高性能。）
+
+<span class="h3"><a class="selflink" id="section-2.1" href="#section-2.1">2.1</a>.  术语和其他约定</span>
+
+   _ASCII_ 应表示 [<a href="#ref-ANSI.X3-4.1986">ANSI.X3-4.1986</a>] 中定义的字符编码方案。
+
+   本文档引用 UTF-8 值，并使用 STD 63 [<a href="./rfc3629" title="&quot;UTF-8, a transformation format of ISO 10646&quot;">RFC3629</a>] 中定义的
+   UTF-8 表示格式。
+
+   诸如命名算法或定义之类的关键术语以 _this_ 的形式表示。
+
+   首部字段或变量的名称以 |this| 的形式表示。
+
+   变量值以 /this/ 的形式表示。
+
+   本文档引用 _Fail the WebSocket Connection_ 过程。此过程定义于
+   <a href="#section-7.1.7">第 7.1.7 节</a>。
+
+   _将字符串转换为 ASCII 小写_ 是指将 U+0041 到 U+005A 范围内
+   的所有字符（即 LATIN CAPITAL LETTER A 到 LATIN CAPITAL LETTER Z）
+   替换为 U+0061 到 U+007A 范围内的相应字符（即 LATIN SMALL
+   LETTER A 到 LATIN SMALL LETTER Z）。
+
+   以 _ASCII 大小写不敏感_ 的方式比较两个字符串，是指逐码点
+   精确比较它们，但 U+0041 到 U+005A 范围内的字符（即 LATIN
+   CAPITAL LETTER A 到 LATIN CAPITAL LETTER Z）以及 U+0061 到
+   U+007A 范围内的相应字符（即 LATIN SMALL LETTER A 到 LATIN
+   SMALL LETTER Z）也被视为匹配。
+
+   本文档中使用的术语 "URI" 如 [<a href="./rfc3986" title="&quot;Uniform Resource Identifier (URI): Generic Syntax&quot;">RFC3986</a>] 中所定义。
+
+   当实现被要求作为 WebSocket 协议的一部分 _send_ 数据时，
+   实现可以任意延迟实际传输，例如缓冲数据以便发送更少的
+   IP 数据包。
+
+   注意，本文档在不同章节中同时使用 [<a href="./rfc5234" title="&quot;Augmented BNF for Syntax Specifications: ABNF&quot;">RFC5234</a>] 和 [<a href="./rfc2616" title="&quot;Hypertext Transfer Protocol -- HTTP/1.1&quot;">RFC2616</a>]
+   的 ABNF 变体。
+
+
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 13 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-14" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+<span class="h2"><a class="selflink" id="section-3" href="#section-3">3</a>.  WebSocket URI</span>
+
+   本规范定义两个 URI 方案，使用 <a href="./rfc5234">RFC 5234</a> [<a href="./rfc5234" title="&quot;Augmented BNF for Syntax Specifications: ABNF&quot;">RFC5234</a>]
+   中定义的 ABNF 语法，以及 URI 规范 <a href="./rfc3986">RFC 3986</a> [<a href="./rfc3986" title="&quot;Uniform Resource Identifier (URI): Generic Syntax&quot;">RFC3986</a>]
+   定义的术语和 ABNF 产生式。
+
+          ws-URI = "ws:" "//" host [ ":" port ] path [ "?" query ]
+          wss-URI = "wss:" "//" host [ ":" port ] path [ "?" query ]
+
+          host = &lt;host，定义于 <a href="./rfc3986#section-3.2.2">[RFC3986]，第&nbsp;3.2.2 节</a>&gt;
+          port = &lt;port，定义于 <a href="./rfc3986#section-3.2.3">[RFC3986]，第&nbsp;3.2.3 节</a>&gt;
+          path = &lt;path-abempty，定义于 <a href="./rfc3986#section-3.3">[RFC3986]，第&nbsp;3.3 节</a>&gt;
+          query = &lt;query，定义于 <a href="./rfc3986#section-3.4">[RFC3986]，第&nbsp;3.4 节</a>&gt;
+
+   port 组件是 OPTIONAL；"ws" 的默认端口为 80，而 "wss" 的
+   默认端口为 443。
+
+   如果 scheme 组件以大小写不敏感的方式匹配 "wss"，则 URI
+   被称为 "secure"（并且称为 "the secure flag is set"）。
+
+   "resource-name"（也称为<a href="#section-4.1">第 4.1 节</a>中的 /resource name/）
+   可以通过拼接以下内容来构造：
+
+   o  如果 path 组件为空，则为 "/"
+
+   o  path 组件
+
+   o  如果 query 组件非空，则为 "?"
+
+   o  query 组件
+
+   片段标识符在 WebSocket URI 的语境中没有意义，并且 MUST NOT
+   在这些 URI 上使用。与任何 URI 方案一样，当字符 "#" 不表示
+   片段开始时，MUST 将其转义为 %23。
+
+<span class="h2"><a class="selflink" id="section-4" href="#section-4">4</a>.  开启握手</span>
+
+<span class="h3"><a class="selflink" id="section-4.1" href="#section-4.1">4.1</a>.  客户端要求</span>
+
+   为了 _Establish a WebSocket Connection_，客户端打开一个连接，
+   并按本节定义发送握手。连接被定义为初始处于 CONNECTING 状态。
+   客户端需要提供 /host/、/port/、/resource name/ 和 /secure/ flag，
+   它们是<a href="#section-3">第 3 节</a>中讨论的 WebSocket URI 的组件，同时还提供
+   要使用的 /protocols/ 和 /extensions/ 列表。
+   此外，如果客户端是 Web 浏览器，则它提供 /origin/。
+
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 14 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-15" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+   在受控环境中运行的客户端，例如绑定到特定运营商的移动手持
+   设备上的浏览器，可以将连接管理卸载给网络上的另一个代理。
+   在这种情况下，就本规范而言，客户端被视为同时包括手持设备
+   软件以及任何此类代理。
+
+   当客户端要在给定一组（/host/、/port/、/resource name/ 和
+   /secure/ flag）、要使用的 /protocols/ 和 /extensions/ 列表，
+   以及在 Web 浏览器情况下的 /origin/ 时 _Establish a WebSocket
+   Connection_，它 MUST 打开连接，发送开启握手，并读取服务器
+   的握手响应。有关应如何打开连接、开启握手中应发送什么以及
+   应如何解释服务器响应的确切要求如下所述。在以下文本中，
+   我们将使用<a href="#section-3">第 3 节</a>中的术语，例如该节中定义的 "/host/"
+   和 "/secure/ flag"。
+
+   1.  传入此算法的 WebSocket URI 组件（/host/、/port/、
+       /resource name/ 和 /secure/ flag）MUST 按<a href="#section-3">第 3 节</a>
+       中指定的 WebSocket URI 规范有效。如果任何组件无效，
+       客户端 MUST _Fail the WebSocket Connection_ 并中止这些步骤。
+
+   2.  如果客户端已经有一个到由 /host/ 和 /port/ 对标识的
+       远程主机（IP 地址）的 WebSocket 连接，即使该远程主机
+       已知为另一个名称，客户端也 MUST 等待该连接已建立或该
+       连接已失败。处于 CONNECTING 状态的连接 MUST 不超过一个。
+       如果同时尝试建立到同一 IP 地址的多个连接，客户端 MUST
+       将它们串行化，使得一次不超过一个连接执行以下步骤。
+
+       如果客户端无法确定远程主机的 IP 地址（例如，因为所有
+       通信都通过自己执行 DNS 查询的代理服务器进行），那么就
+       本步骤而言，客户端 MUST 假定每个主机名都指向一个不同的
+       远程主机，并且客户端 SHOULD 将同时待处理连接的总数限制
+       在一个合理较低的数量（例如，客户端可能允许同时待处理
+       到 a.example.com 和 b.example.com 的连接，但如果请求到
+       单个主机的三十个同时连接，则可能不允许）。例如，在 Web
+       浏览器语境中，客户端需要在设置同时待处理连接数量限制时
+       考虑用户打开的标签页数量。
+
+
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 15 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-16" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+       NOTE: 这使得脚本更难仅通过向远程主机打开大量 WebSocket
+       连接来执行拒绝服务攻击。服务器在受到攻击时，可以通过
+       在关闭连接之前暂停来进一步减少自身负载，因为这会降低
+       客户端重新连接的速率。
+
+       NOTE: 客户端与单个远程主机之间已建立的 WebSocket 连接
+       数量没有限制。服务器可以拒绝接受来自具有过多现有连接的
+       主机/IP 地址的连接，或者在高负载时断开占用资源过多的
+       连接。
+
+   3.  _Proxy Usage_：如果客户端配置为在使用 WebSocket 协议连接
+       到主机 /host/ 和端口 /port/ 时使用代理，则客户端 SHOULD
+       连接到该代理，并要求它打开到 /host/ 给定主机和 /port/
+       给定端口的 TCP 连接。
+
+          EXAMPLE: 例如，如果客户端对所有流量都使用 HTTP 代理，
+          那么当它尝试连接到 server example.com 上的端口 80 时，
+          它可能会向代理服务器发送以下行：
+
+              CONNECT example.com:80 HTTP/1.1
+              Host: example.com
+
+          如果有密码，该连接可能如下所示：
+
+              CONNECT example.com:80 HTTP/1.1
+              Host: example.com
+              Proxy-authorization: Basic ZWRuYW1vZGU6bm9jYXBlcyE=
+
+       如果客户端未配置为使用代理，则 SHOULD 打开到 /host/
+       给定主机和 /port/ 给定端口的直接 TCP 连接。
+
+       NOTE: 如果实现没有公开用于为 WebSocket 连接选择代理的
+       显式 UI，并且该代理与其他代理分开，则鼓励实现对 WebSocket
+       连接使用 SOCKS5 [<a href="./rfc1928" title="&quot;SOCKS Protocol Version 5&quot;">RFC1928</a>] 代理（如果可用），否则优先使用
+       为 HTTPS 连接配置的代理，而不是为 HTTP 连接配置的代理。
+
+       为了用于代理自动配置脚本，传递给函数的 URI MUST 使用
+       <a href="#section-3">第 3 节</a>给出的 WebSocket URI 定义，由 /host/、/port/、
+       /resource name/ 和 /secure/ flag 构造而成。
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 16 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-17" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+       NOTE: 在代理自动配置脚本中，可以从 scheme 识别 WebSocket
+       协议（"ws" 表示未加密连接，"wss" 表示加密连接）。
+
+   4.  如果连接无法打开，无论是因为直接连接失败，还是因为使用的
+       任何代理返回了错误，则客户端 MUST _Fail the WebSocket
+       Connection_ 并中止连接尝试。
+
+   5.  如果 /secure/ 为 true，客户端 MUST 在打开连接后、发送握手
+       数据之前，在该连接上执行 TLS 握手 [<a href="./rfc2818" title="&quot;HTTP Over TLS&quot;">RFC2818</a>]。如果失败
+       （例如，服务器证书无法验证），则客户端 MUST _Fail the
+       WebSocket Connection_ 并中止该连接。否则，此信道上的所有
+       后续通信 MUST 通过加密隧道运行 [<a href="./rfc5246" title="&quot;The Transport Layer Security (TLS) Protocol Version 1.2&quot;">RFC5246</a>]。
+
+       客户端 MUST 在 TLS 握手中使用服务器名称指示扩展
+       [<a href="./rfc6066" title="&quot;Transport Layer Security (TLS) Extensions: Extension Definitions&quot;">RFC6066</a>]。
+
+   一旦到服务器的连接已建立（包括经由代理或通过 TLS 加密隧道
+   的连接），客户端 MUST 向服务器发送开启握手。该握手由一个
+   HTTP Upgrade 请求以及一组必需和可选的首部字段组成。此握手
+   的要求如下。
+
+   1.   该握手 MUST 是 [<a href="./rfc2616" title="&quot;Hypertext Transfer Protocol -- HTTP/1.1&quot;">RFC2616</a>] 指定的有效 HTTP 请求。
+
+   2.   请求的方法 MUST 是 GET，并且 HTTP 版本 MUST 至少为 1.1。
+
+        例如，如果 WebSocket URI 是 "ws://example.com/chat"，
+        则发送的第一行应为 "GET /chat HTTP/1.1"。
+
+   3.   请求的 "Request-URI" 部分 MUST 与<a href="#section-3">第 3 节</a>中定义的
+        /resource name/（一个相对 URI）匹配，或者是一个绝对
+        http/https URI，当解析后，其 /resource name/、/host/
+        和 /port/ 与对应的 ws/wss URI 匹配。
+
+   4.   请求 MUST 包含一个 |Host| 首部字段，其值包含 /host/，
+        并可选地包含 ":" 后跟 /port/（当不使用默认端口时）。
+
+   5.   请求 MUST 包含一个 |Upgrade| 首部字段，其值 MUST 包含
+        "websocket" 关键字。
+
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 17 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-18" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+   6.   请求 MUST 包含一个 |Connection| 首部字段，其值 MUST 包含
+        "Upgrade" token。
+
+   7.   请求 MUST 包含一个名称为 |Sec-WebSocket-Key| 的首部字段。
+        该首部字段的值 MUST 是由随机选择的 16 字节值组成并已
+        base64 编码的 nonce（见 <a href="./rfc4648#section-4">[RFC4648] 第&nbsp;4 节</a>）。该 nonce
+        MUST 为每个连接随机选择。
+
+        NOTE: 例如，如果随机选择的值是字节序列 0x01 0x02 0x03
+        0x04 0x05 0x06 0x07 0x08 0x09
+        0x0a 0x0b 0x0c 0x0d 0x0e 0x0f 0x10，则该首部字段的值将为
+        "AQIDBAUGBwgJCgsMDQ4PEC=="
+
+   8.   如果请求来自浏览器客户端，请求 MUST 包含一个名称为
+        |Origin| 的首部字段 [<a href="./rfc6454" title="&quot;The Web Origin Concept&quot;">RFC6454</a>]。如果连接来自非浏览器客户端，
+        并且该客户端的语义与此处为浏览器客户端描述的用例相匹配，
+        则请求 MAY 包含此首部字段。该首部字段的值是建立连接的
+        代码正在其中运行的上下文的源的 ASCII 序列化。关于此首部
+        字段值如何构造的详细信息，见 [<a href="./rfc6454" title="&quot;The Web Origin Concept&quot;">RFC6454</a>]。
+
+        例如，如果从 www.example.com 下载的代码尝试建立到
+        ww2.example.com 的连接，则该首部字段的值将为
+        "http://www.example.com"。
+
+   9.   请求 MUST 包含一个名称为 |Sec-WebSocket-Version| 的首部
+        字段。该首部字段的值 MUST 为 13。
+
+        NOTE: 虽然本文档的草案版本（-09、-10、-11 和 -12）曾被
+        发布（它们主要包含编辑性更改和澄清，而不是对线路协议的
+        更改），但值 9、10、11 和 12 未被用作
+        Sec-WebSocket-Version 的有效值。这些值已在 IANA 注册表中
+        保留，但未被使用，也不会被使用。
+
+   10.  请求 MAY 包含一个名称为 |Sec-WebSocket-Protocol| 的首部
+        字段。如果存在，此值表示客户端希望使用的一个或多个以
+        逗号分隔的子协议，并按偏好排序。构成此值的元素 MUST 是
+        非空字符串，其字符范围为 U+0021 到 U+007E，但不包括
+        [<a href="./rfc2616" title="&quot;Hypertext Transfer Protocol -- HTTP/1.1&quot;">RFC2616</a>] 中定义的分隔符字符，并且 MUST 全部为唯一字符串。
+        该首部字段值的 ABNF 是 1#token，其中构造和规则的定义
+        如 [<a href="./rfc2616" title="&quot;Hypertext Transfer Protocol -- HTTP/1.1&quot;">RFC2616</a>] 中所给出。
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 18 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-19" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+   11.  请求 MAY 包含一个名称为 |Sec-WebSocket-Extensions| 的首部
+        字段。如果存在，此值表示客户端希望使用的协议级扩展。
+        该首部字段的解释和格式在<a href="#section-9.1">第 9.1 节</a>中描述。
+
+   12.  请求 MAY 包含任何其他首部字段，例如 cookies [<a href="./rfc6265" title="&quot;HTTP State Management Mechanism&quot;">RFC6265</a>] 和/或
+        与认证相关的首部字段，如 |Authorization| 首部字段
+        [<a href="./rfc2616" title="&quot;Hypertext Transfer Protocol -- HTTP/1.1&quot;">RFC2616</a>]，它们按照定义它们的文档处理。
+
+   一旦客户端的开启握手已发送，客户端 MUST 等待来自服务器的
+   响应，然后才能发送任何进一步的数据。客户端 MUST 按如下方式
+   验证服务器的响应：
+
+   1.  如果从服务器收到的状态代码不是 101，则客户端按 HTTP
+       [<a href="./rfc2616" title="&quot;Hypertext Transfer Protocol -- HTTP/1.1&quot;">RFC2616</a>] 过程处理该响应。特别是，如果客户端收到 401
+       状态代码，它可能执行认证；服务器可能使用 3xx 状态代码
+       重定向客户端（但客户端不要求跟随它们）等。否则，按如下
+       继续。
+
+   2.  如果响应缺少 |Upgrade| 首部字段，或者 |Upgrade| 首部字段
+       包含的值不是以 ASCII 大小写不敏感方式匹配 "websocket" 的
+       值，则客户端 MUST _Fail the WebSocket Connection_。
+
+   3.  如果响应缺少 |Connection| 首部字段，或者 |Connection| 首部
+       字段不包含以 ASCII 大小写不敏感方式匹配 "Upgrade" 值的
+       token，则客户端 MUST _Fail the WebSocket Connection_。
+
+   4.  如果响应缺少 |Sec-WebSocket-Accept| 首部字段，或者
+       |Sec-WebSocket-Accept| 包含的值不是将 |Sec-WebSocket-
+       Key|（作为字符串，而不是 base64 解码后）与字符串
+       "258EAFA5-
+       E914-47DA-95CA-C5AB0DC85B11" 拼接后的 SHA-1 的 base64 编码，
+       同时忽略任何前导和尾随空白，则客户端 MUST _Fail the
+       WebSocket Connection_。
+
+   5.  如果响应包含 |Sec-WebSocket-Extensions| 首部字段，并且该
+       首部字段表示使用了未出现在客户端握手中的扩展（服务器指示
+       了客户端未请求的扩展），则客户端 MUST _Fail the WebSocket
+       Connection_。（解析此首部字段以确定请求了哪些扩展的过程在
+       <a href="#section-9.1">第 9.1 节</a>中讨论。）
+
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 19 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-20" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+   6.  如果响应包含 |Sec-WebSocket-Protocol| 首部字段，并且该首部
+       字段表示使用了未出现在客户端握手中的子协议（服务器指示了
+       客户端未请求的子协议），则客户端 MUST _Fail the WebSocket
+       Connection_。
+
+   如果服务器的响应不符合本节和<a href="#section-4.2.2">第 4.2.2 节</a>中定义的服务器
+   握手要求，则客户端 MUST _Fail the WebSocket Connection_。
+
+   请注意，根据 [<a href="./rfc2616" title="&quot;Hypertext Transfer Protocol -- HTTP/1.1&quot;">RFC2616</a>]，HTTP 请求和 HTTP 响应中的所有首部字段名
+   都是大小写不敏感的。
+
+   如果服务器的响应按上文规定验证通过，则称为 _The WebSocket
+   Connection is Established_，并且称 WebSocket 连接处于 OPEN 状态。
+   _Extensions In Use_ 被定义为一个（可能为空的）字符串，其值等于
+   服务器握手提供的 |Sec-WebSocket-Extensions| 首部字段的值；
+   如果服务器握手中不存在该首部字段，则为 null 值。
+   _Subprotocol In Use_ 被定义为服务器握手中
+   |Sec-WebSocket-Protocol| 首部字段的值；如果服务器握手中不存在
+   该首部字段，则为 null 值。此外，如果服务器握手中的任何首部
+   字段表明应设置 cookies（如 [<a href="./rfc6265" title="&quot;HTTP State Management Mechanism&quot;">RFC6265</a>] 所定义），这些 cookies
+   被称为 _Cookies Set During the Server's Opening Handshake_。
+
+<span class="h3"><a class="selflink" id="section-4.2" href="#section-4.2">4.2</a>.  服务器端要求</span>
+
+   服务器 MAY 将连接管理卸载给网络上的其他代理，例如负载均衡器
+   和反向代理。在这种情况下，就本规范而言，服务器被视为包括
+   服务器端基础设施的所有部分，从第一个终止 TCP 连接的设备
+   一直到处理请求并发送响应的服务器。
+
+   EXAMPLE: 数据中心可能有一台服务器响应 WebSocket 请求并给出
+   适当的握手，然后将连接传递给另一台服务器以实际处理数据帧。
+   就本规范而言，"server" 是这两台计算机的组合。
+
+
+
+
+
+
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 20 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-21" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+<span class="h4"><a class="selflink" id="section-4.2.1" href="#section-4.2.1">4.2.1</a>.  读取客户端的开启握手</span>
+
+   当客户端启动 WebSocket 连接时，它会发送其开启握手部分。
+   服务器必须至少解析此握手的一部分，以获得生成服务器握手部分
+   所需的信息。
+
+   客户端的开启握手由以下部分组成。如果服务器在读取握手时发现
+   客户端未发送与以下描述匹配的握手（注意，根据 [<a href="./rfc2616" title="&quot;Hypertext Transfer Protocol -- HTTP/1.1&quot;">RFC2616</a>]，
+   首部字段的顺序并不重要），包括但不限于违反为握手组件指定的
+   ABNF 语法，则服务器 MUST 停止处理客户端的握手，并返回带有
+   适当错误代码的 HTTP 响应（例如 400 Bad Request）。
+
+   1.   一个 HTTP/1.1 或更高版本的 GET 请求，包括一个
+        "Request-URI" [<a href="./rfc2616" title="&quot;Hypertext Transfer Protocol -- HTTP/1.1&quot;">RFC2616</a>]，它应被解释为<a href="#section-3">第 3 节</a>中定义的
+        /resource name/（或一个包含 /resource name/ 的绝对
+        HTTP/HTTPS URI）。
+
+   2.   一个包含服务器 authority 的 |Host| 首部字段。
+
+   3.   一个包含值 "websocket" 的 |Upgrade| 首部字段，作为 ASCII
+        大小写不敏感值处理。
+
+   4.   一个包含 token "Upgrade" 的 |Connection| 首部字段，作为
+        ASCII 大小写不敏感值处理。
+
+   5.   一个 |Sec-WebSocket-Key| 首部字段，具有 base64 编码的
+        （见 <a href="./rfc4648#section-4">[RFC4648] 第&nbsp;4 节</a>）值，该值解码后长度为 16 字节。
+
+   6.   一个 |Sec-WebSocket-Version| 首部字段，其值为 13。
+
+   7.   可选地，一个 |Origin| 首部字段。所有浏览器客户端都会发送
+        此首部字段。缺少此首部字段的连接尝试 SHOULD NOT 被解释为
+        来自浏览器客户端。
+
+   8.   可选地，一个 |Sec-WebSocket-Protocol| 首部字段，其值列表
+        表示客户端希望使用哪些协议，并按偏好排序。
+
+   9.   可选地，一个 |Sec-WebSocket-Extensions| 首部字段，其值列表
+        表示客户端希望使用哪些扩展。该首部字段的解释在
+        <a href="#section-9.1">第 9.1 节</a>中讨论。
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 21 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-22" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+   10.  可选地，其他首部字段，例如用于发送 cookies 或向服务器请求
+        认证的首部字段。未知首部字段按 [<a href="./rfc2616" title="&quot;Hypertext Transfer Protocol -- HTTP/1.1&quot;">RFC2616</a>] 被忽略。
+
+<span class="h4"><a class="selflink" id="section-4.2.2" href="#section-4.2.2">4.2.2</a>.  发送服务器的开启握手</span>
+
+   当客户端建立到服务器的 WebSocket 连接时，服务器 MUST 完成
+   以下步骤以接受该连接并发送服务器的开启握手。
+
+   1.  如果连接发生在 HTTPS（HTTP-over-TLS）端口上，则在该连接上
+       执行 TLS 握手。如果失败（例如，客户端在扩展的客户端 hello
+       "server_name" 扩展中指示了服务器并不托管的主机名），则关闭
+       连接；否则，该连接的所有后续通信（包括服务器的握手）MUST
+       通过加密隧道运行 [<a href="./rfc5246" title="&quot;The Transport Layer Security (TLS) Protocol Version 1.2&quot;">RFC5246</a>]。
+
+   2.  服务器可以执行额外的客户端认证，例如，返回 401 状态代码
+       以及 [<a href="./rfc2616" title="&quot;Hypertext Transfer Protocol -- HTTP/1.1&quot;">RFC2616</a>] 中描述的相应 |WWW-Authenticate| 首部字段。
+
+   3.  服务器 MAY 使用 3xx 状态代码重定向客户端 [<a href="./rfc2616" title="&quot;Hypertext Transfer Protocol -- HTTP/1.1&quot;">RFC2616</a>]。
+       注意，此步骤可以与上述可选认证步骤同时、之前或之后发生。
+
+   4.  确定以下信息：
+
+       /origin/
+          客户端握手中的 |Origin| 首部字段表示建立连接的脚本的源。
+          该源被序列化为 ASCII 并转换为小写。服务器 MAY 将此信息
+          作为是否接受传入连接的判定的一部分。如果服务器不验证源，
+          它将接受来自任何位置的连接。如果服务器不希望接受此连接，
+          它 MUST 返回适当的 HTTP 错误代码（例如 403 Forbidden），
+          并中止本节所述的 WebSocket 握手。更多详细信息请参见
+          <a href="#section-10">第 10 节</a>。
+
+       /key/
+          客户端握手中的 |Sec-WebSocket-Key| 首部字段包含一个
+          base64 编码的值，该值如果解码，其长度为 16 字节。
+          此（编码后的）值用于创建服务器握手，以表示接受该连接。
+          服务器不必对 |Sec-WebSocket-Key| 值进行 base64 解码。
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 22 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-23" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+       /version/
+          客户端握手中的 |Sec-WebSocket-Version| 首部字段包含客户端
+          试图与之通信的 WebSocket 协议版本。如果此版本不匹配
+          服务器理解的版本，服务器 MUST 中止本节所述的 WebSocket
+          握手，并改为发送适当的 HTTP 错误代码（例如 426 Upgrade
+          Required），以及一个 |Sec-WebSocket-Version| 首部字段，
+          表明服务器能够理解的版本。
+
+       /resource name/
+          服务器提供的服务的标识符。如果服务器提供多个服务，
+          则该值应派生自客户端握手中 GET 方法的 "Request-URI"
+          [<a href="./rfc2616" title="&quot;Hypertext Transfer Protocol -- HTTP/1.1&quot;">RFC2616</a>] 中给出的 resource name。如果请求的服务不可用，
+          服务器 MUST 发送适当的 HTTP 错误代码（例如 404 Not Found），
+          并中止 WebSocket 握手。
+
+       /subprotocol/
+          表示服务器准备使用的子协议的单个值，或 null。所选择的值
+          MUST 派生自客户端握手，具体而言，是从
+          |Sec-WebSocket-Protocol| 字段中的值中选择一个服务器愿意在
+          此连接中使用的值（如果有）。如果客户端握手未包含此类
+          首部字段，或者服务器不同意客户端请求的任何子协议，则唯一
+          可接受的值是 null。不存在此类字段等价于 null 值（这意味着
+          如果服务器不希望同意建议的子协议之一，它 MUST NOT 在其响应
+          中返回 |Sec-WebSocket-Protocol| 首部字段）。出于这些目的，
+          空字符串与 null 值不同，并且不是此字段的合法值。该首部
+          字段值的 ABNF 是 (token)，其中构造和规则的定义如
+          [<a href="./rfc2616" title="&quot;Hypertext Transfer Protocol -- HTTP/1.1&quot;">RFC2616</a>] 中所给出。
+
+       /extensions/
+          表示服务器准备使用的协议级扩展的一个（可能为空的）列表。
+          如果服务器支持多个扩展，则该值 MUST 派生自客户端握手，
+          具体而言，是从 |Sec-WebSocket-Extensions| 字段中的值中
+          选择一个或多个值。不存在此类字段等价于 null 值。出于这些
+
+
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 23 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-24" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+          目的，空字符串与 null 值不同。客户端未列出的扩展 MUST NOT
+          被列出。应如何选择和解释这些值的方法在<a href="#section-9.1">第 9.1 节</a>
+          中讨论。
+
+   5.  如果服务器选择接受传入连接，它 MUST 回复一个有效的 HTTP
+       响应，指示以下内容。
+
+       1.  根据 <a href="./rfc2616">RFC 2616</a> [<a href="./rfc2616" title="&quot;Hypertext Transfer Protocol -- HTTP/1.1&quot;">RFC2616</a>]，一个带有 101 响应代码的
+           Status-Line。这样的响应可能看起来像 "HTTP/1.1 101
+           Switching Protocols"。
+
+       2.  根据 <a href="./rfc2616">RFC</a>
+           <a href="./rfc2616">2616</a> [<a href="./rfc2616" title="&quot;Hypertext Transfer Protocol -- HTTP/1.1&quot;">RFC2616</a>]，一个值为 "websocket" 的 |Upgrade| 首部字段。
+
+       3.  一个值为 "Upgrade" 的 |Connection| 首部字段。
+
+       4.  一个 |Sec-WebSocket-Accept| 首部字段。该首部字段的值
+           通过将上文<a href="#section-4.2.2">第 4.2.2 节</a>第 4 步中定义的 /key/ 与字符串
+           "258EAFA5-
+           E914-47DA-95CA-C5AB0DC85B11" 拼接，计算此拼接值的 SHA-1
+           哈希以获得一个 20 字节的值，并对这个 20 字节哈希进行
+           base64 编码（见 <a href="./rfc4648#section-4">[RFC4648] 第&nbsp;4 节</a>）来构造。
+
+           此首部字段的 ABNF [<a href="./rfc2616" title="&quot;Hypertext Transfer Protocol -- HTTP/1.1&quot;">RFC2616</a>] 定义如下：
+
+           Sec-WebSocket-Accept     = base64-value-non-empty
+           base64-value-non-empty = (1*base64-data [ base64-padding ]) |
+                                    base64-padding
+           base64-data      = 4base64-character
+           base64-padding   = (2base64-character "==") |
+                              (3base64-character "=")
+           base64-character = ALPHA | DIGIT | "+" | "/"
+
+   NOTE: 例如，如果客户端握手中 |Sec-WebSocket-Key| 首部字段的值为
+   "dGhlIHNhbXBsZSBub25jZQ=="，服务器会附加字符串
+   "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"
+   以形成字符串 "dGhlIHNhbXBsZSBub25jZQ==258EAFA5-E914-47DA-95CA-
+   C5AB0DC85B11"。随后服务器会计算该字符串的 SHA-1 哈希，得到
+   值 0xb3 0x7a 0x4f 0x2c 0xc0 0x62 0x4f 0x16 0x90
+   0xf6 0x46 0x06 0xcf 0x38 0x59 0x45 0xb2 0xbe 0xc4 0xea。
+   随后该值被 base64 编码，得到值
+   "s3pPLMBiTxaQ9kYGzzhZRbK+xOo="，该值会在
+   |Sec-WebSocket-Accept| 首部字段中返回。
+
+       5.  可选地，一个 |Sec-WebSocket-Protocol| 首部字段，其值为
+           <a href="#section-4.2.2">第 4.2.2 节</a>第 4 步中定义的 /subprotocol/。
+
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 24 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-25" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+       6.  可选地，一个 |Sec-WebSocket-Extensions| 首部字段，其值为
+           <a href="#section-4.2.2">第 4.2.2 节</a>第 4 步中定义的 /extensions/。如果要使用多个
+           扩展，它们可以全部列在单个 |Sec-WebSocket-Extensions|
+           首部字段中，也可以拆分到多个 |Sec-WebSocket-Extensions|
+           首部字段实例之间。
+
+   这完成了服务器的握手。如果服务器在不中止 WebSocket 握手的
+   情况下完成这些步骤，服务器就认为 WebSocket 连接已建立，并且
+   WebSocket 连接处于 OPEN 状态。此时，服务器可以开始发送（和接收）
+   数据。
+
+<span class="h3"><a class="selflink" id="section-4.3" href="#section-4.3">4.3</a>.  握手中使用的新首部字段的汇总 ABNF</span>
+
+   本节使用来自 <a href="./rfc2616#section-2.1">[RFC2616] 第&nbsp;2.1 节</a>的 ABNF 语法/规则，
+   包括“隐含 *LWS 规则”。
+
+   注意，本节使用以下 ABNF 约定。有些规则名称对应于相应首部
+   字段的名称。此类规则表达相应首部字段的值，例如，
+   Sec-WebSocket-Key ABNF 规则描述 |Sec-WebSocket-Key| 首部字段值
+   的语法。名称中带有 "-Client" 后缀的 ABNF 规则仅用于客户端
+   发送给服务器的请求；名称中带有 "-Server" 后缀的 ABNF 规则
+   仅用于服务器发送给客户端的响应。例如，ABNF 规则
+   Sec-WebSocket-Protocol-Client 描述客户端发送给服务器的
+   |Sec-WebSocket-Protocol| 首部字段值的语法。
+
+   以下新首部字段可以在从客户端到服务器的握手期间发送：
+
+      Sec-WebSocket-Key = base64-value-non-empty
+      Sec-WebSocket-Extensions = extension-list
+      Sec-WebSocket-Protocol-Client = 1#token
+      Sec-WebSocket-Version-Client = version
+
+      base64-value-non-empty = (1*base64-data [ base64-padding ]) |
+                                base64-padding
+      base64-data      = 4base64-character
+      base64-padding   = (2base64-character "==") |
+                         (3base64-character "=")
+      base64-character = ALPHA | DIGIT | "+" | "/"
+      extension-list = 1#extension
+      extension = extension-token *( ";" extension-param )
+      extension-token = registered-token
+      registered-token = token
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 25 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-26" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+      extension-param = token [ "=" (token | quoted-string) ]
+           ; When using the quoted-string syntax variant, the value
+           ; after quoted-string unescaping MUST conform to the
+           ; 'token' ABNF.
+      NZDIGIT       =  "1" | "2" | "3" | "4" | "5" | "6" |
+                       "7" | "8" | "9"
+      version = DIGIT | (NZDIGIT DIGIT) |
+                ("1" DIGIT DIGIT) | ("2" DIGIT DIGIT)
+                ; Limited to 0-255 range, with no leading zeros
+
+   以下新首部字段可以在从服务器到客户端的握手期间发送：
+
+      Sec-WebSocket-Extensions = extension-list
+      Sec-WebSocket-Accept     = base64-value-non-empty
+      Sec-WebSocket-Protocol-Server = token
+      Sec-WebSocket-Version-Server = 1#version
+
+<span class="h3"><a class="selflink" id="section-4.4" href="#section-4.4">4.4</a>.  支持多个版本的 WebSocket 协议</span>
+
+   本节就客户端和服务器中支持多个版本的 WebSocket 协议提供一些
+   指导。
+
+   使用 WebSocket 版本通告能力（|Sec-WebSocket-Version| 首部字段），
+   客户端可以先请求它偏好的 WebSocket 协议版本（不一定必须是
+   客户端支持的最新版本）。如果服务器支持所请求的版本，并且
+   握手消息在其他方面有效，服务器将接受该版本。如果服务器不
+   支持所请求的版本，它 MUST 以一个 |Sec-WebSocket-Version| 首部
+   字段（或多个 |Sec-WebSocket-Version| 首部字段）作出响应，其中
+   包含它愿意使用的所有版本。此时，如果客户端支持其中一个已
+   通告版本，它可以使用新的版本值重复 WebSocket 握手。
+
+   以下示例演示了上面描述的版本协商：
+
+      GET /chat HTTP/1.1
+      Host: server.example.com
+      Upgrade: websocket
+      Connection: Upgrade
+      ...
+      Sec-WebSocket-Version: 25
+
+
+
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 26 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-27" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+   来自服务器的响应可能如下所示：
+
+      HTTP/1.1 400 Bad Request
+      ...
+      Sec-WebSocket-Version: 13, 8, 7
+
+   注意，服务器的最后一个响应也可能如下所示：
+
+      HTTP/1.1 400 Bad Request
+      ...
+      Sec-WebSocket-Version: 13
+      Sec-WebSocket-Version: 8, 7
+
+   现在客户端重复符合版本 13 的握手：
+
+      GET /chat HTTP/1.1
+      Host: server.example.com
+      Upgrade: websocket
+      Connection: Upgrade
+      ...
+      Sec-WebSocket-Version: 13
+
+<span class="h2"><a class="selflink" id="section-5" href="#section-5">5</a>.  数据分帧</span>
+
+<span class="h3"><a class="selflink" id="section-5.1" href="#section-5.1">5.1</a>.  概述</span>
+
+   在 WebSocket 协议中，数据使用一系列帧传输。为了避免混淆网络
+   中间设备（例如拦截代理），并出于<a href="#section-10.3">第 10.3 节</a>中进一步讨论的
+   安全原因，客户端 MUST 对其发送给服务器的所有帧进行掩码处理
+   （更多细节见<a href="#section-5.3">第 5.3 节</a>）。（注意，无论 WebSocket 协议
+   是否运行在 TLS 之上，都会执行掩码处理。）服务器在收到未掩码的
+   帧时 MUST 关闭连接。在这种情况下，服务器 MAY 发送一个 Close 帧，
+   其状态代码为 1002（协议错误），如<a href="#section-7.4.1">第 7.4.1 节</a>中所定义。
+   服务器 MUST NOT 对其发送给客户端的任何帧进行掩码处理。客户端
+   如果检测到已掩码的帧，MUST 关闭连接。在这种情况下，它 MAY 使用
+   状态代码 1002（协议错误），如<a href="#section-7.4.1">第 7.4.1 节</a>中所定义。
+   （这些规则可能会在未来的规范中放宽。）
+
+   基本分帧协议定义了一种帧类型，包含 opcode、payload length，
+   以及为 "Extension data" 和 "Application data" 指定的位置，
+   它们共同定义 "Payload data"。某些位和 opcode 被保留用于
+   协议的未来扩展。
+
+
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 27 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-28" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+   在开启握手完成之后、该端点发送 Close 帧（<a href="#section-5.5.1">第 5.5.1 节</a>）
+   之前，客户端或服务器 MAY 在任何时候传输数据帧。
+
+<span class="h3"><a class="selflink" id="section-5.2" href="#section-5.2">5.2</a>.  基本分帧协议</span>
+
+   数据传输部分的此线路格式由本节详细给出的 ABNF [<a href="./rfc5234" title="&quot;Augmented BNF for Syntax Specifications: ABNF&quot;">RFC5234</a>]
+   描述。（注意，与本文档其他章节不同，本节中的 ABNF 操作的是
+   位组。每个位组的长度在注释中指出。在线路上编码时，最高有效位
+   是 ABNF 中最左侧的位）。以下图形给出了分帧的高层概述。如果
+   下图与本节后面指定的 ABNF 之间存在冲突，则以下图形具有权威性。
+
+      0                   1                   2                   3
+      0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+     +-+-+-+-+-------+-+-------------+-------------------------------+
+     |F|R|R|R| opcode|M| Payload len |    Extended payload length    |
+     |I|S|S|S|  (4)  |A|     (7)     |             (16/64)           |
+     |N|V|V|V|       |S|             |   (if payload len==126/127)   |
+     | |1|2|3|       |K|             |                               |
+     +-+-+-+-+-------+-+-------------+ - - - - - - - - - - - - - - - +
+     |     Extended payload length continued, if payload len == 127  |
+     + - - - - - - - - - - - - - - - +-------------------------------+
+     |                               |Masking-key, if MASK set to 1  |
+     +-------------------------------+-------------------------------+
+     | Masking-key (continued)       |          Payload Data         |
+     +-------------------------------- - - - - - - - - - - - - - - - +
+     :                     Payload Data continued ...                :
+     + - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - +
+     |                     Payload Data continued ...                |
+     +---------------------------------------------------------------+
+
+   FIN：1 位
+
+      表示这是消息中的最终分片。第一个分片也 MAY 是最终分片。
+
+   RSV1、RSV2、RSV3：各 1 位
+
+      MUST 为 0，除非已协商了定义非零值含义的扩展。如果收到非零值，
+      并且已协商的扩展中没有任何一个定义此类非零值的含义，则接收
+      端点 MUST _Fail the WebSocket Connection_。
+
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 28 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-29" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+   Opcode：4 位
+
+      定义 "Payload data" 的解释。如果收到未知 opcode，接收端点
+      MUST _Fail the WebSocket Connection_。定义了以下值。
+
+      *  %x0 表示 continuation 帧
+
+      *  %x1 表示 text 帧
+
+      *  %x2 表示 binary 帧
+
+      *  %x3-7 保留用于进一步的非控制帧
+
+      *  %x8 表示连接关闭
+
+      *  %x9 表示 ping
+
+      *  %xA 表示 pong
+
+      *  %xB-F 保留用于进一步的控制帧
+
+   Mask：1 位
+
+      定义 "Payload data" 是否已掩码。如果设置为 1，则 masking-key
+      中存在掩码密钥，并按照<a href="#section-5.3">第 5.3 节</a>使用它对 "Payload data"
+      解除掩码。从客户端发送到服务器的所有帧都将此位设置为 1。
+
+   Payload length：7 位、7+16 位或 7+64 位
+
+      "Payload data" 的长度，以字节为单位：如果为 0-125，则该值
+      就是有效载荷长度。如果为 126，则后续 2 字节解释为 16 位无符号
+      整数，作为有效载荷长度。如果为 127，则后续 8 字节解释为 64 位
+      无符号整数（最高有效位 MUST 为 0），作为有效载荷长度。多字节
+      长度量以网络字节序表示。注意，在所有情况下，MUST 使用最少
+      数量的字节对长度进行编码，例如，一个长度为 124 字节的字符串
+      不能编码为序列 126, 0, 124。有效载荷长度是 "Extension data"
+      的长度 + "Application data" 的长度。"Extension data" 的长度
+      可以为零，在这种情况下，有效载荷长度就是 "Application data"
+      的长度。
+
+
+
+
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 29 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-30" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+   Masking-key：0 或 4 字节
+
+      从客户端发送到服务器的所有帧都由一个包含在帧内的 32 位值
+      进行掩码处理。如果 mask 位设置为 1，则此字段存在；如果 mask
+      位设置为 0，则此字段不存在。关于客户端到服务器掩码处理的
+      更多信息，见<a href="#section-5.3">第 5.3 节</a>。
+
+   Payload data：（x+y）字节
+
+      "Payload data" 被定义为 "Extension data" 与 "Application data"
+      的拼接。
+
+   Extension data：x 字节
+
+      除非已经协商了扩展，否则 "Extension data" 为 0 字节。任何扩展
+      MUST 指定 "Extension data" 的长度，或该长度可以如何计算，以及
+      扩展使用 MUST 如何在开启握手期间协商。如果存在，
+      "Extension data" 会包含在总有效载荷长度中。
+
+   Application data：y 字节
+
+      任意 "Application data"，占据帧中任何 "Extension data" 之后的
+      剩余部分。"Application data" 的长度等于有效载荷长度减去
+      "Extension data" 的长度。
+
+   基本分帧协议由以下 ABNF [<a href="./rfc5234" title="&quot;Augmented BNF for Syntax Specifications: ABNF&quot;">RFC5234</a>] 正式定义。需要注意的是，
+   此数据的表示是二进制，而不是 ASCII 字符。因此，一个长度为 1 位、
+   取值为 %x0 / %x1 的字段，被表示为一个值为 0 或 1 的单个位，
+   而不是一个完整字节（octet），该字节代表 ASCII 编码中的字符
+   "0" 或 "1"。一个长度为 4 位、取值在 %x0-F 之间的字段，同样由
+   4 位表示，同样不是由 ASCII 字符或带有这些值的完整字节（octet）
+   表示。[<a href="./rfc5234" title="&quot;Augmented BNF for Syntax Specifications: ABNF&quot;">RFC5234</a>] 不指定字符编码："Rules resolve into a string
+   of terminal values, sometimes called characters.  In ABNF, a character
+   is merely a non-negative integer.  In certain contexts, a specific
+   mapping (encoding) of values into a character set (such as ASCII) will
+   be specified." 这里，指定的编码是一种二进制编码，其中每个终结值
+   都以指定的位数编码，而该位数随每个字段变化。
+
+
+
+
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 30 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-31" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+    ws-frame                = frame-fin           ; 1 bit in length
+                              frame-rsv1          ; 1 bit in length
+                              frame-rsv2          ; 1 bit in length
+                              frame-rsv3          ; 1 bit in length
+                              frame-opcode        ; 4 bits in length
+                              frame-masked        ; 1 bit in length
+                              frame-payload-length   ; either 7, 7+16,
+                                                     ; or 7+64 bits in
+                                                     ; length
+                              [ frame-masking-key ]  ; 32 bits in length
+                              frame-payload-data     ; n*8 bits in
+                                                     ; length, where
+                                                     ; n &gt;= 0
+
+    frame-fin               = %x0 ; more frames of this message follow
+                            / %x1 ; final frame of this message
+                                  ; 1 bit in length
+
+    frame-rsv1              = %x0 / %x1
+                              ; 1 bit in length, MUST be 0 unless
+                              ; negotiated otherwise
+
+    frame-rsv2              = %x0 / %x1
+                              ; 1 bit in length, MUST be 0 unless
+                              ; negotiated otherwise
+
+    frame-rsv3              = %x0 / %x1
+                              ; 1 bit in length, MUST be 0 unless
+                              ; negotiated otherwise
+
+    frame-opcode            = frame-opcode-non-control /
+                              frame-opcode-control /
+                              frame-opcode-cont
+
+    frame-opcode-cont       = %x0 ; frame continuation
+
+    frame-opcode-non-control= %x1 ; text frame
+                            / %x2 ; binary frame
+                            / %x3-7
+                            ; 4 bits in length,
+                            ; reserved for further non-control frames
+
+    frame-opcode-control    = %x8 ; connection close
+                            / %x9 ; ping
+                            / %xA ; pong
+                            / %xB-F ; reserved for further control
+                                    ; frames
+                                    ; 4 bits in length
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 31 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-32" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+    frame-masked            = %x0
+                            ; frame is not masked, no frame-masking-key
+                            / %x1
+                            ; frame is masked, frame-masking-key present
+                            ; 1 bit in length
+
+    frame-payload-length    = ( %x00-7D )
+                            / ( %x7E frame-payload-length-16 )
+                            / ( %x7F frame-payload-length-63 )
+                            ; 7, 7+16, or 7+64 bits in length,
+                            ; respectively
+
+    frame-payload-length-16 = %x0000-FFFF ; 16 bits in length
+
+    frame-payload-length-63 = %x0000000000000000-7FFFFFFFFFFFFFFF
+                            ; 64 bits in length
+
+    frame-masking-key       = 4( %x00-FF )
+                              ; present only if frame-masked is 1
+                              ; 32 bits in length
+
+    frame-payload-data      = (frame-masked-extension-data
+                               frame-masked-application-data)
+                            ; when frame-masked is 1
+                              / (frame-unmasked-extension-data
+                                frame-unmasked-application-data)
+                            ; when frame-masked is 0
+
+    frame-masked-extension-data     = *( %x00-FF )
+                            ; reserved for future extensibility
+                            ; n*8 bits in length, where n &gt;= 0
+
+    frame-masked-application-data   = *( %x00-FF )
+                            ; n*8 bits in length, where n &gt;= 0
+
+    frame-unmasked-extension-data   = *( %x00-FF )
+                            ; reserved for future extensibility
+                            ; n*8 bits in length, where n &gt;= 0
+
+    frame-unmasked-application-data = *( %x00-FF )
+                            ; n*8 bits in length, where n &gt;= 0
+
+<span class="h3"><a class="selflink" id="section-5.3" href="#section-5.3">5.3</a>.  客户端到服务器的掩码处理</span>
+
+   已掩码的帧 MUST 将字段 frame-masked 设置为 1，如<a href="#section-5.2">第 5.2 节</a>
+   所定义。
+
+
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 32 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-33" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+   掩码密钥完全包含在帧内，如<a href="#section-5.2">第 5.2 节</a>中定义为
+   frame-masking-key。它用于对同一节中定义为 frame-payload-data 的
+   "Payload data" 进行掩码处理，该 "Payload data" 包括
+   "Extension data" 和 "Application data"。
+
+   掩码密钥是客户端随机选择的 32 位值。在准备已掩码帧时，客户端
+   MUST 从允许的 32 位值集合中选择一个新的掩码密钥。掩码密钥需要
+   不可预测；因此，掩码密钥 MUST 派生自强熵源，并且给定帧的掩码
+   密钥 MUST NOT 使服务器/代理能够轻易预测后续帧的掩码密钥。掩码
+   密钥的不可预测性对于防止恶意应用作者选择在线路上出现的字节
+   至关重要。<a href="./rfc4086">RFC 4086</a> [<a href="./rfc4086" title="&quot;Randomness Requirements for Security&quot;">RFC4086</a>] 讨论了安全敏感应用适合的
+   熵源所需具备的条件。
+
+   掩码处理不会影响 "Payload data" 的长度。要将已掩码数据转换为
+   未掩码数据，或反之，应用以下算法。无论转换方向如何，都应用
+   同一算法，例如，对数据进行掩码与解除数据掩码应用相同步骤。
+
+   转换后数据的第 i 个八位字节（"transformed-octet-i"）是原始数据
+   的第 i 个八位字节（"original-octet-i"）与掩码密钥中索引为
+   i modulo 4 的八位字节（"masking-key-octet-j"）的 XOR：
+
+     j                   = i MOD 4
+     transformed-octet-i = original-octet-i XOR masking-key-octet-j
+
+   分帧中由 frame-payload-length 指示的有效载荷长度不包括掩码密钥
+   的长度。它是 "Payload data" 的长度，例如，跟随掩码密钥之后的
+   字节数。
+
+<span class="h3"><a class="selflink" id="section-5.4" href="#section-5.4">5.4</a>.  分片</span>
+
+   分片的主要目的是允许发送在消息开始时大小未知的消息，而无需
+   缓冲该消息。如果消息不能分片，则端点必须缓冲整个消息，以便在
+   发送第一个字节之前计算其长度。有了分片，服务器或中间设备可以
+   选择合理大小的缓冲区，并在缓冲区填满时向网络写入一个分片。
+
+   分片的次要用例是用于多路复用，其中不希望一个逻辑信道上的大
+   消息独占输出信道，因此多路复用需要能够自由
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 33 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-34" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+   将该消息拆分成较小的分片，以便更好地共享输出信道。（注意，
+   多路复用扩展未在本文档中描述。）
+
+   除非由扩展另行指定，帧没有语义含义。如果客户端和服务器没有
+   协商扩展，或者协商了某些扩展但中间设备理解所有已协商扩展并
+   知道如何在这些扩展存在的情况下合并和/或拆分帧，则中间设备
+   可能会合并和/或拆分帧。其一个含义是，在没有扩展的情况下，
+   发送方和接收方不得依赖特定帧边界的存在。
+
+   以下规则适用于分片：
+
+   o  未分片消息由单个帧组成，该帧的 FIN 位被设置
+      （<a href="#section-5.2">第 5.2 节</a>），并且 opcode 不为 0。
+
+   o  分片消息由单个 FIN 位清除且 opcode 不为 0 的帧开始，
+      后跟零个或多个 FIN 位清除且 opcode 设置为 0 的帧，并由一个
+      FIN 位设置且 opcode 为 0 的帧终止。概念上，分片消息等价于
+      一个更大的单个消息，其有效载荷等于各分片有效载荷按顺序
+      拼接而成；然而，在存在扩展的情况下，这可能不成立，因为
+      扩展定义了现有 "Extension data" 的解释。例如，"Extension
+      data" 可能只出现在第一个分片的开头并应用于后续分片，或者
+      每个分片中都可能存在 "Extension data"，且仅应用于该特定
+      分片。在没有 "Extension data" 的情况下，以下示例演示分片
+      如何工作。
+
+      EXAMPLE: 对于作为三个分片发送的文本消息，第一个分片的
+      opcode 为 0x1 且 FIN 位清除，第二个分片的 opcode 为 0x0 且
+      FIN 位清除，第三个分片的 opcode 为 0x0 且 FIN 位被设置。
+
+   o  控制帧（见<a href="#section-5.5">第 5.5 节</a>）MAY 注入到分片消息的中间。
+      控制帧本身 MUST NOT 被分片。
+
+   o  消息分片 MUST 按发送方发送的顺序交付给接收方。
+
+
+
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 34 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-35" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+   o  一个消息的分片 MUST NOT 与另一个消息的分片交错，除非已经
+      协商了能够解释这种交错的扩展。
+
+   o  端点 MUST 能够处理分片消息中间的控制帧。
+
+   o  发送方 MAY 为非控制消息创建任意大小的分片。
+
+   o  客户端和服务器 MUST 支持接收分片和未分片消息。
+
+   o  由于控制帧不能被分片，中间设备 MUST NOT 试图改变控制帧的
+      分片。
+
+   o  如果使用了任何保留位值，并且中间设备不知道这些值的含义，
+      则中间设备 MUST NOT 改变消息的分片。
+
+   o  在连接已协商扩展且中间设备不了解已协商扩展语义的情况下，
+      中间设备 MUST NOT 改变任何消息的分片。类似地，未看到
+      WebSocket 握手（并且未被告知其内容）而导致某个 WebSocket
+      连接的中间设备，MUST NOT 改变该连接中任何消息的分片。
+
+   o  作为这些规则的结果，一个消息的所有分片都具有相同类型，
+      该类型由第一个分片的 opcode 设置。由于控制帧不能被分片，
+      消息中所有分片的类型 MUST 是 text、binary 或保留 opcode
+      之一。
+
+   NOTE: 如果控制帧不能被插入，那么例如 ping 的延迟在位于一个
+   大消息之后时会非常长。因此，需要能够处理分片消息中间的控制帧。
+
+   IMPLEMENTATION NOTE: 在没有任何扩展的情况下，接收方不必为了处理
+   帧而缓冲整个帧。例如，如果使用流式 API，可以将帧的一部分交付给
+   应用。然而，注意此假设可能不适用于所有未来的 WebSocket 扩展。
+
+
+
+
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 35 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-36" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+<span class="h3"><a class="selflink" id="section-5.5" href="#section-5.5">5.5</a>.  控制帧</span>
+
+   控制帧通过 opcode 最高有效位为 1 来识别。当前定义的控制帧
+   opcode 包括 0x8（Close）、0x9（Ping）和 0xA（Pong）。Opcode
+   0xB-0xF 保留用于尚待定义的进一步控制帧。
+
+   控制帧用于传达关于 WebSocket 的状态。控制帧可以插入到分片
+   消息的中间。
+
+   所有控制帧 MUST 具有 125 字节或更少的有效载荷长度，并且
+   MUST NOT 被分片。
+
+<span class="h4"><a class="selflink" id="section-5.5.1" href="#section-5.5.1">5.5.1</a>.  Close</span>
+
+   Close 帧包含 opcode 0x8。
+
+   Close 帧 MAY 包含一个正文（帧的 "Application data" 部分），
+   指示关闭原因，例如端点正在关闭、端点收到了过大的帧，或端点
+   收到了不符合该端点期望格式的帧。如果存在正文，则正文的前两个
+   字节 MUST 是一个 2 字节无符号整数（网络字节序），表示
+   <a href="#section-7.4">第 7.4 节</a>中定义的值为 /code/ 的状态代码。在该 2 字节整数之后，
+   正文 MAY 包含值为 /reason/ 的 UTF-8 编码数据，其解释不由本规范
+   定义。此数据不一定是人类可读的，但可能有助于调试或传递与打开
+   该连接的脚本相关的信息。由于不能保证该数据是人类可读的，客户端
+   MUST NOT 将其显示给最终用户。
+
+   从客户端发送到服务器的 Close 帧必须按<a href="#section-5.3">第 5.3 节</a>进行掩码处理。
+
+   应用在发送 Close 帧之后 MUST NOT 再发送任何数据帧。
+
+   如果端点收到 Close 帧，并且此前未发送 Close 帧，则该端点 MUST
+   发送 Close 帧作为响应。（在发送 Close 帧作为响应时，端点通常会
+   回显它收到的状态代码。）它 SHOULD 尽快这样做。端点 MAY 延迟发送
+   Close 帧，直到其当前消息已发送完毕（例如，如果分片消息的大部分
+   已经发送，则端点 MAY 在发送 Close 帧之前发送剩余分片）。然而，
+   不能保证已经发送 Close 帧的端点会继续处理数据。
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 36 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-37" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+   在发送并接收 Close 消息之后，端点认为 WebSocket 连接已关闭，
+   并且 MUST 关闭底层 TCP 连接。服务器 MUST 立即关闭底层 TCP 连接；
+   客户端 SHOULD 等待服务器关闭连接，但 MAY 在发送并接收 Close
+   消息之后的任何时候关闭连接，例如，如果它在合理时间内未收到
+   来自服务器的 TCP Close。
+
+   如果客户端和服务器同时发送 Close 消息，两个端点都已发送并收到
+   Close 消息，并且应认为 WebSocket 连接已关闭，并关闭底层 TCP
+   连接。
+
+<span class="h4"><a class="selflink" id="section-5.5.2" href="#section-5.5.2">5.5.2</a>.  Ping</span>
+
+   Ping 帧包含 opcode 0x9。
+
+   Ping 帧 MAY 包含 "Application data"。
+
+   收到 Ping 帧后，端点 MUST 发送 Pong 帧作为响应，除非它已经收到
+   Close 帧。它 SHOULD 在实际可行时尽快以 Pong 帧响应。Pong 帧在
+   <a href="#section-5.5.3">第 5.5.3 节</a>中讨论。
+
+   端点 MAY 在连接已建立之后、连接关闭之前的任何时候发送 Ping 帧。
+
+   NOTE: Ping 帧既可以作为保活，也可以作为验证远程端点仍有响应的
+   手段。
+
+<span class="h4"><a class="selflink" id="section-5.5.3" href="#section-5.5.3">5.5.3</a>.  Pong</span>
+
+   Pong 帧包含 opcode 0xA。
+
+   <a href="#section-5.5.2">第 5.5.2 节</a>详述了同时适用于 Ping 和 Pong 帧的要求。
+
+   作为对 Ping 帧的响应而发送的 Pong 帧，必须具有与被回复的 Ping
+   帧消息正文中相同的 "Application data"。
+
+   如果端点收到 Ping 帧，并且尚未发送响应先前 Ping 帧的 Pong
+   帧，则该端点 MAY 选择仅为最近处理的 Ping 帧发送一个 Pong 帧。
+
+
+
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 37 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-38" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+   Pong 帧 MAY 在未经请求的情况下发送。这可作为单向心跳。对未经
+   请求的 Pong 帧不预期响应。
+
+<span class="h3"><a class="selflink" id="section-5.6" href="#section-5.6">5.6</a>.  数据帧</span>
+
+   数据帧（例如，非控制帧）通过 opcode 最高有效位为 0 来识别。
+   当前定义的数据帧 opcode 包括 0x1（Text）、0x2（Binary）。
+   Opcode 0x3-0x7 保留用于尚待定义的进一步非控制帧。
+
+   数据帧承载应用层和/或扩展层数据。opcode 决定数据的解释：
+
+   Text
+
+      "Payload data" 是编码为 UTF-8 的文本数据。注意，特定文本帧
+      可能包含部分 UTF-8 序列；然而，整个消息 MUST 包含有效的
+      UTF-8。重组消息中的无效 UTF-8 按<a href="#section-8.1">第 8.1 节</a>所述处理。
+
+   Binary
+
+      "Payload data" 是任意二进制数据，其解释完全由应用层决定。
+
+<span class="h3"><a class="selflink" id="section-5.7" href="#section-5.7">5.7</a>.  示例</span>
+
+   o  单帧未掩码文本消息
+
+      *  0x81 0x05 0x48 0x65 0x6c 0x6c 0x6f（包含 "Hello"）
+
+   o  单帧已掩码文本消息
+
+      *  0x81 0x85 0x37 0xfa 0x21 0x3d 0x7f 0x9f 0x4d 0x51 0x58
+         （包含 "Hello"）
+
+   o  分片未掩码文本消息
+
+      *  0x01 0x03 0x48 0x65 0x6c（包含 "Hel"）
+
+      *  0x80 0x02 0x6c 0x6f（包含 "lo"）
+
+
+
+
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 38 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-39" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+   o  未掩码 Ping 请求和已掩码 Ping 响应
+
+      *  0x89 0x05 0x48 0x65 0x6c 0x6c 0x6f（包含 "Hello" 的正文，
+         但正文内容是任意的）
+
+      *  0x8a 0x85 0x37 0xfa 0x21 0x3d 0x7f 0x9f 0x4d 0x51 0x58
+         （包含 "Hello" 的正文，与 ping 的正文匹配）
+
+   o  单个未掩码帧中的 256 字节二进制消息
+
+      *  0x82 0x7E 0x0100 [256 bytes of binary data]
+
+   o  单个未掩码帧中的 64KiB 二进制消息
+
+      *  0x82 0x7F 0x0000000000010000 [65536 bytes of binary data]
+
+<span class="h3"><a class="selflink" id="section-5.8" href="#section-5.8">5.8</a>.  可扩展性</span>
+
+   该协议被设计为允许扩展，这些扩展将向基本协议添加能力。连接的
+   端点 MUST 在开启握手期间协商任何扩展的使用。本规范提供了
+   opcode 0x3 到 0x7 和 0xB 到 0xF、"Extension data" 字段，以及
+   帧首部的 frame-rsv1、frame-rsv2 和 frame-rsv3 位，以供扩展使用。
+   扩展协商在<a href="#section-9.1">第 9.1 节</a>中进一步详细讨论。以下是扩展的一些
+   预期用途。此列表既不完整，也不是规定性的。
+
+   o  "Extension data" 可以放置在 "Payload data" 中的
+      "Application data" 之前。
+
+   o  保留位可以分配给每帧需求。
+
+   o  可以定义保留 opcode 值。
+
+   o  如果需要更多 opcode 值，可以将保留位分配给 opcode 字段。
+
+   o  可以定义一个保留位或一个 "extension" opcode，用于从
+      "Payload data" 中分配额外位，以定义更大的 opcode 或更多
+      每帧位。
+
+<span class="h2"><a class="selflink" id="section-6" href="#section-6">6</a>.  发送和接收数据</span>
+
+<span class="h3"><a class="selflink" id="section-6.1" href="#section-6.1">6.1</a>.  发送数据</span>
+
+   要通过 WebSocket 连接 _Send a WebSocket Message_，该消息由
+   /data/ 组成，端点 MUST 执行以下步骤。
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 39 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-40" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+   1.  端点 MUST 确保 WebSocket 连接处于 OPEN 状态（参见第
+       <a href="#section-4.1">4.1</a> 节和<a href="#section-4.2.2">第 4.2.2 节</a>）。如果 WebSocket 连接的状态在任何时候
+       发生变化，端点 MUST 中止以下步骤。
+
+   2.  端点 MUST 按<a href="#section-5.2">第 5.2 节</a>中定义，将 /data/ 封装在 WebSocket
+       帧中。如果要发送的数据很大，或者在端点希望开始发送数据时
+       数据尚未完整可用，则端点 MAY 按<a href="#section-5.4">第 5.4 节</a>中定义，改为将
+       数据封装在一系列帧中。
+
+   3.  包含数据的第一个帧的 opcode（frame-opcode）MUST 设置为
+       <a href="#section-5.2">第 5.2 节</a>中适当的值，用于表示接收方应将该数据解释为文本
+       或二进制数据。
+
+   4.  包含数据的最后一个帧的 FIN 位（frame-fin）MUST 按
+       <a href="#section-5.2">第 5.2 节</a>中定义设置为 1。
+
+   5.  如果数据由客户端发送，则帧 MUST 按<a href="#section-5.3">第 5.3 节</a>中定义进行
+       掩码处理。
+
+   6.  如果已为 WebSocket 连接协商任何扩展（<a href="#section-9">第 9 节</a>），则可能
+       按这些扩展的定义适用额外考虑事项。
+
+   7.  已形成的帧 MUST 通过底层网络连接传输。
+
+<span class="h3"><a class="selflink" id="section-6.2" href="#section-6.2">6.2</a>.  接收数据</span>
+
+   为接收 WebSocket 数据，端点监听底层网络连接。传入数据 MUST 按
+   <a href="#section-5.2">第 5.2 节</a>中定义解析为 WebSocket 帧。如果收到控制帧
+   （<a href="#section-5.5">第 5.5 节</a>），则该帧 MUST 按<a href="#section-5.5">第 5.5 节</a>定义处理。收到
+   数据帧（<a href="#section-5.6">第 5.6 节</a>）时，端点 MUST 记录由<a href="#section-5.2">第 5.2 节</a>中的
+   opcode（frame-opcode）定义的数据 /type/。此帧中的 "Application
+   data" 被定义为消息的 /data/。如果该帧构成一个未分片消息
+   （<a href="#section-5.4">第 5.4 节</a>），则称为 _A WebSocket Message Has Been Received_，
+   其类型为 /type/，数据为 /data/。如果该帧是分片消息的一部分，
+   后续数据帧的 "Application data" 会拼接形成 /data/。当收到由
+   FIN 位（frame-fin）指示的最后一个分片时，则称为 _A WebSocket
+   Message Has Been Received_，其数据为 /data/（由各分片的
+   "Application data" 拼接而成），并且
+
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 40 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-41" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+   类型为 /type/（从分片消息的第一个帧记录）。后续数据帧 MUST
+   被解释为属于新的 WebSocket 消息。
+
+   扩展（<a href="#section-9">第 9 节</a>）MAY 改变数据读取方式的语义，具体包括由什么
+   构成消息边界。扩展除了在有效载荷中的 "Application data" 之前
+   添加 "Extension data" 外，MAY 还修改 "Application data"（例如
+   通过压缩）。
+
+   服务器 MUST 按<a href="#section-5.3">第 5.3 节</a>所述，对从客户端接收的数据帧去除
+   掩码。
+
+<span class="h2"><a class="selflink" id="section-7" href="#section-7">7</a>.  关闭连接</span>
+
+<span class="h3"><a class="selflink" id="section-7.1" href="#section-7.1">7.1</a>.  定义</span>
+
+<span class="h4"><a class="selflink" id="section-7.1.1" href="#section-7.1.1">7.1.1</a>.  关闭 WebSocket 连接</span>
+
+   为 _Close the WebSocket Connection_，端点关闭底层 TCP 连接。端点
+   SHOULD 使用一种干净关闭 TCP 连接以及 TLS 会话（如适用）的方法，
+   并丢弃可能已收到的任何尾随字节。必要时，例如遭受攻击时，端点
+   MAY 通过任何可用方式关闭连接。
+
+   在大多数正常情况下，底层 TCP 连接 SHOULD 首先由服务器关闭，
+   这样由服务器而不是客户端持有 TIME_WAIT 状态（因为这会阻止它在
+   2 个最大报文段生存期（2MSL）内重新打开连接，而服务器没有相应
+   影响，因为 TIME_WAIT 连接在收到带有更高 seq number 的新 SYN 时会
+   立即重新打开）。在异常情况下（例如，在合理时间内未收到来自服务器
+   的 TCP Close），客户端 MAY 发起 TCP Close。因此，当服务器被指示
+   _Close the WebSocket Connection_ 时，它 SHOULD 立即发起 TCP Close；
+   当客户端被指示执行相同操作时，它 SHOULD 等待来自服务器的 TCP Close。
+
+   作为在 C 中使用 Berkeley sockets 获得干净关闭的示例，可以在套接字
+   上使用 SHUT_WR 调用 shutdown()，调用 recv() 直到获得返回值 0，
+   表示对等方也已执行有序关闭，最后在套接字上调用 close()。
+
+
+
+
+
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 41 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-42" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+<span class="h4"><a class="selflink" id="section-7.1.2" href="#section-7.1.2">7.1.2</a>.  启动 WebSocket 关闭握手</span>
+
+   为以状态代码（<a href="#section-7.4">第 7.4 节</a>）/code/ 和可选关闭原因
+   （<a href="#section-7.1.6">第 7.1.6 节</a>）/reason/ _Start the WebSocket Closing Handshake_，
+   端点 MUST 发送一个 Close 控制帧，如<a href="#section-5.5.1">第 5.5.1 节</a>所述，其状态
+   代码设置为 /code/，其关闭原因设置为 /reason/。一旦端点既发送
+   又接收了 Close 控制帧，该端点 SHOULD 按<a href="#section-7.1.1">第 7.1.1 节</a>中定义
+   _Close the WebSocket Connection_。
+
+<span class="h4"><a class="selflink" id="section-7.1.3" href="#section-7.1.3">7.1.3</a>.  WebSocket 关闭握手已启动</span>
+
+   一旦发送或接收了 Close 控制帧，即称为 _The WebSocket Closing
+   Handshake is Started_，并且 WebSocket 连接处于 CLOSING 状态。
+
+<span class="h4"><a class="selflink" id="section-7.1.4" href="#section-7.1.4">7.1.4</a>.  WebSocket 连接已关闭</span>
+
+   当底层 TCP 连接关闭时，即称为 _The WebSocket Connection is
+   Closed_，并且 WebSocket 连接处于 CLOSED 状态。如果 TCP 连接是在
+   WebSocket 关闭握手完成后关闭的，则称 WebSocket 连接已 _cleanly_
+   关闭。
+
+   如果 WebSocket 连接无法建立，也称为 _The WebSocket Connection is
+   Closed_，但不是 _cleanly_。
+
+<span class="h4"><a class="selflink" id="section-7.1.5" href="#section-7.1.5">7.1.5</a>.  WebSocket 连接关闭代码</span>
+
+   如<a href="#section-5.5.1">第 5.5.1 节</a>和<a href="#section-7.4">第 7.4 节</a>所定义，Close 控制帧可能包含
+   表示关闭原因的状态代码。WebSocket 连接的关闭可以由任一端点发起，
+   也可能同时发起。_The WebSocket Connection Close Code_ 被定义为
+   实现本协议的应用接收到的第一个 Close 控制帧中所包含的状态代码
+   （<a href="#section-7.4">第 7.4 节</a>）。如果此 Close 控制帧不包含状态代码，则
+   _The WebSocket Connection Close Code_ 被认为是 1005。如果
+   _The WebSocket Connection is Closed_，且端点未收到 Close 控制帧
+   （例如底层传输连接丢失时可能发生），则 _The WebSocket Connection
+   Close Code_ 被认为是 1006。
+
+   NOTE: 两个端点可能不会就 _The WebSocket Connection Close Code_ 的值
+   达成一致。例如，如果远程端点发送了 Close 帧，但本地应用尚未从其
+   套接字接收缓冲区读取包含 Close 帧的数据，而本地应用独立决定关闭
+   连接并发送 Close 帧，则两个端点都将发送并接收一个
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 42 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-43" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+   Close 帧，并且不会再发送更多 Close 帧。每个端点都会将另一端
+   发送的状态代码视为 _The WebSocket Connection Close Code_。因此，
+   如果两个端点各自独立且大致同时 _Start the WebSocket Closing
+   Handshake_，则两个端点可能不会就 _The WebSocket Connection
+   Close Code_ 的值达成一致。
+
+<span class="h4"><a class="selflink" id="section-7.1.6" href="#section-7.1.6">7.1.6</a>.  WebSocket 连接关闭原因</span>
+
+   如<a href="#section-5.5.1">第 5.5.1 节</a>和<a href="#section-7.4">第 7.4 节</a>所定义，Close 控制帧可能包含
+   表示关闭原因的状态代码，后跟 UTF-8 编码数据，该数据的解释留给
+   端点，不由本协议定义。WebSocket 连接的关闭可以由任一端点发起，
+   也可能同时发起。_The WebSocket Connection Close Reason_ 被定义为
+   实现本协议的应用接收到的第一个 Close 控制帧中，状态代码
+   （<a href="#section-7.4">第 7.4 节</a>）之后的 UTF-8 编码数据。如果 Close 控制帧中没有
+   这类数据，则 _The WebSocket Connection Close Reason_ 是空字符串。
+
+   NOTE: 按照<a href="#section-7.1.5">第 7.1.5 节</a>中所述的相同逻辑，两个端点可能不会
+   就 _The WebSocket Connection Close Reason_ 达成一致。
+
+<span class="h4"><a class="selflink" id="section-7.1.7" href="#section-7.1.7">7.1.7</a>.  使 WebSocket 连接失败</span>
+
+   某些算法和规范要求端点 _Fail the WebSocket Connection_。为此，
+   客户端 MUST _Close the WebSocket Connection_，并 MAY 以适当方式向
+   用户报告问题（这对开发者尤其有用）。类似地，为此，服务器 MUST
+   _Close the WebSocket Connection_，并 SHOULD 记录该问题。
+
+   如果在端点被要求 _Fail the WebSocket Connection_ 的时刻之前，
+   _The WebSocket Connection is Established_，则端点 SHOULD 在继续
+   _Close the WebSocket Connection_ 之前，发送带有适当状态代码
+   （<a href="#section-7.4">第 7.4 节</a>）的 Close 帧。如果端点认为由于最初导致
+   WebSocket 连接失败的错误性质，另一方不太可能接收和处理 Close 帧，
+   则端点 MAY 省略发送 Close 帧。在被指示 _Fail the WebSocket
+   Connection_ 后，端点 MUST NOT 继续尝试处理来自远程端点的数据
+   （包括响应性的 Close 帧）。
+
+   除上述情况或应用层指定的情况（例如，使用 WebSocket API 的脚本）
+   外，客户端 SHOULD NOT 关闭连接。
+
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 43 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-44" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+<span class="h3"><a class="selflink" id="section-7.2" href="#section-7.2">7.2</a>.  异常关闭</span>
+
+<span class="h4"><a class="selflink" id="section-7.2.1" href="#section-7.2.1">7.2.1</a>.  客户端发起的关闭</span>
+
+   某些算法，特别是在开启握手期间，要求客户端 _Fail the WebSocket
+   Connection_。为此，客户端 MUST 按<a href="#section-7.1.7">第 7.1.7 节</a>中定义
+   _Fail the WebSocket Connection_。
+
+   如果底层传输层连接在任何时刻意外丢失，客户端 MUST _Fail the
+   WebSocket Connection_。
+
+   除上述情况或应用层指定的情况（例如，使用 WebSocket API 的脚本）
+   外，客户端 SHOULD NOT 关闭连接。
+
+<span class="h4"><a class="selflink" id="section-7.2.2" href="#section-7.2.2">7.2.2</a>.  服务器发起的关闭</span>
+
+   某些算法要求或建议服务器在开启握手期间 _Abort the WebSocket
+   Connection_。为此，服务器 MUST 仅 _Close the WebSocket Connection_
+   （<a href="#section-7.1.1">第 7.1.1 节</a>）。
+
+<span class="h4"><a class="selflink" id="section-7.2.3" href="#section-7.2.3">7.2.3</a>.  从异常关闭中恢复</span>
+
+   异常关闭可能由许多原因造成。此类关闭可能是瞬时错误的结果，在
+   这种情况下重新连接可能会得到良好的连接并恢复正常操作。此类关闭
+   也可能是非瞬时问题的结果，在这种情况下，如果每个已部署客户端都
+   经历异常关闭并立即且持续地尝试重新连接，服务器可能会遭遇大量
+   客户端试图重新连接所造成的、实质上相当于拒绝服务攻击的情况。
+   这种场景的最终结果可能是服务无法及时恢复，或恢复变得更加困难。
+
+   为防止这种情况，客户端在异常关闭后尝试重新连接时 SHOULD 使用
+   某种形式的退避，如本节所述。
+
+   第一次重新连接尝试 SHOULD 延迟一个随机时间量。选择此随机延迟的
+   参数由客户端自行决定；在 0 到 5 秒之间随机选择一个值是合理的
+   初始延迟，不过客户端 MAY 根据实现经验和特定应用选择不同的区间
+   来选取延迟长度。
+
+   如果第一次重新连接尝试失败，后续重新连接尝试 SHOULD 使用诸如
+   截断二进制指数退避之类的方法，以越来越长的时间量延迟。
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 44 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-45" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+<span class="h3"><a class="selflink" id="section-7.3" href="#section-7.3">7.3</a>.  连接的正常关闭</span>
+
+   服务器 MAY 在需要时关闭 WebSocket 连接。客户端 SHOULD NOT 任意
+   关闭 WebSocket 连接。在任一情况下，端点通过遵循 _Start the
+   WebSocket Closing Handshake_（<a href="#section-7.1.2">第 7.1.2 节</a>）的过程来发起关闭。
+
+<span class="h3"><a class="selflink" id="section-7.4" href="#section-7.4">7.4</a>.  状态代码</span>
+
+   当关闭已建立的连接时（例如，在开启握手完成后发送 Close 帧时），
+   端点 MAY 指示关闭原因。端点对此原因的解释，以及端点在给定此
+   原因时应采取的操作，不由本规范定义。本规范定义了一组预定义
+   状态代码，并指定了扩展、框架和最终应用可以使用哪些范围。状态
+   代码和任何关联的文本消息都是 Close 帧的可选组件。
+
+<span class="h4"><a class="selflink" id="section-7.4.1" href="#section-7.4.1">7.4.1</a>.  已定义的状态代码</span>
+
+   端点 MAY 在发送 Close 帧时使用以下预定义状态代码。
+
+   1000
+
+      1000 表示正常关闭，意味着建立连接的目的已经完成。
+
+   1001
+
+      1001 表示端点正在 "going away"，例如服务器正在关闭，或浏览器
+      已离开页面。
+
+   1002
+
+      1002 表示端点因协议错误而终止连接。
+
+   1003
+
+      1003 表示端点因收到其无法接受的数据类型而终止连接（例如，
+      只理解文本数据的端点如果收到二进制消息，MAY 发送此代码）。
+
+
+
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 45 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-46" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+   1004
+
+      保留。具体含义可能会在未来定义。
+
+   1005
+
+      1005 是保留值，MUST NOT 由端点设置为 Close 控制帧中的状态代码。
+      它被指定供期望状态代码的应用使用，以指示实际上没有状态代码
+      存在。
+
+   1006
+
+      1006 是保留值，MUST NOT 由端点设置为 Close 控制帧中的状态代码。
+      它被指定供期望状态代码的应用使用，以指示连接异常关闭，例如，
+      未发送或接收 Close 控制帧。
+
+   1007
+
+      1007 表示端点因收到消息中的数据与消息类型不一致而终止连接
+      （例如，文本消息中的非 UTF-8 [<a href="./rfc3629" title="&quot;UTF-8, a transformation format of ISO 10646&quot;">RFC3629</a>] 数据）。
+
+   1008
+
+      1008 表示端点因收到违反其策略的消息而终止连接。这是一个通用
+      状态代码，当没有其他更合适的状态代码（例如 1003 或 1009）时，
+      或者需要隐藏有关策略的具体细节时，可以返回此代码。
+
+   1009
+
+      1009 表示端点因收到过大而无法处理的消息而终止连接。
+
+   1010
+
+      1010 表示端点（客户端）正在终止连接，因为它期望服务器协商一个
+      或多个扩展，但服务器没有在 WebSocket 握手的响应消息中返回它们。
+      所需扩展的列表 SHOULD 出现在 Close 帧的 /reason/ 部分。
+
+
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 46 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-47" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+      注意，服务器不使用此状态代码，因为它可以改为使 WebSocket
+      握手失败。
+
+   1011
+
+      1011 表示服务器因遇到阻止其完成请求的意外情况而终止连接。
+
+   1015
+
+      1015 是保留值，MUST NOT 由端点设置为 Close 控制帧中的状态代码。
+      它被指定供期望状态代码的应用使用，以指示连接因执行 TLS 握手
+      失败而关闭（例如，无法验证服务器证书）。
+
+<span class="h4"><a class="selflink" id="section-7.4.2" href="#section-7.4.2">7.4.2</a>.  保留的状态代码范围</span>
+
+   0-999
+
+      0-999 范围内的状态代码未使用。
+
+   1000-2999
+
+      1000-2999 范围内的状态代码保留给本协议、其未来修订版，以及在
+      永久且易于获取的公开规范中指定的扩展来定义。
+
+   3000-3999
+
+      3000-3999 范围内的状态代码保留给库、框架和应用使用。这些状态
+      代码直接向 IANA 注册。这些代码的解释不由本协议定义。
+
+   4000-4999
+
+      4000-4999 范围内的状态代码保留给私有使用，因此不能注册。此类
+      代码可以由 WebSocket 应用之间事先约定后使用。这些代码的解释
+      不由本协议定义。
+
+
+
+
+
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 47 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-48" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+<span class="h2"><a class="selflink" id="section-8" href="#section-8">8</a>.  错误处理</span>
+
+<span class="h3"><a class="selflink" id="section-8.1" href="#section-8.1">8.1</a>.  处理 UTF-8 编码数据中的错误</span>
+
+   当端点要将字节流解释为 UTF-8，却发现该字节流事实上不是有效的
+   UTF-8 流时，该端点 MUST _Fail the WebSocket Connection_。此规则
+   既适用于开启握手期间，也适用于后续数据交换期间。
+
+<span class="h2"><a class="selflink" id="section-9" href="#section-9">9</a>.  扩展</span>
+
+   WebSocket 客户端 MAY 请求对本规范的扩展，WebSocket 服务器 MAY
+   接受客户端请求的部分或全部扩展。服务器 MUST NOT 响应客户端未
+   请求的任何扩展。如果扩展参数包含在客户端与服务器之间的协商中，
+   则这些参数 MUST 按照其所适用扩展的规范来选择。
+
+<span class="h3"><a class="selflink" id="section-9.1" href="#section-9.1">9.1</a>.  协商扩展</span>
+
+   客户端通过包含 |Sec-WebSocket-
+   Extensions| 首部字段来请求扩展，该首部字段遵循 HTTP 首部字段的
+   常规规则（见 <a href="./rfc2616#section-4.2">[RFC2616]，第&nbsp;4.2 节</a>），并且该首部字段的值由
+   以下 ABNF [<a href="./rfc2616" title="&quot;Hypertext Transfer Protocol -- HTTP/1.1&quot;">RFC2616</a>] 定义。注意，本节使用来自 [<a href="./rfc2616" title="&quot;Hypertext Transfer Protocol -- HTTP/1.1&quot;">RFC2616</a>] 的
+   ABNF 语法/规则，包括“隐含 *LWS 规则”。如果客户端或服务器在
+   协商期间收到不符合以下 ABNF 的值，则此类格式错误数据的接收方
+   MUST 立即 _Fail the WebSocket Connection_。
+
+         Sec-WebSocket-Extensions = extension-list
+         extension-list = 1#extension
+         extension = extension-token *( ";" extension-param )
+         extension-token = registered-token
+         registered-token = token
+         extension-param = token [ "=" (token | quoted-string) ]
+             ;When using the quoted-string syntax variant, the value
+             ;after quoted-string unescaping MUST conform to the
+             ;'token' ABNF.
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 48 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-49" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+   注意，与其他 HTTP 首部字段一样，此首部字段 MAY 被拆分或合并到
+   多行中。因此，以下内容等价：
+
+         Sec-WebSocket-Extensions: foo
+         Sec-WebSocket-Extensions: bar; baz=2
+
+   与以下内容完全等价
+
+         Sec-WebSocket-Extensions: foo, bar; baz=2
+
+   使用的任何 extension-token MUST 是已注册 token（见<a href="#section-11.4">第 11.4 节</a>）。
+   与任何给定扩展一起提供的参数 MUST 为该扩展定义。注意，客户端
+   只是提出使用任何已通告扩展，MUST NOT 使用它们，除非服务器指示
+   其希望使用该扩展。
+
+   注意，扩展的顺序是重要的。多个扩展之间的任何交互 MAY 在定义
+   这些扩展的文档中定义。在没有此类定义的情况下，解释为客户端在
+   其请求中列出的首部字段代表它希望使用的首部字段偏好，最先列出
+   的选项最受偏好。服务器在响应中列出的扩展代表连接实际使用的
+   扩展。如果扩展修改数据和/或分帧，则应假定对数据的操作顺序与
+   开启握手中服务器响应列出扩展的顺序相同。
+
+   例如，如果有两个扩展 "foo" 和 "bar"，并且服务器发送的首部字段
+   |Sec-WebSocket-Extensions| 的值为 "foo, bar"，那么对数据的操作将
+   作为 bar(foo(data)) 执行，无论这些更改是对数据本身的更改
+   （例如压缩），还是对可能“堆叠”的分帧的更改。
+
+   可接受扩展首部字段的非规范性示例（注意，为了可读性，长行被折叠）：
+
+         Sec-WebSocket-Extensions: deflate-stream
+         Sec-WebSocket-Extensions: mux; max-channels=4; flow-control,
+          deflate-stream
+         Sec-WebSocket-Extensions: private-extension
+
+   服务器通过包含一个 |Sec-WebSocket-Extensions| 首部字段来接受一个
+   或多个扩展，该字段包含客户端请求的一个或多个扩展。任何扩展参数
+   的解释，以及服务器对客户端请求的一组参数作出有效响应的构成，
+   将由每个此类扩展定义。
+
+
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 49 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-50" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+<span class="h3"><a class="selflink" id="section-9.2" href="#section-9.2">9.2</a>.  已知扩展</span>
+
+   扩展为实现选择加入额外协议特性提供了一种机制。本文档不定义任何
+   扩展，但实现 MAY 使用单独定义的扩展。
+
+<span class="h2"><a class="selflink" id="section-10" href="#section-10">10</a>.  安全考虑事项</span>
+
+   本节描述适用于 WebSocket 协议的一些安全考虑事项。具体的安全
+   考虑事项在本节的子节中描述。
+
+<span class="h3"><a class="selflink" id="section-10.1" href="#section-10.1">10.1</a>.  非浏览器客户端</span>
+
+   WebSocket 协议会防范在受信任应用（如 Web 浏览器）内部运行的恶意
+   JavaScript，例如通过检查 |Origin| 首部字段（见下文）。更多细节见
+   <a href="#section-1.6">第 1.6 节</a>。在功能更强的客户端情况下，这类假设并不成立。
+
+   虽然本协议旨在供网页中的脚本使用，但它也可以由主机直接使用。
+   此类主机代表自身行动，因此可以发送伪造的 |Origin| 首部字段，
+   误导服务器。因此，服务器在假定自己正在直接与来自已知源的脚本
+   通信时应保持谨慎，并且必须考虑它们可能以意外方式被访问。特别是，
+   服务器不应信任任何输入都是有效的。
+
+   EXAMPLE: 如果服务器将输入用作 SQL 查询的一部分，则所有输入文本
+   在传递给 SQL 服务器之前都应被转义，以免服务器易受 SQL 注入影响。
+
+<span class="h3"><a class="selflink" id="section-10.2" href="#section-10.2">10.2</a>.  Origin 考虑事项</span>
+
+   不打算处理来自任何网页的输入、而只处理来自某些站点输入的服务器
+   SHOULD 验证 |Origin| 字段是其期望的源。如果指示的源不可被服务器
+   接受，则它 SHOULD 以包含 HTTP 403 Forbidden 状态代码的回复来响应
+   WebSocket 握手。
+
+   |Origin| 首部字段可防御以下攻击情形：不受信任的一方通常是一个
+   JavaScript 应用的作者，该应用在受信任客户端的上下文中执行。
+   客户端本身可以联系服务器，并且通过 |Origin| 首部字段机制，决定
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 50 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-51" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+   是否将这些通信特权扩展给 JavaScript 应用。其意图不是阻止非浏览器
+   建立连接，而是确保由潜在恶意 JavaScript 控制的受信任浏览器不能
+   伪造 WebSocket 握手。
+
+<span class="h3"><a class="selflink" id="section-10.3" href="#section-10.3">10.3</a>.  对基础设施的攻击（掩码）</span>
+
+   除了端点可能成为通过 WebSocket 发起攻击的目标之外，Web 基础设施
+   的其他部分，例如代理，也可能成为攻击对象。
+
+   在本协议开发过程中，曾进行一个实验来演示一类针对代理的攻击，
+   这类攻击导致已部署缓存代理被投毒 [<a href="#ref-TALKING" title="&quot;Talking to Yourself for Fun and Profit&quot;">TALKING</a>]。该攻击的一般形式
+   是建立到由“攻击者”控制的服务器的连接，对 HTTP 连接执行类似于
+   WebSocket 协议用于建立连接的 UPGRADE，然后通过该 UPGRADE 后的连接
+   发送看起来像针对某个特定已知资源的 GET 请求的数据（在攻击中，
+   该资源很可能是广泛部署的点击跟踪脚本，或广告服务网络上的资源）。
+   远程服务器会响应某些看起来像对伪造 GET 请求的响应的内容，并且
+   该响应会被已部署中间设备中的非零比例缓存，从而投毒缓存。此攻击
+   的净效果是，如果用户被诱导访问攻击者控制的网站，攻击者就可能为
+   该用户以及同一缓存后面的其他用户投毒缓存，并在其他源上运行恶意
+   脚本，从而危害 Web 安全模型。
+
+   为避免此类对已部署中间设备的攻击，仅用不符合 HTTP 的分帧为应用
+   提供的数据加前缀是不够的，因为不可能穷尽发现并测试每个不合规的
+   中间设备都不会跳过此类非 HTTP 分帧并错误地处理帧有效载荷。因此，
+   采用的防御措施是对从客户端到服务器的所有数据进行掩码处理，使远程
+   脚本（攻击者）无法控制所发送数据在线路上的呈现方式，因此无法构造
+   可能被中间设备误解为 HTTP 请求的消息。
+
+   客户端 MUST 为每个帧选择新的掩码密钥，并使用不能被提供数据的最终
+   应用预测的算法。例如，每个掩码密钥都可以从加密强随机数生成器中
+   抽取。如果使用相同密钥，或者存在可解读的模式来选择下一个密钥，
+   攻击者就可以发送一条消息，该消息在被掩码后可能看起来像
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 51 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-52" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+   一个 HTTP 请求（通过获取攻击者希望在线路上看到的消息，并使用下一个
+   将要使用的掩码密钥对其进行掩码处理，当客户端应用该掩码密钥时，
+   掩码密钥实际上会解除数据的掩码）。
+
+   同样必要的是，一旦客户端开始传输某个帧，该帧的有效载荷（应用提供
+   的数据）就必须不能被应用修改。否则，攻击者可以发送一个长帧，其中
+   初始数据是已知值（例如全零），在收到第一部分数据时计算出正在使用的
+   掩码密钥，然后修改帧中尚未发送的数据，使其在被掩码后表现为 HTTP
+   请求。（这本质上与上一段中使用已知或可预测掩码密钥的问题相同。）
+   如果要发送额外数据，或者要发送的数据以某种方式发生变化，则新的或
+   已变化的数据必须在新帧中发送，因此使用新的掩码密钥。简而言之，一旦
+   帧的传输开始，远程脚本（应用）就不得修改其内容。
+
+   所防御的威胁模型是客户端发送看起来像 HTTP 请求的数据。因此，需要
+   被掩码的信道是从客户端到服务器的数据。从服务器到客户端的数据可以
+   被做成看起来像响应，但要完成此请求，客户端也必须能够伪造请求。因此，
+   未认为有必要对两个方向的数据都进行掩码处理（从服务器到客户端的数据
+   不进行掩码处理）。
+
+   尽管掩码处理提供了保护，不合规的 HTTP 代理仍然会受到此类投毒攻击
+   的影响，只要客户端和服务器未应用掩码处理。
+
+<span class="h3"><a class="selflink" id="section-10.4" href="#section-10.4">10.4</a>.  实现特定限制</span>
+
+   对帧大小或从多个帧重组后的总消息大小存在实现特定和/或平台特定
+   限制的实现，MUST 保护自身免于超过这些限制。（例如，恶意端点可以
+   通过发送单个大帧（例如，大小为 2**60）或发送一长串属于分片消息的
+   小帧，来试图耗尽其对等方的内存或发动拒绝服务攻击。）此类实现
+   SHOULD 对帧大小以及从多个帧重组后的总消息大小施加限制。
+
+
+
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 52 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-53" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+<span class="h3"><a class="selflink" id="section-10.5" href="#section-10.5">10.5</a>.  WebSocket 客户端认证</span>
+
+   本协议没有规定服务器在 WebSocket 握手期间可以用来认证客户端的
+   任何特定方式。WebSocket 服务器可以使用通用 HTTP 服务器可用的
+   任何客户端认证机制，例如 cookie、HTTP 认证或 TLS 认证。
+
+<span class="h3"><a class="selflink" id="section-10.6" href="#section-10.6">10.6</a>.  连接机密性和完整性</span>
+
+   通过在 TLS 之上运行 WebSocket 协议（wss URI）来提供连接机密性
+   和完整性。WebSocket 实现 MUST 支持 TLS，并且在与其对等方通信时
+   SHOULD 使用 TLS。
+
+   对于使用 TLS 的连接，TLS 所提供的收益很大程度上取决于 TLS 握手
+   期间协商的算法强度。例如，某些 TLS 密码机制并不提供连接机密性。
+   为实现合理级别的保护，客户端应仅使用强 TLS 算法。"Web Security
+   Context: User Interface Guidelines"
+   [<a href="#ref-W3C.REC-wsc-ui-20100812">W3C.REC-wsc-ui-20100812</a>] 讨论了什么构成强 TLS 算法。
+   [<a href="./rfc5246" title="&quot;The Transport Layer Security (TLS) Protocol Version 1.2&quot;">RFC5246</a>] 在<a href="#appendix-A.5">附录 A.5</a>和<a href="#appendix-D.3">附录 D.3</a>中提供了额外指导。
+
+<span class="h3"><a class="selflink" id="section-10.7" href="#section-10.7">10.7</a>.  无效数据的处理</span>
+
+   传入数据 MUST 始终由客户端和服务器双方验证。如果在任何时候，
+   端点面对的是其不理解的数据，或违反了端点用于判定输入安全性的
+   某些标准的数据，或者当端点看到的开启握手不符合其期望的值
+   （例如，客户端请求中的路径或源不正确）时，端点 MAY 丢弃 TCP
+   连接。如果无效数据是在成功的 WebSocket 握手之后接收的，则端点
+   SHOULD 在继续 _Close the WebSocket Connection_ 之前，发送带有
+   适当状态代码（<a href="#section-7.4">第 7.4 节</a>）的 Close 帧。使用带有适当状态代码
+   的 Close 帧有助于诊断问题。如果无效数据是在 WebSocket 握手期间
+   发送的，则服务器 SHOULD 返回适当的 HTTP [<a href="./rfc2616" title="&quot;Hypertext Transfer Protocol -- HTTP/1.1&quot;">RFC2616</a>] 状态代码。
+
+   一类常见的安全问题出现在使用错误编码发送文本数据时。本协议规定，
+   Text 数据类型（相对于 Binary 或其他类型）的消息包含 UTF-8 编码的
+   数据。虽然仍然会指示长度，并且实现本协议的应用应使用该长度来
+   确定帧实际在哪里结束，但以不正确的编码发送数据
+
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 53 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-54" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+   仍可能破坏构建在本协议之上的应用所作的假设，导致从数据误解到
+   数据丢失或潜在安全漏洞的各种后果。
+
+<span class="h3"><a class="selflink" id="section-10.8" href="#section-10.8">10.8</a>.  WebSocket 握手对 SHA-1 的使用</span>
+
+   本文档中描述的 WebSocket 握手不依赖 SHA-1 的任何安全属性，
+   例如抗碰撞性或抗第二原像攻击能力（如 [<a href="./rfc4270" title="&quot;Attacks on Cryptographic Hashes in Internet Protocols&quot;">RFC4270</a>] 中所述）。
+
+<span class="h2"><a class="selflink" id="section-11" href="#section-11">11</a>.  IANA 考虑事项</span>
+
+<span class="h3"><a class="selflink" id="section-11.1" href="#section-11.1">11.1</a>.  新 URI 方案的注册</span>
+
+<span class="h4"><a class="selflink" id="section-11.1.1" href="#section-11.1.1">11.1.1</a>.  "ws" 方案的注册</span>
+
+   |ws| URI 标识一个 WebSocket 服务器和资源名称。
+
+   URI 方案名称
+      ws
+
+   状态
+      永久
+
+   URI 方案语法
+      使用 URI 规范 [<a href="./rfc3986" title="&quot;Uniform Resource Identifier (URI): Generic Syntax&quot;">RFC3986</a>] 中的 ABNF [<a href="./rfc5234" title="&quot;Augmented BNF for Syntax Specifications: ABNF&quot;">RFC5234</a>] 语法和
+      ABNF 终结符：
+
+           "ws:" "//" authority path-abempty [ "?" query ]
+
+   &lt;path-abempty&gt; 和 &lt;query&gt; [<a href="./rfc3986" title="&quot;Uniform Resource Identifier (URI): Generic Syntax&quot;">RFC3986</a>] 组件构成发送给服务器的
+   资源名称，用于标识所需服务的种类。其他组件具有 [<a href="./rfc3986" title="&quot;Uniform Resource Identifier (URI): Generic Syntax&quot;">RFC3986</a>] 中
+   描述的含义。
+
+   URI 方案语义
+      此方案的唯一操作是使用 WebSocket 协议打开连接。
+
+   编码考虑事项
+      主机组件中被上述定义的语法排除的字符，MUST 按 [<a href="./rfc3987" title="&quot;Internationalized Resource Identifiers (IRIs)&quot;">RFC3987</a>]
+      或其替代规范所指定，从 Unicode 转换为 ASCII。出于基于方案的
+      规范化目的，主机组件的国际化域名（IDN）形式及其到 punycode
+      的转换被视为等价（见 <a href="./rfc3987#section-5.3.3">[RFC3987] 第&nbsp;5.3.3 节</a>）。
+
+
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 54 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-55" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+      其他组件中被上述定义的语法排除的字符，MUST 先将字符编码为
+      UTF-8，然后按照 URI [<a href="./rfc3986" title="&quot;Uniform Resource Identifier (URI): Generic Syntax&quot;">RFC3986</a>] 和国际化资源标识符（IRI）
+      [<a href="./rfc3987" title="&quot;Internationalized Resource Identifiers (IRIs)&quot;">RFC3987</a>] 规范中定义的百分号编码形式替换相应字节，从而从
+      Unicode 转换为 ASCII。
+
+   使用此 URI 方案名称的应用/协议
+      WebSocket 协议
+
+   互操作性考虑事项
+      使用 WebSocket 要求使用 HTTP 版本 1.1 或更高版本。
+
+   安全考虑事项
+      见“安全考虑事项”章节。
+
+   联系人
+      HYBI WG &lt;hybi@ietf.org&gt;
+
+   作者/变更控制者
+      IETF &lt;iesg@ietf.org&gt;
+
+   参考文献
+      <a href="./rfc6455">RFC 6455</a>
+
+<span class="h4"><a class="selflink" id="section-11.1.2" href="#section-11.1.2">11.1.2</a>.  "wss" 方案的注册</span>
+
+   |wss| URI 标识一个 WebSocket 服务器和资源名称，并指示该连接上的
+   流量将通过 TLS 保护（包括 TLS 的标准收益，例如数据机密性和完整性
+   以及端点认证）。
+
+   URI 方案名称
+      wss
+
+   状态
+      永久
+
+   URI 方案语法
+      使用 URI 规范 [<a href="./rfc3986" title="&quot;Uniform Resource Identifier (URI): Generic Syntax&quot;">RFC3986</a>] 中的 ABNF [<a href="./rfc5234" title="&quot;Augmented BNF for Syntax Specifications: ABNF&quot;">RFC5234</a>] 语法和
+      ABNF 终结符：
+
+           "wss:" "//" authority path-abempty [ "?" query ]
+
+   &lt;path-abempty&gt; 和 &lt;query&gt; 组件构成发送给服务器的资源名称，
+   用于标识所需服务的种类。其他组件具有 [<a href="./rfc3986" title="&quot;Uniform Resource Identifier (URI): Generic Syntax&quot;">RFC3986</a>] 中描述的
+   含义。
+
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 55 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-56" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+   URI 方案语义
+      此方案的唯一操作是使用通过 TLS 加密的 WebSocket 协议打开连接。
+
+   编码考虑事项
+      主机组件中被上述定义的语法排除的字符，MUST 按 [<a href="./rfc3987" title="&quot;Internationalized Resource Identifiers (IRIs)&quot;">RFC3987</a>]
+      或其替代规范所指定，从 Unicode 转换为 ASCII。出于基于方案的
+      规范化目的，主机组件的 IDN 形式及其到 punycode 的转换被视为
+      等价（见 <a href="./rfc3987#section-5.3.3">[RFC3987] 第</a>
+      <a href="./rfc3987#section-5.3.3">5.3.3 节</a>）。
+
+      其他组件中被上述定义的语法排除的字符，MUST 先将字符编码为
+      UTF-8，然后按照 URI [<a href="./rfc3986" title="&quot;Uniform Resource Identifier (URI): Generic Syntax&quot;">RFC3986</a>] 和 IRI [<a href="./rfc3987" title="&quot;Internationalized Resource Identifiers (IRIs)&quot;">RFC3987</a>] 规范中定义的
+      百分号编码形式替换相应字节，从而从 Unicode 转换为 ASCII。
+
+   使用此 URI 方案名称的应用/协议
+      TLS 上的 WebSocket 协议
+
+   互操作性考虑事项
+      使用 WebSocket 要求使用 HTTP 版本 1.1 或更高版本。
+
+   安全考虑事项
+      见“安全考虑事项”章节。
+
+   联系人
+      HYBI WG &lt;hybi@ietf.org&gt;
+
+   作者/变更控制者
+      IETF &lt;iesg@ietf.org&gt;
+
+   参考文献
+      <a href="./rfc6455">RFC 6455</a>
+
+<span class="h3"><a class="selflink" id="section-11.2" href="#section-11.2">11.2</a>.  "WebSocket" HTTP Upgrade 关键字的注册</span>
+
+   本节定义一个按 <a href="./rfc2817">RFC 2817</a> [<a href="./rfc2817" title="&quot;Upgrading to TLS Within HTTP/1.1&quot;">RFC2817</a>] 注册到 HTTP Upgrade Tokens
+   Registry 中的关键字。
+
+   token 名称
+      WebSocket
+
+   作者/变更控制者
+      IETF &lt;iesg@ietf.org&gt;
+
+
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 56 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-57" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+   联系人
+      HYBI &lt;hybi@ietf.org&gt;
+
+   参考文献
+      <a href="./rfc6455">RFC 6455</a>
+
+<span class="h3"><a class="selflink" id="section-11.3" href="#section-11.3">11.3</a>.  新 HTTP 首部字段的注册</span>
+
+<span class="h4"><a class="selflink" id="section-11.3.1" href="#section-11.3.1">11.3.1</a>.  Sec-WebSocket-Key</span>
+
+   本节描述一个注册在 Permanent Message Header Field Names 注册表
+   [<a href="./rfc3864" title="&quot;Registration Procedures for Message Header Fields&quot;">RFC3864</a>] 中的首部字段。
+
+   首部字段名
+      Sec-WebSocket-Key
+
+   适用协议
+      http
+
+   状态
+      标准
+
+   作者/变更控制者
+      IETF
+
+   规范文档
+      <a href="./rfc6455">RFC 6455</a>
+
+   相关信息
+      此首部字段仅用于 WebSocket 开启握手。
+
+   |Sec-WebSocket-Key| 首部字段用于 WebSocket 开启握手。它从客户端发送
+   到服务器，以提供服务器用来证明其收到了有效 WebSocket 开启握手的
+   部分信息。这有助于确保服务器不会接受来自非 WebSocket 客户端
+   （例如 HTTP 客户端）的连接，这些客户端正被滥用来向未察觉的
+   WebSocket 服务器发送数据。
+
+   |Sec-WebSocket-Key| 首部字段 MUST NOT 在 HTTP 请求中出现超过一次。
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 57 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-58" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+<span class="h4"><a class="selflink" id="section-11.3.2" href="#section-11.3.2">11.3.2</a>.  Sec-WebSocket-Extensions</span>
+
+   本节描述一个用于注册到 Permanent Message Header Field Names
+   注册表 [<a href="./rfc3864" title="&quot;Registration Procedures for Message Header Fields&quot;">RFC3864</a>] 的首部字段。
+
+   首部字段名
+      Sec-WebSocket-Extensions
+
+   适用协议
+      http
+
+   状态
+      标准
+
+   作者/变更控制者
+      IETF
+
+   规范文档
+      <a href="./rfc6455">RFC 6455</a>
+
+   相关信息
+      此首部字段仅用于 WebSocket 开启握手。
+
+   |Sec-WebSocket-Extensions| 首部字段用于 WebSocket 开启握手。它最初从
+   客户端发送到服务器，随后又从服务器发送到客户端，以就连接期间使用
+   的一组协议级扩展达成一致。
+
+   |Sec-WebSocket-Extensions| 首部字段 MAY 在 HTTP 请求中出现多次
+   （这在逻辑上等同于包含所有值的单个 |Sec-WebSocket-Extensions|
+   首部字段）。然而，|Sec-WebSocket-Extensions| 首部字段 MUST NOT
+   在 HTTP 响应中出现超过一次。
+
+<span class="h4"><a class="selflink" id="section-11.3.3" href="#section-11.3.3">11.3.3</a>.  Sec-WebSocket-Accept</span>
+
+   本节描述一个注册在 Permanent Message Header Field Names 注册表
+   [<a href="./rfc3864" title="&quot;Registration Procedures for Message Header Fields&quot;">RFC3864</a>] 中的首部字段。
+
+   首部字段名
+      Sec-WebSocket-Accept
+
+   适用协议
+      http
+
+   状态
+      标准
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 58 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-59" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+   作者/变更控制者
+      IETF
+
+   规范文档
+      <a href="./rfc6455">RFC 6455</a>
+
+   相关信息
+      此首部字段仅用于 WebSocket 开启
+      握手。
+
+   |Sec-WebSocket-Accept| 首部字段用于 WebSocket 开启握手。它从服务器
+   发送到客户端，以确认服务器愿意发起 WebSocket 连接。
+
+   |Sec-WebSocket-Accept| 首部 MUST NOT 在 HTTP 响应中出现超过一次。
+
+<span class="h4"><a class="selflink" id="section-11.3.4" href="#section-11.3.4">11.3.4</a>.  Sec-WebSocket-Protocol</span>
+
+   本节描述一个注册在 Permanent Message Header Field Names 注册表
+   [<a href="./rfc3864" title="&quot;Registration Procedures for Message Header Fields&quot;">RFC3864</a>] 中的首部字段。
+
+   首部字段名
+      Sec-WebSocket-Protocol
+
+   适用协议
+      http
+
+   状态
+      标准
+
+   作者/变更控制者
+      IETF
+
+   规范文档
+      <a href="./rfc6455">RFC 6455</a>
+
+   相关信息
+      此首部字段仅用于 WebSocket 开启
+      握手。
+
+   |Sec-WebSocket-Protocol| 首部字段用于 WebSocket 开启握手。它从客户端
+   发送到服务器，并从服务器返回到客户端，以确认连接的子协议。
+   这使脚本能够既选择子协议，又确信服务器同意提供该子协议。
+
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 59 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-60" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+   |Sec-WebSocket-Protocol| 首部字段 MAY 在 HTTP 请求中出现多次
+   （这在逻辑上等同于包含所有值的单个 |Sec-WebSocket-Protocol|
+   首部字段）。然而，|Sec-WebSocket-Protocol| 首部字段 MUST NOT
+   在 HTTP 响应中出现超过一次。
+
+<span class="h4"><a class="selflink" id="section-11.3.5" href="#section-11.3.5">11.3.5</a>.  Sec-WebSocket-Version</span>
+
+   本节描述一个注册在 Permanent Message Header Field Names 注册表
+   [<a href="./rfc3864" title="&quot;Registration Procedures for Message Header Fields&quot;">RFC3864</a>] 中的首部字段。
+
+   首部字段名
+      Sec-WebSocket-Version
+
+   适用协议
+      http
+
+   状态
+      标准
+
+   作者/变更控制者
+      IETF
+
+   规范文档
+      <a href="./rfc6455">RFC 6455</a>
+
+   相关信息
+      此首部字段仅用于 WebSocket 开启
+      握手。
+
+   |Sec-WebSocket-Version| 首部字段用于 WebSocket 开启握手。它从客户端
+   发送到服务器，以指示连接的协议版本。这使服务器能够正确解释开启
+   握手以及随后从数据发送的数据，并在服务器无法以安全方式解释该数据
+   时关闭连接。当从客户端接收到的版本与服务器理解的版本不匹配时，
+   |Sec-WebSocket-
+   Version| 首部字段也会在 WebSocket 握手错误时从服务器发送给客户端。
+   在这种情况下，该首部字段包含服务器支持的协议版本。
+
+   注意，并不期望较高版本号必然向后兼容较低版本号。
+
+
+
+
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 60 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-61" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+   |Sec-WebSocket-Version| 首部字段 MAY 在 HTTP 响应中出现多次（这在逻辑上
+   等同于包含所有值的单个 |Sec-WebSocket-Version| 首部字段）。然而，
+   |Sec-WebSocket-Version| 首部字段 MUST NOT 在 HTTP 请求中出现超过一次。
+
+<span class="h3"><a class="selflink" id="section-11.4" href="#section-11.4">11.4</a>.  WebSocket 扩展名注册表</span>
+
+   本规范创建一个新的 IANA 注册表，用于按照 <a href="./rfc5226">RFC 5226</a>
+   [<a href="./rfc5226" title="">RFC5226</a>] 中提出的原则，登记与 WebSocket 协议一起使用的
+   WebSocket 扩展名。
+
+   作为此注册表的一部分，IANA 维护以下信息：
+
+   扩展标识符
+      扩展的标识符，将在本规范<a href="#section-11.3.2">第 11.3.2 节</a>注册的
+      |Sec-WebSocket-Extensions| 首部字段中使用。该值必须符合本规范
+      <a href="#section-9.1">第 9.1 节</a>中定义的 extension-token 要求。
+
+   扩展通用名称
+      扩展通常被称呼的名称。
+
+   扩展定义
+      对定义了与 WebSocket 协议一起使用的该扩展的文档的引用。
+
+   已知不兼容扩展
+      与此扩展已知不兼容的扩展标识符列表。
+
+   WebSocket 扩展名受“先到先得”IANA 注册策略 [<a href="./rfc5226" title="">RFC5226</a>] 约束。
+
+   此注册表中没有初始值。
+
+<span class="h3"><a class="selflink" id="section-11.5" href="#section-11.5">11.5</a>.  WebSocket 子协议名注册表</span>
+
+   本规范创建一个新的 IANA 注册表，用于按照 <a href="./rfc5226">RFC 5226</a>
+   [<a href="./rfc5226" title="">RFC5226</a>] 中提出的原则，登记与 WebSocket 协议一起使用的
+   WebSocket 子协议名。
+
+
+
+
+
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 61 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-62" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+   作为此注册表的一部分，IANA 维护以下信息：
+
+   子协议标识符
+      子协议的标识符，将在本规范<a href="#section-11.3.4">第 11.3.4 节</a>注册的
+      |Sec-WebSocket-Protocol| 首部字段中使用。该值必须符合本规范
+      <a href="#section-4.1">第 4.1 节</a>第 10 项中给出的要求 —— 即，该值必须是
+      <a href="./rfc2616">RFC 2616</a> [<a href="./rfc2616" title="&quot;Hypertext Transfer Protocol -- HTTP/1.1&quot;">RFC2616</a>] 定义的 token。
+
+   子协议通用名称
+      子协议通常被称呼的名称。
+
+   子协议定义
+      对定义了与 WebSocket 协议一起使用的该子协议的文档的引用。
+
+   WebSocket 子协议名受“先到先得”IANA 注册策略 [<a href="./rfc5226" title="">RFC5226</a>] 约束。
+
+<span class="h3"><a class="selflink" id="section-11.6" href="#section-11.6">11.6</a>.  WebSocket 版本号注册表</span>
+
+   本规范创建一个新的 IANA 注册表，用于按照 <a href="./rfc5226">RFC 5226</a>
+   [<a href="./rfc5226" title="">RFC5226</a>] 中提出的原则，登记与 WebSocket 协议一起使用的
+   WebSocket 版本号。
+
+   作为此注册表的一部分，IANA 维护以下信息：
+
+   版本号
+      要在 |Sec-WebSocket-Version| 中使用的版本号在本规范
+      <a href="#section-4.1">第 4.1 节</a>中指定。该值必须是 0 到 255（含）之间的非负整数。
+
+   引用
+      请求新版本号的 RFC，或带版本号的草案名称（见下文）。
+
+   状态
+      "Interim" 或 "Standard"。描述见下文。
+
+   版本号被指定为 "Interim" 或 "Standard"。
+
+   "Standard" 版本号记录在 RFC 中，用于标识 WebSocket 协议的主要、
+   稳定版本，例如本 RFC 定义的版本。"Standard" 版本号受“IETF 审查”
+   IANA 注册策略 [<a href="./rfc5226" title="">RFC5226</a>] 约束。
+
+
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 62 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-63" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+   "Interim" 版本号记录在 Internet-Draft 中，用于帮助实现者标识并
+   与已部署的 WebSocket 协议版本互操作，例如在本 RFC 发布之前开发的
+   版本。"Interim" 版本号受“专家审查”IANA 注册策略 [<a href="./rfc5226" title="">RFC5226</a>] 约束，
+   HYBI 工作组主席（或者，如果该工作组关闭，则为 IETF Applications
+   Area 的 Area Directors）为初始指定专家。
+
+   IANA 已向注册表添加以下初始值。
+
+   +--------+-----------------------------------------+----------+
+   |Version |                Reference                |  Status  |
+   | Number |                                         |          |
+   +--------+-----------------------------------------+----------+
+   | 0      + <a href="./draft-ietf-hybi-thewebsocketprotocol-00">draft-ietf-hybi-thewebsocketprotocol-00</a> | Interim  |
+   +--------+-----------------------------------------+----------+
+   | 1      + <a href="./draft-ietf-hybi-thewebsocketprotocol-01">draft-ietf-hybi-thewebsocketprotocol-01</a> | Interim  |
+   +--------+-----------------------------------------+----------+
+   | 2      + <a href="./draft-ietf-hybi-thewebsocketprotocol-02">draft-ietf-hybi-thewebsocketprotocol-02</a> | Interim  |
+   +--------+-----------------------------------------+----------+
+   | 3      + <a href="./draft-ietf-hybi-thewebsocketprotocol-03">draft-ietf-hybi-thewebsocketprotocol-03</a> | Interim  |
+   +--------+-----------------------------------------+----------+
+   | 4      + <a href="./draft-ietf-hybi-thewebsocketprotocol-04">draft-ietf-hybi-thewebsocketprotocol-04</a> | Interim  |
+   +--------+-----------------------------------------+----------+
+   | 5      + <a href="./draft-ietf-hybi-thewebsocketprotocol-05">draft-ietf-hybi-thewebsocketprotocol-05</a> | Interim  |
+   +--------+-----------------------------------------+----------+
+   | 6      + <a href="./draft-ietf-hybi-thewebsocketprotocol-06">draft-ietf-hybi-thewebsocketprotocol-06</a> | Interim  |
+   +--------+-----------------------------------------+----------+
+   | 7      + <a href="./draft-ietf-hybi-thewebsocketprotocol-07">draft-ietf-hybi-thewebsocketprotocol-07</a> | Interim  |
+   +--------+-----------------------------------------+----------+
+   | 8      + <a href="./draft-ietf-hybi-thewebsocketprotocol-08">draft-ietf-hybi-thewebsocketprotocol-08</a> | Interim  |
+   +--------+-----------------------------------------+----------+
+   | 9      +                Reserved                 |          |
+   +--------+-----------------------------------------+----------+
+   | 10     +                Reserved                 |          |
+   +--------+-----------------------------------------+----------+
+   | 11     +                Reserved                 |          |
+   +--------+-----------------------------------------+----------+
+   | 12     +                Reserved                 |          |
+   +--------+-----------------------------------------+----------+
+   | 13     +                <a href="./rfc6455">RFC 6455</a>                 | Standard |
+   +--------+-----------------------------------------+----------+
+
+
+
+
+
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 63 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-64" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+<span class="h3"><a class="selflink" id="section-11.7" href="#section-11.7">11.7</a>.  WebSocket 关闭代码号注册表</span>
+
+   本规范按照 <a href="./rfc5226">RFC 5226</a> [<a href="./rfc5226" title="">RFC5226</a>] 中提出的原则，为
+   WebSocket 连接关闭代码号创建一个新的 IANA 注册表。
+
+   作为此注册表的一部分，IANA 维护以下信息：
+
+   状态代码
+      Status Code 表示 WebSocket 连接关闭的原因，如本文档
+      <a href="#section-7.4">第 7.4 节</a>所述。状态代码是 1000 到 4999（含）之间的整数。
+
+   含义
+      状态代码的含义。每个状态代码都必须具有唯一含义。
+
+   联系人
+      为保留该状态代码的实体提供的联系人。
+
+   引用
+      请求状态代码并定义其含义的稳定文档。对于 1000-2999 范围内的
+      状态代码，这是必需的；对于 3000-3999 范围内的状态代码，则建议
+      提供。
+
+   WebSocket 关闭代码号根据其范围受不同注册要求约束。用于本协议及其
+   后续版本或扩展的状态代码请求，受“标准行动”、“需要规范”（这意味着
+   “指定专家”）或“IESG 审查”IANA 注册策略中的任一种约束，并应在
+   1000-2999 范围内授予。供库、框架和应用使用的状态代码请求，受
+   “先到先得”IANA 注册策略约束，并应在 3000-3999 范围内授予。
+   4000-4999 状态代码范围被指定为私有使用。请求应说明它们是请求
+   WebSocket 协议（或协议的未来版本）、扩展，还是库/框架/应用使用的
+   状态代码。
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 64 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-65" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+   IANA 已向注册表添加以下初始值。
+
+     |Status Code | Meaning         | Contact       | Reference |
+    -+------------+-----------------+---------------+-----------|
+     | 1000       | Normal Closure  | hybi@ietf.org | <a href="./rfc6455">RFC 6455</a>  |
+    -+------------+-----------------+---------------+-----------|
+     | 1001       | Going Away      | hybi@ietf.org | <a href="./rfc6455">RFC 6455</a>  |
+    -+------------+-----------------+---------------+-----------|
+     | 1002       | Protocol error  | hybi@ietf.org | <a href="./rfc6455">RFC 6455</a>  |
+    -+------------+-----------------+---------------+-----------|
+     | 1003       | Unsupported Data| hybi@ietf.org | <a href="./rfc6455">RFC 6455</a>  |
+    -+------------+-----------------+---------------+-----------|
+     | 1004       | ---Reserved---- | hybi@ietf.org | <a href="./rfc6455">RFC 6455</a>  |
+    -+------------+-----------------+---------------+-----------|
+     | 1005       | No Status Rcvd  | hybi@ietf.org | <a href="./rfc6455">RFC 6455</a>  |
+    -+------------+-----------------+---------------+-----------|
+     | 1006       | Abnormal Closure| hybi@ietf.org | <a href="./rfc6455">RFC 6455</a>  |
+    -+------------+-----------------+---------------+-----------|
+     | 1007       | Invalid frame   | hybi@ietf.org | <a href="./rfc6455">RFC 6455</a>  |
+     |            | payload data    |               |           |
+    -+------------+-----------------+---------------+-----------|
+     | 1008       | Policy Violation| hybi@ietf.org | <a href="./rfc6455">RFC 6455</a>  |
+    -+------------+-----------------+---------------+-----------|
+     | 1009       | Message Too Big | hybi@ietf.org | <a href="./rfc6455">RFC 6455</a>  |
+    -+------------+-----------------+---------------+-----------|
+     | 1010       | Mandatory Ext.  | hybi@ietf.org | <a href="./rfc6455">RFC 6455</a>  |
+    -+------------+-----------------+---------------+-----------|
+     | 1011       | Internal Server | hybi@ietf.org | <a href="./rfc6455">RFC 6455</a>  |
+     |            | Error           |               |           |
+    -+------------+-----------------+---------------+-----------|
+     | 1015       | TLS handshake   | hybi@ietf.org | <a href="./rfc6455">RFC 6455</a>  |
+    -+------------+-----------------+---------------+-----------|
+
+<span class="h3"><a class="selflink" id="section-11.8" href="#section-11.8">11.8</a>.  WebSocket Opcode 注册表</span>
+
+   本规范按照 <a href="./rfc5226">RFC 5226</a> [<a href="./rfc5226" title="">RFC5226</a>] 中提出的原则，
+   为 WebSocket Opcode 创建一个新的 IANA 注册表。
+
+   作为此注册表的一部分，IANA 维护以下信息：
+
+   Opcode
+      opcode 表示 WebSocket 帧的帧类型，如<a href="#section-5.2">第 5.2 节</a>所定义。
+      opcode 是 0 到 15（含）之间的整数。
+
+   含义
+      opcode 值的含义。
+
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 65 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-66" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+   引用
+      请求该 opcode 的规范。
+
+   WebSocket Opcode 编号受“标准行动”IANA 注册策略 [<a href="./rfc5226" title="">RFC5226</a>] 约束。
+
+   IANA 已向注册表添加以下初始值。
+
+     |Opcode  | Meaning                             | Reference |
+    -+--------+-------------------------------------+-----------|
+     | 0      | Continuation Frame                  | <a href="./rfc6455">RFC 6455</a>  |
+    -+--------+-------------------------------------+-----------|
+     | 1      | Text Frame                          | <a href="./rfc6455">RFC 6455</a>  |
+    -+--------+-------------------------------------+-----------|
+     | 2      | Binary Frame                        | <a href="./rfc6455">RFC 6455</a>  |
+    -+--------+-------------------------------------+-----------|
+     | 8      | Connection Close Frame              | <a href="./rfc6455">RFC 6455</a>  |
+    -+--------+-------------------------------------+-----------|
+     | 9      | Ping Frame                          | <a href="./rfc6455">RFC 6455</a>  |
+    -+--------+-------------------------------------+-----------|
+     | 10     | Pong Frame                          | <a href="./rfc6455">RFC 6455</a>  |
+    -+--------+-------------------------------------+-----------|
+
+<span class="h3"><a class="selflink" id="section-11.9" href="#section-11.9">11.9</a>.  WebSocket 分帧首部位注册表</span>
+
+   本规范按照 <a href="./rfc5226">RFC 5226</a> [<a href="./rfc5226" title="">RFC5226</a>] 中提出的原则，为
+   WebSocket 分帧首部位创建一个新的 IANA 注册表。此注册表控制
+   <a href="#section-5.2">第 5.2 节</a>中标记为 RSV1、RSV2 和 RSV3 的位的分配。
+
+   这些位保留用于本规范的未来版本或扩展。
+
+   WebSocket 分帧首部位分配受“标准行动”IANA 注册策略 [<a href="./rfc5226" title="">RFC5226</a>]
+   约束。
+
+<span class="h2"><a class="selflink" id="section-12" href="#section-12">12</a>.  从其他规范使用 WebSocket 协议</span>
+
+   WebSocket 协议旨在供另一规范使用，以提供一种用于动态作者定义内容
+   的通用机制，例如，在定义脚本化 API 的规范中。
+
+   这样的规范首先需要 _Establish a WebSocket
+   Connection_，并向该算法提供：
+
+   o  目标，由 /host/ 和 /port/ 组成。
+
+
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 66 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-67" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+   o  /resource name/，用于在一个主机和端口上标识多个服务。
+
+   o  /secure/ flag，如果连接要加密则为 true，否则为 false。
+
+   o  被指定为对连接负责的源 [<a href="./rfc6454" title="&quot;The Web Origin Concept&quot;">RFC6454</a>] 的 ASCII 序列化。
+
+   o  可选地，一个标识将分层在 WebSocket 连接之上的协议的字符串。
+
+   /host/、/port/、/resource name/ 和 /secure/ flag 通常从 URI 中使用
+   解析 WebSocket URI 组件的步骤获得。如果 URI 未指定 WebSocket，
+   这些步骤将失败。
+
+   如果在任何时候需要关闭连接，则该规范需要使用 _Close the
+   WebSocket Connection_ 算法（<a href="#section-7.1.1">第 7.1.1 节</a>）。
+
+   <a href="#section-7.1.4">第 7.1.4 节</a>定义了 _The WebSocket Connection is Closed_ 的时机。
+
+   当连接处于打开状态时，规范需要处理 _A WebSocket Message Has Been
+   Received_（<a href="#section-6.2">第 6.2 节</a>）的情况。
+
+   要向打开的连接发送某些数据 /data/，规范需要 _Send a WebSocket
+   Message_（<a href="#section-6.1">第 6.1 节</a>）。
+
+<span class="h2"><a class="selflink" id="section-13" href="#section-13">13</a>.  致谢</span>
+
+   特别感谢 Ian Hickson，他是本协议最初的作者和编辑。本规范的初始设计
+   得益于 WHATWG 和 WHATWG 邮件列表中许多人的参与。对该规范的贡献
+   未按章节追踪，但所有为该规范作出贡献的人员列表可在 WHATWG HTML
+   规范中找到，地址为
+   <a href="http://whatwg.org/html5">http://whatwg.org/html5</a>。
+
+   还要特别感谢 John Tamplin，他为本规范的“数据分帧”章节提供了大量
+   文本。
+
+   还要特别感谢 Adam Barth，他为本规范的“数据掩码处理”章节提供了
+   大量文本和背景研究。
+
+
+
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 67 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-68" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+   特别感谢 Lisa Dusseault 所作的 Apps Area 审阅（以及帮助启动这项工作），
+   Richard Barnes 所作的 Gen-Art 审阅，以及 Magnus Westerlund 所作的
+   Transport Area 审阅。特别感谢 HYBI WG 过去和现在的 WG 主席，他们
+   在幕后不懈努力，推动这项工作走向完成：Joe Hildebrand、Salvatore
+   Loreto 和 Gabriel Montenegro。最后但同样重要的是，特别感谢负责的
+   Area Director Peter Saint-Andre。
+
+   感谢以下参与 HYBI WG 邮件列表讨论并贡献想法和/或提供详细审阅的
+   人员（该列表可能并不完整）：Greg Wilkins、John Tamplin、Willy
+   Tarreau、Maciej Stachowiak、Jamie Lokier、Scott Ferguson、Bjoern
+   Hoehrmann、Julian Reschke、Dave Cridland、Andy Green、Eric Rescorla、
+   Inaki Baz Castillo、Martin Thomson、Roberto Peon、Patrick McManus、
+   Zhong Yu、Bruce Atherton、Takeshi Yoshino、Martin J. Duerst、James
+   Graham、Simon Pieters、Roy T. Fielding、Mykyta Yevstifeyev、Len
+   Holgate、Paul Colomiets、Piotr Kulaga、Brian Raymor、Jan Koehler、
+   Joonas Lehtolahti、Sylvain Hellegouarch、Stephen Farrell、Sean Turner、
+   Pete Resnick、Peter Thorson、Joe Mason、John Fallows 和 Alexander
+   Philippou。注意，上述列出人员并不一定认可本工作的最终结果。
+
+<span class="h2"><a class="selflink" id="section-14" href="#section-14">14</a>.  参考文献</span>
+
+<span class="h3"><a class="selflink" id="section-14.1" href="#section-14.1">14.1</a>.  规范性参考文献</span>
+
+   [<a id="ref-ANSI.X3-4.1986">ANSI.X3-4.1986</a>]
+              American National Standards Institute, "Coded Character
+              Set - 7-bit American Standard Code for Information
+              Interchange", ANSI X3.4, 1986.
+
+   [<a id="ref-FIPS.180-3">FIPS.180-3</a>]
+              National Institute of Standards and Technology, "Secure
+              Hash Standard", FIPS PUB 180-3, October 2008,
+              &lt;<a href="http://csrc.nist.gov/publications/fips/fips180-3/fips180-3_final.pdf">http://csrc.nist.gov/publications/fips/fips180-3/</a>
+              <a href="http://csrc.nist.gov/publications/fips/fips180-3/fips180-3_final.pdf">fips180-3_final.pdf</a>&gt;.
+
+   [<a id="ref-RFC1928">RFC1928</a>]  Leech, M., Ganis, M., Lee, Y., Kuris, R., Koblas, D., and
+              L. Jones, "SOCKS Protocol Version 5", <a href="./rfc1928">RFC 1928</a>,
+              March 1996.
+
+   [<a id="ref-RFC2119">RFC2119</a>]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", <a href="https://www.rfc-editor.org/bcp/bcp14">BCP 14</a>, <a href="./rfc2119">RFC 2119</a>, March 1997.
+
+   [<a id="ref-RFC2616">RFC2616</a>]  Fielding, R., Gettys, J., Mogul, J., Frystyk, H.,
+              Masinter, L., Leach, P., and T. Berners-Lee, "Hypertext
+              Transfer Protocol -- HTTP/1.1", <a href="./rfc2616">RFC 2616</a>, June 1999.
+
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 68 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-69" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+   [<a id="ref-RFC2817">RFC2817</a>]  Khare, R. and S. Lawrence, "Upgrading to TLS Within
+              HTTP/1.1", <a href="./rfc2817">RFC 2817</a>, May 2000.
+
+   [<a id="ref-RFC2818">RFC2818</a>]  Rescorla, E., "HTTP Over TLS", <a href="./rfc2818">RFC 2818</a>, May 2000.
+
+   [<a id="ref-RFC3629">RFC3629</a>]  Yergeau, F., "UTF-8, a transformation format of ISO
+              10646", STD 63, <a href="./rfc3629">RFC 3629</a>, November 2003.
+
+   [<a id="ref-RFC3864">RFC3864</a>]  Klyne, G., Nottingham, M., and J. Mogul, "Registration
+              Procedures for Message Header Fields", <a href="https://www.rfc-editor.org/bcp/bcp90">BCP 90</a>, <a href="./rfc3864">RFC 3864</a>,
+              September 2004.
+
+   [<a id="ref-RFC3986">RFC3986</a>]  Berners-Lee, T., Fielding, R., and L. Masinter, "Uniform
+              Resource Identifier (URI): Generic Syntax", STD 66,
+              <a href="./rfc3986">RFC 3986</a>, January 2005.
+
+   [<a id="ref-RFC3987">RFC3987</a>]  Duerst, M. and M. Suignard, "Internationalized Resource
+              Identifiers (IRIs)", <a href="./rfc3987">RFC 3987</a>, January 2005.
+
+   [<a id="ref-RFC4086">RFC4086</a>]  Eastlake, D., Schiller, J., and S. Crocker, "Randomness
+              Requirements for Security", <a href="https://www.rfc-editor.org/bcp/bcp106">BCP 106</a>, <a href="./rfc4086">RFC 4086</a>, June 2005.
+
+   [<a id="ref-RFC4648">RFC4648</a>]  Josefsson, S., "The Base16, Base32, and Base64 Data
+              Encodings", <a href="./rfc4648">RFC 4648</a>, October 2006.
+
+   [<a id="ref-RFC5226">RFC5226</a>]  Narten, T. and H. Alvestrand, "Guidelines for Writing an
+              IANA Considerations Section in RFCs", <a href="https://www.rfc-editor.org/bcp/bcp26">BCP 26</a>, <a href="./rfc5226">RFC 5226</a>,
+              May 2008.
+
+   [<a id="ref-RFC5234">RFC5234</a>]  Crocker, D. and P. Overell, "Augmented BNF for Syntax
+              Specifications: ABNF", STD 68, <a href="./rfc5234">RFC 5234</a>, January 2008.
+
+   [<a id="ref-RFC5246">RFC5246</a>]  Dierks, T. and E. Rescorla, "The Transport Layer Security
+              (TLS) Protocol Version 1.2", <a href="./rfc5246">RFC 5246</a>, August 2008.
+
+   [<a id="ref-RFC6066">RFC6066</a>]  Eastlake, D., "Transport Layer Security (TLS) Extensions:
+              Extension Definitions", <a href="./rfc6066">RFC 6066</a>, January 2011.
+
+   [<a id="ref-RFC6454">RFC6454</a>]  Barth, A., "The Web Origin Concept", <a href="./rfc6454">RFC 6454</a>,
+              December 2011.
+
+<span class="h3"><a class="selflink" id="section-14.2" href="#section-14.2">14.2</a>.  资料性参考文献</span>
+
+   [<a id="ref-RFC4122">RFC4122</a>]  Leach, P., Mealling, M., and R. Salz, "A Universally
+              Unique IDentifier (UUID) URN Namespace", <a href="./rfc4122">RFC 4122</a>,
+              July 2005.
+
+
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 69 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-70" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+   [<a id="ref-RFC4270">RFC4270</a>]  Hoffman, P. and B. Schneier, "Attacks on Cryptographic
+              Hashes in Internet Protocols", <a href="./rfc4270">RFC 4270</a>, November 2005.
+
+   [<a id="ref-RFC5321">RFC5321</a>]  Klensin, J., "Simple Mail Transfer Protocol", <a href="./rfc5321">RFC 5321</a>,
+              October 2008.
+
+   [<a id="ref-RFC6202">RFC6202</a>]  Loreto, S., Saint-Andre, P., Salsano, S., and G. Wilkins,
+              "Known Issues and Best Practices for the Use of Long
+              Polling and Streaming in Bidirectional HTTP", <a href="./rfc6202">RFC 6202</a>,
+              April 2011.
+
+   [<a id="ref-RFC6265">RFC6265</a>]  Barth, A., "HTTP State Management Mechanism", <a href="./rfc6265">RFC 6265</a>,
+              April 2011.
+
+   [<a id="ref-TALKING">TALKING</a>]  Huang, L-S., Chen, E., Barth, A., Rescorla, E., and C.
+              Jackson, "Talking to Yourself for Fun and Profit", 2010,
+              &lt;<a href="http://w2spconf.com/2011/papers/websocket.pdf">http://w2spconf.com/2011/papers/websocket.pdf</a>&gt;.
+
+   [<a id="ref-W3C.REC-wsc-ui-20100812">W3C.REC-wsc-ui-20100812</a>]
+              Roessler, T. and A. Saldhana, "Web Security Context: User
+              Interface Guidelines", World Wide Web Consortium
+              Recommendation REC-wsc-ui-20100812, August 2010,
+              &lt;<a href="http://www.w3.org/TR/2010/REC-wsc-ui-20100812/">http://www.w3.org/TR/2010/REC-wsc-ui-20100812/</a>&gt;.
+
+              最新版本可在以下位置获得：
+              &lt;<a href="http://www.w3.org/TR/wsc-ui/">http://www.w3.org/TR/wsc-ui/</a>&gt;.
+
+   [<a id="ref-WSAPI">WSAPI</a>]    Hickson, I., "The WebSocket API", W3C Working Draft WD-
+              websockets-20110929, September 2011,
+              &lt;<a href="http://www.w3.org/TR/2011/WD-websockets-20110929/">http://www.w3.org/TR/2011/WD-websockets-20110929/</a>&gt;.
+
+              最新版本可在以下位置获得：
+              &lt;<a href="http://www.w3.org/TR/websockets/">http://www.w3.org/TR/websockets/</a>&gt;.
+
+   [<a id="ref-XMLHttpRequest">XMLHttpRequest</a>]
+              van Kesteren, A., Ed., "XMLHttpRequest", W3C Candidate
+              Recommendation CR-XMLHttpRequest-20100803, August 2010,
+              &lt;<a href="http://www.w3.org/TR/2010/CR-XMLHttpRequest-20100803/">http://www.w3.org/TR/2010/CR-XMLHttpRequest-20100803/</a>&gt;.
+
+              最新版本可在以下位置获得：
+              &lt;<a href="http://www.w3.org/TR/XMLHttpRequest/">http://www.w3.org/TR/XMLHttpRequest/</a>&gt;.
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Fette &amp; Melnikov             Standards Track                   [第 70 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-71" ></span>
+<span class="grey"><a href="./rfc6455">RFC 6455</a>                 WebSocket 协议            2011 年 12 月</span>
+
+
+作者地址
+
+   Ian Fette
+   Google, Inc.
+
+   EMail: ifette+ietf@google.com
+   URI:   <a href="http://www.ianfette.com/">http://www.ianfette.com/</a>
+
+
+   Alexey Melnikov
+   Isode Ltd.
+   5 Castle Business Village
+   36 Station Road
+   Hampton, Middlesex  TW12 2BX
+   UK
+
+   EMail: Alexey.Melnikov@isode.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Fette &amp; Melnikov             Standards Track                   [第 71 页]
+</pre>
+<script src="https://htmlspecs.com/dropdown.js"></script>
