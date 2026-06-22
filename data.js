@@ -4348,14 +4348,14 @@ const httpLinks = [
         lang: "cjk",
         state: "RFC"
     },
-    // {
-    //     text: "The Transport Layer Security (TLS) Protocol Version 1.3",
-    //     href: "https://htmlspecs.com/http/rfc8446.html",
-    //     src: "https://www.rfc-editor.org/rfc/rfc8446.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
+    {
+        text: "The Transport Layer Security (TLS) Protocol Version 1.3",
+        href: "https://htmlspecs.com/http/rfc8446.html",
+        src: "https://www.rfc-editor.org/rfc/rfc8446.html",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "RFC"
+    },
     // {
     //     text: "The WebSocket Protocol",
     //     href: "https://htmlspecs.com/http/rfc6455.html",
