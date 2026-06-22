@@ -1,0 +1,928 @@
+<pre>网络工作组                                                   G. Klyne
+请求评议：3339                              Clearswift Corporation
+类别：标准轨道                                                C. Newman
+                                                        Sun Microsystems
+                                                               2002年7月
+
+
+               <span class="h1">互联网上的日期和时间：时间戳</span>
+
+本备忘录状态
+
+   本文档规定了一个面向互联网社区的互联网标准轨道协议，
+   并请求讨论和提出改进建议。关于本协议的标准化阶段
+   和状态，请参阅当前版本的“Internet Official Protocol
+   Standards”（STD 1）。本备忘录的分发不受限制。
+
+Copyright Notice
+
+   Copyright (C) The Internet Society (2002).  All Rights Reserved.
+
+摘要
+
+   本文档定义了一种用于互联网协议的日期和时间格式，
+   它是 ISO 8601 标准的一个配置文件，用于使用公历表示
+   日期和时间。
+
+目录
+
+   <a href="#section-1">1</a>. 引言 ................................................ <a href="#page-2">2</a>
+   <a href="#section-2">2</a>. 定义 ................................................ <a href="#page-3">3</a>
+   <a href="#section-3">3</a>. 两位数年份 .......................................... <a href="#page-4">4</a>
+   <a href="#section-4">4</a>. 本地时间 ............................................ <a href="#page-4">4</a>
+   <a href="#section-4.1">4.1</a>. 协调世界时（UTC） ................................. <a href="#page-4">4</a>
+   <a href="#section-4.2">4.2</a>. 本地偏移 .......................................... <a href="#page-5">5</a>
+   <a href="#section-4.3">4.3</a>. 未知本地偏移约定 ................................. <a href="#page-5">5</a>
+   <a href="#section-4.4">4.4</a>. 未限定的本地时间 ................................. <a href="#page-5">5</a>
+   <a href="#section-5">5</a>. 日期和时间格式 ...................................... <a href="#page-6">6</a>
+   <a href="#section-5.1">5.1</a>. 排序 .............................................. <a href="#page-6">6</a>
+   <a href="#section-5.2">5.2</a>. 人类可读性 ........................................ <a href="#page-6">6</a>
+   <a href="#section-5.3">5.3</a>. 很少使用的选项 .................................... <a href="#page-7">7</a>
+   <a href="#section-5.4">5.4</a>. 冗余信息 .......................................... <a href="#page-7">7</a>
+   <a href="#section-5.5">5.5</a>. 简洁性 ............................................ <a href="#page-7">7</a>
+   <a href="#section-5.6">5.6</a>. 互联网日期/时间格式 ............................... <a href="#page-8">8</a>
+   <a href="#section-5.7">5.7</a>. 限制 .............................................. <a href="#page-9">9</a>
+   <a href="#section-5.8">5.8</a>. 示例 ............................................. <a href="#page-10">10</a>
+   <a href="#section-6">6</a>. 参考文献 ............................................ <a href="#page-10">10</a>
+   <a href="#section-7">7</a>. 安全考虑 ............................................ <a href="#page-11">11</a>
+
+
+
+<span class="grey">Klyne, et. al.              Standards Track                     [Page 1]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-2" ></span>
+<span class="grey"><a href="./rfc3339">RFC 3339</a>       互联网上的日期和时间：时间戳                  2002年7月</span>
+
+
+   <a href="#appendix-A">附录 A</a>. ISO 8601 汇总 ABNF ............................ <a href="#page-12">12</a>
+   <a href="#appendix-B">附录 B</a>. 星期几 ......................................... <a href="#page-14">14</a>
+   <a href="#appendix-C">附录 C</a>. 闰年 ........................................... <a href="#page-14">14</a>
+   <a href="#appendix-D">附录 D</a>. 闰秒 .......................................,... <a href="#page-15">15</a>
+   致谢 ................................................... <a href="#page-17">17</a>
+   作者地址 ............................................... <a href="#page-17">17</a>
+   完整版权声明 ........................................... <a href="#page-18">18</a>
+
+<span class="h2"><a class="selflink" id="section-1" href="#section-1">1</a>. 引言</span>
+
+   日期和时间格式在互联网上造成了大量混淆和互操作性问题。
+   本文档处理遇到的许多问题，并提出建议，以便在互联网协议中
+   表示和使用日期与时间时提高一致性和互操作性。
+
+   本文档包括 ISO 8601 [<a href="#ref-ISO8601" title="&quot;Data elements and interchange formats -- Information interchange -- Representation of dates and times&quot;">ISO8601</a>]
+   标准的一个互联网配置文件，用于使用公历表示日期和时间。
+
+   日期和时间值可能以许多方式出现在互联网协议中：本文档
+   只关注一种常见用法，即互联网协议事件的时间戳。这种有限的
+   考虑有以下后果：
+
+   o  所有日期和时间都假定处于“当前纪元”，位于公元 0000
+      年到公元 9999 年之间的某处。
+
+   o  所有表示的时间都具有与协调世界时（UTC）的既定关系
+      （偏移）。 （这不同于调度应用中的某些用法，在那些用法中
+      本地时间和地点可能是已知的，但与 UTC 的实际关系可能取决于
+      政治人物或管理者未知或不可知的行为。2005 年 3 月 23 日
+      17:00 在纽约对应的 UTC 时间可能取决于关于夏令时的管理
+      决定。本规范完全避开此类考虑。）
+
+   o  时间戳可以表示发生在 UTC 引入之前的时间。此类时间戳
+      相对于世界时表示，使用所述时间可获得的最佳实践。
+
+   o  日期和时间表达式表示时间上的一个瞬间。此处不涵盖
+      时间段或区间的描述。
+
+
+
+
+
+
+
+<span class="grey">Klyne, et. al.              Standards Track                     [Page 2]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-3" ></span>
+<span class="grey"><a href="./rfc3339">RFC 3339</a>       互联网上的日期和时间：时间戳                  2002年7月</span>
+
+
+<span class="h2"><a class="selflink" id="section-2" href="#section-2">2</a>. 定义</span>
+
+   本文档中的关键词 "MUST"、"MUST NOT"、"REQUIRED"、"SHALL"、
+   "SHALL NOT"、"SHOULD"、"SHOULD NOT"、"RECOMMENDED"、"MAY" 和
+   "OPTIONAL" 应按 <a href="./rfc2119">RFC 2119</a> [<a href="./rfc2119" title="&quot;Key words for use in RFCs to Indicate Requirement Levels&quot;">RFC2119</a>] 中的描述解释。
+
+      UTC         由国际计量局（BIPM）维护的协调世界时。
+
+      second      国际单位制中的基本时间测量单位。它定义为铯-133
+                  原子在其基态且不受外部场干扰时，由超精细跃迁
+                  吸收或发射的微波光的 9,192,631,770 个周期的
+                  持续时间。
+
+      minute      60 秒的一段时间。不过，关于如何在分钟内表示
+                  闰秒，另见<a href="#section-5.7">第 5.7 节</a>和<a href="#appendix-D">附录 D</a>中的限制。
+
+      hour        60 分钟的一段时间。
+
+      day         24 小时的一段时间。
+
+      leap year   在公历中，具有 366 天的年份。闰年是这样一个年份：
+                  其年份数可被四整除，但如果它是世纪年（即能被
+                  一百整除），则它还必须能被四百整除。
+
+      ABNF        增强巴科斯-诺尔范式，一种用于表示协议或语言中
+                  允许字符串的格式，如 [<a href="#ref-ABNF" title="&quot;Augmented BNF for Syntax Specifications: ABNF&quot;">ABNF</a>] 中定义。
+
+      Email Date/Time Format
+                  Internet Mail 使用的日期/时间格式，如 <a href="./rfc2822">RFC 2822</a>
+                  [<a href="#ref-IMAIL-UPDATE" title="&quot;Internet Message Format&quot;">IMAIL-UPDATE</a>] 中定义。
+
+      Internet Date/Time Format
+                  本文档<a href="#section-5">第 5 节</a>中定义的日期格式。
+
+      Timestamp   本文档使用此术语指代某一时间瞬间的无歧义表示。
+
+      Z           应用于时间时表示 UTC 偏移为 00:00 的后缀；常按
+                  ICAO 音标字母中表示字母 "Z" 的方式读作 "Zulu"。
+
+
+
+<span class="grey">Klyne, et. al.              Standards Track                     [Page 3]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-4" ></span>
+<span class="grey"><a href="./rfc3339">RFC 3339</a>       互联网上的日期和时间：时间戳                  2002年7月</span>
+
+
+      有关时间尺度的更多信息，见 [<a href="#ref-NTP" title="&quot;Network Time Protocol (Version 3) Specification, Implementation and Analysis&quot;">NTP</a>] 的<a href="#appendix-E">附录 E</a>、
+      [<a href="#ref-ISO8601" title="&quot;Data elements and interchange formats -- Information interchange -- Representation of dates and times&quot;">ISO8601</a>] 的第 3 节，以及相应的 ITU 文档 [ITU-R-
+      TF]。
+
+<span class="h2"><a class="selflink" id="section-3" href="#section-3">3</a>. 两位数年份</span>
+
+   以下要求用于处理 2 位数年份的歧义问题：
+
+      o  互联网协议 MUST 在日期中生成四位数年份。
+
+      o  不推荐使用 2 位数年份。如果接收到 2 位数年份，
+         只有在错误解释不会导致协议或处理失败时，才应接受它
+         （例如，仅用于日志记录或跟踪目的时）。
+
+      o  使用两位数年份的程序有可能把 1999 年之后的年份表示为
+         三位数。如果程序只是从年份中减去 1900 且没有检查数字
+         位数，就会发生这种情况。希望稳健处理这类有缺陷软件
+         生成日期的程序，可以对三位数年份加上 1900。
+
+      o  使用两位数年份的程序有可能把 1999 年之后的年份表示为
+         ":0"、":1"、... ":9"、";0"、...
+         如果程序只是从年份中减去 1900，并把十位数加到 US-ASCII
+         字符零上，就会发生这种情况。希望稳健处理这类有缺陷软件
+         生成日期的程序，应检测非数字的十位并作适当解释。
+
+   两位数年份的问题充分说明了为什么互联网协议中使用的所有
+   日期和时间 MUST 完全限定。
+
+<span class="h2"><a class="selflink" id="section-4" href="#section-4">4</a>. 本地时间</span>
+
+<span class="h3"><a class="selflink" id="section-4.1" href="#section-4.1">4.1</a>. 协调世界时（UTC）</span>
+
+   由于本地时区的夏令时规则非常复杂，并且可能会基于当地法律
+   在不可预测的时间发生变化，因此使用协调世界时（UTC）最有助于
+   实现真正的互操作性。本规范不处理本地时区规则。
+
+
+
+
+
+
+
+
+<span class="grey">Klyne, et. al.              Standards Track                     [Page 4]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-5" ></span>
+<span class="grey"><a href="./rfc3339">RFC 3339</a>       互联网上的日期和时间：时间戳                  2002年7月</span>
+
+
+<span class="h3"><a class="selflink" id="section-4.2" href="#section-4.2">4.2</a>. 本地偏移</span>
+
+   本地时间和 UTC 之间的偏移通常是有用的信息。例如，在电子邮件
+   （<a href="./rfc2822">RFC2822</a>，[<a href="#ref-IMAIL-UPDATE" title="&quot;Internet Message Format&quot;">IMAIL-UPDATE</a>]）中，本地偏移为判断快速响应
+   的可能性提供了一种有用的启发。过去，尝试用字母字符串标记
+   本地偏移曾导致较差的互操作性 [<a href="#ref-IMAIL" title="&quot;Standard for the Format of Arpa Internet Text Messages&quot;">IMAIL</a>]、
+   [<a href="#ref-HOST-REQ" title="&quot;Requirements for Internet Hosts -- Application and Support&quot;">HOST-REQ</a>]。因此，<a href="./rfc2822">RFC2822</a> [<a href="#ref-IMAIL-UPDATE" title="&quot;Internet Message Format&quot;">IMAIL-UPDATE</a>] 已将数值偏移规定为
+   强制要求。
+
+   数值偏移按“本地时间减去 UTC”计算。因此，可以通过从本地
+   时间中减去偏移来确定等价的 UTC 时间。例如，18:50:00-04:00
+   与 22:50:00Z 是同一时间。（此示例显示了通过加上偏移绝对值
+   来处理负偏移。）
+
+      注：遵循 ISO 8601，数值偏移只表示与 UTC 相差整数分钟数的
+      时区。然而，许多历史时区与 UTC 相差非整数分钟数。为了精确
+      表示此类历史时间戳，应用程序必须将它们转换为可表示的时区。
+
+<span class="h3"><a class="selflink" id="section-4.3" href="#section-4.3">4.3</a>. 未知本地偏移约定</span>
+
+   如果 UTC 中的时间已知，但相对于本地时间的偏移未知，则可以用
+   "-00:00" 的偏移表示。这在语义上不同于 "Z" 或 "+00:00" 的
+   偏移，后者意味着 UTC 是指定时间的首选参考点。<a href="./rfc2822">RFC2822</a>
+   [<a href="#ref-IMAIL-UPDATE" title="&quot;Internet Message Format&quot;">IMAIL-UPDATE</a>] 为电子邮件描述了类似约定。
+
+<span class="h3"><a class="selflink" id="section-4.4" href="#section-4.4">4.4</a>. 未限定的本地时间</span>
+
+   目前连接到互联网的许多设备以本地时间运行其内部时钟，并且
+   不知道 UTC。虽然互联网在制定规范时有接受现实的传统，但这
+   不应以牺牲互操作性为代价。由于对未限定本地时区的解释将在
+   全球大约 23/24 的地区失败，未限定本地时间的互操作性问题被
+   认为对于互联网是不可接受的。配置为本地时间、不知道相应 UTC
+   偏移且依赖与其他互联网系统进行时间同步的系统，MUST 使用一种
+   确保与 UTC 正确同步的机制。一些合适的机制包括：
+
+   o  使用网络时间协议 [<a href="#ref-NTP" title="&quot;Network Time Protocol (Version 3) Specification, Implementation and Analysis&quot;">NTP</a>] 获取 UTC 时间。
+
+
+
+
+<span class="grey">Klyne, et. al.              Standards Track                     [Page 5]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-6" ></span>
+<span class="grey"><a href="./rfc3339">RFC 3339</a>       互联网上的日期和时间：时间戳                  2002年7月</span>
+
+
+   o  使用同一本地时区中的另一台主机作为通向互联网的网关。
+      该主机 MUST 修正传输给其他主机的未限定本地时间。
+
+   o  提示用户输入本地时区和夏令时规则设置。
+
+<span class="h2"><a class="selflink" id="section-5" href="#section-5">5</a>. 日期和时间格式</span>
+
+   本节讨论日期和时间格式的理想特性，并定义一个用于互联网协议的
+   ISO 8601 配置文件。
+
+<span class="h3"><a class="selflink" id="section-5.1" href="#section-5.1">5.1</a>. 排序</span>
+
+   如果日期和时间组件从最不精确到最精确排序，则会获得一个有用的
+   属性。假设日期和时间的时区相同（例如，全部为 UTC），使用相同的
+   字符串表示（例如，全部为 "Z" 或全部为 "+00:00"），并且所有时间
+   都具有相同数量的小数秒位数，那么日期和时间字符串可以按字符串
+   排序（例如，使用 C 中的 strcmp() 函数），结果将是按时间排序的
+   序列。可选标点的存在会破坏这一特性。
+
+<span class="h3"><a class="selflink" id="section-5.2" href="#section-5.2">5.2</a>. 人类可读性</span>
+
+   人类可读性已被证明是互联网协议的一项有价值特性。人类可读的
+   协议大大降低了调试成本，因为 telnet 通常足以作为测试客户端，
+   网络分析器也无需用协议知识进行修改。另一方面，人类可读性有时
+   会导致互操作性问题。例如，日期格式 "10/11/1996" 完全不适合
+   全球交换，因为它在不同国家会被作不同解释。此外，[<a href="#ref-IMAIL" title="&quot;Standard for the Format of Arpa Internet Text Messages&quot;">IMAIL</a>] 中的
+   日期格式也曾导致互操作性问题，因为人们认为任何文本字符串都是
+   允许的，并把三个字母的缩写翻译成其他语言，或替换为更容易生成的
+   日期格式（例如 C 函数 ctime 使用的格式）。因此，必须在人类可读性
+   和互操作性之间取得平衡。
+
+   由于没有任何日期和时间格式能按照所有国家的习惯都可读，互联网
+   客户端 SHOULD 准备将日期转换为适合本地环境的显示格式。这可以
+   包括将 UTC 转换为本地时间。
+
+
+
+
+
+
+
+<span class="grey">Klyne, et. al.              Standards Track                     [Page 6]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-7" ></span>
+<span class="grey"><a href="./rfc3339">RFC 3339</a>       互联网上的日期和时间：时间戳                  2002年7月</span>
+
+
+<span class="h3"><a class="selflink" id="section-5.3" href="#section-5.3">5.3</a>. 很少使用的选项</span>
+
+   包含很少使用选项的格式可能会导致互操作性问题。这是因为很少
+   使用的选项不太可能在 alpha 或 beta 测试中被使用，因此解析中的
+   bug 不太可能被发现。只要可能，为了互操作性，很少使用的选项
+   应被设为强制或省略。
+
+   以下定义的格式只包含一个很少使用的选项：秒的小数部分。预计它
+   只会被需要严格排序日期/时间戳或具有不寻常精度要求的应用程序
+   使用。
+
+<span class="h3"><a class="selflink" id="section-5.4" href="#section-5.4">5.4</a>. 冗余信息</span>
+
+   如果日期/时间格式包含冗余信息，就会引入冗余信息不相互关联的
+   可能性。例如，在日期/时间格式中包含星期几，就会引入星期几错误
+   但日期正确，或相反的可能性。由于从日期计算星期几并不困难
+   （见<a href="#appendix-B">附录 B</a>），星期几不应包含在日期/时间格式中。
+
+<span class="h3"><a class="selflink" id="section-5.5" href="#section-5.5">5.5</a>. 简洁性</span>
+
+   ISO 8601 [<a href="#ref-ISO8601" title="&quot;Data elements and interchange formats -- Information interchange -- Representation of dates and times&quot;">ISO8601</a>] 中规定的完整日期和时间格式集合相当复杂，
+   其目的是提供多种表示和部分表示。<a href="#appendix-A">附录 A</a> 包含一个将 ISO 8601
+   的完整语法转换为 ABNF 的尝试。互联网协议具有略有不同的需求，
+   而简洁性已被证明是一项重要特性。此外，互联网协议通常需要对
+   数据进行完整规定，以实现真正的互操作性。因此，ISO 8601 的完整
+   语法被认为对于大多数互联网协议过于复杂。
+
+   以下小节定义了一个用于互联网的 ISO 8601 配置文件。它是 ISO 8601
+   扩展格式的一个符合要求的子集。通过将大多数字段和标点设为强制，
+   实现了简洁性。
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Klyne, et. al.              Standards Track                     [Page 7]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-8" ></span>
+<span class="grey"><a href="./rfc3339">RFC 3339</a>       互联网上的日期和时间：时间戳                  2002年7月</span>
+
+
+<span class="h3"><a class="selflink" id="section-5.6" href="#section-5.6">5.6</a>. 互联网日期/时间格式</span>
+
+   以下 ISO 8601 [<a href="#ref-ISO8601" title="&quot;Data elements and interchange formats -- Information interchange -- Representation of dates and times&quot;">ISO8601</a>] 日期配置文件 SHOULD 用于互联网上的新协议。
+   这是使用 [<a href="#ref-ABNF" title="&quot;Augmented BNF for Syntax Specifications: ABNF&quot;">ABNF</a>] 中定义的语法描述记法规定的。
+
+   date-fullyear   = 4DIGIT
+   date-month      = 2DIGIT  ; 01-12
+   date-mday       = 2DIGIT  ; 01-28, 01-29, 01-30, 01-31 based on
+                             ; month/year
+   time-hour       = 2DIGIT  ; 00-23
+   time-minute     = 2DIGIT  ; 00-59
+   time-second     = 2DIGIT  ; 00-58, 00-59, 00-60 based on leap second
+                             ; rules
+   time-secfrac    = "." 1*DIGIT
+   time-numoffset  = ("+" / "-") time-hour ":" time-minute
+   time-offset     = "Z" / time-numoffset
+
+   partial-time    = time-hour ":" time-minute ":" time-second
+                     [time-secfrac]
+   full-date       = date-fullyear "-" date-month "-" date-mday
+   full-time       = partial-time time-offset
+
+   date-time       = full-date "T" full-time
+
+      注：根据 [<a href="#ref-ABNF" title="&quot;Augmented BNF for Syntax Specifications: ABNF&quot;">ABNF</a>] 和 ISO8601，此语法中的 "T" 和 "Z" 字符
+      也可以分别为小写 "t" 或 "z"。
+
+      此日期/时间格式可能会在区分大写和小写字母 'A'-'Z' 与
+      'a'-'z' 的某些环境或上下文中使用（例如 XML）。在此类环境中
+      使用此格式的规范 MAY 进一步限制日期/时间语法，使日期/时间
+      语法中使用的字母 'T' 和 'Z' 必须始终为大写。生成此格式的
+      应用程序 SHOULD 使用大写字母。
+
+      注：ISO 8601 定义日期和时间由 "T" 分隔。使用此语法的
+      应用程序可以为了可读性，选择规定 full-date 和 full-time
+      由（例如）空格字符分隔。
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Klyne, et. al.              Standards Track                     [Page 8]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-9" ></span>
+<span class="grey"><a href="./rfc3339">RFC 3339</a>       互联网上的日期和时间：时间戳                  2002年7月</span>
+
+
+<span class="h3"><a class="selflink" id="section-5.7" href="#section-5.7">5.7</a>. 限制</span>
+
+   语法元素 date-mday 表示当前月份中的日编号。最大值会根据月份和
+   年份而变化，如下所示：
+
+      Month Number  Month/Year           Maximum value of date-mday
+      ------------  ----------           --------------------------
+      01            January              31
+      02            February, normal     28
+      02            February, leap year  29
+      03            March                31
+      04            April                30
+      05            May                  31
+      06            June                 30
+      07            July                 31
+      08            August               31
+      09            September            30
+      10            October              31
+      11            November             30
+      12            December             31
+
+   <a href="#appendix-C">附录 C</a> 包含用于判断年份是否为闰年的 C 示例代码。
+
+   语法元素 time-second 在发生闰秒的月份末尾可以具有值 "60" —— 到
+   目前为止：六月（XXXX-06-30T23:59:60Z）或十二月
+   （XXXX-12-31T23:59:60Z）；见<a href="#appendix-D">附录 D</a>中的闰秒表。也有可能
+   减去一个闰秒，此时 time-second 的最大值为 "58"。在所有其他时间，
+   time-second 的最大值为 "59"。此外，在 "Z" 以外的时区中，闰秒
+   点会按时区偏移移动（因此它在全球各地的同一瞬间发生）。
+
+   闰秒不能被长期预测。国际地球自转服务发布公告 [<a href="#ref-IERS">IERS</a>]，
+   以提前数周宣布闰秒。应用程序在闰秒宣布之前不应生成涉及插入
+   闰秒的时间戳。
+
+   虽然 ISO 8601 允许小时为 "24"，但为了减少混淆，ISO 8601 的此
+   配置文件只允许小时值在 "00" 和 "23" 之间。
+
+
+
+
+
+
+
+<span class="grey">Klyne, et. al.              Standards Track                     [Page 9]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-10" ></span>
+<span class="grey"><a href="./rfc3339">RFC 3339</a>       互联网上的日期和时间：时间戳                  2002年7月</span>
+
+
+<span class="h3"><a class="selflink" id="section-5.8" href="#section-5.8">5.8</a>. 示例</span>
+
+   下面是一些互联网日期/时间格式的示例。
+
+      1985-04-12T23:20:50.52Z
+
+   这表示 UTC 中 1985 年 4 月 12 日第 23 小时之后的 20 分 50.52 秒。
+
+      1996-12-19T16:39:57-08:00
+
+   这表示 1996 年 12 月 19 日第 16 小时之后的 39 分 57 秒，且相对于
+   UTC 的偏移为 -08:00（太平洋标准时间）。注意，这等价于 UTC 中的
+   1996-12-20T00:39:57Z。
+
+      1990-12-31T23:59:60Z
+
+   这表示在 1990 年末插入的闰秒。
+
+      1990-12-31T15:59:60-08:00
+
+   这表示太平洋标准时间中的同一个闰秒，比 UTC 晚 8 小时。
+
+      1937-01-01T12:00:27.87+00:20
+
+   这表示与 1937 年 1 月 1 日正午荷兰时间相同的时间瞬间。
+   根据法律，从 1909-05-01 到 1937-06-30，荷兰标准时间正好比
+   UTC 早 19 分 32.13 秒。此时区无法使用 HH:MM 格式精确表示，
+   而此时间戳使用最接近的可表示 UTC 偏移。
+
+<span class="h2"><a class="selflink" id="section-6" href="#section-6">6</a>. 参考文献</span>
+
+   [<a id="ref-ZELLER">ZELLER</a>]       Zeller, C., "Kalender-Formeln", Acta Mathematica, Vol.
+                  9, Nov 1886.
+
+   [<a id="ref-IMAIL">IMAIL</a>]        Crocker, D., "Standard for the Format of Arpa Internet
+                  Text Messages", STD 11, <a href="./rfc822">RFC 822</a>, August 1982.
+
+   [<a id="ref-IMAIL-UPDATE">IMAIL-UPDATE</a>] Resnick, P., "Internet Message Format", <a href="./rfc2822">RFC 2822</a>,
+                  April 2001.
+
+   [<a id="ref-ABNF">ABNF</a>]         Crocker, D. and P. Overell, "Augmented BNF for Syntax
+                  Specifications: ABNF", <a href="./rfc2234">RFC 2234</a>, November 1997.
+
+
+
+
+<span class="grey">Klyne, et. al.              Standards Track                    [Page 10]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-11" ></span>
+<span class="grey"><a href="./rfc3339">RFC 3339</a>       互联网上的日期和时间：时间戳                  2002年7月</span>
+
+
+   [<a id="ref-ISO8601">ISO8601</a>]      "Data elements and interchange formats -- Information
+                  interchange -- Representation of dates and times", ISO
+                  8601:1988(E), International Organization for
+                  Standardization, June, 1988.
+
+   [ISO8601:2000] "Data elements and interchange formats -- Information
+                  interchange -- Representation of dates and times", ISO
+                  8601:2000, International Organization for
+                  Standardization, December, 2000.
+
+   [<a id="ref-HOST-REQ">HOST-REQ</a>]     Braden, R., "Requirements for Internet Hosts --
+                  Application and Support", STD 3, <a href="./rfc1123">RFC 1123</a>, October
+                  1989.
+
+   [<a id="ref-IERS">IERS</a>]         International Earth Rotation Service Bulletins,
+                  &lt;<a href="http://hpiers.obspm.fr/eop-pc/products/bulletins.html">http://hpiers.obspm.fr/eop-</a>
+                  <a href="http://hpiers.obspm.fr/eop-pc/products/bulletins.html">pc/products/bulletins.html</a>&gt;.
+
+   [<a id="ref-NTP">NTP</a>]          Mills, D, "Network Time Protocol (Version 3)
+                  Specification, Implementation and Analysis", <a href="./rfc1305">RFC 1305</a>,
+                  March 1992.
+
+   [<a id="ref-ITU-R-TF">ITU-R-TF</a>]     International Telecommunication Union Recommendations
+                  for Time Signals and Frequency Standards Emissions.
+                  &lt;<a href="http://www.itu.ch/publications/itu-r/iturtf.htm">http://www.itu.ch/publications/itu-r/iturtf.htm</a>&gt;
+
+   [<a id="ref-RFC2119">RFC2119</a>]      Bradner, S, "Key words for use in RFCs to Indicate
+                  Requirement Levels", <a href="https://www.rfc-editor.org/bcp/bcp14">BCP 14</a>, <a href="./rfc2119">RFC 2119</a>, March 1997.
+
+<span class="h2"><a class="selflink" id="section-7" href="#section-7">7</a>. 安全考虑</span>
+
+   由于站点的本地时区可能有助于确定系统较不可能被监控且可能更
+   容易受到安全探测的时间，一些站点可能希望只发出 UTC 时间。其他
+   站点可能认为这是出于偏执而造成的有用功能损失。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Klyne, et. al.              Standards Track                    [Page 11]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-12" ></span>
+<span class="grey"><a href="./rfc3339">RFC 3339</a>       互联网上的日期和时间：时间戳                  2002年7月</span>
+
+
+<span class="h2"><a class="selflink" id="appendix-A" href="#appendix-A">附录 A</a>. ISO 8601 汇总 ABNF</span>
+
+   此信息基于 1988 版 ISO 8601。2000 年修订版中可能有一些变化。
+
+   ISO 8601 没有为其定义的日期和时间格式指定形式语法。以下内容是
+   从 ISO 8601 创建形式语法的一次尝试。此内容仅供参考，并且可能
+   包含错误。ISO 8601 仍是权威参考。
+
+   请注意，由于 ISO 8601 中存在歧义，必须作出一些解释。首先，
+   ISO 8601 不清楚是否允许基本格式和扩展格式混合。此语法允许混合。
+   ISO 8601 不清楚小时为 24 是否只有在分钟和秒均为 0 时才允许。
+   这里假定小时 24 在任何上下文中都允许。<a href="#section-5.7">第 5.7 节</a>中对 date-mday
+   的限制适用。ISO 8601 声明在某些情况下可以省略 "T"。此语法要求
+   使用 "T" 以避免歧义。ISO 8601 还要求（在<a href="#section-5.3.1.3">第 5.3.1.3 节</a>中）
+   小于 1 的小数部分前应加 "0"。ISO 8601 的附录 B.2 给出的示例中
+   小数部分前没有 "0"。此语法假定<a href="#section-5.3.1.3">第 5.3.1.3 节</a>正确，而附录 B.2
+   有误。
+
+   date-century    = 2DIGIT  ; 00-99
+   date-decade     =  DIGIT  ; 0-9
+   date-subdecade  =  DIGIT  ; 0-9
+   date-year       = date-decade date-subdecade
+   date-fullyear   = date-century date-year
+   date-month      = 2DIGIT  ; 01-12
+   date-wday       =  DIGIT  ; 1-7  ; 1 is Monday, 7 is Sunday
+   date-mday       = 2DIGIT  ; 01-28, 01-29, 01-30, 01-31 based on
+                             ; month/year
+   date-yday       = 3DIGIT  ; 001-365, 001-366 based on year
+   date-week       = 2DIGIT  ; 01-52, 01-53 based on year
+
+   datepart-fullyear = [date-century] date-year ["-"]
+   datepart-ptyear   = "-" [date-subdecade ["-"]]
+   datepart-wkyear   = datepart-ptyear / datepart-fullyear
+
+   dateopt-century   = "-" / date-century
+   dateopt-fullyear  = "-" / datepart-fullyear
+   dateopt-year      = "-" / (date-year ["-"])
+   dateopt-month     = "-" / (date-month ["-"])
+   dateopt-week      = "-" / (date-week ["-"])
+
+
+
+
+
+
+<span class="grey">Klyne, et. al.              Standards Track                    [Page 12]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-13" ></span>
+<span class="grey"><a href="./rfc3339">RFC 3339</a>       互联网上的日期和时间：时间戳                  2002年7月</span>
+
+
+   datespec-full     = datepart-fullyear date-month ["-"] date-mday
+   datespec-year     = date-century / dateopt-century date-year
+   datespec-month    = "-" dateopt-year date-month [["-"] date-mday]
+   datespec-mday     = "--" dateopt-month date-mday
+   datespec-week     = datepart-wkyear "W"
+                       (date-week / dateopt-week date-wday)
+   datespec-wday     = "---" date-wday
+   datespec-yday     = dateopt-fullyear date-yday
+
+   date              = datespec-full / datespec-year
+                       / datespec-month /
+   datespec-mday / datespec-week / datespec-wday / datespec-yday
+
+Time:
+
+   time-hour         = 2DIGIT ; 00-24
+   time-minute       = 2DIGIT ; 00-59
+   time-second       = 2DIGIT ; 00-58, 00-59, 00-60 based on
+                              ; leap-second rules
+   time-fraction     = ("," / ".") 1*DIGIT
+   time-numoffset    = ("+" / "-") time-hour [[":"] time-minute]
+   time-zone         = "Z" / time-numoffset
+
+   timeopt-hour      = "-" / (time-hour [":"])
+   timeopt-minute    = "-" / (time-minute [":"])
+
+   timespec-hour     = time-hour [[":"] time-minute [[":"] time-second]]
+   timespec-minute   = timeopt-hour time-minute [[":"] time-second]
+   timespec-second   = "-" timeopt-minute time-second
+   timespec-base     = timespec-hour / timespec-minute / timespec-second
+
+   time              = timespec-base [time-fraction] [time-zone]
+
+   iso-date-time     = date "T" time
+
+Durations:
+
+   dur-second        = 1*DIGIT "S"
+   dur-minute        = 1*DIGIT "M" [dur-second]
+   dur-hour          = 1*DIGIT "H" [dur-minute]
+   dur-time          = "T" (dur-hour / dur-minute / dur-second)
+   dur-day           = 1*DIGIT "D"
+   dur-week          = 1*DIGIT "W"
+   dur-month         = 1*DIGIT "M" [dur-day]
+   dur-year          = 1*DIGIT "Y" [dur-month]
+   dur-date          = (dur-day / dur-month / dur-year) [dur-time]
+
+   duration          = "P" (dur-date / dur-time / dur-week)
+
+
+
+<span class="grey">Klyne, et. al.              Standards Track                    [Page 13]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-14" ></span>
+<span class="grey"><a href="./rfc3339">RFC 3339</a>       互联网上的日期和时间：时间戳                  2002年7月</span>
+
+
+Periods:
+
+   period-explicit   = iso-date-time "/" iso-date-time
+   period-start      = iso-date-time "/" duration
+   period-end        = duration "/" iso-date-time
+
+   period            = period-explicit / period-start / period-end
+
+<span class="h2"><a class="selflink" id="appendix-B" href="#appendix-B">附录 B</a>. 星期几</span>
+
+   以下是一个大致基于 Zeller 同余式 [Zeller] 的 C 子例程示例，
+   可用于获取 0000-03-01 当日或之后日期的星期几：
+
+   char *day_of_week(int day, int month, int year)
+   {
+      int cent;
+      char *dayofweek[] = {
+         "Sunday", "Monday", "Tuesday", "Wednesday",
+         "Thursday", "Friday", "Saturday"
+      };
+
+      /* adjust months so February is the last one */
+      month -= 2;
+      if (month &lt; 1) {
+         month += 12;
+         --year;
+      }
+      /* split by century */
+      cent = year / 100;
+      year %= 100;
+      return (dayofweek[((26 * month - 2) / 10 + day + year
+                        + year / 4 + cent / 4 + 5 * cent) % 7]);
+   }
+
+<span class="h2"><a class="selflink" id="appendix-C" href="#appendix-C">附录 C</a>. 闰年</span>
+
+   下面是一个用于计算年份是否为闰年的 C 子例程示例：
+
+   /* This returns non-zero if year is a leap year.  Must use 4 digit
+      year.
+    */
+   int leap_year(int year)
+   {
+       return (year % 4 == 0 &amp;&amp; (year % 100 != 0 || year % 400 == 0));
+   }
+
+
+
+
+
+<span class="grey">Klyne, et. al.              Standards Track                    [Page 14]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-15" ></span>
+<span class="grey"><a href="./rfc3339">RFC 3339</a>       互联网上的日期和时间：时间戳                  2002年7月</span>
+
+
+<span class="h2"><a class="selflink" id="appendix-D" href="#appendix-D">附录 D</a>. 闰秒</span>
+
+   有关闰秒的信息可见：
+   &lt;<a href="http://tycho.usno.navy.mil/leapsec.html">http://tycho.usno.navy.mil/leapsec.html</a>&gt;。特别地，它指出：
+
+      在 UTC 中引入闰秒的决定由国际地球自转服务（IERS）负责。
+      根据 CCIR 建议，首选机会是十二月底和六月底，其次是
+      三月底和九月底。
+
+   在需要时，闰秒的插入会作为 UTC 中一天末尾的额外一秒发生，
+   由形式为 YYYY-MM-DDT23:59:60Z 的时间戳表示。闰秒在所有时区中
+   同时发生，因此时区关系不受影响。有关闰秒时间的一些示例，
+   见<a href="#section-5.8">第 5.8 节</a>。
+
+   下表摘自美国海军天文台维护的表。源数据位于：
+
+      &lt;<a href="ftp://maia.usno.navy.mil/ser7/tai-utc.dat">ftp://maia.usno.navy.mil/ser7/tai-utc.dat</a>&gt;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Klyne, et. al.              Standards Track                    [Page 15]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-16" ></span>
+<span class="grey"><a href="./rfc3339">RFC 3339</a>       互联网上的日期和时间：时间戳                  2002年7月</span>
+
+
+   此表显示闰秒的日期，以及该闰秒之后时间标准 TAI（它不随闰秒
+   调整）与 UTC 之间的差值。
+
+   UTC Date  TAI - UTC After Leap Second
+   --------  ---------------------------
+   1972-06-30     11
+   1972-12-31     12
+   1973-12-31     13
+   1974-12-31     14
+   1975-12-31     15
+   1976-12-31     16
+   1977-12-31     17
+   1978-12-31     18
+   1979-12-31     19
+   1981-06-30     20
+   1982-06-30     21
+   1983-06-30     22
+   1985-06-30     23
+   1987-12-31     24
+   1989-12-31     25
+   1990-12-31     26
+   1992-06-30     27
+   1993-06-30     28
+   1994-06-30     29
+   1995-12-31     30
+   1997-06-30     31
+   1998-12-31     32
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Klyne, et. al.              Standards Track                    [Page 16]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-17" ></span>
+<span class="grey"><a href="./rfc3339">RFC 3339</a>       互联网上的日期和时间：时间戳                  2002年7月</span>
+
+
+致谢
+
+   以下人员为本文档较早的版本提供了有益建议：Ned Freed、Neal
+   McBurnett、David Keegel、Markus Kuhn、Paul Eggert 和 Robert Elz。
+   同时也感谢 IETF Calendaring/Scheduling 工作组邮件列表的参与者，
+   以及时区邮件列表的参与者。
+
+   以下审阅者为当前修订版贡献了有益建议：Tom Harsch、Markus Kuhn、
+   Pete Resnick、Dan Kohn。Paul Eggert 就闰秒和时区偏移的微妙之处
+   提供了许多仔细观察。以下人员指出了早期草案中的修正和改进：
+   Dr John Stockton、Jutta Degener、Joe Abley 和 Dan Wing。
+
+作者地址
+
+   Chris Newman
+   Sun Microsystems
+   1050 Lakes Drive, Suite 250
+   West Covina, CA 91790 USA
+
+   EMail: chris.newman@sun.com
+
+
+   Graham Klyne (editor, this revision)
+   Clearswift Corporation
+   1310 Waterside
+   Arlington Business Park
+   Theale, Reading  RG7 4SA
+   UK
+
+   Phone: +44 11 8903 8903
+   Fax:   +44 11 8903 9000
+   EMail: GK@ACM.ORG
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Klyne, et. al.              Standards Track                    [Page 17]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-18" ></span>
+<span class="grey"><a href="./rfc3339">RFC 3339</a>       互联网上的日期和时间：时间戳                  2002年7月</span>
+
+
+Full Copyright Statement
+
+   Copyright (C) The Internet Society (2002).  All Rights Reserved.
+
+   This document and translations of it may be copied and furnished to
+   others, and derivative works that comment on or otherwise explain it
+   or assist in its implementation may be prepared, copied, published
+   and distributed, in whole or in part, without restriction of any
+   kind, provided that the above copyright notice and this paragraph are
+   included on all such copies and derivative works.  However, this
+   document itself may not be modified in any way, such as by removing
+   the copyright notice or references to the Internet Society or other
+   Internet organizations, except as needed for the purpose of
+   developing Internet standards in which case the procedures for
+   copyrights defined in the Internet Standards process must be
+   followed, or as required to translate it into languages other than
+   English.
+
+   The limited permissions granted above are perpetual and will not be
+   revoked by the Internet Society or its successors or assigns.
+
+   This document and the information contained herein is provided on an
+   "AS IS" basis and THE INTERNET SOCIETY AND THE INTERNET ENGINEERING
+   TASK FORCE DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING
+   BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE INFORMATION
+   HEREIN WILL NOT INFRINGE ANY RIGHTS OR ANY IMPLIED WARRANTIES OF
+   MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+
+致谢
+
+   RFC Editor 职能的经费目前由 Internet Society 提供。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Klyne, et. al.              Standards Track                    [Page 18]
+</pre>
+<script src="https://htmlspecs.com/dropdown.js"></script>

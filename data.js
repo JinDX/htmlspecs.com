@@ -475,14 +475,14 @@ const links = [
         lang: "cjk",
         state: "RFC"
     },
-    // {
-    //     text: "Date and Time on the Internet: Timestamps",
-    //     href: "https://htmlspecs.com/rfc3339/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc3339.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
+    {
+        text: "Date and Time on the Internet: Timestamps",
+        href: "https://htmlspecs.com/rfc3339/",
+        src: "https://www.rfc-editor.org/rfc/rfc3339.html",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "RFC"
+    },
 
     //### 数学|수학|数学
     {
