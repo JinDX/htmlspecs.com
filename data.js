@@ -255,14 +255,14 @@ const links = [
         lang: "cjk",
         state: "DNOTE"
     },
-    // {
-    //     text: "Tags for Identifying Languages (BCP 47)",
-    //     href: "https://htmlspecs.com/bcp47/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc5646.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
+    {
+        text: "Tags for Identifying Languages (BCP 47)",
+        href: "https://htmlspecs.com/bcp47/",
+        src: "https://www.rfc-editor.org/rfc/rfc5646.html",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "RFC"
+    },
 
     //### 数据格式、语义 Web 与 API 描述|데이터 형식, 시맨틱 웹 및 API 설명|データ形式・セマンティック Web・API 記述
     {
