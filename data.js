@@ -181,14 +181,14 @@ const links = [
         lang: "cjk",
         state: "RFC"
     },
-    // {
-    //     text: "Internationalized Resource Identifiers (IRIs)",
-    //     href: "https://htmlspecs.com/iri/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc3987.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
+    {
+        text: "Internationalized Resource Identifiers (IRIs)",
+        href: "https://htmlspecs.com/iri/",
+        src: "https://www.rfc-editor.org/rfc/rfc3987.html",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "RFC"
+    },
     // {
     //     text: "Media Type Specifications and Registration Procedures",
     //     href: "https://htmlspecs.com/media-types/",
