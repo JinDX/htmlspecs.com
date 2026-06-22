@@ -1,0 +1,1960 @@
+<pre>互联网工程任务组 (IETF)                              J. Richer, Ed.
+征求意见稿：7591
+类别：标准轨道                                                M. Jones
+ISSN: 2070-1721                                                Microsoft
+                                                              J. Bradley
+                                                           Ping Identity
+                                                             M. Machulak
+                                                    Newcastle University
+                                                                 P. Hunt
+                                                      Oracle Corporation
+                                                               2015 年 7 月
+
+
+             <span class="h1">OAuth 2.0 动态客户端注册协议</span>
+
+摘要
+
+   本规范定义了一些机制，用于向授权服务器动态注册
+   OAuth 2.0 客户端。注册请求会向授权服务器发送一组期望的
+   客户端元数据值。生成的注册响应会返回一个客户端
+   标识符，以便在授权服务器处使用，以及为该客户端注册的
+   客户端元数据值。随后，客户端可以使用此注册信息
+   通过 OAuth 2.0 协议与授权服务器进行通信。本规范还定义了
+   一组通用的客户端元数据字段和值，供客户端在注册期间使用。
+
+本备忘录状态
+
+   本文档是互联网标准轨道文档。
+
+   本文档是互联网工程任务组 (IETF) 的产物。它代表了
+   IETF 社区的共识。它已经过公开审查，并已由互联网工程
+   指导组 (IESG) 批准发布。有关互联网标准的更多信息，
+   可参见 <a href="./rfc5741#section-2">RFC 5741 第&nbsp;2 节</a>。
+
+   关于本文档当前状态、任何勘误以及如何提供反馈的信息，
+   可在以下地址获得：
+   <a href="http://www.rfc-editor.org/info/rfc7591">http://www.rfc-editor.org/info/rfc7591</a>。
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Richer, et al.                 标准轨道                       [第 1 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-2" ></span>
+<span class="grey"><a href="./rfc7591">RFC 7591</a>             OAuth 2.0 动态注册                 2015 年 7 月</span>
+
+
+Copyright Notice
+
+   Copyright (c) 2015 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to <a href="https://www.rfc-editor.org/bcp/bcp78">BCP 78</a> and the IETF Trust's Legal
+   Provisions Relating to IETF Documents
+   (<a href="http://trustee.ietf.org/license-info">http://trustee.ietf.org/license-info</a>) in effect on the date of
+   publication of this document.  Please review these documents
+   carefully, as they describe your rights and restrictions with respect
+   to this document.  Code Components extracted from this document must
+   include Simplified BSD License text as described in Section 4.e of
+   the Trust Legal Provisions and are provided without warranty as
+   described in the Simplified BSD License.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Richer, et al.                 标准轨道                       [第 2 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-3" ></span>
+<span class="grey"><a href="./rfc7591">RFC 7591</a>             OAuth 2.0 动态注册                 2015 年 7 月</span>
+
+
+目录
+
+   <a href="#section-1">1</a>.  引言  . . . . . . . . . . . . . . . . . . . . . . . . . . .   <a href="#page-4">4</a>
+     <a href="#section-1.1">1.1</a>.  符号约定  . . . . . . . . . . . . . . . . . . . . . . .   <a href="#page-4">4</a>
+     <a href="#section-1.2">1.2</a>.  术语 . . . . . . . . . . . . . . . . . . . . . . . . .   <a href="#page-4">4</a>
+     <a href="#section-1.3">1.3</a>.  协议流程 . . . . . . . . . . . . . . . . . . . . . . .   <a href="#page-7">7</a>
+   <a href="#section-2">2</a>.  客户端元数据 . . . . . . . . . . . . . . . . . . . . . . .   <a href="#page-8">8</a>
+     <a href="#section-2.1">2.1</a>.  授权类型与响应类型之间的关系 . . . . . . . . . . . .  <a href="#page-12">12</a>
+     <a href="#section-2.2">2.2</a>.  人类可读的客户端元数据  . . . . . . . . . . . . . . .  <a href="#page-13">13</a>
+     <a href="#section-2.3">2.3</a>.  软件声明  . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-14">14</a>
+   <a href="#section-3">3</a>.  客户端注册端点  . . . . . . . . . . . . . . . . . . . . .  <a href="#page-15">15</a>
+     <a href="#section-3.1">3.1</a>.  客户端注册请求 . . . . . . . . . . . . . . . . . . . .  <a href="#page-16">16</a>
+       3.1.1.  使用软件声明的客户端注册请求
+               . . . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-18">18</a>
+     <a href="#section-3.2">3.2</a>.  响应 . . . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-19">19</a>
+       <a href="#section-3.2.1">3.2.1</a>.  客户端信息响应 . . . . . . . . . . . . . . . . . .  <a href="#page-19">19</a>
+       <a href="#section-3.2.2">3.2.2</a>.  客户端注册错误响应  . . . . . . . . . . . . . . .  <a href="#page-21">21</a>
+   <a href="#section-4">4</a>.  IANA 相关事项 . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-23">23</a>
+     <a href="#section-4.1">4.1</a>.  OAuth 动态客户端注册元数据注册表 . . . . . . . . . .  <a href="#page-22">22</a>
+       <a href="#section-4.1.1">4.1.1</a>.  注册模板 . . . . . . . . . . . . . . . . . . . .  <a href="#page-24">24</a>
+       <a href="#section-4.1.2">4.1.2</a>.  初始注册表内容 . . . . . . . . . . . . . . . . .  <a href="#page-24">24</a>
+     <a href="#section-4.2">4.2</a>.  OAuth 令牌端点认证方法注册表  . . . . . . . . . . .  <a href="#page-27">27</a>
+       <a href="#section-4.2.1">4.2.1</a>.  注册模板 . . . . . . . . . . . . . . . . . . . .  <a href="#page-28">28</a>
+       <a href="#section-4.2.2">4.2.2</a>.  初始注册表内容 . . . . . . . . . . . . . . . . .  <a href="#page-28">28</a>
+   <a href="#section-5">5</a>.  安全考虑事项 . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-28">28</a>
+   <a href="#section-6">6</a>.  隐私考虑事项  . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-32">32</a>
+   <a href="#section-7">7</a>.  参考文献  . . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-33">33</a>
+     <a href="#section-7.1">7.1</a>.  规范性引用文献  . . . . . . . . . . . . . . . . . . .  <a href="#page-33">33</a>
+     <a href="#section-7.2">7.2</a>.  资料性引用文献  . . . . . . . . . . . . . . . . . . .  <a href="#page-35">35</a>
+   <a href="#appendix-A">附录 A</a>.  用例  . . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-33">33</a>
+     <a href="#appendix-A.1">A.1</a>.  开放式与受保护的动态客户端注册 . . . . . . . . . .  <a href="#page-34">34</a>
+       <a href="#appendix-A.1.1">A.1.1</a>.  开放式动态客户端注册  . . . . . . . . . . . . .  <a href="#page-34">34</a>
+       <a href="#appendix-A.1.2">A.1.2</a>.  受保护的动态客户端注册 . . . . . . . . . . . .  <a href="#page-34">34</a>
+     <a href="#appendix-A.2">A.2</a>.  不带或带软件声明的注册  . . . . . . . . . . . . .  <a href="#page-34">34</a>
+       <a href="#appendix-A.2.1">A.2.1</a>.  不带软件声明的注册 . . . . . . . . . . . . . .  <a href="#page-34">34</a>
+       <a href="#appendix-A.2.2">A.2.2</a>.  带软件声明的注册  . . . . . . . . . . . . . . .  <a href="#page-34">34</a>
+     <a href="#appendix-A.3">A.3</a>.  由客户端或开发者进行注册 . . . . . . . . . . . . .  <a href="#page-34">34</a>
+       <a href="#appendix-A.3.1">A.3.1</a>.  由客户端注册  . . . . . . . . . . . . . . . . .  <a href="#page-35">35</a>
+       <a href="#appendix-A.3.2">A.3.2</a>.  由开发者注册 . . . . . . . . . . . . . . . . .  <a href="#page-35">35</a>
+     <a href="#appendix-A.4">A.4</a>.  每个客户端实例一个客户端 ID，或每个客户端软件
+           一个客户端 ID . . . . . . . . . . . . . . . . . . . .  <a href="#page-35">35</a>
+       <a href="#appendix-A.4.1">A.4.1</a>.  每个客户端软件实例一个客户端 ID  . . . . . . .  <a href="#page-35">35</a>
+       A.4.2.  所有客户端软件实例共享一个客户端 ID
+               . . . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-35">35</a>
+     <a href="#appendix-A.5">A.5</a>.  有状态或无状态注册  . . . . . . . . . . . . . . . .  <a href="#page-35">35</a>
+       <a href="#appendix-A.5.1">A.5.1</a>.  有状态客户端注册  . . . . . . . . . . . . . . .  <a href="#page-36">36</a>
+       <a href="#appendix-A.5.2">A.5.2</a>.  无状态客户端注册 . . . . . . . . . . . . . . . .  <a href="#page-36">36</a>
+   致谢 . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-36">36</a>
+   作者地址  . . . . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-36">36</a>
+
+
+
+<span class="grey">Richer, et al.                 标准轨道                       [第 3 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-4" ></span>
+<span class="grey"><a href="./rfc7591">RFC 7591</a>             OAuth 2.0 动态注册                 2015 年 7 月</span>
+
+
+<span class="h2"><a class="selflink" id="section-1" href="#section-1">1</a>.  引言</span>
+
+   为了让 OAuth 2.0 [<a href="./rfc6749" title="&quot;OAuth 2.0 授权框架&quot;">RFC6749</a>] 客户端能够使用 OAuth 2.0
+   授权服务器，客户端需要特定信息来与该服务器交互，包括
+   一个可在该服务器处使用的 OAuth 2.0 客户端标识符。本规范
+   描述了 OAuth 2.0 客户端如何在授权服务器处动态注册，以
+   获取这些信息。
+
+   作为注册过程的一部分，本规范还定义了一种机制，使客户端
+   能够向授权服务器呈现一组元数据，例如一组有效的重定向
+   URI。此元数据既可以以自声明方式传达，也可以作为一组
+   名为软件声明的元数据传达；软件声明经过数字签名，或通过
+   消息认证码 (MAC) 进行保护；在软件声明的情况下，签发者
+   会为有关客户端的数据的有效性作担保。
+
+   传统上，客户端在授权服务器处的注册是手动执行的。本规范
+   定义的机制既可用于让客户端在授权服务器处动态注册自身，
+   也可用于让客户端开发者以编程方式在授权服务器处注册客户
+   端。多个使用 OAuth 2.0 的应用此前已经开发了完成此类注册
+   的机制。本规范以兼容两者的方式，对 "OpenID Connect
+   Dynamic Client Registration 1.0" [<a href="#ref-OpenID.Registration">OpenID.Registration</a>] 定义并由
+   "User Managed Access (UMA) Profile of OAuth 2.0" [<a href="#ref-UMA-Core">UMA-Core</a>] 使用的
+   注册机制进行了通用化，同时使其适用于更广泛的 OAuth 2.0
+   用例。
+
+<span class="h3"><a class="selflink" id="section-1.1" href="#section-1.1">1.1</a>.  符号约定</span>
+
+   本文档中的关键词 'MUST'、'MUST NOT'、'REQUIRED'、'SHALL'、
+   'SHALL NOT'、'SHOULD'、'SHOULD NOT'、'RECOMMENDED'、'MAY' 和
+   'OPTIONAL' 应按 [<a href="./rfc2119" title="&quot;用于 RFC 中表示要求级别的关键词&quot;">RFC2119</a>] 中所述进行解释。
+
+   除非另有说明，所有协议参数名称和值都区分大小写。
+
+<span class="h3"><a class="selflink" id="section-1.2" href="#section-1.2">1.2</a>.  术语</span>
+
+   本规范使用 OAuth 2.0 [<a href="./rfc6749" title="&quot;OAuth 2.0 授权框架&quot;">RFC6749</a>] 定义的术语 "access token"、
+   "authorization code"、"authorization endpoint"、"authorization
+   grant"、"authorization server"、"client"、"client identifier"、
+   "client secret"、"grant type"、"protected resource"、"redirection URI"、
+
+
+
+
+
+<span class="grey">Richer, et al.                 标准轨道                       [第 4 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-5" ></span>
+<span class="grey"><a href="./rfc7591">RFC 7591</a>             OAuth 2.0 动态注册                 2015 年 7 月</span>
+
+
+   "refresh token"、"resource owner"、"resource server"、"response
+   type" 和 "token endpoint"，并使用 JSON Web Token (JWT) [<a href="./rfc7519" title="&quot;JSON Web Token (JWT)&quot;">RFC7519</a>]
+   定义的术语 "Claim"。
+
+   本规范定义以下术语：
+
+   客户端软件
+      实现 OAuth 2.0 客户端的软件。
+
+   客户端实例
+      一段客户端软件的已部署实例。
+
+   客户端开发者
+      构建客户端软件包并准备分发该软件包的个人或组织。在
+      构建客户端时，开发者通常不知道部署它的服务提供方组织
+      将会是谁。当客户端开发者无法在编译时预测软件的某些
+      方面（如部署 URL）时，就需要使用动态注册。例如，当软件
+      API 发布者与部署组织并非同一方时，就可能出现这种情况。
+
+   客户端注册端点
+      OAuth 2.0 端点，客户端可通过该端点在授权服务器处注册。
+      获取此端点 URL 的方式不在本规范范围内。
+
+   初始访问令牌
+      由授权服务器可选地向开发者或客户端签发的 OAuth 2.0
+      访问令牌，用于授权对客户端注册端点的调用。此令牌的
+      类型和格式很可能是服务特定的，并且不在本规范范围内。
+      授权服务器签发此令牌的方式，以及注册端点验证此令牌的
+      方式，均不在本规范范围内。当授权服务器限制可注册客户
+      端的各方时，需要使用初始访问令牌。
+
+   部署组织
+      一个管理性安全域，软件 API（服务）部署在该域之下，
+      并由 OAuth 2.0 框架保护。在某些 OAuth 场景中，部署组织
+      与软件 API 发布者是同一方。在这些情况下，部署组织通常
+      会与客户端软件开发者有密切关系。在许多其他情况下，
+      服务的定义者可能是独立的第三方发布者或标准组织。当按
+      某个已发布规范为 API 工作时，客户端软件开发者无法与
+      部署该软件 API（服务）的潜在众多部署组织预先建立关系。
+
+
+
+
+<span class="grey">Richer, et al.                 标准轨道                       [第 5 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-6" ></span>
+<span class="grey"><a href="./rfc7591">RFC 7591</a>             OAuth 2.0 动态注册                 2015 年 7 月</span>
+
+
+   软件 API 部署
+      受 OAuth 2.0 保护（即受保护资源）并部署在特定部署组织
+      域中的软件 API 实例。对于任何特定的软件 API，可能存在
+      一个或多个部署。软件 API 部署通常具有关联的 OAuth 2.0
+      授权服务器以及客户端注册端点。获取这些端点的方式不在
+      本规范范围内。
+
+   软件 API 发布者
+      定义某个特定的、可通过 Web 访问的 API 的组织，该 API
+      可部署在一个或多个部署环境中。发布者可以是任何标准
+      机构、商业组织、公共组织、私营组织或开源组织，负责
+      发布和分发可通过 OAuth 2.0 保护的软件和 API 规范。在
+      某些情况下，软件 API 发布者与客户端开发者可能是同一
+      组织。在发布可通过 Web 访问的 API 时，软件发布者通常
+      未与部署组织预先建立关系。
+
+   软件声明
+      一个经过数字签名或 MAC 处理的 JSON Web Token (JWT)
+      [<a href="./rfc7519" title="&quot;JSON Web Token (JWT)&quot;">RFC7519</a>]，用于断言有关客户端软件的元数据值。在某些
+      情况下，软件声明将由客户端开发者直接签发。在其他情况
+      下，软件声明将由第三方组织签发，供客户端开发者使用。
+      在两种情况下，授权服务器与软件声明签发者之间的信任
+      关系，都旨在作为评估是否接受注册请求的输入。软件声明
+      可以作为客户端注册请求的一部分呈现给授权服务器。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Richer, et al.                 标准轨道                       [第 6 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-7" ></span>
+<span class="grey"><a href="./rfc7591">RFC 7591</a>             OAuth 2.0 动态注册                 2015 年 7 月</span>
+
+
+<span class="h3"><a class="selflink" id="section-1.3" href="#section-1.3">1.3</a>.  协议流程</span>
+
+        +--------(A)- 初始访问令牌（可选）
+        |
+        |   +----(B)- 软件声明（可选）
+        |   |
+        v   v
+    +-----------+                                      +---------------+
+    |           |--(C)- 客户端注册请求 --------------&gt;|   客户端      |
+    | 客户端或  |                                      |   注册        |
+    | 开发者    |&lt;-(D)- 客户端信息响应 ---------------|   端点        |
+    |           |        或客户端错误响应             +---------------+
+    +-----------+
+
+   图 1：抽象的动态客户端注册流程
+
+   图 1 所示的抽象 OAuth 2.0 客户端动态注册流程描述了客户端或
+   开发者与本规范定义的端点之间的交互。该图未展示错误情况。
+   此流程包括以下步骤：
+
+   (A)   可选地，向客户端或开发者签发一个初始访问令牌，使其
+         能够访问客户端注册端点。向客户端或开发者签发初始
+         访问令牌的方法不在本规范范围内。
+
+   (B)   可选地，向客户端或开发者签发一个软件声明，以供客户
+         端注册端点使用。向客户端或开发者签发软件声明的方法
+         不在本规范范围内。
+
+   (C)   客户端或开发者调用客户端注册端点，并携带客户端期望
+         的注册元数据；如果授权服务器要求，也可包括来自 (A)
+         的初始访问令牌。
+
+   (D)   授权服务器注册客户端并返回：
+
+         *  客户端已注册的元数据，
+
+         *  在服务器处唯一的客户端标识符，以及
+
+         *  一组客户端凭据，例如客户端密钥（如适用于此客户
+            端）。
+
+   不同配置和用法的示例包含在<a href="#appendix-A">附录 A</a>中。
+
+
+
+<span class="grey">Richer, et al.                 标准轨道                       [第 7 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-8" ></span>
+<span class="grey"><a href="./rfc7591">RFC 7591</a>             OAuth 2.0 动态注册                 2015 年 7 月</span>
+
+
+<span class="h2"><a class="selflink" id="section-2" href="#section-2">2</a>.  客户端元数据</span>
+
+   已注册客户端在授权服务器处具有一组与其客户端标识符关联
+   的元数据值，例如有效重定向 URI 列表或显示名称。
+
+   这些客户端元数据值有两种用途：
+
+   o  作为注册请求的输入值，以及
+
+   o  作为注册响应中的输出值。
+
+   以下客户端元数据字段由本规范定义。除非另有说明，所有客户
+   端元数据字段的实现和使用都是 OPTIONAL。所有数据成员类型
+   （字符串、数组、数字）都按其 JSON [<a href="./rfc7159" title="&quot;JavaScript Object Notation (JSON) 数据交换格式&quot;">RFC7159</a>] 表示形式定义。
+
+   redirect_uris
+      用于基于重定向的流程（如授权码流程和隐式流程）的重定向
+      URI 字符串数组。按照 OAuth 2.0 [<a href="./rfc6749" title="&quot;OAuth 2.0 授权框架&quot;">RFC6749</a>] <a href="#section-2">第 2 节</a>的要求，
+      使用带重定向流程的客户端 MUST 注册其重定向 URI 值。支持
+      基于重定向流程的动态注册的授权服务器 MUST 实现对此元
+      数据值的支持。
+
+   token_endpoint_auth_method
+      表示请求的令牌端点认证方法的字符串指示符。本规范定义
+      的值如下：
+
+      *  "none"：客户端是 OAuth 2.0 <a href="#section-2.1">第 2.1 节</a>中定义的公共
+         客户端，并且没有客户端密钥。
+
+      *  "client_secret_post"：客户端使用 OAuth 2.0 <a href="#section-2.3.1">第 2.3.1 节</a>
+         中定义的 HTTP POST 参数。
+
+      *  "client_secret_basic"：客户端使用 OAuth 2.0 <a href="#section-2.3.1">第 2.3.1 节</a>
+         中定义的 HTTP Basic。
+
+      可通过<a href="#section-4.2">第 4.2 节</a>建立的 IANA "OAuth Token Endpoint
+      Authentication Methods" 注册表定义其他值。绝对 URI 也可
+      用作此参数的值而无需注册。如果未指定或省略，默认值为
+      "client_secret_basic"，表示 OAuth 2.0 <a href="#section-2.3.1">第 2.3.1 节</a>规定的
+      HTTP Basic 认证方案。
+
+
+
+
+
+<span class="grey">Richer, et al.                 标准轨道                       [第 8 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-9" ></span>
+<span class="grey"><a href="./rfc7591">RFC 7591</a>             OAuth 2.0 动态注册                 2015 年 7 月</span>
+
+
+   grant_types
+      客户端可在令牌端点使用的 OAuth 2.0 授权类型字符串数组。
+      这些授权类型定义如下：
+
+      *  "authorization_code"：OAuth 2.0 <a href="#section-4.1">第 4.1 节</a>中定义的
+         授权码授权类型。
+
+      *  "implicit"：OAuth 2.0 <a href="#section-4.2">第 4.2 节</a>中定义的隐式授权
+         类型。
+
+      *  "password"：OAuth 2.0 <a href="#section-4.3">第 4.3 节</a>中定义的资源所有者
+         密码凭据授权类型。
+
+      *  "client_credentials"：OAuth 2.0 <a href="#section-4.4">第 4.4 节</a>中定义的
+         客户端凭据授权类型。
+
+      *  "refresh_token"：OAuth 2.0 <a href="#section-6">第 6 节</a>中定义的刷新令牌
+         授权类型。
+
+      *  "urn:ietf:params:oauth:grant-type:jwt-bearer"：OAuth JWT
+         Bearer Token Profiles [<a href="./rfc7523" title="&quot;用于 OAuth 2.0 客户端认证和授权许可的 JSON Web Token (JWT) Profile&quot;">RFC7523</a>] 中定义的 JWT Bearer
+         Token Grant Type。
+
+      *  "urn:ietf:params:oauth:grant-type:saml2-bearer"：OAuth
+         SAML 2 Bearer Token Profiles [<a href="./rfc7522" title="&quot;用于 OAuth 2.0 客户端认证和授权许可的 Security Assertion Markup Language (SAML) 2.0 Profile&quot;">RFC7522</a>] 中定义的 SAML 2.0
+         Bearer Assertion Grant。
+
+      如果令牌端点在该授权类型中被使用，则此参数的值 MUST 与
+      该授权类型定义中传递给令牌端点的 "grant_type" 参数的值
+      相同。授权服务器 MAY 允许 OAuth 2.0 <a href="#section-4.5">第 4.5 节</a>所述授权
+      类型扩展过程中定义的其他值。如果省略，默认行为是客户端
+      仅使用 "authorization_code" Grant Type。
+
+   response_types
+      客户端可在授权端点使用的 OAuth 2.0 响应类型字符串数组。
+      这些响应类型定义如下：
+
+      *  "code"：OAuth 2.0 <a href="#section-4.1">第 4.1 节</a>中定义的授权码响应
+         类型。
+
+      *  "token"：OAuth 2.0 <a href="#section-4.2">第 4.2 节</a>中定义的隐式响应
+         类型。
+
+
+
+
+
+
+<span class="grey">Richer, et al.                 标准轨道                       [第 9 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-10" ></span>
+<span class="grey"><a href="./rfc7591">RFC 7591</a>             OAuth 2.0 动态注册                 2015 年 7 月</span>
+
+
+      如果授权端点由该授权类型使用，则此参数的值 MUST 与该授权
+      类型定义中传递给授权端点的 "response_type" 参数的值相同。
+      授权服务器 MAY 允许 OAuth 2.0 <a href="#section-4.5">第 4.5 节</a>所述授权类型扩展
+      过程中定义的其他值。如果省略，默认值是客户端仅使用
+      "code" 响应类型。
+
+   client_name
+      在授权期间向最终用户呈现的客户端的人类可读字符串名称。
+      如果省略，授权服务器 MAY 改为向最终用户显示原始
+      "client_id" 值。RECOMMENDED 客户端始终发送此字段。此字段
+      的值 MAY 按<a href="#section-2.2">第 2.2 节</a>所述进行国际化。
+
+   client_uri
+      提供客户端相关信息的网页 URL 字符串。如果存在，服务器
+      SHOULD 以可点击方式向最终用户显示此 URL。RECOMMENDED
+      客户端始终发送此字段。此字段的值 MUST 指向有效网页。
+      此字段的值 MAY 按<a href="#section-2.2">第 2.2 节</a>所述进行国际化。
+
+   logo_uri
+      引用客户端标志的 URL 字符串。如果存在，服务器 SHOULD 在
+      审批期间向最终用户显示此图像。此字段的值 MUST 指向有效
+      图像文件。此字段的值 MAY 按<a href="#section-2.2">第 2.2 节</a>所述进行国际化。
+
+   scope
+      包含以空格分隔的范围值列表的字符串（如 OAuth 2.0
+      [<a href="./rfc6749" title="&quot;OAuth 2.0 授权框架&quot;">RFC6749</a>] <a href="#section-3.3">第 3.3 节</a>所述），客户端在请求访问令牌时可使用
+      这些范围值。此列表中值的语义是服务特定的。如果省略，
+      授权服务器 MAY 使用一组默认范围注册客户端。
+
+   contacts
+      字符串数组，表示联系此客户端负责人的方式，通常为电子
+      邮件地址。授权服务器 MAY 将这些联系地址提供给最终用户，
+      以便其针对客户端提出支持请求。有关隐私考虑事项的信息，
+      参见<a href="#section-6">第 6 节</a>。
+
+
+
+
+
+
+
+<span class="grey">Richer, et al.                 标准轨道                      [第 10 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-11" ></span>
+<span class="grey"><a href="./rfc7591">RFC 7591</a>             OAuth 2.0 动态注册                 2015 年 7 月</span>
+
+
+   tos_uri
+      指向客户端的人类可读服务条款文档的 URL 字符串，该文档
+      描述最终用户在授权客户端时所接受的、最终用户与客户端
+      之间的合同关系。如果提供了此 URL，授权服务器 SHOULD 向
+      最终用户显示它。此字段的值 MUST 指向有效网页。此字段的
+      值 MAY 按<a href="#section-2.2">第 2.2 节</a>所述进行国际化。
+
+   policy_uri
+      指向人类可读隐私政策文档的 URL 字符串，该文档描述部署
+      组织如何收集、使用、保留和披露个人数据。如果提供了此
+      URL，授权服务器 SHOULD 向最终用户显示它。此字段的值
+      MUST 指向有效网页。此字段的值 MAY 按<a href="#section-2.2">第 2.2 节</a>所述进行
+      国际化。
+
+   jwks_uri
+      引用客户端的 JSON Web Key (JWK) Set [<a href="./rfc7517" title="&quot;JSON Web Key (JWK)&quot;">RFC7517</a>] 文档的 URL
+      字符串，该文档包含客户端的公钥。此字段的值 MUST 指向
+      有效的 JWK Set 文档。这些密钥可由使用签名或加密的更高
+      层协议使用。例如，在使用 JWT 进行客户端认证时，某些
+      应用可能会使用这些密钥来验证向令牌端点发出的已签名
+      请求 [<a href="./rfc7523" title="&quot;用于 OAuth 2.0 客户端认证和授权许可的 JSON Web Token (JWT) Profile&quot;">RFC7523</a>]。优先使用此参数而不是 "jwks" 参数，因为它
+      更便于密钥轮换。"jwks_uri" 和 "jwks" 参数 MUST NOT 同时
+      出现在同一请求或响应中。
+
+   jwks
+      客户端的 JSON Web Key Set [<a href="./rfc7517" title="&quot;JSON Web Key (JWK)&quot;">RFC7517</a>] 文档值，其中包含
+      客户端的公钥。此字段的值 MUST 是包含有效 JWK Set 的 JSON
+      对象。这些密钥可由使用签名或加密的更高层协议使用。此
+      参数旨在供无法使用 "jwks_uri" 参数的客户端使用，例如
+      无法托管公共 URL 的原生客户端。"jwks_uri" 和 "jwks" 参数
+      MUST NOT 同时出现在同一请求或响应中。
+
+   software_id
+      由客户端开发者或软件发布者分配的唯一标识符字符串
+      （例如通用唯一标识符 (UUID)），注册端点用它来标识要
+      动态注册的客户端软件。与由授权服务器签发且 SHOULD 在
+      各实例之间不同的 "client_id" 不同，"software_id" SHOULD
+      对客户端软件的所有实例保持相同。"software_id" SHOULD 在同一
+
+
+
+<span class="grey">Richer, et al.                 标准轨道                      [第 11 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-12" ></span>
+<span class="grey"><a href="./rfc7591">RFC 7591</a>             OAuth 2.0 动态注册                 2015 年 7 月</span>
+
+
+      软件的多次更新或版本之间保持相同。此字段的值并非旨在
+      供人类阅读，且通常对客户端和授权服务器是不透明的。
+
+   software_version
+      "software_id" 所标识客户端软件的版本标识符字符串。在对
+      同一 "software_id" 所标识的客户端软件进行任何更新时，
+      "software_version" 的值 SHOULD 发生变化。此字段的值旨在
+      使用字符串相等匹配进行比较，本规范未定义其他比较语义。
+      此字段的值不在本规范范围内，但它并非旨在供人类阅读，
+      且通常对客户端和授权服务器是不透明的。对于会触发此值
+      变化的客户端软件更新，如何定义其构成要素，是该软件
+      自身特定的，并且不在本规范范围内。
+
+   本规范的扩展和 profile 可以按照本文档<a href="#section-4">第 4 节</a>中的 IANA 相关
+   事项，使用注册的元数据名称和描述来扩展此列表。授权服务器
+   MUST 忽略客户端发送的、其不理解的任何客户端元数据（例如，
+   通过在处理期间静默地从客户端注册记录中移除未知元数据）。
+   授权服务器 MAY 按<a href="#section-3.2.1">第 3.2.1 节</a>所述，通过用合适的默认值替换
+   请求的值，或按<a href="#section-3.2.2">第 3.2.2 节</a>所述返回错误响应，来拒绝任何
+   请求的客户端元数据值。
+
+   客户端元数据值既可以按<a href="#section-3.1">第 3.1 节</a>所述直接在注册请求正文中
+   传达，也可以按<a href="#section-2.3">第 2.3 节</a>所述作为 claim 包含在软件声明中；
+   二者混合使用也是可能的。如果同一个客户端元数据名称同时
+   出现在两个位置，且软件声明受到授权服务器信任，则软件声明
+   中 claim 的值 MUST 优先。
+
+<span class="h3"><a class="selflink" id="section-2.1" href="#section-2.1">2.1</a>.  授权类型与响应类型之间的关系</span>
+
+   上文所述的 "grant_types" 和 "response_types" 值在一定程度上
+   是正交的，因为它们指的是传递给 OAuth 协议中不同端点的
+   参数。不过，它们之间也存在关联，因为客户端可用的
+   "grant_types" 会影响该客户端被允许使用的 "response_types"，
+   反之亦然。例如，包含 "authorization_code" 的 "grant_types"
+   值意味着包含 "code" 的 "response_types" 值，因为这两个值
+   都被定义为 OAuth 2.0 授权码授权的一部分。因此，支持这些
+   字段的服务器 SHOULD 采取措施，确保客户端无法将自身注册为
+
+
+
+<span class="grey">Richer, et al.                 标准轨道                      [第 12 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-13" ></span>
+<span class="grey"><a href="./rfc7591">RFC 7591</a>             OAuth 2.0 动态注册                 2015 年 7 月</span>
+
+
+   不一致的状态，例如通过向不一致的注册请求返回
+   "invalid_client_metadata" 错误响应。
+
+   这两个字段之间的对应关系列于下表。
+
+   +-----------------------------------------------+-------------------+
+   | grant_types 值包含：                          | response_types    |
+   |                                               | 值包含：          |
+   +-----------------------------------------------+-------------------+
+   | authorization_code                            | code              |
+   | implicit                                      | token             |
+   | password                                      | （无）            |
+   | client_credentials                            | （无）            |
+   | refresh_token                                 | （无）            |
+   | urn:ietf:params:oauth:grant-type:jwt-bearer   | （无）            |
+   | urn:ietf:params:oauth:grant-type:saml2-bearer | （无）            |
+   +-----------------------------------------------+-------------------+
+
+   引入 "grant_types" 或 "response_types" 参数新值的本文档扩展和
+   profile，MUST 记录这两类参数之间的所有对应关系。
+
+<span class="h3"><a class="selflink" id="section-2.2" href="#section-2.2">2.2</a>.  人类可读的客户端元数据</span>
+
+   人类可读的客户端元数据值，以及引用人类可读值的客户端元数据
+   值，MAY 使用多种语言和文字表示。例如，"client_name"、
+   "tos_uri"、"policy_uri"、"logo_uri" 和 "client_uri" 等字段的
+   值，在某些客户端注册中可能具有多个特定于区域设置的值，
+   以便在不同地点使用。
+
+   为了指定语言和文字，会将 <a href="https://www.rfc-editor.org/bcp/bcp47">BCP 47</a> [<a href="./rfc5646" title="&quot;用于标识语言的标签&quot;">RFC5646</a>] 语言标签添加到客户端
+   元数据成员名称中，并用 "#" 字符分隔。由于 JSON [<a href="./rfc7159" title="&quot;JavaScript Object Notation (JSON) 数据交换格式&quot;">RFC7159</a>] 成员
+   名称区分大小写，RECOMMENDED 在 Claim Names 中使用的语言
+   标签值，应采用其在 "IANA Language Subtag" 注册表
+   [<a href="#ref-IANA.Language">IANA.Language</a>] 中注册时的字符大小写拼写。特别是，通常
+   语言名称使用小写字符拼写，地区名称使用大写字符拼写，
+   语言使用混合大小写字符拼写。不过，由于 <a href="https://www.rfc-editor.org/bcp/bcp47">BCP 47</a> 语言标签值
+   不区分大小写，实现 SHOULD 以不区分大小写的方式解释提供的
+   语言标签值。按照 <a href="https://www.rfc-editor.org/bcp/bcp47">BCP 47</a> 中的建议，用于元数据成员名称的语言
+   标签值应仅具体到必要程度。例如，在许多上下文中使用 "fr"
+   可能已经足够，而不是使用 "fr-CA" 或 "fr-FR"。
+
+
+
+<span class="grey">Richer, et al.                 标准轨道                      [第 13 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-14" ></span>
+<span class="grey"><a href="./rfc7591">RFC 7591</a>             OAuth 2.0 动态注册                 2015 年 7 月</span>
+
+
+   例如，客户端可在同一个注册请求中，将其英文名称表示为
+   "client_name#en": "My Client"，并将其日文名称表示为
+   "client_name#ja-Jpan-JP":
+   "\u30AF\u30E9\u30A4\u30A2\u30F3\u30C8\u540D"。授权服务器 MAY 在授权
+   步骤期间向资源所有者显示这些名称中的任意一个或全部，并
+   可基于系统配置、用户偏好或其他因素选择要显示的名称。
+
+   如果发送的任何人类可读字段没有语言标签，使用它的各方
+   MUST NOT 对字符串值的语言、字符集或文字作任何假设，并且
+   在其呈现于用户界面的任何地方，字符串值 MUST 按原样使用。
+   为了促进互操作性，RECOMMENDED 客户端和服务器除任何特定于
+   语言的字段外，还使用不带任何语言标签的人类可读字段，并且
+   RECOMMENDED 任何不带语言标签发送的人类可读字段都包含适合
+   在各种系统上显示的值。
+
+   实现者说明：许多 JSON 库允许将 JSON 对象的成员作为该库
+   原生编程环境中某个对象构造的成员来引用。不过，虽然 "#"
+   字符是 JSON 对象成员名称内部的有效字符，但在许多编程环境
+   中，它不是可用于对象成员名称的有效字符。因此，实现将需要
+   对这些 claim 使用替代的访问形式。例如，在 JavaScript 中，
+   如果按如下方式解析 JSON："var j = JSON.parse(json);"，则作为
+   解决办法，可使用 JavaScript 语法 "j["client_name#en-us"]"
+   来访问成员 "client_name#en-us"。
+
+<span class="h3"><a class="selflink" id="section-2.3" href="#section-2.3">2.3</a>.  软件声明</span>
+
+   软件声明是 JSON Web Token (JWT) [<a href="./rfc7519" title="&quot;JSON Web Token (JWT)&quot;">RFC7519</a>]，它将有关客户端软件
+   的元数据值作为一个整体加以断言。可在软件声明中使用的一组
+   claim 定义于<a href="#section-2">第 2 节</a>。当软件声明作为客户端注册请求的一部分
+   呈现给授权服务器时，它 MUST 使用 JSON Web Signature (JWS)
+   [<a href="./rfc7515" title="&quot;JSON Web Signature (JWS)&quot;">RFC7515</a>] 进行数字签名或 MAC 处理，并且 MUST 包含一个 "iss"
+   （签发者）claim，用于表示证明软件声明中各 claim 的一方。
+   RECOMMENDED 软件声明使用 "RS256" 签名算法进行数字签名，
+   不过特定应用 MAY 指定使用不同的算法。RECOMMENDED 软件声明
+   包含 "software_id" claim，以允许授权服务器关联使用同一
+   软件声明的软件的不同实例。
+
+
+
+
+
+<span class="grey">Richer, et al.                 标准轨道                      [第 14 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-15" ></span>
+<span class="grey"><a href="./rfc7591">RFC 7591</a>             OAuth 2.0 动态注册                 2015 年 7 月</span>
+
+
+   例如，软件声明可以包含以下 claim：
+
+     {
+      "software_id": "4NRB1-0XZABZI9E6-5SM3R",
+      "client_name": "Example Statement-based Client",
+      "client_uri": "https://client.example.net/"
+     }
+
+   以下非规范性示例 JWT 包含这些 claim，并已使用 "RS256"
+   进行了非对称签名（换行仅用于显示目的）：
+
+     eyJhbGciOiJSUzI1NiJ9.
+     eyJzb2Z0d2FyZV9pZCI6IjROUkIxLTBYWkFCWkk5RTYtNVNNM1IiLCJjbGll
+     bnRfbmFtZSI6IkV4YW1wbGUgU3RhdGVtZW50LWJhc2VkIENsaWVudCIsImNs
+     aWVudF91cmkiOiJodHRwczovL2NsaWVudC5leGFtcGxlLm5ldC8ifQ.
+     GHfL4QNIrQwL18BSRdE595T9jbzqa06R9BT8w409x9oIcKaZo_mt15riEXHa
+     zdISUvDIZhtiyNrSHQ8K4TvqWxH6uJgcmoodZdPwmWRIEYbQDLqPNxREtYn0
+     5X3AR7ia4FRjQ2ojZjk5fJqJdQ-JcfxyhK-P8BAWBd6I2LLA77IG32xtbhxY
+     fHX7VhuU5ProJO8uvu3Ayv4XRhLZJY4yKfmyjiiKiPNe-Ia4SMy_d_QSWxsk
+     U5XIQl5Sa2YRPMbDRXttm2TfnZM1xx70DoYi8g6czz-CPGRi4SW_S2RKHIJf
+     IjoI3zTJ0Y2oe0_EJAiXbL6OyF9S5tKxDXV8JIndSA
+
+   软件声明通常随客户端应用的所有实例一起分发。客户端或
+   开发者获取软件声明的方式不在本规范范围内。一些常见方法
+   可以包括：客户端开发者通过向软件 API 发布者注册，为某一
+   类客户端获取软件声明，从而生成客户端特定的 JWT。
+
+   授权服务器用于确定是否信任并使用软件声明中信息的标准，
+   不在本规范范围内。
+
+   在某些情况下，授权服务器 MAY 选择在授权请求中直接接受
+   软件声明值作为客户端标识符，而无需事先执行动态客户端
+   注册。授权服务器在何种情况下会这样做，以及此情况下所需
+   的具体软件声明特征，均不在本规范范围内。
+
+<span class="h2"><a class="selflink" id="section-3" href="#section-3">3</a>.  客户端注册端点</span>
+
+   客户端注册端点是本文档定义的 OAuth 2.0 端点，旨在允许
+   客户端向授权服务器注册。客户端注册端点 MUST 接受 HTTP
+   POST 消息，其请求参数在实体正文中使用 "application/json"
+   格式编码。客户端注册端点 MUST 由传输层安全机制保护，如
+
+
+
+
+<span class="grey">Richer, et al.                 标准轨道                      [第 15 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-16" ></span>
+<span class="grey"><a href="./rfc7591">RFC 7591</a>             OAuth 2.0 动态注册                 2015 年 7 月</span>
+
+
+   <a href="#section-5">第 5 节</a>所述。
+
+   客户端注册端点 MAY 是 OAuth 2.0 [<a href="./rfc6749" title="&quot;OAuth 2.0 授权框架&quot;">RFC6749</a>] 受保护资源，并且
+   MAY 接受 OAuth 2.0 访问令牌形式的初始访问令牌，以将注册
+   限制为仅允许先前已授权的各方进行。客户端或开发者获取
+   初始访问令牌的方法通常是带外的，并且不在本规范范围内。
+   客户端注册端点验证并确认初始访问令牌的方法不在本规范
+   范围内。
+
+   为支持开放注册并促进更广泛的互操作性，客户端注册端点
+   SHOULD 允许没有授权的注册请求（也就是说，请求中没有初始
+   访问令牌）。这些请求 MAY 被限速或以其他方式加以限制，以
+   防止针对客户端注册端点的拒绝服务攻击。
+
+<span class="h3"><a class="selflink" id="section-3.1" href="#section-3.1">3.1</a>.  客户端注册请求</span>
+
+   此操作将客户端注册到授权服务器。授权服务器为此客户端
+   分配一个唯一的客户端标识符，可选地分配一个客户端密钥，
+   并将请求中提供的元数据与签发的客户端标识符相关联。请求
+   包含注册期间为客户端指定的任何客户端元数据参数。授权
+   服务器 MAY 为客户端元数据中省略的任何项供应默认值。
+
+   为了注册，客户端或开发者向客户端注册端点发送 HTTP POST，
+   其内容类型为 "application/json"。HTTP 实体载荷是一个 JSON
+   [<a href="./rfc7159" title="&quot;JavaScript Object Notation (JSON) 数据交换格式&quot;">RFC7159</a>] 文档，由一个 JSON 对象组成，所有请求的客户端
+   元数据值作为该 JSON 对象的顶层成员。
+
+   例如，如果服务器支持开放注册（没有初始访问令牌），客户端
+   可以向客户端注册端点发送以下注册请求。
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Richer, et al.                 标准轨道                      [第 16 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-17" ></span>
+<span class="grey"><a href="./rfc7591">RFC 7591</a>             OAuth 2.0 动态注册                 2015 年 7 月</span>
+
+
+   以下是不使用初始访问令牌的非规范性示例请求：
+
+     POST /register HTTP/1.1
+     Content-Type: application/json
+     Accept: application/json
+     Host: server.example.com
+
+     {
+      "redirect_uris": [
+        "https://client.example.org/callback",
+        "https://client.example.org/callback2"],
+      "client_name": "My Example Client",
+      "client_name#ja-Jpan-JP":
+         "\u30AF\u30E9\u30A4\u30A2\u30F3\u30C8\u540D",
+      "token_endpoint_auth_method": "client_secret_basic",
+      "logo_uri": "https://client.example.org/logo.png",
+      "jwks_uri": "https://client.example.org/my_public_keys.jwks",
+      "example_extension_parameter": "example_value"
+     }
+
+   或者，如果服务器支持授权注册，开发者或客户端将被供应一个
+   初始访问令牌。（获取初始访问令牌的方法不在本规范范围内。）
+   开发者或客户端向客户端注册端点发送以下授权注册请求。注意，
+   此示例中发送的初始访问令牌是 OAuth 2.0 Bearer Token
+   [<a href="./rfc6750" title="&quot;OAuth 2.0 授权框架：Bearer Token 用法&quot;">RFC6750</a>]，但授权服务器可以使用任何 OAuth 2.0 令牌类型。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Richer, et al.                 标准轨道                      [第 17 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-18" ></span>
+<span class="grey"><a href="./rfc7591">RFC 7591</a>             OAuth 2.0 动态注册                 2015 年 7 月</span>
+
+
+   以下是使用初始访问令牌并按值注册 JWK Set 的非规范性示例
+   请求（值内换行仅用于显示目的）：
+
+     POST /register HTTP/1.1
+     Content-Type: application/json
+     Accept: application/json
+     Authorization: Bearer ey23f2.adfj230.af32-developer321
+     Host: server.example.com
+
+     {
+      "redirect_uris": ["https://client.example.org/callback",
+         "https://client.example.org/callback2"],
+      "client_name": "My Example Client",
+      "client_name#ja-Jpan-JP":
+         "\u30AF\u30E9\u30A4\u30A2\u30F3\u30C8\u540D",
+      "token_endpoint_auth_method": "client_secret_basic",
+      "policy_uri": "https://client.example.org/policy.html",
+      "jwks": {"keys": [{
+         "e": "AQAB",
+         "n": "nj3YJwsLUFl9BmpAbkOswCNVx17Eh9wMO-_AReZwBqfaWFcfG
+   HrZXsIV2VMCNVNU8Tpb4obUaSXcRcQ-VMsfQPJm9IzgtRdAY8NN8Xb7PEcYyk
+   lBjvTtuPbpzIaqyiUepzUXNDFuAOOkrIol3WmflPUUgMKULBN0EUd1fpOD70p
+   RM0rlp_gg_WNUKoW1V-3keYUJoXH9NztEDm_D2MQXj9eGOJJ8yPgGL8PAZMLe
+   2R7jb9TxOCPDED7tY_TU4nFPlxptw59A42mldEmViXsKQt60s1SLboazxFKve
+   qXC_jpLUt22OC6GUG63p-REw-ZOr3r845z50wMuzifQrMI9bQ",
+         "kty": "RSA"
+      }]},
+      "example_extension_parameter": "example_value"
+     }
+
+<span class="h4"><a class="selflink" id="section-3.1.1" href="#section-3.1.1">3.1.1</a>.  使用软件声明的客户端注册请求</span>
+
+   除 JSON 元素外，客户端元数据值 MAY 也在软件声明中提供，
+   如<a href="#section-2.3">第 2.3 节</a>所述。如果授权服务器不支持此特性，它 MAY 忽略
+   软件声明。如果服务器支持软件声明，则通过软件声明传达的
+   客户端元数据值 MUST 优先于使用普通 JSON 元素传达的值。
+
+   软件声明使用此 OPTIONAL 成员包含在请求 JSON 对象中：
+
+   software_statement
+      包含关于客户端软件的客户端元数据值作为 claim 的软件
+      声明。这是一个包含完整已签名 JWT 的字符串值。
+
+
+
+
+<span class="grey">Richer, et al.                 标准轨道                      [第 18 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-19" ></span>
+<span class="grey"><a href="./rfc7591">RFC 7591</a>             OAuth 2.0 动态注册                 2015 年 7 月</span>
+
+
+   在以下示例中，一些注册参数作为 claim 在<a href="#section-2.3">第 2.3 节</a>示例中的
+   软件声明中传达，而一些特定于客户端实例的值则作为常规参数
+   传达（值内换行仅用于显示目的）：
+
+     POST /register HTTP/1.1
+     Content-Type: application/json
+     Accept: application/json
+     Host: server.example.com
+
+     {
+       "redirect_uris": [
+         "https://client.example.org/callback",
+         "https://client.example.org/callback2"
+       ],
+       "software_statement": "eyJhbGciOiJSUzI1NiJ9.
+   eyJzb2Z0d2FyZV9pZCI6IjROUkIxLTBYWkFCWkk5RTYtNVNNM1IiLCJjbGll
+   bnRfbmFtZSI6IkV4YW1wbGUgU3RhdGVtZW50LWJhc2VkIENsaWVudCIsImNs
+   aWVudF91cmkiOiJodHRwczovL2NsaWVudC5leGFtcGxlLm5ldC8ifQ.
+   GHfL4QNIrQwL18BSRdE595T9jbzqa06R9BT8w409x9oIcKaZo_mt15riEXHa
+   zdISUvDIZhtiyNrSHQ8K4TvqWxH6uJgcmoodZdPwmWRIEYbQDLqPNxREtYn0
+   5X3AR7ia4FRjQ2ojZjk5fJqJdQ-JcfxyhK-P8BAWBd6I2LLA77IG32xtbhxY
+   fHX7VhuU5ProJO8uvu3Ayv4XRhLZJY4yKfmyjiiKiPNe-Ia4SMy_d_QSWxsk
+   U5XIQl5Sa2YRPMbDRXttm2TfnZM1xx70DoYi8g6czz-CPGRi4SW_S2RKHIJf
+   IjoI3zTJ0Y2oe0_EJAiXbL6OyF9S5tKxDXV8JIndSA",
+       "scope": "read write",
+       "example_extension_parameter": "example_value"
+     }
+
+<span class="h3"><a class="selflink" id="section-3.2" href="#section-3.2">3.2</a>.  响应</span>
+
+   在注册请求成功后，授权服务器会为客户端返回一个客户端
+   标识符。服务器使用 HTTP 201 Created 状态码进行响应，并
+   返回类型为 "application/json" 的正文，其内容如<a href="#section-3.2.1">第 3.2.1 节</a>
+   所述。
+
+   在注册请求不成功时，授权服务器会按<a href="#section-3.2.2">第 3.2.2 节</a>所述返回
+   错误。
+
+<span class="h4"><a class="selflink" id="section-3.2.1" href="#section-3.2.1">3.2.1</a>.  客户端信息响应</span>
+
+   响应包含客户端标识符，以及客户端密钥（如果客户端是机密
+   客户端）。响应 MAY 包含本规范扩展所指定的其他字段。
+
+
+
+
+
+<span class="grey">Richer, et al.                 标准轨道                      [第 19 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-20" ></span>
+<span class="grey"><a href="./rfc7591">RFC 7591</a>             OAuth 2.0 动态注册                 2015 年 7 月</span>
+
+
+   client_id
+      REQUIRED。OAuth 2.0 客户端标识符字符串。它 SHOULD NOT
+      当前对任何其他已注册客户端有效，不过授权服务器 MAY 按
+      其自行决定向已注册客户端的多个实例签发相同的客户端
+      标识符。
+
+   client_secret
+      OPTIONAL。OAuth 2.0 客户端密钥字符串。如果签发，此值
+      MUST 对每个 "client_id" 唯一，并且 SHOULD 对使用相同
+      "client_id" 的客户端的多个实例唯一。此值由机密客户端
+      用于向令牌端点认证，如 OAuth 2.0
+      <a href="./rfc6749#section-2.3.1">[RFC6749] 第&nbsp;2.3.1 节</a>所述。
+
+   client_id_issued_at
+      OPTIONAL。客户端标识符签发的时间。该时间表示为从
+      1970-01-01T00:00:00Z 到签发日期/时间之间按 UTC 测量的
+      秒数。
+
+   client_secret_expires_at
+      如果签发了 "client_secret"，则 REQUIRED。客户端密钥将
+      过期的时间；如果不会过期，则为 0。该时间表示为从
+      1970-01-01T00:00:00Z 到过期日期/时间之间按 UTC 测量的
+      秒数。
+
+   此外，授权服务器 MUST 返回关于此客户端的所有已注册元数据，
+   包括由授权服务器自身供应的任何字段。授权服务器 MAY 拒绝或
+   替换客户端在注册期间提交的任何请求元数据值，并用合适的值
+   替代它们。客户端或开发者可以检查响应中的值，以确定该注册
+   是否足以使用（例如，已注册的 "token_endpoint_auth_method"
+   是否受客户端软件支持），并确定适合客户端软件的行动方案。
+   对此类情况的响应不在本规范范围内，但可以包括向应用开发者
+   或授权服务器提供者提交报告、使用不同元数据值尝试重新注册，
+   或其他各种方法。例如，如果服务器还支持注册管理机制，如
+   [<a href="./rfc7592" title="&quot;OAuth 2.0 动态客户端注册管理协议&quot;">RFC7592</a>] 中定义的机制，客户端或开发者可以尝试使用不同的
+   元数据值更新注册。此过程也可以由服务发现协议辅助，例如
+   [<a href="#ref-OpenID.Discovery">OpenID.Discovery</a>]，该协议可以列出服务器的能力，使客户端
+   能够提出更有依据的注册请求。任何此类管理或发现系统的使用
+   都是可选的，并且不在本规范范围内。
+
+
+
+
+
+<span class="grey">Richer, et al.                 标准轨道                      [第 20 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-21" ></span>
+<span class="grey"><a href="./rfc7591">RFC 7591</a>             OAuth 2.0 动态注册                 2015 年 7 月</span>
+
+
+   成功的注册响应使用 HTTP 201 Created 状态码，正文类型为
+   "application/json"，由一个 JSON 对象 [<a href="./rfc7159" title="&quot;JavaScript Object Notation (JSON) 数据交换格式&quot;">RFC7159</a>] 组成，所有参数
+   作为该对象的顶层成员。
+
+   如果软件声明被用作注册的一部分，其值 MUST 在响应中使用
+   "software_statement" 成员名称，与其他元数据一起原封不动地
+   返回。从软件声明中使用的客户端元数据元素 MUST 也作为注册
+   响应中的顶层客户端元数据值直接返回（可能具有不同的值，
+   因为请求的值与使用的值可能不同）。
+
+   以下是成功注册的非规范性示例响应：
+
+     HTTP/1.1 201 Created
+     Content-Type: application/json
+     Cache-Control: no-store
+     Pragma: no-cache
+
+     {
+      "client_id": "s6BhdRkqt3",
+      "client_secret": "cf136dc3c1fc93f31185e5885805d",
+      "client_id_issued_at": 2893256800,
+      "client_secret_expires_at": 2893276800,
+      "redirect_uris": [
+        "https://client.example.org/callback",
+        "https://client.example.org/callback2"],
+      "grant_types": ["authorization_code", "refresh_token"],
+      "client_name": "My Example Client",
+      "client_name#ja-Jpan-JP":
+         "\u30AF\u30E9\u30A4\u30A2\u30F3\u30C8\u540D",
+      "token_endpoint_auth_method": "client_secret_basic",
+      "logo_uri": "https://client.example.org/logo.png",
+      "jwks_uri": "https://client.example.org/my_public_keys.jwks",
+      "example_extension_parameter": "example_value"
+     }
+
+<span class="h4"><a class="selflink" id="section-3.2.2" href="#section-3.2.2">3.2.2</a>.  客户端注册错误响应</span>
+
+   当发生 OAuth 2.0 错误情况时，例如客户端呈现无效的初始访问
+   令牌，授权服务器会返回适用于该 OAuth 2.0 令牌类型的错误
+   响应。
+
+
+
+
+
+
+
+<span class="grey">Richer, et al.                 标准轨道                      [第 21 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-22" ></span>
+<span class="grey"><a href="./rfc7591">RFC 7591</a>             OAuth 2.0 动态注册                 2015 年 7 月</span>
+
+
+   当发生注册错误情况时，授权服务器返回 HTTP 400 状态码
+   （除非另有指定），内容类型为 "application/json"，由一个
+   JSON 对象 [<a href="./rfc7159" title="&quot;JavaScript Object Notation (JSON) 数据交换格式&quot;">RFC7159</a>] 组成，并在响应正文中描述错误。
+
+   定义了两个可包含在 JSON 对象中的成员：
+
+   error
+      REQUIRED。单个 ASCII 错误代码字符串。
+
+   error_description
+      OPTIONAL。用于调试的人类可读 ASCII 错误文本描述。
+
+   其他成员 MAY 也被包含；如果不理解它们，则 MUST 忽略。
+
+   本规范定义以下错误代码：
+
+   invalid_redirect_uri
+      一个或多个重定向 URI 的值无效。
+
+   invalid_client_metadata
+      某个客户端元数据字段的值无效，服务器已拒绝此请求。
+      注意，授权服务器 MAY 选择为客户端元数据的任何请求参数
+      替代一个有效值。
+
+   invalid_software_statement
+      所呈现的软件声明无效。
+
+   unapproved_software_statement
+      所呈现的软件声明未被此授权服务器批准使用。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Richer, et al.                 标准轨道                      [第 22 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-23" ></span>
+<span class="grey"><a href="./rfc7591">RFC 7591</a>             OAuth 2.0 动态注册                 2015 年 7 月</span>
+
+
+   以下是因授权服务器将某个重定向 URI 列入黑名单而产生的错误
+   响应的非规范性示例（值内换行仅用于显示目的）：
+
+     HTTP/1.1 400 Bad Request
+     Content-Type: application/json
+     Cache-Control: no-store
+     Pragma: no-cache
+
+     {
+      "error": "invalid_redirect_uri",
+      "error_description": "The redirection URI
+        http://sketchy.example.com is not allowed by this server."
+     }
+
+   以下是因 "response_types" 与 "grant_types" 值组合不一致而
+   产生的错误响应的非规范性示例（值内换行仅用于显示目的）：
+
+     HTTP/1.1 400 Bad Request
+     Content-Type: application/json
+     Cache-Control: no-store
+     Pragma: no-cache
+
+     {
+      "error": "invalid_client_metadata",
+      "error_description": "The grant type 'authorization_code' must be
+        registered along with the response type 'code' but found only
+       'implicit' instead."
+     }
+
+<span class="h2"><a class="selflink" id="section-4" href="#section-4">4</a>.  IANA 相关事项</span>
+
+<span class="h3"><a class="selflink" id="section-4.1" href="#section-4.1">4.1</a>.  OAuth 动态客户端注册元数据注册表</span>
+
+   本规范建立 "OAuth Dynamic Client Registration Metadata" 注册表。
+
+   OAuth 注册客户端元数据名称和描述在 oauth-ext-review@ietf.org
+   邮件列表上经过两周审查期，并根据一名或多名指定专家的建议，
+   按 Specification Required ([<a href="./rfc5226" title="">RFC5226</a>]) 注册。不过，为了允许在
+   发布前分配名称，指定专家可以在确信此类规范将按 [<a href="./rfc7120" title="&quot;标准轨道代码点的早期 IANA 分配&quot;">RFC7120</a>]
+   发布后批准注册。
+
+
+
+
+<span class="grey">Richer, et al.                 标准轨道                      [第 23 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-24" ></span>
+<span class="grey"><a href="./rfc7591">RFC 7591</a>             OAuth 2.0 动态注册                 2015 年 7 月</span>
+
+
+   发送到邮件列表供审查的注册请求应使用适当的主题（例如
+   "Request to register OAuth Dynamic Client Registration Metadata
+   name: example"）。
+
+   在审查期内，指定专家将批准或拒绝注册请求，并将此决定告知
+   审查列表和 IANA。拒绝应包括解释，并在适用时包括关于如何
+   使请求成功的建议。
+
+   IANA 必须只接受来自指定专家的注册表更新，并应将所有注册
+   请求引导到审查邮件列表。
+
+<span class="h4"><a class="selflink" id="section-4.1.1" href="#section-4.1.1">4.1.1</a>.  注册模板</span>
+
+   Client Metadata Name:
+      请求的名称（例如 "example"）。此名称区分大小写。以不区分
+      大小写方式与其他已注册名称匹配的名称 SHOULD NOT 被接受。
+
+   Client Metadata Description:
+      元数据值的简要描述（例如 "Example description"）。
+
+   Change Controller:
+      对于标准轨道 RFC，列出 "IESG"。对于其他文档，给出负责方
+      的名称。也可包含其他详细信息（例如邮政地址、电子邮件
+      地址、主页 URI）。
+
+   Specification Document(s):
+      指向规定客户端元数据定义的一个或多个文档的引用，最好
+      包括可用于获取这些文档副本的 URI。也可包含相关章节的
+      指示，但这不是必需的。
+
+<span class="h4"><a class="selflink" id="section-4.1.2" href="#section-4.1.2">4.1.2</a>.  初始注册表内容</span>
+
+   "OAuth Dynamic Client Registration Metadata" 注册表的初始内容为：
+
+   o  Client Metadata Name: "redirect_uris"
+   o  Client Metadata Description: 用于基于重定向流程的重定向 URI
+      数组
+   o  Change Controller: IESG
+   o  Specification Document(s): <a href="./rfc7591">RFC 7591</a>
+
+
+
+
+
+
+<span class="grey">Richer, et al.                 标准轨道                      [第 24 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-25" ></span>
+<span class="grey"><a href="./rfc7591">RFC 7591</a>             OAuth 2.0 动态注册                 2015 年 7 月</span>
+
+
+   o  Client Metadata Name: "token_endpoint_auth_method"
+   o  Client Metadata Description: 令牌端点请求的认证方法
+   o  Change Controller: IESG
+   o  Specification Document(s): <a href="./rfc7591">RFC 7591</a>
+
+   o  Client Metadata Name: "grant_types"
+   o  Client Metadata Description: 客户端可以使用的 OAuth 2.0 授权
+      类型数组
+   o  Change Controller: IESG
+   o  Specification Document(s): <a href="./rfc7591">RFC 7591</a>
+
+   o  Client Metadata Name: "response_types"
+   o  Client Metadata Description: 客户端可以使用的 OAuth 2.0 响应
+      类型数组
+   o  Change Controller: IESG
+   o  Specification Document(s): <a href="./rfc7591">RFC 7591</a>
+
+   o  Client Metadata Name: "client_name"
+   o  Client Metadata Description: 呈现给用户的人类可读客户端名称
+   o  Change Controller: IESG
+   o  Specification Document(s): <a href="./rfc7591">RFC 7591</a>
+
+   o  Client Metadata Name: "client_uri"
+   o  Client Metadata Description: 提供客户端相关信息的网页 URL
+   o  Change Controller: IESG
+   o  Specification Document(s): <a href="./rfc7591">RFC 7591</a>
+
+   o  Client Metadata Name: "logo_uri"
+   o  Client Metadata Description: 引用客户端标志的 URL
+   o  Change Controller: IESG
+   o  Specification Document(s): <a href="./rfc7591">RFC 7591</a>
+
+   o  Client Metadata Name: "scope"
+   o  Client Metadata Description: 以空格分隔的 OAuth 2.0 范围值
+      列表
+   o  Change Controller: IESG
+   o  Specification Document(s): <a href="./rfc7591">RFC 7591</a>
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Richer, et al.                 标准轨道                      [第 25 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-26" ></span>
+<span class="grey"><a href="./rfc7591">RFC 7591</a>             OAuth 2.0 动态注册                 2015 年 7 月</span>
+
+
+   o  Client Metadata Name: "contacts"
+   o  Client Metadata Description: 表示联系此客户端负责人的方式的
+      字符串数组，通常为电子邮件地址
+   o  Change Controller: IESG
+   o  Specification Document(s): <a href="./rfc7591">RFC 7591</a>
+
+   o  Client Metadata Name: "tos_uri"
+   o  Client Metadata Description: 指向客户端的人类可读服务条款
+      文档的 URL
+   o  Change Controller: IESG
+   o  Specification Document(s): <a href="./rfc7591">RFC 7591</a>
+
+   o  Client Metadata Name: "policy_uri"
+   o  Client Metadata Description: 指向客户端的人类可读政策文档的
+      URL
+   o  Change Controller: IESG
+   o  Specification Document(s): <a href="./rfc7591">RFC 7591</a>
+
+   o  Client Metadata Name: "jwks_uri"
+   o  Client Metadata Description: 引用客户端 JSON Web Key Set
+      [<a href="./rfc7517" title="&quot;JSON Web Key (JWK)&quot;">RFC7517</a>] 文档的 URL，该文档表示客户端公钥
+   o  Change Controller: IESG
+   o  Specification Document(s): <a href="./rfc7591">RFC 7591</a>
+
+   o  Client Metadata Name: "jwks"
+   o  Client Metadata Description: 客户端的 JSON Web Key Set [<a href="./rfc7517" title="&quot;JSON Web Key (JWK)&quot;">RFC7517</a>]
+      文档，表示客户端公钥
+   o  Change Controller: IESG
+   o  Specification Document(s): <a href="./rfc7591">RFC 7591</a>
+
+   o  Client Metadata Name: "software_id"
+   o  Client Metadata Description: 构成客户端的软件的标识符
+   o  Change Controller: IESG
+   o  Specification Document(s): <a href="./rfc7591">RFC 7591</a>
+
+   o  Client Metadata Name: "software_version"
+   o  Client Metadata Description: 构成客户端的软件的版本标识符
+   o  Change Controller: IESG
+   o  Specification Document(s): <a href="./rfc7591">RFC 7591</a>
+
+   o  Client Metadata Name: "client_id"
+   o  Client Metadata Description: 客户端标识符
+   o  Change Controller: IESG
+   o  Specification Document(s): <a href="./rfc7591">RFC 7591</a>
+
+
+
+
+<span class="grey">Richer, et al.                 标准轨道                      [第 26 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-27" ></span>
+<span class="grey"><a href="./rfc7591">RFC 7591</a>             OAuth 2.0 动态注册                 2015 年 7 月</span>
+
+
+   o  Client Metadata Name: "client_secret"
+   o  Client Metadata Description: 客户端密钥
+   o  Change Controller: IESG
+   o  Specification Document(s): <a href="./rfc7591">RFC 7591</a>
+
+   o  Client Metadata Name: "client_id_issued_at"
+   o  Client Metadata Description: 客户端标识符签发的时间
+   o  Change Controller: IESG
+   o  Specification Document(s): <a href="./rfc7591">RFC 7591</a>
+
+   o  Client Metadata Name: "client_secret_expires_at"
+   o  Client Metadata Description: 客户端密钥将过期的时间
+   o  Change Controller: IESG
+   o  Specification Document(s): <a href="./rfc7591">RFC 7591</a>
+
+<span class="h3"><a class="selflink" id="section-4.2" href="#section-4.2">4.2</a>.  OAuth 令牌端点认证方法注册表</span>
+
+   本规范建立 "OAuth Token Endpoint Authentication Methods" 注册表。
+
+   用作 "token_endpoint_auth_method" 值的其他值，在
+   oauth-ext-review@ietf.org 邮件列表上经过两周审查期，并根据
+   一名或多名指定专家的建议，按 Specification Required
+   ([<a href="./rfc5226" title="">RFC5226</a>]) 注册。不过，为了允许在发布前分配值，指定专家
+   可以在确信此类规范将按 [<a href="./rfc7120" title="&quot;标准轨道代码点的早期 IANA 分配&quot;">RFC7120</a>] 发布后批准注册。
+
+   注册请求必须发送到 oauth-ext-review@ietf.org 邮件列表供审查
+   和评论，并使用适当的主题（例如 "Request to register
+   token_endpoint_auth_method value: example"）。
+
+   在审查期内，指定专家将批准或拒绝注册请求，并将此决定告知
+   审查列表和 IANA。拒绝应包括解释，并在适用时包括关于如何
+   使请求成功的建议。
+
+   IANA 必须只接受来自指定专家的注册表更新，并应将所有注册
+   请求引导到审查邮件列表。
+
+
+
+
+
+
+
+
+<span class="grey">Richer, et al.                 标准轨道                      [第 27 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-28" ></span>
+<span class="grey"><a href="./rfc7591">RFC 7591</a>             OAuth 2.0 动态注册                 2015 年 7 月</span>
+
+
+<span class="h4"><a class="selflink" id="section-4.2.1" href="#section-4.2.1">4.2.1</a>.  注册模板</span>
+
+   Token Endpoint Authentication Method Name:
+      请求的名称（例如 "example"）。此名称区分大小写。以不区分
+      大小写方式与其他已注册名称匹配的名称 SHOULD NOT 被接受。
+
+   Change Controller:
+      对于标准轨道 RFC，列出 "IESG"。对于其他文档，给出负责方
+      的名称。也可包含其他详细信息（例如邮政地址、电子邮件
+      地址、主页 URI）。
+
+   Specification Document(s):
+      指向规定令牌端点认证方法的一个或多个文档的引用，最好
+      包括可用于获取这些文档副本的 URI。也可包含相关章节的
+      指示，但这不是必需的。
+
+<span class="h4"><a class="selflink" id="section-4.2.2" href="#section-4.2.2">4.2.2</a>.  初始注册表内容</span>
+
+   "OAuth Token Endpoint Authentication Methods" 注册表的初始内容为：
+
+   o  Token Endpoint Authentication Method Name: "none"
+   o  Change Controller: IESG
+   o  Specification Document(s): <a href="./rfc7591">RFC 7591</a>
+
+   o  Token Endpoint Authentication Method Name: "client_secret_post"
+   o  Change Controller: IESG
+   o  Specification Document(s): <a href="./rfc7591">RFC 7591</a>
+
+   o  Token Endpoint Authentication Method Name: "client_secret_basic"
+   o  Change Controller: IESG
+   o  Specification Document(s): <a href="./rfc7591">RFC 7591</a>
+
+<span class="h2"><a class="selflink" id="section-5" href="#section-5">5</a>.  安全考虑事项</span>
+
+   由于发送到客户端注册端点的请求会导致明文凭据（在 HTTP
+   请求和响应中）的传输，授权服务器 MUST 要求在向注册端点
+   发送请求时使用传输层安全机制。服务器 MUST 支持 TLS 1.2
+   [<a href="./rfc5246" title="&quot;传输层安全 (TLS) 协议版本 1.2&quot;">RFC5246</a>]，并 MAY 支持满足其安全要求的其他传输层安全机制。
+   使用 TLS 时，客户端 MUST 按 <a href="./rfc6125">RFC 6125</a> [<a href="./rfc6125" title="&quot;在传输层安全 (TLS) 语境下，使用 X.509 (PKIX) 证书在互联网公钥基础设施中表示和验证基于域的应用服务身份&quot;">RFC6125</a>] 执行
+   TLS/SSL 服务器证书检查。实现安全考虑事项可见于
+   Recommendations for Secure Use of TLS and DTLS [<a href="#ref-BCP195" title="&quot;安全使用传输层安全 (TLS) 和数据报传输层安全 (DTLS) 的建议&quot;">BCP195</a>]。
+
+
+
+<span class="grey">Richer, et al.                 标准轨道                      [第 28 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-29" ></span>
+<span class="grey"><a href="./rfc7591">RFC 7591</a>             OAuth 2.0 动态注册                 2015 年 7 月</span>
+
+
+   对于使用基于重定向的授权类型（例如 "authorization_code" 和
+   "implicit"）的客户端，授权服务器 MUST 要求客户端注册其
+   重定向 URI 值。这可以帮助缓解以下攻击：恶意行为者注入并
+   冒充一个有效注册的客户端，并通过无效的重定向 URI 或开放
+   重定向器截获其授权码或令牌。此外，为了防止重定向返回值被
+   劫持，已注册的重定向 URI 值 MUST 是以下之一：
+
+   o  受 TLS 保护的远程网站
+      （例如 https://client.example.com/oauth_redirect）
+   o  托管在本地机器上并使用 HTTP URI 的网站
+      （例如 <a href="http://localhost:8080/oauth_redirect">http://localhost:8080/oauth_redirect</a>）
+   o  仅可由客户端应用使用的非 HTTP 应用特定 URL
+      （例如 exampleapp://oauth_redirect）
+
+   如果授权服务器的策略允许，公共客户端 MAY 使用本协议向授权
+   服务器注册。公共客户端对 "token_endpoint_auth_method" 元数据
+   字段使用 "none" 值，并且通常与 "implicit" 授权类型一起使用。
+   这些客户端通常是短生命周期的浏览器内应用，请求访问用户
+   资源，且访问与用户在授权服务器处的活动会话绑定。由于此类
+   客户端通常没有长期存储，因此这类客户端可能需要在每次浏览器
+   应用加载时重新注册。为了避免由此产生大量废弃客户端标识符，
+   授权服务器 MAY 决定在一段时间过去后，使符合某些条件的现有
+   客户端注册过期。或者，此类客户端也可以在提供浏览器内应用
+   代码的服务器上注册，并且客户端的配置可以随代码一起推送到
+   浏览器。
+
+   由于不同的 OAuth 2.0 授权类型具有不同的安全和使用属性，
+   授权服务器 MAY 要求一段软件为支持多个授权类型而分别注册。
+   例如，授权服务器可能要求所有使用 "authorization_code" 授权
+   类型的客户端为 "token_endpoint_auth_method" 使用客户端密钥，
+   但要求任何使用 "implicit" 授权类型的客户端不在令牌端点使用
+   任何认证。在这种情况下，服务器 MAY 禁止客户端同时注册
+   "authorization_code" 和 "implicit" 授权类型。类似地，
+   "authorization_code" 授权类型用于表示代表最终用户的访问，
+   但 "client_credentials" 授权类型表示代表客户端自身的访问。
+   出于安全原因，授权服务器可以要求对这些不同用例使用不同的
+
+
+
+<span class="grey">Richer, et al.                 标准轨道                      [第 29 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-30" ></span>
+<span class="grey"><a href="./rfc7591">RFC 7591</a>             OAuth 2.0 动态注册                 2015 年 7 月</span>
+
+
+   范围，因此，它 MAY 禁止同一客户端同时注册这两种授权类型。
+   在所有这些情况下，授权服务器会以 "invalid_client_metadata"
+   错误响应进行响应。
+
+   除非作为软件声明中的 claim 使用，授权服务器 MUST 将所有
+   客户端元数据视为自声明的。例如，恶意客户端可能使用其试图
+   冒充的合法客户端的名称和标志。此外，恶意客户端可能试图使用
+   合法客户端的软件标识符或软件版本，试图在授权服务器上将自身
+   与合法客户端的实例关联起来。为抵消这一点，授权服务器 MUST
+   通过查看整个注册请求和客户端配置，采取适当步骤来缓解此
+   风险。例如，如果标志的域/站点与重定向 URI 的域/站点不匹配，
+   授权服务器可以发出警告。授权服务器也可以拒绝来自已知软件
+   标识符的注册请求，如果该请求要求使用不同的重定向 URI 或
+   不同的客户端 URI。授权服务器还可以在所有情况下向最终用户
+   呈现关于动态注册客户端的警告消息，尤其是在此类客户端最近
+   才注册，或此前未被授权服务器处任何用户信任的情况下。
+
+   在授权服务器支持开放客户端注册的情况下，它必须对客户端提供
+   并将显示给用户的任何 URL（例如 "logo_uri"、"tos_uri"、
+   "client_uri" 和 "policy_uri"）极其谨慎。例如，恶意客户端
+   可以在注册请求中指定一个在 "policy_uri" 中引用路过式下载的
+   URL，引诱用户在授权期间点击它。授权服务器 SHOULD 检查
+   "logo_uri"、"tos_uri"、"client_uri" 和 "policy_uri" 是否与
+   "redirect_uris" 数组中定义的那些 URI 具有相同的主机和方案，
+   并且所有这些 URI 都解析为有效网页。由于这些 URI 值旨在显示
+   给授权页面上的用户，授权服务器 SHOULD 尽可能保护用户免受
+   这些 URL 所托管的恶意内容影响。例如，在授权页面上向用户
+   呈现 URL 之前，授权服务器可以下载这些 URL 托管的内容，将
+   内容交由恶意软件扫描器和黑名单过滤器检查，确定该 URL 上是否
+   存在安全和非安全内容混合，以及其他可能的服务器端缓解措施。
+   注意，这些 URL 中的内容随时可能更改，授权服务器无法完全确信
+   URL 的安全性，但这些做法可能有所帮助。为了进一步缓解这种
+   威胁，授权服务器也可以警告用户：这些 URL 链接由第三方提供，
+   应谨慎对待，并且并非由授权服务器自身托管。例如，授权服务器
+
+
+
+<span class="grey">Richer, et al.                 标准轨道                      [第 30 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-31" ></span>
+<span class="grey"><a href="./rfc7591">RFC 7591</a>             OAuth 2.0 动态注册                 2015 年 7 月</span>
+
+
+   可以先将用户引导到一个中间警告页面，再允许用户继续前往目标
+   URL，而不是直接在 HTML 锚点中提供这些链接。
+
+   客户端 MAY 同时使用直接 JSON 对象和 JWT 编码的软件声明，作为
+   注册请求的一部分向授权服务器呈现客户端元数据。软件声明受到
+   密码学保护，并表示声明签发者所作的 claim，而 JSON 对象表示
+   客户端或开发者直接作出的自声明 claim。如果软件声明有效，并
+   由可接受的权威方（例如软件 API 发布者）签名，则软件声明中的
+   客户端元数据值 MUST 优先于普通 JSON 对象中呈现的那些元数据
+   值，因为后者可能已被截获和修改。
+
+   与所有元数据值一样，软件声明是由客户端自声明的项目，即使其
+   内容已经由软件声明签发者进行了数字签名或 MAC 处理。因此，在
+   大多数情况下，仅呈现软件声明并不足以完全识别一段客户端软件。
+   相比之下，初始访问令牌不一定包含关于某段特定客户端软件的
+   信息，而是表示使用注册端点的授权。授权服务器在决定是否履行
+   给定注册请求时，MUST 考虑完整的注册请求，包括软件声明、初始
+   访问令牌和 JSON 客户端元数据值。
+
+   如果授权服务器收到针对某个客户端的注册请求，而该客户端并不
+   打算同时注册多个实例，并且授权服务器可以推断出注册重复
+   （例如，它使用与另一个现有客户端相同的 "software_id" 和
+   "software_version" 值），服务器 SHOULD 将新注册视为可疑并
+   拒绝该注册。新客户端有可能正试图冒充现有客户端，以诱骗用户
+   授权它，或者原始注册可能不再有效。管理这种情况的细节特定于
+   授权服务器部署，并且不在本规范范围内。
+
+   由于客户端标识符是可用于在授权端点冒充客户端的公共值，决定
+   向已注册客户端的多个实例签发相同客户端标识符的授权服务器，
+   需要非常明确在何种情况下这样做。例如，授权服务器可以将给定
+   客户端标识符限制为使用相同基于重定向流程和相同重定向 URI 的
+   客户端。授权服务器 SHOULD NOT 向已注册客户端的多个实例签发
+   相同的客户端密钥，即使它们被签发了相同的客户端标识符，否则
+   客户端密钥可能泄露，使恶意冒充者能够冒充机密客户端。
+
+
+
+<span class="grey">Richer, et al.                 标准轨道                      [第 31 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-32" ></span>
+<span class="grey"><a href="./rfc7591">RFC 7591</a>             OAuth 2.0 动态注册                 2015 年 7 月</span>
+
+
+<span class="h2"><a class="selflink" id="section-6" href="#section-6">6</a>.  隐私考虑事项</span>
+
+   由于本规范描述的协议几乎完全处理关于软件而非人的信息，因此
+   其使用中的隐私问题很少。值得注意的例外是<a href="#section-2">第 2 节</a>定义的
+   "contacts" 字段，该字段包含开发者或负责客户端软件的其他方的
+   联系信息。这些值旨在显示给最终用户，并将可供授权服务器的
+   管理员使用。因此，开发者可能希望提供一个专门用于支持客户端
+   的电子邮件地址或其他联系信息，而不是使用其个人或职业地址。
+   或者，开发者可能希望为客户端提供一个集体电子邮件地址，以便
+   在开发者离开并由其他人接管该职责之后，仍可继续联系和支持
+   客户端软件。
+
+   一般而言，客户端的元数据（例如客户端名称和软件标识符）在
+   一段客户端软件的所有实例之间是通用的，因此不会给最终用户
+   带来隐私问题。另一方面，客户端标识符通常对客户端的特定实例
+   唯一。对于供许多用户使用的网站等客户端，客户端标识符可能
+   不会带来显著隐私问题；但对于安装在单个最终用户设备上的原生
+   应用等客户端，客户端标识符可能在 OAuth 2.0 事务期间被唯一
+   跟踪，并将其使用与该单个最终用户绑定。不过，由于客户端软件
+   仍需由资源所有者通过 OAuth 2.0 授权授予进行授权，因此无论
+   客户端标识符是否唯一，都可以通过将已认证资源所有者与请求的
+   客户端标识符相关联来进行这种类型的跟踪。
+
+   注意，本规范禁止客户端创建自己的客户端标识符。如果客户端
+   能够这样做，单个客户端实例就可能在多个串通的授权服务器之间
+   被跟踪，从而导致隐私和安全问题。此外，客户端标识符通常按
+   每个注册请求唯一签发，即使对于同一软件实例也是如此。以这种
+   方式，应用可以通过多次注册并表现为完全不同的应用，稍微改善
+
+
+
+
+<span class="grey">Richer, et al.                 标准轨道                      [第 32 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-33" ></span>
+<span class="grey"><a href="./rfc7591">RFC 7591</a>             OAuth 2.0 动态注册                 2015 年 7 月</span>
+
+
+   隐私。不过，这种技术确实会带来显著的可用性成本，表现为要求
+   每个资源所有者进行多次授权，因此实践中不太可能使用。
+
+<span class="h2"><a class="selflink" id="section-7" href="#section-7">7</a>.  参考文献</span>
+
+<span class="h3"><a class="selflink" id="section-7.1" href="#section-7.1">7.1</a>.  规范性引用文献</span>
+
+   [<a id="ref-BCP195">BCP195</a>]   Sheffer, Y., Holz, R., and P. Saint-Andre,
+              "安全使用传输层安全 (TLS) 和数据报传输层安全
+              (DTLS) 的建议", <a href="https://www.rfc-editor.org/bcp/bcp195">BCP 195</a>, <a href="./rfc7525">RFC 7525</a>, 2015 年 5 月,
+              &lt;<a href="http://www.rfc-editor.org/info/bcp195">http://www.rfc-editor.org/info/bcp195</a>&gt;.
+
+   [<a id="ref-IANA.Language">IANA.Language</a>]
+              IANA, "Language Subtag Registry",
+              &lt;<a href="http://www.iana.org/assignments/language-subtag-registry">http://www.iana.org/assignments/</a>
+              <a href="http://www.iana.org/assignments/language-subtag-registry">language-subtag-registry</a>&gt;.
+
+   [<a id="ref-RFC2119">RFC2119</a>]  Bradner, S., "用于 RFC 中表示要求级别的关键词",
+              <a href="https://www.rfc-editor.org/bcp/bcp14">BCP 14</a>, <a href="./rfc2119">RFC 2119</a>,
+              DOI 10.17487/RFC2119, 1997 年 3 月,
+              &lt;<a href="http://www.rfc-editor.org/info/rfc2119">http://www.rfc-editor.org/info/rfc2119</a>&gt;.
+
+   [<a id="ref-RFC5226">RFC5226</a>]  Narten, T. and H. Alvestrand, "在 RFC 中编写 IANA
+              相关事项章节的指南", <a href="https://www.rfc-editor.org/bcp/bcp26">BCP 26</a>, <a href="./rfc5226">RFC 5226</a>,
+              DOI 10.17487/RFC5226, 2008 年 5 月,
+              &lt;<a href="http://www.rfc-editor.org/info/rfc5226">http://www.rfc-editor.org/info/rfc5226</a>&gt;.
+
+   [<a id="ref-RFC5246">RFC5246</a>]  Dierks, T. and E. Rescorla, "传输层安全 (TLS)
+              协议版本 1.2", <a href="./rfc5246">RFC 5246</a>,
+              DOI 10.17487/RFC5246, 2008 年 8 月,
+              &lt;<a href="http://www.rfc-editor.org/info/rfc5246">http://www.rfc-editor.org/info/rfc5246</a>&gt;.
+
+   [<a id="ref-RFC5646">RFC5646</a>]  Phillips, A., Ed. and M. Davis, Ed., "用于标识
+              语言的标签", <a href="https://www.rfc-editor.org/bcp/bcp47">BCP 47</a>, <a href="./rfc5646">RFC 5646</a>, DOI 10.17487/RFC5646,
+              2009 年 9 月, &lt;<a href="http://www.rfc-editor.org/info/rfc5646">http://www.rfc-editor.org/info/rfc5646</a>&gt;.
+
+   [<a id="ref-RFC6125">RFC6125</a>]  Saint-Andre, P. and J. Hodges, "在传输层安全
+              (TLS) 语境下，使用 X.509 (PKIX) 证书在互联网公钥
+              基础设施中表示和验证基于域的应用服务身份",
+              <a href="./rfc6125">RFC 6125</a>, DOI 10.17487/RFC6125, 2011 年 3 月,
+              &lt;<a href="http://www.rfc-editor.org/info/rfc6125">http://www.rfc-editor.org/info/rfc6125</a>&gt;.
+
+   [<a id="ref-RFC6749">RFC6749</a>]  Hardt, D., Ed., "OAuth 2.0 授权框架",
+              <a href="./rfc6749">RFC 6749</a>, DOI 10.17487/RFC6749, 2012 年 10 月,
+              &lt;<a href="http://www.rfc-editor.org/info/rfc6749">http://www.rfc-editor.org/info/rfc6749</a>&gt;.
+
+
+
+<span class="grey">Richer, et al.                 标准轨道                      [第 33 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-34" ></span>
+<span class="grey"><a href="./rfc7591">RFC 7591</a>             OAuth 2.0 动态注册                 2015 年 7 月</span>
+
+
+   [<a id="ref-RFC6750">RFC6750</a>]  Jones, M. and D. Hardt, "OAuth 2.0 授权框架：
+              Bearer Token 用法", <a href="./rfc6750">RFC 6750</a>,
+              DOI 10.17487/RFC6750, 2012 年 10 月,
+              &lt;<a href="http://www.rfc-editor.org/info/rfc6750">http://www.rfc-editor.org/info/rfc6750</a>&gt;.
+
+   [<a id="ref-RFC7120">RFC7120</a>]  Cotton, M., "标准轨道代码点的早期 IANA 分配",
+              <a href="https://www.rfc-editor.org/bcp/bcp100">BCP 100</a>, <a href="./rfc7120">RFC 7120</a>, DOI 10.17487/RFC7120, 2014 年 1 月,
+              &lt;<a href="http://www.rfc-editor.org/info/rfc7120">http://www.rfc-editor.org/info/rfc7120</a>&gt;.
+
+   [<a id="ref-RFC7159">RFC7159</a>]  Bray, T., Ed., "JavaScript Object Notation (JSON) 数据
+              交换格式", <a href="./rfc7159">RFC 7159</a>, DOI 10.17487/RFC7159, 2014 年 3 月,
+              &lt;<a href="http://www.rfc-editor.org/info/rfc7159">http://www.rfc-editor.org/info/rfc7159</a>&gt;.
+
+   [<a id="ref-RFC7515">RFC7515</a>]  Jones, M., Bradley, J., and N. Sakimura, "JSON Web
+              Signature (JWS)", <a href="./rfc7515">RFC 7515</a>, DOI 10.17487/RFC7515, 2015 年 5 月,
+              &lt;<a href="http://www.rfc-editor.org/info/rfc7515">http://www.rfc-editor.org/info/rfc7515</a>&gt;.
+
+   [<a id="ref-RFC7517">RFC7517</a>]  Jones, M., "JSON Web Key (JWK)", <a href="./rfc7517">RFC 7517</a>,
+              DOI 10.17487/RFC7517, 2015 年 5 月,
+              &lt;<a href="http://www.rfc-editor.org/info/rfc7517">http://www.rfc-editor.org/info/rfc7517</a>&gt;.
+
+   [<a id="ref-RFC7519">RFC7519</a>]  Jones, M., Bradley, J., and N. Sakimura, "JSON Web Token
+              (JWT)", <a href="./rfc7519">RFC 7519</a>, DOI 10.17487/RFC7519, 2015 年 5 月,
+              &lt;<a href="http://www.rfc-editor.org/info/rfc7519">http://www.rfc-editor.org/info/rfc7519</a>&gt;.
+
+   [<a id="ref-RFC7522">RFC7522</a>]  Campbell, B., Mortimore, C., and M. Jones, "用于
+              OAuth 2.0 客户端认证和授权授予的 Security
+              Assertion Markup Language (SAML) 2.0 Profile", <a href="./rfc7522">RFC 7522</a>,
+              DOI 10.17487/RFC7522, 2015 年 5 月,
+              &lt;<a href="http://www.rfc-editor.org/info/rfc7522">http://www.rfc-editor.org/info/rfc7522</a>&gt;.
+
+   [<a id="ref-RFC7523">RFC7523</a>]  Jones, M., Campbell, B., and C. Mortimore, "用于
+              OAuth 2.0 客户端认证和授权授予的 JSON Web Token
+              (JWT) Profile", <a href="./rfc7523">RFC 7523</a>, DOI 10.17487/RFC7523, 2015 年 5 月,
+              &lt;<a href="http://www.rfc-editor.org/info/rfc7523">http://www.rfc-editor.org/info/rfc7523</a>&gt;.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Richer, et al.                 标准轨道                      [第 34 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-35" ></span>
+<span class="grey"><a href="./rfc7591">RFC 7591</a>             OAuth 2.0 动态注册                 2015 年 7 月</span>
+
+
+<span class="h3"><a class="selflink" id="section-7.2" href="#section-7.2">7.2</a>.  资料性引用文献</span>
+
+   [<a id="ref-OpenID.Discovery">OpenID.Discovery</a>]
+              Sakimura, N., Bradley, J., Jones, M., and E. Jay, "OpenID
+              Connect Discovery 1.0", 2014 年 11 月,
+              &lt;<a href="http://openid.net/specs/openid-connect-discovery-1_0.html">http://openid.net/specs/</a>
+              <a href="http://openid.net/specs/openid-connect-discovery-1_0.html">openid-connect-discovery-1_0.html</a>&gt;.
+
+   [<a id="ref-OpenID.Registration">OpenID.Registration</a>]
+              Sakimura, N., Bradley, J., and M. Jones, "OpenID Connect
+              Dynamic Client Registration 1.0", 2014 年 11 月,
+              &lt;<a href="http://openid.net/specs/openid-connect-registration-1_0.html">http://openid.net/specs/</a>
+              <a href="http://openid.net/specs/openid-connect-registration-1_0.html">openid-connect-registration-1_0.html</a>&gt;.
+
+   [<a id="ref-RFC7592">RFC7592</a>]  Richer, J., Jones, M., Bradley, J., and M. Machulak,
+              "OAuth 2.0 动态客户端注册管理协议",
+              <a href="./rfc7592">RFC 7592</a>, DOI 10.17487/RFC7592, 2015 年 7 月,
+              &lt;<a href="http://www.rfc-editor.org/info/rfc7592">http://www.rfc-editor.org/info/rfc7592</a>&gt;.
+
+   [<a id="ref-UMA-Core">UMA-Core</a>]
+              Hardjono, T., Maler, E., Machulak, M., and D. Catalano,
+              "OAuth 2.0 的用户管理访问 (UMA) Profile", Work in
+              Progress, <a href="./draft-hardjono-oauth-umacore-13">draft-hardjono-oauth-umacore-13</a>, 2015 年 4 月.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Richer, et al.                 标准轨道                      [第 35 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-36" ></span>
+<span class="grey"><a href="./rfc7591">RFC 7591</a>             OAuth 2.0 动态注册                 2015 年 7 月</span>
+
+
+<span class="h2"><a class="selflink" id="appendix-A" href="#appendix-A">附录 A</a>.  用例</span>
+
+   本附录描述本规范可被使用的不同方式，包括描述可能需要作出
+   的一些选择。某些选择是相互独立的，可以组合使用，而某些
+   选择则相互关联。
+
+<span class="h3"><a class="selflink" id="appendix-A.1" href="#appendix-A.1">A.1</a>.  开放式与受保护的动态客户端注册</span>
+
+<span class="h4"><a class="selflink" id="appendix-A.1.1" href="#appendix-A.1.1">A.1.1</a>.  开放式动态客户端注册</span>
+
+   支持开放注册的授权服务器允许在没有初始访问令牌的情况下
+   进行注册。这允许所有客户端软件向授权服务器注册。
+
+<span class="h4"><a class="selflink" id="appendix-A.1.2" href="#appendix-A.1.2">A.1.2</a>.  受保护的动态客户端注册</span>
+
+   支持受保护注册的授权服务器要求在发出注册请求时使用初始
+   访问令牌。虽然客户端或开发者接收此初始访问令牌的方法，
+   以及授权服务器验证此初始访问令牌的方法均不在本规范范围内，
+   但一种常见方法是：开发者使用授权服务器处的手动预注册门户，
+   由该门户向开发者签发初始访问令牌。
+
+<span class="h3"><a class="selflink" id="appendix-A.2" href="#appendix-A.2">A.2</a>.  不带或带软件声明的注册</span>
+
+<span class="h4"><a class="selflink" id="appendix-A.2.1" href="#appendix-A.2.1">A.2.1</a>.  不带软件声明的注册</span>
+
+   当注册请求中未使用软件声明时，授权服务器必须愿意使用未由
+   任何权威方进行数字签名或 MAC 处理（并因此证明）的客户端
+   元数据值。（注意，此选择独立于开放式与受保护的选择，并且
+   初始访问令牌是另一种可能的证明形式。）
+
+<span class="h4"><a class="selflink" id="appendix-A.2.2" href="#appendix-A.2.2">A.2.2</a>.  带软件声明的注册</span>
+
+   软件声明可在注册请求中使用，用于由权威方为一组客户端元数据
+   值提供证明。当授权服务器想要将注册限制为由一组权威方证明的
+   客户端软件，或者想知道多个注册请求是否指向同一段客户端软件
+   时，这会很有用。
+
+
+
+
+
+
+<span class="grey">Richer, et al.                 标准轨道                      [第 36 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-37" ></span>
+<span class="grey"><a href="./rfc7591">RFC 7591</a>             OAuth 2.0 动态注册                 2015 年 7 月</span>
+
+
+<span class="h3"><a class="selflink" id="appendix-A.3" href="#appendix-A.3">A.3</a>.  由客户端或开发者进行注册</span>
+
+<span class="h4"><a class="selflink" id="appendix-A.3.1" href="#appendix-A.3.1">A.3.1</a>.  由客户端注册</span>
+
+   在某些用例中，客户端软件会动态地向授权服务器注册自身，以
+   获取客户端标识符以及与授权服务器交互所需的其他信息。在这种
+   情况下，客户端软件中不会随附用于该授权服务器的客户端标识符。
+
+<span class="h4"><a class="selflink" id="appendix-A.3.2" href="#appendix-A.3.2">A.3.2</a>.  由开发者注册</span>
+
+   在某些情况下，开发者（或开发者使用的开发软件）会预先向授权
+   服务器或一组授权服务器注册客户端软件。在这种情况下，用于该
+   授权服务器或这些授权服务器的客户端标识符值可以随客户端软件
+   一起打包。
+
+<span class="h3"><a class="selflink" id="appendix-A.4" href="#appendix-A.4">A.4</a>.  每个客户端实例一个客户端 ID，或每个客户端软件一个客户端 ID</span>
+
+<span class="h4"><a class="selflink" id="appendix-A.4.1" href="#appendix-A.4.1">A.4.1</a>.  每个客户端软件实例一个客户端 ID</span>
+
+   在某些情况下，每个已部署的客户端软件实例都会动态注册并获取
+   不同的客户端标识符值。例如，如果正在使用代码流程，这可能是
+   有利的，因为它还使每个客户端实例都能够拥有自己的客户端密钥。
+   这对于原生客户端可能很有用，因为它们无法维护随软件打包的
+   客户端密钥值的机密性，但可能能够维护每实例客户端密钥的机密
+   性。
+
+<span class="h4"><a class="selflink" id="appendix-A.4.2" href="#appendix-A.4.2">A.4.2</a>.  所有客户端软件实例共享一个客户端 ID</span>
+
+   在某些情况下，每个已部署的客户端软件实例都会共享一个通用的
+   客户端标识符值。例如，这通常适用于使用隐式流程的浏览器内
+   客户端，此时不涉及客户端密钥。特定授权服务器可能会选择例如
+   维护软件声明值与客户端标识符值之间的映射，并对特定软件的
+   所有注册请求返回相同的客户端标识符值。授权服务器在何种情况
+   下会这样做，以及此情况下所需的具体软件声明特征，超出了本
+   规范范围。
+
+
+
+
+
+
+
+<span class="grey">Richer, et al.                 标准轨道                      [第 37 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-38" ></span>
+<span class="grey"><a href="./rfc7591">RFC 7591</a>             OAuth 2.0 动态注册                 2015 年 7 月</span>
+
+
+<span class="h3"><a class="selflink" id="appendix-A.5" href="#appendix-A.5">A.5</a>.  有状态或无状态注册</span>
+
+<span class="h4"><a class="selflink" id="appendix-A.5.1" href="#appendix-A.5.1">A.5.1</a>.  有状态客户端注册</span>
+
+   在某些情况下，授权服务器会维护关于已注册客户端的状态，通常
+   使用客户端标识符值索引此状态。此状态通常会包括与客户端注册
+   关联的客户端元数据值，也可能包括特定于授权服务器实现的其他
+   状态。当使用有状态注册时，可能支持用于检索和/或更新此状态的
+   操作。针对有状态注册的一组可能操作在 [<a href="./rfc7592" title="&quot;OAuth 2.0 动态客户端注册管理协议&quot;">RFC7592</a>] 中描述。
+
+<span class="h4"><a class="selflink" id="appendix-A.5.2" href="#appendix-A.5.2">A.5.2</a>.  无状态客户端注册</span>
+
+   在某些情况下，授权服务器会以一种使其无需维护任何关于已注册
+   客户端的本地状态的方式实现。实现这一点的一种方式是将所有
+   注册状态编码在返回的客户端标识符值中，并可能将该状态加密给
+   授权服务器，以维护该状态的机密性和完整性。
+
+致谢
+
+   作者感谢 OAuth 工作组、User-Managed Access 工作组和 OpenID
+   Connect 工作组参与者对本文档的投入。特别是，以下个人在审查
+   并贡献本文档各个草案版本方面发挥了重要作用：Amanda Anganes、
+   Derek Atkins、Tim Bray、Domenico Catalano、Donald Coffin、
+   Vladimir Dzhuvinov、George Fletcher、Thomas Hardjono、
+   William Kim、Torsten Lodderstedt、Eve Maler、Josh Mandel、
+   Nov Matake、Tony Nadalin、Nat Sakimura、Christian Scholz 和
+   Hannes Tschofenig。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Richer, et al.                 标准轨道                      [第 38 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-39" ></span>
+<span class="grey"><a href="./rfc7591">RFC 7591</a>             OAuth 2.0 动态注册                 2015 年 7 月</span>
+
+
+作者地址
+
+   Justin Richer（编辑）
+
+   Email: ietf@justin.richer.org
+
+
+   Michael B. Jones
+   Microsoft
+
+   Email: mbj@microsoft.com
+   URI:   <a href="http://self-issued.info/">http://self-issued.info/</a>
+
+
+   John Bradley
+   Ping Identity
+
+   Email: ve7jtb@ve7jtb.com
+
+
+   Maciej Machulak
+   Newcastle University
+
+   Email: maciej.machulak@gmail.com
+
+
+   Phil Hunt
+   Oracle Corporation
+
+   Email: phil.hunt@yahoo.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Richer, et al.                 标准轨道                      [第 39 页]
+</pre>
+<script src="https://htmlspecs.com/dropdown.js"></script>
