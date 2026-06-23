@@ -305,7 +305,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Referrer Policy](https://htmlspecs.com/referrer-policy/)（[Source](https://www.w3.org/TR/2017/CR-referrer-policy-20170126/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
 - [Fetch Metadata Request Headers](https://htmlspecs.com/fetch-metadata/)（[Source](https://www.w3.org/TR/2025/WD-fetch-metadata-20250401/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Mixed Content](https://htmlspecs.com/mixed-content/)（[Source](https://www.w3.org/TR/2023/CRD-mixed-content-20230223/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
-- [Trusted Types](https://htmlspecs.com/trusted-types/)（[Source](https://www.w3.org/TR/2026/WD-trusted-types-20260224/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Trusted Types](https://htmlspecs.com/trusted-types/)（[Source](https://www.w3.org/TR/2026/WD-trusted-types-20260623/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Clear Site Data](https://htmlspecs.com/clear-site-data/)（[Source](https://www.w3.org/TR/2017/WD-clear-site-data-20171130/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [JSON Web Token (JWT)](https://htmlspecs.com/jwt/)（[Source](https://www.rfc-editor.org/rfc/rfc7519.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [JSON Web Signature (JWS)](https://htmlspecs.com/jws/)（[Source](https://www.rfc-editor.org/rfc/rfc7515.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
