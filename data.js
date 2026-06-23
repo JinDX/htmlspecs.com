@@ -43,6 +43,14 @@ const links = [
     //     lang: "cjk",
     //     state: "Draft"
     // },
+    // {
+    //     text: "WebAssembly Core Specification",
+    //     href: "https://htmlspecs.com/wasm-core-2",
+    //     src: "https://www.w3.org/TR/2026/CRD-wasm-core-2-20260527/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "CRD"
+    // },
     {
         text: "WebAssembly JavaScript Interface",
         href: "https://htmlspecs.com/wasm-js-api-2/",
@@ -433,6 +441,102 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
+    // {
+    //     text: "RDF 1.2 Concepts and Abstract Data Model",
+    //     href: "https://htmlspecs.com/rdf12-concepts/",
+    //     src: "https://www.w3.org/TR/2026/CR-rdf12-concepts-20260407/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "CR"
+    // },
+    // {
+    //     text: "RDF 1.2 Primer",
+    //     href: "https://htmlspecs.com/rdf12-primer/",
+    //     src: "https://www.w3.org/TR/2026/DNOTE-rdf12-primer-20260416/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "DNOTE"
+    // },
+    // {
+    //     text: "RDF 1.2 Schema",
+    //     href: "https://htmlspecs.com/rdf12-schema/",
+    //     src: "https://www.w3.org/TR/2026/WD-rdf12-schema-20260328/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
+    // {
+    //     text: "RDF 1.2 Turtle",
+    //     href: "https://htmlspecs.com/rdf12-turtle/",
+    //     src: "https://www.w3.org/TR/2026/WD-rdf12-turtle-20260612/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
+    // {
+    //     text: "RDF 1.2 N-Triples",
+    //     href: "https://htmlspecs.com/rdf12-n-triples/",
+    //     src: "https://www.w3.org/TR/2026/WD-rdf12-trig-20260612/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
+    // {
+    //     text: "RDF 1.2 TriG",
+    //     href: "https://htmlspecs.com/rdf12-trig/",
+    //     src: "https://www.w3.org/TR/2026/WD-rdf12-trig-20260612/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
+    // {
+    //     text: "SPARQL 1.2 Query Language",
+    //     href: "https://htmlspecs.com/sparql12-query/",
+    //     src: "https://www.w3.org/TR/2026/WD-sparql12-query-20260617/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
+    // {
+    //     text: "SPARQL 1.2 Protocol",
+    //     href: "https://htmlspecs.com/sparql12-protocol/",
+    //     src: "https://www.w3.org/TR/2026/WD-sparql12-protocol-20260426/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
+    // {
+    //     text: "SHACL 1.2 Core",
+    //     href: "https://htmlspecs.com/shacl12-core/",
+    //     src: "https://www.w3.org/TR/2026/WD-shacl12-core-20260622/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
+    // {
+    //     text: "Data Catalog Vocabulary (DCAT) - Version 3",
+    //     href: "https://htmlspecs.com/vocab-dcat-3/",
+    //     src: "https://www.w3.org/TR/2018/REC-odrl-model-20180215/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "REC"
+    // },
+    // {
+    //     text: "ODRL Information Model 2.2",
+    //     href: "https://htmlspecs.com/odrl-model/",
+    //     src: "https://www.w3.org/TR/2018/REC-odrl-model-20180215/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "REC"
+    // },
+    // {
+    //     text: "ODRL Vocabulary & Expression 2.2",
+    //     href: "https://htmlspecs.com/odrl-vocab/",
+    //     src: "https://www.w3.org/TR/2018/REC-odrl-vocab-20180215/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "REC"
+    // },
     {
         text: "GraphQL",
         href: "https://htmlspecs.com/graphql/",
@@ -1138,6 +1242,32 @@ const links = [
         state: "WD"
     },
 
+    //### Web of Things 与物联网|Web of Things 및 사물인터넷|Web of Things・IoT
+    // {
+    //     text: "Web of Things (WoT) Thing Description 2.0",
+    //     href: "https://htmlspecs.com/wot-thing-description/",
+    //     src: "https://www.w3.org/TR/2023/REC-wot-thing-description11-20231205/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
+    // {
+    //     text: "Web of Things (WoT) Use Cases and Requirements",
+    //     href: "https://htmlspecs.com/wot-usecases/",
+    //     src: "https://www.w3.org/TR/2026/NOTE-wot-usecases-20260205/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "DNOTE"
+    // },
+    // {
+    //     text: "Web of Things (WoT) Scripting API",
+    //     href: "https://htmlspecs.com/wot-scripting-api/",
+    //     src: "https://www.w3.org/TR/2023/NOTE-wot-scripting-api-20231003/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "NOTE"
+    // },
+
     //### 窗口、屏幕与系统集成|창, 화면 및 시스템 통합|ウィンドウ・画面・システム統合
     {
         text: "Screen Orientation",
@@ -1633,6 +1763,30 @@ const links = [
         lang: "cjk",
         state: "DNOTE"
     },
+    // {
+    //     text: "Media Source Extensions Byte Stream Format Registry",
+    //     href: "https://htmlspecs.com/mse-byte-stream-format-registry/",
+    //     src: "https://www.w3.org/TR/2026/DRY-mse-byte-stream-format-registry-20260604/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "DRY"
+    // },
+    // {
+    //     text: "ISO BMFF Byte Stream Format",
+    //     href: "https://htmlspecs.com/mse-byte-stream-format-isobmff/",
+    //     src: "https://www.w3.org/TR/2024/NOTE-mse-byte-stream-format-isobmff-20240723/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "NOTE"
+    // },
+    // {
+    //     text: "Media Fragments URI 1.0",
+    //     href: "https://htmlspecs.com/media-frags/",
+    //     src: "https://www.w3.org/TR/2012/REC-media-frags-20120925/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "REC"
+    // },
 
     //### 图形、图像、GPU 与 WebXR|그래픽, 이미지, GPU 및 WebXR|グラフィックス・画像・GPU・WebXR
     {
@@ -2343,6 +2497,62 @@ const links = [
         lang: "cjk",
         state: "RFC"
     },
+    // {
+    //     text: "OAuth 2.1 Authorization Framework",
+    //     href: "https://htmlspecs.com/oauth-v2-1/",
+    //     src: "https://www.ietf.org/archive/id/draft-ietf-oauth-v2-1-15.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
+    // {
+    //     text: "OAuth 2.0 for Browser-Based Applications",
+    //     href: "https://htmlspecs.com/oauth-browser-based-apps/",
+    //     src: "https://www.ietf.org/archive/id/draft-ietf-oauth-browser-based-apps-26.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
+    // {
+    //     text: "OpenID Connect Core 1.0",
+    //     href: "https://htmlspecs.com/openid-connect-core/",
+    //     src: "https://openid.net/specs/openid-connect-core-1_0.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Final"
+    // },
+    // {
+    //     text: "OAuth 2.0 Pushed Authorization Requests",
+    //     href: "https://htmlspecs.com/oauth-par/",
+    //     src: "https://datatracker.ietf.org/doc/html/rfc9126",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
+    // {
+    //     text: "OAuth 2.0 JWT-Secured Authorization Request (JAR)",
+    //     href: "https://htmlspecs.com/oauth-jar/",
+    //     src: "https://datatracker.ietf.org/doc/html/rfc9101",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
+    // {
+    //     text: "OAuth 2.0 Rich Authorization Requests",
+    //     href: "https://htmlspecs.com/oauth-rar/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc9396.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
+    // {
+    //     text: "OAuth 2.0 Token Exchange",
+    //     href: "https://htmlspecs.com/oauth-token-exchange/",
+    //     src: "https://datatracker.ietf.org/doc/html/rfc8693",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
     {
         text: "The OAuth 2.0 Authorization Framework: Bearer Token Usage",
         href: "https://htmlspecs.com/oauth2-bearer/",
@@ -2709,6 +2919,46 @@ const links = [
         lang: "cjk",
         state: "DISC"
     },
+    // {
+    //     text: "Authoring Tool Accessibility Guidelines (ATAG) 2.0",
+    //     href: "https://htmlspecs.com/atag20/",
+    //     src: "https://www.w3.org/TR/2015/REC-ATAG20-20150924/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "REC"
+    // },
+    // {
+    //     text: "User Agent Accessibility Guidelines (UAAG) 2.0",
+    //     href: "https://htmlspecs.com/uaag20/",
+    //     src: "https://www.w3.org/TR/2025/NOTE-maturity-model-20251104/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "NOTE"
+    // },
+    // {
+    //     text: "Accessibility Maturity Model",
+    //     href: "https://htmlspecs.com/maturity-model/",
+    //     src: "https://www.w3.org/TR/2025/NOTE-maturity-model-20251104/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "NOTE"
+    // },
+    // {
+    //     text: "XR Accessibility User Requirements",
+    //     href: "https://htmlspecs.com/xaur/",
+    //     src: "https://www.w3.org/TR/2015/NOTE-media-accessibility-reqs-20151203/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "NOTE"
+    // },
+    // {
+    //     text: "Media Accessibility User Requirements",
+    //     href: "https://htmlspecs.com/media-accessibility-reqs/",
+    //     src: "https://www.w3.org/TR/2015/NOTE-media-accessibility-reqs-20151203/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "NOTE"
+    // },
 
     //### 数字出版与电子书|디지털 출판 및 전자책|デジタル出版・電子書籍
     {
