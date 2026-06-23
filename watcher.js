@@ -100,9 +100,14 @@ const checkLinks = async (links, category) => {
           let etag = res.headers['etag'] || res.headers.etag;
           const lastModified = res.headers['last-modified'];
 
-          if (etag) {
-            etag = etag.replace(/"/g, '');
+          function getEtagSuffix(raw) {
+            if (!raw) return null;
+            const cleaned = raw.replace(/"/g, '');
+            const parts = cleaned.split('-');
+            return parts[parts.length - 1] || cleaned;
           }
+
+          const etagSuffix = getEtagSuffix(etag);
 
           const hasStoredEtag = Object.prototype.hasOwnProperty.call(link, 'etag');
           const storedLastIsZero = link['last-modified'] === '0';
@@ -112,10 +117,11 @@ const checkLinks = async (links, category) => {
             if (stored) {
               stored = stored.replace(/"/g, '');
             }
-            if (etag) {
-              if (stored !== etag) {
+            const storedSuffix = getEtagSuffix(stored);
+            if (etagSuffix) {
+              if (storedSuffix !== etagSuffix) {
                 const info =
-                  `- ${link.text} ETag changed:\n  - Old ETag: ${stored}\n  - New ETag: ${etag}\n  - Link: ${link.src}`;
+                  `- ${link.text} ETag changed:\n  - Old ETag suffix: ${storedSuffix}\n  - New ETag suffix: ${etagSuffix}\n  - Link: ${link.src}`;
                 logResult(info);
               }
             } else {
