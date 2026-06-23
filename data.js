@@ -476,7 +476,7 @@ const links = [
     // {
     //     text: "RDF 1.2 N-Triples",
     //     href: "https://htmlspecs.com/rdf12-n-triples/",
-    //     src: "https://www.w3.org/TR/2026/WD-rdf12-trig-20260612/",
+    //     src: "https://www.w3.org/TR/2026/WD-rdf12-n-triples-20260612/",
     //     "last-modified": "-",
     //     lang: "cjk",
     //     state: "WD"
@@ -516,7 +516,7 @@ const links = [
     // {
     //     text: "Data Catalog Vocabulary (DCAT) - Version 3",
     //     href: "https://htmlspecs.com/vocab-dcat-3/",
-    //     src: "https://www.w3.org/TR/2018/REC-odrl-model-20180215/",
+    //     src: "https://www.w3.org/TR/2024/REC-vocab-dcat-3-20240822/",
     //     "last-modified": "-",
     //     lang: "cjk",
     //     state: "REC"
