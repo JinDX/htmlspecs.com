@@ -2328,7 +2328,7 @@ const links = [
     {
         text: "Trusted Types",
         href: "https://htmlspecs.com/trusted-types/",
-        src: "https://www.w3.org/TR/2026/WD-trusted-types-20260224/",
+        src: "https://www.w3.org/TR/2026/WD-trusted-types-20260623/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
