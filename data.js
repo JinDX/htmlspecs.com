@@ -15,7 +15,7 @@ const links = [
         text: "ECMAScript® 2027 Language Specification",
         href: "https://ecma262.com/",
         src: "https://tc39.es/ecma262/",
-        "last-modified": "Fri, 19 Jun 2026 11:02:37 GMT",
+        "last-modified": "Tue, 23 Jun 2026 02:56:22 GMT",
         lang: "cjk",
         state: "Draft"
     },
@@ -4059,7 +4059,7 @@ const httpLinks = [
         href: "https://htmlspecs.com/http/no-vary-search.html",
         src: "https://httpwg.org/http-extensions/draft-ietf-httpbis-no-vary-search.html",
         "last-modified": "-",
-        etag: "6a39d95f-1b5d3",
+        etag: "6a39f02b-1b5d3",
         lang: "cjk",
         state: "Draft"
     },
@@ -4079,7 +4079,7 @@ const httpLinks = [
         href: "https://htmlspecs.com/http/draft-ietf-httpbis-rfc6265bis.html",
         src: "https://httpwg.org/http-extensions/draft-ietf-httpbis-rfc6265bis.html",
         "last-modified": "-",
-        etag: "6a39d95e-4498b",
+        etag: "6a39f02b-4498b",
         lang: "cjk",
         state: "Draft"
     },
