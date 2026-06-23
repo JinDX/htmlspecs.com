@@ -15,7 +15,7 @@ const links = [
         text: "ECMAScript® 2027 Language Specification",
         href: "https://ecma262.com/",
         src: "https://tc39.es/ecma262/",
-        "last-modified": "Fri, 19 Jun 2026 11:02:37 GMT",
+        "last-modified": "Tue, 23 Jun 2026 02:56:22 GMT",
         lang: "cjk",
         state: "Draft"
     },
@@ -1646,7 +1646,7 @@ const links = [
     {
         text: "WebGPU",
         href: "https://htmlspecs.com/webgpu/",
-        src: "https://www.w3.org/TR/2026/CRD-webgpu-20260615/",
+        src: "https://www.w3.org/TR/2026/CRD-webgpu-20260623/",
         "last-modified": "-",
         lang: "cjk",
         state: "CRD"
@@ -1654,7 +1654,7 @@ const links = [
     {
         text: "WebGPU Shading Language",
         href: "https://htmlspecs.com/WGSL/",
-        src: "https://www.w3.org/TR/2026/CRD-WGSL-20260619/",
+        src: "https://www.w3.org/TR/2026/CRD-WGSL-20260622/",
         "last-modified": "-",
         lang: "cjk",
         state: "CRD"
@@ -1817,7 +1817,7 @@ const links = [
         text: "Translator and Language Detector APIs",
         href: "https://htmlspecs.com/translation-api/",
         src: "https://webmachinelearning.github.io/translation-api/",
-        "last-modified": "Thu, 22 Jan 2026 15:56:28 GMT",
+        "last-modified": "Mon, 22 Jun 2026 23:39:31 GMT",
         lang: "cjk",
         state: "Draft"
     },
@@ -1825,7 +1825,7 @@ const links = [
         text: "Prompt API",
         href: "https://htmlspecs.com/prompt-api/",
         src: "https://webmachinelearning.github.io/prompt-api/",
-        "last-modified": "Tue, 16 Jun 2026 17:19:17 GMT",
+        "last-modified": "Mon, 22 Jun 2026 23:41:58 GMT",
         lang: "cjk",
         state: "Draft"
     },
@@ -1833,7 +1833,7 @@ const links = [
         text: "Writing Assistance APIs",
         href: "https://htmlspecs.com/writing-assistance-apis/",
         src: "https://webmachinelearning.github.io/writing-assistance-apis/",
-        "last-modified": "Fri, 17 Apr 2026 17:03:58 GMT",
+        "last-modified": "Mon, 22 Jun 2026 23:41:25 GMT",
         lang: "cjk",
         state: "Draft"
     },
@@ -1841,7 +1841,7 @@ const links = [
         text: "Proofreader API",
         href: "https://htmlspecs.com/proofreader-api/",
         src: "https://webmachinelearning.github.io/proofreader-api/",
-        "last-modified": "Thu, 05 Mar 2026 20:55:32 GMT",
+        "last-modified": "Mon, 22 Jun 2026 23:40:49 GMT",
         lang: "cjk",
         state: "Draft"
     },
@@ -2526,7 +2526,7 @@ const links = [
     {
         text: "Payment Request API",
         href: "https://htmlspecs.com/payment-request/",
-        src: "https://www.w3.org/TR/2026/CRD-payment-request-20260327/",
+        src: "https://www.w3.org/TR/2026/CRD-payment-request-20260622/",
         "last-modified": "-",
         lang: "cjk",
         state: "CRD"
@@ -4059,7 +4059,7 @@ const httpLinks = [
         href: "https://htmlspecs.com/http/no-vary-search.html",
         src: "https://httpwg.org/http-extensions/draft-ietf-httpbis-no-vary-search.html",
         "last-modified": "-",
-        etag: "6a375264-1b5d3",
+        etag: "6a39f02b-1b5d3",
         lang: "cjk",
         state: "Draft"
     },
@@ -4079,7 +4079,7 @@ const httpLinks = [
         href: "https://htmlspecs.com/http/draft-ietf-httpbis-rfc6265bis.html",
         src: "https://httpwg.org/http-extensions/draft-ietf-httpbis-rfc6265bis.html",
         "last-modified": "-",
-        etag: "6a375264-4498b",
+        etag: "6a39f02b-4498b",
         lang: "cjk",
         state: "Draft"
     },
