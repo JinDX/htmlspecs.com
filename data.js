@@ -1841,7 +1841,7 @@ const links = [
         text: "Proofreader API",
         href: "https://htmlspecs.com/proofreader-api/",
         src: "https://webmachinelearning.github.io/proofreader-api/",
-        "last-modified": "Thu, 05 Mar 2026 20:55:32 GMT",
+        "last-modified": "Mon, 22 Jun 2026 23:40:49 GMT",
         lang: "cjk",
         state: "Draft"
     },
