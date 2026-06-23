@@ -1833,7 +1833,7 @@ const links = [
         text: "Writing Assistance APIs",
         href: "https://htmlspecs.com/writing-assistance-apis/",
         src: "https://webmachinelearning.github.io/writing-assistance-apis/",
-        "last-modified": "Fri, 17 Apr 2026 17:03:58 GMT",
+        "last-modified": "Mon, 22 Jun 2026 23:41:25 GMT",
         lang: "cjk",
         state: "Draft"
     },
