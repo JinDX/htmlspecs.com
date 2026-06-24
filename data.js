@@ -1050,7 +1050,7 @@ const links = [
     {
         text: "Clipboard API and events",
         href: "https://htmlspecs.com/clipboard-apis/",
-        src: "https://www.w3.org/TR/2025/WD-clipboard-apis-20251124/",
+        src: "https://www.w3.org/TR/2026/WD-clipboard-apis-20260624/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
