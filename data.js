@@ -465,14 +465,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "RDF 1.2 Turtle",
-    //     href: "https://htmlspecs.com/rdf12-turtle/",
-    //     src: "https://www.w3.org/TR/2026/WD-rdf12-turtle-20260612/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "RDF 1.2 Turtle",
+        href: "https://htmlspecs.com/rdf12-turtle/",
+        src: "https://www.w3.org/TR/2026/WD-rdf12-turtle-20260612/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     // {
     //     text: "RDF 1.2 N-Triples",
     //     href: "https://htmlspecs.com/rdf12-n-triples/",
