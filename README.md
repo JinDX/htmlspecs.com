@@ -215,7 +215,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [IMSC Text Profile 1.3](https://htmlspecs.com/ttml-imsc1.3/)（[Source](https://www.w3.org/TR/2026/REC-ttml-imsc1.3-20260521/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Dubbing and Audio description Profiles of TTML2](https://htmlspecs.com/dapt/)（[Source](https://www.w3.org/TR/2026/CRD-dapt-20260210/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [Media Source Extensions](https://htmlspecs.com/media-source-2/)（[Source](https://www.w3.org/TR/2025/WD-media-source-2-20251104/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
-- [WebCodecs](https://htmlspecs.com/webcodecs/)（[Source](https://www.w3.org/TR/2026/WD-webcodecs-20260608/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [WebCodecs](https://htmlspecs.com/webcodecs/)（[Source](https://www.w3.org/TR/2026/WD-webcodecs-20260623/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [WebCodecs Codec Registry](https://htmlspecs.com/webcodecs-codec-registry/)（[Source](https://www.w3.org/TR/2026/DRY-webcodecs-codec-registry-20260212/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [AAC WebCodecs Registration](https://htmlspecs.com/webcodecs-aac-codec-registration/)（[Source](https://www.w3.org/TR/2026/DNOTE-webcodecs-aac-codec-registration-20260319/) ![Note Draft](https://img.shields.io/badge/DNOTE-ffcc00)）
 - [A-law PCM WebCodecs Registration.](https://htmlspecs.com/webcodecs-alaw-codec-registration/)（[Source](https://www.w3.org/TR/2026/DNOTE-webcodecs-alaw-codec-registration-20260608/) ![Note Draft](https://img.shields.io/badge/DNOTE-ffcc00)）
