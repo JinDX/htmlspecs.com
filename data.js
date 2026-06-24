@@ -457,14 +457,14 @@ const links = [
         lang: "cjk",
         state: "DNOTE"
     },
-    // {
-    //     text: "RDF 1.2 Schema",
-    //     href: "https://htmlspecs.com/rdf12-schema/",
-    //     src: "https://www.w3.org/TR/2026/WD-rdf12-schema-20260328/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "RDF 1.2 Schema",
+        href: "https://htmlspecs.com/rdf12-schema/",
+        src: "https://www.w3.org/TR/2026/WD-rdf12-schema-20260328/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     // {
     //     text: "RDF 1.2 Turtle",
     //     href: "https://htmlspecs.com/rdf12-turtle/",
