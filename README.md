@@ -63,6 +63,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [RDF 1.2 Primer](https://htmlspecs.com/rdf12-primer/)（[Source](https://www.w3.org/TR/2026/DNOTE-rdf12-primer-20260416/) ![Note Draft](https://img.shields.io/badge/DNOTE-ffcc00)）
 - [RDF 1.2 Schema](https://htmlspecs.com/rdf12-schema/)（[Source](https://www.w3.org/TR/2026/WD-rdf12-schema-20260328/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [RDF 1.2 Turtle](https://htmlspecs.com/rdf12-turtle/)（[Source](https://www.w3.org/TR/2026/WD-rdf12-turtle-20260612/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [RDF 1.2 N-Triples](https://htmlspecs.com/rdf12-n-triples/)（[Source](https://www.w3.org/TR/2026/WD-rdf12-n-triples-20260624/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [GraphQL](https://htmlspecs.com/graphql/)（[Source](https://spec.graphql.org/draft/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [OpenAPI Specification v3.2.0](https://htmlspecs.com/openapi/)（[Source](https://spec.openapis.org/oas/latest.html) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [URI Template](https://htmlspecs.com/uri-template/)（[Source](https://www.rfc-editor.org/rfc/rfc6570.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
