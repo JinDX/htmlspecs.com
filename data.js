@@ -473,14 +473,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "RDF 1.2 N-Triples",
-    //     href: "https://htmlspecs.com/rdf12-n-triples/",
-    //     src: "https://www.w3.org/TR/2026/WD-rdf12-n-triples-20260612/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "RDF 1.2 N-Triples",
+        href: "https://htmlspecs.com/rdf12-n-triples/",
+        src: "https://www.w3.org/TR/2026/WD-rdf12-n-triples-20260624/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     // {
     //     text: "RDF 1.2 TriG",
     //     href: "https://htmlspecs.com/rdf12-trig/",
