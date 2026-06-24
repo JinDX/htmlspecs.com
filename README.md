@@ -60,6 +60,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Web Annotation Data Model](https://htmlspecs.com/annotation-model/)（[Source](https://www.w3.org/TR/2017/REC-annotation-model-20170223/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Data on the Web Best Practices](https://htmlspecs.com/dwbp/)（[Source](https://www.w3.org/TR/2017/REC-dwbp-20170131/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [RDF 1.2 Concepts and Abstract Data Model](https://htmlspecs.com/rdf12-concepts/)（[Source](https://www.w3.org/TR/2026/CR-rdf12-concepts-20260407/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
+- [RDF 1.2 Primer](https://htmlspecs.com/rdf12-primer/)（[Source](https://www.w3.org/TR/2026/DNOTE-rdf12-primer-20260416/) ![Note Draft](https://img.shields.io/badge/DNOTE-ffcc00)）
 - [GraphQL](https://htmlspecs.com/graphql/)（[Source](https://spec.graphql.org/draft/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [OpenAPI Specification v3.2.0](https://htmlspecs.com/openapi/)（[Source](https://spec.openapis.org/oas/latest.html) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [URI Template](https://htmlspecs.com/uri-template/)（[Source](https://www.rfc-editor.org/rfc/rfc6570.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）

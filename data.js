@@ -449,14 +449,14 @@ const links = [
         lang: "cjk",
         state: "CR"
     },
-    // {
-    //     text: "RDF 1.2 Primer",
-    //     href: "https://htmlspecs.com/rdf12-primer/",
-    //     src: "https://www.w3.org/TR/2026/DNOTE-rdf12-primer-20260416/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "DNOTE"
-    // },
+    {
+        text: "RDF 1.2 Primer",
+        href: "https://htmlspecs.com/rdf12-primer/",
+        src: "https://www.w3.org/TR/2026/DNOTE-rdf12-primer-20260416/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "DNOTE"
+    },
     // {
     //     text: "RDF 1.2 Schema",
     //     href: "https://htmlspecs.com/rdf12-schema/",
