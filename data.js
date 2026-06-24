@@ -441,14 +441,14 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
-    // {
-    //     text: "RDF 1.2 Concepts and Abstract Data Model",
-    //     href: "https://htmlspecs.com/rdf12-concepts/",
-    //     src: "https://www.w3.org/TR/2026/CR-rdf12-concepts-20260407/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "CR"
-    // },
+    {
+        text: "RDF 1.2 Concepts and Abstract Data Model",
+        href: "https://htmlspecs.com/rdf12-concepts/",
+        src: "https://www.w3.org/TR/2026/CR-rdf12-concepts-20260407/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "CR"
+    },
     // {
     //     text: "RDF 1.2 Primer",
     //     href: "https://htmlspecs.com/rdf12-primer/",
