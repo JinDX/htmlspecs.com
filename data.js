@@ -489,14 +489,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "SPARQL 1.2 Query Language",
-    //     href: "https://htmlspecs.com/sparql12-query/",
-    //     src: "https://www.w3.org/TR/2026/WD-sparql12-query-20260617/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "SPARQL 1.2 Query Language",
+        href: "https://htmlspecs.com/sparql12-query/",
+        src: "https://www.w3.org/TR/2026/WD-sparql12-query-20260624/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     // {
     //     text: "SPARQL 1.2 Protocol",
     //     href: "https://htmlspecs.com/sparql12-protocol/",
