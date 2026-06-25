@@ -481,14 +481,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "RDF 1.2 TriG",
-    //     href: "https://htmlspecs.com/rdf12-trig/",
-    //     src: "https://www.w3.org/TR/2026/WD-rdf12-trig-20260612/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "RDF 1.2 TriG",
+        href: "https://htmlspecs.com/rdf12-trig/",
+        src: "https://www.w3.org/TR/2026/WD-rdf12-trig-20260612/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     // {
     //     text: "SPARQL 1.2 Query Language",
     //     href: "https://htmlspecs.com/sparql12-query/",
