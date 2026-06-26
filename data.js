@@ -513,14 +513,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "Data Catalog Vocabulary (DCAT) - Version 3",
-    //     href: "https://htmlspecs.com/vocab-dcat-3/",
-    //     src: "https://www.w3.org/TR/2024/REC-vocab-dcat-3-20240822/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "REC"
-    // },
+    {
+        text: "Data Catalog Vocabulary (DCAT) - Version 3",
+        href: "https://htmlspecs.com/vocab-dcat-3/",
+        src: "https://www.w3.org/TR/2024/REC-vocab-dcat-3-20240822/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "REC"
+    },
     // {
     //     text: "ODRL Information Model 2.2",
     //     href: "https://htmlspecs.com/odrl-model/",
