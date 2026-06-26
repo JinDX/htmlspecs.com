@@ -529,14 +529,14 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
-    // {
-    //     text: "ODRL Vocabulary & Expression 2.2",
-    //     href: "https://htmlspecs.com/odrl-vocab/",
-    //     src: "https://www.w3.org/TR/2018/REC-odrl-vocab-20180215/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "REC"
-    // },
+    {
+        text: "ODRL Vocabulary & Expression 2.2",
+        href: "https://htmlspecs.com/odrl-vocab/",
+        src: "https://www.w3.org/TR/2018/REC-odrl-vocab-20180215/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "REC"
+    },
     {
         text: "GraphQL",
         href: "https://htmlspecs.com/graphql/",
