@@ -193,7 +193,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 ### 音视频采集、WebRTC 与播放
 - [WebRTC](https://htmlspecs.com/webrtc/)（[Source](https://www.w3.org/TR/2025/REC-webrtc-20250313/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Identifiers for WebRTC&#39;s Statistics API](https://htmlspecs.com/webrtc-stats/)（[Source](https://www.w3.org/TR/2025/CRD-webrtc-stats-20250925/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
-- [WebRTC Encoded Transform](https://htmlspecs.com/webrtc-encoded-transform/)（[Source](https://www.w3.org/TR/2026/WD-webrtc-encoded-transform-20260611/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [WebRTC Encoded Transform](https://htmlspecs.com/webrtc-encoded-transform/)（[Source](https://www.w3.org/TR/2026/WD-webrtc-encoded-transform-20260625/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Scalable Video Coding (SVC) Extension for WebRTC](https://htmlspecs.com/webrtc-svc/)（[Source](https://www.w3.org/TR/2024/WD-webrtc-svc-20240817/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Screen Capture](https://htmlspecs.com/screen-capture/)（[Source](https://www.w3.org/TR/2025/WD-screen-capture-20250717/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Viewport Capture](https://htmlspecs.com/mediacapture-viewport/)（[Source](https://www.w3.org/TR/2024/WD-mediacapture-viewport-20241009/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
