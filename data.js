@@ -1243,14 +1243,14 @@ const links = [
     },
 
     //### Web of Things 与物联网|Web of Things 및 사물인터넷|Web of Things・IoT
-    // {
-    //     text: "Web of Things (WoT) Thing Description 2.0",
-    //     href: "https://htmlspecs.com/wot-thing-description/",
-    //     src: "https://www.w3.org/TR/2023/REC-wot-thing-description11-20231205/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "Web of Things (WoT) Thing Description 2.0",
+        href: "https://htmlspecs.com/wot-thing-description-2.0/",
+        src: "https://www.w3.org/TR/2025/WD-wot-thing-description-2.0-20251104/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     // {
     //     text: "Web of Things (WoT) Use Cases and Requirements",
     //     href: "https://htmlspecs.com/wot-usecases/",
