@@ -70,6 +70,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [SHACL 1.2 Core](https://htmlspecs.com/shacl12-core/)（[Source](https://www.w3.org/TR/2026/WD-shacl12-core-20260622/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Data Catalog Vocabulary (DCAT) - Version 3](https://htmlspecs.com/vocab-dcat-3/)（[Source](https://www.w3.org/TR/2024/REC-vocab-dcat-3-20240822/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [ODRL Information Model 2.2](https://htmlspecs.com/odrl-model/)（[Source](https://www.w3.org/TR/2018/REC-odrl-model-20180215/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
+- [ODRL Vocabulary & Expression 2.2](https://htmlspecs.com/odrl-vocab/)（[Source](https://www.w3.org/TR/2018/REC-odrl-vocab-20180215/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [GraphQL](https://htmlspecs.com/graphql/)（[Source](https://spec.graphql.org/draft/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [OpenAPI Specification v3.2.0](https://htmlspecs.com/openapi/)（[Source](https://spec.openapis.org/oas/latest.html) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [URI Template](https://htmlspecs.com/uri-template/)（[Source](https://www.rfc-editor.org/rfc/rfc6570.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
