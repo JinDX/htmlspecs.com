@@ -497,14 +497,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "SPARQL 1.2 Protocol",
-    //     href: "https://htmlspecs.com/sparql12-protocol/",
-    //     src: "https://www.w3.org/TR/2026/WD-sparql12-protocol-20260426/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "SPARQL 1.2 Protocol",
+        href: "https://htmlspecs.com/sparql12-protocol/",
+        src: "https://www.w3.org/TR/2026/WD-sparql12-protocol-20260426/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     // {
     //     text: "SHACL 1.2 Core",
     //     href: "https://htmlspecs.com/shacl12-core/",
