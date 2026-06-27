@@ -2490,14 +2490,6 @@ const links = [
     //     state: "Draft"
     // },
     // {
-    //     text: "OpenID Connect Core 1.0",
-    //     href: "https://htmlspecs.com/openid-connect-core/",
-    //     src: "https://openid.net/specs/openid-connect-core-1_0.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Final"
-    // },
-    // {
     //     text: "OAuth 2.0 Pushed Authorization Requests",
     //     href: "https://htmlspecs.com/oauth-par/",
     //     src: "https://datatracker.ietf.org/doc/html/rfc9126",
