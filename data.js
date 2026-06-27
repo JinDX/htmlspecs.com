@@ -1251,14 +1251,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "Web of Things (WoT) Use Cases and Requirements",
-    //     href: "https://htmlspecs.com/wot-usecases/",
-    //     src: "https://www.w3.org/TR/2026/NOTE-wot-usecases-20260205/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "DNOTE"
-    // },
+    {
+        text: "Web of Things (WoT) Use Cases and Requirements",
+        href: "https://htmlspecs.com/wot-usecases/",
+        src: "https://www.w3.org/TR/2026/NOTE-wot-usecases-20260205/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "NOTE"
+    },
     // {
     //     text: "Web of Things (WoT) Scripting API",
     //     href: "https://htmlspecs.com/wot-scripting-api/",

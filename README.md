@@ -176,6 +176,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 
 ### Web of Things 与物联网
 - [Web of Things (WoT) Thing Description 2.0](https://htmlspecs.com/wot-thing-description-2.0/)（[Source](https://www.w3.org/TR/2025/WD-wot-thing-description-2.0-20251104/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Web of Things (WoT) Use Cases and Requirements](https://htmlspecs.com/wot-usecases/)（[Source](https://www.w3.org/TR/2026/NOTE-wot-usecases-20260205/) ![Note](https://img.shields.io/badge/NOTE-309c40)）
 
 ### 窗口、屏幕与系统集成
 - [Screen Orientation](https://htmlspecs.com/screen-orientation/)（[Source](https://www.w3.org/TR/2025/WD-screen-orientation-20251021/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
