@@ -1630,7 +1630,7 @@ const links = [
     {
         text: "Dubbing and Audio description Profiles of TTML2",
         href: "https://htmlspecs.com/dapt/",
-        src: "https://www.w3.org/TR/2026/CRD-dapt-20260210/",
+        src: "https://www.w3.org/TR/2026/CRD-dapt-20260626/",
         "last-modified": "-",
         lang: "cjk",
         state: "CRD"
