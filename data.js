@@ -1954,7 +1954,7 @@ const links = [
     {
         text: "Web Neural Network API",
         href: "https://htmlspecs.com/webnn/",
-        src: "https://www.w3.org/TR/2026/CRD-webnn-20260521/",
+        src: "https://www.w3.org/TR/2026/CRD-webnn-20260626/",
         "last-modified": "-",
         lang: "cjk",
         state: "CRD"
