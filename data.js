@@ -1808,7 +1808,7 @@ const links = [
     {
         text: "WebGPU Shading Language",
         href: "https://htmlspecs.com/WGSL/",
-        src: "https://www.w3.org/TR/2026/CRD-WGSL-20260623/",
+        src: "https://www.w3.org/TR/2026/CRD-WGSL-20260626/",
         "last-modified": "-",
         lang: "cjk",
         state: "CRD"
