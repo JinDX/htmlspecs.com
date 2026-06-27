@@ -2474,22 +2474,6 @@ const links = [
         state: "RFC"
     },
     // {
-    //     text: "OAuth 2.1 Authorization Framework",
-    //     href: "https://htmlspecs.com/oauth-v2-1/",
-    //     src: "https://www.ietf.org/archive/id/draft-ietf-oauth-v2-1-15.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
-    // {
-    //     text: "OAuth 2.0 for Browser-Based Applications",
-    //     href: "https://htmlspecs.com/oauth-browser-based-apps/",
-    //     src: "https://www.ietf.org/archive/id/draft-ietf-oauth-browser-based-apps-26.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
-    // {
     //     text: "OAuth 2.0 Pushed Authorization Requests",
     //     href: "https://htmlspecs.com/rfc9126/",
     //     src: "https://www.rfc-editor.org/rfc/rfc9126.html",
