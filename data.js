@@ -2458,7 +2458,7 @@ const links = [
     {
         text: "Digital Credentials",
         href: "https://htmlspecs.com/digital-credentials/",
-        src: "https://www.w3.org/TR/2026/WD-digital-credentials-20260616/",
+        src: "https://www.w3.org/TR/2026/WD-digital-credentials-20260626/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
