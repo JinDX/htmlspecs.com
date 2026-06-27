@@ -1259,14 +1259,14 @@ const links = [
         lang: "cjk",
         state: "NOTE"
     },
-    // {
-    //     text: "Web of Things (WoT) Scripting API",
-    //     href: "https://htmlspecs.com/wot-scripting-api/",
-    //     src: "https://www.w3.org/TR/2023/NOTE-wot-scripting-api-20231003/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "NOTE"
-    // },
+    {
+        text: "Web of Things (WoT) Scripting API",
+        href: "https://htmlspecs.com/wot-scripting-api/",
+        src: "https://www.w3.org/TR/2023/NOTE-wot-scripting-api-20231003/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "NOTE"
+    },
 
     //### 窗口、屏幕与系统集成|창, 화면 및 시스템 통합|ウィンドウ・画面・システム統合
     {
