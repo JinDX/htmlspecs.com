@@ -2491,23 +2491,23 @@ const links = [
     // },
     // {
     //     text: "OAuth 2.0 Pushed Authorization Requests",
-    //     href: "https://htmlspecs.com/oauth-par/",
-    //     src: "https://datatracker.ietf.org/doc/html/rfc9126",
+    //     href: "https://htmlspecs.com/rfc9126/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc9126.html",
     //     "last-modified": "-",
     //     lang: "cjk",
     //     state: "RFC"
     // },
     // {
     //     text: "OAuth 2.0 JWT-Secured Authorization Request (JAR)",
-    //     href: "https://htmlspecs.com/oauth-jar/",
-    //     src: "https://datatracker.ietf.org/doc/html/rfc9101",
+    //     href: "https://htmlspecs.com/rfc9101/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc9101.html",
     //     "last-modified": "-",
     //     lang: "cjk",
     //     state: "RFC"
     // },
     // {
     //     text: "OAuth 2.0 Rich Authorization Requests",
-    //     href: "https://htmlspecs.com/oauth-rar/",
+    //     href: "https://htmlspecs.com/rfc9396/",
     //     src: "https://www.rfc-editor.org/rfc/rfc9396.html",
     //     "last-modified": "-",
     //     lang: "cjk",
@@ -2515,8 +2515,8 @@ const links = [
     // },
     // {
     //     text: "OAuth 2.0 Token Exchange",
-    //     href: "https://htmlspecs.com/oauth-token-exchange/",
-    //     src: "https://datatracker.ietf.org/doc/html/rfc8693",
+    //     href: "https://htmlspecs.com/rfc8693/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc8693.html",
     //     "last-modified": "-",
     //     lang: "cjk",
     //     state: "RFC"
