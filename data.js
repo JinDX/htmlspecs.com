@@ -1763,30 +1763,6 @@ const links = [
         lang: "cjk",
         state: "DNOTE"
     },
-    // {
-    //     text: "Media Source Extensions Byte Stream Format Registry",
-    //     href: "https://htmlspecs.com/mse-byte-stream-format-registry/",
-    //     src: "https://www.w3.org/TR/2026/DRY-mse-byte-stream-format-registry-20260604/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "DRY"
-    // },
-    // {
-    //     text: "ISO BMFF Byte Stream Format",
-    //     href: "https://htmlspecs.com/mse-byte-stream-format-isobmff/",
-    //     src: "https://www.w3.org/TR/2024/NOTE-mse-byte-stream-format-isobmff-20240723/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "NOTE"
-    // },
-    // {
-    //     text: "Media Fragments URI 1.0",
-    //     href: "https://htmlspecs.com/media-frags/",
-    //     src: "https://www.w3.org/TR/2012/REC-media-frags-20120925/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "REC"
-    // },
 
     //### 图形、图像、GPU 与 WebXR|그래픽, 이미지, GPU 및 WebXR|グラフィックス・画像・GPU・WebXR
     {
@@ -2245,14 +2221,6 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
-    // {
-    //     text: "Device Bound Session Credentials",
-    //     href: "https://htmlspecs.com/dbsc/",
-    //     src: "https://www.w3.org/TR/2025/WD-dbsc-1-20250821/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
     {
         text: "Subresource Integrity (SRI)",
         href: "https://htmlspecs.com/sri/",
@@ -2927,46 +2895,6 @@ const links = [
         lang: "cjk",
         state: "DISC"
     },
-    // {
-    //     text: "Authoring Tool Accessibility Guidelines (ATAG) 2.0",
-    //     href: "https://htmlspecs.com/atag20/",
-    //     src: "https://www.w3.org/TR/2015/REC-ATAG20-20150924/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "REC"
-    // },
-    // {
-    //     text: "User Agent Accessibility Guidelines (UAAG) 2.0",
-    //     href: "https://htmlspecs.com/uaag20/",
-    //     src: "https://www.w3.org/TR/2025/NOTE-maturity-model-20251104/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "NOTE"
-    // },
-    // {
-    //     text: "Accessibility Maturity Model",
-    //     href: "https://htmlspecs.com/maturity-model/",
-    //     src: "https://www.w3.org/TR/2025/NOTE-maturity-model-20251104/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "NOTE"
-    // },
-    // {
-    //     text: "XR Accessibility User Requirements",
-    //     href: "https://htmlspecs.com/xaur/",
-    //     src: "https://www.w3.org/TR/2015/NOTE-media-accessibility-reqs-20151203/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "NOTE"
-    // },
-    // {
-    //     text: "Media Accessibility User Requirements",
-    //     href: "https://htmlspecs.com/media-accessibility-reqs/",
-    //     src: "https://www.w3.org/TR/2015/NOTE-media-accessibility-reqs-20151203/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "NOTE"
-    // },
 
     //### 数字出版与电子书|디지털 출판 및 전자책|デジタル出版・電子書籍
     {
