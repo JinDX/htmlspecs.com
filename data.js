@@ -1821,14 +1821,6 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "Media Source Extensions Byte Stream Format Registry",
-    //     href: "https://htmlspecs.com/mse-byte-stream-format-registry/",
-    //     src: "https://www.w3.org/TR/mse-byte-stream-format-registry/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
     {
         text: "WebCodecs",
         href: "https://htmlspecs.com/webcodecs/",
@@ -2673,86 +2665,6 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "Verifiable Credential Data Integrity 1.0",
-    //     href: "https://htmlspecs.com/vc-data-integrity/",
-    //     src: "https://www.w3.org/TR/vc-data-integrity/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "REC"
-    // },
-    // {
-    //     text: "Verifiable Credential Data Integrity 1.1",
-    //     href: "https://htmlspecs.com/vc-data-integrity-1.1/",
-    //     src: "https://www.w3.org/TR/vc-data-integrity-1.1/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
-    // {
-    //     text: "Data Integrity EdDSA Cryptosuites v1.0",
-    //     href: "https://htmlspecs.com/vc-di-eddsa/",
-    //     src: "https://www.w3.org/TR/vc-di-eddsa/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "REC"
-    // },
-    // {
-    //     text: "Data Integrity ECDSA Cryptosuites v1.0",
-    //     href: "https://htmlspecs.com/vc-di-ecdsa/",
-    //     src: "https://www.w3.org/TR/vc-di-ecdsa/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "REC"
-    // },
-    // {
-    //     text: "Data Integrity BBS Cryptosuites v1.0",
-    //     href: "https://htmlspecs.com/vc-di-bbs/",
-    //     src: "https://www.w3.org/TR/vc-di-bbs/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "CR"
-    // },
-    // {
-    //     text: "Bitstring Status List v1.0",
-    //     href: "https://htmlspecs.com/vc-bitstring-status-list/",
-    //     src: "https://www.w3.org/TR/vc-bitstring-status-list/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "REC"
-    // },
-    // {
-    //     text: "Decentralized Identifier Resolution (DID Resolution) v0.3",
-    //     href: "https://htmlspecs.com/did-resolution/",
-    //     src: "https://www.w3.org/TR/did-resolution/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
-    // {
-    //     text: "Decentralized Identifier Extensions",
-    //     href: "https://htmlspecs.com/did-extensions/",
-    //     src: "https://www.w3.org/TR/did-extensions/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "NOTE"
-    // },
-    // {
-    //     text: "Threat Model for Decentralized Credentials",
-    //     href: "https://htmlspecs.com/threat-model-decentralized-credentials/",
-    //     src: "https://www.w3.org/TR/threat-model-decentralized-credentials/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "NOTE"
-    // },
-    // {
-    //     text: "Verifiable Credential Barcodes v1.0",
-    //     href: "https://htmlspecs.com/vc-barcodes/",
-    //     src: "https://www.w3.org/TR/vc-barcodes/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
 
     //### OAuth 与授权协议|OAuth 및 인가 프로토콜|OAuth・認可プロトコル
     {
