@@ -577,62 +577,6 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "SPARQL 1.2 Update",
-    //     href: "https://htmlspecs.com/sparql12-update/",
-    //     src: "https://www.w3.org/TR/sparql12-update/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
-    // {
-    //     text: "SPARQL 1.2 Service Description",
-    //     href: "https://htmlspecs.com/sparql12-service-description/",
-    //     src: "https://www.w3.org/TR/sparql12-service-description/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
-    // {
-    //     text: "SPARQL 1.2 Query Results CSV and TSV Formats",
-    //     href: "https://htmlspecs.com/sparql12-results-csv-tsv/",
-    //     src: "https://www.w3.org/TR/sparql12-results-csv-tsv/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
-    // {
-    //     text: "SHACL 1.2 Rules",
-    //     href: "https://htmlspecs.com/shacl12-rules/",
-    //     src: "https://www.w3.org/TR/shacl12-rules/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
-    // {
-    //     text: "SHACL 1.2 User Interfaces",
-    //     href: "https://htmlspecs.com/shacl12-ui/",
-    //     src: "https://www.w3.org/TR/shacl12-ui/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
-    // {
-    //     text: "SHACL 1.2 SPARQL Extensions",
-    //     href: "https://htmlspecs.com/shacl12-sparql/",
-    //     src: "https://www.w3.org/TR/shacl12-sparql/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
-    // {
-    //     text: "SHACL 1.2 Node Expressions",
-    //     href: "https://htmlspecs.com/shacl12-node-expr/",
-    //     src: "https://www.w3.org/TR/shacl12-node-expr/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
     {
         text: "Data Catalog Vocabulary (DCAT) - Version 3",
         href: "https://htmlspecs.com/vocab-dcat-3/",
