@@ -441,14 +441,14 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
-    // {
-    //     text: "Linked Web Storage Protocol 1.0",
-    //     href: "https://htmlspecs.com/lws10-core/",
-    //     src: "https://www.w3.org/TR/lws10-core/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "Linked Web Storage Protocol 1.0",
+        href: "https://htmlspecs.com/lws10-core/",
+        src: "https://www.w3.org/TR/2026/WD-lws10-core-20260622/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     // {
     //     text: "LWS 1.0 Authentication Suite: OpenID Connect",
     //     href: "https://htmlspecs.com/lws10-authn-openid/",
