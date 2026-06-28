@@ -2473,14 +2473,14 @@ const links = [
         lang: "cjk",
         state: "RFC"
     },
-    // {
-    //     text: "OAuth 2.0 Pushed Authorization Requests",
-    //     href: "https://htmlspecs.com/rfc9126/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc9126.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
+    {
+        text: "OAuth 2.0 Pushed Authorization Requests",
+        href: "https://htmlspecs.com/rfc9126/",
+        src: "https://www.rfc-editor.org/rfc/rfc9126.html",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "RFC"
+    },
     // {
     //     text: "OAuth 2.0 JWT-Secured Authorization Request (JAR)",
     //     href: "https://htmlspecs.com/rfc9101/",
