@@ -754,22 +754,6 @@ const links = [
     //     state: "WD"
     // },
     // {
-    //     text: "MiniApp Addressing",
-    //     href: "https://htmlspecs.com/miniapp-addressing/",
-    //     src: "https://www.w3.org/TR/miniapp-addressing/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "DNOTE"
-    // },
-    // {
-    //     text: "MiniApp Widget Requirements",
-    //     href: "https://htmlspecs.com/miniapp-widget-req/",
-    //     src: "https://www.w3.org/TR/miniapp-widget-req/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "NOTE"
-    // },
-    // {
     //     text: "MiniApp Standardization White Paper version 2",
     //     href: "https://htmlspecs.com/mini-app-white-paper/",
     //     src: "https://www.w3.org/TR/mini-app-white-paper/",
