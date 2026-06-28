@@ -101,6 +101,9 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Get Installed Related Apps API](https://htmlspecs.com/get-installed-related-apps/)（[Source](https://wicg.github.io/get-installed-related-apps/spec/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Service Workers Nightly](https://htmlspecs.com/service-workers/)（[Source](https://www.w3.org/TR/2026/CRD-service-workers-20260622/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 
+### MiniApp、小程序与跨端应用
+- [MiniApp Manifest](https://htmlspecs.com/miniapp-manifest/)（[Source](https://www.w3.org/TR/2025/WD-miniapp-manifest-20250128/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+
 ### 网络、传输与实时通信
 - [Fetch](https://htmlspecs.com/fetch/)（[Source](https://fetch.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [Streams](https://htmlspecs.com/streams/)（[Source](https://streams.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）

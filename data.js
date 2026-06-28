@@ -729,14 +729,14 @@ const links = [
     },
 
     //### MiniApp、小程序与跨端应用|MiniApp, 소형 앱 및 크로스 플랫폼 앱|MiniApp・ミニアプリ・クロスプラットフォームアプリ
-    // {
-    //     text: "MiniApp Manifest",
-    //     href: "https://htmlspecs.com/miniapp-manifest/",
-    //     src: "https://www.w3.org/TR/miniapp-manifest/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "MiniApp Manifest",
+        href: "https://htmlspecs.com/miniapp-manifest/",
+        src: "https://www.w3.org/TR/2025/WD-miniapp-manifest-20250128/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     // {
     //     text: "MiniApp Packaging",
     //     href: "https://htmlspecs.com/miniapp-packaging/",
