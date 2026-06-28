@@ -465,14 +465,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "LWS 1.0 Authentication Suite: Self-signed Identity using Controlled Identifiers",
-    //     href: "https://htmlspecs.com/lws10-authn-ssi-cid/",
-    //     src: "https://www.w3.org/TR/lws10-authn-ssi-cid/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "LWS 1.0 Authentication Suite: Self-signed Identity using Controlled Identifiers",
+        href: "https://htmlspecs.com/lws10-authn-ssi-cid/",
+        src: "https://www.w3.org/TR/2026/WD-lws10-authn-ssi-cid-20260609/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     // {
     //     text: "LWS 1.0 Authentication Suite: Self-signed Identity using did:key",
     //     href: "https://htmlspecs.com/lws10-authn-ssi-did-key/",
