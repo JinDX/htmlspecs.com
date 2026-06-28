@@ -1,0 +1,2947 @@
+<!DOCTYPE html>
+<html lang="zh-hans" class="RFC">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="Common,Latin" name="scripts">
+    <meta content="initial-scale=1.0" name="viewport">
+    <title>RFC 9126：OAuth 2.0 推送授权请求</title>
+    <meta content="Torsten Lodderstedt" name="author">
+    <meta content="Brian Campbell" name="author">
+    <meta content="Nat Sakimura" name="author">
+    <meta content="Dave Tonge" name="author">
+    <meta content="Filip Skokan" name="author">
+    <meta content="
+       本文档定义了推送授权请求（PAR）端点，该端点允许
+客户端通过直接请求将 OAuth 2.0 授权请求的有效载荷推送到
+授权服务器，并为它们提供
+一个请求 URI，该 URI 用作在
+后续调用授权端点时对数据的引用。 
+    " name="description">
+    <meta content="xml2rfc 3.9.1" name="generator">
+    <meta content="security" name="keyword">
+    <meta content="oauth2" name="keyword">
+    <meta content="9126" name="rfc.number">
+    <!-- Generator version information:
+  xml2rfc 3.9.1
+    Python 3.6.10
+    appdirs 1.4.4
+    ConfigArgParse 1.2.3
+    google-i18n-address 2.3.5
+    html5lib 1.0.1
+    intervaltree 3.0.2
+    Jinja2 2.11.2
+    kitchen 1.2.6
+    lxml 4.4.2
+    pycairo 1.19.0
+    pycountry 19.8.18
+    pyflakes 2.1.1
+    PyYAML 5.3.1
+    requests 2.22.0
+    setuptools 40.6.2
+    six 1.14.0
+    WeasyPrint 51
+-->
+    <link href="rfc9126.xml" rel="alternate" type="application/rfc+xml">
+    <link href="#copyright" rel="license">
+    <style type="text/css">
+        /*
+
+  NOTE: Changes at the bottom of this file overrides some earlier settings.
+
+  Once the style has stabilized and has been adopted as an official RFC style,
+  this can be consolidated so that style settings occur only in one place, but
+  for now the contents of this file consists first of the initial CSS work as
+  provided to the RFC Formatter (xml2rfc) work, followed by itemized and
+  commented changes found necssary during the development of the v3
+  formatters.
+
+*/
+
+        /* fonts */
+        @import url('https://fonts.googleapis.com/css?family=Noto+Sans');
+        /* Sans-serif */
+        @import url('https://fonts.googleapis.com/css?family=Noto+Serif');
+        /* Serif (print) */
+        @import url('https://fonts.googleapis.com/css?family=Roboto+Mono');
+        /* Monospace */
+
+        @viewport {
+            zoom: 1.0;
+            width: extend-to-zoom;
+        }
+
+        @-ms-viewport {
+            width: extend-to-zoom;
+            zoom: 1.0;
+        }
+
+        /* general and mobile first */
+        html {}
+
+        body {
+            max-width: 90%;
+            margin: 1.5em auto;
+            color: #222;
+            background-color: #fff;
+            font-size: 14px;
+            font-family: 'Noto Sans', Arial, Helvetica, sans-serif;
+            line-height: 1.6;
+            scroll-behavior: smooth;
+        }
+
+        .ears {
+            display: none;
+        }
+
+        /* headings */
+        #title,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            margin: 1em 0 0.5em;
+            font-weight: bold;
+            line-height: 1.3;
+        }
+
+        #title {
+            clear: both;
+            border-bottom: 1px solid #ddd;
+            margin: 0 0 0.5em 0;
+            padding: 1em 0 0.5em;
+        }
+
+        .author {
+            padding-bottom: 4px;
+        }
+
+        h1 {
+            font-size: 26px;
+            margin: 1em 0;
+        }
+
+        h2 {
+            font-size: 22px;
+            margin-top: -20px;
+            /* provide offset for in-page anchors */
+            padding-top: 33px;
+        }
+
+        h3 {
+            font-size: 18px;
+            margin-top: -36px;
+            /* provide offset for in-page anchors */
+            padding-top: 42px;
+        }
+
+        h4 {
+            font-size: 16px;
+            margin-top: -36px;
+            /* provide offset for in-page anchors */
+            padding-top: 42px;
+        }
+
+        h5,
+        h6 {
+            font-size: 14px;
+        }
+
+        #n-copyright-notice {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 1em;
+            margin-bottom: 1em;
+        }
+
+        /* general structure */
+        p {
+            padding: 0;
+            margin: 0 0 1em 0;
+            text-align: left;
+        }
+
+        div,
+        span {
+            position: relative;
+        }
+
+        div {
+            margin: 0;
+        }
+
+        .alignRight.art-text {
+            background-color: #f9f9f9;
+            border: 1px solid #eee;
+            border-radius: 3px;
+            padding: 1em 1em 0;
+            margin-bottom: 1.5em;
+        }
+
+        .alignRight.art-text pre {
+            padding: 0;
+        }
+
+        .alignRight {
+            margin: 1em 0;
+        }
+
+        .alignRight>*:first-child {
+            border: none;
+            margin: 0;
+            float: right;
+            clear: both;
+        }
+
+        .alignRight>*:nth-child(2) {
+            clear: both;
+            display: block;
+            border: none;
+        }
+
+        svg {
+            display: block;
+        }
+
+        .alignCenter.art-text {
+            background-color: #f9f9f9;
+            border: 1px solid #eee;
+            border-radius: 3px;
+            padding: 1em 1em 0;
+            margin-bottom: 1.5em;
+        }
+
+        .alignCenter.art-text pre {
+            padding: 0;
+        }
+
+        .alignCenter {
+            margin: 1em 0;
+        }
+
+        .alignCenter>*:first-child {
+            border: none;
+            /* this isn't optimal, but it's an existence proof.  PrinceXML doesn't
+     support flexbox yet.
+  */
+            display: table;
+            margin: 0 auto;
+        }
+
+        /* lists */
+        ol,
+        ul {
+            padding: 0;
+            margin: 0 0 1em 2em;
+        }
+
+        ol ol,
+        ul ul,
+        ol ul,
+        ul ol {
+            margin-left: 1em;
+        }
+
+        li {
+            margin: 0 0 0.25em 0;
+        }
+
+        .ulCompact li {
+            margin: 0;
+        }
+
+        ul.empty,
+        .ulEmpty {
+            list-style-type: none;
+        }
+
+        ul.empty li,
+        .ulEmpty li {
+            margin-top: 0.5em;
+        }
+
+        ul.ulBare,
+        li.ulBare {
+            margin-left: 0em !important;
+        }
+
+        ul.compact,
+        .ulCompact,
+        ol.compact,
+        .olCompact {
+            line-height: 100%;
+            margin: 0 0 0 2em;
+        }
+
+        /* definition lists */
+        dl {}
+
+        dl>dt {
+            float: left;
+            margin-right: 1em;
+        }
+
+        /* 
+dl.nohang > dt {
+  float: none;
+}
+*/
+        dl>dd {
+            margin-bottom: .8em;
+            min-height: 1.3em;
+        }
+
+        dl.compact>dd,
+        .dlCompact>dd {
+            margin-bottom: 0em;
+        }
+
+        dl>dd>dl {
+            margin-top: 0.5em;
+            margin-bottom: 0em;
+        }
+
+        /* links */
+        a {
+            text-decoration: none;
+        }
+
+        a[href] {
+            color: #22e;
+            /* Arlen: WCAG 2019 */
+        }
+
+        a[href]:hover {
+            background-color: #f2f2f2;
+        }
+
+        figcaption a[href],
+        a[href].selfRef {
+            color: #222;
+        }
+
+        /* XXX probably not this:
+a.selfRef:hover {
+  background-color: transparent;
+  cursor: default;
+} */
+
+        /* Figures */
+        tt,
+        code,
+        pre,
+        code {
+            background-color: #f9f9f9;
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        pre {
+            border: 1px solid #eee;
+            margin: 0;
+            padding: 1em;
+        }
+
+        img {
+            max-width: 100%;
+        }
+
+        figure {
+            margin: 0;
+        }
+
+        figure blockquote {
+            margin: 0.8em 0.4em 0.4em;
+        }
+
+        figcaption {
+            font-style: italic;
+            margin: 0 0 1em 0;
+        }
+
+        @media screen {
+            pre {
+                overflow-x: auto;
+                max-width: 100%;
+                max-width: calc(100% - 22px);
+            }
+        }
+
+        /* aside, blockquote */
+        aside,
+        blockquote {
+            margin-left: 0;
+            padding: 1.2em 2em;
+        }
+
+        blockquote {
+            background-color: #f9f9f9;
+            color: #111;
+            /* Arlen: WCAG 2019 */
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            margin: 1em 0;
+        }
+
+        cite {
+            display: block;
+            text-align: right;
+            font-style: italic;
+        }
+
+        /* tables */
+        table {
+            width: 100%;
+            margin: 0 0 1em;
+            border-collapse: collapse;
+            border: 1px solid #eee;
+        }
+
+        th,
+        td {
+            text-align: left;
+            vertical-align: top;
+            padding: 0.5em 0.75em;
+        }
+
+        th {
+            text-align: left;
+            background-color: #e9e9e9;
+        }
+
+        tr:nth-child(2n+1)>td {
+            background-color: #f5f5f5;
+        }
+
+        table caption {
+            font-style: italic;
+            margin: 0;
+            padding: 0;
+            text-align: left;
+        }
+
+        table p {
+            /* XXX to avoid bottom margin on table row signifiers. If paragraphs should
+     be allowed within tables more generally, it would be far better to select on a class. */
+            margin: 0;
+        }
+
+        /* pilcrow */
+        a.pilcrow {
+            color: #666;
+            /* Arlen: AHDJ 2019 */
+            text-decoration: none;
+            visibility: hidden;
+            user-select: none;
+            -ms-user-select: none;
+            -o-user-select: none;
+            -moz-user-select: none;
+            -khtml-user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
+        }
+
+        @media screen {
+
+            aside:hover>a.pilcrow,
+            p:hover>a.pilcrow,
+            blockquote:hover>a.pilcrow,
+            div:hover>a.pilcrow,
+            li:hover>a.pilcrow,
+            pre:hover>a.pilcrow {
+                visibility: visible;
+            }
+
+            a.pilcrow:hover {
+                background-color: transparent;
+            }
+        }
+
+        /* misc */
+        hr {
+            border: 0;
+            border-top: 1px solid #eee;
+        }
+
+        .bcp14 {
+            font-variant: small-caps;
+        }
+
+        .role {
+            font-variant: all-small-caps;
+        }
+
+        /* info block */
+        #identifiers {
+            margin: 0;
+            font-size: 0.9em;
+        }
+
+        #identifiers dt {
+            width: 3em;
+            clear: left;
+        }
+
+        #identifiers dd {
+            float: left;
+            margin-bottom: 0;
+        }
+
+        #identifiers .authors .author {
+            display: inline-block;
+            margin-right: 1.5em;
+        }
+
+        #identifiers .authors .org {
+            font-style: italic;
+        }
+
+        /* The prepared/rendered info at the very bottom of the page */
+        .docInfo {
+            color: #666;
+            /* Arlen: WCAG 2019 */
+            font-size: 0.9em;
+            font-style: italic;
+            margin-top: 2em;
+        }
+
+        .docInfo .prepared {
+            float: left;
+        }
+
+        .docInfo .prepared {
+            float: right;
+        }
+
+        /* table of contents */
+        #toc {
+            padding: 0.75em 0 2em 0;
+            margin-bottom: 1em;
+        }
+
+        nav.toc ul {
+            margin: 0 0.5em 0 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        nav.toc li {
+            line-height: 1.3em;
+            margin: 0.75em 0;
+            padding-left: 1.2em;
+            text-indent: -1.2em;
+        }
+
+        /* references */
+        .references dt {
+            text-align: right;
+            font-weight: bold;
+            min-width: 7em;
+        }
+
+        .references dd {
+            margin-left: 8em;
+            overflow: auto;
+        }
+
+        .refInstance {
+            margin-bottom: 1.25em;
+        }
+
+        .references .ascii {
+            margin-bottom: 0.25em;
+        }
+
+        /* index */
+        .index ul {
+            margin: 0 0 0 1em;
+            padding: 0;
+            list-style: none;
+        }
+
+        .index ul ul {
+            margin: 0;
+        }
+
+        .index li {
+            margin: 0;
+            text-indent: -2em;
+            padding-left: 2em;
+            padding-bottom: 5px;
+        }
+
+        .indexIndex {
+            margin: 0.5em 0 1em;
+        }
+
+        .index a {
+            font-weight: 700;
+        }
+
+        /* make the index two-column on all but the smallest screens */
+        @media (min-width: 600px) {
+            .index ul {
+                -moz-column-count: 2;
+                -moz-column-gap: 20px;
+            }
+
+            .index ul ul {
+                -moz-column-count: 1;
+                -moz-column-gap: 0;
+            }
+        }
+
+        /* authors */
+        address.vcard {
+            font-style: normal;
+            margin: 1em 0;
+        }
+
+        address.vcard .nameRole {
+            font-weight: 700;
+            margin-left: 0;
+        }
+
+        address.vcard .label {
+            font-family: "Noto Sans", Arial, Helvetica, sans-serif;
+            margin: 0.5em 0;
+        }
+
+        address.vcard .type {
+            display: none;
+        }
+
+        .alternative-contact {
+            margin: 1.5em 0 1em;
+        }
+
+        hr.addr {
+            border-top: 1px dashed;
+            margin: 0;
+            color: #ddd;
+            max-width: calc(100% - 16px);
+        }
+
+        /* temporary notes */
+        .rfcEditorRemove::before {
+            position: absolute;
+            top: 0.2em;
+            right: 0.2em;
+            padding: 0.2em;
+            content: "The RFC Editor will remove this note";
+            color: #9e2a00;
+            /* Arlen: WCAG 2019 */
+            background-color: #ffd;
+            /* Arlen: WCAG 2019 */
+        }
+
+        .rfcEditorRemove {
+            position: relative;
+            padding-top: 1.8em;
+            background-color: #ffd;
+            /* Arlen: WCAG 2019 */
+            border-radius: 3px;
+        }
+
+        .cref {
+            background-color: #ffd;
+            /* Arlen: WCAG 2019 */
+            padding: 2px 4px;
+        }
+
+        .crefSource {
+            font-style: italic;
+        }
+
+        /* alternative layout for smaller screens */
+        @media screen and (max-width: 1023px) {
+            body {
+                padding-top: 2em;
+            }
+
+            #title {
+                padding: 1em 0;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            h2 {
+                font-size: 20px;
+                margin-top: -18px;
+                /* provide offset for in-page anchors */
+                padding-top: 38px;
+            }
+
+            #identifiers dd {
+                max-width: 60%;
+            }
+
+            #toc {
+                position: fixed;
+                z-index: 2;
+                top: 0;
+                right: 0;
+                padding: 0;
+                margin: 0;
+                background-color: inherit;
+                border-bottom: 1px solid #ccc;
+            }
+
+            #toc h2 {
+                margin: -1px 0 0 0;
+                padding: 4px 0 4px 6px;
+                padding-right: 1em;
+                min-width: 190px;
+                font-size: 1.1em;
+                text-align: right;
+                background-color: #444;
+                color: white;
+                cursor: pointer;
+            }
+
+            #toc h2::before {
+                /* css hamburger */
+                float: right;
+                position: relative;
+                width: 1em;
+                height: 1px;
+                left: -164px;
+                margin: 6px 0 0 0;
+                background: white none repeat scroll 0 0;
+                box-shadow: 0 4px 0 0 white, 0 8px 0 0 white;
+                content: "";
+            }
+
+            #toc nav {
+                display: none;
+                padding: 0.5em 1em 1em;
+                overflow: auto;
+                height: calc(100vh - 48px);
+                border-left: 1px solid #ddd;
+            }
+        }
+
+        /* alternative layout for wide screens */
+        @media screen and (min-width: 1024px) {
+            body {
+                max-width: 724px;
+                margin: 42px auto;
+                padding-left: 1.5em;
+                padding-right: 29em;
+            }
+
+            #toc {
+                position: fixed;
+                top: 42px;
+                right: 42px;
+                width: 25%;
+                margin: 0;
+                padding: 0 1em;
+                z-index: 1;
+            }
+
+            #toc h2 {
+                border-top: none;
+                border-bottom: 1px solid #ddd;
+                font-size: 1em;
+                font-weight: normal;
+                margin: 0;
+                padding: 0.25em 1em 1em 0;
+            }
+
+            #toc nav {
+                display: block;
+                height: calc(90vh - 84px);
+                bottom: 0;
+                padding: 0.5em 0 0;
+                overflow: auto;
+            }
+
+            img {
+                /* future proofing */
+                max-width: 100%;
+                height: auto;
+            }
+        }
+
+        /* pagination */
+        @media print {
+            body {
+
+                width: 100%;
+            }
+
+            p {
+                orphans: 3;
+                widows: 3;
+            }
+
+            #n-copyright-notice {
+                border-bottom: none;
+            }
+
+            #toc,
+            #n-introduction {
+                page-break-before: always;
+            }
+
+            #toc {
+                border-top: none;
+                padding-top: 0;
+            }
+
+            figure,
+            pre {
+                page-break-inside: avoid;
+            }
+
+            figure {
+                overflow: scroll;
+            }
+
+            h1,
+            h2,
+            h3,
+            h4,
+            h5,
+            h6 {
+                page-break-after: avoid;
+            }
+
+            h2+*,
+            h3+*,
+            h4+*,
+            h5+*,
+            h6+* {
+                page-break-before: avoid;
+            }
+
+            pre {
+                white-space: pre-wrap;
+                word-wrap: break-word;
+                font-size: 10pt;
+            }
+
+            table {
+                border: 1px solid #ddd;
+            }
+
+            td {
+                border-top: 1px solid #ddd;
+            }
+        }
+
+        /* This is commented out here, as the string-set: doesn't
+   pass W3C validation currently */
+        /*
+.ears thead .left {
+  string-set: ears-top-left content();
+}
+
+.ears thead .center {
+  string-set: ears-top-center content();
+}
+
+.ears thead .right {
+  string-set: ears-top-right content();
+}
+
+.ears tfoot .left {
+  string-set: ears-bottom-left content();
+}
+
+.ears tfoot .center {
+  string-set: ears-bottom-center content();
+}
+
+.ears tfoot .right {
+  string-set: ears-bottom-right content();
+}
+*/
+
+        @page :first {
+            padding-top: 0;
+
+            @top-left {
+                content: normal;
+                border: none;
+            }
+
+            @top-center {
+                content: normal;
+                border: none;
+            }
+
+            @top-right {
+                content: normal;
+                border: none;
+            }
+        }
+
+        @page {
+            size: A4;
+            margin-bottom: 45mm;
+            padding-top: 20px;
+            /* The follwing is commented out here, but set appropriately by in code, as
+     the content depends on the document */
+            /*
+  @top-left {
+    content: 'Internet-Draft';
+    vertical-align: bottom;
+    border-bottom: solid 1px #ccc;
+  }
+  @top-left {
+    content: string(ears-top-left);
+    vertical-align: bottom;
+    border-bottom: solid 1px #ccc;
+  }
+  @top-center {
+    content: string(ears-top-center);
+    vertical-align: bottom;
+    border-bottom: solid 1px #ccc;
+  }
+  @top-right {
+    content: string(ears-top-right);
+    vertical-align: bottom;
+    border-bottom: solid 1px #ccc;
+  }
+  @bottom-left {
+    content: string(ears-bottom-left);
+    vertical-align: top;
+    border-top: solid 1px #ccc;
+  }
+  @bottom-center {
+    content: string(ears-bottom-center);
+    vertical-align: top;
+    border-top: solid 1px #ccc;
+  }
+  @bottom-right {
+      content: '[Page ' counter(page) ']';
+      vertical-align: top;
+      border-top: solid 1px #ccc;
+  }
+  */
+
+        }
+
+        /* Changes introduced to fix issues found during implementation */
+        /* Make sure links are clickable even if overlapped by following H* */
+        a {
+            z-index: 2;
+        }
+
+        /* Separate body from document info even without intervening H1 */
+        section {
+            clear: both;
+        }
+
+
+        /* Top align author divs, to avoid names without organization dropping level with org names */
+        .author {
+            vertical-align: top;
+        }
+
+        /* Leave room in document info to show Internet-Draft on one line */
+        #identifiers dt {
+            width: 8em;
+        }
+
+        /* Don't waste quite as much whitespace between label and value in doc info */
+        #identifiers dd {
+            margin-left: 1em;
+        }
+
+        /* Give floating toc a background color (needed when it's a div inside section */
+        #toc {
+            background-color: white;
+        }
+
+        /* Make the collapsed ToC header render white on gray also when it's a link */
+        @media screen and (max-width: 1023px) {
+
+            #toc h2 a,
+            #toc h2 a:link,
+            #toc h2 a:focus,
+            #toc h2 a:hover,
+            #toc a.toplink,
+            #toc a.toplink:hover {
+                color: white;
+                background-color: #444;
+                text-decoration: none;
+            }
+        }
+
+        /* Give the bottom of the ToC some whitespace */
+        @media screen and (min-width: 1024px) {
+            #toc {
+                padding: 0 0 1em 1em;
+            }
+        }
+
+        /* Style section numbers with more space between number and title */
+        .section-number {
+            padding-right: 0.5em;
+        }
+
+        /* prevent monospace from becoming overly large */
+        tt,
+        code,
+        pre,
+        code {
+            font-size: 95%;
+        }
+
+        /* Fix the height/width aspect for ascii art*/
+        pre.sourcecode,
+        .art-text pre {
+            line-height: 1.12;
+        }
+
+
+        /* Add styling for a link in the ToC that points to the top of the document */
+        a.toplink {
+            float: right;
+            margin-right: 0.5em;
+        }
+
+        /* Fix the dl styling to match the RFC 7992 attributes */
+        dl>dt,
+        dl.dlParallel>dt {
+            float: left;
+            margin-right: 1em;
+        }
+
+        dl.dlNewline>dt {
+            float: none;
+        }
+
+        /* Provide styling for table cell text alignment */
+        table td.text-left,
+        table th.text-left {
+            text-align: left;
+        }
+
+        table td.text-center,
+        table th.text-center {
+            text-align: center;
+        }
+
+        table td.text-right,
+        table th.text-right {
+            text-align: right;
+        }
+
+        /* Make the alternative author contact informatio look less like just another
+   author, and group it closer with the primary author contact information */
+        .alternative-contact {
+            margin: 0.5em 0 0.25em 0;
+        }
+
+        address .non-ascii {
+            margin: 0 0 0 2em;
+        }
+
+        /* With it being possible to set tables with alignment
+  left, center, and right, { width: 100%; } does not make sense */
+        table {
+            width: auto;
+        }
+
+        /* Avoid reference text that sits in a block with very wide left margin,
+   because of a long floating dt label.*/
+        .references dd {
+            overflow: visible;
+        }
+
+        /* Control caption placement */
+        caption {
+            caption-side: bottom;
+        }
+
+        /* Limit the width of the author address vcard, so names in right-to-left
+   script don't end up on the other side of the page. */
+
+        address.vcard {
+            max-width: 30em;
+            margin-right: auto;
+        }
+
+        /* For address alignment dependent on LTR or RTL scripts */
+        address div.left {
+            text-align: left;
+        }
+
+        address div.right {
+            text-align: right;
+        }
+
+        /* Provide table alignment support.  We can't use the alignX classes above
+   since they do unwanted things with caption and other styling. */
+        table.right {
+            margin-left: auto;
+            margin-right: 0;
+        }
+
+        table.center {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        table.left {
+            margin-left: 0;
+            margin-right: auto;
+        }
+
+        /* Give the table caption label the same styling as the figcaption */
+        caption a[href] {
+            color: #222;
+        }
+
+        @media print {
+            .toplink {
+                display: none;
+            }
+
+            /* avoid overwriting the top border line with the ToC header */
+            #toc {
+                padding-top: 1px;
+            }
+
+            /* Avoid page breaks inside dl and author address entries */
+            .vcard {
+                page-break-inside: avoid;
+            }
+
+        }
+
+        /* Tweak the bcp14 keyword presentation */
+        .bcp14 {
+            font-variant: small-caps;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        /* Tweak the invisible space above H* in order not to overlay links in text above */
+        h2 {
+            margin-top: -18px;
+            /* provide offset for in-page anchors */
+            padding-top: 31px;
+        }
+
+        h3 {
+            margin-top: -18px;
+            /* provide offset for in-page anchors */
+            padding-top: 24px;
+        }
+
+        h4 {
+            margin-top: -18px;
+            /* provide offset for in-page anchors */
+            padding-top: 24px;
+        }
+
+        /* Float artwork pilcrow to the right */
+        @media screen {
+            .artwork a.pilcrow {
+                display: block;
+                line-height: 0.7;
+                margin-top: 0.15em;
+            }
+        }
+
+        /* Make pilcrows on dd visible */
+        @media screen {
+            dd:hover>a.pilcrow {
+                visibility: visible;
+            }
+        }
+
+        /* Make the placement of figcaption match that of a table's caption
+   by removing the figure's added bottom margin */
+        .alignLeft.art-text,
+        .alignCenter.art-text,
+        .alignRight.art-text {
+            margin-bottom: 0;
+        }
+
+        .alignLeft,
+        .alignCenter,
+        .alignRight {
+            margin: 1em 0 0 0;
+        }
+
+        /* In print, the pilcrow won't show on hover, so prevent it from taking up space,
+   possibly even requiring a new line */
+        @media print {
+            a.pilcrow {
+                display: none;
+            }
+        }
+
+        /* Styling for the external metadata */
+        div#external-metadata {
+            background-color: #eee;
+            padding: 0.5em;
+            margin-bottom: 0.5em;
+            display: none;
+        }
+
+        div#internal-metadata {
+            padding: 0.5em;
+            /* to match the external-metadata padding */
+        }
+
+        /* Styling for title RFC Number */
+        h1#rfcnum {
+            clear: both;
+            margin: 0 0 -1em;
+            padding: 1em 0 0 0;
+        }
+
+        /* Make .olPercent look the same as <ol><li> */
+        dl.olPercent>dd {
+            margin-bottom: 0.25em;
+            min-height: initial;
+        }
+
+        /* Give aside some styling to set it apart */
+        aside {
+            border-left: 1px solid #ddd;
+            margin: 1em 0 1em 2em;
+            padding: 0.2em 2em;
+        }
+
+        aside>dl,
+        aside>ol,
+        aside>ul,
+        aside>table,
+        aside>p {
+            margin-bottom: 0.5em;
+        }
+
+        /* Additional page break settings */
+        @media print {
+
+            figcaption,
+            table caption {
+                page-break-before: avoid;
+            }
+        }
+
+        /* Font size adjustments for print */
+        @media print {
+            body {
+                font-size: 10pt;
+                line-height: normal;
+                max-width: 96%;
+            }
+
+            h1 {
+                font-size: 1.72em;
+                padding-top: 1.5em;
+            }
+
+            /* 1*1.2*1.2*1.2 */
+            h2 {
+                font-size: 1.44em;
+                padding-top: 1.5em;
+            }
+
+            /* 1*1.2*1.2 */
+            h3 {
+                font-size: 1.2em;
+                padding-top: 1.5em;
+            }
+
+            /* 1*1.2 */
+            h4 {
+                font-size: 1em;
+                padding-top: 1.5em;
+            }
+
+            h5,
+            h6 {
+                font-size: 1em;
+                margin: initial;
+                padding: 0.5em 0 0.3em;
+            }
+        }
+
+        /* Sourcecode margin in print, when there's no pilcrow */
+        @media print {
+
+            .artwork,
+            .sourcecode {
+                margin-bottom: 1em;
+            }
+        }
+
+        /* Avoid narrow tables forcing too narrow table captions, which may render badly */
+        table {
+            min-width: 20em;
+        }
+
+        /* ol type a */
+        ol.type-a {
+            list-style-type: lower-alpha;
+        }
+
+        ol.type-A {
+            list-style-type: upper-alpha;
+        }
+
+        ol.type-i {
+            list-style-type: lower-roman;
+        }
+
+        ol.type-I {
+            list-style-type: lower-roman;
+        }
+
+        /* Apply the print table and row borders in general, on request from the RPC,
+and increase the contrast between border and odd row background sligthtly */
+        table {
+            border: 1px solid #ddd;
+        }
+
+        td {
+            border-top: 1px solid #ddd;
+        }
+
+        tr:nth-child(2n+1)>td {
+            background-color: #f8f8f8;
+        }
+
+        /* Use style rules to govern display of the TOC. */
+        @media screen and (max-width: 1023px) {
+            #toc nav {
+                display: none;
+            }
+
+            #toc.active nav {
+                display: block;
+            }
+        }
+
+        /* Add support for keepWithNext */
+        .keepWithNext {
+            break-after: avoid-page;
+            break-after: avoid-page;
+        }
+
+        /* Add support for keepWithPrevious */
+        .keepWithPrevious {
+            break-before: avoid-page;
+        }
+
+        /* Change the approach to avoiding breaks inside artwork etc. */
+        figure,
+        pre,
+        table,
+        .artwork,
+        .sourcecode {
+            break-before: avoid-page;
+            break-after: auto;
+        }
+
+        /* Avoid breaks between <dt> and <dd> */
+        dl {
+            break-before: auto;
+            break-inside: auto;
+        }
+
+        dt {
+            break-before: auto;
+            break-after: avoid-page;
+        }
+
+        dd {
+            break-before: avoid-page;
+            break-after: auto;
+            orphans: 3;
+            widows: 3
+        }
+
+        span.break,
+        dd.break {
+            margin-bottom: 0;
+            min-height: 0;
+            break-before: auto;
+            break-inside: auto;
+            break-after: auto;
+        }
+
+        /* Undo break-before ToC */
+        @media print {
+            #toc {
+                break-before: auto;
+            }
+        }
+
+        /* Text in compact lists should not get extra bottim margin space,
+   since that would makes the list not compact */
+        ul.compact p,
+        .ulCompact p,
+        ol.compact p,
+        .olCompact p {
+            margin: 0;
+        }
+
+        /* But the list as a whole needs the extra space at the end */
+        section ul.compact,
+        section .ulCompact,
+        section ol.compact,
+        section .olCompact {
+            margin-bottom: 1em;
+            /* same as p not within ul.compact etc. */
+        }
+
+        /* The tt and code background above interferes with for instance table cell
+   backgrounds.  Changed to something a bit more selective. */
+        tt,
+        code {
+            background-color: transparent;
+        }
+
+        p tt,
+        p code,
+        li tt,
+        li code {
+            background-color: #f8f8f8;
+        }
+
+        /* Tweak the pre margin -- 0px doesn't come out well */
+        pre {
+            margin-top: 0.5px;
+        }
+
+        /* Tweak the comact list text */
+        ul.compact,
+        .ulCompact,
+        ol.compact,
+        .olCompact,
+        dl.compact,
+        .dlCompact {
+            line-height: normal;
+        }
+
+        /* Don't add top margin for nested lists */
+        li>ul,
+        li>ol,
+        li>dl,
+        dd>ul,
+        dd>ol,
+        dd>dl,
+        dl>dd>dl {
+            margin-top: initial;
+        }
+
+        /* Elements that should not be rendered on the same line as a <dt> */
+        /* This should match the element list in writer.text.TextWriter.render_dl() */
+        dd>div.artwork:first-child,
+        dd>aside:first-child,
+        dd>figure:first-child,
+        dd>ol:first-child,
+        dd>div:first-child>pre.sourcecode,
+        dd>table:first-child,
+        dd>ul:first-child {
+            clear: left;
+        }
+
+        /* fix for weird browser behaviour when <dd/> is empty */
+        dt+dd:empty::before {
+            content: "\00a0";
+        }
+
+        /* Make paragraph spacing inside <li> smaller than in body text, to fit better within the list */
+        li>p {
+            margin-bottom: 0.5em
+        }
+
+        /* Don't let p margin spill out from inside list items */
+        li>p:last-of-type {
+            margin-bottom: 0;
+        }
+    </style>
+    <link href="https://www.rfc-editor.org/rfc/rfc-local.css" rel="stylesheet" type="text/css">
+    <link href="https://dx.doi.org/10.17487/rfc9126" rel="alternate">
+    <link href="urn:issn:2070-1721" rel="alternate">
+    <link href="https://datatracker.ietf.org/doc/draft-ietf-oauth-par-10" rel="prev">
+</head>
+
+<body>
+    <script src="https://www.rfc-editor.org/js/metadata.min.js"></script>
+    <table class="ears">
+        <thead>
+            <tr>
+                <td class="left">RFC 9126</td>
+                <td class="center">OAuth PAR</td>
+                <td class="right">2021年9月</td>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <td class="left">Lodderstedt 等</td>
+                <td class="center">标准轨道</td>
+                <td class="right">[页]</td>
+            </tr>
+        </tfoot>
+    </table>
+    <div id="external-metadata" class="document-information"></div>
+    <div id="internal-metadata" class="document-information">
+        <dl id="identifiers">
+            <dt class="label-stream">流：</dt>
+            <dd class="stream">互联网工程任务组（IETF）</dd>
+            <dt class="label-rfc">RFC：</dt>
+            <dd class="rfc"><a href="https://www.rfc-editor.org/rfc/rfc9126" class="eref">9126</a></dd>
+            <dt class="label-category">类别：</dt>
+            <dd class="category">标准轨道</dd>
+            <dt class="label-published">发布：</dt>
+            <dd class="published">
+                <time datetime="2021-09" class="published">2021年9月</time>
+            </dd>
+            <dt class="label-issn">ISSN：</dt>
+            <dd class="issn">2070-1721</dd>
+            <dt class="label-authors">作者：</dt>
+            <dd class="authors">
+                <div class="author">
+                    <div class="author-name">T. Lodderstedt</div>
+                    <div class="org">yes.com</div>
+                </div>
+                <div class="author">
+                    <div class="author-name">B. Campbell</div>
+                    <div class="org">Ping Identity</div>
+                </div>
+                <div class="author">
+                    <div class="author-name">N. Sakimura</div>
+                    <div class="org">NAT.Consulting</div>
+                </div>
+                <div class="author">
+                    <div class="author-name">D. Tonge</div>
+                    <div class="org">Moneyhub Financial Technology</div>
+                </div>
+                <div class="author">
+                    <div class="author-name">F. Skokan</div>
+                    <div class="org">Auth0</div>
+                </div>
+            </dd>
+        </dl>
+    </div>
+    <h1 id="rfcnum">RFC 9126</h1>
+    <h1 id="title">OAuth 2.0 推送授权请求</h1>
+    <section id="section-abstract">
+        <h2 id="abstract"><a href="#abstract" class="selfRef">摘要</a></h2>
+        <p id="section-abstract-1">本文档定义了推送授权请求（PAR）端点，该端点允许
+            客户端通过直接请求将 OAuth 2.0 授权请求的有效载荷推送到
+            授权服务器，并为它们提供
+            一个请求 URI，该 URI 用作在
+            后续调用授权端点时对数据的引用。<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+    </section>
+    <div id="status-of-memo">
+        <section id="section-boilerplate.1">
+            <h2 id="name-status-of-this-memo">
+                <a href="#name-status-of-this-memo" class="section-name selfRef">本备忘录状态</a>
+            </h2>
+            <p id="section-boilerplate.1-1">
+                这是一个互联网标准轨道文档。<a href="#section-boilerplate.1-1" class="pilcrow">¶</a>
+            </p>
+            <p id="section-boilerplate.1-2">
+                本文档是互联网工程任务组
+                （IETF）的产物。它代表了 IETF 社区的共识。它已经
+                过公开审查，并已由
+                互联网工程指导组（IESG）批准发布。关于
+                互联网标准的更多信息可参见
+                RFC 7841 第 2 节。<a href="#section-boilerplate.1-2" class="pilcrow">¶</a></p>
+            <p id="section-boilerplate.1-3">
+                有关本文档当前状态、任何
+                勘误以及如何提供反馈的信息，可在
+                <span><a
+                        href="https://www.rfc-editor.org/info/rfc9126">https://www.rfc-editor.org/info/rfc9126</a></span>
+                获取。<a href="#section-boilerplate.1-3" class="pilcrow">¶</a>
+            </p>
+        </section>
+    </div>
+    <div id="copyright">
+        <section id="section-boilerplate.2">
+            <h2 id="name-copyright-notice">
+                <a href="#name-copyright-notice" class="section-name selfRef">Copyright Notice</a>
+            </h2>
+            <p id="section-boilerplate.2-1">
+                Copyright (c) 2021 IETF Trust and the persons identified as the
+                document authors. All rights reserved.<a href="#section-boilerplate.2-1" class="pilcrow">¶</a></p>
+            <p id="section-boilerplate.2-2">
+                This document is subject to BCP 78 and the IETF Trust's Legal
+                Provisions Relating to IETF Documents
+                (<span><a href="https://trustee.ietf.org/license-info">https://trustee.ietf.org/license-info</a></span>)
+                in effect on the date of
+                publication of this document. Please review these documents
+                carefully, as they describe your rights and restrictions with
+                respect to this document. Code Components extracted from this
+                document must include Simplified BSD License text as described in
+                Section 4.e of the Trust Legal Provisions and are provided without
+                warranty as described in the Simplified BSD License.<a href="#section-boilerplate.2-2"
+                    class="pilcrow">¶</a></p>
+        </section>
+    </div>
+    <div id="toc">
+        <section id="section-toc.1">
+            <a href="#" onclick="scroll(0,0)" class="toplink">▲</a>
+            <h2 id="name-table-of-contents">
+                <a href="#name-table-of-contents" class="section-name selfRef">目录</a>
+            </h2>
+            <nav class="toc">
+                <ul class="toc ulEmpty ulBare compact">
+                    <li class="toc ulEmpty ulBare compact" id="section-toc.1-1.1">
+                        <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="xref">1</a>. <a
+                                href="#name-introduction" class="xref">引言</a></p>
+                        <ul class="ulEmpty ulBare toc compact">
+                            <li class="ulEmpty ulBare toc compact" id="section-toc.1-1.1.2.1">
+                                <p id="section-toc.1-1.1.2.1.1" class="keepWithNext"><a href="#section-1.1"
+                                        class="xref">1.1</a>. <a href="#name-introductory-example"
+                                        class="xref">引导性示例</a></p>
+                            </li>
+                            <li class="ulEmpty ulBare toc compact" id="section-toc.1-1.1.2.2">
+                                <p id="section-toc.1-1.1.2.2.1" class="keepWithNext"><a href="#section-1.2"
+                                        class="xref">1.2</a>. <a href="#name-conventions-and-terminology"
+                                        class="xref">约定和术语</a></p>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="toc ulEmpty ulBare compact" id="section-toc.1-1.2">
+                        <p id="section-toc.1-1.2.1"><a href="#section-2" class="xref">2</a>. <a
+                                href="#name-pushed-authorization-reques" class="xref">推送授权请求
+                                端点</a></p>
+                        <ul class="ulEmpty ulBare toc compact">
+                            <li class="ulEmpty ulBare toc compact" id="section-toc.1-1.2.2.1">
+                                <p id="section-toc.1-1.2.2.1.1"><a href="#section-2.1" class="xref">2.1</a>. <a
+                                        href="#name-request" class="xref">请求</a></p>
+                            </li>
+                            <li class="ulEmpty ulBare toc compact" id="section-toc.1-1.2.2.2">
+                                <p id="section-toc.1-1.2.2.2.1"><a href="#section-2.2" class="xref">2.2</a>. <a
+                                        href="#name-successful-response" class="xref">成功响应</a></p>
+                            </li>
+                            <li class="ulEmpty ulBare toc compact" id="section-toc.1-1.2.2.3">
+                                <p id="section-toc.1-1.2.2.3.1"><a href="#section-2.3" class="xref">2.3</a>. <a
+                                        href="#name-error-response" class="xref">错误响应</a></p>
+                            </li>
+                            <li class="ulEmpty ulBare toc compact" id="section-toc.1-1.2.2.4">
+                                <p id="section-toc.1-1.2.2.4.1"><a href="#section-2.4" class="xref">2.4</a>. <a
+                                        href="#name-management-of-client-redire" class="xref">客户端
+                                        重定向 URI 的管理</a></p>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="toc ulEmpty ulBare compact" id="section-toc.1-1.3">
+                        <p id="section-toc.1-1.3.1"><a href="#section-3" class="xref">3</a>. <a
+                                href="#name-the-request-request-paramet" class="xref">“request” 请求
+                                参数</a></p>
+                    </li>
+                    <li class="toc ulEmpty ulBare compact" id="section-toc.1-1.4">
+                        <p id="section-toc.1-1.4.1"><a href="#section-4" class="xref">4</a>. <a
+                                href="#name-authorization-request" class="xref">授权请求</a></p>
+                    </li>
+                    <li class="toc ulEmpty ulBare compact" id="section-toc.1-1.5">
+                        <p id="section-toc.1-1.5.1"><a href="#section-5" class="xref">5</a>. <a
+                                href="#name-authorization-server-metada" class="xref">授权服务器元数据</a>
+                        </p>
+                    </li>
+                    <li class="toc ulEmpty ulBare compact" id="section-toc.1-1.6">
+                        <p id="section-toc.1-1.6.1"><a href="#section-6" class="xref">6</a>. <a
+                                href="#name-client-metadata" class="xref">客户端元数据</a></p>
+                    </li>
+                    <li class="toc ulEmpty ulBare compact" id="section-toc.1-1.7">
+                        <p id="section-toc.1-1.7.1"><a href="#section-7" class="xref">7</a>. <a
+                                href="#name-security-considerations" class="xref">安全考量</a></p>
+                        <ul class="ulEmpty ulBare toc compact">
+                            <li class="ulEmpty ulBare toc compact" id="section-toc.1-1.7.2.1">
+                                <p id="section-toc.1-1.7.2.1.1"><a href="#section-7.1" class="xref">7.1</a>. <a
+                                        href="#name-request-uri-guessing" class="xref">请求 URI 猜测</a></p>
+                            </li>
+                            <li class="ulEmpty ulBare toc compact" id="section-toc.1-1.7.2.2">
+                                <p id="section-toc.1-1.7.2.2.1"><a href="#section-7.2" class="xref">7.2</a>. <a
+                                        href="#name-open-redirection" class="xref">开放重定向</a></p>
+                            </li>
+                            <li class="ulEmpty ulBare toc compact" id="section-toc.1-1.7.2.3">
+                                <p id="section-toc.1-1.7.2.3.1"><a href="#section-7.3" class="xref">7.3</a>. <a
+                                        href="#name-request-object-replay" class="xref">请求对象重放</a></p>
+                            </li>
+                            <li class="ulEmpty ulBare toc compact" id="section-toc.1-1.7.2.4">
+                                <p id="section-toc.1-1.7.2.4.1"><a href="#section-7.4" class="xref">7.4</a>. <a
+                                        href="#name-client-policy-change" class="xref">客户端策略变更</a></p>
+                            </li>
+                            <li class="ulEmpty ulBare toc compact" id="section-toc.1-1.7.2.5">
+                                <p id="section-toc.1-1.7.2.5.1"><a href="#section-7.5" class="xref">7.5</a>. <a
+                                        href="#name-request-uri-swapping" class="xref">请求 URI 调换</a></p>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="toc ulEmpty ulBare compact" id="section-toc.1-1.8">
+                        <p id="section-toc.1-1.8.1"><a href="#section-8" class="xref">8</a>. <a
+                                href="#name-privacy-considerations" class="xref">隐私考量</a></p>
+                    </li>
+                    <li class="toc ulEmpty ulBare compact" id="section-toc.1-1.9">
+                        <p id="section-toc.1-1.9.1"><a href="#section-9" class="xref">9</a>. <a
+                                href="#name-iana-considerations" class="xref">IANA 考量</a></p>
+                        <ul class="ulEmpty ulBare toc compact">
+                            <li class="ulEmpty ulBare toc compact" id="section-toc.1-1.9.2.1">
+                                <p id="section-toc.1-1.9.2.1.1"><a href="#section-9.1" class="xref">9.1</a>. <a
+                                        href="#name-oauth-authorization-server-" class="xref">OAuth 授权服务器
+                                        元数据</a></p>
+                            </li>
+                            <li class="ulEmpty ulBare toc compact" id="section-toc.1-1.9.2.2">
+                                <p id="section-toc.1-1.9.2.2.1"><a href="#section-9.2" class="xref">9.2</a>. <a
+                                        href="#name-oauth-dynamic-client-regist" class="xref">OAuth 动态客户端
+                                        注册元数据</a></p>
+                            </li>
+                            <li class="ulEmpty ulBare toc compact" id="section-toc.1-1.9.2.3">
+                                <p id="section-toc.1-1.9.2.3.1"><a href="#section-9.3" class="xref">9.3</a>. <a
+                                        href="#name-oauth-uri-registration" class="xref">OAuth URI 注册</a></p>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="toc ulEmpty ulBare compact" id="section-toc.1-1.10">
+                        <p id="section-toc.1-1.10.1"><a href="#section-10" class="xref">10</a>. <a
+                                href="#name-references" class="xref">参考文献</a></p>
+                        <ul class="ulEmpty ulBare toc compact">
+                            <li class="ulEmpty ulBare toc compact" id="section-toc.1-1.10.2.1">
+                                <p id="section-toc.1-1.10.2.1.1"><a href="#section-10.1" class="xref">10.1</a>. <a
+                                        href="#name-normative-references" class="xref">规范性参考文献</a></p>
+                            </li>
+                            <li class="ulEmpty ulBare toc compact" id="section-toc.1-1.10.2.2">
+                                <p id="section-toc.1-1.10.2.2.1"><a href="#section-10.2" class="xref">10.2</a>. <a
+                                        href="#name-informative-references" class="xref">资料性参考文献</a></p>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="toc ulEmpty ulBare compact" id="section-toc.1-1.11">
+                        <p id="section-toc.1-1.11.1"><a href="#appendix-A" class="xref"></a><a
+                                href="#name-acknowledgements" class="xref">致谢</a></p>
+                    </li>
+                    <li class="toc ulEmpty ulBare compact" id="section-toc.1-1.12">
+                        <p id="section-toc.1-1.12.1"><a href="#appendix-B" class="xref"></a><a
+                                href="#name-authors-addresses" class="xref">作者地址</a></p>
+                    </li>
+                </ul>
+            </nav>
+        </section>
+    </div>
+    <div id="Introduction">
+        <section id="section-1">
+            <h2 id="name-introduction">
+                <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction"
+                    class="section-name selfRef">引言</a>
+            </h2>
+            <p id="section-1-1">本文档定义了推送授权请求（PAR）端点，它使
+                OAuth <span>[<a href="#RFC6749" class="xref">RFC6749</a>]</span> 客户端
+                能够将授权请求的有效载荷直接推送到
+                授权服务器。作为交换会收到一个请求 URI 值；该值用作
+                授权请求有效载荷数据的引用，供随后通过用户代理调用授权端点时使用
+                。<a href="#section-1-1" class="pilcrow">¶</a></p>
+            <p id="section-1-2">在 OAuth <span>[<a href="#RFC6749" class="xref">RFC6749</a>]</span> 中，授权
+                请求参数通常作为 URI 查询
+                参数通过用户代理中的重定向发送。这很简单，但也带来了一些挑战：<a href="#section-1-2" class="pilcrow">¶</a></p>
+            <ul class="normal">
+                <li class="normal" id="section-1-3.1">没有加密完整性和真实性保护。
+                    例如，攻击者可以通过更改 scope 值来修改所请求的访问范围，或调换
+                    支付交易的上下文。虽然已有一些协议机制可让客户端
+                    或用户检测到部分此类更改，但在流程早期阻止修改是更稳健的
+                    解决方案。<a href="#section-1-3.1" class="pilcrow">¶</a>
+                </li>
+                <li class="normal" id="section-1-3.2">没有机制来确保请求
+                    参数的机密性。虽然授权端点要求使用 HTTPS，但请求数据会以明文
+                    通过用户代理，并且查询字符串数据可能无意间泄露到 Web 服务器日志
+                    中，也可能通过 referrer 泄露给其他站点。如果在授权请求中发送了
+                    个人身份信息或其他受监管数据（在身份、开放银行和类似场景中
+                    很可能如此），这种泄露的影响可能非常严重。<a href="#section-1-3.2" class="pilcrow">¶</a>
+                </li>
+                <li class="normal" id="section-1-3.3">授权请求 URL 可能变得相当大，尤其是在
+                    需要细粒度授权数据的场景中，这可能导致请求
+                    处理出错。<a href="#section-1-3.3" class="pilcrow">¶</a>
+                </li>
+            </ul>
+            <p id="section-1-4">JWT 安全授权请求（JAR）<span>[<a href="#RFC9101" class="xref">RFC9101</a>]</span> 通过允许
+                OAuth 客户端将授权请求参数包装在 Request Object 中，为这些安全挑战提供了解决方案；Request Object 是
+                一个已签名且可选加密的 JSON Web Token（JWT）<span>[<a href="#RFC7519" class="xref">RFC7519</a>]</span>。
+
+                为了应对大小限制，JAR 引入了 <code>request_uri</code> 参数，允许客户端
+                发送对 Request Object 的引用，而不是发送 Request Object 本身。<a href="#section-1-4" class="pilcrow">¶</a></p>
+            <p id="section-1-5">本文档通过提供一种可互操作的方式来补充 JAR，使得
+                授权请求的有效载荷可以直接推送到授权服务器，以换取一个
+                可在后续授权请求中用于授权服务器的 <code>request_uri</code>
+                值。<a href="#section-1-5" class="pilcrow">¶</a></p>
+            <p id="section-1-6">PAR 通过为客户端提供一种简单方式来实现机密且
+                受完整性保护的授权请求，从而增强 OAuth 安全性。需要更高安全级别的客户端，尤其是
+                需要以密码学方式确认的不可否认性的客户端，能够按
+                <span>[<a href="#RFC9101" class="xref">RFC9101</a>]</span>
+
+                中定义的方式结合 PAR 使用基于 JWT 的 Request Object。<a href="#section-1-6" class="pilcrow">¶</a>
+            </p>
+            <p id="section-1-7">PAR 允许授权服务器在任何用户
+                交互发生之前对客户端进行认证。
+                在授权过程中对客户端身份的信心提高，使
+                授权服务器能够在流程中更早拒绝非法请求，这可以防止
+                伪装客户端，或以其他方式篡改或滥用授权请求的企图。<a href="#section-1-7" class="pilcrow">¶</a></p>
+            <p id="section-1-8">注意，如 <span><a href="https://www.rfc-editor.org/rfc/rfc6749#section-3.1"
+                        class="relref">[<a href="#RFC6749" class="xref">RFC6749</a>] 第 3.1 节</span> 和
+                <span>[<a href="#OIDC" class="xref">OIDC</a>]</span> 第 3.1.2.1 节所述，也可以使用经由用户代理
+                发往授权端点的 HTTP <code>POST</code> 请求来应对上述
+                请求大小限制。然而，根据 <span>[<a href="#RFC6749" class="xref">RFC6749</a>]</span>，这只是可选的；即使被支持，它对
+                传统 Web 应用而言是可行选项，但对已安装的移动应用来说使用起来极其困难。
+                如 <span>[<a href="#RFC8252" class="xref">RFC8252</a>]</span> 所述，这些应用使用
+                平台特定 API 在系统浏览器中打开授权请求 URI。然而，当移动应用
+                启动浏览器时，生成的初始请求被限制为使用 <code>GET</code>
+                方法。使用 <code>POST</code> 发出授权请求将要求应用首先让
+                浏览器通过 <code>GET</code> 打开一个由应用控制的 URI，同时以某种方式传递庞大的
+                授权请求有效载荷，然后让生成的响应包含用于
+                向授权服务器发起跨站表单 <code>POST</code> 的内容和脚本。PAR 更易于使用，
+                并且如上所述具有额外的安全优势。<a href="#section-1-8" class="pilcrow">¶</a>
+            </p>
+            <div id="introductory-example">
+                <section id="section-1.1">
+                    <h3 id="name-introductory-example">
+                        <a href="#section-1.1" class="section-number selfRef">1.1. </a><a
+                            href="#name-introductory-example" class="section-name selfRef">引导性示例</a>
+                    </h3>
+                    <p id="section-1.1-1">在传统 OAuth 2.0 中，客户端通常通过
+                        指示用户代理向授权服务器的授权端点发出类似下面的 HTTP 请求，
+                        来发起授权
+                        请求（额外的换行和缩进仅用于显示
+                        目的）：<a href="#section-1.1-1" class="pilcrow">¶</a></p>
+                    <div id="section-1.1-2">
+                        <pre class="sourcecode lang-http-message"> GET /authorize?response_type=code
+  &amp;client_id=CLIENT1234&amp;state=duk681S8n00GsJpe7n9boxdzen
+  &amp;redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb HTTP/1.1
+ Host: as.example.com
+</pre><a href="#section-1.1-2" class="pilcrow">¶</a>
+                    </div>
+                    <p id="section-1.1-3">客户端可以改为通过
+                        <code>POST</code> 请求将此类请求直接推送到授权服务器的 PAR 端点，如下面的
+                        示例所示（额外的换行和空格仅用于显示目的）。
+                        客户端可以进行认证（例如，如示例中所示使用基于 JWT 客户端断言的认证），
+                        因为该请求是直接发往授权服务器的。<a href="#section-1.1-3" class="pilcrow">¶</a>
+                    </p>
+                    <div id="section-1.1-4">
+                        <pre class="sourcecode lang-http-message"> POST /as/par HTTP/1.1
+ Host: as.example.com
+ Content-Type: application/x-www-form-urlencoded
+
+ &amp;response_type=code
+ &amp;client_id=CLIENT1234&amp;state=duk681S8n00GsJpe7n9boxdzen
+ &amp;redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
+ &amp;client_assertion_type=
+  urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer
+ &amp;client_assertion=eyJraWQiOiI0MiIsImFsZyI6IkVTMjU2In0.eyJpc3MiOiJDTE
+  lFTlQxMjM0Iiwic3ViIjoiQ0xJRU5UMTIzNCIsImF1ZCI6Imh0dHBzOi8vc2VydmVyL
+  mV4YW1wbGUuY29tIiwiZXhwIjoxNjI1ODY4ODc4fQ.Igw8QrpAWRNPDGoWGRmJumLBM
+  wbLjeIYwqWUu-ywgvvufl_0sQJftNs3bzjIrP0BV9rRG-3eI1Ksh0kQ1CwvzA
+
+</pre><a href="#section-1.1-4" class="pilcrow">¶</a>
+                    </div>
+                    <p id="section-1.1-5">授权服务器以一个请求 URI 作为响应：<a href="#section-1.1-5" class="pilcrow">¶</a></p>
+                    <div id="section-1.1-6">
+                        <pre class="sourcecode lang-http-message"> HTTP/1.1 201 Created
+ Cache-Control: no-cache, no-store
+ Content-Type: application/json
+
+ {
+   "request_uri": "urn:example:bwc4JK-ESC0w8acc191e-Y1LTC2",
+   "expires_in": 90
+ }
+</pre><a href="#section-1.1-6" class="pilcrow">¶</a>
+                    </div>
+                    <p id="section-1.1-7">客户端使用该请求 URI 值来创建后续授权
+                        请求，方式是指示用户代理向授权服务器的
+                        授权端点发出类似下面的 HTTP 请求（额外的换行和缩进仅用于显示
+                        目的）：<a href="#section-1.1-7" class="pilcrow">¶</a></p>
+                    <div id="section-1.1-8">
+                        <pre class="sourcecode lang-http-message"> GET /authorize?client_id=CLIENT1234
+  &amp;request_uri=urn%3Aexample%3Abwc4JK-ESC0w8acc191e-Y1LTC2 HTTP/1.1
+ Host: as.example.com
+</pre><a href="#section-1.1-8" class="pilcrow">¶</a>
+                    </div>
+                </section>
+            </div>
+            <div id="conventions-and-terminology">
+                <section id="section-1.2">
+                    <h3 id="name-conventions-and-terminology">
+                        <a href="#section-1.2" class="section-number selfRef">1.2. </a><a
+                            href="#name-conventions-and-terminology" class="section-name selfRef">约定和
+                            术语</a>
+                    </h3>
+                    <p id="section-1.2-1">
+                        本文档中的关键词“<span class="bcp14">MUST</span>”、“<span class="bcp14">MUST NOT</span>”、“<span
+                            class="bcp14">REQUIRED</span>”、“<span class="bcp14">SHALL</span>”、“<span class="bcp14">SHALL
+                            NOT</span>”、“<span class="bcp14">SHOULD</span>”、“<span class="bcp14">SHOULD
+                            NOT</span>”、“<span class="bcp14">RECOMMENDED</span>”、“<span class="bcp14">NOT
+                            RECOMMENDED</span>”、
+                        “<span class="bcp14">MAY</span>”和“<span class="bcp14">OPTIONAL</span>”应
+                        按 BCP 14 <span>[<a href="#RFC2119" class="xref">RFC2119</a>]</span> <span>[<a href="#RFC8174"
+                                class="xref">RFC8174</a>]</span>
+                        中的描述解释，但仅当它们以全大写形式出现时，如此处所示。<a href="#section-1.2-1" class="pilcrow">¶</a></p>
+                    <p id="section-1.2-2">本规范使用“The OAuth 2.0 Authorization Framework”
+                        <span>[<a href="#RFC6749" class="xref">RFC6749</a>]</span> 中定义的术语“access token”、
+                        “authorization server”、“authorization endpoint”、
+                        “authorization request”、“token endpoint”
+                        和
+                        “client”。<a href="#section-1.2-2" class="pilcrow">¶</a>
+                    </p>
+                </section>
+            </div>
+        </section>
+    </div>
+    <div id="pushed-authorization-request-endpoint">
+        <section id="section-2">
+            <h2 id="name-pushed-authorization-reques">
+                <a href="#section-2" class="section-number selfRef">2. </a><a href="#name-pushed-authorization-reques"
+                    class="section-name selfRef">推送授权请求端点</a>
+            </h2>
+            <p id="section-2-1">推送授权请求端点是授权服务器上的一个 HTTP API，
+                它接受 HTTP <code>POST</code> 请求，请求参数位于 HTTP 请求消息体中，并使用
+                <code>application/x-www-form-urlencoded</code> 格式。该格式的字符编码为 UTF-8，如
+                <span><a href="https://www.rfc-editor.org/rfc/rfc6749#appendix-B" class="relref">[<a href="#RFC6749"
+                            class="xref">RFC6749</a>] 附录
+                        B</a></span> 中所述。PAR 端点 URL <span class="bcp14">MUST</span> 使用“https”方案。<a href="#section-2-1"
+                    class="pilcrow">¶</a>
+            </p>
+            <p id="section-2-2">支持 PAR 的授权服务器 <span class="bcp14">SHOULD</span> 在其
+                授权服务器元数据文档 <span>[<a href="#RFC8414" class="xref">RFC8414</a>]</span> 中包含
+                其推送授权请求端点的 URL，使用
+                <code>pushed_authorization_request_endpoint</code> 参数，如 <a href="#as_metadata" class="xref">第 5 节</a>
+                所定义。<a href="#section-2-2" class="pilcrow">¶</a>
+            </p>
+            <p id="section-2-3">该端点接受 <span>[<a href="#RFC6749" class="xref">RFC6749</a>]</span> 中为授权端点定义的授权请求参数，以及
+                为授权端点定义的所有适用扩展。此类扩展的一些示例包括
+                Proof Key for Code Exchange（PKCE）<span>[<a href="#RFC7636" class="xref">RFC7636</a>]</span>、Resource
+                Indicators <span>[<a href="#RFC8707" class="xref">RFC8707</a>]</span> 和 OpenID Connect（OIDC）
+                <span>[<a href="#OIDC" class="xref">OIDC</a>]</span>。该端点 <span class="bcp14">MAY</span> 还支持
+                按照 <span>[<a href="#RFC9101" class="xref">RFC9101</a>]</span> 和本文档 <a href="#request_parameter"
+                    class="xref">第 3 节</a>，将授权请求参数集作为 Request Object 发送。<a href="#section-2-3" class="pilcrow">¶</a>
+            </p>
+            <p id="section-2-4"><span>[<a href="#RFC6749" class="xref">RFC6749</a>]</span> 中为令牌端点请求定义的客户端认证规则，包括适用的
+                认证方法，也适用于 PAR 端点。如适用，
+                <code>token_endpoint_auth_method</code> 客户端元数据参数 <span>[<a href="#RFC7591"
+                        class="xref">RFC7591</a>]</span> 指示客户端在向授权服务器发出直接请求（包括
+                发往 PAR 端点的请求）时要使用的已注册认证方法。
+                类似地，<code>token_endpoint_auth_methods_supported</code> 授权服务器元数据
+                <span>[<a href="#RFC8414" class="xref">RFC8414</a>]</span> 参数列出了授权服务器在接受来自客户端的
+                直接请求（包括发往 PAR 端点的请求）时支持的客户端认证方法。<a href="#section-2-4" class="pilcrow">¶</a>
+            </p>
+            <p id="section-2-5">由于历史原因，在使用基于 JWT 客户端断言的认证（在 <span><a
+                        href="https://www.rfc-editor.org/rfc/rfc7523#section-2.2" class="relref">[<a href="#RFC7523"
+                            class="xref">RFC7523</a>] 第 2.2 节</span> 中定义，且根据 <span>[<a href="#OIDC"
+                        class="xref">OIDC</a>]</span> 第 9 节使用 <code>private_key_jwt</code> 或
+                <code>client_secret_jwt</code> 认证方法名称）时，关于应使用的适当 audience
+                值存在潜在歧义。为解决这种歧义，<span>[<a href="#RFC8414" class="xref">RFC8414</a>]</span> 所规定的
+                授权服务器 issuer 标识符 URL <span class="bcp14">SHOULD</span> 用作 audience 的值。为促进
+                互操作性，授权服务器 <span class="bcp14">MUST</span> 接受其 issuer 标识符、
+                令牌端点 URL 或推送授权请求端点 URL，作为将其标识为预期 audience 的值。<a href="#section-2-5" class="pilcrow">¶</a>
+            </p>
+            <div id="request">
+                <section id="section-2.1">
+                    <h3 id="name-request">
+                        <a href="#section-2.1" class="section-number selfRef">2.1. </a><a href="#name-request"
+                            class="section-name selfRef">请求</a>
+                    </h3>
+                    <p id="section-2.1-1">客户端将构成授权请求的参数直接发送到
+                        PAR 端点。典型参数集可能包括：<code>client_id</code>、
+                        <code>response_type</code>、<code>redirect_uri</code>、<code>scope</code>、<code>state</code>、
+                        <code>code_challenge</code> 和 <code>code_challenge_method</code>，如下例所示。
+                        然而，推送授权请求可以由任何适用于授权端点的参数组成，
+                        包括 <span>[<a href="#RFC6749" class="xref">RFC6749</a>]</span> 中定义的参数以及所有适用扩展。
+                        <code>request_uri</code> 授权请求参数是一个例外，它 <span class="bcp14">MUST NOT</span> 被提供。<a
+                            href="#section-2.1-1" class="pilcrow">¶</a>
+                    </p>
+                    <p id="section-2.1-2">请求还会按给定客户端的需要，包含
+                        客户端认证所需的任何其他参数（例如 <code>client_secret</code> 或
+                        <code>client_assertion</code> 和 <code>client_assertion_type</code>）。这些参数
+                        已定义并注册用于令牌端点，但仅适用于客户端
+                        认证。当它们出现在推送授权请求中时，只依赖它们进行
+                        客户端认证，而与授权请求本身无关。任何与客户端认证无关的令牌
+                        端点参数，对推送授权请求均没有定义的含义。
+                        <code>client_id</code> 参数在授权请求和令牌端点请求中具有相同
+                        语义；作为必需的授权请求参数，它同样也是推送授权请求中的必需参数。<a href="#section-2.1-2" class="pilcrow">¶</a>
+                    </p>
+                    <p id="section-2.1-3">客户端构造 HTTP <code>POST</code> 请求的消息体，
+                        其中参数以 <code>x-www-form-urlencoded</code> 格式表示，并使用
+                        UTF-8 字符编码，如 <span><a href="https://www.rfc-editor.org/rfc/rfc6749#appendix-B"
+                                class="relref">[<a href="#RFC6749" class="xref">RFC6749</a>] 附录 B</a></span>
+                        所述。如适用，客户端还会按照与令牌端点请求相同的规则，
+                        将其认证凭据添加到请求头或请求体中。<a href="#section-2.1-3" class="pilcrow">¶</a></p>
+                    <p id="section-2.1-4">以下示例对此进行了说明（消息
+                        体中的额外换行仅用于显示目的）：<a href="#section-2.1-4" class="pilcrow">¶</a></p>
+                    <div id="section-2.1-5">
+                        <pre class="sourcecode lang-http-message"> POST /as/par HTTP/1.1
+ Host: as.example.com
+ Content-Type: application/x-www-form-urlencoded
+
+ response_type=code&amp;state=af0ifjsldkj&amp;client_id=s6BhdRkqt3
+ &amp;redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
+ &amp;code_challenge=K2-ltc83acc4h0c9w6ESC_rEMTJ3bww-uCHaoeK1t8U
+ &amp;code_challenge_method=S256&amp;scope=account-information
+ &amp;client_assertion_type=
+  urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer
+ &amp;client_assertion=eyJraWQiOiJrMmJkYyIsImFsZyI6IlJTMjU2In0.eyJpc3Mi
+  OiJzNkJoZFJrcXQzIiwic3ViIjoiczZCaGRSa3F0MyIsImF1ZCI6Imh0dHBzOi8vc
+  2VydmVyLmV4YW1wbGUuY29tIiwiZXhwIjoxNjI1ODY5Njc3fQ.te4IdnP_DK4hWrh
+  TWA6fyhy3fxlAQZAhfA4lmzRdpoP5uZb-E90R5YxzN1YDA8mnVdpgj_Bx1lG5r6se
+  f5TlckApA3hahhC804dcqlE4naEmLISmN1pds2WxTMOUzZY8aKKSDzNTDqhyTgE-K
+  dTb3RafRj7tdZb09zWs7c_moOvfVcQIoy5zz1BvLQKW1Y8JsYvdpu2AvpxRPbcP8W
+  yeW9B6PL6_fy3pXYKG3e-qUcvPa9kan-mo9EoSgt-YTDQjK1nZMdXIqTluK9caVJE
+  RWW0fD1Y11_tlOcJn-ya7v7d8YmFyJpkhZfm8x1FoeH0djEicXTixEkdRuzsgUCm6
+  GQ
+</pre><a href="#section-2.1-5" class="pilcrow">¶</a>
+                    </div>
+                    <p id="section-2.1-6">授权服务器 <span class="bcp14">MUST</span> 按如下方式处理请求：<a href="#section-2.1-6"
+                            class="pilcrow">¶</a></p>
+                    <ol start="1" type="1" class="normal type-1" id="section-2.1-7">
+                        <li id="section-2.1-7.1">以与令牌端点相同的方式认证客户端
+                            （<span><a href="https://www.rfc-editor.org/rfc/rfc6749#section-2.3" class="relref">[<a
+                                        href="#RFC6749" class="xref">RFC6749</a>] 第
+                                    2.3 节</a></span>）。<a href="#section-2.1-7.1" class="pilcrow">¶</a>
+                        </li>
+                        <li id="section-2.1-7.2">如果提供了 <code>request_uri</code> 授权
+                            请求参数，则拒绝该请求。<a href="#section-2.1-7.2" class="pilcrow">¶</a>
+                        </li>
+                        <li id="section-2.1-7.3">像验证发送到授权端点的授权请求一样，
+                            验证该推送请求。例如，授权服务器检查
+                            重定向 URI 是否匹配为客户端配置的重定向 URI 之一，并且还检查
+                            该客户端是否被授权访问其所请求的 scope。
+                            这种验证允许授权服务器尽早拒绝未授权或欺诈性请求。
+                            授权服务器 <span class="bcp14">MAY</span> 省略其在
+                            处理推送请求时无法执行的验证步骤；然而，这些检查随后 <span class="bcp14">MUST</span> 在授权端点处理授权请求时执行。<a
+                                href="#section-2.1-7.3" class="pilcrow">¶</a>
+                        </li>
+                    </ol>
+                    <p id="section-2.1-8">授权服务器 <span class="bcp14">MAY</span> 允许具有
+                        认证凭据的客户端在每个推送授权请求中建立每授权请求的重定向 URI。
+                        如 <a href="#redirect_uri_mgmt" class="xref">第 2.4 节</a> 更详细描述，这是可能的，因为与 <span>[<a
+                                href="#RFC6749" class="xref">RFC6749</a>]</span> 不同，本规范使
+                        授权服务器能够在实际授权请求执行之前认证客户端并验证客户端请求。<a href="#section-2.1-8" class="pilcrow">¶</a></p>
+                </section>
+            </div>
+            <div id="par-response">
+                <section id="section-2.2">
+                    <h3 id="name-successful-response">
+                        <a href="#section-2.2" class="section-number selfRef">2.2. </a><a
+                            href="#name-successful-response" class="section-name selfRef">成功响应</a>
+                    </h3>
+                    <p id="section-2.2-1">如果验证成功，服务器 <span class="bcp14">MUST</span>
+                        生成一个请求 URI，并在响应中以 <code>201</code> HTTP 状态码提供它。
+                        以下参数作为顶层成员包含在 HTTP
+                        响应的消息体中，使用 <span>[<a href="#RFC8259" class="xref">RFC8259</a>]</span> 所定义的
+                        <code>application/json</code> 媒体类型。<a href="#section-2.2-1" class="pilcrow">¶</a>
+                    </p>
+                    <span class="break"></span>
+                    <dl class="dlNewline" id="section-2.2-2">
+                        <dt id="section-2.2-2.1">request_uri</dt>
+                        <dd style="margin-left: 1.5em" id="section-2.2-2.2">与已提交的
+                            授权请求对应的请求 URI。该 URI 是后续授权请求中相应请求
+                            数据的单次使用引用。授权流程获取
+                            授权请求数据的方式由授权服务器自行决定，并不在
+                            本规范范围内。无需通过此 URI 将授权请求数据
+                            提供给其他方。<a href="#section-2.2-2.2" class="pilcrow">¶</a>
+                        </dd>
+                        <dd class="break"></dd>
+                        <dt id="section-2.2-2.3">expires_in</dt>
+                        <dd style="margin-left: 1.5em" id="section-2.2-2.4"> 一个 JSON 数字，表示
+                            请求 URI 的生存期，以秒为单位的正整数。请求 URI 生存期由
+                            授权服务器自行决定，但通常会相对较短（例如，在
+                            5 到 600 秒之间）。<a href="#section-2.2-2.4" class="pilcrow">¶</a>
+                        </dd>
+                        <dd class="break"></dd>
+                    </dl>
+                    <p id="section-2.2-3"><code>request_uri</code> 值的格式由
+                        授权服务器自行决定，但它 <span class="bcp14">MUST</span> 包含某个使用
+                        密码学强伪随机算法生成的部分，使得预测或猜测有效值在计算上不可行
+                        （具体细节见 <span><a href="https://www.rfc-editor.org/rfc/rfc6749#section-10.10" class="relref">[<a
+                                    href="#RFC6749" class="xref">RFC6749</a>] 第
+                                10.10 节</a></span>）。授权服务器 <span class="bcp14">MAY</span> 使用
+                        <code>urn:ietf:params:oauth:request_uri:&lt;reference-value&gt;</code> 形式构造
+                        <code>request_uri</code> 值，其中
+                        <code>&lt;reference-value&gt;</code> 是 URI 的随机部分，用来引用
+                        相应的授权请求数据。<a href="#section-2.2-3" class="pilcrow">¶</a>
+                    </p>
+                    <p id="section-2.2-4"><code>request_uri</code> 值 <span class="bcp14">MUST</span> 绑定到
+                        提交该授权请求的客户端。<a href="#section-2.2-4" class="pilcrow">¶</a>
+                    </p>
+                    <p id="section-2.2-5">以下是这种响应的示例：<a href="#section-2.2-5" class="pilcrow">¶</a></p>
+                    <div id="section-2.2-6">
+                        <pre class="sourcecode lang-http-message"> HTTP/1.1 201 Created
+ Content-Type: application/json
+ Cache-Control: no-cache, no-store
+
+ {
+  "request_uri":
+    "urn:ietf:params:oauth:request_uri:6esc_11ACC5bwc014ltc14eY22c",
+  "expires_in": 60
+ }
+</pre><a href="#section-2.2-6" class="pilcrow">¶</a>
+                    </div>
+                </section>
+            </div>
+            <div id="error_response">
+                <section id="section-2.3">
+                    <h3 id="name-error-response">
+                        <a href="#section-2.3" class="section-number selfRef">2.3. </a><a href="#name-error-response"
+                            class="section-name selfRef">错误响应</a>
+                    </h3>
+                    <p id="section-2.3-1">授权服务器返回错误响应，其格式与
+                        <span><a href="https://www.rfc-editor.org/rfc/rfc6749#section-5.2" class="relref">[<a
+                                    href="#RFC6749" class="xref">RFC6749</a>] 第 5.2 节</a></span>
+                        中为令牌端点错误响应指定的格式相同，使用其中适当的错误代码
+                        或 <span><a href="https://www.rfc-editor.org/rfc/rfc6749#section-4.1.2.1" class="relref">[<a
+                                    href="#RFC6749" class="xref">RFC6749</a>] 第 4.1.2.1 节</a></span> 中的错误代码。在那些
+                        <span><a href="https://www.rfc-editor.org/rfc/rfc6749#section-4.1.2.1" class="relref">[<a
+                                    href="#RFC6749" class="xref">RFC6749</a>] 第
+                                4.1.2.1 节</a></span> 禁止使用错误自动重定向回请求客户端，
+                        因而没有定义错误代码的情况下（例如，当请求因缺失、无效或不匹配的
+                        重定向 URI 而失败时），可以使用 <code>invalid_request</code> 错误代码作为默认
+                        错误代码。当某个 OAuth 扩展参与已推送的授权请求的
+                        初始处理时，也可以使用该 OAuth 扩展定义的错误代码。由于
+                        推送授权请求的初始处理不涉及资源所有者交互，
+                        因此与用户交互相关的错误代码，例如 <span>[<a href="#OIDC" class="xref">OIDC</a>]</span> 中定义的
+                        <code>consent_required</code>，绝不会返回。<a href="#section-2.3-1" class="pilcrow">¶</a>
+                    </p>
+                    <p id="section-2.3-2">如果客户端被授权服务器或客户端策略要求使用已签名的
+                        Request Object（见 <span>[<a href="#RFC9101" class="xref">RFC9101</a>], <a
+                                href="https://www.rfc-editor.org/rfc/rfc9101#section-10.5" class="relref">第 10.5
+                                节</a></span>），则授权服务器 <span class="bcp14">MUST</span> 仅接受符合 <a href="#request_parameter"
+                            class="xref">第 3 节</a> 中给出定义的请求，并且 <span class="bcp14">MUST</span>
+                        以 HTTP 状态码 400 和错误代码
+                        <code>invalid_request</code> 拒绝任何其他请求。<a href="#section-2.3-2" class="pilcrow">¶</a>
+                    </p>
+                    <p id="section-2.3-3">除上述内容外，PAR 端点还可以使用以下
+                        HTTP 状态码：<a href="#section-2.3-3" class="pilcrow">¶</a></p>
+                    <span class="break"></span>
+                    <dl class="dlParallel" id="section-2.3-4">
+                        <dt id="section-2.3-4.1">405：</dt>
+                        <dd style="margin-left: 3.0em" id="section-2.3-4.2"> 如果请求未使用
+                            <code>POST</code> 方法，授权服务器以 HTTP 405（Method Not
+                            Allowed）状态码响应。<a href="#section-2.3-4.2" class="pilcrow">¶</a>
+                        </dd>
+                        <dd class="break"></dd>
+                        <dt id="section-2.3-4.3">413：</dt>
+                        <dd style="margin-left: 3.0em" id="section-2.3-4.4"> 如果请求大小超出
+                            授权服务器允许的上限，授权服务器以 HTTP
+                            413（Payload Too Large）状态码响应。<a href="#section-2.3-4.4" class="pilcrow">¶</a>
+                        </dd>
+                        <dd class="break"></dd>
+                        <dt id="section-2.3-4.5">429：</dt>
+                        <dd style="margin-left: 3.0em" id="section-2.3-4.6"> 如果某一特定时间段内来自客户端的
+                            请求数量超过授权服务器允许的数量，
+                            授权服务器以 HTTP 429（Too Many Requests）状态码响应。<a href="#section-2.3-4.6" class="pilcrow">¶</a>
+                        </dd>
+                        <dd class="break"></dd>
+                    </dl>
+                    <p id="section-2.3-5">以下是来自 PAR 端点的错误响应示例：<a href="#section-2.3-5" class="pilcrow">¶</a></p>
+                    <div id="section-2.3-6">
+                        <pre class="sourcecode lang-http-message"> HTTP/1.1 400 Bad Request
+ Content-Type: application/json
+ Cache-Control: no-cache, no-store
+
+ {
+   "error": "invalid_request",
+   "error_description":
+     "The redirect_uri is not valid for the given client"
+ }
+</pre><a href="#section-2.3-6" class="pilcrow">¶</a>
+                    </div>
+                </section>
+            </div>
+            <div id="redirect_uri_mgmt">
+                <section id="section-2.4">
+                    <h3 id="name-management-of-client-redire">
+                        <a href="#section-2.4" class="section-number selfRef">2.4. </a><a
+                            href="#name-management-of-client-redire" class="section-name selfRef">客户端
+                            重定向 URI 的管理</a>
+                    </h3>
+                    <p id="section-2.4-1">OAuth 2.0 <span>[<a href="#RFC6749" class="xref">RFC6749</a>]</span> 允许
+                        客户端在某些情况下使用未注册的 <code>redirect_uri</code> 值，或允许
+                        授权服务器对客户端在授权端点提交的 <code>redirect_uri</code> 值
+                        应用其自己的匹配语义。然而，OAuth 安全 BCP <span>[<a href="#I-D.ietf-oauth-security-topics"
+                                class="xref">OAUTH-SECURITY-TOPICS</a>]</span> 以及
+                        OAuth 2.1 规范 <span>[<a href="#I-D.ietf-oauth-v2-1" class="xref">OAUTH-V2</a>]</span> 要求授权服务器将
+                        <code>redirect_uri</code> 参数与先前为特定客户端建立的一组重定向 URI
+                        进行精确匹配。这是早期检测客户端冒充尝试的一种手段，
+                        并可防止令牌泄露和开放重定向。缺点是，这会使客户端管理更加
+                        繁琐，因为重定向 URI 通常是客户端策略中最易变的部分。<a href="#section-2.4-1" class="pilcrow">¶</a>
+                    </p>
+                    <p id="section-2.4-2">对于已与授权服务器建立认证凭据的客户端，
+                        使用 PAR 时 <span class="bcp14">MAY</span> 放宽精确匹配要求。
+                        这是可能的，因为与传统授权请求不同，
+                        授权服务器会在授权流程开始之前认证客户端，从而
+                        确保它正在与合法客户端交互。授权服务器 <span class="bcp14">MAY</span> 允许此类客户端指定
+                        先前未向授权服务器注册的 <code>redirect_uri</code> 值。这将给予客户端更大的
+                        灵活性（例如，在运行时为每个授权服务器铸造不同的 <code>redirect_uri</code> 值），
+                        并可简化客户端管理。授权服务器可自行决定对所提供的
+                        <code>redirect_uri</code> 值施加限制，例如，授权服务器 <span class="bcp14">MAY</span>
+                        要求特定 URI 前缀，或只允许查询
+                        参数在运行时变化。<a href="#section-2.4-2" class="pilcrow">¶</a>
+                    </p>
+                    <aside id="section-2.4-3">
+                        <p id="section-2.4-3.1">注意：设置特定于交易的重定向 URI 的能力，在
+                            客户端 ID 以及相应凭据和策略由可信第三方管理的情形中也很有用，
+                            例如通过包含客户端权限的客户端证书进行管理。此类
+                            外部管理的客户端可以与信任相应第三方的授权服务器交互，
+                            而无需额外的注册步骤。<a href="#section-2.4-3.1" class="pilcrow">¶</a></p>
+                    </aside>
+                </section>
+            </div>
+        </section>
+    </div>
+    <div id="request_parameter">
+        <section id="section-3">
+            <h2 id="name-the-request-request-paramet">
+                <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-the-request-request-paramet"
+                    class="section-name selfRef">“request” 请求参数</a>
+            </h2>
+            <p id="section-3-1">客户端 <span class="bcp14">MAY</span> 使用 JAR <span>[<a href="#RFC9101"
+                        class="xref">RFC9101</a>]</span> 中定义的
+                <code>request</code> 参数，将 Request Object JWT 推送到
+                授权服务器。JAR <span>[<a href="#RFC9101" class="xref">RFC9101</a>]</span> 中定义的 Request Object 处理、签名和加密规则
+                适用。给定客户端认证方法所需的请求参数会直接包含在
+                <code>application/x-www-form-urlencoded</code>
+                请求中，并且是表单体中除 <code>request</code> 之外的唯一参数（例如，
+                mutual TLS 客户端认证 <span>[<a href="#RFC8705" class="xref">RFC8705</a>]</span> 使用
+                <code>client_id</code> HTTP 请求参数，而基于 JWT 断言的客户端认证 <span>[<a href="#RFC7523"
+                        class="xref">RFC7523</a>]</span> 使用 <code>client_assertion</code> 和
+                <code>client_assertion_type</code>）。所有其他请求参数，即与
+                授权请求本身相关的参数，<span class="bcp14">MUST</span> 作为表示
+                授权请求的 JWT 的声明出现。<a href="#section-3-1" class="pilcrow">¶</a>
+            </p>
+            <p id="section-3-2">以下是使用已签名 Request
+                Object 的推送授权请求示例，其授权请求有效载荷与 <a href="#request" class="xref">第 2.1 节</a> 中示例相同。客户端使用基于 JWT 客户端断言的
+                认证 <span>[<a href="#RFC7523" class="xref">RFC7523</a>]</span> 进行认证（额外的换行和空格
+                仅用于显示目的）：<a href="#section-3-2" class="pilcrow">¶</a></p>
+            <div id="section-3-3">
+                <pre class="sourcecode lang-http-message"> POST /as/par HTTP/1.1
+ Host: as.example.com
+ Content-Type: application/x-www-form-urlencoded
+
+ client_assertion_type=
+  urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer
+ &amp;client_assertion=eyJraWQiOiJrMmJkYyIsImFsZyI6IlJTMjU2In0.eyJpc3Mi
+  OiJzNkJoZFJrcXQzIiwic3ViIjoiczZCaGRSa3F0MyIsImF1ZCI6Imh0dHBzOi8vc
+  2VydmVyLmV4YW1wbGUuY29tIiwiZXhwIjoxNjI1ODY5Njc3fQ.te4IdnP_DK4hWrh
+  TWA6fyhy3fxlAQZAhfA4lmzRdpoP5uZb-E90R5YxzN1YDA8mnVdpgj_Bx1lG5r6se
+  f5TlckApA3hahhC804dcqlE4naEmLISmN1pds2WxTMOUzZY8aKKSDzNTDqhyTgE-K
+  dTb3RafRj7tdZb09zWs7c_moOvfVcQIoy5zz1BvLQKW1Y8JsYvdpu2AvpxRPbcP8W
+  yeW9B6PL6_fy3pXYKG3e-qUcvPa9kan-mo9EoSgt-YTDQjK1nZMdXIqTluK9caVJE
+  RWW0fD1Y11_tlOcJn-ya7v7d8YmFyJpkhZfm8x1FoeH0djEicXTixEkdRuzsgUCm6
+  GQ
+ &amp;request=eyJraWQiOiJrMmJkYyIsImFsZyI6IlJTMjU2In0.eyJpc3MiOiJzNkJoZ
+  FJrcXQzIiwiYXVkIjoiaHR0cHM6Ly9zZXJ2ZXIuZXhhbXBsZS5jb20iLCJleHAiOj
+  E2MjU4Njk2NzcsInJlc3BvbnNlX3R5cGUiOiJjb2RlIiwiY2xpZW50X2lkIjoiczZ
+  CaGRSa3F0MyIsInJlZGlyZWN0X3VyaSI6Imh0dHBzOi8vY2xpZW50LmV4YW1wbGUu
+  b3JnL2NiIiwic2NvcGUiOiJhY2NvdW50LWluZm9ybWF0aW9uIiwic3RhdGUiOiJhZ
+  jBpZmpzbGRraiIsImNvZGVfY2hhbGxlbmdlIjoiSzItbHRjODNhY2M0aDBjOXc2RV
+  NDX3JFTVRKM2J3dy11Q0hhb2VLMXQ4VSIsImNvZGVfY2hhbGxlbmdlX21ldGhvZCI
+  6IlMyNTYifQ.l9R3RC9bFBHry_8acObQjEf4fX5yfJkWUPfak3J3iiBm0aaQznPw5
+  BZ0B3VQZ9_KYdPt5bTkaflS5fSDklM3_7my9MyOSKFYmf46INk6ju_qUuC2crkOQX
+  ZWYJB-0bnYEbdHpUjazFSUvN49cEGstNQeE-dKDWHNgEojgcuNA_pjKfL9VYp1dEA
+  6-WjXZ_OlJ7R_mBWpjFAzc0UkQwqX5hfOJoGTqB2tE4a4aB2z8iYlUJp0DeeYp_hP
+  N6svtmdvte73p5bLGDFpRIlmrBQIAQuxiS0skORpXlS0cBcgHimXVnXOJG7E-A_lS
+  _5y54dVLQPA1jKYx-fxbYSG7dp2fw
+ &amp;client_id=s6BhdRkqt3
+</pre><a href="#section-3-3" class="pilcrow">¶</a>
+            </div>
+            <p id="section-3-4">除 <a href="#request" class="xref">第 2.1 节</a> 中定义的处理规则之外，
+                授权服务器 <span class="bcp14">MUST</span> 采取以下步骤：<a href="#section-3-4" class="pilcrow">¶</a></p>
+            <ol start="1" type="1" class="normal type-1" id="section-3-5">
+                <li id="section-3-5.1">如适用，按 JAR <span>[<a href="#RFC9101" class="xref">RFC9101</a>], <a
+                            href="https://www.rfc-editor.org/rfc/rfc9101#section-6.1" class="relref">第
+                            6.1 节</a></span> 中指定的方式解密 Request Object。<a href="#section-3-5.1" class="pilcrow">¶</a>
+                </li>
+                <li id="section-3-5.2">按 JAR <span>[<a href="#RFC9101" class="xref">RFC9101</a>], <a
+                            href="https://www.rfc-editor.org/rfc/rfc9101#section-6.2" class="relref">第
+                            6.2 节</a></span> 中指定的方式验证 Request Object 签名。<a href="#section-3-5.2" class="pilcrow">¶</a>
+                </li>
+                <li id="section-3-5.3">如果客户端已与授权服务器建立认证凭据，
+                    当已认证的 <code>client_id</code> 与 Request Object 中的
+                    <code>client_id</code> 声明不匹配时，拒绝该请求。此外，是否要求 <code>iss</code>
+                    声明与 <code>client_id</code> 匹配，由授权服务器自行决定。<a href="#section-3-5.3" class="pilcrow">¶</a>
+                </li>
+            </ol>
+            <p id="section-3-6">以下 RSA 密钥对以 JSON Web Key（JWK）格式 <span>[<a href="#RFC7517"
+                        class="xref">RFC7517</a>]</span> 表示，
+                可用于验证或重新创建上述示例中的
+                Request Object 签名（值中的额外换行和缩进仅用于
+                显示目的）：<a href="#section-3-6" class="pilcrow">¶</a></p>
+            <div id="section-3-7">
+                <pre class="sourcecode lang-json"> {
+   "kty": "RSA",
+   "kid":"k2bdc",
+   "n": "y9Lqv4fCp6Ei-u2-ZCKq83YvbFEk6JMs_pSj76eMkddWRuWX2aBKGHAtKlE
+         5P7_vn__PCKZWePt3vGkB6ePgzAFu08NmKemwE5bQI0e6kIChtt_6KzT5Oa
+         aXDFI6qCLJmk51Cc4VYFaxgqevMncYrzaW_50mZ1yGSFIQzLYP8bijAHGVj
+         dEFgZaZEN9lsn_GdWLaJpHrB3ROlS50E45wxrlg9xMncVb8qDPuXZarvghL
+         L0HzOuYRadBJVoWZowDNTpKpk2RklZ7QaBO7XDv3uR7s_sf2g-bAjSYxYUG
+         sqkNA9b3xVW53am_UZZ3tZbFTIh557JICWKHlWj5uzeJXaw",
+   "e": "AQAB",
+   "d": "LNwG_pCKrwowALpCpRdcOKlSVqylSurZhE6CpkRiE9cpDgGKIkO9CxPlXOL
+         zjqxXuQc8MdMqRQZTnAwgd7HH0B6gncrruV3NewI-XQV0ckldTjqNfOTz1V
+         Rs-jE-57KAXI3YBIhu-_0YpIDzdk_wBuAk661Svn0GsPQe7m9DoxdzenQu9
+         O_soewUhlPzRrTH0EeIqYI715rwI3TYaSzoWBmEPD2fICyj18FF0MPy_SQz
+         k3noVUUIzfzLnnJiWy_p63QBCMqjRoSHHdMnI4z9iVpIwJWQ3jO5n_2lC2-
+         cSgwjmKsFzDBbQNJc7qMG1N6EssJUwgGJxz1eAUFf0w4YAQ",
+   "qi": "J-mG0swR4FTy3atrcQ7dd0hhYn1E9QndN-
+         -sDG4EQO0RnFj6wIefCvwIc4
+         7hCtVeFnCTPYJNc_JyV-mU-9vlzS5GSNuyR5qdpsMZXUMpEvQcwKt23ffPZ
+         YGaqfKyEesmf_Wi8fFcE68H9REQjnniKrXm7w2-IuG_IrVJA9Ox-uU",
+   "q": "4hlMYAGa0dvogdK1jnxQ7J_Lqpqi99e-AeoFvoYpMPhthChTzwFZO9lQmUo
+         BpMqVQTws_s7vWGmt7ZAB3ywkurf0pV7BD0fweJiUzrWk4KJjxtmP_auuxr
+         jvm3s2FUGn6f0wRY9Z8Hj9A7C72DnYCjuZiJQMYCWDsZ8-d-L1a-s",
+   "p": "5sd9Er3I2FFT9R-gy84_oakEyCmgw036B_nfYEEOCwpSvi2z7UcIVK3bSEL
+         5WCW6BNgB3HDWhq8aYPirwQnqm0K9mX1E-4xM10WWZ-rP3XjYpQeS0Snru5
+         LFVWsAzi-FX7BOqBibSAXLdEGXcXa44l08iec_bPD3xduq5V_1YoE",
+   "dq": "Nz2PF3XM6bEc4XsluKZO70ErdYdKgdtIJReUR7Rno_tOZpejwlPGBYVW19
+         zpAeYtCT82jxroB2XqhLxGeMxEPQpsz2qTKLSe4BgHY2ml2uxSDGdjcsrbb
+         NoKUKaN1CuyZszhWl1n0AT_bENl4bJgQj_Fh0UEsQj5YBBUJt5gr_k",
+   "dp": "Zc877jirkkLOtyTs2vxyNe9KnMNAmOidlUc2tE_-0gAL4Lpo1hSwKCtKwe
+         ZJ-gkqt1hT-dwNx_0Xtg_-NXsadMRMwJnzBMYwYAfjApUkfqABc0yUCJJl3
+         KozRCugf1WXkU9GZAH2_x8PUopdNUEa70ISowPRh04HANKX4fkjWAE"
+  }
+</pre><a href="#section-3-7" class="pilcrow">¶</a>
+            </div>
+        </section>
+    </div>
+    <div id="authorization-request">
+        <section id="section-4">
+            <h2 id="name-authorization-request">
+                <a href="#section-4" class="section-number selfRef">4. </a><a href="#name-authorization-request"
+                    class="section-name selfRef">授权请求</a>
+            </h2>
+            <p id="section-4-1">客户端使用授权服务器返回的 <code>request_uri</code> 值，
+                构建 <span>[<a href="#RFC9101" class="xref">RFC9101</a>]</span> 中定义的授权请求。如下例所示，
+                客户端指示用户代理发出以下 HTTP 请求（额外的换行和缩进仅用于显示
+                目的）：<a href="#section-4-1" class="pilcrow">¶</a></p>
+            <div id="section-4-2">
+                <pre class="sourcecode lang-http-message"> GET /authorize?client_id=s6BhdRkqt3&amp;request_uri=urn%3Aietf%3Aparams
+  %3Aoauth%3Arequest_uri%3A6esc_11ACC5bwc014ltc14eY22c HTTP/1.1
+ Host: as.example.com
+</pre><a href="#section-4-2" class="pilcrow">¶</a>
+            </div>
+            <p id="section-4-3">由于授权请求内容的部分内容，例如 <code>code_challenge</code>
+                参数值，对于特定授权请求是唯一的，客户端 <span class="bcp14">MUST</span> 只使用一次 <code>request_uri</code> 值。授权服务器
+                <span class="bcp14">SHOULD</span> 将 <code>request_uri</code> 值视为一次性使用，但 <span class="bcp14">MAY</span>
+                因用户重新加载/刷新其用户代理而允许重复请求。
+                已过期的 <code>request_uri</code> <span class="bcp14">MUST</span> 作为无效而被拒绝。<a href="#section-4-3"
+                    class="pilcrow">¶</a>
+            </p>
+            <p id="section-4-4">授权服务器 <span class="bcp14">MUST</span> 验证由推送请求产生的授权请求，
+                就像验证任何其他授权请求一样。授权服务器
+                <span class="bcp14">MAY</span> 省略其在请求被推送时已经执行过的验证步骤，
+                前提是它可以验证该请求确实是一个推送请求，并且该请求或
+                授权服务器策略未以会影响被省略步骤结果的方式被修改。<a href="#section-4-4" class="pilcrow">¶</a>
+            </p>
+            <p id="section-4-5">授权服务器策略 <span class="bcp14">MAY</span> 规定，无论是全局还是
+                按客户端，PAR 是客户端传递授权请求数据的唯一方式。在
+                这种情况下，授权服务器会使用 <code>invalid_request</code> 错误代码拒绝
+                处理任何不带有 <code>request_uri</code>
+                参数且该参数值不是从 PAR 端点获得的授权端点请求。<a href="#section-4-5" class="pilcrow">¶</a></p>
+            <aside id="section-4-6">
+                <p id="section-4-6.1">注意：授权服务器和客户端 <span class="bcp14">MAY</span> 使用
+                    第 <a href="#as_metadata" class="xref">5</a> 节和第 <a href="#c_metadata" class="xref">6</a>
+                    节中定义的元数据来传达期望的行为。<a href="#section-4-6.1" class="pilcrow">¶</a>
+                </p>
+            </aside>
+        </section>
+    </div>
+    <div id="as_metadata">
+        <section id="section-5">
+            <h2 id="name-authorization-server-metada">
+                <a href="#section-5" class="section-number selfRef">5. </a><a href="#name-authorization-server-metada"
+                    class="section-name selfRef">授权服务器元数据</a>
+            </h2>
+            <p id="section-5-1">引入以下授权服务器元数据参数
+                <span>[<a href="#RFC8414" class="xref">RFC8414</a>]</span>，用于传达服务器关于 PAR 的能力和策略。<a href="#section-5-1"
+                    class="pilcrow">¶</a>
+            </p>
+            <span class="break"></span>
+            <dl class="dlNewline" id="section-5-2">
+                <dt id="section-5-2.1">pushed_authorization_request_endpoint</dt>
+                <dd style="margin-left: 1.5em" id="section-5-2.2">推送授权请求端点的 URL，
+                    客户端可以在此提交授权请求，以换取可在授权服务器使用的 <code>request_uri</code> 值。<a href="#section-5-2.2"
+                        class="pilcrow">¶</a>
+                </dd>
+                <dd class="break"></dd>
+                <dt id="section-5-2.3">require_pushed_authorization_requests</dt>
+                <dd style="margin-left: 1.5em" id="section-5-2.4">布尔参数，指示授权
+                    服务器是否只通过 PAR 接受授权请求数据。如果省略，默认值为
+                    <code>false</code>。<a href="#section-5-2.4" class="pilcrow">¶</a>
+                </dd>
+                <dd class="break"></dd>
+            </dl>
+            <p id="section-5-3">注意，存在 <code>pushed_authorization_request_endpoint</code>
+                已足以让客户端确定它可以使用 PAR 流程。从 PAR 端点获得的
+                <code>request_uri</code> 值可在授权端点使用，而不受其他授权
+                服务器元数据影响，例如 <code>request_uri_parameter_supported</code> 或
+                <code>require_request_uri_registration</code> <span>[<a href="#OIDC.Disco"
+                        class="xref">OIDC.Disco</a>]</span>。<a href="#section-5-3" class="pilcrow">¶</a>
+            </p>
+        </section>
+    </div>
+    <div id="c_metadata">
+        <section id="section-6">
+            <h2 id="name-client-metadata">
+                <a href="#section-6" class="section-number selfRef">6. </a><a href="#name-client-metadata"
+                    class="section-name selfRef">客户端元数据</a>
+            </h2>
+            <p id="section-6-1">动态客户端注册协议 <span>[<a href="#RFC7591" class="xref">RFC7591</a>]</span> 定义了一个
+                API，用于向授权服务器动态注册 OAuth 2.0 客户端
+                元数据。<span>[<a href="#RFC7591" class="xref">RFC7591</a>]</span> 定义的元数据及其已注册扩展，也蕴含了一个通用的客户端
+                数据模型，即使未使用动态客户端注册协议，该模型对授权服务器实现也很有用。
+                这类实现通常会提供某种用户
+                界面来管理客户端配置。本文档引入以下客户端元数据参数，
+                用于指示给定客户端是否要求使用推送授权请求。<a href="#section-6-1" class="pilcrow">¶</a></p>
+            <span class="break"></span>
+            <dl class="dlNewline" id="section-6-2">
+                <dt id="section-6-2.1">require_pushed_authorization_requests</dt>
+                <dd style="margin-left: 1.5em" id="section-6-2.2">布尔参数，指示
+                    客户端允许使用的发起授权请求的唯一方式是否为 PAR。如果省略，默认
+                    值为 <code>false</code>。<a href="#section-6-2.2" class="pilcrow">¶</a>
+                </dd>
+                <dd class="break"></dd>
+            </dl>
+        </section>
+    </div>
+    <div id="security-considerations">
+        <section id="section-7">
+            <h2 id="name-security-considerations">
+                <a href="#section-7" class="section-number selfRef">7. </a><a href="#name-security-considerations"
+                    class="section-name selfRef">安全考量</a>
+            </h2>
+            <div id="request-uri-guessing">
+                <section id="section-7.1">
+                    <h3 id="name-request-uri-guessing">
+                        <a href="#section-7.1" class="section-number selfRef">7.1. </a><a
+                            href="#name-request-uri-guessing" class="section-name selfRef">请求 URI 猜测</a>
+                    </h3>
+                    <p id="section-7.1-1">攻击者可能尝试猜测并重放有效的请求 URI 值，并
+                        试图冒充相应客户端。
+
+                        授权服务器 <span class="bcp14">MUST</span> 考虑
+                        JAR <span>[<a href="#RFC9101" class="xref">RFC9101</a>], <a
+                                href="https://www.rfc-editor.org/rfc/rfc9101#section-10.2" class="relref">第
+                                10.2 节</a></span> 中关于 request URI 熵的第（d）项考量。<a href="#section-7.1-1"
+                            class="pilcrow">¶</a></p>
+                </section>
+            </div>
+            <div id="open-redirection">
+                <section id="section-7.2">
+                    <h3 id="name-open-redirection">
+                        <a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-open-redirection"
+                            class="section-name selfRef">开放重定向</a>
+                    </h3>
+                    <p id="section-7.2-1">攻击者可能试图注册一个指向其控制站点的重定向 URI，
+                        以获取授权码或对用户发起其他攻击。
+                        授权服务器 <span class="bcp14">MUST</span> 只接受来自已认证客户端的
+                        推送授权请求中的新重定向 URI。<a href="#section-7.2-1" class="pilcrow">¶</a></p>
+                </section>
+            </div>
+            <div id="request-object-replay">
+                <section id="section-7.3">
+                    <h3 id="name-request-object-replay">
+                        <a href="#section-7.3" class="section-number selfRef">7.3. </a><a
+                            href="#name-request-object-replay" class="section-name selfRef">请求对象重放</a>
+                    </h3>
+                    <p id="section-7.3-1">攻击者可能重放从合法
+                        授权请求中捕获的请求 URI。为应对此类攻击，授权服务器 <span class="bcp14">SHOULD</span> 使请求 URI 一次性使用。<a
+                            href="#section-7.3-1" class="pilcrow">¶</a></p>
+                </section>
+            </div>
+            <div id="client-policy-change">
+                <section id="section-7.4">
+                    <h3 id="name-client-policy-change">
+                        <a href="#section-7.4" class="section-number selfRef">7.4. </a><a
+                            href="#name-client-policy-change" class="section-name selfRef">客户端策略变更</a>
+                    </h3>
+                    <p id="section-7.4-1">在提交 Request Object 与使用特定 Request Object 发起
+                        授权请求之间，客户端策略可能发生变化。因此，建议
+                        授权服务器在处理授权请求时根据客户端策略检查 request 参数。<a href="#section-7.4-1" class="pilcrow">¶</a></p>
+                </section>
+            </div>
+            <div id="request-uri-swapping">
+                <section id="section-7.5">
+                    <h3 id="name-request-uri-swapping">
+                        <a href="#section-7.5" class="section-number selfRef">7.5. </a><a
+                            href="#name-request-uri-swapping" class="section-name selfRef">请求 URI 调换</a>
+                    </h3>
+                    <p id="section-7.5-1">攻击者可能从一个请求中捕获 request URI，然后将其替换到
+                        另一个授权请求中。例如，在 OpenID Connect 语境下，攻击者
+                        可能将请求高认证保证级别的 request URI 替换为
+                        要求较低保证级别的 request URI。客户端 <span class="bcp14">SHOULD</span> 在
+                        推送的 Request Object 中使用 PKCE <span>[<a href="#RFC7636" class="xref">RFC7636</a>]</span>、
+                        唯一的 <code>state</code> 参数 <span>[<a href="#RFC6749" class="xref">RFC6749</a>]</span>，
+                        或 OIDC “nonce”参数 <span>[<a href="#OIDC" class="xref">OIDC</a>]</span>，
+                        以防止此攻击。<a href="#section-7.5-1" class="pilcrow">¶</a></p>
+                </section>
+            </div>
+        </section>
+    </div>
+    <div id="privacy-considerations">
+        <section id="section-8">
+            <h2 id="name-privacy-considerations">
+                <a href="#section-8" class="section-number selfRef">8. </a><a href="#name-privacy-considerations"
+                    class="section-name selfRef">隐私考量</a>
+            </h2>
+            <p id="section-8-1">OAuth 2.0 是一个复杂且灵活的框架，由于其本质上让一个实体在
+                另外两个实体之间介入用户授权以访问数据，因此具有广泛的隐私影响。
+                整个 OAuth 的隐私考量超出了本文档范围；本文档
+                仅定义了在更大框架中发起一个消息序列的替代方式。然而，
+                使用 PAR 可能会通过降低无意信息披露的可能性来改善隐私，
+                因为它通过安全连接在 HTTP 请求消息体中直接在客户端和授权服务器之间
+                传递授权请求数据，而不是在以明文通过用户代理的 URL 查询组件中
+                传递这些数据。<a href="#section-8-1" class="pilcrow">¶</a></p>
+        </section>
+    </div>
+    <div id="iana_considerations">
+        <section id="section-9">
+            <h2 id="name-iana-considerations">
+                <a href="#section-9" class="section-number selfRef">9. </a><a href="#name-iana-considerations"
+                    class="section-name selfRef">IANA 考量</a>
+            </h2>
+            <div id="oauth-authorization-server-metadata">
+                <section id="section-9.1">
+                    <h3 id="name-oauth-authorization-server-">
+                        <a href="#section-9.1" class="section-number selfRef">9.1. </a><a
+                            href="#name-oauth-authorization-server-" class="section-name selfRef">OAuth 授权
+                            服务器元数据</a>
+                    </h3>
+                    <p id="section-9.1-1">IANA 已在由 <span>[<a href="#RFC8414" class="xref">RFC8414</a>]</span> 建立的
+                        <span>[<a href="#IANA.OAuth.Parameters" class="xref">IANA.OAuth.Parameters</a>]</span> 的 IANA
+                        “OAuth Authorization
+                        Server Metadata”注册表中注册以下值。<a href="#section-9.1-1" class="pilcrow">¶</a>
+                    </p>
+                    <span class="break"></span>
+                    <dl class="dlParallel dlCompact" id="section-9.1-2">
+                        <dt id="section-9.1-2.1">元数据名称：</dt>
+                        <dd style="margin-left: 1.5em" id="section-9.1-2.2">
+                            <code>pushed_authorization_request_endpoint</code><a href="#section-9.1-2.2"
+                                class="pilcrow">¶</a>
+                        </dd>
+                        <dd class="break"></dd>
+                        <dt id="section-9.1-2.3">元数据描述：</dt>
+                        <dd style="margin-left: 1.5em" id="section-9.1-2.4">授权服务器推送
+                            授权请求端点的 URL。<a href="#section-9.1-2.4" class="pilcrow">¶</a>
+                        </dd>
+                        <dd class="break"></dd>
+                        <dt id="section-9.1-2.5">变更控制方：</dt>
+                        <dd style="margin-left: 1.5em" id="section-9.1-2.6">IESG<a href="#section-9.1-2.6"
+                                class="pilcrow">¶</a>
+                        </dd>
+                        <dd class="break"></dd>
+                        <dt id="section-9.1-2.7">规范文档：</dt>
+                        <dd style="margin-left: 1.5em" id="section-9.1-2.8">
+                            RFC 9126 的 <a href="#as_metadata" class="xref">第 5 节</a><a href="#section-9.1-2.8"
+                                class="pilcrow">¶</a>
+                        </dd>
+                        <dd class="break"></dd>
+                    </dl>
+                    <span class="break"></span>
+                    <dl class="dlParallel dlCompact" id="section-9.1-3">
+                        <dt id="section-9.1-3.1">元数据名称：</dt>
+                        <dd style="margin-left: 1.5em" id="section-9.1-3.2">
+                            <code>require_pushed_authorization_requests</code><a href="#section-9.1-3.2"
+                                class="pilcrow">¶</a>
+                        </dd>
+                        <dd class="break"></dd>
+                        <dt id="section-9.1-3.3">元数据描述：</dt>
+                        <dd style="margin-left: 1.5em" id="section-9.1-3.4">指示授权服务器
+                            是否只通过 PAR 接受授权请求。<a href="#section-9.1-3.4" class="pilcrow">¶</a>
+                        </dd>
+                        <dd class="break"></dd>
+                        <dt id="section-9.1-3.5">变更控制方：</dt>
+                        <dd style="margin-left: 1.5em" id="section-9.1-3.6">IESG<a href="#section-9.1-3.6"
+                                class="pilcrow">¶</a>
+                        </dd>
+                        <dd class="break"></dd>
+                        <dt id="section-9.1-3.7">规范文档：</dt>
+                        <dd style="margin-left: 1.5em" id="section-9.1-3.8">
+                            RFC 9126 的 <a href="#as_metadata" class="xref">第 5 节</a><a href="#section-9.1-3.8"
+                                class="pilcrow">¶</a>
+                        </dd>
+                        <dd class="break"></dd>
+                    </dl>
+                </section>
+            </div>
+            <div id="oauth-dynamic-client-registration-metadata">
+                <section id="section-9.2">
+                    <h3 id="name-oauth-dynamic-client-regist">
+                        <a href="#section-9.2" class="section-number selfRef">9.2. </a><a
+                            href="#name-oauth-dynamic-client-regist" class="section-name selfRef">OAuth 动态客户端
+                            注册元数据</a>
+                    </h3>
+                    <p id="section-9.2-1">IANA 已在由 <span>[<a href="#RFC7591" class="xref">RFC7591</a>]</span> 建立的
+                        <span>[<a href="#IANA.OAuth.Parameters" class="xref">IANA.OAuth.Parameters</a>]</span> 的 IANA
+                        “OAuth Dynamic Client
+                        Registration Metadata”注册表中注册以下值。<a href="#section-9.2-1" class="pilcrow">¶</a>
+                    </p>
+                    <span class="break"></span>
+                    <dl class="dlParallel dlCompact" id="section-9.2-2">
+                        <dt id="section-9.2-2.1">客户端元数据名称：</dt>
+                        <dd style="margin-left: 1.5em" id="section-9.2-2.2">
+                            <code>require_pushed_authorization_requests</code><a href="#section-9.2-2.2"
+                                class="pilcrow">¶</a>
+                        </dd>
+                        <dd class="break"></dd>
+                        <dt id="section-9.2-2.3">客户端元数据描述：</dt>
+                        <dd style="margin-left: 1.5em" id="section-9.2-2.4">指示客户端是否被要求
+                            使用 PAR 发起授权请求。<a href="#section-9.2-2.4" class="pilcrow">¶</a>
+                        </dd>
+                        <dd class="break"></dd>
+                        <dt id="section-9.2-2.5">变更控制方：</dt>
+                        <dd style="margin-left: 1.5em" id="section-9.2-2.6">IESG<a href="#section-9.2-2.6"
+                                class="pilcrow">¶</a>
+                        </dd>
+                        <dd class="break"></dd>
+                        <dt id="section-9.2-2.7">规范文档：</dt>
+                        <dd style="margin-left: 1.5em" id="section-9.2-2.8">
+                            RFC 9126 的 <a href="#c_metadata" class="xref">第 6 节</a><a href="#section-9.2-2.8"
+                                class="pilcrow">¶</a>
+                        </dd>
+                        <dd class="break"></dd>
+                    </dl>
+                </section>
+            </div>
+            <div id="oauth-uri-registration">
+                <section id="section-9.3">
+                    <h3 id="name-oauth-uri-registration">
+                        <a href="#section-9.3" class="section-number selfRef">9.3. </a><a
+                            href="#name-oauth-uri-registration" class="section-name selfRef">OAuth URI 注册</a>
+                    </h3>
+                    <p id="section-9.3-1">IANA 已在由 <span>[<a href="#RFC6755" class="xref">RFC6755</a>]</span>
+                        建立的 <span>[<a href="#IANA.OAuth.Parameters" class="xref">IANA.OAuth.Parameters</a>]</span>
+                        的“OAuth URI”注册表中注册以下值。<a href="#section-9.3-1" class="pilcrow">¶</a>
+                    </p>
+                    <span class="break"></span>
+                    <dl class="dlParallel dlCompact" id="section-9.3-2">
+                        <dt id="section-9.3-2.1">URN：</dt>
+                        <dd style="margin-left: 1.5em" id="section-9.3-2.2">
+                            <code>urn:ietf:params:oauth:request_uri:</code><a href="#section-9.3-2.2"
+                                class="pilcrow">¶</a>
+                        </dd>
+                        <dd class="break"></dd>
+                        <dt id="section-9.3-2.3">通用名称：</dt>
+                        <dd style="margin-left: 1.5em" id="section-9.3-2.4">用于 OAuth Request
+                            URI 的 URN 子命名空间。<a href="#section-9.3-2.4" class="pilcrow">¶</a>
+                        </dd>
+                        <dd class="break"></dd>
+                        <dt id="section-9.3-2.5">变更控制方：</dt>
+                        <dd style="margin-left: 1.5em" id="section-9.3-2.6">IESG<a href="#section-9.3-2.6"
+                                class="pilcrow">¶</a>
+                        </dd>
+                        <dd class="break"></dd>
+                        <dt id="section-9.3-2.7">规范文档：</dt>
+                        <dd style="margin-left: 1.5em" id="section-9.3-2.8">
+                            RFC 9126 的 <a href="#par-response" class="xref">第 2.2 节</a><a href="#section-9.3-2.8"
+                                class="pilcrow">¶</a>
+                        </dd>
+                        <dd class="break"></dd>
+                    </dl>
+                </section>
+            </div>
+        </section>
+    </div>
+    <section id="section-10">
+        <h2 id="name-references">
+            <a href="#section-10" class="section-number selfRef">10. </a><a href="#name-references"
+                class="section-name selfRef">参考文献</a>
+        </h2>
+        <section id="section-10.1">
+            <h3 id="name-normative-references">
+                <a href="#section-10.1" class="section-number selfRef">10.1. </a><a href="#name-normative-references"
+                    class="section-name selfRef">规范性参考文献</a>
+            </h3>
+            <dl class="references">
+                <dt id="RFC2119">[RFC2119]</dt>
+                <dd>
+                    <span class="refAuthor">Bradner, S.</span>, <span class="refTitle">“用于 RFC 中表示
+                        要求级别的关键词”</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC
+                        2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03"
+                        class="refDate">1997年3月</time>, <span>&lt;<a
+                            href="https://www.rfc-editor.org/info/rfc2119">https://www.rfc-editor.org/info/rfc2119</a>&gt;</span>.
+                </dd>
+                <dd class="break"></dd>
+                <dt id="RFC6749">[RFC6749]</dt>
+                <dd>
+                    <span class="refAuthor">Hardt, D., Ed.</span>, <span class="refTitle">“OAuth 2.0 授权
+                        框架”</span>, <span class="seriesInfo">RFC 6749</span>, <span class="seriesInfo">DOI
+                        10.17487/RFC6749</span>, <time datetime="2012-10" class="refDate">2012年10月</time>,
+                    <span>&lt;<a
+                            href="https://www.rfc-editor.org/info/rfc6749">https://www.rfc-editor.org/info/rfc6749</a>&gt;</span>.
+                </dd>
+                <dd class="break"></dd>
+                <dt id="RFC8174">[RFC8174]</dt>
+                <dd>
+                    <span class="refAuthor">Leiba, B.</span>, <span class="refTitle">“RFC 2119 关键词中大写与
+                        小写的歧义”</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>,
+                    <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05"
+                        class="refDate">2017年5月</time>, <span>&lt;<a
+                            href="https://www.rfc-editor.org/info/rfc8174">https://www.rfc-editor.org/info/rfc8174</a>&gt;</span>.
+                </dd>
+                <dd class="break"></dd>
+                <dt id="RFC8259">[RFC8259]</dt>
+                <dd>
+                    <span class="refAuthor">Bray, T., Ed.</span>, <span class="refTitle">“JavaScript Object Notation
+                        (JSON) 数据交换格式”</span>, <span class="seriesInfo">STD 90</span>, <span class="seriesInfo">RFC
+                        8259</span>, <span class="seriesInfo">DOI 10.17487/RFC8259</span>, <time datetime="2017-12"
+                        class="refDate">2017年12月</time>, <span>&lt;<a
+                            href="https://www.rfc-editor.org/info/rfc8259">https://www.rfc-editor.org/info/rfc8259</a>&gt;</span>.
+                </dd>
+                <dd class="break"></dd>
+                <dt id="RFC8414">[RFC8414]</dt>
+                <dd>
+                    <span class="refAuthor">Jones, M.</span>, <span class="refAuthor">Sakimura, N.</span>, and <span
+                        class="refAuthor">J. Bradley</span>, <span class="refTitle">“OAuth 2.0 授权服务器
+                        元数据”</span>, <span class="seriesInfo">RFC 8414</span>, <span class="seriesInfo">DOI
+                        10.17487/RFC8414</span>, <time datetime="2018-06" class="refDate">2018年6月</time>, <span>&lt;<a
+                            href="https://www.rfc-editor.org/info/rfc8414">https://www.rfc-editor.org/info/rfc8414</a>&gt;</span>.
+                </dd>
+                <dd class="break"></dd>
+                <dt id="RFC9101">[RFC9101]</dt>
+                <dd>
+                    <span class="refAuthor">Sakimura, N.</span>, <span class="refAuthor">Bradley, J.</span>, and <span
+                        class="refAuthor">M. Jones</span>, <span class="refTitle">“OAuth 2.0 授权
+                        框架：JWT 安全授权请求（JAR）”</span>, <span class="seriesInfo">RFC
+                        9101</span>, <span class="seriesInfo">DOI 10.17487/RFC9101</span>, <time datetime="2021-08"
+                        class="refDate">2021年8月</time>, <span>&lt;<a
+                            href="https://www.rfc-editor.org/info/rfc9101">https://www.rfc-editor.org/info/rfc9101</a>&gt;</span>.
+                </dd>
+                <dd class="break"></dd>
+            </dl>
+        </section>
+        <section id="section-10.2">
+            <h3 id="name-informative-references">
+                <a href="#section-10.2" class="section-number selfRef">10.2. </a><a href="#name-informative-references"
+                    class="section-name selfRef">资料性参考文献</a>
+            </h3>
+            <dl class="references">
+                <dt id="IANA.OAuth.Parameters">[IANA.OAuth.Parameters]</dt>
+                <dd>
+                    <span class="refAuthor">IANA</span>, <span class="refTitle">“OAuth 参数”</span>, <span>&lt;<a
+                            href="http://www.iana.org/assignments/oauth-parameters">http://www.iana.org/assignments/oauth-parameters</a>&gt;</span>.
+                </dd>
+                <dd class="break"></dd>
+                <dt id="I-D.ietf-oauth-security-topics">[OAUTH-SECURITY-TOPICS]</dt>
+                <dd>
+                    <span class="refAuthor">Lodderstedt, T.</span>, <span class="refAuthor">Bradley, J.</span>, <span
+                        class="refAuthor">Labunets, A.</span>, and <span class="refAuthor">D. Fett</span>, <span
+                        class="refTitle">“OAuth 2.0 安全当前最佳实践”</span>, <span class="refContent">进行中的工作</span>, <span
+                        class="seriesInfo">Internet-Draft,
+                        draft-ietf-oauth-security-topics-18</span>, <time datetime="2021-04-13"
+                        class="refDate">2021年4月13日</time>, <span>&lt;<a
+                            href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-security-topics-18">https://datatracker.ietf.org/doc/html/draft-ietf-oauth-security-topics-18</a>&gt;</span>.
+                </dd>
+                <dd class="break"></dd>
+                <dt id="I-D.ietf-oauth-v2-1">[OAUTH-V2]</dt>
+                <dd>
+                    <span class="refAuthor">Hardt, D.</span>, <span class="refAuthor">Parecki, A.</span>, and <span
+                        class="refAuthor">T. Lodderstedt</span>, <span class="refTitle">“OAuth 2.1 授权
+                        框架”</span>, <span class="refContent">进行中的工作</span>, <span class="seriesInfo">Internet-Draft,
+                        draft-ietf-oauth-v2-1-03</span>, <time datetime="2021-09-08" class="refDate">2021年9月8日</time>,
+                    <span>&lt;<a
+                            href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-v2-1-03">https://datatracker.ietf.org/doc/html/draft-ietf-oauth-v2-1-03</a>&gt;</span>.
+                </dd>
+                <dd class="break"></dd>
+                <dt id="OIDC">[OIDC]</dt>
+                <dd>
+                    <span class="refAuthor">Sakimura, N.</span>, <span class="refAuthor">Bradley, J.</span>, <span
+                        class="refAuthor">Jones, M.</span>, <span class="refAuthor">de Medeiros, B.</span>, and <span
+                        class="refAuthor">C. Mortimore</span>, <span class="refTitle">“OpenID Connect Core 1.0
+                        incorporating errata set 1”</span>, <time datetime="2014-11" class="refDate">2014年11月</time>,
+                    <span>&lt;<a
+                            href="http://openid.net/specs/openid-connect-core-1_0.html">http://openid.net/specs/openid-connect-core-1_0.html</a>&gt;</span>.
+                </dd>
+                <dd class="break"></dd>
+                <dt id="OIDC.Disco">[OIDC.Disco]</dt>
+                <dd>
+                    <span class="refAuthor">Sakimura, N.</span>, <span class="refAuthor">Bradley, J.</span>, <span
+                        class="refAuthor">Jones, M.</span>, and <span class="refAuthor">E. Jay</span>, <span
+                        class="refTitle">“OpenID Connect Discovery 1.0 incorporating errata set 1”</span>, <time
+                        datetime="2014-11" class="refDate">2014年11月</time>, <span>&lt;<a
+                            href="http://openid.net/specs/openid-connect-discovery-1_0.html">http://openid.net/specs/openid-connect-discovery-1_0.html</a>&gt;</span>.
+                </dd>
+                <dd class="break"></dd>
+                <dt id="RFC6755">[RFC6755]</dt>
+                <dd>
+                    <span class="refAuthor">Campbell, B.</span> and <span class="refAuthor">H. Tschofenig</span>, <span
+                        class="refTitle">“用于 OAuth 的 IETF URN 子命名空间”</span>, <span class="seriesInfo">RFC
+                        6755</span>, <span class="seriesInfo">DOI 10.17487/RFC6755</span>, <time datetime="2012-10"
+                        class="refDate">2012年10月</time>, <span>&lt;<a
+                            href="https://www.rfc-editor.org/info/rfc6755">https://www.rfc-editor.org/info/rfc6755</a>&gt;</span>.
+                </dd>
+                <dd class="break"></dd>
+                <dt id="RFC7517">[RFC7517]</dt>
+                <dd>
+                    <span class="refAuthor">Jones, M.</span>, <span class="refTitle">“JSON Web Key（JWK）”</span>, <span
+                        class="seriesInfo">RFC 7517</span>, <span class="seriesInfo">DOI 10.17487/RFC7517</span>, <time
+                        datetime="2015-05" class="refDate">2015年5月</time>, <span>&lt;<a
+                            href="https://www.rfc-editor.org/info/rfc7517">https://www.rfc-editor.org/info/rfc7517</a>&gt;</span>.
+                </dd>
+                <dd class="break"></dd>
+                <dt id="RFC7519">[RFC7519]</dt>
+                <dd>
+                    <span class="refAuthor">Jones, M.</span>, <span class="refAuthor">Bradley, J.</span>, and <span
+                        class="refAuthor">N. Sakimura</span>, <span class="refTitle">“JSON Web Token（JWT）”</span>,
+                    <span class="seriesInfo">RFC 7519</span>, <span class="seriesInfo">DOI 10.17487/RFC7519</span>,
+                    <time datetime="2015-05" class="refDate">2015年5月</time>, <span>&lt;<a
+                            href="https://www.rfc-editor.org/info/rfc7519">https://www.rfc-editor.org/info/rfc7519</a>&gt;</span>.
+                </dd>
+                <dd class="break"></dd>
+                <dt id="RFC7523">[RFC7523]</dt>
+                <dd>
+                    <span class="refAuthor">Jones, M.</span>, <span class="refAuthor">Campbell, B.</span>, and <span
+                        class="refAuthor">C. Mortimore</span>, <span class="refTitle">“用于
+                        OAuth 2.0 客户端认证和授权授予的 JSON Web Token（JWT）配置文件”</span>, <span class="seriesInfo">RFC
+                        7523</span>, <span class="seriesInfo">DOI 10.17487/RFC7523</span>, <time datetime="2015-05"
+                        class="refDate">2015年5月</time>, <span>&lt;<a
+                            href="https://www.rfc-editor.org/info/rfc7523">https://www.rfc-editor.org/info/rfc7523</a>&gt;</span>.
+                </dd>
+                <dd class="break"></dd>
+                <dt id="RFC7591">[RFC7591]</dt>
+                <dd>
+                    <span class="refAuthor">Richer, J., Ed.</span>, <span class="refAuthor">Jones, M.</span>, <span
+                        class="refAuthor">Bradley, J.</span>, <span class="refAuthor">Machulak, M.</span>, and <span
+                        class="refAuthor">P. Hunt</span>, <span class="refTitle">“OAuth 2.0 动态客户端注册
+                        协议”</span>, <span class="seriesInfo">RFC 7591</span>, <span class="seriesInfo">DOI
+                        10.17487/RFC7591</span>, <time datetime="2015-07" class="refDate">2015年7月</time>, <span>&lt;<a
+                            href="https://www.rfc-editor.org/info/rfc7591">https://www.rfc-editor.org/info/rfc7591</a>&gt;</span>.
+                </dd>
+                <dd class="break"></dd>
+                <dt id="RFC7636">[RFC7636]</dt>
+                <dd>
+                    <span class="refAuthor">Sakimura, N., Ed.</span>, <span class="refAuthor">Bradley, J.</span>, and
+                    <span class="refAuthor">N. Agarwal</span>, <span class="refTitle">“OAuth 公共客户端的
+                        Proof Key for Code Exchange”</span>, <span class="seriesInfo">RFC 7636</span>, <span
+                        class="seriesInfo">DOI 10.17487/RFC7636</span>, <time datetime="2015-09"
+                        class="refDate">2015年9月</time>, <span>&lt;<a
+                            href="https://www.rfc-editor.org/info/rfc7636">https://www.rfc-editor.org/info/rfc7636</a>&gt;</span>.
+                </dd>
+                <dd class="break"></dd>
+                <dt id="RFC8252">[RFC8252]</dt>
+                <dd>
+                    <span class="refAuthor">Denniss, W.</span> and <span class="refAuthor">J. Bradley</span>, <span
+                        class="refTitle">“用于原生应用的 OAuth 2.0”</span>, <span class="seriesInfo">BCP 212</span>,
+                    <span class="seriesInfo">RFC 8252</span>, <span class="seriesInfo">DOI 10.17487/RFC8252</span>,
+                    <time datetime="2017-10" class="refDate">2017年10月</time>, <span>&lt;<a
+                            href="https://www.rfc-editor.org/info/rfc8252">https://www.rfc-editor.org/info/rfc8252</a>&gt;</span>.
+                </dd>
+                <dd class="break"></dd>
+                <dt id="RFC8705">[RFC8705]</dt>
+                <dd>
+                    <span class="refAuthor">Campbell, B.</span>, <span class="refAuthor">Bradley, J.</span>, <span
+                        class="refAuthor">Sakimura, N.</span>, and <span class="refAuthor">T. Lodderstedt</span>, <span
+                        class="refTitle">“OAuth 2.0 Mutual-TLS 客户端认证和证书绑定访问
+                        令牌”</span>, <span class="seriesInfo">RFC 8705</span>, <span class="seriesInfo">DOI
+                        10.17487/RFC8705</span>, <time datetime="2020-02" class="refDate">2020年2月</time>,
+                    <span>&lt;<a
+                            href="https://www.rfc-editor.org/info/rfc8705">https://www.rfc-editor.org/info/rfc8705</a>&gt;</span>.
+                </dd>
+                <dd class="break"></dd>
+                <dt id="RFC8707">[RFC8707]</dt>
+                <dd>
+                    <span class="refAuthor">Campbell, B.</span>, <span class="refAuthor">Bradley, J.</span>, and <span
+                        class="refAuthor">H. Tschofenig</span>, <span class="refTitle">“OAuth
+                        2.0 的 Resource Indicators”</span>, <span class="seriesInfo">RFC 8707</span>, <span
+                        class="seriesInfo">DOI
+                        10.17487/RFC8707</span>, <time datetime="2020-02" class="refDate">2020年2月</time>,
+                    <span>&lt;<a
+                            href="https://www.rfc-editor.org/info/rfc8707">https://www.rfc-editor.org/info/rfc8707</a>&gt;</span>.
+                </dd>
+                <dd class="break"></dd>
+            </dl>
+        </section>
+    </section>
+    <div id="Acknowledgements">
+        <section id="appendix-A">
+            <h2 id="name-acknowledgements">
+                <a href="#name-acknowledgements" class="section-name selfRef">致谢</a>
+            </h2>
+            <p id="appendix-A-1">本规范基于 OpenID Foundation 的 Financial-grade API Working Group 开展的
+                <a href="https://bitbucket.org/openid/fapi/src/master/Financial_API_Pushed_Request_Object.md">Pushed
+                    Request Object</a>
+                工作。我们感谢该工作组成员的宝贵贡献。<a href="#appendix-A-1" class="pilcrow">¶</a>
+            </p>
+            <p id="appendix-A-2">我们感谢
+                <span class="contact-name">Vladimir Dzhuvinov</span>、
+                <span class="contact-name">Aaron Parecki</span>、
+                <span class="contact-name">Justin Richer</span>、
+                <span class="contact-name">Sascha Preibisch</span>、
+                <span class="contact-name">Daniel Fett</span>、
+                <span class="contact-name">Michael B. Jones</span>、
+                <span class="contact-name">Annabelle Backman</span>、
+                <span class="contact-name">Joseph Heenan</span>、
+                <span class="contact-name">Sean Glencross</span>、
+                <span class="contact-name">Maggie Hung</span>、
+                <span class="contact-name">Neil Madden</span>、
+                <span class="contact-name">Karsten Meyer zu Selhausen</span>、
+                <span class="contact-name">Roman Danyliw</span>、
+                <span class="contact-name">Meral Shirazipour</span>
+                和
+                <span class="contact-name">Takahiko Kawasaki</span>
+                对本文档提出的宝贵反馈。<a href="#appendix-A-2" class="pilcrow">¶</a>
+            </p>
+        </section>
+    </div>
+    <div id="authors-addresses">
+        <section id="appendix-B">
+            <h2 id="name-authors-addresses">
+                <a href="#name-authors-addresses" class="section-name selfRef">作者地址</a>
+            </h2>
+            <address class="vcard">
+                <div dir="auto" class="left"><span class="fn nameRole">Torsten Lodderstedt</span></div>
+                <div dir="auto" class="left"><span class="org">yes.com</span></div>
+                <div class="email">
+                    <span>电子邮件：</span>
+                    <a href="mailto:torsten@lodderstedt.net" class="email">torsten@lodderstedt.net</a>
+                </div>
+            </address>
+            <address class="vcard">
+                <div dir="auto" class="left"><span class="fn nameRole">Brian Campbell</span></div>
+                <div dir="auto" class="left"><span class="org">Ping Identity</span></div>
+                <div class="email">
+                    <span>电子邮件：</span>
+                    <a href="mailto:bcampbell@pingidentity.com" class="email">bcampbell@pingidentity.com</a>
+                </div>
+            </address>
+            <address class="vcard">
+                <div dir="auto" class="left"><span class="fn nameRole">Nat Sakimura</span></div>
+                <div dir="auto" class="left"><span class="org">NAT.Consulting</span></div>
+                <div class="email">
+                    <span>电子邮件：</span>
+                    <a href="mailto:nat@sakimura.org" class="email">nat@sakimura.org</a>
+                </div>
+            </address>
+            <address class="vcard">
+                <div dir="auto" class="left"><span class="fn nameRole">Dave Tonge</span></div>
+                <div dir="auto" class="left"><span class="org">Moneyhub Financial Technology</span></div>
+                <div class="email">
+                    <span>电子邮件：</span>
+                    <a href="mailto:dave@tonge.org" class="email">dave@tonge.org</a>
+                </div>
+            </address>
+            <address class="vcard">
+                <div dir="auto" class="left"><span class="fn nameRole">Filip Skokan</span></div>
+                <div dir="auto" class="left"><span class="org">Auth0</span></div>
+                <div class="email">
+                    <span>电子邮件：</span>
+                    <a href="mailto:panva.ip@gmail.com" class="email">panva.ip@gmail.com</a>
+                </div>
+            </address>
+        </section>
+    </div>
+    <script>const toc = document.getElementById("toc");
+        toc.querySelector("h2").addEventListener("click", e => {
+            toc.classList.toggle("active");
+        });
+        toc.querySelector("nav").addEventListener("click", e => {
+            toc.classList.remove("active");
+        });
+    </script>
+    <script src="https://htmlspecs.com/dropdown.js"></script>
+</body>
+
+</html>
