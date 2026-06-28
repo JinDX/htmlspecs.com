@@ -441,6 +441,54 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
+    // {
+    //     text: "Linked Web Storage Protocol 1.0",
+    //     href: "https://htmlspecs.com/lws10-core/",
+    //     src: "https://www.w3.org/TR/lws10-core/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
+    // {
+    //     text: "LWS 1.0 Authentication Suite: OpenID Connect",
+    //     href: "https://htmlspecs.com/lws10-authn-openid/",
+    //     src: "https://www.w3.org/TR/lws10-authn-openid/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
+    // {
+    //     text: "LWS 1.0 Authentication Suite: SAML 2.0",
+    //     href: "https://htmlspecs.com/lws10-authn-saml/",
+    //     src: "https://www.w3.org/TR/lws10-authn-saml/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
+    // {
+    //     text: "LWS 1.0 Authentication Suite: Self-signed Identity using Controlled Identifiers",
+    //     href: "https://htmlspecs.com/lws10-authn-ssi-cid/",
+    //     src: "https://www.w3.org/TR/lws10-authn-ssi-cid/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
+    // {
+    //     text: "LWS 1.0 Authentication Suite: Self-signed Identity using did:key",
+    //     href: "https://htmlspecs.com/lws10-authn-ssi-did-key/",
+    //     src: "https://www.w3.org/TR/lws10-authn-ssi-did-key/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
+    // {
+    //     text: "Linked Web Storage Use Cases",
+    //     href: "https://htmlspecs.com/lws-ucs/",
+    //     src: "https://www.w3.org/TR/lws-ucs/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "DNOTE"
+    // },
     {
         text: "RDF 1.2 Concepts and Abstract Data Model",
         href: "https://htmlspecs.com/rdf12-concepts/",
@@ -489,6 +537,22 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "RDF 1.2 N-Quads",
+    //     href: "https://htmlspecs.com/rdf12-n-quads/",
+    //     src: "https://www.w3.org/TR/rdf12-n-quads/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
+    // {
+    //     text: "RDF 1.2 XML Syntax",
+    //     href: "https://htmlspecs.com/rdf12-xml/",
+    //     src: "https://www.w3.org/TR/rdf12-xml/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "SPARQL 1.2 Query Language",
         href: "https://htmlspecs.com/sparql12-query/",
@@ -513,6 +577,62 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "SPARQL 1.2 Update",
+    //     href: "https://htmlspecs.com/sparql12-update/",
+    //     src: "https://www.w3.org/TR/sparql12-update/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
+    // {
+    //     text: "SPARQL 1.2 Service Description",
+    //     href: "https://htmlspecs.com/sparql12-service-description/",
+    //     src: "https://www.w3.org/TR/sparql12-service-description/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
+    // {
+    //     text: "SPARQL 1.2 Query Results CSV and TSV Formats",
+    //     href: "https://htmlspecs.com/sparql12-results-csv-tsv/",
+    //     src: "https://www.w3.org/TR/sparql12-results-csv-tsv/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
+    // {
+    //     text: "SHACL 1.2 Rules",
+    //     href: "https://htmlspecs.com/shacl12-rules/",
+    //     src: "https://www.w3.org/TR/shacl12-rules/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
+    // {
+    //     text: "SHACL 1.2 User Interfaces",
+    //     href: "https://htmlspecs.com/shacl12-ui/",
+    //     src: "https://www.w3.org/TR/shacl12-ui/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
+    // {
+    //     text: "SHACL 1.2 SPARQL Extensions",
+    //     href: "https://htmlspecs.com/shacl12-sparql/",
+    //     src: "https://www.w3.org/TR/shacl12-sparql/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
+    // {
+    //     text: "SHACL 1.2 Node Expressions",
+    //     href: "https://htmlspecs.com/shacl12-node-expr/",
+    //     src: "https://www.w3.org/TR/shacl12-node-expr/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "Data Catalog Vocabulary (DCAT) - Version 3",
         href: "https://htmlspecs.com/vocab-dcat-3/",
@@ -664,6 +784,56 @@ const links = [
         state: "CRD"
     },
 
+    //### MiniApp、小程序与跨端应用|MiniApp, 소형 앱 및 크로스 플랫폼 앱|MiniApp・ミニアプリ・クロスプラットフォームアプリ
+    // {
+    //     text: "MiniApp Manifest",
+    //     href: "https://htmlspecs.com/miniapp-manifest/",
+    //     src: "https://www.w3.org/TR/miniapp-manifest/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
+    // {
+    //     text: "MiniApp Packaging",
+    //     href: "https://htmlspecs.com/miniapp-packaging/",
+    //     src: "https://www.w3.org/TR/miniapp-packaging/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
+    // {
+    //     text: "MiniApp Lifecycle",
+    //     href: "https://htmlspecs.com/miniapp-lifecycle/",
+    //     src: "https://www.w3.org/TR/miniapp-lifecycle/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
+    // {
+    //     text: "MiniApp Addressing",
+    //     href: "https://htmlspecs.com/miniapp-addressing/",
+    //     src: "https://www.w3.org/TR/miniapp-addressing/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "DNOTE"
+    // },
+    // {
+    //     text: "MiniApp Widget Requirements",
+    //     href: "https://htmlspecs.com/miniapp-widget-req/",
+    //     src: "https://www.w3.org/TR/miniapp-widget-req/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "NOTE"
+    // },
+    // {
+    //     text: "MiniApp Standardization White Paper version 2",
+    //     href: "https://htmlspecs.com/mini-app-white-paper/",
+    //     src: "https://www.w3.org/TR/mini-app-white-paper/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "NOTE"
+    // },
+
     //### 网络、传输与实时通信|네트워크, 전송 및 실시간 통신|ネットワーク・転送・リアルタイム通信
     {
         text: "Fetch",
@@ -795,6 +965,30 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "Generic Event Delivery Using HTTP Push",
+    //     href: "https://htmlspecs.com/rfc8030/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc8030.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
+    // {
+    //     text: "Message Encryption for Web Push",
+    //     href: "https://htmlspecs.com/rfc8291/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc8291.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
+    // {
+    //     text: "Voluntary Application Server Identification (VAPID) for Web Push",
+    //     href: "https://htmlspecs.com/rfc8292/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc8292.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
     {
         text: "Background Fetch",
         href: "https://htmlspecs.com/background-fetch/",
@@ -1267,6 +1461,30 @@ const links = [
         lang: "cjk",
         state: "NOTE"
     },
+    // {
+    //     text: "Web of Things (WoT) Architecture 1.1",
+    //     href: "https://htmlspecs.com/wot-architecture11/",
+    //     src: "https://www.w3.org/TR/wot-architecture11/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "REC"
+    // },
+    // {
+    //     text: "Web of Things (WoT) Discovery",
+    //     href: "https://htmlspecs.com/wot-discovery/",
+    //     src: "https://www.w3.org/TR/wot-discovery/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "REC"
+    // },
+    // {
+    //     text: "Web of Things (WoT) Profile",
+    //     href: "https://htmlspecs.com/wot-profile/",
+    //     src: "https://www.w3.org/TR/wot-profile/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "REC"
+    // },
 
     //### 窗口、屏幕与系统集成|창, 화면 및 시스템 통합|ウィンドウ・画面・システム統合
     {
@@ -1601,6 +1819,22 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "Open Screen Network Protocol",
+    //     href: "https://htmlspecs.com/openscreen-network/",
+    //     src: "https://www.w3.org/TR/openscreen-network/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
+    // {
+    //     text: "TV Control API Specification",
+    //     href: "https://htmlspecs.com/tvcontrol-api/",
+    //     src: "https://www.w3.org/TR/tvcontrol-api/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
 
     //### 媒体格式、字幕与编解码|미디어 형식, 자막 및 코덱|メディア形式・字幕・コーデック
     {
@@ -1643,6 +1877,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "Media Source Extensions Byte Stream Format Registry",
+    //     href: "https://htmlspecs.com/mse-byte-stream-format-registry/",
+    //     src: "https://www.w3.org/TR/mse-byte-stream-format-registry/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
     {
         text: "WebCodecs",
         href: "https://htmlspecs.com/webcodecs/",
@@ -1985,6 +2227,14 @@ const links = [
         lang: "cjk",
         state: "CRD"
     },
+    // {
+    //     text: "Timing Entry Names Registry",
+    //     href: "https://htmlspecs.com/timing-entrytypes-registry/",
+    //     src: "https://www.w3.org/TR/timing-entrytypes-registry/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "Compute Pressure API",
         href: "https://htmlspecs.com/compute-pressure/",
@@ -2309,6 +2559,22 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "A File Format to Aid in Security Vulnerability Disclosure",
+    //     href: "https://htmlspecs.com/rfc9116/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc9116.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
+    // {
+    //     text: "Device Bound Session Credentials",
+    //     href: "https://htmlspecs.com/device-bound-session-credentials/",
+    //     src: "https://w3c.github.io/webappsec-dbsc/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
     {
         text: "JSON Web Token (JWT)",
         href: "https://htmlspecs.com/jwt/",
@@ -2463,6 +2729,86 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "Verifiable Credential Data Integrity 1.0",
+    //     href: "https://htmlspecs.com/vc-data-integrity/",
+    //     src: "https://www.w3.org/TR/vc-data-integrity/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "REC"
+    // },
+    // {
+    //     text: "Verifiable Credential Data Integrity 1.1",
+    //     href: "https://htmlspecs.com/vc-data-integrity-1.1/",
+    //     src: "https://www.w3.org/TR/vc-data-integrity-1.1/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
+    // {
+    //     text: "Data Integrity EdDSA Cryptosuites v1.0",
+    //     href: "https://htmlspecs.com/vc-di-eddsa/",
+    //     src: "https://www.w3.org/TR/vc-di-eddsa/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "REC"
+    // },
+    // {
+    //     text: "Data Integrity ECDSA Cryptosuites v1.0",
+    //     href: "https://htmlspecs.com/vc-di-ecdsa/",
+    //     src: "https://www.w3.org/TR/vc-di-ecdsa/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "REC"
+    // },
+    // {
+    //     text: "Data Integrity BBS Cryptosuites v1.0",
+    //     href: "https://htmlspecs.com/vc-di-bbs/",
+    //     src: "https://www.w3.org/TR/vc-di-bbs/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "CR"
+    // },
+    // {
+    //     text: "Bitstring Status List v1.0",
+    //     href: "https://htmlspecs.com/vc-bitstring-status-list/",
+    //     src: "https://www.w3.org/TR/vc-bitstring-status-list/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "REC"
+    // },
+    // {
+    //     text: "Decentralized Identifier Resolution (DID Resolution) v0.3",
+    //     href: "https://htmlspecs.com/did-resolution/",
+    //     src: "https://www.w3.org/TR/did-resolution/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
+    // {
+    //     text: "Decentralized Identifier Extensions",
+    //     href: "https://htmlspecs.com/did-extensions/",
+    //     src: "https://www.w3.org/TR/did-extensions/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "NOTE"
+    // },
+    // {
+    //     text: "Threat Model for Decentralized Credentials",
+    //     href: "https://htmlspecs.com/threat-model-decentralized-credentials/",
+    //     src: "https://www.w3.org/TR/threat-model-decentralized-credentials/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "NOTE"
+    // },
+    // {
+    //     text: "Verifiable Credential Barcodes v1.0",
+    //     href: "https://htmlspecs.com/vc-barcodes/",
+    //     src: "https://www.w3.org/TR/vc-barcodes/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
 
     //### OAuth 与授权协议|OAuth 및 인가 프로토콜|OAuth・認可プロトコル
     {
@@ -2709,6 +3055,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "Payment Method Identifiers",
+    //     href: "https://htmlspecs.com/payment-method-id/",
+    //     src: "https://www.w3.org/TR/payment-method-id/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "REC"
+    // },
     {
         text: "Digital Goods API",
         href: "https://htmlspecs.com/digital-goods/",
@@ -2767,6 +3121,22 @@ const links = [
         lang: "cjk",
         state: "CR"
     },
+    // {
+    //     text: "WAI-Adapt: Tools Module",
+    //     href: "https://htmlspecs.com/adapt-tools/",
+    //     src: "https://www.w3.org/TR/adapt-tools/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
+    // {
+    //     text: "Specification for Spoken Presentation in HTML",
+    //     href: "https://htmlspecs.com/spoken-html/",
+    //     src: "https://www.w3.org/TR/spoken-html/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "Accessible Rich Internet Applications (WAI-ARIA) 1.2",
         href: "https://htmlspecs.com/wai-aria-1.2/",
