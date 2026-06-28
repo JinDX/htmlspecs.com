@@ -2497,14 +2497,14 @@ const links = [
         lang: "cjk",
         state: "RFC"
     },
-    // {
-    //     text: "OAuth 2.0 Token Exchange",
-    //     href: "https://htmlspecs.com/rfc8693/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc8693.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
+    {
+        text: "OAuth 2.0 Token Exchange",
+        href: "https://htmlspecs.com/rfc8693/",
+        src: "https://www.rfc-editor.org/rfc/rfc8693.html",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "RFC"
+    },
     {
         text: "The OAuth 2.0 Authorization Framework: Bearer Token Usage",
         href: "https://htmlspecs.com/oauth2-bearer/",
