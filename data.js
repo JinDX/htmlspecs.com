@@ -476,19 +476,19 @@ const links = [
     {
         text: "LWS 1.0 Authentication Suite: Self-signed Identity using did:key",
         href: "https://htmlspecs.com/lws10-authn-ssi-did-key/",
-        src: "https://www.w3.org/TR/lws10-authn-ssi-did-key/",
+        src: "https://www.w3.org/TR/2026/WD-lws10-authn-ssi-did-key-20260609/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "Linked Web Storage Use Cases",
-    //     href: "https://htmlspecs.com/lws-ucs/",
-    //     src: "https://www.w3.org/TR/lws-ucs/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "DNOTE"
-    // },
+    {
+        text: "Linked Web Storage Use Cases",
+        href: "https://htmlspecs.com/lws-ucs/",
+        src: "https://www.w3.org/TR/2026/DNOTE-lws-ucs-20260210/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "DNOTE"
+    },
     {
         text: "RDF 1.2 Concepts and Abstract Data Model",
         href: "https://htmlspecs.com/rdf12-concepts/",
