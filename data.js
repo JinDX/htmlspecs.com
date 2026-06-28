@@ -473,14 +473,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "LWS 1.0 Authentication Suite: Self-signed Identity using did:key",
-    //     href: "https://htmlspecs.com/lws10-authn-ssi-did-key/",
-    //     src: "https://www.w3.org/TR/lws10-authn-ssi-did-key/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "LWS 1.0 Authentication Suite: Self-signed Identity using did:key",
+        href: "https://htmlspecs.com/lws10-authn-ssi-did-key/",
+        src: "https://www.w3.org/TR/lws10-authn-ssi-did-key/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     // {
     //     text: "Linked Web Storage Use Cases",
     //     href: "https://htmlspecs.com/lws-ucs/",
