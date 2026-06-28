@@ -1755,14 +1755,6 @@ const links = [
     //     lang: "cjk",
     //     state: "WD"
     // },
-    // {
-    //     text: "TV Control API Specification",
-    //     href: "https://htmlspecs.com/tvcontrol-api/",
-    //     src: "https://www.w3.org/TR/tvcontrol-api/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
 
     //### 媒体格式、字幕与编解码|미디어 형식, 자막 및 코덱|メディア形式・字幕・コーデック
     {
