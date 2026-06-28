@@ -537,14 +537,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "RDF 1.2 N-Quads",
-    //     href: "https://htmlspecs.com/rdf12-n-quads/",
-    //     src: "https://www.w3.org/TR/rdf12-n-quads/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "RDF 1.2 N-Quads",
+        href: "https://htmlspecs.com/rdf12-n-quads/",
+        src: "https://www.w3.org/TR/2026/WD-rdf12-n-quads-20260612/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     // {
     //     text: "RDF 1.2 XML Syntax",
     //     href: "https://htmlspecs.com/rdf12-xml/",
