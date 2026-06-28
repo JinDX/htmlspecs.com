@@ -2489,14 +2489,14 @@ const links = [
         lang: "cjk",
         state: "RFC"
     },
-    // {
-    //     text: "OAuth 2.0 Rich Authorization Requests",
-    //     href: "https://htmlspecs.com/rfc9396/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc9396.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
+    {
+        text: "OAuth 2.0 Rich Authorization Requests",
+        href: "https://htmlspecs.com/rfc9396/",
+        src: "https://www.rfc-editor.org/rfc/rfc9396.html",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "RFC"
+    },
     // {
     //     text: "OAuth 2.0 Token Exchange",
     //     href: "https://htmlspecs.com/rfc8693/",
