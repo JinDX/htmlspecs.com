@@ -545,14 +545,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "RDF 1.2 XML Syntax",
-    //     href: "https://htmlspecs.com/rdf12-xml/",
-    //     src: "https://www.w3.org/TR/rdf12-xml/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "RDF 1.2 XML Syntax",
+        href: "https://htmlspecs.com/rdf12-xml/",
+        src: "https://www.w3.org/TR/2026/WD-rdf12-xml-20260618/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     {
         text: "SPARQL 1.2 Query Language",
         href: "https://htmlspecs.com/sparql12-query/",
