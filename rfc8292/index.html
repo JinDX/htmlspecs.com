@@ -1,0 +1,731 @@
+<pre>互联网工程任务组 (IETF)                                      M. Thomson
+征求意见稿：8292                                                 Mozilla
+类别：标准化进程                                             P. Beverloo
+ISSN: 2070-1721                                                   Google
+                                                           2017年11月
+
+
+    <span class="h1">用于 Web Push 的自愿应用服务器标识（VAPID）</span>
+
+摘要
+
+   应用服务器可以使用本文档中描述的自愿应用服务器
+   标识（VAPID）方法，向推送服务自愿标识自身。
+   “vapid”认证方案允许客户端在其发出的请求中，
+   通过已签名令牌包含自己的身份。推送服务可以使用
+   该签名，将同一应用服务器发出的请求归属于单一实体。
+   标识信息可以允许推送服务的运营者联系应用服务器的
+   运营者。该签名可用于将推送消息订阅的使用限制在
+   单一应用服务器上。
+
+本备忘录状态
+
+   本文档是互联网标准化进程文档。
+
+   本文档是互联网工程任务组（IETF）的产物。它代表了
+   IETF 社区的共识。它已经接受公开审查，并已由互联网
+   工程指导组（IESG）批准发布。有关互联网标准的更多
+   信息可参见 <a href="./rfc7841#section-2">RFC 7841 第&nbsp;2节</a>。
+
+   关于本文档的当前状态、任何勘误以及如何提供反馈的
+   信息，可以从
+   <a href="https://www.rfc-editor.org/info/rfc8292">https://www.rfc-editor.org/info/rfc8292</a> 获得。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Thomson &amp; Beverloo           标准化进程                      [第 1 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-2" ></span>
+<span class="grey"><a href="./rfc8292">RFC 8292</a>                   用于 Web Push 的 VAPID        2017年11月</span>
+
+
+Copyright Notice
+
+   Copyright (c) 2017 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to <a href="https://www.rfc-editor.org/bcp/bcp78">BCP 78</a> and the IETF Trust's Legal
+   Provisions Relating to IETF Documents
+   (<a href="https://trustee.ietf.org/license-info">https://trustee.ietf.org/license-info</a>) in effect on the date of
+   publication of this document.  Please review these documents
+   carefully, as they describe your rights and restrictions with respect
+   to this document.  Code Components extracted from this document must
+   include Simplified BSD License text as described in Section 4.e of
+   the Trust Legal Provisions and are provided without warranty as
+   described in the Simplified BSD License.
+
+目录
+
+   <a href="#section-1">1</a>. 引言 .........................................................<a href="#page-3">3</a>
+      <a href="#section-1.1">1.1</a>. 自愿标识 ................................................<a href="#page-3">3</a>
+      <a href="#section-1.2">1.2</a>. 记法约定 ................................................<a href="#page-4">4</a>
+   <a href="#section-2">2</a>. 应用服务器自我标识 ...........................................<a href="#page-4">4</a>
+      <a href="#section-2.1">2.1</a>. 应用服务器联系信息 ......................................<a href="#page-5">5</a>
+      <a href="#section-2.2">2.2</a>. 附加声明 ................................................<a href="#page-5">5</a>
+      <a href="#section-2.3">2.3</a>. 密码算法敏捷性 ..........................................<a href="#page-5">5</a>
+      <a href="#section-2.4">2.4</a>. 示例 ....................................................<a href="#page-5">5</a>
+   <a href="#section-3">3</a>. VAPID 认证方案 ...............................................<a href="#page-6">6</a>
+      <a href="#section-3.1">3.1</a>. 令牌参数（"t"） .........................................<a href="#page-7">7</a>
+      <a href="#section-3.2">3.2</a>. 公钥参数（"k"） .........................................<a href="#page-7">7</a>
+   <a href="#section-4">4</a>. 订阅限制 .....................................................<a href="#page-7">7</a>
+      <a href="#section-4.1">4.1</a>. 创建受限推送消息订阅 ....................................<a href="#page-8">8</a>
+      <a href="#section-4.2">4.2</a>. 使用受限订阅 ............................................<a href="#page-9">9</a>
+   <a href="#section-5">5</a>. 安全考虑 .....................................................<a href="#page-9">9</a>
+   <a href="#section-6">6</a>. IANA 考虑事项 ...............................................<a href="#page-10">10</a>
+      <a href="#section-6.1">6.1</a>. VAPID 认证方案注册 ......................................<a href="#page-10">10</a>
+      <a href="#section-6.2">6.2</a>. VAPID 认证方案参数 ......................................<a href="#page-10">10</a>
+      <a href="#section-6.3">6.3</a>. application/webpush-options+json 媒体类型注册 ..........11
+   <a href="#section-7">7</a>. 参考文献 ....................................................<a href="#page-12">12</a>
+      <a href="#section-7.1">7.1</a>. 规范性参考文献 .........................................<a href="#page-12">12</a>
+      <a href="#section-7.2">7.2</a>. 资料性参考文献 .........................................<a href="#page-14">14</a>
+   致谢 ...........................................................<a href="#page-14">14</a>
+   作者地址 .......................................................<a href="#page-14">14</a>
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Thomson &amp; Beverloo           标准化进程                       [第 2 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-3" ></span>
+<span class="grey"><a href="./rfc8292">RFC 8292</a>                   用于 Web Push 的 VAPID        2017年11月</span>
+
+
+<span class="h2"><a class="selflink" id="section-1" href="#section-1">1</a>.  引言</span>
+
+   Web Push 协议 [<a href="./rfc8030" title="&quot;Generic Event Delivery Using HTTP Push&quot;">RFC8030</a>] 描述了应用服务器如何能够请求推送服务
+   向用户代理递送推送消息。
+
+   由于预期的部署架构，应用服务器在请求递送推送消息之前，
+   并没有可供推送服务预先认识它的基础。要求推送服务能够
+   认证应用服务器，会给用户代理与应用服务器之间的交互
+   施加不需要的约束，而它们才是推送服务的最终用户。
+   这种约束还会削弱协议所提供的隐私保护属性。基于这些
+   原因，[<a href="./rfc8030" title="&quot;Generic Event Delivery Using HTTP Push&quot;">RFC8030</a>] 没有定义应用服务器认证的强制性系统。
+
+   [<a href="./rfc8030" title="&quot;Generic Event Delivery Using HTTP Push&quot;">RFC8030</a>] 的设计带来的一个不幸后果是，推送服务暴露于
+   更高的拒绝服务攻击风险。虽然来自应用服务器的请求可以
+   间接归因于用户代理，但这并不总是高效，甚至并不总是
+   充分。直接向推送服务提供关于应用服务器的更多信息，
+   可以让推送服务更好地区分合法请求和伪造请求。
+
+   此外，[<a href="./rfc8030" title="&quot;Generic Event Delivery Using HTTP Push&quot;">RFC8030</a>] 的设计依赖于保持推送消息订阅 URI 的
+   机密性。任何拥有推送消息订阅 URI 的应用服务器都能够
+   向用户代理发送消息。如果订阅的使用能够限制到单一
+   应用服务器，则会降低推送消息订阅 URI 被未授权方获知
+   所造成的影响。
+
+<span class="h3"><a class="selflink" id="section-1.1" href="#section-1.1">1.1</a>.  自愿标识</span>
+
+   本文档描述了一种系统，应用服务器可以借此向推送服务
+   自愿提供关于自身的信息。至少，这会为应用服务器提供
+   稳定的身份，不过也可以包含联系信息，例如电子邮件地址。
+
+   推送服务可以使用一致的身份，为应用服务器建立行为预期。
+   与既定常态的显著偏离随后可用于触发异常处理过程。
+
+
+
+
+
+
+
+<span class="grey">Thomson &amp; Beverloo           标准化进程                       [第 3 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-4" ></span>
+<span class="grey"><a href="./rfc8292">RFC 8292</a>                   用于 Web Push 的 VAPID        2017年11月</span>
+
+
+   自愿提供的联系信息可用于在异常情况下联系应用服务器
+   运营者。
+
+   推送服务部署经验表明，软件错误或异常情况可能导致推送
+   消息量大幅增加。事实证明，联系应用服务器的运营者很有
+   价值。
+
+   即使没有可用的联系信息，在决定是否丢弃某条推送消息时，
+   具有良好声誉的应用服务器也可能相对于未标识的应用服务器
+   获得优先考虑。
+
+<span class="h3"><a class="selflink" id="section-1.2" href="#section-1.2">1.2</a>.  记法约定</span>
+
+   本文档中的关键词 “MUST”、“MUST NOT”、“REQUIRED”、“SHALL”、
+   “SHALL NOT”、“SHOULD”、“SHOULD NOT”、“RECOMMENDED”、
+   “NOT RECOMMENDED”、“MAY” 和 “OPTIONAL”，当且仅当它们
+   以此处所示的全大写形式出现时，应按 <a href="https://www.rfc-editor.org/bcp/bcp14">BCP 14</a> [<a href="./rfc2119" title="&quot;Key words for use in RFCs to Indicate Requirement Levels&quot;">RFC2119</a>]
+   [<a href="./rfc8174" title="&quot;Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words&quot;">RFC8174</a>] 中的描述解释。
+
+   术语 “push message”、“push service”、“push message
+   subscription”、“application server” 和 “user agent” 按
+   [<a href="./rfc8030" title="&quot;Generic Event Delivery Using HTTP Push&quot;">RFC8030</a>] 中的定义使用。
+
+<span class="h2"><a class="selflink" id="section-2" href="#section-2">2</a>.  应用服务器自我标识</span>
+
+   希望自我标识的应用服务器会生成并维护一个签名密钥对。
+   该密钥对 MUST 能够与 P-256 曲线上的椭圆曲线数字签名
+   算法（ECDSA）[<a href="#ref-FIPS186" title="&quot;Digital Signature Standard (DSS)&quot;">FIPS186</a>] 一起使用。发送推送消息时使用
+   该密钥，会为应用服务器建立一个跨多条消息保持一致的身份。
+
+   请求递送推送消息时，应用包含一个使用其签名密钥签名的
+   JSON Web Token（JWT）[<a href="./rfc7519" title="&quot;JSON Web Token (JWT)&quot;">RFC7519</a>]。该令牌包含如下若干声明：
+
+   o  令牌中的 “aud”（Audience）声明 MUST 包含推送资源 URL
+      的源的 Unicode 序列化（<a href="./rfc6454#section-6.1">[RFC6454] 第&nbsp;6.1节</a>）。这会将
+      令牌绑定到特定的推送服务，并确保该令牌可被所有共享
+      相同源的推送资源 URL 复用。
+
+   o  MUST 包含 “exp”（Expiry）声明，其值为令牌过期的时间。
+      这会限制令牌有效的时间范围。“exp” 声明 MUST NOT
+      超过请求时间之后 24 小时。
+
+
+
+
+<span class="grey">Thomson &amp; Beverloo           标准化进程                       [第 4 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-5" ></span>
+<span class="grey"><a href="./rfc8292">RFC 8292</a>                   用于 Web Push 的 VAPID        2017年11月</span>
+
+
+      将其限制为 24 小时，是在复用需求与有效令牌被盗的
+      潜在成本和可能性之间取得平衡。
+
+   此 JWT 使用 “vapid” 认证方案包含在 Authorization 头字段中。
+   如果 JWT 签名或其声明无效，推送服务 MAY 以 403（Forbidden）
+   状态码 [<a href="./rfc7231" title="&quot;Hypertext Transfer Protocol (HTTP/1.1): Semantics and Content&quot;">RFC7231</a>] 拒绝请求。推送服务 MUST NOT 使用无效
+   令牌中的信息。
+
+   JWT MUST 使用 JSON Web Signature（JWS）[<a href="./rfc7515" title="&quot;JSON Web Signature (JWS)&quot;">RFC7515</a>]。签名
+   MUST 使用 NIST P-256 曲线上的 ECDSA [<a href="#ref-FIPS186" title="&quot;Digital Signature Standard (DSS)&quot;">FIPS186</a>]，其标识为
+   “ES256” [<a href="./rfc7518" title="&quot;JSON Web Algorithms (JWA)&quot;">RFC7518</a>]。
+
+<span class="h3"><a class="selflink" id="section-2.1" href="#section-2.1">2.1</a>.  应用服务器联系信息</span>
+
+   如果应用服务器希望提供联系详情，它 MAY 在 JWT 中包含
+   “sub”（Subject）声明。“sub” 声明 SHOULD 包含应用服务器的
+   联系 URI，该 URI 可以是 “mailto:”（电子邮件）[<a href="./rfc6068" title="&quot;The 'mailto' URI Scheme&quot;">RFC6068</a>]，
+   也可以是 “https:” [<a href="./rfc2818" title="&quot;HTTP Over TLS&quot;">RFC2818</a>] URI。
+
+<span class="h3"><a class="selflink" id="section-2.2" href="#section-2.2">2.2</a>.  附加声明</span>
+
+   应用服务器 MAY 使用公共名称或私有名称包含附加声明
+   （见 [<a href="./rfc7519" title="&quot;JSON Web Token (JWT)&quot;">RFC7519</a>] 的第 <a href="#section-4.2">4.2</a> 和 <a href="#section-4.3">4.3</a> 节）。由于 JWT
+   位于头字段中，附加声明的大小 SHOULD 尽可能保持较小。
+
+<span class="h3"><a class="selflink" id="section-2.3" href="#section-2.3">2.3</a>.  密码算法敏捷性</span>
+
+   “vapid” HTTP 认证方案（<a href="#section-3">第 3 节</a>）用于标识本文档中定义的
+   JWT 特定配置文件。更新签名算法或其他参数需要不同的
+   认证方案。这确保可以使用现有的认证方案协商机制，而不是
+   定义新的参数协商机制。
+
+<span class="h3"><a class="selflink" id="section-2.4" href="#section-2.4">2.4</a>.  示例</span>
+
+   应用服务器按照 [<a href="./rfc8030" title="&quot;Generic Event Delivery Using HTTP Push&quot;">RFC8030</a>] 中的描述请求递送推送消息。
+   如果应用服务器希望自我标识，它会包含一个 Authorization
+   头字段，其中凭据使用 “vapid” 认证方案。
+
+
+
+
+
+
+
+
+<span class="grey">Thomson &amp; Beverloo           标准化进程                       [第 5 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-6" ></span>
+<span class="grey"><a href="./rfc8292">RFC 8292</a>                   用于 Web Push 的 VAPID        2017年11月</span>
+
+
+   POST /p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV HTTP/1.1
+   Host: push.example.net
+   TTL: 30
+   Content-Length: 136
+   Content-Encoding: aes128gcm
+   Authorization: vapid
+      t=eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiJ9.eyJhdWQiOiJodHRwczovL3
+        B1c2guZXhhbXBsZS5uZXQiLCJleHAiOjE0NTM1MjM3NjgsInN1YiI6Im1ha
+        Wx0bzpwdXNoQGV4YW1wbGUuY29tIn0.i3CYb7t4xfxCDquptFOepC9GAu_H
+        LGkMlMuCGSK2rpiUfnK9ojFwDXb1JrErtmysazNjjvW2L9OkSSHzvoD1oA,
+      k=BA1Hxzyi1RUM1b5wjxsn7nGxAszw2u61m164i3MrAIxHF6YK5h4SDYic-dR
+        uU_RCPCfA5aq9ojSwk5Y2EmClBPs
+   { encrypted push message }
+
+            图 1：使用 JWT 请求推送消息递送
+
+   请注意，本文档中的示例头字段包含额外的换行，以满足
+   格式约束。
+
+   Authorization 头字段的 “t” 参数包含一个 JWT；“k” 参数包含
+   对该令牌进行签名的密钥的 base64url 编码。JWT 输入值以及
+   与签名密钥相对应的 JSON Web Key（JWK）[<a href="./rfc7517" title="&quot;JSON Web Key (JWK)&quot;">RFC7517</a>] 如图 2
+   所示，其中为可读性添加了额外空白。此 JWT 的有效期将
+   持续到 2016-01-23T04:36:08Z。
+
+   JWT header = { "typ": "JWT", "alg": "ES256" }
+   JWT body = { "aud": "https://push.example.net",
+                "exp": 1453523768,
+                "sub": "mailto:push@example.com" }
+   JWK = { "crv":"P-256",
+           "kty":"EC",
+           "x":"DUfHPKLVFQzVvnCPGyfucbECzPDa7rWbXriLcysAjEc",
+           "y":"F6YK5h4SDYic-dRuU_RCPCfA5aq9ojSwk5Y2EmClBPs" }
+
+                     图 2：解码后的示例值
+
+<span class="h2"><a class="selflink" id="section-3" href="#section-3">3</a>.  VAPID 认证方案</span>
+
+   本文档定义了一个名为 “vapid” 的新 HTTP 认证方案
+   [<a href="./rfc7235" title="&quot;Hypertext Transfer Protocol (HTTP/1.1): Authentication&quot;">RFC7235</a>]。此认证方案携带一个已签名 JWT（如<a href="#section-2">第 2 节</a>
+   所述），以及对该 JWT 进行签名的密钥。
+
+   此认证方案仅用于源服务器认证。因此，此认证方案 MUST NOT
+   与 Proxy-Authenticate 或 Proxy-Authorization 头字段一起使用。
+
+
+
+
+
+<span class="grey">Thomson &amp; Beverloo           标准化进程                       [第 6 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-7" ></span>
+<span class="grey"><a href="./rfc8292">RFC 8292</a>                   用于 Web Push 的 VAPID        2017年11月</span>
+
+
+   “vapid” 认证方案的质询只包含 “auth-scheme” 产生式。
+   目前未定义任何参数。
+
+   为此认证方案定义了两个参数：“t” 和 “k”。对 “vapid”
+   认证凭据中所有未知或不受支持的参数，MUST 忽略。
+   对于此认证方案，“realm” 参数会被忽略。
+
+   此认证方案旨在供应用服务器在使用 Web Push 协议
+   [<a href="./rfc8030" title="&quot;Generic Event Delivery Using HTTP Push&quot;">RFC8030</a>] 时使用。
+
+<span class="h3"><a class="selflink" id="section-3.1" href="#section-3.1">3.1</a>.  令牌参数（"t"）</span>
+
+   “vapid” 认证方案的 “t” 参数携带一个 JWT，如<a href="#section-2">第 2 节</a>
+   所述。
+
+<span class="h3"><a class="selflink" id="section-3.2" href="#section-3.2">3.2</a>.  公钥参数（"k"）</span>
+
+   为了使推送服务能够验证 JWT，它需要获知应用服务器的
+   公钥。为 “vapid” 认证方案定义了 “k” 参数，用于携带
+   此信息。
+
+   “k” 参数包含一个 ECDSA 公钥 [<a href="#ref-FIPS186" title="&quot;Digital Signature Standard (DSS)&quot;">FIPS186</a>]，该公钥采用
+   未压缩形式 [<a href="#ref-X9.62" title="&quot;Public Key Cryptography for the Financial Services Industry: the Elliptic Curve Digital Signature Algorithm (ECDSA)&quot;">X9.62</a>]，并使用 base64url 编码
+   [<a href="./rfc7515" title="&quot;JSON Web Signature (JWS)&quot;">RFC7515</a>] 进行编码。
+
+   注：使用 X9.62 编码而不是 JWK [<a href="./rfc7517" title="&quot;JSON Web Key (JWK)&quot;">RFC7517</a>] 有两个原因。
+      JWK 没有规范形式，因此 X9.62 编码使推送服务更容易
+      处理来自不同来源的密钥比较。其次，X9.62 编码也明显
+      更小。
+
+   某些椭圆曲线实现允许同一个 P-256 密钥同时用于签名和
+   密钥交换。应用服务器 MUST 为密钥交换 [<a href="./rfc8291" title="&quot;Message Encryption for Web Push&quot;">RFC8291</a>] 和签署
+   认证令牌选择不同的私钥。虽然推送服务没有义务对每条
+   推送消息检查任一参数，但推送服务 SHOULD 以 400（Bad Request）
+   状态码拒绝这些参数具有相同值的推送消息。
+
+<span class="h2"><a class="selflink" id="section-4" href="#section-4">4</a>.  订阅限制</span>
+
+   应用服务器的公钥充当该服务器的稳定标识符。该密钥可用于
+   将推送消息订阅限制到特定应用服务器。
+
+
+
+
+
+<span class="grey">Thomson &amp; Beverloo           标准化进程                       [第 7 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-8" ></span>
+<span class="grey"><a href="./rfc8292">RFC 8292</a>                   用于 Web Push 的 VAPID        2017年11月</span>
+
+
+   订阅限制通过要求应用服务器在请求递送推送消息时提供已签名
+   令牌，减少了对端点机密性的依赖。这为防止推送消息订阅
+   详情泄漏提供了额外一层保护。
+
+<span class="h3"><a class="selflink" id="section-4.1" href="#section-4.1">4.1</a>.  创建受限推送消息订阅</span>
+
+   希望创建受限订阅的用户代理，在请求创建推送消息订阅时
+   包含应用服务器的公钥。这会将所得订阅的使用限制为能够
+   提供由相应私钥签名的有效 JWT 的应用服务器。
+
+   用户代理随后把该公钥添加到创建推送消息订阅的请求中。
+   推送消息订阅请求会被扩展为包含正文。请求正文是一个
+   JSON 对象，如 [<a href="./rfc7159" title="&quot;The JavaScript Object Notation (JSON) Data Interchange Format&quot;">RFC7159</a>] 中所述。用户代理向该 JSON 对象
+   添加一个 “vapid” 成员，该成员包含 P-256 曲线上的公钥，
+   以未压缩形式 [<a href="#ref-X9.62" title="&quot;Public Key Cryptography for the Financial Services Industry: the Elliptic Curve Digital Signature Algorithm (ECDSA)&quot;">X9.62</a>] 表示并进行 base64url 编码
+   [<a href="./rfc7515" title="&quot;JSON Web Signature (JWS)&quot;">RFC7515</a>]。正文的媒体类型被设置为 “application/
+   webpush-options+json”（此媒体类型的注册见<a href="#section-6.3">第 6.3 节</a>）。
+
+   推送服务 MUST 忽略使用不同媒体类型的请求正文。对于
+   “application/webpush-options+json” 媒体类型，推送服务
+   MUST 忽略此对象中它不理解的任何成员。
+
+   图 3 中的示例展示了对图 1 中所用密钥的限制。为满足
+   格式约束，添加了额外空白。
+
+   POST /subscribe/ HTTP/1.1
+   Host: push.example.net
+   Content-Type: application/webpush-options+json
+   Content-Length: 104
+   { "vapid": "BA1Hxzyi1RUM1b5wjxsn7nGxAszw2u61m164i3MrAIxH
+               F6YK5h4SDYic-dRuU_RCPCfA5aq9ojSwk5Y2EmClBPs" }
+
+                    图 3：示例订阅请求
+
+   应用可以使用 Push API [<a href="#ref-API" title="&quot;Push API&quot;">API</a>] 向用户代理提供公钥。
+
+
+
+
+
+
+
+
+<span class="grey">Thomson &amp; Beverloo           标准化进程                       [第 8 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-9" ></span>
+<span class="grey"><a href="./rfc8292">RFC 8292</a>                   用于 Web Push 的 VAPID        2017年11月</span>
+
+
+<span class="h3"><a class="selflink" id="section-4.2" href="#section-4.2">4.2</a>.  使用受限订阅</span>
+
+   当推送消息订阅已经被限制到某个应用服务器时，推送消息递送
+   请求 MUST 包含一个 JWT，该 JWT 由与创建订阅时使用的公钥
+   相对应的私钥签名。
+
+   如果发送到受限推送消息订阅的消息没有包含 “vapid” 认证，
+   或者包含无效的 “vapid” 认证，推送服务 MUST 拒绝该消息。
+   如果认证缺失，可能使用 401（Unauthorized）状态码；如果
+   认证无效，可能使用 403（Forbidden）状态码。
+
+   在以下情况下，“vapid” 认证无效：
+
+   o  请求中未包含认证令牌或公钥中的任一项；
+
+   o  无法使用包含的公钥成功验证 JWT 上的签名；
+
+   o  当前时间晚于 “exp”（Expiry）声明中标识的时间，或者
+      早于过期时间超过 24 小时；
+
+   o  推送资源的源未包含在 “aud”（Audience）声明中；或者
+
+   o  用于签名 JWT 的公钥与创建推送消息订阅时包含的公钥
+      不匹配。
+
+   推送服务在递送推送消息时 MUST NOT 将 JWT 或公钥转发给
+   用户代理。
+
+   需要替换其签名密钥的应用服务器，需要请求用户代理创建
+   一个受限于更新后密钥的新订阅。应用服务器需要记住请求
+   创建订阅时使用的密钥。
+
+<span class="h2"><a class="selflink" id="section-5" href="#section-5">5</a>.  安全考虑</span>
+
+   如果攻击者能够获得有效 JWT，则此认证方案容易受到重放
+   攻击。按 [<a href="./rfc8030" title="&quot;Generic Event Delivery Using HTTP Push&quot;">RFC8030</a>] 要求使用 HTTPS 发送请求会提供机密性。
+   此外，对可重放令牌能够复用的时间段应用严格限制，会降低
+   被盗令牌对攻击者的潜在价值，并可能增加窃取令牌的难度。
+
+
+
+
+<span class="grey">Thomson &amp; Beverloo           标准化进程                       [第 9 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-10" ></span>
+<span class="grey"><a href="./rfc8292">RFC 8292</a>                   用于 Web Push 的 VAPID        2017年11月</span>
+
+
+   应用服务器可能提供伪造的联系信息。应用服务器声明其电子邮件
+   地址或联系 URI，但没有任何证据支持该声明。推送服务运营者
+   不能把未经验证的联系信息的存在用作任何安全关键决策过程的
+   输入。
+
+   验证 JWT 上的签名需要非平凡的计算量。对于可能用于在
+   拒绝服务攻击条件下识别合法请求的机制来说，这并不理想。
+   因此，鼓励应用服务器复用令牌，这允许推送服务缓存签名验证
+   的结果。
+
+   更改签名密钥的应用服务器会破坏它在不同密钥下发送的推送
+   消息之间的可关联性。依赖应用服务器一致身份的推送服务，
+   可能会以不同方式对使用新密钥发出的请求进行分类。逐步迁移
+   到新的签名密钥，可以降低使用新密钥的请求被归类为滥用请求
+   的可能性。
+
+<span class="h2"><a class="selflink" id="section-6" href="#section-6">6</a>.  IANA 考虑事项</span>
+
+   本文档注册一个新的认证方案、该方案参数的注册表，以及一个
+   用于推送选项的媒体类型。
+
+<span class="h3"><a class="selflink" id="section-6.1" href="#section-6.1">6.1</a>.  VAPID 认证方案注册</span>
+
+   本文档在由 [<a href="./rfc7235" title="&quot;Hypertext Transfer Protocol (HTTP/1.1): Authentication&quot;">RFC7235</a>] 建立的 “Hypertext Transfer Protocol
+   (HTTP) Authentication Scheme Registry” 中注册 “vapid” 认证方案。
+
+   Authentication Scheme Name:  vapid
+
+   Pointer to specification text:  本文档<a href="#section-3">第 3 节</a>
+
+<span class="h3"><a class="selflink" id="section-6.2" href="#section-6.2">6.2</a>.  VAPID 认证方案参数</span>
+
+   本文档为 “vapid” 认证方案的参数创建一个 “VAPID Authentication
+   Scheme Parameters” 注册表。这些参数被定义为用于请求
+   （在 Authorization 头字段中）和质询（在 WWW-Authenticate
+   头字段中）。此注册表位于 “Web Push Parameters” 分组下。
+   该注册表按 “Specification Required” 策略 [<a href="./rfc8126" title="">RFC8126</a>] 运作。
+
+
+
+
+
+
+
+<span class="grey">Thomson &amp; Beverloo           标准化进程                      [第 10 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-11" ></span>
+<span class="grey"><a href="./rfc8292">RFC 8292</a>                   用于 Web Push 的 VAPID        2017年11月</span>
+
+
+   注册项 MUST 包含以下信息：
+
+   Parameter Name:  参数的名称，该名称符合 “token” 语法
+      [<a href="./rfc7230" title="&quot;Hypertext Transfer Protocol (HTTP/1.1): Message Syntax and Routing&quot;">RFC7230</a>]
+
+   Purpose (optional):  标识参数用途的简短文本
+
+   Header Field(s):  可使用该参数的头字段
+
+   Specification:  指向定义该参数格式和语义的规范的链接
+
+   此注册表初始包含以下条目：
+
+   +-------------+------------------+---------------+------------------+
+   | Parameter   | Purpose          | Header        | Specification    |
+   | Name        |                  | Field(s)      |                  |
+   +-------------+------------------+---------------+------------------+
+   | t           | JWT              | Authorization | [<a href="./rfc8292">RFC8292</a>],       |
+   |             | 认证             |               | <a href="#section-3.1">第 3.1 节</a>      |
+   |             | 令牌             |               |                  |
+   |             |                  |               |                  |
+   | k           | 签名密钥         | Authorization | [<a href="./rfc8292">RFC8292</a>],       |
+   |             |                  |               | <a href="#section-3.2">第 3.2 节</a>      |
+   +-------------+------------------+---------------+------------------+
+
+<span class="h3"><a class="selflink" id="section-6.3" href="#section-6.3">6.3</a>.  application/webpush-options+json 媒体类型注册</span>
+
+   本文档按照 [<a href="./rfc6838" title="&quot;Media Type Specifications and Registration Procedures&quot;">RFC6838</a>] 中描述的过程，在 “Media Types”
+   注册表中注册 “application/webpush-options+json” 媒体类型。
+
+   Type name:  application
+
+   Subtype name:  webpush-options+json
+
+   Required parameters:  无
+
+   Optional parameters:  无
+
+   Encoding considerations:  binary（JSON 是 UTF-8 编码文本）
+
+   Security considerations:  关于 JSON 特有的安全考虑，见
+      [<a href="./rfc7159" title="&quot;The JavaScript Object Notation (JSON) Data Interchange Format&quot;">RFC7159</a>]。
+
+
+
+
+
+<span class="grey">Thomson &amp; Beverloo           标准化进程                      [第 11 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-12" ></span>
+<span class="grey"><a href="./rfc8292">RFC 8292</a>                   用于 Web Push 的 VAPID        2017年11月</span>
+
+
+   Interoperability considerations:  关于 JSON 特有的互操作性考虑，
+      见 [<a href="./rfc7159" title="&quot;The JavaScript Object Notation (JSON) Data Interchange Format&quot;">RFC7159</a>]。
+
+   Published specification:  [<a href="./rfc8292">RFC8292</a>]
+
+   Applications that use this media type:  通过 Web Push 协议
+      [<a href="./rfc8030" title="&quot;Generic Event Delivery Using HTTP Push&quot;">RFC8030</a>] 使用它的 Web 浏览器
+
+   Fragment identifier considerations:  无
+
+   Additional information:
+
+      Deprecated alias names for this type:  n/a
+
+      Magic number(s):  n/a
+
+      File extension(s):  .json
+
+      Macintosh file type code(s):  TEXT
+
+   Person &amp; email address to contact for further information:  Martin
+      Thomson (martin.thomson@gmail.com)
+
+   Intended usage:  LIMITED USE
+
+   Restrictions on usage:  用于 Web Push 协议 [<a href="./rfc8030" title="&quot;Generic Event Delivery Using HTTP Push&quot;">RFC8030</a>]
+
+   Author:  见 [<a href="./rfc8292">RFC8292</a>] 的 “Authors' Addresses” 一节。
+
+   Change controller:  Internet Engineering Task Force
+
+<span class="h2"><a class="selflink" id="section-7" href="#section-7">7</a>.  参考文献</span>
+
+<span class="h3"><a class="selflink" id="section-7.1" href="#section-7.1">7.1</a>.  规范性参考文献</span>
+
+   [<a id="ref-FIPS186">FIPS186</a>]  National Institute of Standards and Technology (NIST),
+              "Digital Signature Standard (DSS)", FIPS PUB 186-4,
+              DOI 10.6028/NIST.FIPS.186-4, July 2013.
+
+   [<a id="ref-RFC2119">RFC2119</a>]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", <a href="https://www.rfc-editor.org/bcp/bcp14">BCP 14</a>, <a href="./rfc2119">RFC 2119</a>,
+              DOI 10.17487/RFC2119, March 1997,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc2119">https://www.rfc-editor.org/info/rfc2119</a>&gt;.
+
+   [<a id="ref-RFC2818">RFC2818</a>]  Rescorla, E., "HTTP Over TLS", <a href="./rfc2818">RFC 2818</a>,
+              DOI 10.17487/RFC2818, May 2000,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc2818">https://www.rfc-editor.org/info/rfc2818</a>&gt;.
+
+
+
+
+<span class="grey">Thomson &amp; Beverloo           标准化进程                      [第 12 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-13" ></span>
+<span class="grey"><a href="./rfc8292">RFC 8292</a>                   用于 Web Push 的 VAPID        2017年11月</span>
+
+
+   [<a id="ref-RFC6068">RFC6068</a>]  Duerst, M., Masinter, L., and J. Zawinski, "The 'mailto'
+              URI Scheme", <a href="./rfc6068">RFC 6068</a>, DOI 10.17487/RFC6068, October 2010,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc6068">https://www.rfc-editor.org/info/rfc6068</a>&gt;.
+
+   [<a id="ref-RFC6454">RFC6454</a>]  Barth, A., "The Web Origin Concept", <a href="./rfc6454">RFC 6454</a>,
+              DOI 10.17487/RFC6454, December 2011,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc6454">https://www.rfc-editor.org/info/rfc6454</a>&gt;.
+
+   [<a id="ref-RFC6838">RFC6838</a>]  Freed, N., Klensin, J., and T. Hansen, "Media Type
+              Specifications and Registration Procedures", <a href="https://www.rfc-editor.org/bcp/bcp13">BCP 13</a>,
+              <a href="./rfc6838">RFC 6838</a>, DOI 10.17487/RFC6838, January 2013,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc6838">https://www.rfc-editor.org/info/rfc6838</a>&gt;.
+
+   [<a id="ref-RFC7159">RFC7159</a>]  Bray, T., Ed., "The JavaScript Object Notation (JSON) Data
+              Interchange Format", <a href="./rfc7159">RFC 7159</a>, DOI 10.17487/RFC7159, March
+              2014, &lt;<a href="https://www.rfc-editor.org/info/rfc7159">https://www.rfc-editor.org/info/rfc7159</a>&gt;.
+
+   [<a id="ref-RFC7230">RFC7230</a>]  Fielding, R., Ed. and J. Reschke, Ed., "Hypertext Transfer
+              Protocol (HTTP/1.1): Message Syntax and Routing",
+              <a href="./rfc7230">RFC 7230</a>, DOI 10.17487/RFC7230, June 2014,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc7230">https://www.rfc-editor.org/info/rfc7230</a>&gt;.
+
+   [<a id="ref-RFC7231">RFC7231</a>]  Fielding, R., Ed. and J. Reschke, Ed., "Hypertext Transfer
+              Protocol (HTTP/1.1): Semantics and Content", <a href="./rfc7231">RFC 7231</a>,
+              DOI 10.17487/RFC7231, June 2014,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc7231">https://www.rfc-editor.org/info/rfc7231</a>&gt;.
+
+   [<a id="ref-RFC7235">RFC7235</a>]  Fielding, R., Ed. and J. Reschke, Ed., "Hypertext Transfer
+              Protocol (HTTP/1.1): Authentication", <a href="./rfc7235">RFC 7235</a>,
+              DOI 10.17487/RFC7235, June 2014,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc7235">https://www.rfc-editor.org/info/rfc7235</a>&gt;.
+
+   [<a id="ref-RFC7515">RFC7515</a>]  Jones, M., Bradley, J., and N. Sakimura, "JSON Web
+              Signature (JWS)", <a href="./rfc7515">RFC 7515</a>, DOI 10.17487/RFC7515, May
+              2015, &lt;<a href="https://www.rfc-editor.org/info/rfc7515">https://www.rfc-editor.org/info/rfc7515</a>&gt;.
+
+   [<a id="ref-RFC7518">RFC7518</a>]  Jones, M., "JSON Web Algorithms (JWA)", <a href="./rfc7518">RFC 7518</a>,
+              DOI 10.17487/RFC7518, May 2015,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc7518">https://www.rfc-editor.org/info/rfc7518</a>&gt;.
+
+   [<a id="ref-RFC7519">RFC7519</a>]  Jones, M., Bradley, J., and N. Sakimura, "JSON Web Token
+              (JWT)", <a href="./rfc7519">RFC 7519</a>, DOI 10.17487/RFC7519, May 2015,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc7519">https://www.rfc-editor.org/info/rfc7519</a>&gt;.
+
+   [<a id="ref-RFC8030">RFC8030</a>]  Thomson, M., Damaggio, E., and B. Raymor, Ed., "Generic
+              Event Delivery Using HTTP Push", <a href="./rfc8030">RFC 8030</a>,
+              DOI 10.17487/RFC8030, December 2016,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc8030">https://www.rfc-editor.org/info/rfc8030</a>&gt;.
+
+
+
+<span class="grey">Thomson &amp; Beverloo           标准化进程                      [第 13 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-14" ></span>
+<span class="grey"><a href="./rfc8292">RFC 8292</a>                   用于 Web Push 的 VAPID        2017年11月</span>
+
+
+   [<a id="ref-RFC8126">RFC8126</a>]  Cotton, M., Leiba, B., and T. Narten, "Guidelines for
+              Writing an IANA Considerations Section in RFCs", <a href="https://www.rfc-editor.org/bcp/bcp26">BCP 26</a>,
+              <a href="./rfc8126">RFC 8126</a>, DOI 10.17487/RFC8126, June 2017,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc8126">https://www.rfc-editor.org/info/rfc8126</a>&gt;.
+
+   [<a id="ref-RFC8174">RFC8174</a>]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in <a href="./rfc2119">RFC</a>
+              <a href="./rfc2119">2119</a> Key Words", <a href="https://www.rfc-editor.org/bcp/bcp14">BCP 14</a>, <a href="./rfc8174">RFC 8174</a>, DOI 10.17487/RFC8174,
+              May 2017, &lt;<a href="https://www.rfc-editor.org/info/rfc8174">https://www.rfc-editor.org/info/rfc8174</a>&gt;.
+
+   [<a id="ref-RFC8291">RFC8291</a>]  Thomson, M., "Message Encryption for Web Push", <a href="./rfc8291">RFC 8291</a>,
+              DOI 10.17487/RFC8291, November 2017,
+              &lt;<a href="http://www.rfc-editor.org/info/rfc8291">http://www.rfc-editor.org/info/rfc8291</a>&gt;.
+
+   [<a id="ref-X9.62">X9.62</a>]    ANSI, "Public Key Cryptography for the Financial Services
+              Industry: the Elliptic Curve Digital Signature Algorithm
+              (ECDSA)", ANSI X9.62, 2005.
+
+<span class="h3"><a class="selflink" id="section-7.2" href="#section-7.2">7.2</a>.  资料性参考文献</span>
+
+   [<a id="ref-API">API</a>]      Beverloo, P., Thomson, M., van Ouwerkerk, M., Sullivan,
+              B., and E. Fullea, "Push API", October 2017,
+              &lt;<a href="https://www.w3.org/TR/push-api/">https://www.w3.org/TR/push-api/</a>&gt;.
+
+   [<a id="ref-RFC7517">RFC7517</a>]  Jones, M., "JSON Web Key (JWK)", <a href="./rfc7517">RFC 7517</a>,
+              DOI 10.17487/RFC7517, May 2015,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc7517">https://www.rfc-editor.org/info/rfc7517</a>&gt;.
+
+致谢
+
+   如果没有 Benjamin Bangert、JR Conlin、Chris Karlof、Costin
+   Manolache、Adam Roach 以及其他人的贡献，本文档会比现在
+   糟糕得多。
+
+作者地址
+
+   Martin Thomson
+   Mozilla
+
+   Email: martin.thomson@gmail.com
+
+
+   Peter Beverloo
+   Google
+
+   Email: beverloo@google.com
+
+
+
+
+
+
+Thomson &amp; Beverloo           标准化进程                      [第 14 页]
+</pre>
+<script src="https://htmlspecs.com/dropdown.js"></script>

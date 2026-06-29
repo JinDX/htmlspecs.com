@@ -901,22 +901,22 @@ const links = [
         lang: "cjk",
         state: "RFC"
     },
-    // {
-    //     text: "Message Encryption for Web Push",
-    //     href: "https://htmlspecs.com/rfc8291/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc8291.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
-    // {
-    //     text: "Voluntary Application Server Identification (VAPID) for Web Push",
-    //     href: "https://htmlspecs.com/rfc8292/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc8292.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
+    {
+        text: "Message Encryption for Web Push",
+        href: "https://htmlspecs.com/rfc8291/",
+        src: "https://www.rfc-editor.org/rfc/rfc8291.html",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "RFC"
+    },
+    {
+        text: "Voluntary Application Server Identification (VAPID) for Web Push",
+        href: "https://htmlspecs.com/rfc8292/",
+        src: "https://www.rfc-editor.org/rfc/rfc8292.html",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "RFC"
+    },
     {
         text: "Background Fetch",
         href: "https://htmlspecs.com/background-fetch/",
