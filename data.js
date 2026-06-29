@@ -1405,14 +1405,14 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
-    // {
-    //     text: "Web of Things (WoT) Profile",
-    //     href: "https://htmlspecs.com/wot-profile/",
-    //     src: "https://www.w3.org/TR/wot-profile/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "REC"
-    // },
+    {
+        text: "Web of Things (WoT) Profile",
+        href: "https://htmlspecs.com/wot-profile/",
+        src: "https://www.w3.org/TR/2025/WD-wot-profile-20251104/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "REC"
+    },
 
     //### 窗口、屏幕与系统集成|창, 화면 및 시스템 통합|ウィンドウ・画面・システム統合
     {
