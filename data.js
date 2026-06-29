@@ -1411,7 +1411,7 @@ const links = [
         src: "https://www.w3.org/TR/2025/WD-wot-profile-20251104/",
         "last-modified": "-",
         lang: "cjk",
-        state: "REC"
+        state: "WD"
     },
 
     //### 窗口、屏幕与系统集成|창, 화면 및 시스템 통합|ウィンドウ・画面・システム統合
@@ -2956,7 +2956,7 @@ const links = [
     // {
     //     text: "WAI-Adapt: Tools Module",
     //     href: "https://htmlspecs.com/adapt-tools/",
-    //     src: "https://www.w3.org/TR/adapt-tools/",
+    //     src: "https://www.w3.org/TR/2022/WD-adapt-tools-20220609/",
     //     "last-modified": "-",
     //     lang: "cjk",
     //     state: "WD"
