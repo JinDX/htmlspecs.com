@@ -347,6 +347,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Trusted Types](https://htmlspecs.com/trusted-types/)（[Source](https://www.w3.org/TR/2026/WD-trusted-types-20260623/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Clear Site Data](https://htmlspecs.com/clear-site-data/)（[Source](https://www.w3.org/TR/2017/WD-clear-site-data-20171130/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [A File Format to Aid in Security Vulnerability Disclosure](https://htmlspecs.com/rfc9116/)（[Source](https://www.rfc-editor.org/rfc/rfc9116.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [Device Bound Session Credentials](https://htmlspecs.com/dbsc/)（[Source](https://www.w3.org/TR/2025/WD-dbsc-1-20250821/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [JSON Web Token (JWT)](https://htmlspecs.com/jwt/)（[Source](https://www.rfc-editor.org/rfc/rfc7519.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [JSON Web Signature (JWS)](https://htmlspecs.com/jws/)（[Source](https://www.rfc-editor.org/rfc/rfc7515.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [JSON Web Encryption (JWE)](https://htmlspecs.com/jwe/)（[Source](https://www.rfc-editor.org/rfc/rfc7516.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
