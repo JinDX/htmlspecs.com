@@ -753,14 +753,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "MiniApp Standardization White Paper version 2",
-    //     href: "https://htmlspecs.com/mini-app-white-paper/",
-    //     src: "https://www.w3.org/TR/mini-app-white-paper/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "NOTE"
-    // },
+    {
+        text: "MiniApp Standardization White Paper version 2",
+        href: "https://htmlspecs.com/mini-app-white-paper/",
+        src: "https://www.w3.org/TR/2022/DNOTE-mini-app-white-paper-20220701/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "DNOTE"
+    },
 
     //### 网络、传输与实时通信|네트워크, 전송 및 실시간 통신|ネットワーク・転送・リアルタイム通信
     {
