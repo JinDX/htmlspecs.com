@@ -197,6 +197,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Web of Things (WoT) Scripting API](https://htmlspecs.com/wot-scripting-api/)（[Source](https://www.w3.org/TR/2023/NOTE-wot-scripting-api-20231003/) ![Note](https://img.shields.io/badge/NOTE-309c40)）
 - [Web of Things (WoT) Architecture 1.1](https://htmlspecs.com/wot-architecture11/)（[Source](https://www.w3.org/TR/2023/REC-wot-architecture11-20231205/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Web of Things (WoT) Discovery](https://htmlspecs.com/wot-discovery/)（[Source](https://www.w3.org/TR/2023/REC-wot-discovery-20231205/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
+- [Web of Things (WoT) Profile](https://htmlspecs.com/wot-profile/)（[Source](https://www.w3.org/TR/2025/WD-wot-profile-20251104/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 
 ### 窗口、屏幕与系统集成
 - [Screen Orientation](https://htmlspecs.com/screen-orientation/)（[Source](https://www.w3.org/TR/2025/WD-screen-orientation-20251021/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
@@ -244,6 +245,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Encrypted Media Extensions](https://htmlspecs.com/encrypted-media-2/)（[Source](https://www.w3.org/TR/2026/WD-encrypted-media-2-20260624/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Remote Playback](https://htmlspecs.com/remote-playback/)（[Source](https://www.w3.org/TR/2024/CRD-remote-playback-20240430/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [Open Screen Application Protocol](https://htmlspecs.com/openscreen-application/)（[Source](https://www.w3.org/TR/2026/WD-openscreen-application-20260210/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Open Screen Network Protocol](https://htmlspecs.com/openscreen-network/)（[Source](https://www.w3.org/TR/2026/WD-openscreen-network-20260210/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 
 ### 媒体格式、字幕与编解码
 - [WebVTT: The Web Video Text Tracks Format](https://htmlspecs.com/webvtt1/)（[Source](https://www.w3.org/TR/2026/CRD-webvtt1-20260520/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
