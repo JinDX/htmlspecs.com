@@ -1,0 +1,674 @@
+<pre>互联网工程任务组 (IETF)                                      M. Thomson
+征求意见稿: 8291                                                Mozilla
+类别: 标准化进程                                             2017 年 11 月
+ISSN: 2070-1721
+
+
+                    <span class="h1">用于 Web Push 的消息加密</span>
+
+摘要
+
+   本文档描述了 Web Push 协议的一种消息加密方案。该方案为从应用
+   服务器发送到用户代理的消息提供机密性和完整性。
+
+关于本文档的状态
+
+   本文档是互联网标准化进程文档。
+
+   本文档是互联网工程任务组 (IETF) 的成果。它代表了 IETF 社区的
+   共识。它已经过公开审查，并由互联网工程指导组 (IESG) 批准发布。
+   关于互联网标准的更多信息可见于 <a href="./rfc7841#section-2">RFC 7841 第&nbsp;2 节</a>。
+
+   关于本文档的当前状态、任何勘误以及如何提供反馈的信息，可在
+   <a href="https://www.rfc-editor.org/info/rfc8291">https://www.rfc-editor.org/info/rfc8291</a>.
+
+Copyright Notice
+
+   Copyright (c) 2017 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to <a href="https://www.rfc-editor.org/bcp/bcp78">BCP 78</a> and the IETF Trust's Legal
+   Provisions Relating to IETF Documents
+   (<a href="https://trustee.ietf.org/license-info">https://trustee.ietf.org/license-info</a>) in effect on the date of
+   publication of this document.  Please review these documents
+   carefully, as they describe your rights and restrictions with respect
+   to this document.  Code Components extracted from this document must
+   include Simplified BSD License text as described in Section 4.e of
+   the Trust Legal Provisions and are provided without warranty as
+   described in the Simplified BSD License.
+
+
+
+
+
+
+
+
+
+<span class="grey">Thomson                      标准化进程                    [第 1 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-2" ></span>
+<span class="grey"><a href="./rfc8291">RFC 8291</a>                   Web Push 加密                 2017 年 11 月</span>
+
+
+目录
+
+   <a href="#section-1">1</a>. 引言 ........................................................<a href="#page-2">2</a>
+      <a href="#section-1.1">1.1</a>. 记法约定 ...............................................<a href="#page-3">3</a>
+   <a href="#section-2">2</a>. 推送消息加密概述 ............................................<a href="#page-3">3</a>
+      <a href="#section-2.1">2.1</a>. 密钥和秘密的分发 .......................................<a href="#page-4">4</a>
+   <a href="#section-3">3</a>. 推送消息加密 ................................................<a href="#page-4">4</a>
+      <a href="#section-3.1">3.1</a>. Diffie-Hellman 密钥协商 ................................<a href="#page-5">5</a>
+      <a href="#section-3.2">3.2</a>. 推送消息认证 ...........................................<a href="#page-5">5</a>
+      <a href="#section-3.3">3.3</a>. 组合共享秘密和认证秘密 .................................<a href="#page-5">5</a>
+      <a href="#section-3.4">3.4</a>. 加密摘要 ...............................................<a href="#page-6">6</a>
+   <a href="#section-4">4</a>. 对使用 "aes128gcm" 内容编码的限制 ...........................<a href="#page-7">7</a>
+   <a href="#section-5">5</a>. 推送消息加密示例 ............................................<a href="#page-8">8</a>
+   <a href="#section-6">6</a>. IANA 考虑事项 ...............................................<a href="#page-8">8</a>
+   <a href="#section-7">7</a>. 安全考虑事项 ................................................<a href="#page-8">8</a>
+   <a href="#section-8">8</a>. 参考文献 ....................................................<a href="#page-10">10</a>
+      <a href="#section-8.1">8.1</a>. 规范性参考文献 ........................................<a href="#page-10">10</a>
+      <a href="#section-8.2">8.2</a>. 资料性参考文献 ........................................<a href="#page-11">11</a>
+   <a href="#appendix-A">附录 A</a>.  用于加密的中间值 ....................................<a href="#page-12">12</a>
+   作者地址 ......................................................<a href="#page-13">13</a>
+
+<span class="h2"><a class="selflink" id="section-1" href="#section-1">1</a>.  引言</span>
+
+   Web Push 协议 [<a href="./rfc8030" title="&quot;使用 HTTP Push 进行通用事件交付&quot;">RFC8030</a>] 必然是一个带有中介的协议。来自
+   应用服务器的消息通过推送服务传递给用户代理 (UA)，如图 1
+   所示。
+
+    +-------+           +--------------+       +-------------+
+    |  UA   |           | Push Service |       | Application |
+    +-------+           +--------------+       +-------------+
+        |                      |                      |
+        |        Setup         |                      |
+        |&lt;====================&gt;|                      |
+        |           Provide Subscription              |
+        |--------------------------------------------&gt;|
+        |                      |                      |
+        :                      :                      :
+        |                      |     Push Message     |
+        |    Push Message      |&lt;---------------------|
+        |&lt;---------------------|                      |
+        |                      |                      |
+
+                                 图 1
+
+   本文档描述了如何保护使用此协议发送的消息，使其免遭推送
+   服务的检查、修改和伪造。
+
+
+
+
+<span class="grey">Thomson                      标准化进程                    [第 2 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-3" ></span>
+<span class="grey"><a href="./rfc8291">RFC 8291</a>                   Web Push 加密                 2017 年 11 月</span>
+
+
+   Web Push 消息是 HTTP 消息 [<a href="./rfc7230" title="&quot;超文本传输协议 (HTTP/1.1)：消息语法和路由&quot;">RFC7230</a>] 的有效载荷。
+   这些消息使用加密内容编码 [<a href="./rfc8188" title="&quot;用于 HTTP 的加密内容编码&quot;">RFC8188</a>] 进行加密。本文档描述了
+   如何应用该内容编码，并描述了一种推荐的密钥管理方案。
+
+   同一用户代理上 Web Push 的多个用户通常会共享一个聚合推送
+   功能的中央代理。该代理可以强制使用推送消息传递的应用使用
+   此加密方案。只交付正确加密消息的代理，会强烈促进消息的
+   端到端保护。
+
+   实现 Push API [<a href="#ref-API" title="&quot;Push API&quot;">API</a>] 的 Web 浏览器可以通过只转发已正确
+   加密的消息来强制使用加密。
+
+<span class="h3"><a class="selflink" id="section-1.1" href="#section-1.1">1.1</a>.  记法约定</span>
+
+   本文档中的关键词 "MUST"、"MUST NOT"、"REQUIRED"、"SHALL"、
+   "SHALL NOT"、"SHOULD"、"SHOULD NOT"、"RECOMMENDED"、"NOT
+   RECOMMENDED"、"MAY" 和 "OPTIONAL" 只有在以全大写形式出现时，
+   才应按 <a href="https://www.rfc-editor.org/bcp/bcp14">BCP</a> <a href="https://www.rfc-editor.org/bcp/bcp14">14</a> [<a href="./rfc2119" title="&quot;用于 RFC 中表示要求级别的关键词&quot;">RFC2119</a>] [<a href="./rfc8174" title="&quot;RFC 2119 关键词中大小写歧义&quot;">RFC8174</a>] 中的说明进行解释，如这里所示。
+
+   本文档使用 [<a href="./rfc8030" title="&quot;使用 HTTP Push 进行通用事件交付&quot;">RFC8030</a>] 中的术语，主要是 "user
+   agent"、"push service" 和 "application server"。
+
+<span class="h2"><a class="selflink" id="section-2" href="#section-2">2</a>.  推送消息加密概述</span>
+
+   加密推送消息使用 P-256 曲线 [<a href="#ref-FIPS186" title="&quot;数字签名标准 (DSS)&quot;">FIPS186</a>] 上的椭圆曲线
+   Diffie-Hellman (ECDH) [<a href="#ref-ECDH" title="&quot;SEC 1：椭圆曲线密码学&quot;">ECDH</a>] 来建立共享秘密（见
+   <a href="#section-3.1">第 3.1 节</a>）以及用于认证的对称秘密（见 <a href="#section-3.2">第 3.2 节</a>）。
+
+   用户代理生成 ECDH 密钥对和认证秘密，并将其关联到它创建的
+   每个订阅。ECDH 公钥和认证秘密会随推送订阅的其他详细信息
+   一起发送给应用服务器。
+
+   发送消息时，应用服务器生成一个 ECDH 密钥对和一个随机盐值。
+   ECDH 公钥被编码到加密内容编码头部的 "keyid" 参数中，盐值
+   被编码到同一头部的 "salt" 参数中（见
+   <a href="./rfc8188#section-2.1">[RFC8188] 第&nbsp;2.1 节</a>）。ECDH 密钥对可在加密消息后丢弃。
+
+
+
+
+
+
+<span class="grey">Thomson                      标准化进程                    [第 3 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-4" ></span>
+<span class="grey"><a href="./rfc8291">RFC 8291</a>                   Web Push 加密                 2017 年 11 月</span>
+
+
+   推送消息的内容使用内容加密密钥和 nonce 进行加密或解密。这些值
+   是通过将 "keyid" 和 "salt" 作为输入，按 <a href="#section-3">第 3 节</a> 中描述的过程
+   派生得到的。
+
+<span class="h3"><a class="selflink" id="section-2.1" href="#section-2.1">2.1</a>.  密钥和秘密的分发</span>
+
+   使用该订阅的应用将订阅公钥和认证秘密分发给经授权的应用
+   服务器。这可以随用户代理提供的其他订阅信息一起发送，例如
+   推送订阅 URI。
+
+   应用为此目的必须使用经过认证并受机密性保护的通信媒介。
+   除 [<a href="./rfc8030" title="&quot;使用 HTTP Push 进行通用事件交付&quot;">RFC8030</a>] 中描述的原因之外，这种使用还确保认证秘密不会
+   泄露给未经授权的实体，否则这些实体就能生成会被用户代理接受
+   的推送消息。
+
+   大多数使用推送消息传递的应用都与某个应用服务器已有关系，
+   可用于分发订阅数据。提供足够机密性和完整性保护的认证通信
+   机制（例如 HTTPS [<a href="./rfc2818" title="&quot;基于 TLS 的 HTTP&quot;">RFC2818</a>]）是充分的。
+
+<span class="h2"><a class="selflink" id="section-3" href="#section-3">3</a>.  推送消息加密</span>
+
+   推送消息加密分四个阶段进行：
+
+   o  使用 ECDH [<a href="#ref-ECDH" title="&quot;SEC 1：椭圆曲线密码学&quot;">ECDH</a>] 派生共享秘密（见本文档
+      <a href="#section-3.1">第 3.1 节</a>）。
+
+   o  然后将共享秘密与认证秘密组合，生成 [<a href="./rfc8188" title="&quot;用于 HTTP 的加密内容编码&quot;">RFC8188</a>] 中使用的
+      输入密钥材料 (IKM)（见本文档 <a href="#section-3.3">第 3.3 节</a>）。
+
+   o  使用 [<a href="./rfc8188" title="&quot;用于 HTTP 的加密内容编码&quot;">RFC8188</a>] 中的过程派生内容加密密钥和 nonce。
+
+   o  按照 [<a href="./rfc8188" title="&quot;用于 HTTP 的加密内容编码&quot;">RFC8188</a>] 进行加密或解密。
+
+   密钥派生过程在 <a href="#section-3.4">第 3.4 节</a> 中概述。对使用加密内容编码的
+   限制在 <a href="#section-4">第 4 节</a> 中描述。
+
+
+
+
+
+
+<span class="grey">Thomson                      标准化进程                    [第 4 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-5" ></span>
+<span class="grey"><a href="./rfc8291">RFC 8291</a>                   Web Push 加密                 2017 年 11 月</span>
+
+
+<span class="h3"><a class="selflink" id="section-3.1" href="#section-3.1">3.1</a>.  Diffie-Hellman 密钥协商</span>
+
+   对于用户代理为应用生成的每个新订阅，它还会生成一个用于
+   ECDH [<a href="#ref-ECDH" title="&quot;SEC 1：椭圆曲线密码学&quot;">ECDH</a>] 的 P-256 [<a href="#ref-FIPS186" title="&quot;数字签名标准 (DSS)&quot;">FIPS186</a>] 密钥对。
+
+   发送推送消息时，应用服务器也会在同一 P-256 曲线上生成一个
+   新的 ECDH 密钥对。
+
+   应用服务器的 ECDH 公钥作为加密内容编码头部中的 "keyid"
+   参数包含在内（见 <a href="./rfc8188#section-2.1">[RFC8188] 第&nbsp;2.1 节</a>）。
+
+   应用服务器使用 [<a href="#ref-ECDH" title="&quot;SEC 1：椭圆曲线密码学&quot;">ECDH</a>] 中描述的过程，将其 ECDH 私钥与用户
+   代理提供的公钥组合；在收到推送消息时，用户代理以相同方式
+   将其私钥与应用服务器在 "keyid" 参数中提供的公钥组合。这些
+   操作会为 ECDH 共享秘密生成相同的值。
+
+<span class="h3"><a class="selflink" id="section-3.2" href="#section-3.2">3.2</a>.  推送消息认证</span>
+
+   为确保推送消息得到正确认证，会将一个对称认证秘密添加到
+   用户代理生成的信息中。认证秘密会混入 <a href="#section-3.3">第 3.3 节</a> 描述的
+   密钥派生过程中。
+
+   用户代理必须生成并提供一个难以猜测的 16 个八位字节序列，
+   该序列用于推送消息的认证。该序列应该由密码学强随机数
+   生成器 [<a href="./rfc4086" title="&quot;安全性的随机性要求&quot;">RFC4086</a>] 生成。
+
+<span class="h3"><a class="selflink" id="section-3.3" href="#section-3.3">3.3</a>.  组合共享秘密和认证秘密</span>
+
+   ECDH 生成的共享秘密会使用基于 HMAC 的密钥派生函数 (HKDF)
+   [<a href="./rfc5869" title="&quot;基于 HMAC 的提取与扩展密钥派生函数 (HKDF)&quot;">RFC5869</a>] 与认证秘密组合。这会生成 [<a href="./rfc8188" title="&quot;用于 HTTP 的加密内容编码&quot;">RFC8188</a>] 使用的输入
+   密钥材料。
+
+   HKDF 函数使用 SHA-256 哈希算法 [<a href="#ref-FIPS180-4">FIPS180-4</a>]，并带有以下
+   输入：
+
+   salt: 认证秘密
+
+   IKM:  使用 ECDH 派生的共享秘密
+
+
+
+
+
+
+<span class="grey">Thomson                      标准化进程                    [第 5 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-6" ></span>
+<span class="grey"><a href="./rfc8291">RFC 8291</a>                   Web Push 加密                 2017 年 11 月</span>
+
+
+   info: ASCII 编码字符串 "WebPush: info"（该字符串不以 NUL 终止）、
+         一个零八位字节、用户代理 ECDH 公钥以及应用服务器 ECDH
+         公钥的串接，（两个 ECDH 公钥均采用 [<a href="#ref-X9.62" title="&quot;面向金融服务业的公钥密码学：椭圆曲线数字签名算法 (ECDSA)&quot;">X9.62</a>] 中定义的
+         未压缩点形式）。即：
+
+   key_info = "WebPush: info" || 0x00 || ua_public || as_public
+
+   L:    32 个八位字节（即，输出长度为底层 SHA-256 HMAC 函数
+         输出的长度）
+
+<span class="h3"><a class="selflink" id="section-3.4" href="#section-3.4">3.4</a>.  加密摘要</span>
+
+   这会使用以下序列生成最终的内容加密密钥和 nonce；这里以
+   伪代码形式展示，并将 HKDF 展开为使用 HMAC 和 SHA-256 的
+   单独离散步骤：
+
+      -- 对于用户代理：
+      ecdh_secret = ECDH(ua_private, as_public)
+      auth_secret = random(16)
+      salt = &lt;来自内容编码头部&gt;
+
+      -- 对于应用服务器：
+      ecdh_secret = ECDH(as_private, ua_public)
+      auth_secret = &lt;来自用户代理&gt;
+      salt = random(16)
+
+      -- 对二者均适用：
+
+      ## 使用 HKDF 组合 ECDH 和认证秘密
+      # HKDF-Extract(salt=auth_secret, IKM=ecdh_secret)
+      PRK_key = HMAC-SHA-256(auth_secret, ecdh_secret)
+      # HKDF-Expand(PRK_key, key_info, L_key=32)
+      key_info = "WebPush: info" || 0x00 || ua_public || as_public
+      IKM = HMAC-SHA-256(PRK_key, key_info || 0x01)
+
+      ## 来自 <a href="./rfc8188">RFC 8188</a> 的 HKDF 计算
+      # HKDF-Extract(salt, IKM)
+      PRK = HMAC-SHA-256(salt, IKM)
+      # HKDF-Expand(PRK, cek_info, L_cek=16)
+      cek_info = "Content-Encoding: aes128gcm" || 0x00
+      CEK = HMAC-SHA-256(PRK, cek_info || 0x01)[0..15]
+      # HKDF-Expand(PRK, nonce_info, L_nonce=12)
+      nonce_info = "Content-Encoding: nonce" || 0x00
+      NONCE = HMAC-SHA-256(PRK, nonce_info || 0x01)[0..11]
+
+
+
+
+
+
+<span class="grey">Thomson                      标准化进程                    [第 6 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-7" ></span>
+<span class="grey"><a href="./rfc8291">RFC 8291</a>                   Web Push 加密                 2017 年 11 月</span>
+
+
+   请注意，这省略了最终 nonce 与记录序列号的异或运算，因为推送
+   消息只包含单条记录（见 <a href="#section-4">第 4 节</a>），且第一条记录的序列号为零。
+
+<span class="h2"><a class="selflink" id="section-4" href="#section-4">4</a>.  对使用 "aes128gcm" 内容编码的限制</span>
+
+   应用服务器必须用单条记录加密推送消息。这允许接收方实现保持
+   最小，只处理单条记录。应用服务器必须将 "aes128gcm" 内容编码
+   头部中的 "rs" 参数设置为一个大小，该大小大于明文长度、填充
+   分隔符（1 个八位字节）、任何填充以及认证标签（16 个八位字节）
+   的长度总和。
+
+   推送消息必须在加密内容编码头部的 "keyid" 参数中包含应用
+   服务器 ECDH 公钥。[<a href="#ref-X9.62" title="&quot;面向金融服务业的公钥密码学：椭圆曲线数字签名算法 (ECDSA)&quot;">X9.62</a>] 中定义的未压缩点形式（即，一个以
+   0x04 八位字节开头的 65 八位字节序列）构成 "keyid" 的全部。
+   请注意，这意味着 "keyid" 参数不会像 [<a href="./rfc8188" title="&quot;用于 HTTP 的加密内容编码&quot;">RFC8188</a>] 推荐的那样
+   是有效的 UTF-8。
+
+   推送服务不要求支持超过 4096 个八位字节的有效载荷主体（见
+   <a href="./rfc8030#section-7.2">[RFC8030] 第&nbsp;7.2 节</a>）。去掉头部（86 个八位字节）、填充
+   （最少 1 个八位字节）以及 AEAD_AES_128_GCM 的扩展（16 个
+   八位字节）后，这最多相当于 3993 个八位字节的明文。
+
+   应用服务器不得对推送消息使用其他内容编码。特别是，会压缩的
+   内容编码可能导致推送消息内容泄露。因此，Content-Encoding
+   头字段恰好只有一个值，即 "aes128gcm"。不允许多个 "aes128gcm"
+   值。
+
+   不要求用户代理支持多条记录。用户代理可以忽略 "rs" 参数。
+   如果未检查记录大小，对于所有有效情形，解密都会以很高概率
+   失败。必须检查填充分隔符八位字节；除 0x02 之外的值必须导致
+   消息被丢弃。
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Thomson                      标准化进程                    [第 7 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-8" ></span>
+<span class="grey"><a href="./rfc8291">RFC 8291</a>                   Web Push 加密                 2017 年 11 月</span>
+
+
+<span class="h2"><a class="selflink" id="section-5" href="#section-5">5</a>.  推送消息加密示例</span>
+
+   以下示例展示了一条发送到推送服务的推送消息。
+
+   POST /push/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV HTTP/1.1
+   Host: push.example.net
+   TTL: 10
+   Content-Length: 145
+   Content-Encoding: aes128gcm
+
+   DGv6ra1nlYgDCS1FRnbzlwAAEABBBP4z9KsN6nGRTbVYI_c7VJSPQTBtkgcy27ml
+   mlMoZIIgDll6e3vCYLocInmYWAmS6TlzAC8wEqKK6PBru3jl7A_yl95bQpu6cVPT
+   pK4Mqgkf1CXztLVBSt2Ks3oZwbuwXPXLWyouBWLVWGNWQexSgSxsj_Qulcy4a-fN
+
+   此示例展示 ASCII 编码字符串 "When I grow up, I want to be a
+   watermelon"。此处显示的内容主体带有换行，并采用 URL 安全的
+   base64url [<a href="./rfc4648" title="&quot;Base16、Base32 和 Base64 数据编码&quot;">RFC4648</a>] 编码，以满足呈现约束。
+
+   所用密钥如下所示，采用 [<a href="#ref-X9.62" title="&quot;面向金融服务业的公钥密码学：椭圆曲线数字签名算法 (ECDSA)&quot;">X9.62</a>] 的未压缩形式，并使用
+   base64url 编码。
+
+      认证秘密: BTBZMqHH6r4Tts7J_aSIgg
+      接收方:
+         私钥: q1dXpw3UpT5VOmu_cf_v6ih07Aems3njxI-JWgLcM94
+         公钥: BCVxsr7N_eNgVRqvHtD0zTZsEc6-VV-JvLexhqUzORcx
+                     aOzi6-AYWXvTBHm4bjyPjs7Vd8pZGH6SRpkNtoIAiw4
+      发送方:
+         私钥: yfWPiYE-n46HLnH0KqZOF1fJJU3MYrct3AELtAQ-oRw
+         公钥: BP4z9KsN6nGRTbVYI_c7VJSPQTBtkgcy27mlmlMoZIIg
+                     Dll6e3vCYLocInmYWAmS6TlzAC8wEqKK6PBru3jl7A8
+
+   此示例的中间值包含在 <a href="#appendix-A">附录 A</a> 中。
+
+<span class="h2"><a class="selflink" id="section-6" href="#section-6">6</a>.  IANA 考虑事项</span>
+
+   本文档不要求任何 IANA 操作。
+
+<span class="h2"><a class="selflink" id="section-7" href="#section-7">7</a>.  安全考虑事项</span>
+
+   [<a href="./rfc8030" title="&quot;使用 HTTP Push 进行通用事件交付&quot;">RFC8030</a>] 的隐私和安全考虑事项均适用于此机制的使用。
+
+   [<a href="./rfc8188" title="&quot;用于 HTTP 的加密内容编码&quot;">RFC8188</a>] 的“安全考虑事项”一节描述了内容编码的限制。特别是，
+   内容编码方案不会保护任何 HTTP 头字段。用户代理必须认为 HTTP
+   头字段来自推送服务。
+
+
+
+<span class="grey">Thomson                      标准化进程                    [第 8 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-9" ></span>
+<span class="grey"><a href="./rfc8291">RFC 8291</a>                   Web Push 加密                 2017 年 11 月</span>
+
+
+   虽然头字段可能是正确处理 HTTP 响应所必需的，但它们并非协议
+   正确运行所必需。用户代理上使用头字段信息来改变其推送消息
+   处理方式的应用，会暴露于遭受推送服务攻击的风险中。
+
+   通信的时序和长度无法对推送服务隐藏。虽然外部观察者可能看到
+   各个消息彼此交织，但推送服务会看到哪个应用服务器正在与哪个
+   用户代理通信，以及所使用的订阅。此外，除非使用内容编码方案
+   提供的填充来掩蔽长度，否则消息长度可能会泄露。
+
+   用户代理和应用必须验证其接收到的公钥位于 P-256 曲线上。
+   未能验证公钥可能使攻击者能够提取私钥。适当的验证过程在
+   [<a href="#ref-X9.62" title="&quot;面向金融服务业的公钥密码学：椭圆曲线数字签名算法 (ECDSA)&quot;">X9.62</a>] 第 4.3.7 节中定义，另见 [<a href="#ref-KEYAGREEMENT">KEYAGREEMENT</a>] 第 5.6.2.3 节。
+   此过程由三个步骤组成：
+
+   1.  验证 Y 不是无穷远点 (O)，
+
+   2.  验证对于 Y = (x, y)，两个整数都在正确区间内，
+
+   3.  确保 (x, y) 是椭圆曲线方程的正确解。
+
+   对于这些曲线，实现者不需要验证是否属于正确的子群。
+
+   如果将来需要替换此加密方案，可以定义新的内容编码方案。为了
+   管理新方案的渐进部署，用户代理可以公开其支持的内容编码方案
+   信息。Push API [<a href="#ref-API" title="&quot;Push API&quot;">API</a>] 的 "supportedContentEncodings" 参数就是可能
+   实现这种做法的一个示例。
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Thomson                      标准化进程                    [第 9 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-10" ></span>
+<span class="grey"><a href="./rfc8291">RFC 8291</a>                   Web Push 加密                 2017 年 11 月</span>
+
+
+<span class="h2"><a class="selflink" id="section-8" href="#section-8">8</a>.  参考文献</span>
+
+<span class="h3"><a class="selflink" id="section-8.1" href="#section-8.1">8.1</a>.  规范性参考文献</span>
+
+   [<a id="ref-ECDH">ECDH</a>]     SECG, "SEC 1: Elliptic Curve Cryptography", Version 2.0,
+              May 2009, &lt;<a href="http://www.secg.org/">http://www.secg.org/</a>&gt;.
+
+   [<a id="ref-FIPS180-4">FIPS180-4</a>]
+              National Institute of Standards and Technology (NIST),
+              "Secure Hash Standard (SHS)", FIPS PUB 180-4,
+              DOI 10.6028/NIST.FIPS.180-4, August 2015.
+
+   [<a id="ref-FIPS186">FIPS186</a>]  National Institute of Standards and Technology (NIST),
+              "Digital Signature Standard (DSS)", FIPS PUB 186-4,
+              DOI 10.6028/NIST.FIPS.186-4, July 2013.
+
+   [<a id="ref-RFC2119">RFC2119</a>]  Bradner, S., "用于 RFC 中表示要求级别的关键词",
+              <a href="https://www.rfc-editor.org/bcp/bcp14">BCP 14</a>, <a href="./rfc2119">RFC 2119</a>, DOI 10.17487/RFC2119, March 1997,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc2119">https://www.rfc-editor.org/info/rfc2119</a>&gt;.
+
+   [<a id="ref-RFC4086">RFC4086</a>]  Eastlake 3rd, D., Schiller, J., and S. Crocker,
+              "安全性的随机性要求", <a href="https://www.rfc-editor.org/bcp/bcp106">BCP 106</a>, <a href="./rfc4086">RFC 4086</a>,
+              DOI 10.17487/RFC4086, June 2005,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc4086">https://www.rfc-editor.org/info/rfc4086</a>&gt;.
+
+   [<a id="ref-RFC5869">RFC5869</a>]  Krawczyk, H. and P. Eronen, "基于 HMAC 的提取与扩展
+              密钥派生函数 (HKDF)", <a href="./rfc5869">RFC 5869</a>,
+              DOI 10.17487/RFC5869, May 2010,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc5869">https://www.rfc-editor.org/info/rfc5869</a>&gt;.
+
+   [<a id="ref-RFC8030">RFC8030</a>]  Thomson, M., Damaggio, E., and B. Raymor, Ed., "使用
+              HTTP Push 进行通用事件交付", <a href="./rfc8030">RFC 8030</a>,
+              DOI 10.17487/RFC8030, December 2016,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc8030">https://www.rfc-editor.org/info/rfc8030</a>&gt;.
+
+   [<a id="ref-RFC8174">RFC8174</a>]  Leiba, B., "<a href="./rfc2119">RFC</a> <a href="./rfc2119">2119</a> 关键词中大小写歧义", <a href="https://www.rfc-editor.org/bcp/bcp14">BCP 14</a>,
+              <a href="./rfc8174">RFC 8174</a>, DOI 10.17487/RFC8174,
+              May 2017, &lt;<a href="https://www.rfc-editor.org/info/rfc8174">https://www.rfc-editor.org/info/rfc8174</a>&gt;.
+
+   [<a id="ref-RFC8188">RFC8188</a>]  Thomson, M., "用于 HTTP 的加密内容编码",
+              <a href="./rfc8188">RFC 8188</a>, DOI 10.17487/RFC8188, June 2017,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc8188">https://www.rfc-editor.org/info/rfc8188</a>&gt;.
+
+   [<a id="ref-X9.62">X9.62</a>]    ANSI, "面向金融服务业的公钥密码学：椭圆曲线数字签名
+              算法 (ECDSA)", ANSI X9.62, 2005.
+
+
+
+
+<span class="grey">Thomson                      标准化进程                   [第 10 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-11" ></span>
+<span class="grey"><a href="./rfc8291">RFC 8291</a>                   Web Push 加密                 2017 年 11 月</span>
+
+
+<span class="h3"><a class="selflink" id="section-8.2" href="#section-8.2">8.2</a>.  资料性参考文献</span>
+
+   [<a id="ref-API">API</a>]      Beverloo, P., Thomson, M., van Ouwerkerk, M., Sullivan,
+              B., and E. Fullea, "Push API", October 2017,
+              &lt;<a href="https://www.w3.org/TR/push-api/">https://www.w3.org/TR/push-api/</a>&gt;.
+
+   [<a id="ref-KEYAGREEMENT">KEYAGREEMENT</a>]
+              Barker, E., Chen, L., Roginsky, A., and M. Smid,
+              "使用离散对数密码学的成对密钥建立方案建议",
+              NIST Special Publication 800-56A, Revision 2,
+              DOI 10.6028/NIST.SP.800-56Ar2, May 2013.
+
+   [<a id="ref-RFC2818">RFC2818</a>]  Rescorla, E., "基于 TLS 的 HTTP", <a href="./rfc2818">RFC 2818</a>,
+              DOI 10.17487/RFC2818, May 2000,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc2818">https://www.rfc-editor.org/info/rfc2818</a>&gt;.
+
+   [<a id="ref-RFC4648">RFC4648</a>]  Josefsson, S., "Base16、Base32 和 Base64 数据编码",
+              <a href="./rfc4648">RFC 4648</a>, DOI 10.17487/RFC4648, October 2006,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc4648">https://www.rfc-editor.org/info/rfc4648</a>&gt;.
+
+   [<a id="ref-RFC7230">RFC7230</a>]  Fielding, R., Ed. and J. Reschke, Ed., "超文本传输
+              协议 (HTTP/1.1)：消息语法和路由",
+              <a href="./rfc7230">RFC 7230</a>, DOI 10.17487/RFC7230, June 2014,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc7230">https://www.rfc-editor.org/info/rfc7230</a>&gt;.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Thomson                      标准化进程                   [第 11 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-12" ></span>
+<span class="grey"><a href="./rfc8291">RFC 8291</a>                   Web Push 加密                 2017 年 11 月</span>
+
+
+<span class="h2"><a class="selflink" id="appendix-A" href="#appendix-A">附录 A</a>.  用于加密的中间值</span>
+
+   <a href="#section-5">第 5 节</a> 示例所计算的中间值如下所示。这些示例中的 base64url
+   值包含可以移除的空白。
+
+   以下是计算的输入：
+
+   明文:  V2hlbiBJIGdyb3cgdXAsIEkgd2FudCB0byBiZSBhIHdhdGVybWVsb24
+
+   应用服务器公钥 (as_public):
+      BP4z9KsN6nGRTbVYI_c7VJSPQTBtkgcy27mlmlMoZIIg
+      Dll6e3vCYLocInmYWAmS6TlzAC8wEqKK6PBru3jl7A8
+
+   应用服务器私钥 (as_private):
+      yfWPiYE-n46HLnH0KqZOF1fJJU3MYrct3AELtAQ-oRw
+
+   用户代理公钥 (ua_public):  BCVxsr7N_eNgVRqvHtD0zTZsEc6-VV-
+      JvLexhqUzORcx aOzi6-AYWXvTBHm4bjyPjs7Vd8pZGH6SRpkNtoIAiw4
+
+   用户代理私钥 (ua_private):
+      q1dXpw3UpT5VOmu_cf_v6ih07Aems3njxI-JWgLcM94
+
+   盐值:  DGv6ra1nlYgDCS1FRnbzlw
+
+   认证秘密 (auth_secret):  BTBZMqHH6r4Tts7J_aSIgg
+
+   请注意，只需要知道其中一个私钥。应用服务器随机生成盐值，
+   而盐值则作为接收方的输入。
+
+   这会生成以下中间值：
+
+   共享 ECDH 秘密 (ecdh_secret):
+      kyrL1jIIOHEzg3sM2ZWRHDRB62YACZhhSlknJ672kSs
+
+   用于密钥组合的伪随机密钥 (PRK_key):
+      Snr3JMxaHVDXHWJn5wdC52WjpCtd2EIEGBykDcZW32k
+
+   用于密钥组合的信息 (key_info):  V2ViUHVzaDogaW5mbwAEJXGyvs3942BVG
+      q8e0PTNNmwR zr5VX4m8t7GGpTM5FzFo7OLr4BhZe9MEebhuPI-OztV3
+      ylkYfpJGmQ22ggCLDgT-M_SrDepxkU21WCP3O1SUj0Ew
+      bZIHMtu5pZpTKGSCIA5Zent7wmC6HCJ5mFgJkuk5cwAv MBKiiujwa7t45ewP
+
+   用于内容加密密钥派生的输入密钥材料 (IKM):
+      S4lYMb_L0FxCeq0WhDx813KgSYqU26kOyzWUdsXYyrg
+
+
+
+
+
+<span class="grey">Thomson                      标准化进程                   [第 12 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-13" ></span>
+<span class="grey"><a href="./rfc8291">RFC 8291</a>                   Web Push 加密                 2017 年 11 月</span>
+
+
+   用于内容加密的 PRK (PRK):
+      09_eUZGrsvxChDCGRCdkLiDXrReGOEVeSCdCcPBSJSc
+
+   用于内容加密密钥派生的信息 (cek_info):
+      Q29udGVudC1FbmNvZGluZzogYWVzMTI4Z2NtAA
+
+   内容加密密钥 (CEK):  oIhVW04MRdy2XN9CiKLxTg
+
+   用于内容加密 nonce 派生的信息 (nonce_info):
+      Q29udGVudC1FbmNvZGluZzogbm9uY2UA
+
+   Nonce (NONCE):  4h_95klXJ5E_qnoN
+
+   盐值、4096 的记录大小以及应用服务器公钥会生成一个 86 个
+   八位字节的头部：
+
+   DGv6ra1nlYgDCS1FRnbzlwAAEABBBP4z 9KsN6nGRTbVYI_c7VJSPQTBtkgcy27ml
+   mlMoZIIgDll6e3vCYLocInmYWAmS6Tlz AC8wEqKK6PBru3jl7A8
+
+   推送消息明文会附加填充分隔符八位字节 (0x02)，从而生成：
+
+   V2hlbiBJIGdyb3cgdXAsIEkgd2FudCB0 byBiZSBhIHdhdGVybWVsb24C
+
+   然后使用 AES-GCM 对明文进行加密，生成的密文为：
+
+   8pfeW0KbunFT06SuDKoJH9Ql87S1QUrd irN6GcG7sFz1y1sqLgVi1VhjVkHsUoEs
+   bI_0LpXMuGvnzQ
+
+   头部和密文被串接，生成 <a href="#section-5">第 5 节</a> 中所示的结果。
+
+作者地址
+
+   Martin Thomson
+   Mozilla
+
+   Email: martin.thomson@gmail.com
+
+
+
+
+
+
+
+
+
+
+
+
+Thomson                      标准化进程                   [第 13 页]
+</pre>
+<script src="https://htmlspecs.com/dropdown.js"></script>
