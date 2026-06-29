@@ -2471,14 +2471,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "A File Format to Aid in Security Vulnerability Disclosure",
-    //     href: "https://htmlspecs.com/rfc9116/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc9116.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
+    {
+        text: "A File Format to Aid in Security Vulnerability Disclosure",
+        href: "https://htmlspecs.com/rfc9116/",
+        src: "https://www.rfc-editor.org/rfc/rfc9116.html",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "RFC"
+    },
     // {
     //     text: "Device Bound Session Credentials",
     //     href: "https://htmlspecs.com/device-bound-session-credentials/",
