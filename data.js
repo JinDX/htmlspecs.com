@@ -737,14 +737,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "MiniApp Packaging",
-    //     href: "https://htmlspecs.com/miniapp-packaging/",
-    //     src: "https://www.w3.org/TR/miniapp-packaging/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "MiniApp Packaging",
+        href: "https://htmlspecs.com/miniapp-packaging/",
+        src: "https://www.w3.org/TR/2025/WD-miniapp-packaging-20250128/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     // {
     //     text: "MiniApp Lifecycle",
     //     href: "https://htmlspecs.com/miniapp-lifecycle/",
