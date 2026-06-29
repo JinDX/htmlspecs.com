@@ -415,6 +415,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Making Content Usable for People with Cognitive and Learning Disabilities](https://htmlspecs.com/coga-usable/)（[Source](https://www.w3.org/TR/2021/NOTE-coga-usable-20210429/) ![Note](https://img.shields.io/badge/NOTE-309c40)）
 - [WAI-Adapt Explainer](https://htmlspecs.com/adapt/)（[Source](https://www.w3.org/TR/2023/DNOTE-adapt-20230103/) ![Note Draft](https://img.shields.io/badge/DNOTE-ffcc00)）
 - [WAI-Adapt: Symbols Module](https://htmlspecs.com/adapt-symbols/)（[Source](https://www.w3.org/TR/2023/CR-adapt-symbols-20230105/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
+- [WAI-Adapt: Tools Module](https://htmlspecs.com/adapt-tools/)（[Source](https://www.w3.org/TR/2022/WD-adapt-tools-20220609/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Accessible Rich Internet Applications (WAI-ARIA) 1.2](https://htmlspecs.com/wai-aria-1.2/)（[Source](https://www.w3.org/TR/2023/REC-wai-aria-1.2-20230606/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Accessible Rich Internet Applications (WAI-ARIA) 1.3](https://htmlspecs.com/wai-aria-1.3/)（[Source](https://www.w3.org/TR/2026/WD-wai-aria-1.3-20260604/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Digital Publishing WAI-ARIA Module 1.1](https://htmlspecs.com/dpub-aria-1.1/)（[Source](https://www.w3.org/TR/2025/REC-dpub-aria-1.1-20250612/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
