@@ -1,0 +1,1537 @@
+<pre>互联网工程任务组（IETF）                                  M. Thomson
+征求意见稿：8030                                             Mozilla
+类别：标准轨道                                           E. Damaggio
+ISSN: 2070-1721                                      B. Raymor, Ed.
+                                                               Microsoft
+                                                           2016 年 12 月
+
+
+                 <span class="h1">使用 HTTP 推送的通用事件递送</span>
+
+摘要
+
+   本文档描述了一种向用户代理递送实时事件的简单协议。
+   此方案使用 HTTP/2 服务器推送。
+
+本文备忘录状态
+
+   本文档是互联网标准轨道文档。
+
+   本文档是互联网工程任务组（IETF）的产物。它代表了 IETF
+   社区的共识。它已经过公开审查，并已由互联网工程指导小组
+   （IESG）批准发布。关于互联网标准的更多信息可见于
+   <a href="./rfc7841#section-2">RFC 7841 第&nbsp;2 节</a>。
+
+   关于本文档当前状态、任何勘误以及如何提供反馈的信息，
+   可从以下地址获取：
+   <a href="http://www.rfc-editor.org/info/rfc8030">http://www.rfc-editor.org/info/rfc8030</a>.
+
+Copyright Notice
+
+   Copyright (c) 2016 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to <a href="https://www.rfc-editor.org/bcp/bcp78">BCP 78</a> and the IETF Trust's Legal
+   Provisions Relating to IETF Documents
+   (<a href="http://trustee.ietf.org/license-info">http://trustee.ietf.org/license-info</a>) in effect on the date of
+   publication of this document.  Please review these documents
+   carefully, as they describe your rights and restrictions with respect
+   to this document.  Code Components extracted from this document must
+   include Simplified BSD License text as described in Section 4.e of
+   the Trust Legal Provisions and are provided without warranty as
+   described in the Simplified BSD License.
+
+
+
+
+
+
+
+
+<span class="grey">Thomson 等人              标准轨道                    [第 1 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-2" ></span>
+<span class="grey"><a href="./rfc8030">RFC 8030</a>                      HTTP Web Push                2016 年 12 月</span>
+
+
+目录
+
+   <a href="#section-1">1</a>.  引言  . . . . . . . . . . . . . . . . . . . . . . . . . . .   <a href="#page-3">3</a>
+     <a href="#section-1.1">1.1</a>.  约定和术语 . . . . . . . . . . . . . . . . . . . . . .   <a href="#page-4">4</a>
+   <a href="#section-2">2</a>.  概述  . . . . . . . . . . . . . . . . . . . . . . . . . .   <a href="#page-6">6</a>
+     <a href="#section-2.1">2.1</a>.  HTTP 资源  . . . . . . . . . . . . . . . . . . . . . .   <a href="#page-7">7</a>
+   <a href="#section-3">3</a>.  连接到推送服务  . . . . . . . . . . . . . . . . . . . . .   <a href="#page-8">8</a>
+   <a href="#section-4">4</a>.  订阅推送消息 . . . . . . . . . . . . . . . . . . . . . .   <a href="#page-8">8</a>
+     <a href="#section-4.1">4.1</a>.  将订阅收集到集合中  . . . . . . . . . . . . . . . . .   <a href="#page-9">9</a>
+   <a href="#section-5">5</a>.  请求推送消息递送  . . . . . . . . . . . . . . . . . . .  <a href="#page-10">10</a>
+     <a href="#section-5.1">5.1</a>.  请求推送消息回执  . . . . . . . . . . . . . . . . . .  <a href="#page-10">10</a>
+     <a href="#section-5.2">5.2</a>.  推送消息存活时间 . . . . . . . . . . . . . . . . . .  <a href="#page-11">11</a>
+     <a href="#section-5.3">5.3</a>.  推送消息紧急性  . . . . . . . . . . . . . . . . . .  <a href="#page-13">13</a>
+     <a href="#section-5.4">5.4</a>.  替换推送消息 . . . . . . . . . . . . . . . . . . .  <a href="#page-14">14</a>
+   <a href="#section-6">6</a>.  接收某个订阅的推送消息  . . . . . . . . . . . . . . . .  <a href="#page-15">15</a>
+     <a href="#section-6.1">6.1</a>.  接收某个订阅集合的推送消息  . . . . . . . . . . . .  <a href="#page-17">17</a>
+     <a href="#section-6.2">6.2</a>.  确认推送消息 . . . . . . . . . . . . . . . . . . .  <a href="#page-18">18</a>
+     <a href="#section-6.3">6.3</a>.  接收推送消息回执 . . . . . . . . . . . . . . . . .  <a href="#page-19">19</a>
+   <a href="#section-7">7</a>.  操作方面的考虑  . . . . . . . . . . . . . . . . . . . .  <a href="#page-20">20</a>
+     <a href="#section-7.1">7.1</a>.  负载管理 . . . . . . . . . . . . . . . . . . . . .  <a href="#page-20">20</a>
+     <a href="#section-7.2">7.2</a>.  推送消息过期 . . . . . . . . . . . . . . . . . . .  <a href="#page-20">20</a>
+     <a href="#section-7.3">7.3</a>.  订阅过期 . . . . . . . . . . . . . . . . . . . . .  <a href="#page-21">21</a>
+       <a href="#section-7.3.1">7.3.1</a>.  订阅集合过期 . . . . . . . . . . . . . . . . .  <a href="#page-21">21</a>
+     <a href="#section-7.4">7.4</a>.  对应用可靠性的影响  . . . . . . . . . . . . . . .  <a href="#page-22">22</a>
+     <a href="#section-7.5">7.5</a>.  订阅集合和并发 HTTP/2 流 . . . . . . . . . . . . .  <a href="#page-22">22</a>
+   <a href="#section-8">8</a>.  安全方面的考虑 . . . . . . . . . . . . . . . . . . .  <a href="#page-22">22</a>
+     <a href="#section-8.1">8.1</a>.  防止推送服务访问的机密性  . . . . . . . . . . . . .  <a href="#page-23">23</a>
+     <a href="#section-8.2">8.2</a>.  隐私方面的考虑  . . . . . . . . . . . . . . . . .  <a href="#page-23">23</a>
+     <a href="#section-8.3">8.3</a>.  授权 . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-24">24</a>
+     <a href="#section-8.4">8.4</a>.  拒绝服务方面的考虑  . . . . . . . . . . . . . . .  <a href="#page-25">25</a>
+     <a href="#section-8.5">8.5</a>.  日志记录风险 . . . . . . . . . . . . . . . . . .  <a href="#page-25">25</a>
+   <a href="#section-9">9</a>.  IANA 方面的考虑 . . . . . . . . . . . . . . . . . . .  <a href="#page-26">26</a>
+     <a href="#section-9.1">9.1</a>.  标头字段注册  . . . . . . . . . . . . . . . . . .  <a href="#page-26">26</a>
+     <a href="#section-9.2">9.2</a>.  链接关系 URN  . . . . . . . . . . . . . . . . . .  <a href="#page-26">26</a>
+     <a href="#section-9.3">9.3</a>.  服务名称和端口号注册 . . . . . . . . . . . . . .  <a href="#page-28">28</a>
+   <a href="#section-10">10</a>. 参考文献  . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-28">28</a>
+     <a href="#section-10.1">10.1</a>.  规范性参考文献 . . . . . . . . . . . . . . . . .  <a href="#page-28">28</a>
+     <a href="#section-10.2">10.2</a>.  资料性参考文献 . . . . . . . . . . . . . . . . .  <a href="#page-30">30</a>
+   致谢  . . . . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-31">31</a>
+   作者地址  . . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-31">31</a>
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Thomson 等人              标准轨道                    [第 2 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-3" ></span>
+<span class="grey"><a href="./rfc8030">RFC 8030</a>                      HTTP Web Push                2016 年 12 月</span>
+
+
+<span class="h2"><a class="selflink" id="section-1" href="#section-1">1</a>.  引言</span>
+
+   移动和嵌入式设备上的许多应用需要持续访问网络通信，
+   以便能够及时递送（或“推送”）实时事件，例如来电或消息。
+   这些设备通常电量有限，因此找到更高效的方式来满足应用需求，
+   会极大地有益于应用生态系统。
+
+   无线电是耗电量的一个重要来源。无线设备上的无线电通信会消耗
+   能源预算中的很大一部分。
+
+   多个应用各自无协调地使用持久连接或会话，可能导致设备无线电
+   不必要地被使用，因为每个独立会话都可能产生自己的开销。
+   特别是，用于确保中间盒不会过早使会话超时的 keep-alive 流量，
+   可能造成显著浪费。由于事件相对罕见，从长期来看，维护流量
+   往往占据主导。
+
+   将所有实时事件合并到单个会话中，可以确保更高效地使用网络和
+   无线电资源。单个服务会合并所有事件，并在这些事件到达时将其
+   分发给应用。这只需要一个会话，从而避免重复的开销成本。
+
+   W3C Push API [<a href="#ref-API" title="&quot;Push API&quot;">API</a>] 描述了一个 API，使 Web 应用能够使用
+   合并的推送服务。本文档在该工作的基础上进行了扩展，描述了一种
+   可用于以下用途的协议：
+
+   o  请求向用户代理递送推送消息，
+
+   o  创建新的推送消息递送订阅，以及
+
+   o  监视新的推送消息。
+
+   标准化的事件递送方法对于 W3C Push API 尤其重要，因为应用服务器
+   可能需要使用多个推送服务。订阅、管理和监视功能目前由专有协议
+   完成；这些协议是足够的，但不具备标准化所带来的任何优势。
+
+   本文档有意不描述如何发现推送服务。如果最终证明有必要，
+   推送服务发现将留给未来的工作。用户代理预期会配置一个
+   推送服务 URL。
+
+
+
+<span class="grey">Thomson 等人              标准轨道                    [第 3 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-4" ></span>
+<span class="grey"><a href="./rfc8030">RFC 8030</a>                      HTTP Web Push                2016 年 12 月</span>
+
+
+<span class="h3"><a class="selflink" id="section-1.1" href="#section-1.1">1.1</a>.  约定和术语</span>
+
+   本文档中的关键词“MUST”、“MUST NOT”、“REQUIRED”、“SHALL”、
+   “SHALL NOT”、“SHOULD”、“SHOULD NOT”、“RECOMMENDED”、“MAY”和
+   “OPTIONAL”应按 [<a href="./rfc2119" title="&quot;Key words for use in RFCs to Indicate Requirement Levels&quot;">RFC2119</a>] 中的描述解释。
+
+   本文档定义以下术语：
+
+   application：推送消息的发送方和最终消费者。许多应用具有在
+      用户代理上运行的组件，以及在服务器上运行的其他组件。
+
+   application server：应用中通常在服务器上运行并请求递送
+      推送消息的组件。
+
+   push message subscription：在用户代理和推送服务之间建立并与
+      应用服务器共享的消息递送上下文。所有推送消息都与一个
+      推送消息订阅相关联。
+
+   push message subscription set：在用户代理和推送服务之间建立的
+      消息递送上下文，用于将多个推送消息订阅收集到一个集合中。
+
+   push message：由应用服务器通过推送服务发送给用户代理的消息。
+
+   push message receipt：从推送服务发送给应用服务器的消息递送确认。
+
+   push service：向用户代理递送推送消息的服务。
+
+   user agent：接收推送消息的设备和软件。
+
+   本文档中的示例使用 HTTP/1.1 消息格式 [<a href="./rfc7230" title="&quot;Hypertext Transfer Protocol (HTTP/1.1): Message Syntax and Routing&quot;">RFC7230</a>]。
+   许多交换可以使用 HTTP/1.1 完成：
+
+   o  订阅推送消息（<a href="#section-4">第 4 节</a>）
+
+   o  请求推送消息递送（<a href="#section-5">第 5 节</a>）
+
+   o  替换推送消息（<a href="#section-5.4">第 5.4 节</a>）
+
+   o  确认推送消息（<a href="#section-6.2">第 6.2 节</a>）
+
+
+
+
+
+
+<span class="grey">Thomson 等人              标准轨道                    [第 4 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-5" ></span>
+<span class="grey"><a href="./rfc8030">RFC 8030</a>                      HTTP Web Push                2016 年 12 月</span>
+
+
+   当示例依赖 HTTP/2 服务器推送时，会使用 [<a href="./rfc7540" title="&quot;Hypertext Transfer Protocol Version 2 (HTTP/2)&quot;">RFC7540</a>] 中
+   更详细的帧格式：
+
+   o  接收某个订阅的推送消息（<a href="#section-6">第 6 节</a>）
+
+   o  接收某个订阅集合的推送消息（<a href="#section-6.1">第 6.1 节</a>）
+
+   o  接收推送消息回执（<a href="#section-6.3">第 6.3 节</a>）
+
+   所有示例都使用基于默认端口（443）的 HTTPS，而不是注册端口
+   （1001）。推送服务部署可能偏好这种配置，以最大化用户代理
+   能够访问该服务的机会。推送服务可以使用 HTTP 替代服务将
+   用户代理重定向到注册端口（1001），以在不牺牲可达性的前提下
+   获得标准化 HTTPS 端口的好处（见<a href="#section-3">第 3 节</a>）。这只会通过在从
+   用户代理到推送服务的请求中包含 Alt-Used 标头字段 [<a href="./rfc7838" title="&quot;HTTP Alternative Services&quot;">RFC7838</a>]
+   在示例中表现出来。
+
+   示例不包含推送消息加密或应用服务器认证的具体方法，因为本协议
+   未定义强制系统。Voluntary Application Server Identification
+   [<a href="#ref-VAPID" title="&quot;Voluntary Application Server Identification for Web Push&quot;">VAPID</a>] 和 Message Encryption for WebPush
+   [<a href="#ref-ENCRYPT" title="&quot;Message Encryption for Web Push&quot;">ENCRYPT</a>] 中的示例展示了 W3C Push API [<a href="#ref-API" title="&quot;Push API&quot;">API</a>]
+   为其要求采用的方法。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Thomson 等人              标准轨道                    [第 5 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-6" ></span>
+<span class="grey"><a href="./rfc8030">RFC 8030</a>                      HTTP Web Push                2016 年 12 月</span>
+
+
+<span class="h2"><a class="selflink" id="section-2" href="#section-2">2</a>.  概述</span>
+
+   推送服务的一般模型包括三个基本参与者：用户代理、推送服务和
+   应用（服务器）。
+
+    +-------+           +--------------+       +-------------+
+    |  UA   |           | Push Service |       | Application |
+    +-------+           +--------------+       |   Server    |
+        |                      |               +-------------+
+        |      Subscribe       |                      |
+        |---------------------&gt;|                      |
+        |       Monitor        |                      |
+        |&lt;====================&gt;|                      |
+        |                      |                      |
+        |          Distribute Push Resource           |
+        |--------------------------------------------&gt;|
+        |                      |                      |
+        :                      :                      :
+        |                      |     Push Message     |
+        |    Push Message      |&lt;---------------------|
+        |&lt;---------------------|                      |
+        |                      |                      |
+
+                      图 1：WebPush 架构
+
+   在过程的最开始，用户代理会创建一个新的消息订阅，然后将其分发给
+   其应用服务器。此订阅是参与者之间所有未来交互的基础。应用服务器
+   使用订阅向推送服务发送消息，以便递送给用户代理。用户代理使用
+   订阅监视推送服务，以获取任何传入消息。
+
+   为了给授权提供更多控制，消息订阅被建模为两个具有不同能力的资源：
+
+   o  订阅资源用于从订阅接收消息和删除订阅。它对用户代理是私有的。
+
+   o  推送资源用于向订阅发送消息。它是公开的，并由用户代理与其
+      应用服务器共享。
+
+   预期会为每个应用分发一个唯一订阅；但是，协议本身没有固有的
+   基数约束。可以为同一个应用创建多个订阅，或者多个应用可以使用
+
+
+
+
+
+<span class="grey">Thomson 等人              标准轨道                    [第 6 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-7" ></span>
+<span class="grey"><a href="./rfc8030">RFC 8030</a>                      HTTP Web Push                2016 年 12 月</span>
+
+
+   同一个订阅。不过请注意，共享订阅具有安全和隐私影响。
+
+   订阅具有有限生命周期。它们也可以在任何时候由推送服务或
+   用户代理终止。用户代理和应用服务器必须准备好管理订阅状态的变化。
+
+<span class="h3"><a class="selflink" id="section-2.1" href="#section-2.1">2.1</a>.  HTTP 资源</span>
+
+   本协议使用 HTTP 资源 [<a href="./rfc7230" title="&quot;Hypertext Transfer Protocol (HTTP/1.1): Message Syntax and Routing&quot;">RFC7230</a>] 和链接关系
+   [<a href="./rfc5988" title="&quot;Web Linking&quot;">RFC5988</a>]。定义了以下资源：
+
+   push service：此资源用于创建推送消息订阅（<a href="#section-4">第 4 节</a>）。
+      推送服务的 URL 会被配置到用户代理中。
+
+   push message subscription：此资源为消息订阅提供读取和删除访问。
+      用户代理使用推送消息订阅接收推送消息（<a href="#section-6">第 6 节</a>）。
+      每个推送消息订阅都恰好有一个与之关联的推送资源。
+
+   push message subscription set：此资源为推送消息订阅集合提供
+      读取和删除访问。用户代理为该集合中的所有推送消息订阅接收
+      推送消息（<a href="#section-6.1">第 6.1 节</a>）。类型为
+      "urn:ietf:params:push:set" 的链接关系标识一个推送消息订阅集合。
+
+   push：应用服务器使用推送资源请求递送（<a href="#section-5">第 5 节</a>）推送消息。
+      类型为 "urn:ietf:params:push" 的链接关系标识一个推送资源。
+
+   push message：推送服务创建推送消息资源，以标识已接受递送的
+      推送消息（<a href="#section-5">第 5 节</a>）。用户代理也会删除推送消息资源，以确认
+      收到（<a href="#section-6.2">第 6.2 节</a>）推送消息。
+
+   receipt subscription：应用服务器使用回执订阅接收推送消息的
+      递送确认（<a href="#section-5.1">第 5.1 节</a>）。类型为
+      "urn:ietf:params:push:receipt" 的链接关系标识一个回执订阅。
+
+
+
+
+
+
+
+<span class="grey">Thomson 等人              标准轨道                    [第 7 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-8" ></span>
+<span class="grey"><a href="./rfc8030">RFC 8030</a>                      HTTP Web Push                2016 年 12 月</span>
+
+
+<span class="h2"><a class="selflink" id="section-3" href="#section-3">3</a>.  连接到推送服务</span>
+
+   推送服务 MUST 按照 [<a href="./rfc7525" title="&quot;Recommendations for Secure Use of Transport Layer Security (TLS) and Datagram Transport Layer Security (DTLS)&quot;">RFC7525</a>] 中的建议使用基于传输层安全
+   （TLS）的 HTTP [<a href="./rfc2818" title="&quot;HTTP Over TLS&quot;">RFC2818</a>]。推送服务与 HTTPS 共享同一个默认端口号
+   （443/TCP），但也 MAY 使用 HTTP 替代服务 [<a href="./rfc7838" title="&quot;HTTP Alternative Services&quot;">RFC7838</a>] 公告 IANA
+   分配的 TCP 系统端口（1001）。
+
+   虽然默认端口（443）提供了广泛的可达性特征，但它最常用于
+   Web 浏览场景，而中间盒对此类端口配置的空闲超时通常短于其他端口。
+   对于 WebPush 场景，这会导致在电池供电设备上产生不必要的
+   无线电通信以维持连接。
+
+   公告替代端口（1001）允许中间盒优化特定于推送场景连接的
+   空闲超时，因为预期数据交换并不频繁。
+
+   中间盒 SHOULD 遵守 [<a href="./rfc5382" title="&quot;NAT Behavioral Requirements for TCP&quot;">RFC5382</a>] 中的 REQ-5，其中声明
+   “‘已建立连接空闲超时’的值 MUST NOT 小于 2 小时 4 分钟”。
+
+<span class="h2"><a class="selflink" id="section-4" href="#section-4">4</a>.  订阅推送消息</span>
+
+   用户代理向其配置的推送服务资源发送 POST 请求，以创建新的订阅。
+
+   POST /subscribe HTTP/1.1
+   Host: push.example.net
+
+   201 (Created) 响应表示推送订阅已创建。为响应请求而创建的
+   推送消息订阅资源 URI MUST 在 Location 标头字段中返回。
+
+   推送服务 MUST 在类型为 "urn:ietf:params:push" 的链接关系中，
+   提供与推送消息订阅对应的推送资源 URI。
+
+   使用应用特定的方法将推送 URI 分发给应用服务器。必须使用机密性
+   保护和应用服务器认证，以确保此 URI 不会泄露给未经授权的接收者
+   （<a href="#section-8.3">第 8.3 节</a>）。
+
+
+
+
+
+
+
+
+<span class="grey">Thomson 等人              标准轨道                    [第 8 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-9" ></span>
+<span class="grey"><a href="./rfc8030">RFC 8030</a>                      HTTP Web Push                2016 年 12 月</span>
+
+
+   HTTP/1.1 201 Created
+   Date: Thu, 11 Dec 2014 23:56:52 GMT
+   Link: &lt;/push/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV&gt;;
+           rel="urn:ietf:params:push"
+   Link: &lt;/subscription-set/4UXwi2Rd7jGS7gp5cuutF8ZldnEuvbOy&gt;;
+           rel="urn:ietf:params:push:set"
+   Location: https://push.example.net/subscription/LBhhw0OohO-Wl4Oi971UG
+
+<span class="h3"><a class="selflink" id="section-4.1" href="#section-4.1">4.1</a>.  将订阅收集到集合中</span>
+
+   将多个推送消息订阅收集到一个订阅集合中，可以为推送服务和
+   用户代理带来显著的效率提升。推送服务 MAY 在类型为
+   "urn:ietf:params:push:set" 的链接关系中提供订阅集合资源的 URI。
+
+   当推送消息订阅响应中返回了订阅集合时，用户代理 SHOULD 在
+   随后的创建新推送消息订阅请求中，将该订阅集合包含在类型为
+   "urn:ietf:params:push:set" 的链接关系中。
+
+   如果用户代理无法在订阅生命周期内以聚合方式接收推送消息，
+   则 MAY 省略订阅集合。如果用户代理代表其他推送消息接收者
+   监视订阅，这可能是必要的。
+
+   POST /subscribe HTTP/1.1
+   Host: push.example.net
+   Link: &lt;/subscription-set/4UXwi2Rd7jGS7gp5cuutF8ZldnEuvbOy&gt;;
+           rel="urn:ietf:params:push:set"
+
+   推送服务 SHOULD 在其响应中返回相同的订阅集合，但如果无法重用
+   用户代理提供的订阅集合，则 MAY 返回新的订阅集合。
+
+   HTTP/1.1 201 Created
+   Date: Thu, 11 Dec 2014 23:56:52 GMT
+   Link: &lt;/push/YBJNBIMwwA_Ag8EtD47J4A&gt;;
+           rel="urn:ietf:params:push"
+   Link: &lt;/subscription-set/4UXwi2Rd7jGS7gp5cuutF8ZldnEuvbOy&gt;;
+           rel="urn:ietf:params:push:set"
+   Location: https://push.example.net/subscription/i-nQ3A9Zm4kgSWg8_ZijV
+
+   对于包含无效订阅集合的请求，推送服务 MUST 返回 400
+   (Bad Request) 状态码。推送服务 MAY 返回 429 (Too Many Requests)
+   状态码 [<a href="./rfc6585" title="&quot;Additional HTTP Status Codes&quot;">RFC6585</a>]，以拒绝省略订阅集合的请求。
+
+
+
+
+<span class="grey">Thomson 等人              标准轨道                    [第 9 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-10" ></span>
+<span class="grey"><a href="./rfc8030">RFC 8030</a>                      HTTP Web Push                2016 年 12 月</span>
+
+
+   推送服务如何检测请求源自同一用户代理属于实现特定行为，但可以考虑
+   环境信息，例如 TLS 连接、源 IP 地址和端口。提醒实现者注意，
+   某些启发式方法可能产生误报，从而导致请求被错误拒绝。
+
+<span class="h2"><a class="selflink" id="section-5" href="#section-5">5</a>.  请求推送消息递送</span>
+
+   应用服务器通过向由用户代理分发给应用服务器的推送资源发送
+   HTTP POST 请求，来请求递送推送消息。推送消息的内容包含在
+   请求主体中。
+
+   POST /push/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV HTTP/1.1
+   Host: push.example.net
+   TTL: 15
+   Content-Type: text/plain;charset=utf8
+   Content-Length: 36
+
+   iChYuI3jMzt3ir20P8r_jgRR-dSuN182x7iB
+
+   201 (Created) 响应表示推送消息已被接受。为响应请求而创建的
+   推送消息资源 URI MUST 在 Location 标头字段中返回。这并不表示
+   消息已递送给用户代理。
+
+   HTTP/1.1 201 Created
+   Date: Thu, 11 Dec 2014 23:56:55 GMT
+   Location: https://push.example.net/message/qDIYHNcfAIPP_5ITvURr-d6BGt
+
+<span class="h3"><a class="selflink" id="section-5.1" href="#section-5.1">5.1</a>.  请求推送消息回执</span>
+
+   应用服务器可以包含带有 "respond-async" 偏好的 Prefer 标头字段
+   [<a href="./rfc7240" title="&quot;Prefer Header for HTTP&quot;">RFC7240</a>]，以请求在推送消息被递送并随后由用户代理确认时，
+   由推送服务提供确认。推送服务 MUST 支持递送确认。
+
+   POST /push/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV HTTP/1.1
+   Host: push.example.net
+   Prefer: respond-async
+   TTL: 15
+   Content-Type: text/plain;charset=utf8
+   Content-Length: 36
+
+   iChYuI3jMzt3ir20P8r_jgRR-dSuN182x7iB
+
+
+
+
+<span class="grey">Thomson 等人              标准轨道                   [第 10 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-11" ></span>
+<span class="grey"><a href="./rfc8030">RFC 8030</a>                      HTTP Web Push                2016 年 12 月</span>
+
+
+   当推送服务接受需要确认的消息递送时，它 MUST 返回 202
+   (Accepted) 响应。为响应请求而创建的推送消息资源 URI MUST
+   在 Location 标头字段中返回。推送服务 MUST 还在类型为
+   "urn:ietf:params:push:receipt" 的链接关系中，提供回执订阅
+   资源的 URI。
+
+   HTTP/1.1 202 Accepted
+   Date: Thu, 11 Dec 2014 23:56:55 GMT
+   Link: &lt;/receipt-subscription/3ZtI4YVNBnUUZhuoChl6omUvG4ZM&gt;;
+           rel="urn:ietf:params:push:receipt"
+   Location: https://push.example.net/message/qDIYHNcfAIPP_5ITvURr-d6BGt
+
+   对同一源 [<a href="./rfc6454" title="&quot;The Web Origin Concept&quot;">RFC6454</a>] 的后续回执请求，应用服务器 SHOULD 在类型为
+   "urn:ietf:params:push:receipt" 的链接关系中包含返回的回执订阅。
+   这使推送服务可以选择聚合回执。推送服务 SHOULD 在其响应中返回
+   相同的回执订阅，但如果无法重用应用服务器提供的回执订阅，
+   则 MAY 返回新的回执订阅。
+
+   如果应用服务器无法在回执订阅生命周期内以聚合方式接收回执，
+   则 MAY 省略回执订阅。如果应用服务器代表其他推送消息发送方
+   监视回执订阅，这可能是必要的。
+
+   对于包含无效回执订阅的请求，推送服务 MUST 返回 400
+   (Bad Request) 状态码。如果推送服务希望限制其维护的回执订阅
+   数量，则 MAY 返回 429 (Too Many Requests) 状态码
+   [<a href="./rfc6585" title="&quot;Additional HTTP Status Codes&quot;">RFC6585</a>]，以拒绝省略回执订阅的回执请求。
+
+<span class="h3"><a class="selflink" id="section-5.2" href="#section-5.2">5.2</a>.  推送消息存活时间</span>
+
+   推送服务可以通过在一段时间内存储推送消息，显著提高推送消息
+   递送的可靠性。用户代理通常只是间歇性连接，因此会受益于推送服务
+   上的短期消息存储。
+
+   延迟递送也可以用于批量处理与用户代理的通信，从而节省无线电资源。
+
+   某些推送消息在经过一定时间后不再有用。在消息不再相关之后再递送
+   是浪费。例如，如果推送消息包含来电通知，那么在呼叫者已经放弃通话
+
+
+
+
+
+<span class="grey">Thomson 等人              标准轨道                   [第 11 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-12" ></span>
+<span class="grey"><a href="./rfc8030">RFC 8030</a>                      HTTP Web Push                2016 年 12 月</span>
+
+
+   之后接收消息没有任何价值；用户代理上的应用被迫抑制该消息，
+   以免它生成无用警报。
+
+   应用服务器 MUST 在其推送消息递送请求中包含 TTL (Time-To-Live)
+   标头字段。TTL 标头字段包含以秒为单位的值，用于建议推送服务
+   保留推送消息的时长。
+
+   TTL 规则指定一个非负整数，表示以秒为单位的时间。解析并将 TTL
+   值转换为二进制形式的接收者 SHOULD 使用至少具有 31 位非负整数范围
+   的算术类型。如果接收者收到的 TTL 值大于其能够表示的最大整数，
+   或者其任何后续计算发生溢出，它 MUST 将该值视为 2147483648
+   (2^31)。
+
+   TTL = 1*DIGIT
+
+   对于省略 TTL 标头字段的请求，推送服务 MUST 返回 400
+   (Bad Request) 状态码。
+
+   推送服务 MAY 按短于请求的时长保留推送消息。它通过在其响应中
+   返回 TTL 标头字段并给出实际 TTL 来指示这一点。此 TTL 值 MUST
+   小于或等于应用服务器提供的值。
+
+   一旦 TTL 周期结束，推送服务 MUST NOT 尝试将推送消息递送给
+   用户代理。推送服务可以调整 TTL 值，以计入处理中的时间核算错误。
+   例如，在服务器集群中分发推送消息可能会由于时钟偏移或传播延迟
+   而累积误差。
+
+   推送服务没有义务核算应用服务器向推送服务发送推送消息所花费的
+   时间，或向用户代理发送推送消息时产生的延迟。应用服务器需要在
+   选择 TTL 标头字段值时考虑传输延迟。
+
+   TTL 为零的推送消息会在用户代理可接收消息时立即递送。递送后，
+   推送服务被允许立即移除 TTL 为零的推送消息。这可能发生在用户代理
+   通过对推送消息资源执行 HTTP DELETE 来确认收到消息之前。因此，
+   应用服务器不能依赖于接收 TTL 为零的推送消息的确认回执。
+
+
+
+
+
+<span class="grey">Thomson 等人              标准轨道                   [第 12 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-13" ></span>
+<span class="grey"><a href="./rfc8030">RFC 8030</a>                      HTTP Web Push                2016 年 12 月</span>
+
+
+   如果用户代理不可用，则 TTL 为零的推送消息会过期，并且永不递送。
+
+<span class="h3"><a class="selflink" id="section-5.3" href="#section-5.3">5.3</a>.  推送消息紧急性</span>
+
+   对于电池供电的设备来说，长时间保持休眠通常至关重要。尤其是
+   无线电通信会消耗大量电力，并限制设备能够运行的时间长度。
+
+   为了避免消耗资源来接收琐碎消息，如果应用服务器能够传达消息的
+   紧急性，并且用户代理能够请求推送服务器仅转发特定紧急性级别的
+   消息，将会很有帮助。
+
+   应用服务器 MAY 在其推送消息递送请求中包含 Urgency 标头字段。
+   该标头字段表示消息紧急性。推送服务 MUST NOT 将 Urgency 标头字段
+   转发给用户代理。不带 Urgency 标头字段的推送消息默认值为
+   "normal"。
+
+   用户代理在监视推送消息时 MAY 包含 Urgency 标头字段，以表示其愿意
+   接收的推送消息的最低紧急性。推送服务 MUST NOT 递送紧急性低于
+   用户代理在其监视请求中指示值的推送消息。没有在监视消息时包含
+   Urgency 标头字段的用户代理会收到任何紧急性的推送消息。
+
+   Urgency 标头字段的语法如下：
+
+   Urgency = urgency-option
+   urgency-option = ("very-low" / "low" / "normal" / "high")
+
+   按紧急性递增顺序：
+
+   +----------+-----------------------------+--------------------------+
+   | Urgency  | Device State                | Example Application      |
+   |          |                             | Scenario                 |
+   +----------+-----------------------------+--------------------------+
+   | very-low | On power and Wi-Fi          | Advertisements           |
+   | low      | On either power or Wi-Fi    | Topic updates            |
+   | normal   | On neither power nor Wi-Fi  | Chat or Calendar Message |
+   | high     | Low battery                 | Incoming phone call or   |
+   |          |                             | time-sensitive alert     |
+   +----------+-----------------------------+--------------------------+
+
+                   表 1：说明性的紧急性值
+
+
+
+<span class="grey">Thomson 等人              标准轨道                   [第 13 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-14" ></span>
+<span class="grey"><a href="./rfc8030">RFC 8030</a>                      HTTP Web Push                2016 年 12 月</span>
+
+
+   请求中 MUST NOT 包含 Urgency 标头字段的多个值；否则，推送服务
+   MUST 返回 400 (Bad Request) 状态码。
+
+<span class="h3"><a class="selflink" id="section-5.4" href="#section-5.4">5.4</a>.  替换推送消息</span>
+
+   推送服务存储的推送消息可以用新内容替换。如果用户代理在推送消息
+   发送期间处于离线状态，更新推送消息可避免过时或冗余消息被发送给
+   用户代理。
+
+   只有已分配主题的推送消息才能被替换。带有主题的推送消息会替换
+   任何具有相同主题的未完成推送消息。
+
+   推送消息主题是 Topic 标头字段中携带的字符串。主题用于关联发送到
+   同一订阅的推送消息，不传达任何其他语义。
+
+   Topic 标头字段的语法使用 [<a href="./rfc7230" title="&quot;Hypertext Transfer Protocol (HTTP/1.1): Message Syntax and Routing&quot;">RFC7230</a>] 中定义的 "token" 规则。
+
+   Topic = token
+
+   对于本协议的使用，Topic 标头字段 MUST 限制为不超过 32 个来自
+   URL 和文件名安全 Base64 字母表 [<a href="./rfc4648" title="&quot;The Base16, Base32, and Base64 Data Encodings&quot;">RFC4648</a>] 的字符。推送服务
+   如果收到带有不满足这些约束的 Topic 标头字段的请求，MUST 向
+   应用服务器返回 400 (Bad Request) 状态码。
+
+   推送消息替换请求会创建新的推送消息资源，并同时删除具有匹配主题的
+   任何现有消息资源。如果已经尝试递送被删除的推送消息，则在推送消息
+   被替换后，确认可能会到达推送服务。此类已删除消息的递送回执
+   SHOULD 被抑制。
+
+   替换请求还会替换与匹配主题中的先前消息相关联的已存储 TTL、
+   Urgency 以及任何回执订阅。
+
+   带有未与同一订阅的未完成消息共享的主题的推送消息，会按正常方式
+   存储或递送。
+
+
+
+
+
+
+
+<span class="grey">Thomson 等人              标准轨道                   [第 14 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-15" ></span>
+<span class="grey"><a href="./rfc8030">RFC 8030</a>                      HTTP Web Push                2016 年 12 月</span>
+
+
+   例如，以下消息可能导致现有消息被替换：
+
+   POST /push/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV HTTP/1.1
+   Host: push.example.net
+   TTL: 600
+   Topic: upd
+   Content-Type: text/plain;charset=utf8
+   Content-Length: 36
+
+   ZuHSZPKa2b1jtOKLGpWrcrn8cNqt0iVQyroF
+
+   如果推送服务识别出主题为 "upd" 的未完成推送消息，则该消息资源
+   会被删除。201 (Created) 响应表示推送消息替换已被接受。为响应
+   请求而创建的新推送消息资源的 URI 包含在 Location 标头字段中。
+
+   HTTP/1.1 201 Created
+   Date: Thu, 11 Dec 2014 23:57:02 GMT
+   Location: https://push.example.net/message/qDIYHNcfAIPP_5ITvURr-d6BGt
+
+   Topic 标头字段的值 MUST NOT 转发给用户代理。其值既未加密，
+   也未认证。
+
+<span class="h2"><a class="selflink" id="section-6" href="#section-6">6</a>.  接收某个订阅的推送消息</span>
+
+   用户代理通过向推送消息订阅资源发出 GET 请求，请求递送新的推送消息。
+   推送服务不响应此请求；相反，它使用 HTTP/2 服务器推送 [<a href="./rfc7540" title="&quot;Hypertext Transfer Protocol Version 2 (HTTP/2)&quot;">RFC7540</a>]
+   在应用服务器发送推送消息时发送推送消息的内容。
+
+   用户代理 MAY 在其请求中包含 Urgency 标头字段。推送服务 MUST NOT
+   递送紧急性低于表 1（说明性的紧急性值）中所定义标头字段值的消息。
+
+   每个推送消息都作为对 PUSH_PROMISE 中发送的合成 GET 请求的响应
+   被推送。此 GET 请求针对的是应用服务器请求消息递送时由推送服务
+   创建的推送消息资源。响应标头 SHOULD 在类型为
+   "urn:ietf:params:push" 的链接关系中，提供与推送消息订阅对应的
+   推送资源 URI。响应主体是应用服务器发送到推送资源的最近一次请求的
+   实体主体。
+
+
+
+
+<span class="grey">Thomson 等人              标准轨道                   [第 15 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-16" ></span>
+<span class="grey"><a href="./rfc8030">RFC 8030</a>                      HTTP Web Push                2016 年 12 月</span>
+
+
+   以下示例请求通过 HTTP/2 发出：
+
+   HEADERS      [stream 7] +END_STREAM +END_HEADERS
+     :method        = GET
+     :path          = /subscription/LBhhw0OohO-Wl4Oi971UG
+     :authority     = push.example.net
+
+   推送服务允许该请求保持未完成状态。当应用服务器发送推送消息时，
+   会生成与初始请求关联的服务器推送。服务器推送的响应包含推送消息。
+
+   PUSH_PROMISE [stream 7; promised stream 4] +END_HEADERS
+     :method        = GET
+     :path          = /message/qDIYHNcfAIPP_5ITvURr-d6BGt
+     :authority     = push.example.net
+
+   HEADERS      [stream 4] +END_HEADERS
+     :status        = 200
+     date           = Thu, 11 Dec 2014 23:56:56 GMT
+     last-modified  = Thu, 11 Dec 2014 23:56:55 GMT
+     cache-control  = private
+     link           = &lt;/push/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV&gt;;
+                       rel="urn:ietf:params:push"
+     content-type   = text/plain;charset=utf8
+     content-length = 36
+
+   DATA         [stream 4] +END_STREAM
+     iChYuI3jMzt3ir20P8r_jgRR-dSuN182x7iB
+
+   HEADERS      [stream 7] +END_STREAM +END_HEADERS
+     :status        = 200
+
+   用户代理还可以通过包含带有设置为 "0" 的 "wait" 偏好的 Prefer
+   标头字段 [<a href="./rfc7240" title="&quot;Prefer Header for HTTP&quot;">RFC7240</a>]，立即请求推送消息订阅资源的内容。作为
+   对此请求的响应，推送服务 MUST 为所有尚未递送的推送消息生成
+   服务器推送。
+
+   没有关联服务器推送的 204 (No Content) 状态码表示当前没有可用消息。
+   这可能是因为推送消息已经过期。
+
+
+
+
+
+
+
+
+
+<span class="grey">Thomson 等人              标准轨道                   [第 16 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-17" ></span>
+<span class="grey"><a href="./rfc8030">RFC 8030</a>                      HTTP Web Push                2016 年 12 月</span>
+
+
+<span class="h3"><a class="selflink" id="section-6.1" href="#section-6.1">6.1</a>.  接收某个订阅集合的推送消息</span>
+
+   接收某个订阅的推送消息和接收某个订阅集合的推送消息之间存在
+   细微差异。如果订阅集合可用，用户代理 SHOULD 使用订阅集合来监视
+   推送消息，而不是使用单个推送消息订阅。
+
+   用户代理通过向推送消息订阅集合资源发出 GET 请求，来请求递送
+   推送消息订阅集合的新推送消息。推送服务不响应此请求；相反，
+   它使用 HTTP/2 服务器推送 [<a href="./rfc7540" title="&quot;Hypertext Transfer Protocol Version 2 (HTTP/2)&quot;">RFC7540</a>] 在应用服务器发送
+   推送消息时发送推送消息的内容。
+
+   用户代理 MAY 在其请求中包含 Urgency 标头字段。推送服务 MUST NOT
+   递送紧急性低于表 1（说明性的紧急性值）中所定义标头字段值的消息。
+
+   每个推送消息都作为对 PUSH_PROMISE 中发送的合成 GET 请求的响应
+   被推送。此 GET 请求针对的是应用服务器请求消息递送时由推送服务
+   创建的推送消息资源。合成请求 MUST 在类型为
+   "urn:ietf:params:push" 的链接关系中，提供与推送消息订阅对应的
+   推送资源 URI。这使用户代理能够区分消息来源。响应主体是应用服务器
+   发送到推送资源的最近一次请求的实体主体。
+
+   以下示例请求通过 HTTP/2 发出。
+
+   HEADERS      [stream 7] +END_STREAM +END_HEADERS
+     :method        = GET
+     :path          = /subscription-set/4UXwi2Rd7jGS7gp5cuutF8ZldnEuvbOy
+     :authority     = push.example.net
+
+   推送服务允许该请求保持未完成状态。当应用服务器发送推送消息时，
+   会生成与初始请求关联的服务器推送。服务器推送的响应包含推送消息。
+
+   PUSH_PROMISE [stream 7; promised stream 4] +END_HEADERS
+     :method        = GET
+     :path          = /message/qDIYHNcfAIPP_5ITvURr-d6BGt
+     :authority     = push.example.net
+
+
+
+
+
+<span class="grey">Thomson 等人              标准轨道                   [第 17 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-18" ></span>
+<span class="grey"><a href="./rfc8030">RFC 8030</a>                      HTTP Web Push                2016 年 12 月</span>
+
+
+   HEADERS      [stream 4] +END_HEADERS
+     :status        = 200
+     date           = Thu, 11 Dec 2014 23:56:56 GMT
+     last-modified  = Thu, 11 Dec 2014 23:56:55 GMT
+     link           = &lt;/push/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV&gt;;
+                       rel="urn:ietf:params:push"
+     cache-control  = private
+     content-type   = text/plain;charset=utf8
+     content-length = 36
+
+   DATA         [stream 4] +END_STREAM
+     iChYuI3jMzt3ir20P8r_jgRR-dSuN182x7iB
+
+   HEADERS      [stream 7] +END_STREAM +END_HEADERS
+     :status        = 200
+
+   用户代理可以通过包含带有设置为 "0" 的 "wait" 偏好的 Prefer 标头字段
+   [<a href="./rfc7240" title="&quot;Prefer Header for HTTP&quot;">RFC7240</a>]，立即请求推送消息订阅集合资源的内容。作为对此请求的
+   响应，推送服务 MUST 为所有尚未递送的推送消息生成服务器推送。
+
+   没有关联服务器推送的 204 (No Content) 状态码表示当前没有可用消息。
+   这可能是因为推送消息已经过期。
+
+<span class="h3"><a class="selflink" id="section-6.2" href="#section-6.2">6.2</a>.  确认推送消息</span>
+
+   为了确保推送消息至少一次正确递送给用户代理，用户代理 MUST 通过
+   对推送消息资源执行 HTTP DELETE 来确认收到消息。
+
+   DELETE /message/qDIYHNcfAIPP_5ITvURr-d6BGt HTTP/1.1
+   Host: push.example.net
+
+   如果推送服务收到确认，并且应用已请求递送回执，则推送服务 MUST
+   向正在监视回执订阅的应用服务器返回 204 (No Content) 响应。
+
+   如果推送服务在合理时间内未收到确认，则该消息被视为尚未递送。
+   推送服务 SHOULD 继续重试递送该消息，直到其公告的过期时间为止。
+
+   推送服务 MAY 因用户代理无响应或操作约束等场景，在其公告的过期时间
+   之前停止重试递送该消息。如果应用已经
+
+
+
+
+
+<span class="grey">Thomson 等人              标准轨道                   [第 18 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-19" ></span>
+<span class="grey"><a href="./rfc8030">RFC 8030</a>                      HTTP Web Push                2016 年 12 月</span>
+
+
+   请求了递送回执，则推送服务 MUST 向正在监视回执订阅的应用服务器
+   返回 410 (Gone) 响应。
+
+<span class="h3"><a class="selflink" id="section-6.3" href="#section-6.3">6.3</a>.  接收推送消息回执</span>
+
+   应用服务器通过向回执订阅资源发出 HTTP GET 请求，来请求从推送服务
+   递送回执。推送服务不响应此请求；相反，它使用 HTTP/2 服务器推送
+   [<a href="./rfc7540" title="&quot;Hypertext Transfer Protocol Version 2 (HTTP/2)&quot;">RFC7540</a>] 在消息由用户代理确认（<a href="#section-6.2">第 6.2 节</a>）时发送
+   推送回执。
+
+   每个回执都作为对 PUSH_PROMISE 中发送的合成 GET 请求的响应被推送。
+   此 GET 请求针对的是应用服务器请求消息递送时由推送服务创建的同一
+   推送消息资源。响应包含指示消息递送结果的状态码，并且不携带数据。
+
+   以下示例请求通过 HTTP/2 发出。
+
+   HEADERS      [stream 13] +END_STREAM +END_HEADERS
+     :method        = GET
+     :path          = /receipt-subscription/3ZtI4YVNBnUUZhuoChl6omUvG4ZM
+     :authority     = push.example.net
+
+   推送服务允许该请求保持未完成状态。当用户代理确认消息时，推送服务
+   向应用服务器推送递送回执。204 (No Content) 状态码确认消息已递送
+   并被确认。
+
+   PUSH_PROMISE [stream 13; promised stream 82] +END_HEADERS
+     :method        = GET
+     :path          = /message/qDIYHNcfAIPP_5ITvURr-d6BGt
+     :authority     = push.example.net
+
+   HEADERS      [stream 82] +END_STREAM
+                           +END_HEADERS
+     :status        = 204
+     date           = Thu, 11 Dec 2014 23:56:56 GMT
+
+   如果用户代理未能确认收到推送消息，并且推送服务在其公告的过期时间
+   之前停止重试递送该消息，则推送服务 MUST 推送状态码为 410 (Gone)
+   的失败响应。
+
+
+
+
+
+<span class="grey">Thomson 等人              标准轨道                   [第 19 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-20" ></span>
+<span class="grey"><a href="./rfc8030">RFC 8030</a>                      HTTP Web Push                2016 年 12 月</span>
+
+
+<span class="h2"><a class="selflink" id="section-7" href="#section-7">7</a>.  操作方面的考虑</span>
+
+<span class="h3"><a class="selflink" id="section-7.1" href="#section-7.1">7.1</a>.  负载管理</span>
+
+   推送服务很可能必须维护数量非常庞大的开放 TCP 连接。对这些连接的
+   有效管理可能取决于能否在服务器实例之间移动连接。
+
+   用户代理 MUST 支持 307 (Temporary Redirect) 状态码 [<a href="./rfc7231" title="&quot;Hypertext Transfer Protocol (HTTP/1.1): Semantics and Content&quot;">RFC7231</a>]，
+   推送服务可在请求新订阅时使用它来重新分配负载。
+
+   希望重新分配负载的服务器可以使用 HTTP 替代服务 [<a href="./rfc7838" title="&quot;HTTP Alternative Services&quot;">RFC7838</a>]。
+   HTTP 替代服务允许在为各种资源保持相同 URI 的同时重新分配负载。
+   用户代理可以在建立替代连接后使用 GOAWAY 帧，以确保平滑过渡。
+
+<span class="h3"><a class="selflink" id="section-7.2" href="#section-7.2">7.2</a>.  推送消息过期</span>
+
+   基于 TTL 标头字段存储推送消息可能会占用推送服务相当大的存储空间。
+   推送服务没有义务无限期存储消息。推送服务能够使用 TTL 标头字段
+   （<a href="#section-5.2">第 5.2 节</a>）向应用服务器指示其打算保留消息的时长。
+
+   未主动监视推送消息的用户代理不会接收到在该间隔期间过期的消息。
+
+   已存储且尚未递送给用户代理的推送消息，会在用户代理重新开始监视时
+   被递送。已存储的推送消息 SHOULD 包含 Last-Modified 标头字段
+   （<a href="./rfc7232#section-2.2">[RFC7232] 第&nbsp;2.2 节</a>），指示应用服务器请求递送的时间。
+
+   对仅含过期消息的推送消息订阅资源发出的 GET 请求，会得到仿佛从未
+   发送过推送消息一样的响应。
+
+   推送服务可能需要限制已存储推送消息的大小和数量，以避免过载。
+   为了限制消息大小，推送服务 MAY 对包含过大实体主体的请求返回
+   413 (Payload Too Large) 状态码 [<a href="./rfc7231" title="&quot;Hypertext Transfer Protocol (HTTP/1.1): Semantics and Content&quot;">RFC7231</a>]。对于大小为
+   4096 字节或更小的实体主体，推送服务 MUST NOT 返回 413 状态码。
+
+
+
+
+
+
+<span class="grey">Thomson 等人              标准轨道                   [第 20 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-21" ></span>
+<span class="grey"><a href="./rfc8030">RFC 8030</a>                      HTTP Web Push                2016 年 12 月</span>
+
+
+   为了限制已存储推送消息的数量，推送服务 MAY 在其推送消息递送请求
+   中以短于应用服务器提议的 Time-To-Live 进行响应（<a href="#section-5.2">第 5.2 节</a>）。
+   一旦消息被接受，推送服务 MAY 后续在其公告的 Time-To-Live 之前
+   使消息过期。如果应用服务器请求了递送回执，则推送服务 MUST 返回
+   失败响应（<a href="#section-6.2">第 6.2 节</a>）。
+
+<span class="h3"><a class="selflink" id="section-7.3" href="#section-7.3">7.3</a>.  订阅过期</span>
+
+   在某些情况下，可能有必要终止订阅，以便刷新它们。这适用于
+   推送消息订阅和回执订阅。
+
+   推送服务 MAY 在任何时候使订阅过期。如果用户代理对已过期的推送消息
+   订阅资源（<a href="#section-6">第 6 节</a>）有未完成请求，或应用服务器对已过期的
+   回执订阅资源（<a href="#section-6.3">第 6.3 节</a>）有未完成请求，则 MUST 通过返回
+   404 (Not Found) 状态码来发出信号。
+
+   如果应用服务器尝试向已过期的推送消息订阅发送推送消息，推送服务
+   MUST 返回 404 (Not Found) 状态码。
+
+   用户代理可以通过向相应 URI 发送 DELETE 请求来移除其推送消息订阅。
+   应用服务器可以通过向相应 URI 发送 DELETE 请求来移除其回执订阅。
+
+<span class="h4"><a class="selflink" id="section-7.3.1" href="#section-7.3.1">7.3.1</a>.  订阅集合过期</span>
+
+   推送服务 MAY 在任何时候使订阅集合过期，并且 MUST 同时使该集合中的
+   所有推送消息订阅过期。如果用户代理对推送订阅集合
+   （<a href="#section-6.1">第 6.1 节</a>）有未完成请求，则 MUST 通过返回 404 (Not Found)
+   状态码来发出信号。
+
+   用户代理可以通过向订阅集合 URI 发送 DELETE 请求，来请求移除
+   订阅集合。这 MUST 同时移除该集合中的所有推送消息订阅。
+
+   如果属于订阅集合成员的某个特定推送消息订阅已过期或被移除，
+   则它 MUST 同时从其订阅集合中移除。
+
+
+
+
+
+
+
+<span class="grey">Thomson 等人              标准轨道                   [第 21 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-22" ></span>
+<span class="grey"><a href="./rfc8030">RFC 8030</a>                      HTTP Web Push                2016 年 12 月</span>
+
+
+<span class="h3"><a class="selflink" id="section-7.4" href="#section-7.4">7.4</a>.  对应用可靠性的影响</span>
+
+   如果推送服务不支持在间歇性网络连接或设备上应用失败的情况下进行
+   可靠递送，就会迫使设备直接向应用服务器确认收到消息，从而为了建立
+   和维护到各个应用服务器的（通常是安全的）连接而产生额外电量消耗。
+
+   如果消息包含对应用状态至关重要的信息，推送消息可靠性可能很重要。
+   修复状态可能代价高昂，尤其是对于通信能力有限的设备。知道推送消息
+   已被正确接收，可以避免重传、轮询和状态重新同步。
+
+   推送消息递送回执的可用性确保应用开发者不会被诱使创建替代机制，
+   以便在推送服务未能递送关键消息时进行消息递送。为了弥补这些缺陷而
+   建立轮询机制或备用消息通道，几乎会抵消推送服务提供的全部优势。
+
+   但是，对于瞬态消息（例如来电）或很快被取代的消息（例如当前未读
+   电子邮件数量），可靠性可能并非必要。
+
+<span class="h3"><a class="selflink" id="section-7.5" href="#section-7.5">7.5</a>.  订阅集合和并发 HTTP/2 流</span>
+
+   如果推送服务要求用户代理使用推送消息订阅集合，则它 MAY 在
+   HTTP/2 SETTINGS 帧 [<a href="./rfc7540" title="&quot;Hypertext Transfer Protocol Version 2 (HTTP/2)&quot;">RFC7540</a>] 内使用 SETTINGS_MAX_CONCURRENT_STREAMS
+   参数限制并发活动流的数量。用户代理 MAY 被限制为一个并发流用于管理
+   推送消息订阅，并为推送服务返回的每个订阅集合限制一个并发流。
+   这可能迫使用户代理将对推送服务的订阅请求串行化。
+
+<span class="h2"><a class="selflink" id="section-8" href="#section-8">8</a>.  安全方面的考虑</span>
+
+   本协议 MUST 按照 [<a href="./rfc7525" title="&quot;Recommendations for Secure Use of Transport Layer Security (TLS) and Datagram Transport Layer Security (DTLS)&quot;">RFC7525</a>] 中的建议使用基于 TLS 的 HTTP
+   [<a href="./rfc2818" title="&quot;HTTP Over TLS&quot;">RFC2818</a>]。这包括用户代理与推送服务之间的任何通信，以及
+   应用服务器与推送服务之间的通信。因此，所有 URI 都使用 "https"
+   方案。这为订阅和推送消息提供来自外部方的机密性和完整性保护。
+
+
+
+
+<span class="grey">Thomson 等人              标准轨道                   [第 22 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-23" ></span>
+<span class="grey"><a href="./rfc8030">RFC 8030</a>                      HTTP Web Push                2016 年 12 月</span>
+
+
+<span class="h3"><a class="selflink" id="section-8.1" href="#section-8.1">8.1</a>.  防止推送服务访问的机密性</span>
+
+   TLS 提供的保护并不能防止内容被推送服务访问。如果没有额外保障，
+   推送服务可以检查和修改消息内容。
+
+   使用本协议的应用 MUST 使用提供端到端机密性、完整性和数据来源认证
+   的机制。发送推送消息的应用服务器和用户代理上接收推送消息的应用
+   通常只是同一应用的不同实例，因此不需要标准化协议来建立适当的
+   安全上下文。从用户代理向其应用服务器分发订阅信息，也为密钥协商
+   提供了便利媒介。
+
+   为满足这一要求，W3C Push API [<a href="#ref-API" title="&quot;Push API&quot;">API</a>] 已采用 Message Encryption for
+   WebPush [<a href="#ref-ENCRYPT" title="&quot;Message Encryption for Web Push&quot;">ENCRYPT</a>]，以保护消息内容不被推送服务获知。
+   其他场景可以通过类似策略处理。
+
+   Topic 标头字段会暴露允许对同一主题上的推送消息进行更细粒度关联的
+   信息。推送服务可能使用它来辅助推送消息的流量分析。
+
+<span class="h3"><a class="selflink" id="section-8.2" href="#section-8.2">8.2</a>.  隐私方面的考虑</span>
+
+   推送消息机密性并不能确保谁在通信以及何时通信的身份受到保护。
+   但是，可以限制暴露的信息量。
+
+   为推送资源提供的 URI MUST NOT 提供任何基础来关联给定用户代理的
+   通信。MUST NOT 能够仅基于内容关联任意两个推送资源 URI。这允许
+   用户代理控制跨不同应用或随时间变化的关联。当然，这并不能防止使用
+   用户代理可能暴露的其他信息进行关联。
+
+   同样，推送服务提供的用于标识推送消息的 URI MUST NOT 提供任何允许
+   跨订阅关联的信息。同一订阅的推送消息 URI MAY 包含允许与相关订阅
+   或该订阅的其他推送消息关联的信息。
+
+   用户和设备信息 MUST NOT 通过推送 URI 或推送消息 URI 暴露。
+
+
+
+
+
+<span class="grey">Thomson 等人              标准轨道                   [第 23 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-24" ></span>
+<span class="grey"><a href="./rfc8030">RFC 8030</a>                      HTTP Web Push                2016 年 12 月</span>
+
+
+   此外，由同一用户代理建立的推送 URI，或同一订阅的推送消息 URI，
+   MUST NOT 包含任何允许它们与用户代理关联的信息。
+
+   注：只要最终的匿名集（<a href="./rfc6973#section-6.1.1">[RFC6973] 第&nbsp;6.1.1 节</a>）足够大，
+      这不必是完美的。推送 URI 必然标识一个推送服务或单个服务器实例。
+      也可能使用流量分析来关联订阅。
+
+   用户代理 MUST 能够在任何时候创建带有新标识符的新订阅。
+
+<span class="h3"><a class="selflink" id="section-8.3" href="#section-8.3">8.3</a>.  授权</span>
+
+   本协议不定义推送服务如何确定用户代理是否被允许创建订阅，或是否
+   可以将推送消息递送给用户代理。推送服务 MAY 选择基于任何可用的、
+   与 HTTP 兼容的授权方法来授权请求，这些方法有多种选择（包括实验性
+   选项），安全级别各不相同。授权过程和任何相关凭据预期会与推送服务
+   URI 一起配置到用户代理中。
+
+   授权通过推送消息订阅、推送和回执订阅资源的能力 URL 管理
+   （[<a href="#ref-CAP-URI" title="&quot;Good Practices for Capability URLs&quot;">CAP-URI</a>]）。能力 URL 仅基于对 URL 的知晓来授予对资源的访问权。
+
+   使用能力 URL 是因为其“便于继续共享”和“便于客户端 API”的属性。
+   这些属性使得可以避免依赖推送服务与应用服务器之间预先安排的关系或
+   额外协议。
+
+   能力 URL 充当 bearer 令牌。知晓推送消息订阅 URI 即意味着有权接收
+   推送消息或删除订阅。知晓推送 URI 即意味着有权发送推送消息。
+   知晓推送消息 URI 允许读取并确认该特定消息。知晓回执订阅 URI
+   即意味着有权接收推送回执。
+
+   在路径组件中编码大量随机熵（至少 120 位），可确保难以成功猜测
+   有效的能力 URL。
+
+
+
+
+
+<span class="grey">Thomson 等人              标准轨道                   [第 24 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-25" ></span>
+<span class="grey"><a href="./rfc8030">RFC 8030</a>                      HTTP Web Push                2016 年 12 月</span>
+
+
+<span class="h3"><a class="selflink" id="section-8.4" href="#section-8.4">8.4</a>.  拒绝服务方面的考虑</span>
+
+   用户代理可以通过限制将推送 URI 分发给经授权的应用服务器，来控制
+   有效推送消息的来源。确保推送 URI 难以猜测，可以确保只有收到推送
+   URI 的应用服务器能够使用它。
+
+   未经用户代理成功认证的推送消息不会被递送，但这可能带来拒绝服务
+   风险。即使相对较小数量的推送消息，也可能导致电池供电设备耗尽电量。
+
+   为解决这种情况，W3C Push API [<a href="#ref-API" title="&quot;Push API&quot;">API</a>] 已采用 Voluntary Application
+   Server Identification [<a href="#ref-VAPID" title="&quot;Voluntary Application Server Identification for Web Push&quot;">VAPID</a>]，它允许用户代理将订阅限制到特定
+   应用服务器。随后，推送服务可以在不联系用户代理的情况下识别并拒绝
+   不想要的消息。
+
+   拥有有效推送 URI 的恶意应用可以利用推送服务的更大资源，对用户代理
+   发起拒绝服务攻击。推送服务 SHOULD 限制向单个用户代理发送推送消息的
+   速率。
+
+   当应用服务器超过其向推送资源递送推送消息的速率限制时，推送服务
+   MAY 返回 429 (Too Many Requests) 状态码 [<a href="./rfc6585" title="&quot;Additional HTTP Status Codes&quot;">RFC6585</a>]。推送服务 SHOULD
+   还包含 Retry-After 标头 [<a href="./rfc7231" title="&quot;Hypertext Transfer Protocol (HTTP/1.1): Semantics and Content&quot;">RFC7231</a>]，以指示请求应用服务器在再次
+   向推送资源发出请求之前等待多长时间。
+
+   推送服务或用户代理 MAY 终止接收过多推送消息的订阅
+   （<a href="#section-7.3">第 7.3 节</a>）。
+
+   推送服务也能够拒绝向用户代理提供服务。有意不递送消息很难与故障
+   区分开来，而故障可能由暂时性网络错误、用户代理可用性中断或真实的
+   服务中断造成。
+
+<span class="h3"><a class="selflink" id="section-8.5" href="#section-8.5">8.5</a>.  日志记录风险</span>
+
+   服务器请求日志可能揭示订阅相关 URI，或同一用户代理的订阅相关 URI
+   之间的关系。对日志保留的限制和强访问控制机制可以确保 URI 不会泄露
+   给未经授权的实体。
+
+
+
+
+
+
+<span class="grey">Thomson 等人              标准轨道                   [第 25 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-26" ></span>
+<span class="grey"><a href="./rfc8030">RFC 8030</a>                      HTTP Web Push                2016 年 12 月</span>
+
+
+<span class="h2"><a class="selflink" id="section-9" href="#section-9">9</a>.  IANA 方面的考虑</span>
+
+   本协议在<a href="#section-9.1">第 9.1 节</a>中定义了新的 HTTP 标头字段。新的链接关系类型
+   使用<a href="#section-9.2">第 9.2 节</a>中定义的 URN 来标识。端口注册定义于<a href="#section-9.3">第 9.3 节</a>
+
+<span class="h3"><a class="selflink" id="section-9.1" href="#section-9.1">9.1</a>.  标头字段注册</span>
+
+   HTTP 标头字段注册在由 &lt;<a href="https://www.iana.org/assignments/message-headers/">https://www.iana.org/assignments/message-</a>
+   <a href="https://www.iana.org/assignments/message-headers/">headers/</a>&gt; 维护的 "Message Headers"
+   注册表中。
+
+   本文档定义了以下 HTTP 标头字段，并且以下条目已添加到
+   "Permanent Message Header Field Names" 注册表（[<a href="./rfc3864" title="&quot;Registration Procedures for Message Header Fields&quot;">RFC3864</a>]）中：
+
+   +-------------------+----------+----------+--------------+
+   | Header Field Name | Protocol | Status   | Reference    |
+   +-------------------+----------+----------+--------------+
+   | TTL               | http     | standard | <a href="#section-5.2">Section 5.2</a>  |
+   | Urgency           | http     | standard | <a href="#section-5.3">Section 5.3</a>  |
+   | Topic             | http     | standard | <a href="#section-5.4">Section 5.4</a>  |
+   +-------------------+----------+----------+--------------+
+
+   变更控制者为："IETF (iesg@ietf.org) - Internet
+   Engineering Task Force"。
+
+<span class="h3"><a class="selflink" id="section-9.2" href="#section-9.2">9.2</a>.  链接关系 URN</span>
+
+   本文档注册用于标识链接关系类型的 URN。这些已根据
+   <a href="./rfc3553#section-4">[RFC3553] 第&nbsp;4 节</a>中的程序添加到新的 "Web Push Identifiers"
+   注册表中；相应的 "push" 子命名空间已进入 "IETF URN
+   Sub-namespace for Registered Protocol Parameter Identifiers"
+   注册表。
+
+   "Web Push Identifiers" 注册表在 IETF Review 策略 [<a href="./rfc5226" title="">RFC5226</a>]
+   下运作。
+
+   注册表名称：Web Push Identifiers
+
+   URN 前缀：urn:ietf:params:push
+
+   规范：<a href="./rfc8030">RFC 8030</a>（本文档）
+
+   存储库：<a href="http://www.iana.org/assignments/webpush-parameters/">http://www.iana.org/assignments/webpush-parameters/</a>
+
+
+
+
+
+<span class="grey">Thomson 等人              标准轨道                   [第 26 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-27" ></span>
+<span class="grey"><a href="./rfc8030">RFC 8030</a>                      HTTP Web Push                2016 年 12 月</span>
+
+
+   索引值：此注册表中的值是以 "urn:ietf:params:push" 前缀开头的
+      URN 或 URN 前缀。每个值均独立注册。
+
+   "Web Push Identifiers" 注册表中的注册项包括以下信息：
+
+   URN：完整的 URN 或 URN 前缀。
+
+   描述：简要描述。
+
+   联系人：进行注册的个人或组的电子邮件。
+
+   索引值：如 [<a href="./rfc3553" title="&quot;An IETF URN Sub-namespace for Registered Protocol Parameters&quot;">RFC3553</a>] 中所述
+
+   参考文献：描述该 URN 或 URN 前缀语义的规范引用。
+
+      注册的 URN 前缀包含关于如何构造 URN 的描述。这不适用于具体 URN。
+
+   这些值作为 "Web Push Identifiers" 注册表的初始内容输入。
+
+   URN：urn:ietf:params:push
+
+   描述：此链接关系类型用于标识用于发送推送消息的资源。
+
+   联系人：IETF 的 WEBPUSH WG (webpush@ietf.org)
+
+   参考文献：<a href="./rfc8030">RFC 8030</a>（本文档）
+
+   URN：urn:ietf:params:push:set
+
+   描述：此链接关系类型用于标识推送消息订阅的集合。
+
+   联系人：IETF 的 WEBPUSH WG (webpush@ietf.org)
+
+   参考文献：<a href="./rfc8030">RFC 8030</a>（本文档）
+
+   URN：urn:ietf:params:push:receipt
+
+   描述：此链接关系类型用于标识用于接收推送消息递送确认的资源。
+
+   联系人：IETF 的 WEBPUSH WG (webpush@ietf.org)
+
+
+
+<span class="grey">Thomson 等人              标准轨道                   [第 27 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-28" ></span>
+<span class="grey"><a href="./rfc8030">RFC 8030</a>                      HTTP Web Push                2016 年 12 月</span>
+
+
+   参考文献：<a href="./rfc8030">RFC 8030</a>（本文档）
+
+<span class="h3"><a class="selflink" id="section-9.3" href="#section-9.3">9.3</a>.  服务名称和端口号注册</span>
+
+   服务名称和端口号注册在由
+   &lt;<a href="https://www.iana.org/assignments/service-names-port-numbers/">https://www.iana.org/assignments/service-names-port-numbers/</a>&gt;
+   维护的 "Service Name and Transport Protocol Port Number Registry"
+   注册表中。
+
+   根据 [<a href="./rfc6335" title="&quot;Internet Assigned Numbers Authority (IANA) Procedures for the Management of the Service Name and Transport Protocol Port Number Registry&quot;">RFC6335</a>]，IANA 已分配系统端口号 1001 和服务名称
+   "webpush"。
+
+   服务名称：
+      webpush
+
+   端口号：
+      1001
+
+   传输协议：
+      tcp
+
+   描述：
+      HTTP Web Push
+
+   受让方：
+      The IESG (iesg@ietf.org)
+
+   联系人：
+      The IETF Chair (chair@ietf.org)
+
+   参考文献：
+      <a href="./rfc8030">RFC 8030</a>（本文档）
+
+<span class="h2"><a class="selflink" id="section-10" href="#section-10">10</a>.  参考文献</span>
+
+<span class="h3"><a class="selflink" id="section-10.1" href="#section-10.1">10.1</a>.  规范性参考文献</span>
+
+   [<a id="ref-CAP-URI">CAP-URI</a>]  Tennison, J., "Good Practices for Capability URLs", W3C
+              First Public Working Draft capability-urls, February 2014,
+              &lt;<a href="http://www.w3.org/TR/capability-urls/">http://www.w3.org/TR/capability-urls/</a>&gt;.
+
+   [<a id="ref-RFC2119">RFC2119</a>]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", <a href="https://www.rfc-editor.org/bcp/bcp14">BCP 14</a>, <a href="./rfc2119">RFC 2119</a>,
+              DOI 10.17487/RFC2119, March 1997,
+              &lt;<a href="http://www.rfc-editor.org/info/rfc2119">http://www.rfc-editor.org/info/rfc2119</a>&gt;.
+
+   [<a id="ref-RFC2818">RFC2818</a>]  Rescorla, E., "HTTP Over TLS", <a href="./rfc2818">RFC 2818</a>,
+              DOI 10.17487/RFC2818, May 2000,
+              &lt;<a href="http://www.rfc-editor.org/info/rfc2818">http://www.rfc-editor.org/info/rfc2818</a>&gt;.
+
+
+
+<span class="grey">Thomson 等人              标准轨道                   [第 28 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-29" ></span>
+<span class="grey"><a href="./rfc8030">RFC 8030</a>                      HTTP Web Push                2016 年 12 月</span>
+
+
+   [<a id="ref-RFC3553">RFC3553</a>]  Mealling, M., Masinter, L., Hardie, T., and G. Klyne, "An
+              IETF URN Sub-namespace for Registered Protocol
+              Parameters", <a href="https://www.rfc-editor.org/bcp/bcp73">BCP 73</a>, <a href="./rfc3553">RFC 3553</a>, DOI 10.17487/RFC3553, June
+              2003, &lt;<a href="http://www.rfc-editor.org/info/rfc3553">http://www.rfc-editor.org/info/rfc3553</a>&gt;.
+
+   [<a id="ref-RFC3864">RFC3864</a>]  Klyne, G., Nottingham, M., and J. Mogul, "Registration
+              Procedures for Message Header Fields", <a href="https://www.rfc-editor.org/bcp/bcp90">BCP 90</a>, <a href="./rfc3864">RFC 3864</a>,
+              DOI 10.17487/RFC3864, September 2004,
+              &lt;<a href="http://www.rfc-editor.org/info/rfc3864">http://www.rfc-editor.org/info/rfc3864</a>&gt;.
+
+   [<a id="ref-RFC4648">RFC4648</a>]  Josefsson, S., "The Base16, Base32, and Base64 Data
+              Encodings", <a href="./rfc4648">RFC 4648</a>, DOI 10.17487/RFC4648, October 2006,
+              &lt;<a href="http://www.rfc-editor.org/info/rfc4648">http://www.rfc-editor.org/info/rfc4648</a>&gt;.
+
+   [<a id="ref-RFC5226">RFC5226</a>]  Narten, T. and H. Alvestrand, "Guidelines for Writing an
+              IANA Considerations Section in RFCs", <a href="https://www.rfc-editor.org/bcp/bcp26">BCP 26</a>, <a href="./rfc5226">RFC 5226</a>,
+              DOI 10.17487/RFC5226, May 2008,
+              &lt;<a href="http://www.rfc-editor.org/info/rfc5226">http://www.rfc-editor.org/info/rfc5226</a>&gt;.
+
+   [<a id="ref-RFC5382">RFC5382</a>]  Guha, S., Ed., Biswas, K., Ford, B., Sivakumar, S., and P.
+              Srisuresh, "NAT Behavioral Requirements for TCP", <a href="https://www.rfc-editor.org/bcp/bcp142">BCP 142</a>,
+              <a href="./rfc5382">RFC 5382</a>, DOI 10.17487/RFC5382, October 2008,
+              &lt;<a href="http://www.rfc-editor.org/info/rfc5382">http://www.rfc-editor.org/info/rfc5382</a>&gt;.
+
+   [<a id="ref-RFC5988">RFC5988</a>]  Nottingham, M., "Web Linking", <a href="./rfc5988">RFC 5988</a>,
+              DOI 10.17487/RFC5988, October 2010,
+              &lt;<a href="http://www.rfc-editor.org/info/rfc5988">http://www.rfc-editor.org/info/rfc5988</a>&gt;.
+
+   [<a id="ref-RFC6335">RFC6335</a>]  Cotton, M., Eggert, L., Touch, J., Westerlund, M., and S.
+              Cheshire, "Internet Assigned Numbers Authority (IANA)
+              Procedures for the Management of the Service Name and
+              Transport Protocol Port Number Registry", <a href="https://www.rfc-editor.org/bcp/bcp165">BCP 165</a>,
+              <a href="./rfc6335">RFC 6335</a>, DOI 10.17487/RFC6335, August 2011,
+              &lt;<a href="http://www.rfc-editor.org/info/rfc6335">http://www.rfc-editor.org/info/rfc6335</a>&gt;.
+
+   [<a id="ref-RFC6454">RFC6454</a>]  Barth, A., "The Web Origin Concept", <a href="./rfc6454">RFC 6454</a>,
+              DOI 10.17487/RFC6454, December 2011,
+              &lt;<a href="http://www.rfc-editor.org/info/rfc6454">http://www.rfc-editor.org/info/rfc6454</a>&gt;.
+
+   [<a id="ref-RFC6585">RFC6585</a>]  Nottingham, M. and R. Fielding, "Additional HTTP Status
+              Codes", <a href="./rfc6585">RFC 6585</a>, DOI 10.17487/RFC6585, April 2012,
+              &lt;<a href="http://www.rfc-editor.org/info/rfc6585">http://www.rfc-editor.org/info/rfc6585</a>&gt;.
+
+   [<a id="ref-RFC7230">RFC7230</a>]  Fielding, R., Ed. and J. Reschke, Ed., "Hypertext Transfer
+              Protocol (HTTP/1.1): Message Syntax and Routing",
+              <a href="./rfc7230">RFC 7230</a>, DOI 10.17487/RFC7230, June 2014,
+              &lt;<a href="http://www.rfc-editor.org/info/rfc7230">http://www.rfc-editor.org/info/rfc7230</a>&gt;.
+
+
+
+
+<span class="grey">Thomson 等人              标准轨道                   [第 29 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-30" ></span>
+<span class="grey"><a href="./rfc8030">RFC 8030</a>                      HTTP Web Push                2016 年 12 月</span>
+
+
+   [<a id="ref-RFC7231">RFC7231</a>]  Fielding, R., Ed. and J. Reschke, Ed., "Hypertext Transfer
+              Protocol (HTTP/1.1): Semantics and Content", <a href="./rfc7231">RFC 7231</a>,
+              DOI 10.17487/RFC7231, June 2014,
+              &lt;<a href="http://www.rfc-editor.org/info/rfc7231">http://www.rfc-editor.org/info/rfc7231</a>&gt;.
+
+   [<a id="ref-RFC7232">RFC7232</a>]  Fielding, R., Ed. and J. Reschke, Ed., "Hypertext Transfer
+              Protocol (HTTP/1.1): Conditional Requests", <a href="./rfc7232">RFC 7232</a>,
+              DOI 10.17487/RFC7232, June 2014,
+              &lt;<a href="http://www.rfc-editor.org/info/rfc7232">http://www.rfc-editor.org/info/rfc7232</a>&gt;.
+
+   [<a id="ref-RFC7240">RFC7240</a>]  Snell, J., "Prefer Header for HTTP", <a href="./rfc7240">RFC 7240</a>,
+              DOI 10.17487/RFC7240, June 2014,
+              &lt;<a href="http://www.rfc-editor.org/info/rfc7240">http://www.rfc-editor.org/info/rfc7240</a>&gt;.
+
+   [<a id="ref-RFC7525">RFC7525</a>]  Sheffer, Y., Holz, R., and P. Saint-Andre,
+              "Recommendations for Secure Use of Transport Layer
+              Security (TLS) and Datagram Transport Layer Security
+              (DTLS)", <a href="https://www.rfc-editor.org/bcp/bcp195">BCP 195</a>, <a href="./rfc7525">RFC 7525</a>, DOI 10.17487/RFC7525, May
+              2015, &lt;<a href="http://www.rfc-editor.org/info/rfc7525">http://www.rfc-editor.org/info/rfc7525</a>&gt;.
+
+   [<a id="ref-RFC7540">RFC7540</a>]  Belshe, M., Peon, R., and M. Thomson, Ed., "Hypertext
+              Transfer Protocol Version 2 (HTTP/2)", <a href="./rfc7540">RFC 7540</a>,
+              DOI 10.17487/RFC7540, May 2015,
+              &lt;<a href="http://www.rfc-editor.org/info/rfc7540">http://www.rfc-editor.org/info/rfc7540</a>&gt;.
+
+   [<a id="ref-RFC7838">RFC7838</a>]  Nottingham, M., McManus, P., and J. Reschke, "HTTP
+              Alternative Services", <a href="./rfc7838">RFC 7838</a>, DOI 10.17487/RFC7838,
+              April 2016, &lt;<a href="http://www.rfc-editor.org/info/rfc7838">http://www.rfc-editor.org/info/rfc7838</a>&gt;.
+
+<span class="h3"><a class="selflink" id="section-10.2" href="#section-10.2">10.2</a>.  资料性参考文献</span>
+
+   [<a id="ref-API">API</a>]      Beverloo, P., Thomson, M., van Ouwerkerk, M., Sullivan,
+              B., and E. Fullea, "Push API", W3C Editor's Draft push-
+              api, November 2016, &lt;<a href="https://w3c.github.io/push-api/">https://w3c.github.io/push-api/</a>&gt;.
+
+   [<a id="ref-ENCRYPT">ENCRYPT</a>]  Thomson, M., <a style="text-decoration: none" href='https://www.google.com/search?sitesearch=datatracker.ietf.org%2Fdoc%2Fhtml%2F&amp;q=inurl:draft-+%22Message+Encryption+for+Web+Push%22'>"Message Encryption for Web Push"</a>, Work in
+              Progress, <a href="./draft-ietf-webpush-encryption-06">draft-ietf-webpush-encryption-06</a>, October 2016.
+
+   [<a id="ref-RFC6973">RFC6973</a>]  Cooper, A., Tschofenig, H., Aboba, B., Peterson, J.,
+              Morris, J., Hansen, M., and R. Smith, "Privacy
+              Considerations for Internet Protocols", <a href="./rfc6973">RFC 6973</a>,
+              DOI 10.17487/RFC6973, July 2013,
+              &lt;<a href="http://www.rfc-editor.org/info/rfc6973">http://www.rfc-editor.org/info/rfc6973</a>&gt;.
+
+   [<a id="ref-VAPID">VAPID</a>]    Thomson, M. and P. Beverloo, "Voluntary Application Server
+              Identification for Web Push", Work in Progress,
+              <a href="./draft-ietf-webpush-vapid-01">draft-ietf-webpush-vapid-01</a>, June 2016.
+
+
+
+
+<span class="grey">Thomson 等人              标准轨道                   [第 30 页]</span></pre>
+<hr class='noprint' /><!--NewPage-->
+<pre class='newpage'><span id="page-31" ></span>
+<span class="grey"><a href="./rfc8030">RFC 8030</a>                      HTTP Web Push                2016 年 12 月</span>
+
+
+致谢
+
+   Ben Bangert、Peter Beverloo、Kit Cambridge、JR Conlin、Lucas Jenss、
+   Matthew Kaufman、Costin Manolache、Mark Nottingham、Idel Pivnitskiy、
+   Robert Sparks、Darshak Thakore 以及许多其他人为本文档提供了重要的
+   技术输入。
+
+作者地址
+
+   Martin Thomson
+   Mozilla
+   331 E Evelyn Street
+   Mountain View, CA  94041
+   United States of America
+
+   Email: martin.thomson@gmail.com
+
+
+   Elio Damaggio
+   Microsoft
+   One Microsoft Way
+   Redmond, WA  98052
+   United States of America
+
+   Email: elioda@microsoft.com
+
+
+   Brian Raymor（编辑）
+   Microsoft
+   One Microsoft Way
+   Redmond, WA  98052
+   United States of America
+
+   Email: brian.raymor@microsoft.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Thomson 等人              标准轨道                   [第 31 页]
+</pre>

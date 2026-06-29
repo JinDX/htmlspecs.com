@@ -893,14 +893,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "Generic Event Delivery Using HTTP Push",
-    //     href: "https://htmlspecs.com/rfc8030/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc8030.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
+    {
+        text: "Generic Event Delivery Using HTTP Push",
+        href: "https://htmlspecs.com/rfc8030/",
+        src: "https://www.rfc-editor.org/rfc/rfc8030.html",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "RFC"
+    },
     // {
     //     text: "Message Encryption for Web Push",
     //     href: "https://htmlspecs.com/rfc8291/",
