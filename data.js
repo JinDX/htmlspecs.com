@@ -2139,14 +2139,14 @@ const links = [
         lang: "cjk",
         state: "CRD"
     },
-    // {
-    //     text: "Timing Entry Names Registry",
-    //     href: "https://htmlspecs.com/timing-entrytypes-registry/",
-    //     src: "https://www.w3.org/TR/timing-entrytypes-registry/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "Timing Entry Names Registry",
+        href: "https://htmlspecs.com/timing-entrytypes-registry/",
+        src: "https://www.w3.org/TR/2019/WD-timing-entrytypes-registry-20190723/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     {
         text: "Compute Pressure API",
         href: "https://htmlspecs.com/compute-pressure/",
