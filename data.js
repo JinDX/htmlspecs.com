@@ -2953,14 +2953,14 @@ const links = [
         lang: "cjk",
         state: "CR"
     },
-    // {
-    //     text: "WAI-Adapt: Tools Module",
-    //     href: "https://htmlspecs.com/adapt-tools/",
-    //     src: "https://www.w3.org/TR/2022/WD-adapt-tools-20220609/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "WAI-Adapt: Tools Module",
+        href: "https://htmlspecs.com/adapt-tools/",
+        src: "https://www.w3.org/TR/2022/WD-adapt-tools-20220609/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     // {
     //     text: "Specification for Spoken Presentation in HTML",
     //     href: "https://htmlspecs.com/spoken-html/",
