@@ -745,14 +745,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "MiniApp Lifecycle",
-    //     href: "https://htmlspecs.com/miniapp-lifecycle/",
-    //     src: "https://www.w3.org/TR/miniapp-lifecycle/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "MiniApp Lifecycle",
+        href: "https://htmlspecs.com/miniapp-lifecycle/",
+        src: "https://www.w3.org/TR/2023/WD-miniapp-lifecycle-20230529/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     // {
     //     text: "MiniApp Standardization White Paper version 2",
     //     href: "https://htmlspecs.com/mini-app-white-paper/",
