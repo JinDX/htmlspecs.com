@@ -2887,14 +2887,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "Payment Method Identifiers",
-    //     href: "https://htmlspecs.com/payment-method-id/",
-    //     src: "https://www.w3.org/TR/payment-method-id/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "REC"
-    // },
+    {
+        text: "Payment Method Identifiers",
+        href: "https://htmlspecs.com/payment-method-id/",
+        src: "https://www.w3.org/TR/2022/REC-payment-method-id-20220908/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "REC"
+    },
     {
         text: "Digital Goods API",
         href: "https://htmlspecs.com/digital-goods/",
