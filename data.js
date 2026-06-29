@@ -1747,14 +1747,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "Open Screen Network Protocol",
-    //     href: "https://htmlspecs.com/openscreen-network/",
-    //     src: "https://www.w3.org/TR/openscreen-network/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "Open Screen Network Protocol",
+        href: "https://htmlspecs.com/openscreen-network/",
+        src: "https://www.w3.org/TR/2026/WD-openscreen-network-20260210/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
 
     //### 媒体格式、字幕与编解码|미디어 형식, 자막 및 코덱|メディア形式・字幕・コーデック
     {
