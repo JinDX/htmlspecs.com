@@ -1389,14 +1389,14 @@ const links = [
         lang: "cjk",
         state: "NOTE"
     },
-    // {
-    //     text: "Web of Things (WoT) Architecture 1.1",
-    //     href: "https://htmlspecs.com/wot-architecture11/",
-    //     src: "https://www.w3.org/TR/wot-architecture11/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "REC"
-    // },
+    {
+        text: "Web of Things (WoT) Architecture 1.1",
+        href: "https://htmlspecs.com/wot-architecture11/",
+        src: "https://www.w3.org/TR/2023/REC-wot-architecture11-20231205/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "REC"
+    },
     // {
     //     text: "Web of Things (WoT) Discovery",
     //     href: "https://htmlspecs.com/wot-discovery/",
