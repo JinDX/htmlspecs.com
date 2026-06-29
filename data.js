@@ -2961,14 +2961,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "Specification for Spoken Presentation in HTML",
-    //     href: "https://htmlspecs.com/spoken-html/",
-    //     src: "https://www.w3.org/TR/spoken-html/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "Specification for Spoken Presentation in HTML",
+        href: "https://htmlspecs.com/spoken-html/",
+        src: "https://www.w3.org/TR/2021/WD-spoken-html-20210923/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     {
         text: "Accessible Rich Internet Applications (WAI-ARIA) 1.2",
         href: "https://htmlspecs.com/wai-aria-1.2/",
