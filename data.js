@@ -1397,14 +1397,14 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
-    // {
-    //     text: "Web of Things (WoT) Discovery",
-    //     href: "https://htmlspecs.com/wot-discovery/",
-    //     src: "https://www.w3.org/TR/wot-discovery/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "REC"
-    // },
+    {
+        text: "Web of Things (WoT) Discovery",
+        href: "https://htmlspecs.com/wot-discovery/",
+        src: "https://www.w3.org/TR/2023/REC-wot-discovery-20231205/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "REC"
+    },
     // {
     //     text: "Web of Things (WoT) Profile",
     //     href: "https://htmlspecs.com/wot-profile/",
