@@ -122,6 +122,7 @@ const stateMap = {
     'Draft': ['Draft', 'https://img.shields.io/badge/Draft-ffcc00'],
     'WD': ['Working Draft', 'https://img.shields.io/badge/WD-e66e33'],
     'REC': ['Recommendation', 'https://img.shields.io/badge/REC-309c40'],
+    'SPSD': ['Superseded Recommendation', 'https://img.shields.io/badge/SPSD-6c757d'],
     'CRD': ['Candidate Recommendation Draft', 'https://img.shields.io/badge/CRD-e2a669'],
     'CR': ['Candidate Recommendation', 'https://img.shields.io/badge/CR-cfd510'],
     'CG-FINAL': ['Community Group Final Report', 'https://img.shields.io/badge/CG--FINAL-ffcc00'],

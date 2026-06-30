@@ -1092,10 +1092,10 @@ const links = [
     {
         text: "Pointer Events Level 2",
         href: "https://htmlspecs.com/pointerevents2/",
-        src: "https://www.w3.org/TR/2019/REC-pointerevents2-20190404/",
+        src: "https://www.w3.org/TR/2026/SPSD-pointerevents2-20260630/",
         "last-modified": "-",
         lang: "cjk",
-        state: "REC"
+        state: "SPSD"
     },
     {
         text: "Pointer Events Level 3",
