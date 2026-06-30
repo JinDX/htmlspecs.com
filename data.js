@@ -1535,14 +1535,14 @@ const links = [
         "lang": "cjk",
         "state": "Draft"
     },
-    // {
-    //     "text": "Save Data API",
-    //     "href": "https://htmlspecs.com/savedata/",
-    //     "src": "https://wicg.github.io/savedata/",
-    //     "last-modified": "-",
-    //     "lang": "cjk",
-    //     "state": "Draft"
-    // },
+    {
+        "text": "Save Data API",
+        "href": "https://htmlspecs.com/savedata/",
+        "src": "https://wicg.github.io/savedata/",
+        "last-modified": "-",
+        "lang": "cjk",
+        "state": "Draft"
+    },
 
 
     //### 音频、语音与媒体控制|오디오, 음성 및 미디어 제어|音声・スピーチ・メディア制御
