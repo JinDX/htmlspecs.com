@@ -1539,7 +1539,7 @@ const links = [
         "text": "Save Data API",
         "href": "https://htmlspecs.com/savedata/",
         "src": "https://wicg.github.io/savedata/",
-        "last-modified": "-",
+        "last-modified": "Thu, 02 Feb 2023 10:34:46 GMT",
         "lang": "cjk",
         "state": "Draft"
     },
