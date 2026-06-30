@@ -633,14 +633,14 @@ const links = [
         "lang": "cjk",
         "state": "Draft"
     },
-    // {
-    //     "text": "JSON Schema Validation",
-    //     "href": "https://htmlspecs.com/json-schema-validation/",
-    //     "src": "https://json-schema.org/draft/2020-12/json-schema-validation",
-    //     "last-modified": "-",
-    //     "lang": "cjk",
-    //     "state": "Draft"
-    // },
+    {
+        "text": "JSON Schema Validation",
+        "href": "https://htmlspecs.com/json-schema-validation/",
+        "src": "https://json-schema.org/draft/2020-12/json-schema-validation",
+        "last-modified": "-",
+        "lang": "cjk",
+        "state": "Draft"
+    },
 
     //### 语法记法与时间格式|구문 표기법 및 시간 형식|構文記法・時刻フォーマット
     {
