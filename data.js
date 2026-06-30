@@ -1527,14 +1527,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
-    // {
-    //     "text": "Device Attributes API",
-    //     "href": "https://htmlspecs.com/device-attributes/",
-    //     "src": "https://wicg.github.io/WebApiDevice/device_attributes/",
-    //     "last-modified": "-",
-    //     "lang": "cjk",
-    //     "state": "Draft"
-    // },
+    {
+        "text": "Device Attributes API",
+        "href": "https://htmlspecs.com/device_attributes/",
+        "src": "https://wicg.github.io/WebApiDevice/device_attributes/",
+        "last-modified": "Wed, 13 Aug 2025 20:05:16 GMT",
+        "lang": "cjk",
+        "state": "Draft"
+    },
     // {
     //     "text": "Save Data API",
     //     "href": "https://htmlspecs.com/savedata/",
