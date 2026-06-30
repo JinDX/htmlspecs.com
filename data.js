@@ -87,7 +87,7 @@ const links = [
         text: "URL",
         href: "https://htmlspecs.com/url/",
         src: "https://url.spec.whatwg.org/",
-        "last-modified": "Fri, 26 Jun 2026 05:11:01 GMT",
+        "last-modified": "Tue, 30 Jun 2026 11:10:47 GMT",
         lang: "cjk",
         state: "LS"
     },
