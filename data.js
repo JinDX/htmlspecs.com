@@ -625,6 +625,22 @@ const links = [
         lang: "cjk",
         state: "RFC"
     },
+    // {
+    //     "text": "JSON Schema Core",
+    //     "href": "https://htmlspecs.com/json-schema-core/",
+    //     "src": "https://json-schema.org/draft/2020-12/json-schema-core",
+    //     "last-modified": "-",
+    //     "lang": "cjk",
+    //     "state": "Draft"
+    // },
+    // {
+    //     "text": "JSON Schema Validation",
+    //     "href": "https://htmlspecs.com/json-schema-validation/",
+    //     "src": "https://json-schema.org/draft/2020-12/json-schema-validation",
+    //     "last-modified": "-",
+    //     "lang": "cjk",
+    //     "state": "Draft"
+    // },
 
     //### 语法记法与时间格式|구문 표기법 및 시간 형식|構文記法・時刻フォーマット
     {
@@ -1511,6 +1527,31 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
+    // {
+    //     "text": "Device Attributes API",
+    //     "href": "https://htmlspecs.com/device-attributes/",
+    //     "src": "https://wicg.github.io/WebApiDevice/device_attributes/",
+    //     "last-modified": "-",
+    //     "lang": "cjk",
+    //     "state": "Draft"
+    // },
+    // {
+    //     "text": "Save Data API",
+    //     "href": "https://htmlspecs.com/savedata/",
+    //     "src": "https://wicg.github.io/savedata/",
+    //     "last-modified": "-",
+    //     "lang": "cjk",
+    //     "state": "Draft"
+    // },
+    // {
+    //     "text": "Web Budget API",
+    //     "href": "https://htmlspecs.com/budget-api/",
+    //     "src": "https://wicg.github.io/budget-api/",
+    //     "last-modified": "-",
+    //     "lang": "cjk",
+    //     "state": "Draft"
+    // },
+
 
     //### 音频、语音与媒体控制|오디오, 음성 및 미디어 제어|音声・スピーチ・メディア制御
     {
@@ -1563,6 +1604,14 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
+    // {
+    //     "text": "WebRTC Priority Control API",
+    //     "href": "https://htmlspecs.com/webrtc-priority/",
+    //     "src": "https://www.w3.org/TR/2021/CR-webrtc-priority-20210318/",
+    //     "last-modified": "-",
+    //     "lang": "cjk",
+    //     "state": "CR"
+    // },
     {
         text: "Identifiers for WebRTC&#39;s Statistics API",
         href: "https://htmlspecs.com/webrtc-stats/",
@@ -2139,6 +2188,14 @@ const links = [
         lang: "cjk",
         state: "CRD"
     },
+    // {
+    //     "text": "CPU Performance API",
+    //     "href": "https://htmlspecs.com/cpu-performance/",
+    //     "src": "https://wicg.github.io/cpu-performance/",
+    //     "last-modified": "-",
+    //     "lang": "cjk",
+    //     "state": "Draft"
+    // },
     {
         text: "Timing Entry Names Registry",
         href: "https://htmlspecs.com/timing-entrytypes-registry/",
@@ -3025,6 +3082,14 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
+    // {
+    //     "text": "Graphics Accessibility API Mappings",
+    //     "href": "https://htmlspecs.com/graphics-aam-1.0/",
+    //     "src": "https://www.w3.org/TR/2018/REC-graphics-aam-1.0-20181002/",
+    //     "last-modified": "-",
+    //     "lang": "cjk",
+    //     "state": "REC"
+    // },
     {
         text: "WAI-ARIA Graphics Module",
         href: "https://htmlspecs.com/graphics-aria-1.0/",
