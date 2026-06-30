@@ -1543,14 +1543,6 @@ const links = [
     //     "lang": "cjk",
     //     "state": "Draft"
     // },
-    // {
-    //     "text": "Web Budget API",
-    //     "href": "https://htmlspecs.com/budget-api/",
-    //     "src": "https://wicg.github.io/budget-api/",
-    //     "last-modified": "-",
-    //     "lang": "cjk",
-    //     "state": "Draft"
-    // },
 
 
     //### 音频、语音与媒体控制|오디오, 음성 및 미디어 제어|音声・スピーチ・メディア制御
