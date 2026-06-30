@@ -2180,14 +2180,14 @@ const links = [
         lang: "cjk",
         state: "CRD"
     },
-    // {
-    //     text: "CPU Performance API",
-    //     href: "https://htmlspecs.com/cpu-performance/",
-    //     src: "https://wicg.github.io/cpu-performance/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "CPU Performance API",
+        href: "https://htmlspecs.com/cpu-performance/",
+        src: "https://wicg.github.io/cpu-performance/",
+        "last-modified": "Thu, 18 Jun 2026 17:20:22 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
     {
         text: "Timing Entry Names Registry",
         href: "https://htmlspecs.com/timing-entrytypes-registry/",

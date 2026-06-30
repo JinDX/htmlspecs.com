@@ -306,6 +306,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 
 ### 性能时间线、指标与观测
 - [Performance Timeline](https://htmlspecs.com/performance-timeline/)（[Source](https://www.w3.org/TR/2025/CRD-performance-timeline-20250521/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
+- [CPU Performance API](https://htmlspecs.com/cpu-performance/)（[Source](https://wicg.github.io/cpu-performance/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Timing Entry Names Registry](https://htmlspecs.com/timing-entrytypes-registry/)（[Source](https://www.w3.org/TR/2019/WD-timing-entrytypes-registry-20190723/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Compute Pressure API](https://htmlspecs.com/compute-pressure/)（[Source](https://www.w3.org/TR/2026/CRD-compute-pressure-20260514/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [High Resolution Time](https://htmlspecs.com/hr-time-3/)（[Source](https://www.w3.org/TR/2026/WD-hr-time-3-20260324/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
