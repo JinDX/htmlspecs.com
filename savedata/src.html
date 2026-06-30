@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<meta charset='utf-8'>
+<title>Save Data API</title>
+<script class='remove' src='https://www.w3.org/Tools/respec/respec-w3c-common'></script>
+<script>
+
+    var respecConfig = {
+        specStatus: "CG-DRAFT",
+        shortName: "savedata-api",
+        format: "markdown",
+        subtitle: "Living Document",
+        github: "https://github.com/WICG/savedata/",
+        editors: [
+            {
+                name: "Yoav Weiss",
+                company: "Google",
+                companyURL: "http://google.com",
+            },
+            {
+                name: "Ilya Grigorik",
+                company: "Google",
+                companyURL: "http://google.com",
+            },
+        ],
+        wg: "Web Incubator Community Group",
+        wgURI: "https://wicg.io",
+        caniuse: "",
+        localBiblio: {
+            "CLIENT-HINTS": {
+                title: "HTTP Client Hints",
+                href: "https://tools.ietf.org/html/draft-ietf-httpbis-client-hints-07",
+                status: "Internet-Draft",
+                publisher: "IETF",
+            },
+            "STRUCTURED-HEADERS": {
+                title: "Structured Headers for HTTP",
+                href: "https://tools.ietf.org/html/draft-ietf-httpbis-header-structure-11",
+                status: "Internet-Draft",
+                publisher: "IETF",
+            }
+        },
+    };
+</script>
+
+<section id='abstract'>
+    The <cite>Save Data API</cite> enables web applications to access information about the user's preference regarding
+    data savings.
+</section>
+
+<section id='sotd'></section>
+
+## Requirements and use cases
+
+This document describes an API that addresses a specific requirement: Communicate the user's preferences regarding data
+savings through both a JS API as well as a Client Hint.
+
+**Example use cases:**
+
+* A web application which primary purpose is to stream media could provide highly compressed media content if the user
+is interested in reducing their data costs.
+* A web application presenting the user with background videos can choose to use background images instead, based on the
+user's preference.
+
+
+## <dfn>NavigatorNetworkInformation</dfn> interface
+
+The <code><dfn data-cite="netinfo#networkinformation-interface">NetworkInformation</dfn></code> interface exposes access
+to <a>saveData</a> by mixing in <a>NetworkInformationSaveData</a>.
+
+<pre class="idl">
+  interface mixin NetworkInformationSaveData {
+    [SameObject] readonly attribute boolean saveData;
+  };
+
+  NetworkInformation includes NetworkInformationSaveData;
+</pre>
+
+### <dfn>saveData</dfn> attribute
+
+The <a>saveData</a> attribute, when getting, returns `true` if the user has requested a reduced data usage mode from the
+user agent, and `false` otherwise.
+
+<p class="note">The user may enable such preference, if made available by the user agent, due to high data transfer
+    costs, slow connection speeds, or other reasons.</p>
+
+#### <code><dfn>Save-Data</dfn></code> Request Header Field
+
+The <a>SaveData</a> request header is a Client Hint [[CLIENT-HINTS]]. The header's value is an `sh-list`
+[[STRUCTURED-HEADERS]] which contains `token`s, indicating the user agent's preference for reduced data usage.
+
+<pre class="nohighlight">
+    Save-Data = sh-list
+  </pre>
+
+This specification defines the "`on`" `token` value, which is used as a signal indicating explicit user opt-in into a
+reduced data usage mode (i.e. when <a>saveData</a>'s value is `true`), and when communicated to origins allows them to
+deliver alternate content honoring such preference - e.g. smaller image and video resources, alternate markup, and so
+on.
+
+In case of multiple conflicting tokens in the list, the latest token takes precedence.
+
+<div class="issue">
+    TODO: update <a href="https://fetch.spec.whatwg.org/#fetching">Fetch#fetching algorithm</a> to use
+    `connection.saveData` as signal to append the Save-Data header.
+</div>
+</section>
+
+
+<section data-link-for="NetworkInformation">
+    ### Handling changes to the user preference
+
+    When the user's <a>saveData</a> preference changes, the user agent MUST run the <dfn>steps to update the user
+        preference</dfn>:
+
+    1. Let <var>new-saveData</var> be the current <a>saveData</a> preference.
+    1. If <var>new-saveData</var> is not equal to the value of `connection.saveData`:
+    1. Using the <a data-cite="HTML#networking-task-source">networking task source</a>, <a
+        data-cite="HTML#queue-a-task">queue a task</a> to perform the following:
+    1. Set `connection.saveData` to <var>new-saveData</var>.
+    1. <a data-cite="DOM#concept-event-fire">Fire an event</a> named `change` at the `NetworkInformation` object.
+</section>
+
+<section>
+    ## Privacy Considerations
+
+    This specification exposes information regarding the user's preferences, which a bit of information about the user
+    and can be used as an active fingerprinting vector.
+    User agents implementing this specification need to be aware of that, and take that into consideration when deciding
+    whether to enable the feature in certain situations.
+
+    For example, user agents may decide to omit or lie about the user's preference when the user is in a private
+    browsing mode.
+
+</section>
+
+<section id="iana-considerations">
+    ## IANA Considerations
+
+    The following three HTTP request header fields should be added to the permanent registry of message header fields
+    (see [[RFC3864]]), taking into account the guidelines given by HTTP/1.1 [[RFC7231]].
+
+    <section id="registration-save-data">
+        ### `Save-Data` Request Header Field Registration
+
+        * Header Field Name: Save-Data
+        * Applicable Protocol: Hypertext Transfer Protocol (HTTP)
+        * Status: Standard
+        * Author/Change controller: W3C
+        * Specification document(s): W3C TR https://www.w3.org/TR/netinfo/
+
+    </section>
+
+</section>
+
+<section id="policy-controlled-features">
+    ## Policy-controlled features
+
+    This document extends the [=policy-controlled client hints features=] with the following [=policy-controlled
+    features=]:
+    * `ch-save-data` which has a default allowlist of `*`
+
+</section>
+
+<section id="conformance">
+    There is only one class of product that can claim conformance to this
+    specification: a <dfn>user agent</dfn>.
+</section>
+
+<section class="appendix">
+    ## Acknowledgments
+    This document reuses text from the [[HTML]] specification
+    as permitted by the license of that specification.
+</section>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<meta charset='utf-8'>
+<title>节省数据 API</title>
+<script class='remove' src='https://www.w3.org/Tools/respec/respec-w3c-common'></script>
+<script>
+
+    var respecConfig = {
+        specStatus: "CG-DRAFT",
+        shortName: "savedata-api",
+        format: "markdown",
+        subtitle: "Living Document",
+        github: "https://github.com/WICG/savedata/",
+        editors: [
+            {
+                name: "Yoav Weiss",
+                company: "Google",
+                companyURL: "http://google.com",
+            },
+            {
+                name: "Ilya Grigorik",
+                company: "Google",
+                companyURL: "http://google.com",
+            },
+        ],
+        wg: "Web Incubator Community Group",
+        wgURI: "https://wicg.io",
+        caniuse: "",
+        localBiblio: {
+            "CLIENT-HINTS": {
+                title: "HTTP Client Hints",
+                href: "https://tools.ietf.org/html/draft-ietf-httpbis-client-hints-07",
+                status: "Internet-Draft",
+                publisher: "IETF",
+            },
+            "STRUCTURED-HEADERS": {
+                title: "Structured Headers for HTTP",
+                href: "https://tools.ietf.org/html/draft-ietf-httpbis-header-structure-11",
+                status: "Internet-Draft",
+                publisher: "IETF",
+            }
+        },
+    };
+</script>
+
+<section id='abstract'>
+    <cite>节省数据 API</cite> 使 Web 应用能够访问有关用户在
+    数据节省方面偏好的信息。
+</section>
+
+<section id='sotd'></section>
+
+## 需求和用例
+
+本文档描述了一个满足特定需求的 API：通过 JS API 以及客户端提示来传达用户在数据
+节省方面的偏好。
+
+**用例示例：**
+
+* 主要用途是流式传输媒体的 Web 应用，如果用户有意降低其数据成本，则可以提供高度压缩的媒体内容。
+* 向用户呈现背景视频的 Web 应用可以根据用户的偏好选择改用背景图像。
+
+
+## <dfn>NavigatorNetworkInformation</dfn> 接口
+
+<code><dfn data-cite="netinfo#networkinformation-interface">NetworkInformation</dfn></code> 接口通过混入
+<a>NetworkInformationSaveData</a> 来公开对 <a>saveData</a> 的访问。
+
+<pre class="idl">
+  interface mixin NetworkInformationSaveData {
+    [SameObject] readonly attribute boolean saveData;
+  };
+
+  NetworkInformation includes NetworkInformationSaveData;
+</pre>
+
+### <dfn>saveData</dfn> 属性
+
+<a>saveData</a> 属性在获取时，如果用户已从用户代理请求降低数据使用量的模式，则返回 `true`，
+否则返回 `false`。
+
+<p class="note">如果用户代理提供此类偏好，用户可以因数据传输
+    成本高、连接速度慢或其他原因启用该偏好。</p>
+
+#### <code><dfn>Save-Data</dfn></code> 请求头字段
+
+<a>SaveData</a> 请求头是一个客户端提示 [[CLIENT-HINTS]]。该头的值是一个 `sh-list`
+[[STRUCTURED-HEADERS]]，其中包含表示用户代理偏好降低数据使用量的 `token`。
+
+<pre class="nohighlight">
+    Save-Data = sh-list
+  </pre>
+
+本规范定义了 "`on`" `token` 值，它用作一个信号，表示用户明确选择进入
+降低数据使用量的模式（即当 <a>saveData</a> 的值为 `true` 时），并且在传达给源时允许它们
+交付遵循该偏好的替代内容——例如更小的图像和视频资源、替代标记，等等。
+
+如果列表中存在多个相互冲突的 token，则最新的 token 优先。
+
+<div class="issue">
+    TODO: 更新 <a href="https://fetch.spec.whatwg.org/#fetching">Fetch#fetching 算法</a>，以使用
+    `connection.saveData` 作为追加 Save-Data 头的信号。
+</div>
+</section>
+
+
+<section data-link-for="NetworkInformation">
+### 处理用户偏好的变化
+
+    当用户的 <a>saveData</a> 偏好发生变化时，用户代理必须运行<dfn>更新用户
+        偏好的步骤</dfn>：
+
+    1. 令 <var>new-saveData</var> 为当前的 <a>saveData</a> 偏好。
+    1. 如果 <var>new-saveData</var> 不等于 `connection.saveData` 的值：
+    1. 使用 <a data-cite="HTML#networking-task-source">网络任务源</a>，<a data-cite="HTML#queue-a-task">将一个任务排队</a>以执行以下操作：
+    1. 将 `connection.saveData` 设置为 <var>new-saveData</var>。
+    1. 在 `NetworkInformation` 对象上<a data-cite="DOM#concept-event-fire">触发一个事件</a>，其名称为 `change`。
+</section>
+
+<section>
+## 隐私考虑
+
+    本规范公开有关用户偏好的信息，这是关于用户的一小部分信息，
+    可被用作主动指纹识别向量。
+    实现本规范的用户代理需要意识到这一点，并在决定
+    是否在某些情形中启用该特性时将其纳入考虑。
+
+    例如，当用户处于私密浏览模式时，用户代理可以决定省略或伪称用户的偏好。
+
+</section>
+
+<section id="iana-considerations">
+## IANA 考虑
+
+    以下三个 HTTP 请求头字段应被添加到消息头字段永久注册表中
+    （见 [[RFC3864]]），并考虑 HTTP/1.1 [[RFC7231]] 给出的指南。
+
+    <section id="registration-save-data">
+### `Save-Data` 请求头字段注册
+
+        * 头字段名称：Save-Data
+        * 适用协议：超文本传输协议（HTTP）
+        * 状态：标准
+        * 作者/变更控制方：W3C
+        * 规范文档：W3C TR https://www.w3.org/TR/netinfo/
+
+    </section>
+
+</section>
+
+<section id="policy-controlled-features">
+## 受策略控制的特性
+
+    本文档用以下[=受策略控制的特性=]扩展[=受策略控制的客户端提示特性=]：
+    * `ch-save-data`，其默认允许列表为 `*`
+
+</section>
+
+<section id="conformance">
+    只有一类产品可以声称符合本
+    规范：<dfn>用户代理</dfn>。
+</section>
+
+<section class="appendix">
+## 致谢
+    本文档复用了 [[HTML]] 规范中的文本，
+    这是该规范的许可证所允许的。
+</section>
+<script src="https://htmlspecs.com/dropdown.js"></script>
