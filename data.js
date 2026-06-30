@@ -625,14 +625,14 @@ const links = [
         lang: "cjk",
         state: "RFC"
     },
-    // {
-    //     "text": "JSON Schema Core",
-    //     "href": "https://htmlspecs.com/json-schema-core/",
-    //     "src": "https://json-schema.org/draft/2020-12/json-schema-core",
-    //     "last-modified": "-",
-    //     "lang": "cjk",
-    //     "state": "Draft"
-    // },
+    {
+        "text": "JSON Schema Core",
+        "href": "https://htmlspecs.com/json-schema-core/",
+        "src": "https://json-schema.org/draft/2020-12/json-schema-core",
+        "last-modified": "-",
+        "lang": "cjk",
+        "state": "Draft"
+    },
     // {
     //     "text": "JSON Schema Validation",
     //     "href": "https://htmlspecs.com/json-schema-validation/",
