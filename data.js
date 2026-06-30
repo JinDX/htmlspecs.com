@@ -3074,14 +3074,14 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
-    // {
-    //     text: "Graphics Accessibility API Mappings",
-    //     href: "https://htmlspecs.com/graphics-aam-1.0/",
-    //     src: "https://www.w3.org/TR/2018/REC-graphics-aam-1.0-20181002/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "REC"
-    // },
+    {
+        text: "Graphics Accessibility API Mappings",
+        href: "https://htmlspecs.com/graphics-aam-1.0/",
+        src: "https://www.w3.org/TR/2018/REC-graphics-aam-1.0-20181002/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "REC"
+    },
     {
         text: "WAI-ARIA Graphics Module",
         href: "https://htmlspecs.com/graphics-aria-1.0/",
