@@ -82,6 +82,8 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [GraphQL](https://htmlspecs.com/graphql/)（[Source](https://spec.graphql.org/draft/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [OpenAPI Specification v3.2.0](https://htmlspecs.com/openapi/)（[Source](https://spec.openapis.org/oas/latest.html) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [URI Template](https://htmlspecs.com/uri-template/)（[Source](https://www.rfc-editor.org/rfc/rfc6570.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [JSON Schema Core](https://htmlspecs.com/json-schema-core/)（[Source](https://json-schema.org/draft/2020-12/json-schema-core) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
+- [JSON Schema Validation](https://htmlspecs.com/json-schema-validation/)（[Source](https://json-schema.org/draft/2020-12/json-schema-validation) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 
 ### 语法记法与时间格式
 - [Augmented BNF for Syntax Specifications: ABNF](https://htmlspecs.com/abnf/)（[Source](https://www.rfc-editor.org/rfc/rfc5234.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
@@ -212,6 +214,8 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Web Printing API](https://htmlspecs.com/web-printing/)（[Source](https://wicg.github.io/web-printing/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Web Share API](https://htmlspecs.com/web-share/)（[Source](https://www.w3.org/TR/2023/REC-web-share-20230530/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Web Share Target API](https://htmlspecs.com/web-share-target/)（[Source](https://w3c.github.io/web-share-target/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
+- [Device Attributes API](https://htmlspecs.com/device_attributes/)（[Source](https://wicg.github.io/WebApiDevice/device_attributes/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
+- [Save Data API](https://htmlspecs.com/savedata/)（[Source](https://wicg.github.io/savedata/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 
 ### 音频、语音与媒体控制
 - [Web Speech API](https://htmlspecs.com/web-speech-api/)（[Source](https://webaudio.github.io/web-speech-api/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
@@ -222,6 +226,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 
 ### 音视频采集、WebRTC 与播放
 - [WebRTC](https://htmlspecs.com/webrtc/)（[Source](https://www.w3.org/TR/2025/REC-webrtc-20250313/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
+- [WebRTC Priority Control API](https://htmlspecs.com/webrtc-priority/)（[Source](https://www.w3.org/TR/2021/CR-webrtc-priority-20210318/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
 - [Identifiers for WebRTC&#39;s Statistics API](https://htmlspecs.com/webrtc-stats/)（[Source](https://www.w3.org/TR/2025/CRD-webrtc-stats-20250925/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [WebRTC Encoded Transform](https://htmlspecs.com/webrtc-encoded-transform/)（[Source](https://www.w3.org/TR/2026/WD-webrtc-encoded-transform-20260625/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Scalable Video Coding (SVC) Extension for WebRTC](https://htmlspecs.com/webrtc-svc/)（[Source](https://www.w3.org/TR/2024/WD-webrtc-svc-20240817/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
