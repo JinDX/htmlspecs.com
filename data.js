@@ -4516,7 +4516,7 @@ const httpLinks = [
         href: "https://htmlspecs.com/http/draft-ietf-httpbis-rfc6265bis.html",
         src: "https://httpwg.org/http-extensions/draft-ietf-httpbis-rfc6265bis.html",
         "last-modified": "-",
-        etag: "6a39f02b-4498b",
+        etag: "6a44c0cf-44984",
         lang: "cjk",
         state: "Draft"
     },
