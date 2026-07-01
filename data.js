@@ -289,14 +289,14 @@ const links = [
         lang: "cjk",
         state: ""
     },
-    // {
-    //     text: "YAML Media Type",
-    //     href: "https://htmlspecs.com/yaml-media-type/",
-    //     src: "https://www.rfc-editor.org/rfc/rfc9512.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
+    {
+        text: "YAML Media Type",
+        href: "https://htmlspecs.com/yaml-media-type/",
+        src: "https://www.rfc-editor.org/rfc/rfc9512.html",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "RFC"
+    },
     {
         text: "JSON-LD 1.1",
         href: "https://htmlspecs.com/json-ld11/",
