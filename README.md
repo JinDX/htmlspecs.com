@@ -39,6 +39,8 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 
 ### 数据格式、语义 Web 与 API 描述
 - [The JavaScript Object Notation (JSON) Data Interchange Format](https://htmlspecs.com/json/)（[Source](https://www.rfc-editor.org/rfc/rfc8259.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [YAML Ain’t Markup Language (YAML™) revision 1.2.2](https://htmlspecs.com/yaml/)（[Source](https://yaml.org/spec/1.2.2/)）
+- [YAML Media Type](https://htmlspecs.com/yaml-media-type/)（[Source](https://www.rfc-editor.org/rfc/rfc9512.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [JSON-LD 1.1](https://htmlspecs.com/json-ld11/)（[Source](https://www.w3.org/TR/2020/REC-json-ld11-20200716/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [JSON-LD 1.1 Processing Algorithms and API](https://htmlspecs.com/json-ld11-api/)（[Source](https://www.w3.org/TR/2020/REC-json-ld11-api-20200716/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [JSON-LD 1.1 Framing](https://htmlspecs.com/json-ld11-framing/)（[Source](https://www.w3.org/TR/2020/REC-json-ld11-framing-20200716/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
