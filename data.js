@@ -281,14 +281,14 @@ const links = [
         lang: "cjk",
         state: "RFC"
     },
-    // {
-    //     text: "YAML Ain’t Markup Language (YAML™) revision 1.2.2",
-    //     href: "https://htmlspecs.com/yaml/",
-    //     src: "https://yaml.org/spec/1.2.2/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Spec"
-    // },
+    {
+        text: "YAML Ain’t Markup Language (YAML™) revision 1.2.2",
+        href: "https://htmlspecs.com/yaml/",
+        src: "https://yaml.org/spec/1.2.2/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: ""
+    },
     // {
     //     text: "YAML Media Type",
     //     href: "https://htmlspecs.com/yaml-media-type/",
