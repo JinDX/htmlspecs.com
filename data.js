@@ -281,6 +281,22 @@ const links = [
         lang: "cjk",
         state: "RFC"
     },
+    // {
+    //     text: "YAML Ain’t Markup Language (YAML™) revision 1.2.2",
+    //     href: "https://htmlspecs.com/yaml/",
+    //     src: "https://yaml.org/spec/1.2.2/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Spec"
+    // },
+    // {
+    //     text: "YAML Media Type",
+    //     href: "https://htmlspecs.com/yaml-media-type/",
+    //     src: "https://www.rfc-editor.org/rfc/rfc9512.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
     {
         text: "JSON-LD 1.1",
         href: "https://htmlspecs.com/json-ld11/",
