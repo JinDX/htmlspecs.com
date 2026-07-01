@@ -8,7 +8,7 @@
     <meta content="CRD" name="w3c-status">
     <meta content="Bikeshed version d113b2e81, updated Tue Jun 9 14:57:55 2026 -0700" name="generator">
     <link href="https://www.w3.org/TR/WGSL/" rel="canonical">
-    <meta content="41c83d8cc5c7124827b647b18868b2ba24556b21" name="revision">
+    <meta content="253e308b077ac21316e4954690887b6b81e0a37f" name="revision">
     <meta content="dark light" name="color-scheme">
     <style>
         tr:nth-child(2n) {
@@ -1576,7 +1576,7 @@ For darkmode:
         </p>
         <h1 class="no-ref p-name" id="title">WebGPU Shading Language</h1>
         <p id="w3c-state"><a href="https://www.w3.org/standards/types/#CRD">W3C Candidate Recommendation Draft</a>,
-            <time class="dt-updated" datetime="2026-06-26">26 June 2026</time>
+            <time class="dt-updated" datetime="2026-06-30">30 June 2026</time>
         </p>
         <details open>
             <summary>More details about this document</summary>
@@ -1584,14 +1584,14 @@ For darkmode:
                 <dl>
                     <dt>This version:
                     <dd><a class="u-url"
-                            href="https://www.w3.org/TR/2026/CRD-WGSL-20260626/">https://www.w3.org/TR/2026/CRD-WGSL-20260626/</a>
+                            href="https://www.w3.org/TR/2026/CRD-WGSL-20260630/">https://www.w3.org/TR/2026/CRD-WGSL-20260630/</a>
                     <dt>Latest published version:
                     <dd><a href="https://www.w3.org/TR/WGSL/">https://www.w3.org/TR/WGSL/</a>
                     <dt>Editor's Draft:
                     <dd><a href="https://gpuweb.github.io/gpuweb/wgsl/">https://gpuweb.github.io/gpuweb/wgsl/</a>
                     <dt>Previous Versions:
-                    <dd><a href="https://www.w3.org/TR/2026/CRD-WGSL-20260623/"
-                            rel="prev">https://www.w3.org/TR/2026/CRD-WGSL-20260623/</a>
+                    <dd><a href="https://www.w3.org/TR/2026/CRD-WGSL-20260626/"
+                            rel="prev">https://www.w3.org/TR/2026/CRD-WGSL-20260626/</a>
                     <dt>History:
                     <dd><a class="u-url"
                             href="https://www.w3.org/standards/history/WGSL/">https://www.w3.org/standards/history/WGSL/</a>
@@ -17492,7 +17492,7 @@ sampler_comparison
         <p>A <dfn class="dfn-paneled" data-dfn-for="statement" data-dfn-type="dfn" data-noexport
                 id="statement-discard">discard</dfn> statement converts the invocation into
             a <a data-link-type="dfn" href="#helper-invocation" id="ref-for-helper-invocation">helper invocation</a> and
-            throws away the fragment.
+            throws away the fragment output.
             The <code>discard</code> statement <a data-link-type="dfn" href="#shader-creation-error"
                 id="ref-for-shader-creation-error①②⑦">must</a> only be used in a <a data-link-type="dfn"
                 href="#fragment" id="ref-for-fragment">fragment</a> shader stage.</p>
@@ -17503,7 +17503,7 @@ sampler_comparison
                 <p>convert the current invocation into a <a data-link-type="dfn" href="#helper-invocation"
                         id="ref-for-helper-invocation①">helper invocation</a>, and</p>
             <li data-md>
-                <p>prevent the current fragment from being processed downstream in the <a data-link-type="dfn"
+                <p>prevent the current fragment output from being processed downstream in the <a data-link-type="dfn"
                         href="#gpurenderpipeline" id="ref-for-gpurenderpipeline①">GPURenderPipeline</a>.</p>
         </ul>
         <p>Only statements executed prior to the <code>discard</code> statement <a data-link-type="dfn"
@@ -17513,7 +17513,7 @@ sampler_comparison
             by any
             <a data-link-type="dfn" href="#functions-in-a-shader-stage"
                 id="ref-for-functions-in-a-shader-stage①">function in a fragment stage</a> and the effect is the same:
-            the fragment will be thrown away.
+            the fragment output will be thrown away.
         </p>
         <div class="example no-marker wgsl" id="example-e08ccdbe">
             <a class="self-link" href="#example-e08ccdbe"></a>
@@ -19958,11 +19958,32 @@ sampler_comparison
                     output attributes for the vertex.</p>
             <li data-md>
                 <p>Fixed-function stages map vertices into graphic primitives (such as triangles)
-                    which are then rasterized to produce fragments.</p>
+                    which are then rasterized to produce <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport
+                        id="rasterization-fragments">rasterization fragments</dfn>.
+                    Each rasterization fragment represents the overlap between the primitive
+                    being drawn, and a particular
+                    pixel in the <a data-link-type="dfn" href="https://gpuweb.github.io/gpuweb/#framebuffer"
+                        id="ref-for-framebuffer">framebuffer</a>.</p>
             <li data-md>
                 <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="fragment-shader-stage">fragment
                         shader stage</dfn> processes each fragment,
                     possibly producing a fragment output.</p>
+                <ul>
+                    <li data-md>
+                        <p>Typically, one fragment shader invocation is created for each <a data-link-type="dfn"
+                                href="#rasterization-fragments" id="ref-for-rasterization-fragments">rasterization
+                                fragment</a>.
+                            More than one fragment invocation may be created if the rasterization fragment covers
+                            multiple
+                            samples. See <a href="https://www.w3.org/TR/webgpu/#per-sample-shading"><cite>WebGPU</cite>
+                                § 23.2.10 Per-Sample Shading</a>.</p>
+                    <li data-md>
+                        <p>If the rasterization fragment is near the boundary of the primitive, then additional <a
+                                data-link-type="dfn" href="#helper-invocation" id="ref-for-helper-invocation②">helper
+                                invocations</a>
+                            may also be created. See <a href="#fragment-shaders-helper-invocations">§ 15.4 Fragment
+                                Shaders and Helper Invocations</a>.</p>
+                </ul>
             <li data-md>
                 <p>Fixed-function stages consume a fragment output, possibly updating external state
                     such as color attachments and depth and stencil buffers.</p>
@@ -21100,16 +21121,17 @@ sampler_comparison
                     <td>
                         <div class="algorithm" data-algorithm="fragment position calculation">
 
-                            Input position of the current fragment.
+                            Input position of the current fragment rasterization point.
 
 
-                            <p>Let <var>fp</var> be the input position of the fragment.<br>
-                                Let <var>rp</var> be the <a data-link-type="dfn"
+                            <p>Let <var>rp</var> be the <a data-link-type="dfn"
                                     href="https://gpuweb.github.io/gpuweb/#rasterizationpoint"
                                     id="ref-for-rasterizationpoint">RasterizationPoint</a> for the fragment.<br>
                                 Let <var>vp</var> be the <code
                                     class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/webgpu/#dom-renderstate-viewport-slot" id="ref-for-dom-renderstate-viewport-slot">[[viewport]]</a></code>
-                                in effect for the draw command.</p>
+                                in effect for the draw command.<br>
+                                Then <var>fp</var> is the computed input position of the fragment rasterization point.
+                            </p>
                             <p>Then schematically:</p>
                             <blockquote>
                                 <var>fp</var>.xy = <var>rp</var>.<a data-link-type="dfn"
@@ -21129,16 +21151,17 @@ sampler_comparison
                                 <li data-md>
                                     <p><var>fp</var>.x and <var>fp</var>.y are the interpolated x and y coordinates of
                                         the
-                                        position the current fragment in
+                                        position the current fragment rasterization point in
                                         the <a data-link-type="dfn" href="https://gpuweb.github.io/gpuweb/#framebuffer"
-                                            id="ref-for-framebuffer">framebuffer</a>.</p>
+                                            id="ref-for-framebuffer①">framebuffer</a>.</p>
                                     <p>The framebuffer is a two-dimensional grid of pixels with the top-left at
                                         (0.0,0.0)
                                         and the bottom right at (<var>vp</var>.width, <var>vp</var>.height).
                                         Each pixel has an extent of 1.0 unit in each of the x and y dimensions,
                                         and pixel centers are at (0.5,0.5) offset from integer coordinates.</p>
                                 <li data-md>
-                                    <p><var>fp</var>.z is the interpolated depth of the current fragment.
+                                    <p><var>fp</var>.z is the interpolated depth of the current fragment rasterization
+                                        point.
                                         For example:</p>
                                     <ul>
                                         <li data-md>
@@ -21153,7 +21176,7 @@ sampler_comparison
                                             </p>
                                     </ul>
                                 <li data-md>
-                                    <p><var>fp</var>.w is the perspective divisor for the fragment,
+                                    <p><var>fp</var>.w is the perspective divisor for the fragment rasterization point,
                                         which is the interpolation of 1.0 ÷ <var>vertex_w</var>,
                                         where <var>vertex_w</var> is the w component
                                         of the <a data-link-type="dfn" href="#built-in-values-position"
@@ -21238,7 +21261,8 @@ sampler_comparison
 
                     <td>
 
-                        Sample index for the current fragment. The value is least 0 and at most
+                        Sample index for the current fragment rasterization point.
+                        The value is least 0 and at most
                         <code>sampleCount</code>-1, where <code>sampleCount</code> is the sample
                         <code
                             class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/webgpu/#dom-gpumultisamplestate-count" id="ref-for-dom-gpumultisamplestate-count">count</a></code>
@@ -21567,7 +21591,7 @@ sampler_comparison
                         <p class="note" role="note"><span class="marker">Note:</span> Subgroup invocation indexing in
                             fragment shaders may not be dense. The implementation
                             may assign some lower-numbered IDs to <a data-link-type="dfn" href="#helper-invocation"
-                                id="ref-for-helper-invocation②">helper invocations</a>.</p>
+                                id="ref-for-helper-invocation③">helper invocations</a>.</p>
         </table>
         <h6 class="heading settled" data-level="13.3.1.1.18" id="subgroup-size-builtin-value"><span
                 class="secno">13.3.1.1.18. </span><span class="content"><code>subgroup_size</code></span><a
@@ -26961,7 +26985,7 @@ sampler_comparison
             for that operation.
             When the subgroup size exceeds the number of invocations in a subgroup, the
             extra hypothetical invocations are considered inactive.
-            <a data-link-type="dfn" href="#helper-invocation" id="ref-for-helper-invocation③">Helper invocations</a> may
+            <a data-link-type="dfn" href="#helper-invocation" id="ref-for-helper-invocation④">Helper invocations</a> may
             be active or inactive in an operation.
             That is, on some devices helper invocations may participate in subgroup operations,
             while on other devices they may not.
@@ -38455,18 +38479,6 @@ array<c- o>&lt;</c->bool<c- p>,</c-> <c- mi>2</c-><c- o>></c-><c- p>(</c-><c- kc
         <div class="syntax">
 
             <dfn class="dfn-paneled" data-dfn-for="recursive descent syntax" data-dfn-type="dfn" data-noexport
-                id="recursive-descent-syntax-decimal_float_literal">decimal_float_literal</dfn>:
-
-
-            <p>| <code>/0[fh]/</code></p>
-            <p>| <code>/[0-9]*\.[0-9]+([eE][+-]?[0-9]+)?[fh]?/</code></p>
-            <p>| <code>/[0-9]+[eE][+-]?[0-9]+[fh]?/</code></p>
-            <p>| <code>/[0-9]+\.[0-9]*([eE][+-]?[0-9]+)?[fh]?/</code></p>
-            <p>| <code>/[1-9][0-9]*[fh]/</code></p>
-        </div>
-        <div class="syntax">
-
-            <dfn class="dfn-paneled" data-dfn-for="recursive descent syntax" data-dfn-type="dfn" data-noexport
                 id="recursive-descent-syntax-decimal_int_literal">decimal_int_literal</dfn>:
 
 
@@ -38549,10 +38561,10 @@ array<c- o>&lt;</c->bool<c- p>,</c-> <c- mi>2</c-><c- o>></c-><c- p>(</c-><c- kc
                 id="recursive-descent-syntax-float_literal">float_literal</dfn>:
 
 
-            <p>| <a data-link-type="dfn" href="#recursive-descent-syntax-decimal_float_literal"
-                    id="ref-for-recursive-descent-syntax-decimal_float_literal">decimal_float_literal</a></p>
-            <p>| <a data-link-type="dfn" href="#recursive-descent-syntax-hex_float_literal"
-                    id="ref-for-recursive-descent-syntax-hex_float_literal">hex_float_literal</a></p>
+            <p>| <a data-link-type="dfn" href="#syntax-decimal_float_literal"
+                    id="ref-for-syntax-decimal_float_literal①">decimal_float_literal</a></p>
+            <p>| <a data-link-type="dfn" href="#syntax-hex_float_literal"
+                    id="ref-for-syntax-hex_float_literal①">hex_float_literal</a></p>
         </div>
         <div class="syntax">
 
@@ -38712,16 +38724,6 @@ array<c- o>&lt;</c->bool<c- p>,</c-> <c- mi>2</c-><c- o>></c-><c- p>(</c-><c- kc
                 <code>'='</code> <a data-link-type="dfn" href="#recursive-descent-syntax-expression"
                     id="ref-for-recursive-descent-syntax-expression②⓪">expression</a>
             </p>
-        </div>
-        <div class="syntax">
-
-            <dfn class="dfn-paneled" data-dfn-for="recursive descent syntax" data-dfn-type="dfn" data-noexport
-                id="recursive-descent-syntax-hex_float_literal">hex_float_literal</dfn>:
-
-
-            <p>| <code>/0[xX][0-9a-fA-F]*\.[0-9a-fA-F]+([pP][+-]?[0-9]+[fh]?)?/</code></p>
-            <p>| <code>/0[xX][0-9a-fA-F]+[pP][+-]?[0-9]+[fh]?/</code></p>
-            <p>| <code>/0[xX][0-9a-fA-F]+\.[0-9a-fA-F]*([pP][+-]?[0-9]+[fh]?)?/</code></p>
         </div>
         <div class="syntax">
 
@@ -39671,13 +39673,7 @@ array<c- o>&lt;</c->bool<c- p>,</c-> <c- mi>2</c-><c- o>></c-><c- p>(</c-><c- kc
         <li><a href="#correctly-rounded">correctly rounded</a><span>, in § 15.7.4</span>
         <li><a href="#creation-fixed-footprint">creation-fixed footprint</a><span>, in § 6.2.13</span>
         <li><a href="#decimal-floating-point-literal">decimal floating point literal</a><span>, in § 3.5.2</span>
-        <li>
-            decimal_float_literal
-            <ul>
-                <li><a href="#recursive-descent-syntax-decimal_float_literal">dfn for recursive descent
-                        syntax</a><span>, in § 18</span>
-                <li><a href="#syntax-decimal_float_literal">dfn for syntax</a><span>, in § 3.5.2</span>
-            </ul>
+        <li><a href="#syntax-decimal_float_literal">decimal_float_literal</a><span>, in § 3.5.2</span>
         <li>
             decimal_int_literal
             <ul>
@@ -39913,13 +39909,7 @@ array<c- o>&lt;</c->bool<c- p>,</c-> <c- mi>2</c-><c- o>></c-><c- p>(</c-><c- kc
         <li><a href="#helper-invocation">helper invocation</a><span>, in § 15.4</span>
         <li><a href="#hexadecimal-floating-point-literal">hexadecimal floating point literal</a><span>, in
                 § 3.5.2</span>
-        <li>
-            hex_float_literal
-            <ul>
-                <li><a href="#recursive-descent-syntax-hex_float_literal">dfn for recursive descent syntax</a><span>, in
-                        § 18</span>
-                <li><a href="#syntax-hex_float_literal">dfn for syntax</a><span>, in § 3.5.2</span>
-            </ul>
+        <li><a href="#syntax-hex_float_literal">hex_float_literal</a><span>, in § 3.5.2</span>
         <li><a href="#syntax-hex_int_literal">hex_int_literal</a><span>, in § 3.5.2</span>
         <li><a href="#host-shareable">host-shareable</a><span>, in § 6.4.2</span>
         <li><a href="#hyperbolic-angle">hyperbolic angle</a><span>, in § 1.3</span>
@@ -40237,6 +40227,7 @@ array<c- o>&lt;</c->bool<c- p>,</c-> <c- mi>2</c-><c- o>></c-><c- p>(</c-><c- kc
         <li><a href="#texel-format-r8uint">r8uint</a><span>, in § 6.5.1</span>
         <li><a href="#texel-format-r8unorm">r8unorm</a><span>, in § 6.5.1</span>
         <li><a href="#range-diagnostic-filter">range diagnostic filter</a><span>, in § 2.3.3</span>
+        <li><a href="#rasterization-fragments">rasterization fragments</a><span>, in § 13.1</span>
         <li><a href="#access-read">read</a><span>, in § 14.2</span>
         <li><a href="#read-access">read access</a><span>, in § 14.2</span>
         <li><a
@@ -41105,7 +41096,7 @@ array<c- o>&lt;</c->bool<c- p>,</c-> <c- mi>2</c-><c- o>></c-><c- p>(</c-><c- kc
                 "2eef8263": { "dfnID": "2eef8263", "dfnText": "GPUTextureBindingLayout", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-dictdef-gputexturebindinglayout" }], "title": "6.5.6. Depth Texture Types" }], "url": "https://www.w3.org/TR/webgpu/#dictdef-gputexturebindinglayout" },
                 "2f7382b6": { "dfnID": "2f7382b6", "dfnText": "GPUSamplerBindingType", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-enumdef-gpusamplerbindingtype" }], "title": "13.3.3. Resource Layout Compatibility" }], "url": "https://www.w3.org/TR/webgpu/#enumdef-gpusamplerbindingtype" },
                 "302a1456": { "dfnID": "302a1456", "dfnText": "subgroupMaxSize", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-dom-gpuadapterinfo-subgroupmaxsize\u2461" }], "title": "15.5. Subgroups" }], "url": "https://gpuweb.github.io/gpuweb/#dom-gpuadapterinfo-subgroupmaxsize" },
-                "317e6090": { "dfnID": "317e6090", "dfnText": "framebuffer", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-framebuffer" }], "title": "13.3.1.1.10. position" }], "url": "https://gpuweb.github.io/gpuweb/#framebuffer" },
+                "317e6090": { "dfnID": "317e6090", "dfnText": "framebuffer", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-framebuffer" }], "title": "13.1. Shader Stages" }, { "refs": [{ "id": "ref-for-framebuffer\u2460" }], "title": "13.3.1.1.10. position" }], "url": "https://gpuweb.github.io/gpuweb/#framebuffer" },
                 "355e6a41": { "dfnID": "355e6a41", "dfnText": "fragmentdestination-position", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-fragmentdestination-position" }], "title": "13.3.1.1.10. position" }], "url": "https://gpuweb.github.io/gpuweb/#fragmentdestination-position" },
                 "39ef407b": { "dfnID": "39ef407b", "dfnText": "texture", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-dom-gpubindgrouplayoutentry-texture" }], "title": "13.3.3. Resource Layout Compatibility" }], "url": "https://www.w3.org/TR/webgpu/#dom-gpubindgrouplayoutentry-texture" },
                 "3baf574c": { "dfnID": "3baf574c", "dfnText": "GPUProgrammableStage", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-gpuprogrammablestage" }], "title": "1.1. Overview" }, { "refs": [{ "id": "ref-for-gpuprogrammablestage\u2460" }], "title": "2.1. Shader Lifecycle" }, { "refs": [{ "id": "ref-for-gpuprogrammablestage\u2461" }], "title": "2.2. Errors" }, { "refs": [{ "id": "ref-for-gpuprogrammablestage\u2462" }], "title": "2.3.1. Diagnostic Processing" }, { "refs": [{ "id": "ref-for-gpuprogrammablestage\u2463" }], "title": "8.1.2. override Expressions" }, { "refs": [{ "id": "ref-for-gpuprogrammablestage\u2464" }], "title": "13.2. Entry Point Declaration" }], "url": "https://www.w3.org/TR/webgpu/#gpuprogrammablestage" },
@@ -41383,7 +41374,7 @@ array<c- o>&lt;</c->bool<c- p>,</c-> <c- mi>2</c-><c- o>></c-><c- p>(</c-><c- kc
                 "group_count_x": { "dfnID": "group_count_x", "dfnText": "group_count_x", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-group_count_x" }], "title": "13.3.1.1.15. workgroup_id" }, { "refs": [{ "id": "ref-for-group_count_x\u2460" }], "title": "15.3. Compute Shaders and Workgroups" }], "url": "#group_count_x" },
                 "group_count_y": { "dfnID": "group_count_y", "dfnText": "group_count_y", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-group_count_y" }], "title": "13.3.1.1.15. workgroup_id" }, { "refs": [{ "id": "ref-for-group_count_y\u2460" }], "title": "15.3. Compute Shaders and Workgroups" }], "url": "#group_count_y" },
                 "group_count_z": { "dfnID": "group_count_z", "dfnText": "group_count_z", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-group_count_z" }], "title": "13.3.1.1.15. workgroup_id" }, { "refs": [{ "id": "ref-for-group_count_z\u2460" }], "title": "15.3. Compute Shaders and Workgroups" }], "url": "#group_count_z" },
-                "helper-invocation": { "dfnID": "helper-invocation", "dfnText": "helper invocation", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-helper-invocation" }, { "id": "ref-for-helper-invocation\u2460" }], "title": "9.4.11. Discard Statement" }, { "refs": [{ "id": "ref-for-helper-invocation\u2461" }], "title": "13.3.1.1.17. subgroup_invocation_id" }, { "refs": [{ "id": "ref-for-helper-invocation\u2462" }], "title": "15.5. Subgroups" }], "url": "#helper-invocation" },
+                "helper-invocation": { "dfnID": "helper-invocation", "dfnText": "helper invocation", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-helper-invocation" }, { "id": "ref-for-helper-invocation\u2460" }], "title": "9.4.11. Discard Statement" }, { "refs": [{ "id": "ref-for-helper-invocation\u2461" }], "title": "13.1. Shader Stages" }, { "refs": [{ "id": "ref-for-helper-invocation\u2462" }], "title": "13.3.1.1.17. subgroup_invocation_id" }, { "refs": [{ "id": "ref-for-helper-invocation\u2463" }], "title": "15.5. Subgroups" }], "url": "#helper-invocation" },
                 "hexadecimal-floating-point-literal": { "dfnID": "hexadecimal-floating-point-literal", "dfnText": "hexadecimal floating point literal", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-hexadecimal-floating-point-literal" }, { "id": "ref-for-hexadecimal-floating-point-literal\u2460" }, { "id": "ref-for-hexadecimal-floating-point-literal\u2461" }], "title": "3.5.2. Numeric Literals" }], "url": "#hexadecimal-floating-point-literal" },
                 "host-shareable": { "dfnID": "host-shareable", "dfnText": "host-shareable", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-host-shareable" }, { "id": "ref-for-host-shareable\u2460" }, { "id": "ref-for-host-shareable\u2461" }, { "id": "ref-for-host-shareable\u2462" }], "title": "7. Variable and Value Declarations" }, { "refs": [{ "id": "ref-for-host-shareable\u2463" }, { "id": "ref-for-host-shareable\u2464" }, { "id": "ref-for-host-shareable\u2465" }], "title": "7.3. var Declarations" }, { "refs": [{ "id": "ref-for-host-shareable\u2466" }, { "id": "ref-for-host-shareable\u2467" }, { "id": "ref-for-host-shareable\u2468" }, { "id": "ref-for-host-shareable\u2460\u24ea" }], "title": "14.4. Memory Layout" }, { "refs": [{ "id": "ref-for-host-shareable\u2460\u2460" }, { "id": "ref-for-host-shareable\u2460\u2461" }], "title": "14.4.1. Alignment and Size" }, { "refs": [{ "id": "ref-for-host-shareable\u2460\u2462" }, { "id": "ref-for-host-shareable\u2460\u2463" }], "title": "14.4.4. Internal Layout of Values" }], "url": "#host-shareable" },
                 "hyperbolic-angle": { "dfnID": "hyperbolic-angle", "dfnText": "hyperbolic angle", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-hyperbolic-angle" }], "title": "17.5.3. acosh" }, { "refs": [{ "id": "ref-for-hyperbolic-angle\u2460" }], "title": "17.5.5. asinh" }, { "refs": [{ "id": "ref-for-hyperbolic-angle\u2461" }], "title": "17.5.7. atanh" }, { "refs": [{ "id": "ref-for-hyperbolic-angle\u2462" }], "title": "17.5.12. cosh" }, { "refs": [{ "id": "ref-for-hyperbolic-angle\u2463" }], "title": "17.5.56. sinh" }, { "refs": [{ "id": "ref-for-hyperbolic-angle\u2464" }], "title": "17.5.61. tanh" }], "url": "#hyperbolic-angle" },
@@ -41553,6 +41544,7 @@ array<c- o>&lt;</c->bool<c- p>,</c-> <c- mi>2</c-><c- o>></c-><c- p>(</c-><c- kc
                 "quad": { "dfnID": "quad", "dfnText": "quad", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-quad" }], "title": "11.2. Function Calls" }, { "refs": [{ "id": "ref-for-quad\u2460" }], "title": "14.5.3. Scoped Operations" }, { "refs": [{ "id": "ref-for-quad\u2461" }], "title": "15.5. Subgroups" }, { "refs": [{ "id": "ref-for-quad\u2462" }], "title": "15.6.2. Derivatives" }, { "refs": [{ "id": "ref-for-quad\u2463" }, { "id": "ref-for-quad\u2464" }], "title": "15.6.4. Quad Operations" }, { "refs": [{ "id": "ref-for-quad\u2465" }], "title": "17.13. Quad Operations" }, { "refs": [{ "id": "ref-for-quad\u2466" }], "title": "17.13.2. quadSwapDiagonal" }, { "refs": [{ "id": "ref-for-quad\u2467" }], "title": "17.13.3. quadSwapX" }, { "refs": [{ "id": "ref-for-quad\u2468" }], "title": "17.13.4. quadSwapY" }], "url": "#quad" },
                 "quad-invocation-id": { "dfnID": "quad-invocation-id", "dfnText": "quad invocation ID", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-quad-invocation-id" }], "title": "17.13.1. quadBroadcast" }], "url": "#quad-invocation-id" },
                 "range-diagnostic-filter": { "dfnID": "range-diagnostic-filter", "dfnText": "range diagnostic filter", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-range-diagnostic-filter" }], "title": "2.3.3. Diagnostic Filtering" }, { "refs": [{ "id": "ref-for-range-diagnostic-filter\u2460" }], "title": "12.6. diagnostic" }], "url": "#range-diagnostic-filter" },
+                "rasterization-fragments": { "dfnID": "rasterization-fragments", "dfnText": "rasterization fragments", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-rasterization-fragments" }], "title": "13.1. Shader Stages" }], "url": "#rasterization-fragments" },
                 "read-access": { "dfnID": "read-access", "dfnText": "read access", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-read-access" }], "title": "6.4.7. Use Cases for References and Pointers" }, { "refs": [{ "id": "ref-for-read-access\u2460" }], "title": "6.5.2. Sampled Texture Types" }, { "refs": [{ "id": "ref-for-read-access\u2461" }, { "id": "ref-for-read-access\u2462" }], "title": "6.5.5. Storage Texture Types" }, { "refs": [{ "id": "ref-for-read-access\u2463" }], "title": "6.5.6. Depth Texture Types" }, { "refs": [{ "id": "ref-for-read-access\u2464" }], "title": "7.1. Variables vs Values" }, { "refs": [{ "id": "ref-for-read-access\u2465" }], "title": "9.2.3. Compound Assignment" }, { "refs": [{ "id": "ref-for-read-access\u2466" }, { "id": "ref-for-read-access\u2467" }], "title": "11.4.1.2. Aliasing" }, { "refs": [{ "id": "ref-for-read-access\u2468" }, { "id": "ref-for-read-access\u2460\u24ea" }, { "id": "ref-for-read-access\u2460\u2460" }], "title": "14.5.1. Memory Operation" }, { "refs": [{ "id": "ref-for-read-access\u2460\u2461" }, { "id": "ref-for-read-access\u2460\u2462" }], "title": "14.5.5. Private vs Non-private" }], "url": "#read-access" },
                 "reassociation": { "dfnID": "reassociation", "dfnText": "Reassociation", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-reassociation" }], "title": "15.7.4. Floating Point Accuracy" }], "url": "#reassociation" },
                 "recursive-descent-syntax-additive_operator": { "dfnID": "recursive-descent-syntax-additive_operator", "dfnText": "additive_operator", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-recursive-descent-syntax-additive_operator" }], "title": "18. Grammar for Recursive Descent Parsing" }], "url": "#recursive-descent-syntax-additive_operator" },
@@ -41570,7 +41562,6 @@ array<c- o>&lt;</c->bool<c- p>,</c-> <c- mi>2</c-><c- o>></c-><c- p>(</c-><c- kc
                 "recursive-descent-syntax-compute_attr": { "dfnID": "recursive-descent-syntax-compute_attr", "dfnText": "compute_attr", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-recursive-descent-syntax-compute_attr" }], "title": "18. Grammar for Recursive Descent Parsing" }], "url": "#recursive-descent-syntax-compute_attr" },
                 "recursive-descent-syntax-const_attr": { "dfnID": "recursive-descent-syntax-const_attr", "dfnText": "const_attr", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-recursive-descent-syntax-const_attr" }], "title": "18. Grammar for Recursive Descent Parsing" }], "url": "#recursive-descent-syntax-const_attr" },
                 "recursive-descent-syntax-core_lhs_expression": { "dfnID": "recursive-descent-syntax-core_lhs_expression", "dfnText": "core_lhs_expression", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-recursive-descent-syntax-core_lhs_expression" }], "title": "18. Grammar for Recursive Descent Parsing" }], "url": "#recursive-descent-syntax-core_lhs_expression" },
-                "recursive-descent-syntax-decimal_float_literal": { "dfnID": "recursive-descent-syntax-decimal_float_literal", "dfnText": "decimal_float_literal", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-recursive-descent-syntax-decimal_float_literal" }], "title": "18. Grammar for Recursive Descent Parsing" }], "url": "#recursive-descent-syntax-decimal_float_literal" },
                 "recursive-descent-syntax-decimal_int_literal": { "dfnID": "recursive-descent-syntax-decimal_int_literal", "dfnText": "decimal_int_literal", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-recursive-descent-syntax-decimal_int_literal" }], "title": "18. Grammar for Recursive Descent Parsing" }], "url": "#recursive-descent-syntax-decimal_int_literal" },
                 "recursive-descent-syntax-diagnostic_control": { "dfnID": "recursive-descent-syntax-diagnostic_control", "dfnText": "diagnostic_control", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-recursive-descent-syntax-diagnostic_control" }], "title": "18. Grammar for Recursive Descent Parsing" }], "url": "#recursive-descent-syntax-diagnostic_control" },
                 "recursive-descent-syntax-diagnostic_rule_name": { "dfnID": "recursive-descent-syntax-diagnostic_rule_name", "dfnText": "diagnostic_rule_name", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-recursive-descent-syntax-diagnostic_rule_name" }, { "id": "ref-for-recursive-descent-syntax-diagnostic_rule_name\u2460" }], "title": "18. Grammar for Recursive Descent Parsing" }], "url": "#recursive-descent-syntax-diagnostic_rule_name" },
@@ -41583,7 +41574,6 @@ array<c- o>&lt;</c->bool<c- p>,</c-> <c- mi>2</c-><c- o>></c-><c- p>(</c-><c- kc
                 "recursive-descent-syntax-global_decl": { "dfnID": "recursive-descent-syntax-global_decl", "dfnText": "global_decl", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-recursive-descent-syntax-global_decl" }, { "id": "ref-for-recursive-descent-syntax-global_decl\u2460" }], "title": "18. Grammar for Recursive Descent Parsing" }], "url": "#recursive-descent-syntax-global_decl" },
                 "recursive-descent-syntax-global_directive": { "dfnID": "recursive-descent-syntax-global_directive", "dfnText": "global_directive", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-recursive-descent-syntax-global_directive" }], "title": "18. Grammar for Recursive Descent Parsing" }], "url": "#recursive-descent-syntax-global_directive" },
                 "recursive-descent-syntax-global_value_decl": { "dfnID": "recursive-descent-syntax-global_value_decl", "dfnText": "global_value_decl", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-recursive-descent-syntax-global_value_decl" }], "title": "18. Grammar for Recursive Descent Parsing" }], "url": "#recursive-descent-syntax-global_value_decl" },
-                "recursive-descent-syntax-hex_float_literal": { "dfnID": "recursive-descent-syntax-hex_float_literal", "dfnText": "hex_float_literal", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-recursive-descent-syntax-hex_float_literal" }], "title": "18. Grammar for Recursive Descent Parsing" }], "url": "#recursive-descent-syntax-hex_float_literal" },
                 "recursive-descent-syntax-ident": { "dfnID": "recursive-descent-syntax-ident", "dfnText": "ident", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-recursive-descent-syntax-ident" }, { "id": "ref-for-recursive-descent-syntax-ident\u2460" }, { "id": "ref-for-recursive-descent-syntax-ident\u2461" }, { "id": "ref-for-recursive-descent-syntax-ident\u2462" }, { "id": "ref-for-recursive-descent-syntax-ident\u2463" }, { "id": "ref-for-recursive-descent-syntax-ident\u2464" }, { "id": "ref-for-recursive-descent-syntax-ident\u2465" }, { "id": "ref-for-recursive-descent-syntax-ident\u2466" }, { "id": "ref-for-recursive-descent-syntax-ident\u2467" }, { "id": "ref-for-recursive-descent-syntax-ident\u2468" }, { "id": "ref-for-recursive-descent-syntax-ident\u2460\u24ea" }, { "id": "ref-for-recursive-descent-syntax-ident\u2460\u2460" }, { "id": "ref-for-recursive-descent-syntax-ident\u2460\u2461" }, { "id": "ref-for-recursive-descent-syntax-ident\u2460\u2462" }, { "id": "ref-for-recursive-descent-syntax-ident\u2460\u2463" }, { "id": "ref-for-recursive-descent-syntax-ident\u2460\u2464" }], "title": "18. Grammar for Recursive Descent Parsing" }], "url": "#recursive-descent-syntax-ident" },
                 "recursive-descent-syntax-int_literal": { "dfnID": "recursive-descent-syntax-int_literal", "dfnText": "int_literal", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-recursive-descent-syntax-int_literal" }], "title": "18. Grammar for Recursive Descent Parsing" }], "url": "#recursive-descent-syntax-int_literal" },
                 "recursive-descent-syntax-interpolate_attr": { "dfnID": "recursive-descent-syntax-interpolate_attr", "dfnText": "interpolate_attr", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-recursive-descent-syntax-interpolate_attr" }], "title": "18. Grammar for Recursive Descent Parsing" }], "url": "#recursive-descent-syntax-interpolate_attr" },
@@ -41730,7 +41720,7 @@ array<c- o>&lt;</c->bool<c- p>,</c-> <c- mi>2</c-><c- o>></c-><c- p>(</c-><c- kc
                 "syntax-continuing_compound_statement": { "dfnID": "syntax-continuing_compound_statement", "dfnText": "continuing_compound_statement", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-syntax-continuing_compound_statement" }, { "id": "ref-for-syntax-continuing_compound_statement\u2460" }, { "id": "ref-for-syntax-continuing_compound_statement\u2461" }], "title": "2.3.3. Diagnostic Filtering" }, { "refs": [{ "id": "ref-for-syntax-continuing_compound_statement\u2462" }], "title": "9.1. Compound Statement" }, { "refs": [{ "id": "ref-for-syntax-continuing_compound_statement\u2463" }], "title": "9.4.9. Continuing Statement" }, { "refs": [{ "id": "ref-for-syntax-continuing_compound_statement\u2464" }], "title": "9.6. Statements Grammar Summary" }], "url": "#syntax-continuing_compound_statement" },
                 "syntax-continuing_statement": { "dfnID": "syntax-continuing_statement", "dfnText": "continuing_statement", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-syntax-continuing_statement" }], "title": "9.4.3. Loop Statement" }], "url": "#syntax-continuing_statement" },
                 "syntax-core_lhs_expression": { "dfnID": "syntax-core_lhs_expression", "dfnText": "core_lhs_expression", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-syntax-core_lhs_expression" }], "title": "8.18. Expression Grammar Summary" }], "url": "#syntax-core_lhs_expression" },
-                "syntax-decimal_float_literal": { "dfnID": "syntax-decimal_float_literal", "dfnText": "decimal_float_literal", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-syntax-decimal_float_literal" }], "title": "3.5.2. Numeric Literals" }], "url": "#syntax-decimal_float_literal" },
+                "syntax-decimal_float_literal": { "dfnID": "syntax-decimal_float_literal", "dfnText": "decimal_float_literal", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-syntax-decimal_float_literal" }], "title": "3.5.2. Numeric Literals" }, { "refs": [{ "id": "ref-for-syntax-decimal_float_literal\u2460" }], "title": "18. Grammar for Recursive Descent Parsing" }], "url": "#syntax-decimal_float_literal" },
                 "syntax-decimal_int_literal": { "dfnID": "syntax-decimal_int_literal", "dfnText": "decimal_int_literal", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-syntax-decimal_int_literal" }], "title": "3.5.2. Numeric Literals" }], "url": "#syntax-decimal_int_literal" },
                 "syntax-decrement_statement": { "dfnID": "syntax-decrement_statement", "dfnText": "decrement_statement", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-syntax-decrement_statement" }], "title": "9.6. Statements Grammar Summary" }], "url": "#syntax-decrement_statement" },
                 "syntax-default_alone_clause": { "dfnID": "syntax-default_alone_clause", "dfnText": "default_alone_clause", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-syntax-default_alone_clause" }], "title": "9.4.2. Switch Statement" }], "url": "#syntax-default_alone_clause" },
@@ -41761,7 +41751,7 @@ array<c- o>&lt;</c->bool<c- p>,</c-> <c- mi>2</c-><c- o>></c-><c- p>(</c-><c- kc
                 "syntax-global_value_decl": { "dfnID": "syntax-global_value_decl", "dfnText": "global_value_decl", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-syntax-global_value_decl" }], "title": "2. WGSL Module" }], "url": "#syntax-global_value_decl" },
                 "syntax-global_variable_decl": { "dfnID": "syntax-global_variable_decl", "dfnText": "global_variable_decl", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-syntax-global_variable_decl" }], "title": "2. WGSL Module" }], "url": "#syntax-global_variable_decl" },
                 "syntax-group_attr": { "dfnID": "syntax-group_attr", "dfnText": "group_attr", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-syntax-group_attr" }], "title": "12. Attributes" }], "url": "#syntax-group_attr" },
-                "syntax-hex_float_literal": { "dfnID": "syntax-hex_float_literal", "dfnText": "hex_float_literal", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-syntax-hex_float_literal" }], "title": "3.5.2. Numeric Literals" }], "url": "#syntax-hex_float_literal" },
+                "syntax-hex_float_literal": { "dfnID": "syntax-hex_float_literal", "dfnText": "hex_float_literal", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-syntax-hex_float_literal" }], "title": "3.5.2. Numeric Literals" }, { "refs": [{ "id": "ref-for-syntax-hex_float_literal\u2460" }], "title": "18. Grammar for Recursive Descent Parsing" }], "url": "#syntax-hex_float_literal" },
                 "syntax-hex_int_literal": { "dfnID": "syntax-hex_int_literal", "dfnText": "hex_int_literal", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-syntax-hex_int_literal" }], "title": "3.5.2. Numeric Literals" }, { "refs": [{ "id": "ref-for-syntax-hex_int_literal\u2460" }], "title": "18. Grammar for Recursive Descent Parsing" }], "url": "#syntax-hex_int_literal" },
                 "syntax-id_attr": { "dfnID": "syntax-id_attr", "dfnText": "id_attr", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-syntax-id_attr" }], "title": "12. Attributes" }], "url": "#syntax-id_attr" },
                 "syntax-ident": { "dfnID": "syntax-ident", "dfnText": "ident", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-syntax-ident" }], "title": "3.7. Identifiers" }, { "refs": [{ "id": "ref-for-syntax-ident\u2460" }, { "id": "ref-for-syntax-ident\u2461" }], "title": "5. Declaration and Scope" }, { "refs": [{ "id": "ref-for-syntax-ident\u2462" }], "title": "6.2.10. Structure Types" }, { "refs": [{ "id": "ref-for-syntax-ident\u2463" }], "title": "6.7. Type Aliases" }, { "refs": [{ "id": "ref-for-syntax-ident\u2464" }], "title": "6.8. Type Specifier Grammar" }, { "refs": [{ "id": "ref-for-syntax-ident\u2465" }], "title": "7.4. Variable and Value Declaration Grammar Summary" }, { "refs": [{ "id": "ref-for-syntax-ident\u2466" }], "title": "8.18. Expression Grammar Summary" }, { "refs": [{ "id": "ref-for-syntax-ident\u2467" }, { "id": "ref-for-syntax-ident\u2468" }], "title": "11.1. Declaring a User-defined Function" }], "url": "#syntax-ident" },
@@ -42767,6 +42757,7 @@ array<c- o>&lt;</c->bool<c- p>,</c-> <c- mi>2</c-><c- o>></c-><c- p>(</c-><c- kc
                 "#quad": { "displayText": "quad", "export": true, "for_": [], "level": "", "normative": true, "shortname": "wgsl", "spec": "wgsl", "status": "local", "text": "quad", "type": "dfn", "url": "#quad" },
                 "#quad-invocation-id": { "displayText": "quad invocation id", "export": true, "for_": [], "level": "", "normative": true, "shortname": "wgsl", "spec": "wgsl", "status": "local", "text": "quad invocation id", "type": "dfn", "url": "#quad-invocation-id" },
                 "#range-diagnostic-filter": { "displayText": "range diagnostic filter", "export": true, "for_": [], "level": "", "normative": true, "shortname": "wgsl", "spec": "wgsl", "status": "local", "text": "range diagnostic filter", "type": "dfn", "url": "#range-diagnostic-filter" },
+                "#rasterization-fragments": { "displayText": "rasterization fragments", "export": true, "for_": [], "level": "", "normative": true, "shortname": "wgsl", "spec": "wgsl", "status": "local", "text": "rasterization fragments", "type": "dfn", "url": "#rasterization-fragments" },
                 "#read-access": { "displayText": "read access", "export": true, "for_": [], "level": "", "normative": true, "shortname": "wgsl", "spec": "wgsl", "status": "local", "text": "read access", "type": "dfn", "url": "#read-access" },
                 "#reassociation": { "displayText": "reassociation", "export": true, "for_": [], "level": "", "normative": true, "shortname": "wgsl", "spec": "wgsl", "status": "local", "text": "reassociation", "type": "dfn", "url": "#reassociation" },
                 "#recursive-descent-syntax-additive_operator": { "displayText": "additive_operator", "export": true, "for_": ["recursive descent syntax"], "level": "", "normative": true, "shortname": "wgsl", "spec": "wgsl", "status": "local", "text": "additive_operator", "type": "dfn", "url": "#recursive-descent-syntax-additive_operator" },
@@ -42783,7 +42774,6 @@ array<c- o>&lt;</c->bool<c- p>,</c-> <c- mi>2</c-><c- o>></c-><c- p>(</c-><c- kc
                 "#recursive-descent-syntax-compute_attr": { "displayText": "compute_attr", "export": true, "for_": ["recursive descent syntax"], "level": "", "normative": true, "shortname": "wgsl", "spec": "wgsl", "status": "local", "text": "compute_attr", "type": "dfn", "url": "#recursive-descent-syntax-compute_attr" },
                 "#recursive-descent-syntax-const_attr": { "displayText": "const_attr", "export": true, "for_": ["recursive descent syntax"], "level": "", "normative": true, "shortname": "wgsl", "spec": "wgsl", "status": "local", "text": "const_attr", "type": "dfn", "url": "#recursive-descent-syntax-const_attr" },
                 "#recursive-descent-syntax-core_lhs_expression": { "displayText": "core_lhs_expression", "export": true, "for_": ["recursive descent syntax"], "level": "", "normative": true, "shortname": "wgsl", "spec": "wgsl", "status": "local", "text": "core_lhs_expression", "type": "dfn", "url": "#recursive-descent-syntax-core_lhs_expression" },
-                "#recursive-descent-syntax-decimal_float_literal": { "displayText": "decimal_float_literal", "export": true, "for_": ["recursive descent syntax"], "level": "", "normative": true, "shortname": "wgsl", "spec": "wgsl", "status": "local", "text": "decimal_float_literal", "type": "dfn", "url": "#recursive-descent-syntax-decimal_float_literal" },
                 "#recursive-descent-syntax-decimal_int_literal": { "displayText": "decimal_int_literal", "export": true, "for_": ["recursive descent syntax"], "level": "", "normative": true, "shortname": "wgsl", "spec": "wgsl", "status": "local", "text": "decimal_int_literal", "type": "dfn", "url": "#recursive-descent-syntax-decimal_int_literal" },
                 "#recursive-descent-syntax-diagnostic_control": { "displayText": "diagnostic_control", "export": true, "for_": ["recursive descent syntax"], "level": "", "normative": true, "shortname": "wgsl", "spec": "wgsl", "status": "local", "text": "diagnostic_control", "type": "dfn", "url": "#recursive-descent-syntax-diagnostic_control" },
                 "#recursive-descent-syntax-diagnostic_rule_name": { "displayText": "diagnostic_rule_name", "export": true, "for_": ["recursive descent syntax"], "level": "", "normative": true, "shortname": "wgsl", "spec": "wgsl", "status": "local", "text": "diagnostic_rule_name", "type": "dfn", "url": "#recursive-descent-syntax-diagnostic_rule_name" },
@@ -42796,7 +42786,6 @@ array<c- o>&lt;</c->bool<c- p>,</c-> <c- mi>2</c-><c- o>></c-><c- p>(</c-><c- kc
                 "#recursive-descent-syntax-global_decl": { "displayText": "global_decl", "export": true, "for_": ["recursive descent syntax"], "level": "", "normative": true, "shortname": "wgsl", "spec": "wgsl", "status": "local", "text": "global_decl", "type": "dfn", "url": "#recursive-descent-syntax-global_decl" },
                 "#recursive-descent-syntax-global_directive": { "displayText": "global_directive", "export": true, "for_": ["recursive descent syntax"], "level": "", "normative": true, "shortname": "wgsl", "spec": "wgsl", "status": "local", "text": "global_directive", "type": "dfn", "url": "#recursive-descent-syntax-global_directive" },
                 "#recursive-descent-syntax-global_value_decl": { "displayText": "global_value_decl", "export": true, "for_": ["recursive descent syntax"], "level": "", "normative": true, "shortname": "wgsl", "spec": "wgsl", "status": "local", "text": "global_value_decl", "type": "dfn", "url": "#recursive-descent-syntax-global_value_decl" },
-                "#recursive-descent-syntax-hex_float_literal": { "displayText": "hex_float_literal", "export": true, "for_": ["recursive descent syntax"], "level": "", "normative": true, "shortname": "wgsl", "spec": "wgsl", "status": "local", "text": "hex_float_literal", "type": "dfn", "url": "#recursive-descent-syntax-hex_float_literal" },
                 "#recursive-descent-syntax-ident": { "displayText": "ident", "export": true, "for_": ["recursive descent syntax"], "level": "", "normative": true, "shortname": "wgsl", "spec": "wgsl", "status": "local", "text": "ident", "type": "dfn", "url": "#recursive-descent-syntax-ident" },
                 "#recursive-descent-syntax-int_literal": { "displayText": "int_literal", "export": true, "for_": ["recursive descent syntax"], "level": "", "normative": true, "shortname": "wgsl", "spec": "wgsl", "status": "local", "text": "int_literal", "type": "dfn", "url": "#recursive-descent-syntax-int_literal" },
                 "#recursive-descent-syntax-interpolate_attr": { "displayText": "interpolate_attr", "export": true, "for_": ["recursive descent syntax"], "level": "", "normative": true, "shortname": "wgsl", "spec": "wgsl", "status": "local", "text": "interpolate_attr", "type": "dfn", "url": "#recursive-descent-syntax-interpolate_attr" },
