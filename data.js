@@ -2653,7 +2653,7 @@ const links = [
     {
         text: "Credential Management Level 1",
         href: "https://htmlspecs.com/credential-management-1/",
-        src: "https://www.w3.org/TR/2026/WD-credential-management-1-20260410/",
+        src: "https://www.w3.org/TR/2026/WD-credential-management-1-20260702/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
