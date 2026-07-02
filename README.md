@@ -158,7 +158,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Scroll To Text Fragment](https://htmlspecs.com/scroll-to-text-fragment/)（[Source](https://wicg.github.io/scroll-to-text-fragment/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Pointer Events Level 2](https://htmlspecs.com/pointerevents2/)（[Source](https://www.w3.org/TR/2026/SPSD-pointerevents2-20260630/) ![Superseded Recommendation](https://img.shields.io/badge/SPSD-6c757d)）
 - [Pointer Events Level 3](https://htmlspecs.com/pointerevents3/)（[Source](https://www.w3.org/TR/2026/REC-pointerevents3-20260630/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
-- [Pointer Events Level 4](https://htmlspecs.com/pointerevents4/)（[Source](https://www.w3.org/TR/2026/WD-pointerevents4-20260616/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Pointer Events Level 4](https://htmlspecs.com/pointerevents4/)（[Source](https://www.w3.org/TR/2026/WD-pointerevents4-20260701/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Ink API](https://htmlspecs.com/ink-api/)（[Source](https://wicg.github.io/ink-enhancement/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Handwriting Recognition API](https://htmlspecs.com/handwriting-recognition/)（[Source](https://wicg.github.io/handwriting-recognition/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [UI Events](https://htmlspecs.com/uievents/)（[Source](https://www.w3.org/TR/2026/WD-uievents-20260221/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
