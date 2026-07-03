@@ -449,7 +449,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 ### 开发者工具、测试与自动化
 - [Test Utils](https://htmlspecs.com/testutils/)（[Source](https://testutils.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [Console](https://htmlspecs.com/console/)（[Source](https://console.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
-- [WebDriver](https://htmlspecs.com/webdriver2/)（[Source](https://www.w3.org/TR/2026/WD-webdriver2-20260528/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [WebDriver](https://htmlspecs.com/webdriver2/)（[Source](https://www.w3.org/TR/2026/WD-webdriver2-20260702/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [WebDriver BiDi](https://htmlspecs.com/webdriver-bidi/)（[Source](https://www.w3.org/TR/2026/WD-webdriver-bidi-20260629/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 
 ## CSS
