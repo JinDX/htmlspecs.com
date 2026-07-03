@@ -1649,7 +1649,7 @@
         </p>
         <h1 class="no-ref p-name" id="title">安全付款确认</h1>
         <p id="w3c-state"><a href="https://www.w3.org/standards/types/#CRD">W3C 候选推荐草案</a>,
-            <time class="dt-updated" datetime="2026-06-04">2026年6月4日</time>
+            <time class="dt-updated" datetime="2026-07-02">2026年7月2日</time>
         </p>
         <details open>
             <summary>关于本文档的更多详情</summary>
@@ -1657,7 +1657,7 @@
                 <dl>
                     <dt>本版本：
                     <dd><a class="u-url"
-                            href="https://www.w3.org/TR/2026/CRD-secure-payment-confirmation-20260604/">https://www.w3.org/TR/2026/CRD-secure-payment-confirmation-20260604/</a>
+                            href="https://www.w3.org/TR/2026/CRD-secure-payment-confirmation-20260702/">https://www.w3.org/TR/2026/CRD-secure-payment-confirmation-20260702/</a>
                     <dt>最新发布版本：
                     <dd><a
                             href="https://www.w3.org/TR/secure-payment-confirmation/">https://www.w3.org/TR/secure-payment-confirmation/</a>
@@ -1665,8 +1665,8 @@
                     <dd><a
                             href="https://w3c.github.io/secure-payment-confirmation/">https://w3c.github.io/secure-payment-confirmation/</a>
                     <dt>之前版本：
-                    <dd><a href="https://www.w3.org/TR/2026/CRD-secure-payment-confirmation-20260601/"
-                            rel="prev">https://www.w3.org/TR/2026/CRD-secure-payment-confirmation-20260601/</a>
+                    <dd><a href="https://www.w3.org/TR/2026/CRD-secure-payment-confirmation-20260604/"
+                            rel="prev">https://www.w3.org/TR/2026/CRD-secure-payment-confirmation-20260604/</a>
                     <dt>历史记录：
                     <dd><a class="u-url"
                             href="https://www.w3.org/standards/history/secure-payment-confirmation/">https://www.w3.org/standards/history/secure-payment-confirmation/</a>
@@ -1883,6 +1883,8 @@
                                         class="content">登录攻击</span></a>
                             <li><a href="#sctn-security-payment-attack"><span class="secno">11.1.2</span> <span
                                         class="content">支付攻击</span></a>
+                            <li><a href="#sctn-security-webauthn-extensions"><span class="secno">11.1.3</span> <span
+                                        class="content">WebAuthn 扩展仅允许用于依赖方</span></a>
                         </ol>
                     <li><a href="#sctn-security-merchant-data"><span class="secno">11.2</span> <span
                                 class="content">商家提供的认证数据</span></a>
@@ -2074,11 +2076,12 @@
                 <li data-md>
                     <p>验证流程完成后银行 iframe 关闭，商户继续完成用户结账流程。</p>
             </ol>
-            <p>如下为用户注册代码样例：</p>
-            <pre class="example highlight" id="registration-example"><a class="self-link" href="#registration-example"></a><c- k>if</c-> <c- p>(</c-><c- o>!</c->window<c- p>.</c->PublicKeyCredential<c- p>)</c-> <c- p>{</c-> <c- d>/* 客户端不支持。请处理错误。 */</c-> <c- p>}</c->
+            <p>以下是以这种方式注册用户的示例代码。注意，示例代码
+                假定可以使用 async/await，以便更易读地处理 promise。</p>
+            <pre class="example highlight" id="registration-example"><a class="self-link" href="#registration-example"></a><c- k>if</c-> <c- p>(</c-><c- o>!</c->window<c- p>.</c->PublicKeyCredential<c- p>)</c-> <c- p>{</c-> <c- d>/* 客户端不支持。处理错误。 */</c-> <c- p>}</c->
 
 <c- a>const</c-> publicKey <c- o>=</c-> <c- p>{</c->
-  <c- c1>// challenge 由银行服务端创建并发送到 iframe。</c->
+  <c- c1>// challenge 应由银行服务器创建并发送到 iframe。</c->
   challenge<c- o>:</c-> <c- ow>new</c-> Uint8Array<c- p>([</c-><c- mf>21</c-><c- p>,</c-><c- mf>31</c-><c- p>,</c-><c- mf>105</c-> <c- d>/* 服务器生成的另外 29 个随机字节 */</c-><c- p>]),</c->
 
   <c- c1>// 依赖方：</c->
@@ -2088,14 +2091,17 @@
 
   <c- c1>// 用户：</c->
   user<c- o>:</c-> <c- p>{</c->
-    <c- c1>// WebAuthn要求。本信息非SPC必须，但银行服务端可用于识别用户。</c->
-    <c- c1>// 同一用户如信息不一致则可能创建多个凭证，影响凭证选择体验。</c->
+    <c- c1>// WebAuthn 的一部分。SPC 不需要此信息，</c->
+    <c- c1>// 但银行服务器可在未来交易中用它来识别此用户。</c->
+    <c- c1>// 同一用户的值不一致可能导致为该用户创建</c->
+    <c- c1>// 多个凭据，从而因凭据选择而产生潜在的用户体验阻力。</c->
     id<c- o>:</c-> Uint8Array<c- p>.</c-><c- kr>from</c-><c- p>(</c->window<c- p>.</c->atob<c- p>(</c-><c- u>"MIIBkzCCATigAwIBAjCCAZMwggE4oAMCAQIwggGTMII="</c-><c- p>),</c-> c<c- p>=></c->c<c- p>.</c->charCodeAt<c- p>(</c-><c- mf>0</c-><c- p>)),</c->
     name<c- o>:</c-> <c- u>"jane.doe@email.example"</c-><c- p>,</c->
     displayName<c- o>:</c-> <c- u>"Jane Doe"</c-><c- p>,</c->
   <c- p>},</c->
 
-  <c- c1>// 本例依赖方接受 ES256 或 RS256 凭证，但更偏好 ES256。</c->
+  <c- c1>// 在此示例中，依赖方接受 ES256 或 RS256 凭据，</c->
+  <c- c1>// 但偏好 ES256 凭据。</c->
   pubKeyCredParams<c- o>:</c-> <c- p>[</c->
     <c- p>{</c->
       type<c- o>:</c-> <c- u>"public-key"</c-><c- p>,</c->
@@ -2113,16 +2119,19 @@
     authenticatorAttachment<c- o>:</c-> <c- u>"platform"</c-><c- p>,</c->
   <c- p>},</c->
 
-  timeout<c- o>:</c-> <c- mf>360000</c-><c- p>,</c->  <c- c1>// 6分钟</c->
+  timeout<c- o>:</c-> <c- mf>360000</c-><c- p>,</c->  <c- c1>// 6 分钟</c->
 
-  <c- c1>// 表明这是SPC凭证。当前必须，浏览器据此关联SPC，也支持跨源iframe创建。</c->
-  <c- c1>// </c->
-  <c- c1>// 后续规范可能取消该扩展的必需性。</c->
+  <c- c1>// 指明这是一个 SPC 凭据。目前需要这样做，</c->
+  <c- c1>// 以便浏览器知道此凭据与 SPC 相关。它还会启用</c->
+  <c- c1>// 跨源 iframe 中的凭据创建，而此示例需要这一点。</c->
+  <c- c1>//</c->
+  <c- c1>// 此规范的未来版本可能会移除此扩展的必要性。</c->
   extensions<c- o>:</c-> <c- p>{</c->
     <c- u>"payment"</c-><c- o>:</c-> <c- p>{</c->
       isPayment<c- o>:</c-> <c- kc>true</c-><c- p>,</c->
-      <c- c1>// 可选的算法允许列表。未指定时使用 pubKeyCredparams，默认 ES256与RS256。</c->
-      <c- c1>// 本例允许ES256和RS256，偏好RS256。</c->
+      <c- c1>// 允许算法的可选列表。不存在或为空时，</c->
+      <c- c1>// 使用 pubKeyCredparams，默认使用 ES256 和 RS256。</c->
+      <c- c1>// 在此示例中允许 ES256 和 RS256，并偏好 RS256。</c->
       browserBoundPubKeyCredParams<c- o>:</c-> <c- p>[</c->
         <c- p>{</c->
           type<c- o>:</c-> <c- u>"public-key"</c-><c- p>,</c->
@@ -2137,13 +2146,13 @@
   <c- p>}</c->
 <c- p>};</c->
 
-<c- c1>// 注意：以下调用会促使认证器显示界面。</c->
-navigator<c- p>.</c->credentials<c- p>.</c->create<c- p>({</c-> publicKey <c- p>})</c->
-  <c- p>.</c->then<c- p>(</c-><c- a>function</c-> <c- p>(</c->newCredentialInfo<c- p>)</c-> <c- p>{</c->
-    <c- c1>// 将新凭证信息发送到服务器进行校验和注册。</c->
-  <c- p>}).</c-><c- k>catch</c-><c- p>(</c-><c- a>function</c-> <c- p>(</c->err<c- p>)</c-> <c- p>{</c->
-    <c- c1>// 未找到可用认证器或用户拒绝授权，需妥善处理。</c->
-  <c- p>});</c->
+<c- c1>// 注意：以下调用会使认证器显示 UI。</c->
+<c- k>try</c-> <c- p>{</c->
+  <c- a>const</c-> newCredentialInfo <c- o>=</c-> <c- k>await</c-> navigator<c- p>.</c->credentials<c- p>.</c->create<c- p>({</c-> publicKey <c- p>});</c->
+  <c- c1>// 将新凭据信息发送到服务器以进行验证和注册。</c->
+<c- p>}</c-> <c- k>catch</c-><c- p>(</c->err<c- p>)</c-> <c- p>{</c->
+  <c- c1>// 没有可接受的认证器，或用户拒绝同意。请适当处理。</c->
+<c- p>}</c->
 </pre>
         </div>
         <h4 class="heading settled" data-level="1.2.2" id="sctn-sample-authentication"><span class="secno">1.2.2.
@@ -2168,27 +2177,27 @@ navigator<c- p>.</c->credentials<c- p>.</c->create<c- p>({</c-> publicKey <c- p>
                         class="idl"><a data-link-type="idl" href="#dom-collectedclientadditionalpaymentdata-browserboundpublickey" id="ref-for-dom-collectedclientadditionalpaymentdata-browserboundpublickey">browserBoundPublicKey</a></code>。
                 </p>
         </ol>
-        <p>如下为用户身份认证代码示例。示例代码假定支持 await/async，以便简化 promise 处理流程。</p>
-        <pre class="example highlight" id="authentication-example"><a class="self-link" href="#authentication-example"></a><c- d>/* securePaymentConfirmationAvailability 表示浏览器是否支持SPC */</c->
-<c- d>/* 不表示用户当前设备上是否有可用凭证。 */</c->
+        <p>以下是用于认证用户的示例代码。注意，示例代码
+            假定可以使用 async/await，以便更易读地处理 promise。</p>
+        <pre class="example highlight" id="authentication-example"><a class="self-link" href="#authentication-example"></a><c- d>/* securePaymentConfirmationAvailability 表示浏览器是否 */</c->
+<c- d>/* 支持 SPC。它并不表示用户是否已在此设备上 */</c->
+<c- d>/* 准备好可用的凭据。 */</c->
 <c- a>const</c-> spcAvailable <c- o>=</c->
-  PaymentRequest <c- o>&amp;&amp;</c->
-  PaymentRequest<c- p>.</c->securePaymentConfirmationAvailability <c- o>&amp;&amp;</c->
-  <c- p>(</c-><c- k>await</c-> PaymentRequest<c- p>.</c->securePaymentConfirmationAvailability<c- p>())</c-> <c- o>===</c-> <c- t>'available'</c-><c- p>;</c->
+  <c- p>(</c-><c- k>await</c-> window<c- p>.</c->PaymentRequest<c- o>?</c-><c- p>.</c->securePaymentConfirmationAvailability<c- o>?</c-><c- p>.())</c-> <c- o>===</c-> <c- t>'available'</c-><c- p>;</c->
 <c- k>if</c-> <c- p>(</c-><c- o>!</c->spcAvailable<c- p>)</c-> <c- p>{</c->
-  <c- d>/* 浏览器不支持SPC，商户应回退到传统流程。 */</c->
+  <c- d>/* 浏览器不支持 SPC；商户应回退到传统流程。 */</c->
 <c- p>}</c->
 
 <c- a>const</c-> request <c- o>=</c-> <c- ow>new</c-> PaymentRequest<c- p>([{</c->
   supportedMethods<c- o>:</c-> <c- u>"secure-payment-confirmation"</c-><c- p>,</c->
   data<c- o>:</c-> <c- p>{</c->
-    <c- c1>// 从银行获取的凭证ID列表</c->
+    <c- c1>// 从银行获取的凭据 ID 列表。</c->
     credentialIds<c- p>,</c->
 
     rpId<c- o>:</c-> <c- u>"fancybank.example"</c-><c- p>,</c->
 
-    <c- c1>// 挑战值也是由银行获取</c->
-    challenge<c- o>:</c-> <c- ow>new</c-> Uint8Array<c- p>([</c-><c- mf>21</c-><c- p>,</c-><c- mf>31</c-><c- p>,</c-><c- mf>105</c-> <c- d>/* 银行生成的其他29个随机字节 */</c-><c- p>]),</c->
+    <c- c1>// challenge 也从银行获取。</c->
+    challenge<c- o>:</c-> <c- ow>new</c-> Uint8Array<c- p>([</c-><c- mf>21</c-><c- p>,</c-><c- mf>31</c-><c- p>,</c-><c- mf>105</c-> <c- d>/* 银行生成的另外 29 个随机字节 */</c-><c- p>]),</c->
 
     instrument<c- o>:</c-> <c- p>{</c->
       displayName<c- o>:</c-> <c- u>"FancyBank Platinum Card"</c-><c- p>,</c->
@@ -2210,13 +2219,16 @@ navigator<c- p>.</c->credentials<c- p>.</c->create<c- p>({</c-> publicKey <c- p>
       <c- p>},</c->
     <c- p>],</c->
 
-    <c- c1>// 调用方请求本地化体验</c->
+    <c- c1>// 调用者请求的本地化体验</c->
     locale<c- o>:</c-> <c- p>[</c-><c- u>"en"</c-><c- p>],</c->
 
-    timeout<c- o>:</c-> <c- mf>360000</c-><c- p>,</c->  <c- c1>// 6分钟</c->
+    timeout<c- o>:</c-> <c- mf>360000</c-><c- p>,</c->  <c- c1>// 6 分钟</c->
 
-    <c- c1>// 可选的算法列表，默认ES256和RS256，本例允许ES256和RS256，偏好ES256。</c->
-    <c- c1>// 浏览器绑定密钥已存在时不会创建，仅当需要新建时使用此列表。</c->
+    <c- c1>// 允许算法的可选列表，默认使用 ES256 和 RS256。</c->
+    <c- c1>// 在此示例中允许 ES256 和 RS256，并偏好 ES256。</c->
+    <c- c1>// 浏览器绑定密钥在已经存在时不会被创建，</c->
+    <c- c1>// 因此此列表只在确实需要创建浏览器绑定密钥时</c->
+    <c- c1>// 使用。</c->
     browserBoundPubKeyCredParams<c- o>:</c-> <c- p>[</c->
       <c- p>{</c->
         type<c- o>:</c-> <c- u>"public-key"</c-><c- p>,</c->
@@ -2241,11 +2253,12 @@ navigator<c- p>.</c->credentials<c- p>.</c->create<c- p>({</c-> publicKey <c- p>
   <c- a>const</c-> response <c- o>=</c-> <c- k>await</c-> request<c- p>.</c->show<c- p>();</c->
   <c- k>await</c-> response<c- p>.</c->complete<c- p>(</c-><c- t>'success'</c-><c- p>);</c->
 
-  <c- c1>// response.data 为 PublicKeyCredential，clientDataJSON 包含由发卡银行验证的交易数据。</c->
+  <c- c1>// response.data 是一个 PublicKeyCredential，其 clientDataJSON</c->
+  <c- c1>// 包含供发卡银行验证的交易数据。</c->
 
-  <c- d>/* 将 response.data 发送给发卡银行进行验证 */</c->
+  <c- d>/* 将 response.data 发送到发卡银行进行验证 */</c->
 <c- p>}</c-> <c- k>catch</c-> <c- p>(</c->err<c- p>)</c-> <c- p>{</c->
-  <c- d>/* SPC无法使用，商户应回退到传统流程 */</c->
+  <c- d>/* 无法使用 SPC；商户应回退到传统流程 */</c->
 <c- p>}</c->
 </pre>
         <h2 class="heading settled" data-level="2" id="sctn-terminology"><span class="secno">2. </span><span
@@ -2310,8 +2323,10 @@ navigator<c- p>.</c->credentials<c- p>.</c->create<c- p>({</c-> publicKey <c- p>
                 </p>
             <dt data-md><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="browser-bound-key">浏览器绑定密钥</dfn>
             <dd data-md>
-                <p>一个由用户代理绑定到单一设备的公私<a data-link-type="dfn" href="#key-pair" id="ref-for-key-pair①">密钥对</a>，除 WebAuthn
-                    凭证外还能对交易详情进行签名。</p>
+                <p>一个公私 <a data-link-type="dfn" href="#key-pair" id="ref-for-key-pair①">密钥对</a>，它
+                    除了 WebAuthn 凭据之外，还会对交易详情进行签名，并由
+                    用户代理绑定到单个设备。<b>注意：</b> 选择这个名称是因为此功能的初始实现
+                    是为浏览器创建的，但该概念适用于任何用户代理。</p>
             <dt data-md><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="key-pair">密钥对</dfn>
             <dd data-md>
                 <p>密钥对是由<a data-link-type="dfn" href="https://infra.spec.whatwg.org/#struct"
@@ -2559,6 +2574,12 @@ navigator<c- p>.</c->credentials<c- p>.</c->create<c- p>({</c-> publicKey <c- p>
                         id="ref-for-webauthn-extensions②">WebAuthn扩展</a>。调用者无需指定<a
                         href="#sctn-payment-extension-registration">支付扩展</a>，会自动添加。
                 </p>
+                <p class="note" role="note"><span class="marker">注意：</span> 如果此
+                    字典非空，第三方 SPC 调用将抛出异常，以避免对可
+                    存储私有数据的 <a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
+                        id="ref-for-relying-party①⑤">依赖方</a> 扩展的攻击。参见 <a href="#sctn-security-webauthn-extensions">§
+                        11.1.3 WebAuthn 扩展
+                        仅允许用于依赖方</a>。</p>
             <dt data-md><code
                     class="idl"><a data-link-type="idl" href="#dom-securepaymentconfirmationrequest-browserboundpubkeycredparams" id="ref-for-dom-securepaymentconfirmationrequest-browserboundpubkeycredparams">browserBoundPubKeyCredParams</a></code>
             <dd data-md>
@@ -2813,8 +2834,8 @@ navigator<c- p>.</c->credentials<c- p>.</c->create<c- p>({</c-> publicKey <c- p>
             <li data-md>
                 <p>如果 <var>data</var>["<code
                         class="idl"><a data-link-type="idl" href="#dom-securepaymentconfirmationrequest-credentialids" id="ref-for-dom-securepaymentconfirmationrequest-credentialids①">credentialIds</a></code>"]
-                    为空，则抛出
-                    <code
+                    为空，
+                    抛出一个 <code
                         class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#exceptiondef-rangeerror" id="ref-for-exceptiondef-rangeerror①">RangeError</a></code>。
                 </p>
             <li data-md>
@@ -2824,40 +2845,38 @@ navigator<c- p>.</c->credentials<c- p>.</c->create<c- p>({</c-> publicKey <c- p>
                 </p>
                 <ol>
                     <li data-md>
-                        <p>如果 <var>id</var> 为空，则抛出
-                            <code
+                        <p>如果 <var>id</var> 为空，抛出一个 <code
                                 class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#exceptiondef-rangeerror" id="ref-for-exceptiondef-rangeerror②">RangeError</a></code>。
                         </p>
                 </ol>
             <li data-md>
                 <p>如果 <var>data</var>["<code
                         class="idl"><a data-link-type="idl" href="#dom-securepaymentconfirmationrequest-challenge" id="ref-for-dom-securepaymentconfirmationrequest-challenge①">challenge</a></code>"]
-                    为 null 或为空，则抛出
-                    <code
+                    为 null 或
+                    为空，抛出一个 <code
                         class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror">TypeError</a></code>。
                 </p>
             <li data-md>
                 <p>如果 <var>data</var>["<code
                         class="idl"><a data-link-type="idl" href="#dom-securepaymentconfirmationrequest-instrument" id="ref-for-dom-securepaymentconfirmationrequest-instrument①">instrument</a></code>"]["<code
                         class="idl"><a data-link-type="idl" href="#dom-paymentcredentialinstrument-displayname" id="ref-for-dom-paymentcredentialinstrument-displayname">displayName</a></code>"]
-                    为空，则抛出
-                    <code
+                    为空，抛出一个 <code
                         class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror①">TypeError</a></code>。
                 </p>
             <li data-md>
                 <p>如果 <var>data</var>["<code
                         class="idl"><a data-link-type="idl" href="#dom-securepaymentconfirmationrequest-instrument" id="ref-for-dom-securepaymentconfirmationrequest-instrument②">instrument</a></code>"]["<code
                         class="idl"><a data-link-type="idl" href="#dom-paymentcredentialinstrument-icon" id="ref-for-dom-paymentcredentialinstrument-icon">icon</a></code>"]
-                    为空，则抛出
-                    <code
+                    为空，抛出一个 <code
                         class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror②">TypeError</a></code>。
                 </p>
             <li data-md>
-                <p>在 data["<code
+                <p>对 data["<code
                         class="idl"><a data-link-type="idl" href="#dom-securepaymentconfirmationrequest-instrument" id="ref-for-dom-securepaymentconfirmationrequest-instrument③">instrument</a></code>"]
                     ["<code
                         class="idl"><a data-link-type="idl" href="#dom-paymentcredentialinstrument-icon" id="ref-for-dom-paymentcredentialinstrument-icon①">icon</a></code>"]
-                    上运行 URL 解析器。如果返回失败，则抛出
+                    运行 URL 解析器。
+                    如果这返回失败，则抛出一个
                     <code
                         class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror③">TypeError</a></code>。
                 </p>
@@ -2865,16 +2884,15 @@ navigator<c- p>.</c->credentials<c- p>.</c->create<c- p>({</c-> publicKey <c- p>
                 <p>如果 <var>data</var>["<code
                         class="idl"><a data-link-type="idl" href="#dom-securepaymentconfirmationrequest-instrument" id="ref-for-dom-securepaymentconfirmationrequest-instrument④">instrument</a></code>"]["<code
                         class="idl"><a data-link-type="idl" href="#dom-paymentcredentialinstrument-details" id="ref-for-dom-paymentcredentialinstrument-details">details</a></code>"]
-                    存在但为空，则抛出
-                    <code
+                    存在但为空，抛出一个 <code
                         class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror④">TypeError</a></code>。
                 </p>
             <li data-md>
                 <p>如果 <var>data</var>["<code
                         class="idl"><a data-link-type="idl" href="#dom-securepaymentconfirmationrequest-rpid" id="ref-for-dom-securepaymentconfirmationrequest-rpid①">rpId</a></code>"]
-                    不是<a data-link-type="dfn" href="https://url.spec.whatwg.org/#valid-domain"
-                        id="ref-for-valid-domain">有效域名</a>，则抛出
-                    <code
+                    不是一个
+                    <a data-link-type="dfn" href="https://url.spec.whatwg.org/#valid-domain"
+                        id="ref-for-valid-domain">有效域名</a>，抛出一个 <code
                         class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror⑤">TypeError</a></code>。
                 </p>
             <li data-md>
@@ -2883,8 +2901,8 @@ navigator<c- p>.</c->credentials<c- p>.</c->create<c- p>({</c-> publicKey <c- p>
                     和
                     <var>data</var>["<code
                         class="idl"><a data-link-type="idl" href="#dom-securepaymentconfirmationrequest-payeeorigin" id="ref-for-dom-securepaymentconfirmationrequest-payeeorigin②">payeeOrigin</a></code>"]
-                    均被省略，则抛出
-                    <code
+                    都被省略，
+                    抛出一个 <code
                         class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror⑥">TypeError</a></code>。
                 </p>
             <li data-md>
@@ -2893,8 +2911,8 @@ navigator<c- p>.</c->credentials<c- p>.</c->create<c- p>({</c-> publicKey <c- p>
                     或
                     <var>data</var>["<code
                         class="idl"><a data-link-type="idl" href="#dom-securepaymentconfirmationrequest-payeeorigin" id="ref-for-dom-securepaymentconfirmationrequest-payeeorigin③">payeeOrigin</a></code>"]
-                    中任一存在但为空，则抛出
-                    <code
+                    中的任一项存在且
+                    为空，抛出一个 <code
                         class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror⑦">TypeError</a></code>。
                 </p>
             <li data-md>
@@ -2903,21 +2921,20 @@ navigator<c- p>.</c->credentials<c- p>.</c->create<c- p>({</c-> publicKey <c- p>
                     存在：</p>
                 <ol>
                     <li data-md>
-                        <p>令 <var>parsedURL</var> 为在
+                        <p>令 <var>parsedURL</var> 为对
                             <var>data</var>["<code
                                 class="idl"><a data-link-type="idl" href="#dom-securepaymentconfirmationrequest-payeeorigin" id="ref-for-dom-securepaymentconfirmationrequest-payeeorigin⑤">payeeOrigin</a></code>"]
-                            上运行<a data-link-type="dfn" href="https://url.spec.whatwg.org/#concept-url-parser"
-                                id="ref-for-concept-url-parser">URL 解析器</a>的结果。
+                            运行 <a data-link-type="dfn" href="https://url.spec.whatwg.org/#concept-url-parser"
+                                id="ref-for-concept-url-parser">URL 解析器</a> 的结果。
                         </p>
                     <li data-md>
-                        <p>如果 <var>parsedURL</var> 为失败，则抛出
-                            <code
+                        <p>如果 <var>parsedURL</var> 为失败，则抛出一个 <code
                                 class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror⑧">TypeError</a></code>。
                         </p>
                     <li data-md>
-                        <p>如果 <var>parsedURL</var> 的<a data-link-type="dfn"
+                        <p>如果 <var>parsedURL</var> 的 <a data-link-type="dfn"
                                 href="https://url.spec.whatwg.org/#concept-url-scheme"
-                                id="ref-for-concept-url-scheme">scheme</a> 不是 "<code>https</code>"，则抛出
+                                id="ref-for-concept-url-scheme">scheme</a> 不是 "<code>https</code>"，则抛出一个
                             <code
                                 class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror⑨">TypeError</a></code>。
                         </p>
@@ -2937,21 +2954,22 @@ navigator<c- p>.</c->credentials<c- p>.</c->create<c- p>({</c-> publicKey <c- p>
                             <li data-md>
                                 <p>如果 <var>logo</var>["<code
                                         class="idl"><a data-link-type="idl" href="#dom-paymententitylogo-url" id="ref-for-dom-paymententitylogo-url">url</a></code>"]
-                                    为空，则抛出
+                                    为空，抛出一个
                                     <code
                                         class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror①⓪">TypeError</a></code>。
                                 </p>
                             <li data-md>
-                                <p>在 <var>logo</var>["<code
+                                <p>对 <var>logo</var>["<code
                                         class="idl"><a data-link-type="idl" href="#dom-paymententitylogo-url" id="ref-for-dom-paymententitylogo-url①">url</a></code>"]
-                                    上运行 URL 解析器。如果返回失败，则抛出
-                                    <code
+                                    运行 URL 解析器。
+                                    如果
+                                    这返回失败，抛出一个 <code
                                         class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror①①">TypeError</a></code>。
                                 </p>
                             <li data-md>
                                 <p>如果 <var>logo</var>["<code
                                         class="idl"><a data-link-type="idl" href="#dom-paymententitylogo-label" id="ref-for-dom-paymententitylogo-label">label</a></code>"]
-                                    为空，则抛出
+                                    为空，抛出一个
                                     <code
                                         class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror①②">TypeError</a></code>。
                                 </p>
@@ -2959,10 +2977,29 @@ navigator<c- p>.</c->credentials<c- p>.</c->create<c- p>({</c-> publicKey <c- p>
                 </ol>
             <li data-md>
                 <p>如果 <var>data</var>["<code
+                        class="idl"><a data-link-type="idl" href="#dom-securepaymentconfirmationrequest-extensions" id="ref-for-dom-securepaymentconfirmationrequest-extensions①">extensions</a></code>"]
+                    <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#map-exists"
+                        id="ref-for-map-exists①">存在</a>
+                    且<a data-link-type="dfn" href="https://infra.spec.whatwg.org/#map-is-empty"
+                        id="ref-for-map-is-empty">非空</a>，并且
+                    <var>data</var>["<code
+                        class="idl"><a data-link-type="idl" href="#dom-securepaymentconfirmationrequest-rpid" id="ref-for-dom-securepaymentconfirmationrequest-rpid②">rpId</a></code>"]
+                    不是 <var>request</var> 的<a data-link-type="dfn"
+                        href="https://html.spec.whatwg.org/multipage/webappapis.html#relevant-settings-object"
+                        id="ref-for-relevant-settings-object">相关设置对象</a>的
+                    <a data-link-type="dfn"
+                        href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-origin"
+                        id="ref-for-concept-settings-object-origin">源</a>，抛出
+                    一个 <code
+                        class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror①③">TypeError</a></code>。
+                </p>
+            <li data-md>
+                <p>如果 <var>data</var>["<code
                         class="idl"><a data-link-type="idl" href="#dom-securepaymentconfirmationrequest-locale" id="ref-for-dom-securepaymentconfirmationrequest-locale①">locale</a></code>"]
                     <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#map-exists"
-                        id="ref-for-map-exists①">存在</a>且<a data-link-type="dfn"
-                        href="https://infra.spec.whatwg.org/#list-is-empty" id="ref-for-list-is-empty">非空</a>
+                        id="ref-for-map-exists②">存在</a>且
+                    <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-is-empty"
+                        id="ref-for-list-is-empty">非空</a>
                 </p>
                 <ol>
                     <li data-md>
@@ -2972,19 +3009,20 @@ navigator<c- p>.</c->credentials<c- p>.</c->create<c- p>({</c-> publicKey <c- p>
                         </p>
                         <ol>
                             <li data-md>
-                                <p>如果 <var>tag</var> 不是格式正确的 <a data-link-type="biblio" href="#biblio-bcp47"
-                                        title="Tags for Identifying Languages">[BCP47]</a> 语言标记，则抛出
+                                <p>如果 <var>tag</var> 不是格式良好的 <a data-link-type="biblio" href="#biblio-bcp47"
+                                        title="Tags for Identifying Languages">[BCP47]</a> 语言
+                                    标签，抛出一个
                                     <code
-                                        class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror①③">TypeError</a></code>。
+                                        class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror①④">TypeError</a></code>。
                                 </p>
                         </ol>
                 </ol>
-                <p class="note" role="note"><span class="marker">NOTE:</span>
-                    <code
+                <p class="note" role="note"><span class="marker">注意：</span> <code
                         class="idl"><a data-link-type="idl" href="#dom-securepaymentconfirmationrequest-locale" id="ref-for-dom-securepaymentconfirmationrequest-locale③">locale</a></code>
-                    与关联到特定输入成员的语言或方向元数据不同，它表示调用方所请求的本地化体验，而不是对某个具体字符串值的声明。更多讨论见
-                    <a href="#sctn-i18n-considerations">§ 14 Internationalization Considerations</a>。
-                </p>
+                    不同于与特定输入
+                    成员相关联的语言或方向元数据，因为它表示调用者请求的本地化
+                    体验，而不是关于某个特定字符串值的断言。
+                    更多讨论见 <a href="#sctn-i18n-considerations">§ 14 国际化考量</a>。</p>
         </ol>
         <h3 class="heading settled" data-level="4.9" id="sctn-steps-to-check-if-a-payment-can-be-made"><span
                 class="secno">4.9. </span><span class="content">检查是否可支付的步骤</span><a class="self-link"
@@ -3147,9 +3185,9 @@ navigator<c- p>.</c->credentials<c- p>.</c->create<c- p>({</c-> publicKey <c- p>
                     <li data-md>
                         <p>运行<a data-link-type="dfn"
                                 href="#steps-to-silently-determine-if-a-credential-is-available-for-the-current-device"
-                                id="ref-for-steps-to-silently-determine-if-a-credential-is-available-for-the-current-device">静默确定当前设备是否可用某个凭据的步骤</a>，传入
+                                id="ref-for-steps-to-silently-determine-if-a-credential-is-available-for-the-current-device">静默确定凭据是否可用于当前设备的步骤</a>，传入
                             <var>data</var>["<code
-                                class="idl"><a data-link-type="idl" href="#dom-securepaymentconfirmationrequest-rpid" id="ref-for-dom-securepaymentconfirmationrequest-rpid②">rpId</a></code>"]
+                                class="idl"><a data-link-type="idl" href="#dom-securepaymentconfirmationrequest-rpid" id="ref-for-dom-securepaymentconfirmationrequest-rpid③">rpId</a></code>"]
                             和 <var>id</var>。
                             如果结果为 <code>false</code>，则从
                             <var>data</var>["<code
@@ -3158,19 +3196,21 @@ navigator<c- p>.</c->credentials<c- p>.</c->create<c- p>({</c-> publicKey <c- p>
                         </p>
                     <li data-md>
                         <p>如果 <var>data</var>["<code
-                                class="idl"><a data-link-type="idl" href="#dom-securepaymentconfirmationrequest-rpid" id="ref-for-dom-securepaymentconfirmationrequest-rpid③">rpId</a></code>"]
-                            不是 <var>request</var> 的<a data-link-type="dfn"
+                                class="idl"><a data-link-type="idl" href="#dom-securepaymentconfirmationrequest-rpid" id="ref-for-dom-securepaymentconfirmationrequest-rpid④">rpId</a></code>"]
+                            不是
+                            <var>request</var> 的<a data-link-type="dfn"
                                 href="https://html.spec.whatwg.org/multipage/webappapis.html#relevant-settings-object"
-                                id="ref-for-relevant-settings-object">相关设置对象</a>的<a data-link-type="dfn"
+                                id="ref-for-relevant-settings-object①">相关设置对象</a>的<a data-link-type="dfn"
                                 href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-origin"
-                                id="ref-for-concept-settings-object-origin">origin</a>，则运行
-                            <a data-link-type="dfn"
+                                id="ref-for-concept-settings-object-origin①">源</a>，
+                            则运行<a data-link-type="dfn"
                                 href="#steps-to-silently-determine-if-an-spc-credential-is-third-party-enabled"
-                                id="ref-for-steps-to-silently-determine-if-an-spc-credential-is-third-party-enabled">静默确定某
+                                id="ref-for-steps-to-silently-determine-if-an-spc-credential-is-third-party-enabled">静默确定
                                 SPC 凭据是否启用第三方的步骤</a>，传入
                             <var>data</var>["<code
-                                class="idl"><a data-link-type="idl" href="#dom-securepaymentconfirmationrequest-rpid" id="ref-for-dom-securepaymentconfirmationrequest-rpid④">rpId</a></code>"]
-                            和 <var>id</var>。若结果为 <code>false</code>，则从
+                                class="idl"><a data-link-type="idl" href="#dom-securepaymentconfirmationrequest-rpid" id="ref-for-dom-securepaymentconfirmationrequest-rpid⑤">rpId</a></code>"]
+                            和 <var>id</var>。如果
+                            结果为 <code>false</code>，则从
                             <var>data</var>["<code
                                 class="idl"><a data-link-type="idl" href="#dom-securepaymentconfirmationrequest-credentialids" id="ref-for-dom-securepaymentconfirmationrequest-credentialids⑤">credentialIds</a></code>"]
                             中移除 <var>id</var>。
@@ -3194,7 +3234,7 @@ navigator<c- p>.</c->credentials<c- p>.</c->create<c- p>({</c-> publicKey <c- p>
         </h4>
         <p>为避免限制用户代理的实现选择，本规范不要求用户代理展示特定的用户界面。然而，为了让
             <a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
-                id="ref-for-relying-party①⑤">Relying Party</a> 可以信任
+                id="ref-for-relying-party①⑥">Relying Party</a> 可以信任
             <code
                 class="idl"><a data-link-type="idl" href="#dictdef-collectedclientpaymentdata" id="ref-for-dictdef-collectedclientpaymentdata">CollectedClientPaymentData</a></code>
             中所包含的信息，用户代理必须确保以下内容已传达给用户，并已为该次认证收集到用户同意：
@@ -3275,7 +3315,7 @@ navigator<c- p>.</c->credentials<c- p>.</c->create<c- p>({</c-> publicKey <c- p>
                 class="idl"><a data-link-type="idl" href="#dom-securepaymentconfirmationrequest-showoptout" id="ref-for-dom-securepaymentconfirmationrequest-showoptout①">showOptOut</a></code>
             为 <code>true</code>，则用户代理必须给用户提供机会，指明他们希望针对该
             <code
-                class="idl"><a data-link-type="idl" href="#dom-securepaymentconfirmationrequest-rpid" id="ref-for-dom-securepaymentconfirmationrequest-rpid⑤">给定 Relying Party</a></code>
+                class="idl"><a data-link-type="idl" href="#dom-securepaymentconfirmationrequest-rpid" id="ref-for-dom-securepaymentconfirmationrequest-rpid⑥">给定 Relying Party</a></code>
             退出该流程。
         </p>
         <details class="wpt-tests-block" dir="ltr" lang="en">
@@ -3374,7 +3414,7 @@ navigator<c- p>.</c->credentials<c- p>.</c->create<c- p>({</c-> publicKey <c- p>
                 </p>
             <dt data-md>用户希望针对该
                 <code
-                    class="idl"><a data-link-type="idl" href="#dom-securepaymentconfirmationrequest-rpid" id="ref-for-dom-securepaymentconfirmationrequest-rpid⑥">给定 Relying Party</a></code>
+                    class="idl"><a data-link-type="idl" href="#dom-securepaymentconfirmationrequest-rpid" id="ref-for-dom-securepaymentconfirmationrequest-rpid⑦">给定 Relying Party</a></code>
                 退出该流程，
             <dd data-md>
                 <p>用
@@ -3468,7 +3508,7 @@ navigator<c- p>.</c->credentials<c- p>.</c->create<c- p>({</c-> publicKey <c- p>
             <li data-md>
                 <p>令 <var>topOrigin</var> 为 <var>request</var> 的<a data-link-type="dfn"
                         href="https://html.spec.whatwg.org/multipage/webappapis.html#relevant-settings-object"
-                        id="ref-for-relevant-settings-object①">相关设置对象</a>的<a data-link-type="dfn"
+                        id="ref-for-relevant-settings-object②">相关设置对象</a>的<a data-link-type="dfn"
                         href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-environment-top-level-origin"
                         id="ref-for-concept-environment-top-level-origin">顶层源（top-level origin）</a>。</p>
             <li data-md>
@@ -3486,7 +3526,7 @@ navigator<c- p>.</c->credentials<c- p>.</c->create<c- p>({</c-> publicKey <c- p>
                             class="idl"><a data-link-type="idl" href="#dom-authenticationextensionspaymentinputs-rpid" id="ref-for-dom-authenticationextensionspaymentinputs-rpid">rpId</a></code>
                     <dd data-md>
                         <p><var>data</var>["<code
-                                class="idl"><a data-link-type="idl" href="#dom-securepaymentconfirmationrequest-rpid" id="ref-for-dom-securepaymentconfirmationrequest-rpid⑦">rpId</a></code>"]
+                                class="idl"><a data-link-type="idl" href="#dom-securepaymentconfirmationrequest-rpid" id="ref-for-dom-securepaymentconfirmationrequest-rpid⑧">rpId</a></code>"]
                         </p>
                     <dt data-md><code
                             class="idl"><a data-link-type="idl" href="#dom-authenticationextensionspaymentinputs-toporigin" id="ref-for-dom-authenticationextensionspaymentinputs-toporigin">topOrigin</a></code>
@@ -3520,7 +3560,7 @@ navigator<c- p>.</c->credentials<c- p>.</c->create<c- p>({</c-> publicKey <c- p>
                                 class="idl"><a data-link-type="idl" href="#dictdef-paymententitylogo" id="ref-for-dictdef-paymententitylogo③">PaymentEntityLogo</a></code>
                             添加多个 URL，以原生支持暗黑模式等功能。若发生这种情况，本规范将需要向
                             <a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
-                                id="ref-for-relying-party①⑥">Relying Party</a> 指明某个
+                                id="ref-for-relying-party①⑦">Relying Party</a> 指明某个
                             <code
                                 class="idl"><a data-link-type="idl" href="#dictdef-paymententitylogo" id="ref-for-dictdef-paymententitylogo④">PaymentEntityLogo</a></code>
                             实际展示的是哪个 URL。
@@ -3555,7 +3595,7 @@ navigator<c- p>.</c->credentials<c- p>.</c->create<c- p>({</c-> publicKey <c- p>
                         class="idl"><a data-link-type="idl" href="#dom-authenticationextensionsclientinputs-payment" id="ref-for-dom-authenticationextensionsclientinputs-payment①">payment</a></code>
                     成员设为 <var>payment</var>，其余成员从
                     <var>data</var>["<code
-                        class="idl"><a data-link-type="idl" href="#dom-securepaymentconfirmationrequest-extensions" id="ref-for-dom-securepaymentconfirmationrequest-extensions①">extensions</a></code>"]
+                        class="idl"><a data-link-type="idl" href="#dom-securepaymentconfirmationrequest-extensions" id="ref-for-dom-securepaymentconfirmationrequest-extensions②">extensions</a></code>"]
                     填充。
                 </p>
             <li data-md>
@@ -3581,7 +3621,7 @@ navigator<c- p>.</c->credentials<c- p>.</c->create<c- p>({</c-> publicKey <c- p>
                             class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/webauthn-3/#dom-publickeycredentialrequestoptions-rpid" id="ref-for-dom-publickeycredentialrequestoptions-rpid">rpId</a></code>
                     <dd data-md>
                         <p><var>data</var>["<code
-                                class="idl"><a data-link-type="idl" href="#dom-securepaymentconfirmationrequest-rpid" id="ref-for-dom-securepaymentconfirmationrequest-rpid⑧">rpId</a></code>"]
+                                class="idl"><a data-link-type="idl" href="#dom-securepaymentconfirmationrequest-rpid" id="ref-for-dom-securepaymentconfirmationrequest-rpid⑨">rpId</a></code>"]
                         </p>
                     <dt data-md><code
                             class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/webauthn-3/#dom-publickeycredentialrequestoptions-userverification" id="ref-for-dom-publickeycredentialrequestoptions-userverification">userVerification</a></code>
@@ -3673,7 +3713,7 @@ navigator<c- p>.</c->credentials<c- p>.</c->create<c- p>({</c-> publicKey <c- p>
         </p>
         <p>对于注册，此扩展允许浏览器识别和缓存安全支付确认凭证ID。对于认证，此扩展允许第三方代表
             <a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
-                id="ref-for-relying-party①⑦">依赖方</a>执行认证流程，并将交易信息加入签名密文中。
+                id="ref-for-relying-party①⑧">依赖方</a>执行认证流程，并将交易信息加入签名密文中。
         </p>
         <p>注意，网站不应直接用此扩展调用
             <code
@@ -3817,7 +3857,7 @@ navigator<c- p>.</c->credentials<c- p>.</c->create<c- p>({</c-> publicKey <c- p>
                                         </p>
                                 </ul>
                                 <p>则抛出 <code
-                                        class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror①④">TypeError</a></code>。
+                                        class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror①⑤">TypeError</a></code>。
                                 </p>
                                 <p class="note" role="note"><span
                                         class="marker">注意：</span>这些值目前为硬编码，源自Chrome初始实现。当前限制可能变化，欢迎提出支持其他值的场景。</p>
@@ -4251,7 +4291,7 @@ navigator<c- p>.</c->credentials<c- p>.</c->create<c- p>({</c-> publicKey <c- p>
                     class="idl"><a data-link-type="idl" href="#dom-collectedclientadditionalpaymentdata-rpid" id="ref-for-dom-collectedclientadditionalpaymentdata-rpid①">rpId</a></code>
             <dd data-md>
                 <p>创建该凭据的 <a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
-                        id="ref-for-relying-party①⑧">Relying Party</a> 的 id。</p>
+                        id="ref-for-relying-party①⑨">Relying Party</a> 的 id。</p>
                 <p class="note" role="note"><span class="marker">NOTE:</span> 出于历史原因，一些实现还可能使用名称为
                     <code>rp</code> 的参数来包含此值。当 <code>rp</code> 和
                     <code>rpId</code> 同时存在时，它们的取值必须相同。
@@ -4327,38 +4367,67 @@ navigator<c- p>.</c->credentials<c- p>.</c->create<c- p>({</c-> publicKey <c- p>
         </dl>
         <h2 class="heading settled" data-level="6" id="sctn-browser-bound-key-store"><span class="secno">6. </span><span
                 class="content">浏览器绑定密钥存储</span><a class="self-link" href="#sctn-browser-bound-key-store"></a></h2>
-        <p>这是由 <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#user-agent"
-                id="ref-for-user-agent">用户代理</a>持有的内部组件，管理依赖平台的加密密钥对，包括它们与 <a data-link-type="dfn"
-                href="#spc-credential" id="ref-for-spc-credential⑥">SPC凭证</a>（即passkey）的关联。 本节说明 <dfn
-                class="dfn-paneled" data-dfn-type="dfn" data-lt="browser bound key store" data-noexport
-                id="browser-bound-key-store">浏览器绑定密钥存储</dfn>及其密钥对创建、绑定、检索和签名过程。</p>
-        <p class="note" role="note"><span class="marker">注意：</span>
-            <a data-link-type="dfn" href="#browser-bound-key-store"
-                id="ref-for-browser-bound-key-store">浏览器绑定密钥存储</a>需要生成密钥对、检索密钥对、导出公钥、生成签名。许多操作系统都提供相关API，并将私钥存储于设备安全元件（如有）。如
+        <p>这是一个由 <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#user-agent"
+                id="ref-for-user-agent">用户代理</a> 拥有的内部组件，用于管理
+            依赖平台的加密密钥对，包括它们与 <a data-link-type="dfn" href="#spc-credential" id="ref-for-spc-credential⑥">SPC
+                凭据</a>（即通行密钥）的关联。每个浏览器
+            绑定密钥存储都由单个
+            用户代理拥有，该用户代理将其同时绑定到设备和浏览器。每个
+            用户代理可以持有多个浏览器绑定密钥存储，
+            例如当用户代理有多个配置文件时。
+            本节说明<dfn class="dfn-paneled" data-dfn-type="dfn" data-lt="browser bound key store" data-noexport
+                id="browser-bound-key-store">浏览器绑定密钥
+                存储</dfn>以及使用浏览器绑定密钥对进行创建、绑定、检索和签名的过程。</p>
+        <p class="note" role="note"><span class="marker">注意：</span> <a data-link-type="dfn"
+                href="#browser-bound-key-store" id="ref-for-browser-bound-key-store">浏览器绑定密钥存储</a>需要
+            生成密钥对、检索密钥
+            对、导出公钥并生成签名。许多操作系统
+            提供实现这些操作的 API，并在可用时提供将
+            私钥存储在设备安全元件中的能力。例如
             <a href="https://source.android.com/docs/security/features/keystore">Android
                 KeyStore</a>、
-            <a href="https://developer.apple.com/documentation/cryptokit/">Apple CryptoKit</a> 或
+            <a href="https://developer.apple.com/documentation/cryptokit/">Apple CryptoKit</a>，或
             <a href="https://learn.microsoft.com/en-us/windows/win32/seccng/cng-portal">Windows Cryptography API: Next
                 Generation</a>。
         </p>
-        <p>浏览器绑定密钥存储包含如下内容：</p>
+        <p class="note" role="note"><span class="marker">注意：</span> 浏览器绑定密钥的要求和设计考量
+            在
+            <a href="https://github.com/w3c/secure-payment-confirmation/blob/main/bbk-requirements.md">BBK 要求
+                文档</a>中描述。
+            浏览器绑定密钥存储及其过程的设计基于这些要求和
+            考量。
+            在该要求文档中，术语“已安装的浏览器程序”用于指代用户代理，
+            因为
+            该文档是以浏览器实现为背景编写的。不过，这些要求和设计
+            考量
+            适用于任何用户代理实现。
+        </p>
+        <p>浏览器绑定密钥存储包含以下内容：</p>
         <dl>
             <dt data-md><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport
                     id="browser_bound_map">browser_bound_map</dfn>
             <dd data-md>
-                <p>从 <a data-link-type="dfn" href="https://w3c.github.io/webauthn/#credential-id"
-                        id="ref-for-credential-id②">Credential ID</a> 到密钥对标识符的映射。</p>
+                <p>一个从 <a data-link-type="dfn" href="https://w3c.github.io/webauthn/#credential-id"
+                        id="ref-for-credential-id②">凭据 ID</a> 到密钥对标识符的映射。</p>
+        </dl>
+        <p class="note" role="note"><span class="marker">注意：</span> 每个密钥对标识符最多可以关联一个
+            <a data-link-type="dfn" href="https://w3c.github.io/webauthn/#credential-id" id="ref-for-credential-id③">凭据
+                ID</a>。
+        </p>
+        <dl>
             <dt data-md><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="keypair_map">keypair_map</dfn>
             <dd data-md>
-                <p>从字节数组（密钥对标识符）到由公私<a data-link-type="dfn" href="#key-pair" id="ref-for-key-pair②">密钥对</a>和算法标识符
+                <p>一个从字节数组（即密钥对标识符）到由
+                    公私 <a data-link-type="dfn" href="#key-pair" id="ref-for-key-pair②">密钥对</a>和
+                    算法标识符（即
                     <code
-                        class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/webauthn-3/#typedefdef-cosealgorithmidentifier" id="ref-for-typedefdef-cosealgorithmidentifier">COSEAlgorithmIdentifier</a></code>
-                    组成的<a data-link-type="dfn" href="https://infra.spec.whatwg.org/#tuple" id="ref-for-tuple">二元组</a>映射。
+                        class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/webauthn-3/#typedefdef-cosealgorithmidentifier" id="ref-for-typedefdef-cosealgorithmidentifier">COSEAlgorithmIdentifier</a></code>）组成的
+                    <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#tuple" id="ref-for-tuple">元组</a>的映射。
                 </p>
-                <p class="note" role="note"><span class="marker">注意：</span>
-                    用户代理可调用加密API以实现类似 <a data-link-type="dfn" href="#keypair_map"
-                        id="ref-for-keypair_map">keypair_map</a> 功能，则该部分工作可委托给加密API。
-                </p>
+                <p class="note" role="note"><span class="marker">注意：</span> 用户代理可能正在使用一个
+                    提供与 <a data-link-type="dfn" href="#keypair_map" id="ref-for-keypair_map">keypair_map</a> 等价能力的
+                    加密 API，在这种情况下，用户代理会
+                    将此方面委托给该加密 API。</p>
         </dl>
         <h3 class="heading settled" data-level="6.1" id="sctn-creating-a-keypair"><span class="secno">6.1. </span><span
                 class="content">创建密钥对</span><a class="self-link" href="#sctn-creating-a-keypair"></a></h3>
@@ -4467,52 +4536,61 @@ navigator<c- p>.</c->credentials<c- p>.</c->create<c- p>({</c-> publicKey <c- p>
                 #288</a>（涉及BBK存储类型、允许范围及是否暴露给依赖方）。</p>
         <h3 class="heading settled" data-level="6.2" id="sctn-binding-a-keypair"><span class="secno">6.2. </span><span
                 class="content">绑定密钥对</span><a class="self-link" href="#sctn-binding-a-keypair"></a></h3>
-        <p>要在给定含密钥对标识字节数组 <var>bbk_id</var> 和 <var>credential_id</var> 时 <dfn class="dfn-paneled" data-dfn-type="dfn"
-                data-noexport id="bind-a-key-pair">绑定密钥对</dfn>，可能返回失败：</p>
-        <p class="note" role="note"><span class="marker">注意：</span>将浏览器绑定密钥标识存储到 <a data-link-type="dfn"
-                href="#browser_bound_map" id="ref-for-browser_bound_map">browser_bound_map</a> 中，对应具体的 <a
-                data-link-type="dfn" href="https://w3c.github.io/webauthn/#credential-id"
-                id="ref-for-credential-id③">Credential ID</a>（即passkey标识）。</p>
+        <p>要<dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="bind-a-key-pair">绑定密钥对</dfn>，
+            给定包含密钥对
+            标识符的字节数组 <var>bbk_id</var>，以及一个字节数组 <var>credential_id</var>，可能返回
+            失败，执行以下步骤：</p>
+        <p class="note" role="note"><span class="marker">注意：</span> 将浏览器绑定密钥标识符存储到 <a data-link-type="dfn"
+                href="#browser_bound_map" id="ref-for-browser_bound_map">browser_bound_map</a> 中，用于
+            <a data-link-type="dfn" href="https://w3c.github.io/webauthn/#credential-id" id="ref-for-credential-id④">凭据
+                ID</a>（即通行密钥标识符）。
+        </p>
         <ol>
             <li data-md>
-                <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#map-set" id="ref-for-map-set②">写入</a>
+                <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#map-set" id="ref-for-map-set②">设置</a>
                     <a data-link-type="dfn" href="#browser_bound_map"
-                        id="ref-for-browser_bound_map①">browser_bound_map</a>[<var>credential_id</var>] =
-                    <var>bbk_id</var>。如遇
-                    <code
+                        id="ref-for-browser_bound_map①">browser_bound_map</a>[<var>credential_id</var>] 为
+                    <var>bbk_id</var>。捕获
+                    错误 <code
                         class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#invalidstateerror" id="ref-for-invalidstateerror">InvalidStateError</a></code>、
                     <code
-                        class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror①⑤">TypeError</a></code>
-                    或 <code
+                        class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror①⑥">TypeError</a></code>
+                    和 <code
                         class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#quotaexceedederror" id="ref-for-quotaexceedederror">QuotaExceededError</a></code>
-                    则返回失败。
+                    然后返回失败。
                 </p>
-                <p class="note" role="note"><span class="marker">注意：</span>底层文件系统操作可能抛错（如 <code
-                        class="idl"><a data-link-type="idl" href="https://fs.spec.whatwg.org/#dom-filesystemsyncaccesshandle-write" id="ref-for-dom-filesystemsyncaccesshandle-write">write(buffer, options)</a></code>）。
-                    返回false则本次交易不会包含BBK，依赖方也无法拿到BBK。后续断言会尝试新建密钥对。</p>
+                <p class="note" role="note"><span class="marker">注意：</span> 错误可能由底层
+                    文件系统操作抛出，
+                    例如 <code
+                        class="idl"><a data-link-type="idl" href="https://fs.spec.whatwg.org/#dom-filesystemsyncaccesshandle-write" id="ref-for-dom-filesystemsyncaccesshandle-write">write(buffer, options)</a></code>。
+                    这里返回 False，这会使用户代理避免
+                    在交易中包含浏览器绑定密钥，并且在这种情况下，
+                    依赖方不会在此
+                    交易中获得浏览器绑定密钥。在后续的支付断言中，将尝试创建
+                    新的密钥对。</p>
         </ol>
         <h3 class="heading settled" data-level="6.3" id="sctn-retrieving-a-browser-bound-key"><span class="secno">6.3.
             </span><span class="content">检索密钥对</span><a class="self-link"
                 href="#sctn-retrieving-a-browser-bound-key"></a></h3>
-        <p>在给定 <var>credential_id</var> 字节数组和
-            <code
+        <p>要<dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="get-or-create-a-browser-bound-key">获取或
+                创建浏览器绑定密钥</dfn>，给定一个字节数组
+            <var>credential_id</var>，以及一个由 <code
                 class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/webauthn-3/#dictdef-publickeycredentialparameters" id="ref-for-dictdef-publickeycredentialparameters③">PublicKeyCredentialParameters</a></code>
-            组成的 <var>allowed_algorithms</var> 列表时，
-            <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport
-                id="get-or-create-a-browser-bound-key">获取或创建浏览器绑定密钥</dfn>，返回包含 <a data-link-type="dfn" href="#key-pair"
-                id="ref-for-key-pair⑥">密钥对</a>及 <code
+            组成的 <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list">列表</a>，
+            <var>allowed_algorithms</var>，返回一个由<a data-link-type="dfn" href="#key-pair" id="ref-for-key-pair⑥">密钥对</a>及其
+            <code
                 class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/webauthn-3/#typedefdef-cosealgorithmidentifier" id="ref-for-typedefdef-cosealgorithmidentifier②">COSEAlgorithmIdentifier</a></code>
-            的二元组，方法如下：
+            组成的<a data-link-type="dfn" href="https://infra.spec.whatwg.org/#tuple" id="ref-for-tuple③">元组</a>：
         </p>
-        <p class="note" role="note"><span class="marker">注意：</span>找出已有对应 <a data-link-type="dfn"
-                href="https://w3c.github.io/webauthn/#credential-id" id="ref-for-credential-id④">Credential ID</a>
-            的密钥对或新建并返回。</p>
+        <p class="note" role="note"><span class="marker">注意：</span> 查找与某个 <a data-link-type="dfn"
+                href="https://w3c.github.io/webauthn/#credential-id" id="ref-for-credential-id⑤">凭据 ID</a> 关联的现有密钥对，或创建
+            一个新的关联密钥对，并返回该密钥对及其算法。</p>
         <ol>
             <li data-md>
                 <p>如果 <a data-link-type="dfn" href="#browser_bound_map"
                         id="ref-for-browser_bound_map②">browser_bound_map</a>[<var>credential_id</var>] <a
                         data-link-type="dfn" href="https://infra.spec.whatwg.org/#map-exists"
-                        id="ref-for-map-exists②">存在</a></p>
+                        id="ref-for-map-exists③">存在</a></p>
                 <ol>
                     <li data-md>
                         <p>令 <var>bbk_id</var> 为 <a data-link-type="dfn" href="#browser_bound_map"
@@ -4525,20 +4603,22 @@ navigator<c- p>.</c->credentials<c- p>.</c->create<c- p>({</c-> publicKey <c- p>
                 <p>如果 <a data-link-type="dfn" href="#browser_bound_map"
                         id="ref-for-browser_bound_map④">browser_bound_map</a>[<var>credential_id</var>] 不<a
                         data-link-type="dfn" href="https://infra.spec.whatwg.org/#map-exists"
-                        id="ref-for-map-exists③">存在</a></p>
+                        id="ref-for-map-exists④">存在</a></p>
                 <ol>
                     <li data-md>
                         <p>令 (<var>new_bbk_and_algorithm</var>, <var>bbk_id</var>) 为使用
-                            <var>allowed_algorithms</var> <a data-link-type="dfn" href="#create-a-key-pair"
-                                id="ref-for-create-a-key-pair①">创建密钥对</a> 的结果。
+                            <var>allowed_algorithms</var>
+                            <a data-link-type="dfn" href="#create-a-key-pair" id="ref-for-create-a-key-pair①">创建
+                                密钥对</a>的结果。
                         </p>
                     <li data-md>
                         <p>令 <var>binding_result</var> 为使用 <var>bbk_id</var> 和 <var>credential_id</var>
                             <a data-link-type="dfn" href="#bind-a-key-pair" id="ref-for-bind-a-key-pair①">绑定密钥对</a>
-                            的结果。如果结果为失败，则令 <var>bbk_and_algorithm</var> 为 null。
+                            的结果。如果结果为失败，则令
+                            <var>bbk_and_algorithm</var> 为 null。
                         </p>
                     <li data-md>
-                        <p>如果 <var>binding_result</var> 不为失败，则令 <var>bbk_and_algorithm</var> 为
+                        <p>如果 <var>binding_result</var> 不是失败，则令 <var>bbk_and_algorithm</var> 为
                             <var>new_bbk_and_algorithm</var>。
                         </p>
                 </ol>
@@ -4632,39 +4712,48 @@ navigator<c- p>.</c->credentials<c- p>.</c->create<c- p>({</c-> publicKey <c- p>
             <dt data-md><code
                     class="idl"><a data-link-type="idl" href="#dom-paymentcredentialinstrument-displayname" id="ref-for-dom-paymentcredentialinstrument-displayname②">displayName</a></code>
             <dd data-md>
-                <p>展示给用户的支付工具名称。</p>
-                <p class="note" role="note"><span class="marker">注意：</span>关于 <code
+                <p>要显示给用户的支付工具名称。</p>
+                <p class="note" role="note"><span class="marker">注意：</span> 关于
+                    <code
                         class="idl"><a data-link-type="idl" href="#dom-paymentcredentialinstrument-displayname" id="ref-for-dom-paymentcredentialinstrument-displayname③">displayName</a></code>
-                    的国际化讨论，请参见 <a href="#sctn-i18n-considerations">§ 14 国际化考虑</a>。</p>
+                    的国际化讨论，见 <a href="#sctn-i18n-considerations">§ 14 国际化考量</a>。
+                </p>
             <dt data-md><code
                     class="idl"><a data-link-type="idl" href="#dom-paymentcredentialinstrument-icon" id="ref-for-dom-paymentcredentialinstrument-icon⑥">icon</a></code>
             <dd data-md>
                 <p>支付工具图标的 URL。</p>
-                <p class="note" role="note"><span class="marker">注意：</span>该 <code
+                <p class="note" role="note"><span class="marker">注意：</span> <code
                         class="idl"><a data-link-type="idl" href="#dom-paymentcredentialinstrument-icon" id="ref-for-dom-paymentcredentialinstrument-icon⑦">icon</a></code>
-                    URL 可以是互联网上可访问服务器上的图片（例如 <code>https://bank.example/card.png</code>），也可以通过 Data URL <a
-                        data-link-type="biblio" href="#biblio-rfc2397"
-                        title="The &quot;data&quot; URL scheme">[RFC2397]</a> 直接编码图标数据。在这两种类型中，Data URL 对于 <a
-                        data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
-                        id="ref-for-relying-party①⑨">Relying Party</a> 有若干好处：它们可以提升可靠性（例如图标托管服务器不可用时），也能增强验证，因为 <a
-                        data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
-                        id="ref-for-relying-party②⓪">Relying Party</a> 在被签名的 <code
+                    URL 可以标识
+                    互联网可访问服务器上的图像（例如 <code>https://bank.example/card.png</code>），
+                    或通过 Data URL <a data-link-type="biblio" href="#biblio-rfc2397"
+                        title="The &quot;data&quot; URL scheme">[RFC2397]</a> 直接编码图标数据。在
+                    这两类 URL 中，Data URL 为
+                    <a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
+                        id="ref-for-relying-party②⓪">依赖方</a>提供若干好处。它们可以提高可靠性（例如，在
+                    图标托管服务器可能不可用的情况下）。它们还可以增强
+                    验证，因为<a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
+                        id="ref-for-relying-party②①">依赖方</a>拥有关于
+                    浏览器向用户显示内容的加密证据：图标 URL 作为
+                    <code
                         class="idl"><a data-link-type="idl" href="#dictdef-collectedclientadditionalpaymentdata" id="ref-for-dictdef-collectedclientadditionalpaymentdata⑧">CollectedClientAdditionalPaymentData</a></code>
-                    结构中具有对浏览器展示内容的密码学证据（即图标 URL 被签名）。
+                    结构的一部分被签名。
                 </p>
-                <p class="note" role="note"><span class="marker">注意：</span>参见相关的 <a
-                        href="#sctn-accessibility-considerations">无障碍考虑</a>。</p>
+                <p class="note" role="note"><span class="marker">注意：</span> 见相关的<a
+                        href="#sctn-accessibility-considerations">无障碍考量</a>。</p>
             <dt data-md><code
                     class="idl"><a data-link-type="idl" href="#dom-paymentcredentialinstrument-iconmustbeshown" id="ref-for-dom-paymentcredentialinstrument-iconmustbeshown②">iconMustBeShown</a></code>
             <dd data-md>
-                <p>指示指定图标是否必须被成功获取并展示以使请求成功。</p>
+                <p>指示为使请求成功，指定图标是否必须成功获取并显示。</p>
             <dt data-md><code
                     class="idl"><a data-link-type="idl" href="#dom-paymentcredentialinstrument-details" id="ref-for-dom-paymentcredentialinstrument-details②">details</a></code>
             <dd data-md>
-                <p>可选的额外细节字符串，用于向用户展示支付工具的补充信息。</p>
-                <p class="note" role="note"><span class="marker">注意：</span>关于 <code
+                <p>要显示给用户的支付工具的可选附加详情字符串。</p>
+                <p class="note" role="note"><span class="marker">注意：</span> 关于
+                    <code
                         class="idl"><a data-link-type="idl" href="#dom-paymentcredentialinstrument-details" id="ref-for-dom-paymentcredentialinstrument-details③">details</a></code>
-                    的国际化讨论，请参见 <a href="#sctn-i18n-considerations">§ 14 国际化考虑</a>。</p>
+                    的国际化讨论，见 <a href="#sctn-i18n-considerations">§ 14 国际化考量</a>。
+                </p>
         </dl>
         <h3 class="heading settled" data-level="7.2" id="sctn-paymententitylogo-dictionary"><span class="secno">7.2.
             </span><span class="content"><dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export
@@ -4675,30 +4764,43 @@ navigator<c- p>.</c->credentials<c- p>.</c->create<c- p>({</c-> publicKey <c- p>
     <c- b>required</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-USVString" id="ref-for-idl-USVString①⑧"><c- b>USVString</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="PaymentEntityLogo" data-dfn-type="dict-member" data-export data-type="USVString" id="dom-paymententitylogo-label"><code><c- g>label</c-></code></dfn>;
 };
 </pre>
-        <p>The <code
+        <p><code
                 class="idl"><a data-link-type="idl" href="#dictdef-paymententitylogo" id="ref-for-dictdef-paymententitylogo⑧">PaymentEntityLogo</a></code>
-            字典包含描述为本次交易提供便利的支付实体的 logo 的信息。它包含下列成员：</p>
+            字典包含描述促成当前交易的支付实体
+            徽标的信息。它包含以下
+            成员：</p>
         <dl class="domintro">
             <dt data-md><code
                     class="idl"><a data-link-type="idl" href="#dom-paymententitylogo-url" id="ref-for-dom-paymententitylogo-url⑤">url</a></code>
             <dd data-md>
-                <p>logo 的 URL。</p>
-                <p class="note" role="note"><span class="marker">注意：</span>该 <code
+                <p>徽标的 URL。</p>
+                <p class="note" role="note"><span class="marker">注意：</span> <code
                         class="idl"><a data-link-type="idl" href="#dom-paymententitylogo-url" id="ref-for-dom-paymententitylogo-url⑥">url</a></code>
-                    可以是互联网上的图片（例如 <code>https://bank.com/logo.png</code>），也可以通过 Data URL <a data-link-type="biblio"
-                        href="#biblio-rfc2397" title="The &quot;data&quot; URL scheme">[RFC2397]</a> 直接编码图像数据。相较之下，Data
-                    URL 对 <a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
-                        id="ref-for-relying-party②①">Relying Party</a> 有若干好处：可提升可靠性（例如 logo 托管服务器不可用时），并能增强验证，因为 <a
-                        data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
-                        id="ref-for-relying-party②②">Relying Party</a> 在被签名的 <code
+                    可以标识
+                    互联网可访问服务器上的图像（例如 <code>https://bank.com/logo.png</code>），
+                    或通过 Data URL <a data-link-type="biblio" href="#biblio-rfc2397"
+                        title="The &quot;data&quot; URL scheme">[RFC2397]</a> 直接编码徽标数据。在
+                    这两类 URL 中，Data URL 为
+                    <a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
+                        id="ref-for-relying-party②②">依赖方</a>提供若干好处。它们可以提高可靠性（例如，在
+                    徽标托管服务器可能不可用的情况下）。它们还可以增强
+                    验证，因为<a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
+                        id="ref-for-relying-party②③">依赖方</a>拥有关于
+                    浏览器向用户显示内容的加密证据：徽标 URL 作为
+                    <code
                         class="idl"><a data-link-type="idl" href="#dictdef-collectedclientadditionalpaymentdata" id="ref-for-dictdef-collectedclientadditionalpaymentdata⑨">CollectedClientAdditionalPaymentData</a></code>
-                    结构中具有对浏览器展示内容的密码学证据（即 logo URL 被签名）。
+                    结构的一部分被签名。
                 </p>
             <dt data-md><code
                     class="idl"><a data-link-type="idl" href="#dom-paymententitylogo-label" id="ref-for-dom-paymententitylogo-label③">label</a></code>
             <dd data-md>
-                <p>logo 的描述性标签。用户代理可以（但不必）向用户显示此标签（见 <a href="#sctn-transaction-confirmation-ux">§ 4.10
-                        显示交易确认界面</a>），并应将其用于无障碍用途（例如在描述该 logo 的界面时由屏幕阅读器朗读）。</p>
+                <p>徽标的描述性标签。用户代理可以（但不要求
+                    ）向用户显示此标签（见
+                    <a href="#sctn-transaction-confirmation-ux">§ 4.10 显示交易确认 UX</a>），
+                    并且应将其用于
+                    无障碍目的（例如，当在 UX 中描述此徽标时，
+                    由屏幕阅读器朗读）。
+                </p>
         </dl>
         <h2 class="heading settled" data-level="8" id="sctn-permissions-policy"><span class="secno">8. </span><span
                 class="content">权限策略集成</span><a class="self-link" href="#sctn-permissions-policy"></a></h2>
@@ -4751,86 +4853,102 @@ navigator<c- p>.</c->credentials<c- p>.</c->create<c- p>({</c-> publicKey <c- p>
         </h2>
         <h3 class="heading settled" data-level="9.1" id="sctn-verifying-assertion"><span class="secno">9.1. </span><span
                 class="content">验证认证断言</span><a class="self-link" href="#sctn-verifying-assertion"></a></h3>
-        <p>为对 Secure Payment Confirmation 执行一次 <a data-link-type="dfn"
-                href="https://w3c.github.io/webauthn/#authentication-ceremony"
-                id="ref-for-authentication-ceremony①">认证流程</a>，<a data-link-type="dfn"
-                href="https://w3c.github.io/webauthn/#relying-party" id="ref-for-relying-party②③">依赖方</a> 必须按下列步骤进行：</p>
+        <p>为了对安全支付确认执行一次<a data-link-type="dfn" href="https://w3c.github.io/webauthn/#authentication-ceremony"
+                id="ref-for-authentication-ceremony①">认证仪式</a>，<a data-link-type="dfn"
+                href="https://w3c.github.io/webauthn/#relying-party" id="ref-for-relying-party②④">依赖方</a>必须按如下方式进行：</p>
         <ol>
             <li data-md>
-                <p>令 <var>credential</var> 为从 <a data-link-type="dfn"
+                <p>令 <var>credential</var> 为一个 <code
+                        class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/webauthn-3/#publickeycredential" id="ref-for-publickeycredential①">PublicKeyCredential</a></code>，
+                    它由 <var>SPC caller</var> 成功调用<a data-link-type="dfn"
                         href="#secure-payment-confirmation-payment-handler"
-                        id="ref-for-secure-payment-confirmation-payment-handler②">Secure Payment Confirmation 支付处理器</a>
-                    成功调用中由 <var>SPC 调用者</var> 返回的 <code
-                        class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/webauthn-3/#publickeycredential" id="ref-for-publickeycredential①">PublicKeyCredential</a></code>。
+                        id="ref-for-secure-payment-confirmation-payment-handler②">安全支付确认支付
+                        处理器</a>返回。
                 </p>
-                <p class="note" role="note"><span class="marker">注意：</span>由于 SPC 的设计支持 <a
-                        href="#sctn-use-case-merchant-authentication">商户对认证的控制</a>，发起 SPC 的实体可能并非依赖方。此第一步假定 SPC 调用者已将通过
-                    SPC 获得的凭证返回给 <a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
-                        id="ref-for-relying-party②⑤">依赖方</a>。</p>
+                <p class="note" role="note"><span class="marker">注意：</span> 由于 SPC 被设计为支持<a
+                        href="#sctn-use-case-merchant-authentication">商户
+                        控制认证</a>，调用 SPC 的实体可能不是
+                    <a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
+                        id="ref-for-relying-party②⑤">依赖方</a>。这第一步假定 SPC 调用者已经
+                    将通过 SPC 获得的凭据返回给<a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
+                        id="ref-for-relying-party②⑥">依赖
+                        方</a>。
+                </p>
             <li data-md>
-                <p>按照 <a href="https://www.w3.org/TR/webauthn-3/#sctn-verifying-assertion">WebAuthn</a> 中第 3–21
-                    步执行验证，但作如下更改：</p>
+                <p>执行 <a href="https://www.w3.org/TR/webauthn-3/#sctn-verifying-assertion">WebAuthn 中指定的</a>
+                    步骤 3-21，并作如下修改：</p>
                 <ol>
                     <li data-md>
-                        <p>在第 5 步中，验证 <var>credential</var>.<code
+                        <p>在步骤 5 中，验证 <var>credential</var>.<code
                                 class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/credential-management-1/#dom-credential-id" id="ref-for-dom-credential-id">id</a></code>
-                            是否标识了 <var>SPC 调用者</var> 从 <a data-link-type="dfn"
-                                href="https://w3c.github.io/webauthn/#relying-party"
-                                id="ref-for-relying-party②⑥">依赖方</a> 那里获取的某个公钥凭证。
-                        </p>
+                            标识由<a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
+                                id="ref-for-relying-party②⑦">依赖方</a>提供给 <var>SPC caller</var> 的
+                            公钥凭据之一。</p>
                     <li data-md>
-                        <p>在第 11 步，验证 <var>C</var>["<code
+                        <p>在步骤 11 中，验证 <var>C</var>["<code
                                 class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/webauthn-3/#dom-collectedclientdata-type" id="ref-for-dom-collectedclientdata-type①">type</a></code>"]
                             的值为字符串 <code>payment.get</code>。</p>
                     <li data-md>
-                        <p>在第 12 步，验证 <var>C</var>["<code
+                        <p>在步骤 12 中，验证 <var>C</var>["<code
                                 class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/webauthn-3/#dom-collectedclientdata-challenge" id="ref-for-dom-collectedclientdata-challenge">challenge</a></code>"]
-                            的值等于依赖方提供给 <var>SPC 调用者</var> 的 challenge 的 base64url 编码。</p>
+                            的值等于由<a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
+                                id="ref-for-relying-party②⑧">依赖方</a>提供给
+                            <var>SPC caller</var> 的 challenge 的 base64url 编码。
+                        </p>
                     <li data-md>
-                        <p>在第 13 步，验证 <var>C</var>["<code
+                        <p>在步骤 13 中，验证 <var>C</var>["<code
                                 class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/webauthn-3/#dom-collectedclientdata-origin" id="ref-for-dom-collectedclientdata-origin">origin</a></code>"]
-                            的值与依赖方期望 SPC 被调用的来源匹配。</p>
+                            的值与<a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
+                                id="ref-for-relying-party②⑨">依赖方</a>期望 SPC
+                            被调用自的源匹配。</p>
                     <li data-md>
-                        <p>在第 13 步之后，插入下列步骤：</p>
+                        <p>在步骤 13 之后，插入以下步骤：</p>
                         <ul>
                             <li data-md>
                                 <p>验证 <var>C</var>["<code
                                         class="idl"><a data-link-type="idl" href="#dom-collectedclientpaymentdata-payment" id="ref-for-dom-collectedclientpaymentdata-payment③">payment</a></code>"]["<code
                                         class="idl"><a data-link-type="idl" href="#dom-collectedclientadditionalpaymentdata-rpid" id="ref-for-dom-collectedclientadditionalpaymentdata-rpid②">rpId</a></code>"]
-                                    的值与依赖方的 origin 匹配。</p>
+                                    的值与<a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
+                                        id="ref-for-relying-party③⓪">依赖方</a>的源匹配。</p>
                             <li data-md>
                                 <p>验证 <var>C</var>["<code
                                         class="idl"><a data-link-type="idl" href="#dom-collectedclientpaymentdata-payment" id="ref-for-dom-collectedclientpaymentdata-payment④">payment</a></code>"]["<code
                                         class="idl"><a data-link-type="idl" href="#dom-collectedclientadditionalpaymentdata-toporigin" id="ref-for-dom-collectedclientadditionalpaymentdata-toporigin②">topOrigin</a></code>"]
-                                    的值与依赖方期望的顶层 origin 匹配。</p>
+                                    的值与<a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
+                                        id="ref-for-relying-party③①">依赖方</a>期望的顶层源匹配。</p>
                             <li data-md>
                                 <p>验证 <var>C</var>["<code
                                         class="idl"><a data-link-type="idl" href="#dom-collectedclientpaymentdata-payment" id="ref-for-dom-collectedclientpaymentdata-payment⑤">payment</a></code>"]["<code
                                         class="idl"><a data-link-type="idl" href="#dom-collectedclientadditionalpaymentdata-payeename" id="ref-for-dom-collectedclientadditionalpaymentdata-payeename③">payeeName</a></code>"]
-                                    的值（若有）与应当显示给用户的收款方名称匹配。</p>
+                                    的值与本应显示给用户的收款人名称匹配（如有）。
+                                </p>
                             <li data-md>
                                 <p>验证 <var>C</var>["<code
                                         class="idl"><a data-link-type="idl" href="#dom-collectedclientpaymentdata-payment" id="ref-for-dom-collectedclientpaymentdata-payment⑥">payment</a></code>"]["<code
                                         class="idl"><a data-link-type="idl" href="#dom-collectedclientadditionalpaymentdata-payeeorigin" id="ref-for-dom-collectedclientadditionalpaymentdata-payeeorigin③">payeeOrigin</a></code>"]
-                                    的值（若有）与应当显示给用户的收款方来源匹配。</p>
+                                    的值与本应显示给用户的收款人源匹配（如有）。
+                                </p>
                             <li data-md>
                                 <p>验证 <var>C</var>["<code
                                         class="idl"><a data-link-type="idl" href="#dom-collectedclientpaymentdata-payment" id="ref-for-dom-collectedclientpaymentdata-payment⑦">payment</a></code>"]["<code
                                         class="idl"><a data-link-type="idl" href="#dom-collectedclientadditionalpaymentdata-paymententitieslogos" id="ref-for-dom-collectedclientadditionalpaymentdata-paymententitieslogos④">paymentEntitiesLogos</a></code>"]
-                                    是应当展示给用户的 logo 列表的严格有序子集（若有）。</p>
-                                <p class="note" role="note"><span class="marker">注意：</span>用户代理可以不展示所有 logo，但在 <code
+                                    的值是本应显示给用户的徽标的严格有序子集（如有）。</p>
+                                <p class="note" role="note"><span class="marker">注意：</span> 允许用户代理
+                                    不显示所有徽标，但不得在
+                                    <code
                                         class="idl"><a data-link-type="idl" href="#dictdef-collectedclientadditionalpaymentdata" id="ref-for-dictdef-collectedclientadditionalpaymentdata①⓪">CollectedClientAdditionalPaymentData</a></code>
-                                    中不得包含未向用户展示的 logo。</p>
+                                    中包含未向用户显示的徽标。
+                                </p>
                             <li data-md>
                                 <p>验证 <var>C</var>["<code
                                         class="idl"><a data-link-type="idl" href="#dom-collectedclientpaymentdata-payment" id="ref-for-dom-collectedclientpaymentdata-payment⑧">payment</a></code>"]["<code
                                         class="idl"><a data-link-type="idl" href="#dom-collectedclientadditionalpaymentdata-total" id="ref-for-dom-collectedclientadditionalpaymentdata-total③">total</a></code>"]
-                                    的值与应当展示给用户的交易金额匹配。</p>
+                                    的值与本应显示给用户的交易金额匹配。</p>
                             <li data-md>
                                 <p>验证 <var>C</var>["<code
                                         class="idl"><a data-link-type="idl" href="#dom-collectedclientpaymentdata-payment" id="ref-for-dom-collectedclientpaymentdata-payment⑨">payment</a></code>"]["<code
                                         class="idl"><a data-link-type="idl" href="#dom-collectedclientadditionalpaymentdata-instrument" id="ref-for-dom-collectedclientadditionalpaymentdata-instrument④">instrument</a></code>"]
-                                    的值与应当展示给用户的支付工具详情匹配。
+                                    的值与本应显示给用户的支付工具详情匹配。
                                 </p>
                         </ul>
                 </ol>
@@ -4901,151 +5019,256 @@ navigator<c- p>.</c->credentials<c- p>.</c->create<c- p>({</c-> publicKey <c- p>
         <h3 class="heading settled" data-level="11.1" id="sctn-security-cross-origin-auth"><span class="secno">11.1.
             </span><span class="content">跨源认证流程</span><a class="self-link" href="#sctn-security-cross-origin-auth"></a>
         </h3>
-        <p>Secure Payment Confirmation 与 WebAuthn 的一个重大不同点是允许第三方使用为另一 <a data-link-type="dfn"
-                href="https://w3c.github.io/webauthn/#relying-party"
-                id="ref-for-relying-party③①">依赖方</a>创建的凭证来发起认证流程，并将断言返回给第三方。此特性可能使 <a data-link-type="dfn"
-                href="https://w3c.github.io/webauthn/#relying-party" id="ref-for-relying-party③②">依赖方</a>
-            面临登录和支付类攻击，下文讨论了这些风险。</p>
+        <p>安全支付确认与 WebAuthn 的一个重大差异是，
+            它允许第三方使用属于另一个<a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
+                id="ref-for-relying-party③②">依赖方</a>的凭据发起认证仪式，并将断言返回给
+            该第三方。此功能可能使<a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
+                id="ref-for-relying-party③③">依赖方</a>暴露于
+            登录和
+            支付攻击，这些攻击将在此处讨论。</p>
         <h4 class="heading settled" data-level="11.1.1" id="sctn-security-login-attack"><span class="secno">11.1.1.
             </span><span class="content">登录攻击</span><a class="self-link" href="#sctn-security-login-attack"></a>
         </h4>
-        <p>由于为 Secure Payment Confirmation 创建的凭证同时也是有效的 WebAuthn
-            凭证，依赖方可能会希望对同一用户将同一凭证用于登录和支付。这会带来一种潜在攻击，如果依赖方未谨慎验证它所接收的断言，攻击者或可利用该途径。</p>
-        <p>攻击流程如下：</p>
+        <p>由于为安全支付确认创建的凭据是有效的 WebAuthn
+            凭据，因此<a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
+                id="ref-for-relying-party③④">依赖方</a>可能
+            希望为给定用户同时将同一
+            凭据用于登录和支付。如果他们没有仔细验证
+            收到的断言，这就可能允许对<a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
+                id="ref-for-relying-party③⑤">依赖方</a>登录系统的潜在
+            攻击。</p>
+        <p>攻击如下：</p>
         <ol>
             <li data-md>
-                <p>用户访问 <code>attacker.example</code>，该站点为或冒充为商户网站。</p>
+                <p>用户访问 <code>attacker.example</code>，它是或伪装成一个商户站点。</p>
             <li data-md>
-                <p><code>attacker.example</code> 从 <code>relyingparty.example</code> 获得了该用户的凭证，可能是合法获得或从
-                    <code>relyingparty.example</code> 或其他共享凭证的实体处窃取而来。
+                <p><code>attacker.example</code> 从
+                    <code>relyingparty.example</code> 获取该用户的凭据，
+                    可能是合法获取，也可能是从 <code>relyingparty.example</code> 或另一个
+                    <code>relyingparty.example</code> 曾与之共享凭据的
+                    方那里窃取。
                 </p>
             <li data-md>
-                <p><code>attacker.example</code> 发起 SPC 认证，且用户同意该交易（该交易可能合法也可能不合法）。</p>
+                <p><code>attacker.example</code> 发起 SPC 认证，用户同意该
+                    交易（该交易可能合法，也可能不合法）。</p>
             <li data-md>
-                <p><code>attacker.example</code> 将从 API 调用中获得的支付断言发送到 <code>relyingparty.example</code> 的登录端点，例如向
-                    <code>https://relyingparty.example/login</code> 发送 POST。
-                </p>
+                <p><code>attacker.example</code> 获取它从 API
+                    调用中收到的支付断言，并将其发送到 <code>relyingparty.example</code> 的登录端点，例如通过
+                    向 <code>https://relyingparty.example/login</code> 发送 POST。</p>
             <li data-md>
-                <p><code>relyingparty.example</code> 使用有缺陷的断言验证代码，仅校验签名但未验证必要字段（见下文），于是认为登录尝试合法。</p>
+                <p><code>relyingparty.example</code> 使用有缺陷的断言验证代码，该代码
+                    检查签名，但未能验证必要字段（见
+                    下文），并认为登录尝试是合法的。</p>
             <li data-md>
-                <p><code>relyingparty.example</code> 向 <code>attacker.example</code> 返回登录 cookie
-                    等。<code>relyingparty.example</code> 上的用户账户因此被攻破。</p>
+                <p><code>relyingparty.example</code> 向 <code>attacker.example</code> 返回例如登录 cookie。
+                    用户在 <code>relyingparty.example</code> 的账号现在已经被攻陷。</p>
         </ol>
         <p><a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
-                id="ref-for-relying-party③⑤">依赖方</a> 可以用两种方式防范此类攻击。</p>
-        <p>其一，依赖方必须始终按照正确的断言验证步骤来校验断言——针对登录使用 WebAuthn 登录验证步骤，针对 SPC 使用 SPC 支付验证步骤。尤其下列字段可用于检测凭证的不当使用：</p>
+                id="ref-for-relying-party③⑥">依赖方</a>可以通过两种方式防范此攻击。</p>
+        <p>首先，<a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
+                id="ref-for-relying-party③⑦">依赖方</a>必须始终根据情况遵循正确的断言
+            验证步骤，无论是用于 <a href="https://www.w3.org/TR/webauthn-3/#sctn-verifying-assertion">WebAuthn
+                登录</a>还是 <a href="#sctn-verifying-assertion">SPC 支付</a>。尤其是，
+            以下字段都可用于检测凭据的
+            不当使用：</p>
         <ul>
             <li data-md>
                 <p><code
                         class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/webauthn-3/#dictdef-collectedclientdata" id="ref-for-dictdef-collectedclientdata⑨">CollectedClientData</a></code>["<code
-                        class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/webauthn-3/#dom-collectedclientdata-type" id="ref-for-dom-collectedclientdata-type②">type</a></code>"]
-                    — 登录为 "webauthn.get"，SPC 为 "payment.get"。</p>
+                        class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/webauthn-3/#dom-collectedclientdata-type" id="ref-for-dom-collectedclientdata-type②">type</a></code>"]-
+                    登录为 "webauthn.get"，
+                    SPC 为 "payment.get"。</p>
             <li data-md>
                 <p><code
                         class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/webauthn-3/#dictdef-collectedclientdata" id="ref-for-dictdef-collectedclientdata①⓪">CollectedClientData</a></code>["<code
                         class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/webauthn-3/#dom-collectedclientdata-challenge" id="ref-for-dom-collectedclientdata-challenge①">challenge</a></code>"]
-                    — 该值应由依赖方服务器在发起 WebAuthn 或 SPC 前向站点提供，且在验证时应核对为先前提供的、适当的期望值。</p>
+                    - 该值应由<a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
+                        id="ref-for-relying-party③⑧">依赖方</a>服务器在对 WebAuthn 或 SPC
+                    进行任何调用之前提供给该站点，并且应验证其与预期的、
+                    适当的、先前提供的值匹配。</p>
             <li data-md>
                 <p><code
                         class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/webauthn-3/#dictdef-collectedclientdata" id="ref-for-dictdef-collectedclientdata①①">CollectedClientData</a></code>["<code
                         class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/webauthn-3/#dom-collectedclientdata-origin" id="ref-for-dom-collectedclientdata-origin①">origin</a></code>"]
-                    — 如为跨源 SPC，该值将包含调用者的 origin（例如上例中的 <code>attacker.example</code>）。</p>
+                    - 如果 SPC 正在
+                    跨源执行，则该值将包含调用者的源
+                    （例如上例中的 <code>attacker.example</code>）。</p>
         </ul>
-        <p>其二，依赖方可以考虑将其支付凭证与登录凭证分开管理。如果采用此策略，依赖方应仅在子域（例如 <code>https//payment.relyingparty.example</code>）上为 Secure
-            Payment Confirmation 注册凭证，并在数据库中将支付凭证与登录凭证分开保存。</p>
+        <p>其次，<a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
+                id="ref-for-relying-party③⑨">依赖方</a>可以考虑将其支付凭据和登录
+            凭据分开。如果这样做，<a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
+                id="ref-for-relying-party④⓪">依赖方</a>
+            应仅在子域上
+            注册用于安全支付确认的凭据（例如
+            <code>https//payment.relyingparty.example</code>），并且应在其数据库中将支付凭据和
+            登录凭据分开。
+        </p>
         <div class="note" role="note">
-            <p>注意：按目前文本，Secure Payment Confirmation 规范允许任何 WebAuthn 凭证参与 SPC 认证。然而现实实现中并非如此，当前实现仅允许带有 <code
-                    class="idl"><a data-link-type="idl" href="#dom-authenticationextensionsclientinputs-payment" id="ref-for-dom-authenticationextensionsclientinputs-payment②">payment</a></code>
-                扩展的凭证参与 SPC 认证；未来规范可能会更新以反映这一点。</p>
-            <p>在当前实现与规范中，带有 <code
+
+            注意：按照当前写法，安全支付确认规范
+            允许任何 WebAuthn 凭据用于 SPC 认证。
+            不过，在今天的实现中并非如此，这些实现只允许
+            使用指定的 <code
+                class="idl"><a data-link-type="idl" href="#dom-authenticationextensionsclientinputs-payment" id="ref-for-dom-authenticationextensionsclientinputs-payment②">payment</a></code>
+            扩展创建的凭据参与 SPC 认证，并且
+            规范将来可能会更新以反映这一点。
+
+
+            <p>在今天的实现和规范中，使用
+                <code
                     class="idl"><a data-link-type="idl" href="#dom-authenticationextensionsclientinputs-payment" id="ref-for-dom-authenticationextensionsclientinputs-payment③">payment</a></code>
-                扩展创建的凭证，若依赖方愿意，可用于登录。这一行为预计不会改变。</p>
+                创建的凭据可以
+                用于登录，如果依赖方希望这样做。这一点预计不会改变。
+            </p>
         </div>
         <h4 class="heading settled" data-level="11.1.2" id="sctn-security-payment-attack"><span class="secno">11.1.2.
             </span><span class="content">支付攻击</span><a class="self-link" href="#sctn-security-payment-attack"></a></h4>
-        <p>除非 Secure Payment Confirmation 断言是正在进行的线上交易的一部分，否则其实用性极低。</p>
-        <p>有多种机制可以防止一种攻击：恶意第三方不是试图劫持用户账户，而是使用（合法或非法获得的）Secure Payment Confirmation 凭证发起未授权付款：</p>
+        <p>除非安全支付确认断言是正在进行的在线交易的一部分，
+            否则它基本上没有用。</p>
+        <p>多种机制可以防范这样的攻击：恶意
+            第三方不是试图劫持用户账号，而是使用安全支付确认凭据
+            （无论是合法获得还是以其他方式获得）发起
+            未授权支付：</p>
         <ul>
             <li data-md>
-                <p>当攻击者发起 SPC 时，用户代理会向用户展示清楚列明交易详情（包括收款方和金额）的界面。在这种情形下，用户很可能会“取消”。</p>
+                <p>当攻击者发起 SPC 时，用户代理会向用户显示 UI，
+                    清楚说明交易详情（包括收款人
+                    和金额）。在这种场景下，用户很可能会“取消”。</p>
             <li data-md>
-                <p>如果用户确实同意了交易并完成随后 WebAuthn 的认证流程，攻击者将获得一个针对该 <a data-link-type="dfn"
-                        href="https://w3c.github.io/webauthn/#relying-party" id="ref-for-relying-party④⓪">Relying
-                        Party</a> 的已签名 SPC 断言。</p>
+                <p>如果用户确实同意该交易，并完成后续的
+                    WebAuthn 认证仪式，攻击者现在就拥有了一个针对<a data-link-type="dfn"
+                        href="https://w3c.github.io/webauthn/#relying-party" id="ref-for-relying-party④①">依赖方</a>的已签名
+                    SPC
+                    断言。</p>
             <li data-md>
-                <p>如果该 <a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
-                        id="ref-for-relying-party④①">Relying Party</a> 并未预期此交易，它将拒绝该断言。</p>
+                <p>如果<a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
+                        id="ref-for-relying-party④②">依赖方</a>并未预期有交易，它将拒绝该
+                    断言。</p>
             <li data-md>
-                <p>如果该 <a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
-                        id="ref-for-relying-party④②">Relying Party</a> 的确在等待交易，它将检测到至少下列之一并拒绝断言：</p>
+                <p>如果<a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
+                        id="ref-for-relying-party④③">依赖方</a>预期有交易，它将检测到
+                    以下至少
+                    一项并拒绝该断言：</p>
                 <ul>
                     <li data-md>
-                        <p>错误的 <code
+                        <p>不正确的 <code
                                 class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/webauthn-3/#dictdef-collectedclientdata" id="ref-for-dictdef-collectedclientdata①②">CollectedClientData</a></code>["<code
-                                class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/webauthn-3/#dom-collectedclientdata-challenge" id="ref-for-dom-collectedclientdata-challenge②">challenge</a></code>"]，若攻击者试图与有效正在进行的付款争用（race）时会出现。
-                        </p>
+                                class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/webauthn-3/#dom-collectedclientdata-challenge" id="ref-for-dom-collectedclientdata-challenge②">challenge</a></code>"]，
+                            如果攻击者试图与有效的正在进行的支付竞争。</p>
                     <li data-md>
-                        <p>错误的 <code
+                        <p>不正确的 <code
                                 class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/webauthn-3/#dictdef-collectedclientdata" id="ref-for-dictdef-collectedclientdata①③">CollectedClientData</a></code>["<code
-                                class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/webauthn-3/#dom-collectedclientdata-origin" id="ref-for-dom-collectedclientdata-origin②">origin</a></code>"]，若攻击者试图处于用户与有效商户站点之间并转发断言时会出现。
-                        </p>
+                                class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/webauthn-3/#dom-collectedclientdata-origin" id="ref-for-dom-collectedclientdata-origin②">origin</a></code>"]，
+                            如果攻击者试图位于用户与有效商户
+                            站点之间并转发该断言。</p>
                 </ul>
         </ul>
+        <h4 class="heading settled" data-level="11.1.3" id="sctn-security-webauthn-extensions"><span
+                class="secno">11.1.3. </span><span class="content">WebAuthn 扩展仅允许用于依赖
+                方</span><a class="self-link" href="#sctn-security-webauthn-extensions"></a></h4>
+        <p>WebAuthn 允许在
+            认证仪式期间使用<a data-link-type="dfn" href="https://w3c.github.io/webauthn/#authentication-extension"
+                id="ref-for-authentication-extension③">认证扩展</a>。某些扩展可用于存储或检索
+            （在认证器上的）对<a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
+                id="ref-for-relying-party④④">依赖方</a>敏感的数据。</p>
+        <p>在安全支付确认认证仪式中，第三方（即
+            调用者）可以为由另一个
+            <a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
+                id="ref-for-relying-party④⑤">依赖方</a>拥有的凭据发起该仪式。如果允许调用者指定任意 WebAuthn
+            扩展，它们可能能够访问属于该
+            <a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
+                id="ref-for-relying-party④⑥">依赖方</a>的敏感数据，而该<a data-link-type="dfn"
+                href="https://w3c.github.io/webauthn/#relying-party" id="ref-for-relying-party④⑦">依赖方</a>并不
+            打算与该
+            调用者共享这些数据。
+        </p>
+        <p>例如，<a data-link-type="dfn" href="https://w3c.github.io/webauthn/#largeblob"
+                id="ref-for-largeblob">largeBlob</a> 扩展允许存储和检索
+            大量数据。如果攻击者能够使用
+            <code>largeBlob</code> 扩展发起 SPC 仪式，那么在用户授权该仪式的情况下，
+            它们可能能够读取<a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
+                id="ref-for-relying-party④⑧">依赖方</a>此前
+            存储在那里的数据。
+        </p>
+        <p>为缓解此风险，安全支付确认禁止在跨源认证仪式中使用
+            WebAuthn 扩展；只有当调用者是<a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
+                id="ref-for-relying-party④⑨">依赖方</a>时才
+            允许使用它们。</p>
         <h3 class="heading settled" data-level="11.2" id="sctn-security-merchant-data"><span class="secno">11.2.
             </span><span class="content">商户提供的认证数据</span><a class="self-link" href="#sctn-security-merchant-data"></a>
         </h3>
-        <p>银行可以且应该通过<a href="#sctn-verifying-assertion">验证其收到的认证断言</a>来防止欺骗，以确保证断言与商户提供的交易详情一致。
+        <p>银行可以并且应当通过
+            <a href="#sctn-verifying-assertion">验证收到的认证断言</a>来防范欺骗，
+            以确保它与商户提供的交易详情一致。
         </p>
-        <p>这是因为本规范的第三方认证流程的一个后果是：即便在有效交易中（即 <a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
-                id="ref-for-relying-party④③">Relying Party</a> 所期望的交易），第三方也会提供展示给用户的交易详情：</p>
+        <p>这是因为此规范的第三方
+            认证仪式带来的一个结果是，即使在有效交易中（即
+            <a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
+                id="ref-for-relying-party⑤⓪">依赖方</a>预期的交易），第三方也会提供
+            显示给用户的交易详情：
+        </p>
         <ul>
             <li data-md>
-                <p>交易金额与货币</p>
+                <p>交易金额和币种</p>
             <li data-md>
-                <p>支付工具名称与图标</p>
+                <p>支付工具名称和图标</p>
             <li data-md>
-                <p>收款方名称与来源</p>
+                <p>收款人名称和源</p>
         </ul>
-        <p>这可能导致欺骗攻击，即商户向用户展示不正确的数据。例如，商户可能在后端告诉银行它正在发起一笔 100 美元的购买，但传给 SPC API 的却是 1 美元（因此向用户展示的是 1
-            美元的交易以供核验）。或者商户可能提供正确的交易详情，但传递的 Secure Payment Confirmation 凭证并不符合 <a data-link-type="dfn"
-                href="https://w3c.github.io/webauthn/#relying-party" id="ref-for-relying-party④④">Relying Party</a> 的期望。
-        </p>
-        <p>实际上，Secure Payment Confirmation
-            使击败此类攻击比当前网络上的情况更容易做到。如今在线支付中，银行不得不信任商户在结账流程中向用户展示了正确金额（任何欺诈发现通常发生在支付之后，当用户查看对账单时）。</p>
+        <p>这可能导致欺骗攻击，其中商户向用户展示不正确的
+            数据。例如，商户可以（在
+            后端）告诉银行它正在发起一笔 100 美元的购买，但随后向 SPC
+            API 传入 1 美元（从而向用户显示一笔 1 美元的交易供其验证）。或者商户
+            可以提供正确的交易详情，但传入与<a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
+                id="ref-for-relying-party⑤①">依赖方</a>
+            预期不匹配的安全支付
+            确认凭据。</p>
+        <p>安全支付确认实际上使击败这类攻击比
+            当前 Web 上的情况更容易。在今天的在线支付中，银行必须
+            相信商户在其结账
+            流程中向用户显示了正确金额（而任何欺诈发现都是支付之后的，
+            即用户查看其账户对账单时）。</p>
         <h3 class="heading settled" data-level="11.3" id="sctn-security-attacker-generated-bbk"><span
                 class="secno">11.3. </span><span class="content">攻击者生成的 <a data-link-type="dfn"
                     href="#browser-bound-key" id="ref-for-browser-bound-key⑦">浏览器绑定密钥</a></span><a class="self-link"
                 href="#sctn-security-attacker-generated-bbk"></a></h3>
-        <p>The <a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
-                id="ref-for-relying-party④⑤">Relying Party</a>（例如银行）可以且应当防范由攻击者
-            生成的 BBK，方法是通过 <a href="#sctn-verifying-assertion">验证包含
-                的认证断言</a> 中的 <a data-link-type="dfn" href="#browser-bound-key" id="ref-for-browser-bound-key⑧">BBK</a>
-            公钥并忽略
-            来自签名无效的密码报文的 BBK 公钥。虽然会有
-            两个签名存在，一个来自 <a data-link-type="dfn" href="#spc-credential" id="ref-for-spc-credential⑦">SPC
-                Credential</a>，另一个来自 BBK，
-            应使用通行密钥（除了 BBK 之外）来验证该断言。
-            BBK 提供了一个额外的签名，而不是通行密钥
-            签名。</p>
-        <p>伪装成商户的攻击者可能会尝试用另一个由攻击者控制其私钥的 <a data-link-type="dfn" href="#browser-bound-key"
-                id="ref-for-browser-bound-key⑨">BBK</a> 公钥进行替换。之后，攻击者再伪装为用户访问商户网站，当商户调用 SPC 时，攻击者使用自己的私钥对 SPC
-            密码报文进行签名。这样攻击者就破坏了 BBK 的设备绑定属性。</p>
-        <p>然而，这种攻击在实践中是不可行的：</p>
+        <p><a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
+                id="ref-for-relying-party⑤②">依赖方</a>（例如银行）可以并且应当通过<a href="#sctn-verifying-assertion">验证认证
+                断言</a>来防范攻击者生成的 BBK，该断言包含 <a data-link-type="dfn" href="#browser-bound-key"
+                id="ref-for-browser-bound-key⑧">BBK</a> 公钥，并忽略
+            签名无效的密码报文中的 BBK 公钥。虽然会存在
+            两个签名，一个来自 <a data-link-type="dfn" href="#spc-credential" id="ref-for-spc-credential⑦">SPC 凭据</a>，另一个来自 BBK，
+            但应使用通行密钥（除 BBK 之外）来验证该断言。
+            BBK 提供的是一个额外签名，而不是通行密钥
+            签名的替代品。</p>
+        <p>伪装成商户的攻击者可能会尝试将一个 <a data-link-type="dfn" href="#browser-bound-key" id="ref-for-browser-bound-key⑨">BBK</a>
+            公钥替换为另一个公钥，其中
+            攻击者控制相应的
+            私钥。之后，攻击者冒充用户
+            访问商户网站，并在商户调用 SPC 时使用攻击者的
+            私钥对 SPC 密码报文进行签名。攻击者已经破坏了
+            BBK 的设备绑定方面。</p>
+        <p>不过，此攻击并不可行：</p>
         <ol>
             <li data-md>
                 <p>当攻击者替换 BBK 时：<a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
-                        id="ref-for-relying-party④⑥">Relying
-                        Party</a> 在使用通行密钥公钥验证 <code
+                        id="ref-for-relying-party⑤③">依赖
+                        方</a>在使用通行密钥公钥验证
+                    （包含 BBK 公钥的）<code
                         class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/webauthn-3/#dictdef-collectedclientdata" id="ref-for-dictdef-collectedclientdata①④">CollectedClientData</a></code>
-                    （其中包含 BBK 公钥）时会检测到签名不正确。<a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
-                        id="ref-for-relying-party④⑦">Relying
-                        Party</a> 应当拒绝该笔交易，并将此 BBK 公钥视为不可信。</p>
+                    时会检测到
+                    不正确的签名。<a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
+                        id="ref-for-relying-party⑤④">依赖
+                        方</a>应拒绝此交易，并将此 BBK 公钥视为
+                    不受信任。</p>
             <li data-md>
                 <p>当攻击者尝试冒充用户时：<a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
-                        id="ref-for-relying-party④⑧">Relying
-                        Party</a> 在使用通行密钥公钥进行验证时会检测到签名不正确。<a data-link-type="dfn"
-                        href="https://w3c.github.io/webauthn/#relying-party" id="ref-for-relying-party④⑨">Relying
-                        Party</a> 应继续将此 BBK 公钥视为不可信。</p>
+                        id="ref-for-relying-party⑤⑤">依赖
+                        方</a>
+                    在使用通行密钥公钥进行验证时将检测到不正确的
+                    签名。<a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
+                        id="ref-for-relying-party⑤⑥">依赖方</a>应继续将此 BBK 公钥视为
+                    不受信任。</p>
         </ol>
         <h3 class="heading settled" data-level="11.4" id="sctn-security-user-activation-requirement"><span
                 class="secno">11.4. </span><span class="content">缺乏用户激活要求</span><a class="self-link"
@@ -5065,62 +5288,84 @@ navigator<c- p>.</c->credentials<c- p>.</c->create<c- p>({</c-> publicKey <c- p>
         <h3 class="heading settled" data-level="12.1" id="sctn-privacy-probing-credential-ids"><span class="secno">12.1.
             </span><span class="content">探测凭证 ID</span><a class="self-link"
                 href="#sctn-privacy-probing-credential-ids"></a></h3>
-        <p>根据 WebAuthn 关于<a href="https://www.w3.org/TR/webauthn-3/#sctn-assertion-privacy">认证流程隐私</a>的部分，Secure Payment
-            Confirmation 的实现者必须确保恶意调用者（现在可能甚至不是 <a data-link-type="dfn"
-                href="https://w3c.github.io/webauthn/#relying-party" id="ref-for-relying-party⑤⓪">Relying
-                Party</a>）无法区分以下两种情况：</p>
+        <p>根据 WebAuthn 中关于<a href="https://www.w3.org/TR/webauthn-3/#sctn-assertion-privacy">认证
+                仪式隐私</a>的章节，安全支付确认的实现者必须确保
+            不会使恶意调用者（现在甚至可能不是<a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
+                id="ref-for-relying-party⑤⑦">依赖方</a>）
+            能够区分以下情况：</p>
         <ul>
             <li data-md>
-                <p>凭证不可用。</p>
+                <p>凭据不可用。</p>
             <li data-md>
-                <p>凭证可用，但用户不同意使用它。</p>
+                <p>凭据可用，但用户不同意使用它。</p>
         </ul>
-        <p>如果上述情形可被区分，则会泄露信息，恶意 <a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
-                id="ref-for-relying-party⑤①">Relying Party</a> 可以通过探测哪些<a data-link-type="dfn"
-                href="https://w3c.github.io/webauthn/#public-key-credential"
-                id="ref-for-public-key-credential②">凭证</a>可用来识别用户。</p>
-        <p>在 Secure Payment Confirmation 中，这一风险通过始终展示<a
-                href="#sctn-transaction-confirmation-ux">交易确认界面</a>并在以下两种情况下都返回相同错误（即 "<code
-                class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#notallowederror" id="ref-for-notallowederror④">NotAllowedError</a></code>"
-            DOMException）来缓解：既无 <a data-link-type="dfn" href="#spc-credential" id="ref-for-spc-credential⑧">SPC
-                Credential</a> 可用，或有 SPC Credential 可用但用户选择不使用它。</p>
+        <p>如果上述情况可以区分，就会泄露信息，使恶意<a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
+                id="ref-for-relying-party⑤⑧">依赖方</a>能够通过探测哪些
+            <a data-link-type="dfn" href="https://w3c.github.io/webauthn/#public-key-credential"
+                id="ref-for-public-key-credential②">凭据</a>可用来识别用户。
+        </p>
+        <p>在安全支付确认中，通过始终显示
+            <a href="#sctn-transaction-confirmation-ux">交易确认 UX</a>，并且
+            在没有可用的 <a data-link-type="dfn" href="#spc-credential" id="ref-for-spc-credential⑧">SPC 凭据</a>的情况，以及有可用的
+            <a data-link-type="dfn" href="#spc-credential" id="ref-for-spc-credential⑨">SPC 凭据</a>但
+            用户选择不使用它的情况下，均返回相同的错误（一个“<code
+                class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#notallowederror" id="ref-for-notallowederror④">NotAllowedError</a></code>”
+            <code
+                class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#idl-DOMException" id="ref-for-idl-DOMException⑦">DOMException</a></code>），
+            从而缓解此风险。
+        </p>
         <h3 class="heading settled" data-level="12.2" id="sctn-privacy-joining-payment-instruments"><span
                 class="secno">12.2. </span><span class="content">关联不同的支付工具</span><a class="self-link"
                 href="#sctn-privacy-joining-payment-instruments"></a></h3>
-        <p>如果 <a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
-                id="ref-for-relying-party⑤②">Relying Party</a> 在多个支付工具间为同一用户使用相同凭证，商户可能因此将本来无法关联的支付工具信息进行关联。也就是说，在用户 U
-            使用支付工具 P1 与 P2 进行的两笔不同交易中（无论是在同一商户 M，还是在两个串通的商户 M1 与 M2），商户现在可能能判断 P1 与 P2 属于同一用户。</p>
-        <p>对于许多当前的在线支付流程，这可能不是重要风险，因为用户通常会提供足以用于关联的信息（例如姓名、电子邮件、送货地址）。</p>
-        <p>然而，如果未来广泛采用包含更少识别信息的支付方法（例如令牌化），生态系统相关方应采取措施保护用户隐私。例如：</p>
+        <p>如果<a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
+                id="ref-for-relying-party⑤⑨">依赖方</a>为给定用户在
+            多个支付工具之间使用相同凭据，这可能允许商户关联
+            原本可能无法关联的支付工具信息。也就是说，在
+            用户 U 使用支付工具 P1
+            和 P2 执行的两笔不同交易中（无论是在同一商户 M，还是两个串通的商户 M1 和 M2 上），
+            商户现在可能能够得知 P1 和 P2 属于同一用户。</p>
+        <p>对于许多当前的在线支付流程，这可能不是一个重大
+            风险，因为用户通常会提供足够的信息，使得无论如何都可以
+            进行这种关联（例如姓名、电子邮件地址、送货地址）。</p>
+        <p>然而，如果涉及较少身份识别信息的支付方式
+            （例如令牌化）变得普遍，生态系统利益相关者采取措施
+            保护用户隐私就很重要。例如：</p>
         <ul>
             <li data-md>
-                <p>支付系统可能制定规则，限制第三方存储凭证 ID 或 BBK 公钥的行为。</p>
+                <p>支付系统可以制定规则，限制第三方对凭据 ID 或 BBK 公钥
+                    的存储。</p>
             <li data-md>
-                <p>当 <a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
-                        id="ref-for-relying-party⑤③">Relying Party</a> 将多个支付工具关联到单个 SPC 凭证时，可能选择不将该凭证 ID
-                    共享给其他方。在这种情况下，<a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
-                        id="ref-for-relying-party⑤④">Relying Party</a> 仍可在第一方或第三方上下文中使用该 SPC 凭证本身来认证用户。</p>
+                <p>当<a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
+                        id="ref-for-relying-party⑥⓪">依赖方</a>将多个工具分配给单个 SPC
+                    凭据时，它可以选择不与其他方共享该凭据 ID。在这种情况下，<a data-link-type="dfn"
+                        href="https://w3c.github.io/webauthn/#relying-party" id="ref-for-relying-party⑥①">依赖方</a>仍可使用该
+                    SPC 凭据本身（在
+                    第一方或第三方上下文中）来认证用户。</p>
             <li data-md>
                 <p><a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
-                        id="ref-for-relying-party⑤⑤">Relying Party</a>（例如银行）可以允许用户为每个支付工具注册独立的 SPC 凭证。这样做不会阻止该 <a
-                        data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
-                        id="ref-for-relying-party⑤⑥">Relying Party</a> 在内部将这些账户进行关联。</p>
+                        id="ref-for-relying-party⑥②">依赖方</a>（例如银行）可以允许用户为每个支付工具注册
+                    一个不同的 SPC 凭据。这不会阻止<a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
+                        id="ref-for-relying-party⑥③">依赖
+                        方</a>在内部关联这些账户。</p>
         </ul>
         <h3 class="heading settled" data-level="12.3" id="sctn-privacy-credential-id-tracking-vector"><span
                 class="secno">12.3. </span><span class="content">凭证 ID 作为追踪向量</span><a class="self-link"
                 href="#sctn-privacy-credential-id-tracking-vector"></a></h3>
-        <p>即便针对单一支付工具，由 <a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
-                id="ref-for-relying-party⑤⑦">Relying Party</a> 返回的凭证 ID 也可能被恶意实体作为强跨站标识用于追踪。然而，商户要从 <a
-                data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
-                id="ref-for-relying-party⑤⑧">Relying Party</a> 获取这些凭证 ID，已经需要商户向 <a data-link-type="dfn"
-                href="https://w3c.github.io/webauthn/#relying-party" id="ref-for-relying-party⑤⑨">Relying Party</a>
-            提供一个同样强的标识（例如信用卡号）。</p>
+        <p>即使对于单个支付工具，<a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
+                id="ref-for-relying-party⑥④">依赖方</a>返回的凭据 ID 也可能被恶意实体用作跟踪向量，
+            因为
+            它们是强跨站标识符。不过，为了从
+            <a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
+                id="ref-for-relying-party⑥⑤">依赖方</a>获取它们，商户已经需要一个同样强的标识符
+            提供给<a data-link-type="dfn" href="https://w3c.github.io/webauthn/#relying-party"
+                id="ref-for-relying-party⑥⑥">依赖方</a>（例如信用卡号）。
+        </p>
         <h3 class="heading settled" data-level="12.4" id="sctn-privacy-browser-bound-key-tracking-vector"><span
                 class="secno">12.4. </span><span class="content">浏览器绑定密钥作为追踪向量</span><a class="self-link"
                 href="#sctn-privacy-browser-bound-key-tracking-vector"></a></h3>
         <p>BBK 公钥仅在每次 SPC 支付断言中返回（以及在初次第一方创建 <a data-link-type="dfn" href="#spc-credential"
                 id="ref-for-spc-credential①⓪">SPC Credential</a> 时返回一次）。但要获取 BBK，商户必须先从 <a data-link-type="dfn"
-                href="https://w3c.github.io/webauthn/#relying-party" id="ref-for-relying-party⑥⓪">Relying Party</a> 获取凭证
+                href="https://w3c.github.io/webauthn/#relying-party" id="ref-for-relying-party⑥⑦">Relying Party</a> 获取凭证
             ID 才能发起 SPC，且用户必须使用其 passkey 对交易进行认证。由于访问 BBK 公钥需要先访问凭证 ID，BBK 公钥并未增加额外的追踪能力。</p>
         <h3 class="heading settled" data-level="12.5"
             id="sctn-fingerprinting-via-is-secure-payment-confirmation-available"><span class="secno">12.5. </span><span
@@ -5582,19 +5827,20 @@ navigator<c- p>.</c->credentials<c- p>.</c->create<c- p>({</c-> publicKey <c- p>
             <a data-link-type="biblio">[INFRA]</a> 定义了以下术语：
             <ul>
                 <li><span class="dfn-paneled" id="53275e46">append</span>
-                <li><span class="dfn-paneled" id="03afaf9c">empty（空）</span>
-                <li><span class="dfn-paneled" id="1243a891">exist（存在）</span>
-                <li><span class="dfn-paneled" id="860300d4">实现自定义（implementation-defined）</span>
-                <li><span class="dfn-paneled" id="6b815fdd">is empty（为空）</span>
-                <li><span class="dfn-paneled" id="dd460c8e">is not empty（非空）</span>
+                <li><span class="dfn-paneled" id="03afaf9c">empty</span>
+                <li><span class="dfn-paneled" id="1243a891">exist</span>
+                <li><span class="dfn-paneled" id="860300d4">implementation-defined</span>
+                <li><span class="dfn-paneled" id="6b815fdd">is empty</span>
+                <li><span class="dfn-paneled" id="dd460c8e">is not empty <small>(for list)</small></span>
+                <li><span class="dfn-paneled" id="8e67c0a3">is not empty <small>(for map)</small></span>
                 <li><span class="dfn-paneled" id="31db57e6">keys</span>
-                <li><span class="dfn-paneled" id="649608b9">list（列表）</span>
-                <li><span class="dfn-paneled" id="99c988d6">remove（移除）</span>
-                <li><span class="dfn-paneled" id="0e6b2056">set（设置）</span>
-                <li><span class="dfn-paneled" id="0204d188">size（大小）</span>
-                <li><span class="dfn-paneled" id="984221ca">struct（结构体）</span>
-                <li><span class="dfn-paneled" id="0e8de730">tuple（二元组）</span>
-                <li><span class="dfn-paneled" id="6d19ac93">user agent（用户代理）</span>
+                <li><span class="dfn-paneled" id="649608b9">list</span>
+                <li><span class="dfn-paneled" id="99c988d6">remove</span>
+                <li><span class="dfn-paneled" id="0e6b2056">set</span>
+                <li><span class="dfn-paneled" id="0204d188">size</span>
+                <li><span class="dfn-paneled" id="984221ca">struct</span>
+                <li><span class="dfn-paneled" id="0e8de730">tuple</span>
+                <li><span class="dfn-paneled" id="6d19ac93">user agent</span>
             </ul>
         <li>
             <a data-link-type="biblio">[PAYMENT-METHOD-ID]</a> 定义了以下术语：
@@ -5637,22 +5883,23 @@ navigator<c- p>.</c->credentials<c- p>.</c->create<c- p>({</c-> publicKey <c- p>
         <li>
             <a data-link-type="biblio">[WEB-AUTHN]</a> 定义了以下术语：
             <ul>
-                <li><span class="dfn-paneled" id="8f3d2845">authentication ceremony（认证流程）</span>
-                <li><span class="dfn-paneled" id="9c64cd22">authentication extension（认证扩展）</span>
+                <li><span class="dfn-paneled" id="8f3d2845">authentication ceremony</span>
+                <li><span class="dfn-paneled" id="9c64cd22">authentication extension</span>
                 <li><span class="dfn-paneled" id="cf3032fa">base64url encoding</span>
-                <li><span class="dfn-paneled" id="88ae1d28">client extension（客户端扩展）</span>
-                <li><span class="dfn-paneled" id="af1d27d0">create credential async loop（创建凭证异步循环）</span>
-                <li><span class="dfn-paneled" id="e4d7113a">credential ID（凭证ID）</span>
-                <li><span class="dfn-paneled" id="9877bbe9">credentialPublicKey（凭证公钥）</span>
-                <li><span class="dfn-paneled" id="3781d718">discoverable credential（可发现凭证）</span>
-                <li><span class="dfn-paneled" id="b6a00a38">extension identifier（扩展标识符）</span>
-                <li><span class="dfn-paneled" id="fe1cbc76">public key credential（公钥凭证）</span>
-                <li><span class="dfn-paneled" id="5d6beb3a">registration extension（注册扩展）</span>
-                <li><span class="dfn-paneled" id="77a62788">relying party（依赖方）</span>
-                <li><span class="dfn-paneled" id="c92c9b81">relying party identifier（依赖方标识符）</span>
-                <li><span class="dfn-paneled" id="c7e62ce0">user member（用户成员）</span>
-                <li><span class="dfn-paneled" id="03162f8e">user-verifying platform authenticator（用户验证平台认证器）</span>
-                <li><span class="dfn-paneled" id="2e3d2880">WebAuthn Extension（WebAuthn 扩展）</span>
+                <li><span class="dfn-paneled" id="88ae1d28">client extension</span>
+                <li><span class="dfn-paneled" id="af1d27d0">create credential async loop</span>
+                <li><span class="dfn-paneled" id="e4d7113a">credential ID</span>
+                <li><span class="dfn-paneled" id="9877bbe9">credentialPublicKey</span>
+                <li><span class="dfn-paneled" id="3781d718">discoverable credential</span>
+                <li><span class="dfn-paneled" id="b6a00a38">extension identifier</span>
+                <li><span class="dfn-paneled" id="964302f4">largeBlob</span>
+                <li><span class="dfn-paneled" id="fe1cbc76">public key credential</span>
+                <li><span class="dfn-paneled" id="5d6beb3a">registration extension</span>
+                <li><span class="dfn-paneled" id="77a62788">relying party</span>
+                <li><span class="dfn-paneled" id="c92c9b81">relying party identifier</span>
+                <li><span class="dfn-paneled" id="c7e62ce0">user member</span>
+                <li><span class="dfn-paneled" id="03162f8e">user-verifying platform authenticator</span>
+                <li><span class="dfn-paneled" id="2e3d2880">WebAuthn Extension</span>
             </ul>
         <li>
             <a data-link-type="biblio">[WEBAUTHN-3]</a> 定义了以下术语：
@@ -5756,99 +6003,99 @@ navigator<c- p>.</c->credentials<c- p>.</c->create<c- p>({</c-> publicKey <c- p>
             href="#normative"></a></h3>
     <dl>
         <dt id="biblio-credential-management-1">[CREDENTIAL-MANAGEMENT-1]
-        <dd>Nina Satragno；Marcos Caceres。<a
-                href="https://www.w3.org/TR/credential-management-1/"><cite>凭据管理第一版</cite></a>。
-            2026年4月10日。WD。URL: <a
+        <dd>Nina Satragno; Marcos Caceres. <a href="https://www.w3.org/TR/credential-management-1/"><cite>凭据
+                    管理第 1 级</cite></a>. 2026 年 7 月 2 日。WD。URL：<a
                 href="https://www.w3.org/TR/credential-management-1/">https://www.w3.org/TR/credential-management-1/</a>
         <dt id="biblio-dom">[DOM]
-        <dd>Anne van Kesteren。<a href="https://dom.spec.whatwg.org/"><cite>DOM 标准</cite></a>。Living Standard。
-            URL: <a href="https://dom.spec.whatwg.org/">https://dom.spec.whatwg.org/</a>
+        <dd>Anne van Kesteren. <a href="https://dom.spec.whatwg.org/"><cite>DOM 标准</cite></a>. 现行标准。
+            URL：<a href="https://dom.spec.whatwg.org/">https://dom.spec.whatwg.org/</a>
         <dt id="biblio-ecmascript">[ECMASCRIPT]
-        <dd><a href="https://tc39.es/ecma262/multipage/"><cite>ECMAScript 语言规范</cite></a>。URL: <a
+        <dd><a href="https://tc39.es/ecma262/multipage/"><cite>ECMAScript 语言规范</cite></a>. URL：<a
                 href="https://tc39.es/ecma262/multipage/">https://tc39.es/ecma262/multipage/</a>
         <dt id="biblio-fetch">[FETCH]
-        <dd>Anne van Kesteren。<a href="https://fetch.spec.whatwg.org/"><cite>Fetch 标准</cite></a>。Living
-            Standard。URL: <a href="https://fetch.spec.whatwg.org/">https://fetch.spec.whatwg.org/</a>
+        <dd>Anne van Kesteren. <a href="https://fetch.spec.whatwg.org/"><cite>Fetch 标准</cite></a>. 现行
+            标准。URL：<a href="https://fetch.spec.whatwg.org/">https://fetch.spec.whatwg.org/</a>
         <dt id="biblio-html">[HTML]
-        <dd>Anne van Kesteren 等。<a href="https://html.spec.whatwg.org/multipage/"><cite>HTML 标准</cite></a>。
-            Living Standard。URL: <a
-                href="https://html.spec.whatwg.org/multipage/">https://html.spec.whatwg.org/multipage/</a>
+        <dd>Anne van Kesteren; et al. <a href="https://html.spec.whatwg.org/multipage/"><cite>HTML 标准</cite></a>。
+            现行标准。URL：<a href="https://html.spec.whatwg.org/multipage/">https://html.spec.whatwg.org/multipage/</a>
         <dt id="biblio-i18n-glossary">[I18N-GLOSSARY]
-        <dd>Richard Ishida；Addison Phillips。<a href="https://www.w3.org/TR/i18n-glossary/"><cite>国际化词汇表</cite></a>。
-            2024年10月17日。NOTE。URL: <a
+        <dd>Richard Ishida; Addison Phillips. <a href="https://www.w3.org/TR/i18n-glossary/"><cite>国际化
+                    术语表</cite></a>. 2024 年 10 月 17 日。NOTE。URL：<a
                 href="https://www.w3.org/TR/i18n-glossary/">https://www.w3.org/TR/i18n-glossary/</a>
         <dt id="biblio-iana-cose-algs-reg">[IANA-COSE-ALGS-REG]
-        <dd><a href="https://www.iana.org/assignments/cose/cose.xhtml#algorithms"><cite>IANA CBOR
-                    对象签名与加密算法注册表</cite></a>。
-            URL: <a
+        <dd><a href="https://www.iana.org/assignments/cose/cose.xhtml#algorithms"><cite>IANA CBOR 对象签名和
+                    加密（COSE）算法注册表</cite></a>. URL：<a
                 href="https://www.iana.org/assignments/cose/cose.xhtml#algorithms">https://www.iana.org/assignments/cose/cose.xhtml#algorithms</a>
         <dt id="biblio-iana-webauthn-registries">[IANA-WebAuthn-Registries]
-        <dd><a href="https://www.rfc-editor.org/rfc/rfc8809.html"><cite>Web 认证（WebAuthn）注册表</cite></a>。
-            URL: <a href="https://www.rfc-editor.org/rfc/rfc8809.html">https://www.rfc-editor.org/rfc/rfc8809.html</a>
+        <dd><a href="https://www.rfc-editor.org/rfc/rfc8809.html"><cite>Web 认证
+                    （WebAuthn）注册表</cite></a>. URL：<a
+                href="https://www.rfc-editor.org/rfc/rfc8809.html">https://www.rfc-editor.org/rfc/rfc8809.html</a>
         <dt id="biblio-image-resource">[IMAGE-RESOURCE]
-        <dd>Aaron Gustafson；Rayan Kanso；Marcos Caceres。<a
-                href="https://www.w3.org/TR/image-resource/"><cite>图像资源</cite></a>。
-            2021年6月4日。WD。URL: <a href="https://www.w3.org/TR/image-resource/">https://www.w3.org/TR/image-resource/</a>
+        <dd>Aaron Gustafson; Rayan Kanso; Marcos Caceres. <a href="https://www.w3.org/TR/image-resource/"><cite>图像
+                    资源</cite></a>. 2021 年 6 月 4 日。WD。URL：<a
+                href="https://www.w3.org/TR/image-resource/">https://www.w3.org/TR/image-resource/</a>
         <dt id="biblio-infra">[INFRA]
-        <dd>Anne van Kesteren；Domenic Denicola。<a href="https://infra.spec.whatwg.org/"><cite>Infra 标准</cite></a>。
-            Living Standard。URL: <a href="https://infra.spec.whatwg.org/">https://infra.spec.whatwg.org/</a>
+        <dd>Anne van Kesteren; Domenic Denicola. <a href="https://infra.spec.whatwg.org/"><cite>Infra
+                    标准</cite></a>. 现行标准。URL：<a href="https://infra.spec.whatwg.org/">https://infra.spec.whatwg.org/</a>
         <dt id="biblio-payment-method-id">[PAYMENT-METHOD-ID]
-        <dd>Marcos Caceres。<a href="https://www.w3.org/TR/payment-method-id/"><cite>支付方式标识</cite></a>。
-            2022年9月8日。REC。URL: <a
+        <dd>Marcos Caceres. <a href="https://www.w3.org/TR/payment-method-id/"><cite>支付方式
+                    标识符</cite></a>. 2022 年 9 月 8 日。REC。URL：<a
                 href="https://www.w3.org/TR/payment-method-id/">https://www.w3.org/TR/payment-method-id/</a>
         <dt id="biblio-payment-request">[PAYMENT-REQUEST]
-        <dd>Marcos Caceres；Ian Jacobs；Stephen McGruer。<a href="https://www.w3.org/TR/payment-request/"><cite>支付请求
-                    API</cite></a>。
-            2026年3月27日。CRD。URL: <a
+        <dd>Marcos Caceres; Ian Jacobs; Stephen McGruer. <a href="https://www.w3.org/TR/payment-request/"><cite>支付
+                    请求 API</cite></a>. 2026 年 6 月 22 日。CRD。URL：<a
                 href="https://www.w3.org/TR/payment-request/">https://www.w3.org/TR/payment-request/</a>
         <dt id="biblio-rfc2119">[RFC2119]
-        <dd>S. Bradner。<a href="https://datatracker.ietf.org/doc/html/rfc2119"><cite>在 RFCs 中表示需求级别的关键词</cite></a>。
-            1997年3月。最佳当前实践。URL: <a
+        <dd>S. Bradner. <a href="https://datatracker.ietf.org/doc/html/rfc2119"><cite>RFC 中用于
+                    表示要求级别的关键词</cite></a>. 1997 年 3 月。最佳当前实践。URL：<a
                 href="https://datatracker.ietf.org/doc/html/rfc2119">https://datatracker.ietf.org/doc/html/rfc2119</a>
         <dt id="biblio-rfc8809">[RFC8809]
-        <dd>J. Hodges；G. Mandyam；M. Jones。<a href="https://www.rfc-editor.org/rfc/rfc8809"><cite>Web
-                    认证（WebAuthn）注册表</cite></a>。
-            2020年8月。信息性。URL: <a href="https://www.rfc-editor.org/rfc/rfc8809">https://www.rfc-editor.org/rfc/rfc8809</a>
+        <dd>J. Hodges; G. Mandyam; M. Jones. <a href="https://www.rfc-editor.org/info/rfc8809/"><cite>Web
+                    认证（WebAuthn）注册表</cite></a>. 2020 年 8 月。信息性。URL：<a
+                href="https://www.rfc-editor.org/info/rfc8809/">https://www.rfc-editor.org/info/rfc8809/</a>
         <dt id="biblio-url">[URL]
-        <dd>Anne van Kesteren。<a href="https://url.spec.whatwg.org/"><cite>URL 标准</cite></a>。Living Standard。
-            URL: <a href="https://url.spec.whatwg.org/">https://url.spec.whatwg.org/</a>
+        <dd>Anne van Kesteren. <a href="https://url.spec.whatwg.org/"><cite>URL 标准</cite></a>. 现行标准。
+            URL：<a href="https://url.spec.whatwg.org/">https://url.spec.whatwg.org/</a>
         <dt id="biblio-webauthn-3">[WEBAUTHN-3]
-        <dd>Akshay Kumar 等。<a href="https://www.w3.org/TR/webauthn-3/"><cite>Web 认证：用于访问公钥凭据的 API －第 3 级</cite></a>。
-            2026年5月26日。CR。URL: <a href="https://www.w3.org/TR/webauthn-3/">https://www.w3.org/TR/webauthn-3/</a>
+        <dd>Akshay Kumar; et al. <a href="https://www.w3.org/TR/webauthn-3/"><cite>Web 认证：用于
+                    访问公钥凭据的 API - 第 3 级</cite></a>. 2026 年 5 月 26 日。CR。URL：<a
+                href="https://www.w3.org/TR/webauthn-3/">https://www.w3.org/TR/webauthn-3/</a>
         <dt id="biblio-webcrypto-2">[WEBCRYPTO-2]
-        <dd>Daniel Huigens。<a href="https://www.w3.org/TR/webcrypto-2/"><cite>Web 加密标准第 2 级</cite></a>。
-            2025年4月22日。FPWD。URL: <a href="https://www.w3.org/TR/webcrypto-2/">https://www.w3.org/TR/webcrypto-2/</a>
+        <dd>Daniel Huigens. <a href="https://www.w3.org/TR/webcrypto-2/"><cite>Web 加密第 2 级</cite></a>. 2025 年 4 月 22 日。
+            FPWD。URL：<a href="https://www.w3.org/TR/webcrypto-2/">https://www.w3.org/TR/webcrypto-2/</a>
         <dt id="biblio-webdriver2">[WebDriver2]
-        <dd>Simon Stewart；David Burns。<a href="https://www.w3.org/TR/webdriver2/"><cite>WebDriver</cite></a>。
-            2026年5月28日。WD。URL: <a href="https://www.w3.org/TR/webdriver2/">https://www.w3.org/TR/webdriver2/</a>
+        <dd>Simon Stewart; David Burns. <a href="https://www.w3.org/TR/webdriver2/"><cite>WebDriver</cite></a>. 2026 年 5
+            月
+            28 日。WD。URL：<a href="https://www.w3.org/TR/webdriver2/">https://www.w3.org/TR/webdriver2/</a>
         <dt id="biblio-webidl">[WEBIDL]
-        <dd>Edgar Chen；Timothy Gu。<a href="https://webidl.spec.whatwg.org/"><cite>Web IDL 标准</cite></a>。Living
-            Standard。URL: <a href="https://webidl.spec.whatwg.org/">https://webidl.spec.whatwg.org/</a>
+        <dd>Edgar Chen; Timothy Gu. <a href="https://webidl.spec.whatwg.org/"><cite>Web IDL 标准</cite></a>. 现行
+            标准。URL：<a href="https://webidl.spec.whatwg.org/">https://webidl.spec.whatwg.org/</a>
     </dl>
     <h3 class="heading no-num no-ref settled" id="informative"><span class="content">非规范性引用</span><a class="self-link"
             href="#informative"></a></h3>
     <dl>
         <dt id="biblio-bcp47">[BCP47]
-        <dd>A. Phillips, Ed.; M. Davis, Ed.. <a
-                href="https://www.rfc-editor.org/rfc/rfc5646"><cite>用于识别语言的标签</cite></a>。
-            2009年9月。最佳当前实践。URL: <a
-                href="https://www.rfc-editor.org/rfc/rfc5646">https://www.rfc-editor.org/rfc/rfc5646</a>
+        <dd>A. Phillips, Ed.; M. Davis, Ed.. <a href="https://www.rfc-editor.org/info/rfc5646/"><cite>用于
+                    标识语言的标签</cite></a>. 2009 年 9 月。最佳当前实践。URL：<a
+                href="https://www.rfc-editor.org/info/rfc5646/">https://www.rfc-editor.org/info/rfc5646/</a>
         <dt id="biblio-dbsc">[DBSC]
-        <dd>Ian Clelland；Daniel Rubery；thefrog t。<a href="https://www.w3.org/TR/dbsc-1/"><cite>设备绑定会话凭据</cite></a>。
-            2025年8月21日。FPWD。URL: <a href="https://www.w3.org/TR/dbsc-1/">https://www.w3.org/TR/dbsc-1/</a>
+        <dd>Ian Clelland; Daniel Rubery; thefrog t. <a href="https://www.w3.org/TR/dbsc-1/"><cite>设备绑定会话
+                    凭据</cite></a>. 2025 年 8 月 21 日。FPWD。URL：<a
+                href="https://www.w3.org/TR/dbsc-1/">https://www.w3.org/TR/dbsc-1/</a>
         <dt id="biblio-fs">[FS]
-        <dd>Austin Sullivan。<a href="https://fs.spec.whatwg.org/"><cite>文件系统标准</cite></a>。Living
-            Standard。URL: <a href="https://fs.spec.whatwg.org/">https://fs.spec.whatwg.org/</a>
+        <dd>Austin Sullivan. <a href="https://fs.spec.whatwg.org/"><cite>文件系统标准</cite></a>. 现行
+            标准。URL：<a href="https://fs.spec.whatwg.org/">https://fs.spec.whatwg.org/</a>
         <dt id="biblio-rfc2397">[RFC2397]
-        <dd>L. Masinter。<a href="https://www.rfc-editor.org/rfc/rfc2397"><cite>“data” URL 方案</cite></a>。1998年8月。
-            建议标准。URL: <a href="https://www.rfc-editor.org/rfc/rfc2397">https://www.rfc-editor.org/rfc/rfc2397</a>
+        <dd>L. Masinter. <a href="https://www.rfc-editor.org/info/rfc2397/"><cite>“data” URL 方案</cite></a>。
+            1998 年 8 月。拟议标准。URL：<a
+                href="https://www.rfc-editor.org/info/rfc2397/">https://www.rfc-editor.org/info/rfc2397/</a>
         <dt id="biblio-rfc4647">[RFC4647]
-        <dd>A. Phillips, Ed.; M. Davis, Ed.. <a href="https://www.rfc-editor.org/rfc/rfc4647"><cite>语言标签的匹配</cite></a>。
-            2006年9月。最佳当前实践。URL: <a
-                href="https://www.rfc-editor.org/rfc/rfc4647">https://www.rfc-editor.org/rfc/rfc4647</a>
+        <dd>A. Phillips, Ed.; M. Davis, Ed.. <a href="https://www.rfc-editor.org/info/rfc4647/"><cite>语言
+                    标签匹配</cite></a>. 2006 年 9 月。最佳当前实践。URL：<a
+                href="https://www.rfc-editor.org/info/rfc4647/">https://www.rfc-editor.org/info/rfc4647/</a>
         <dt id="biblio-webauthn-conditional-ui">[WEBAUTHN-CONDITIONAL-UI]
         <dd><a href="https://github.com/w3c/webauthn/issues/1545"><cite>WebAuthn 条件式 UI 提案</cite></a>。
-            URL: <a href="https://github.com/w3c/webauthn/issues/1545">https://github.com/w3c/webauthn/issues/1545</a>
+            URL：<a href="https://github.com/w3c/webauthn/issues/1545">https://github.com/w3c/webauthn/issues/1545</a>
     </dl>
     <h2 class="heading no-num no-ref settled" id="idl-index"><span class="content">IDL 索引</span><a class="self-link"
             href="#idl-index"></a></h2>
@@ -6182,7 +6429,7 @@ navigator<c- p>.</c->credentials<c- p>.</c->create<c- p>({</c-> publicKey <c- p>
                 "0d0033ad": { "dfnID": "0d0033ad", "dfnText": "payment handler", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-dfn-payment-handler" }], "title": "4. Authentication - the Secure Payment Confirmation payment method" }], "url": "https://www.w3.org/TR/payment-request/#dfn-payment-handler" },
                 "0e6b2056": { "dfnID": "0e6b2056", "dfnText": "set", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-map-set" }], "title": "5. WebAuthn Extension - \"payment\"" }, { "refs": [{ "id": "ref-for-map-set\u2460" }], "title": "6.1. Creating a key pair" }, { "refs": [{ "id": "ref-for-map-set\u2461" }], "title": "6.2. Binding a key pair" }], "url": "https://infra.spec.whatwg.org/#map-set" },
                 "0e8de730": { "dfnID": "0e8de730", "dfnText": "tuple", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-tuple" }], "title": "6. Browser Bound Key Store" }, { "refs": [{ "id": "ref-for-tuple\u2460" }, { "id": "ref-for-tuple\u2461" }], "title": "6.1. Creating a key pair" }, { "refs": [{ "id": "ref-for-tuple\u2462" }], "title": "6.3. Retrieving a key pair" }, { "refs": [{ "id": "ref-for-tuple\u2463" }], "title": "6.4. Getting the browser bound public key" }, { "refs": [{ "id": "ref-for-tuple\u2464" }], "title": "6.5. Signing client data" }], "url": "https://infra.spec.whatwg.org/#tuple" },
-                "1243a891": { "dfnID": "1243a891", "dfnText": "exist", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-map-exists" }], "title": "4.7. Availability of Secure Payment Confirmation capabilities" }, { "refs": [{ "id": "ref-for-map-exists\u2460" }], "title": "4.8. Steps to validate payment method data" }, { "refs": [{ "id": "ref-for-map-exists\u2461" }, { "id": "ref-for-map-exists\u2462" }], "title": "6.3. Retrieving a key pair" }], "url": "https://infra.spec.whatwg.org/#map-exists" },
+                "1243a891": { "dfnID": "1243a891", "dfnText": "exist", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-map-exists" }], "title": "4.7. Availability of Secure Payment Confirmation capabilities" }, { "refs": [{ "id": "ref-for-map-exists\u2460" }, { "id": "ref-for-map-exists\u2461" }], "title": "4.8. Steps to validate payment method data" }, { "refs": [{ "id": "ref-for-map-exists\u2462" }, { "id": "ref-for-map-exists\u2463" }], "title": "6.3. Retrieving a key pair" }], "url": "https://infra.spec.whatwg.org/#map-exists" },
                 "12b8dfc0": { "dfnID": "12b8dfc0", "dfnText": "current settings object", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-current-settings-object" }], "title": "8. Permissions Policy integration" }], "url": "https://html.spec.whatwg.org/multipage/webappapis.html#current-settings-object" },
                 "16ad0fd2": { "dfnID": "16ad0fd2", "dfnText": "locale", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-dfn-locale" }], "title": "4.4. SecurePaymentConfirmationRequest Dictionary" }, { "refs": [{ "id": "ref-for-dfn-locale\u2460" }], "title": "14. Internationalization Considerations" }], "url": "https://www.w3.org/TR/i18n-glossary/#dfn-locale" },
                 "171090ff": { "dfnID": "171090ff", "dfnText": "allowCredentials", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-dom-publickeycredentialrequestoptions-allowcredentials" }], "title": "4.11. Steps to respond to a payment request" }], "url": "https://www.w3.org/TR/webauthn-3/#dom-publickeycredentialrequestoptions-allowcredentials" },
@@ -6202,7 +6449,7 @@ navigator<c- p>.</c->credentials<c- p>.</c->create<c- p>({</c-> publicKey <c- p>
                 "3a711be7": { "dfnID": "3a711be7", "dfnText": "scheme", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-concept-url-scheme" }], "title": "4.8. Steps to validate payment method data" }, { "refs": [{ "id": "ref-for-concept-url-scheme\u2460" }], "title": "4.9. Steps to check if a payment can be made" }], "url": "https://url.spec.whatwg.org/#concept-url-scheme" },
                 "3aff2fb3": { "dfnID": "3aff2fb3", "dfnText": "BufferSource", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-BufferSource" }, { "id": "ref-for-BufferSource\u2460" }], "title": "4.4. SecurePaymentConfirmationRequest Dictionary" }], "url": "https://webidl.spec.whatwg.org/#BufferSource" },
                 "3c7fe9c4": { "dfnID": "3c7fe9c4", "dfnText": "user accepts the payment request algorithm", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-dfn-user-accepts-the-payment-request-algorithm" }, { "id": "ref-for-dfn-user-accepts-the-payment-request-algorithm\u2460" }], "title": "4.10.2. Outcome of the transaction confirmation UX" }, { "refs": [{ "id": "ref-for-dfn-user-accepts-the-payment-request-algorithm\u2461" }], "title": "4.11. Steps to respond to a payment request" }], "url": "https://w3c.github.io/payment-request/#dfn-user-accepts-the-payment-request-algorithm" },
-                "43ac8374": { "dfnID": "43ac8374", "dfnText": "origin (for environment settings object)", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-concept-settings-object-origin" }], "title": "4.9. Steps to check if a payment can be made" }], "url": "https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-origin" },
+                "43ac8374": { "dfnID": "43ac8374", "dfnText": "origin (for environment settings object)", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-concept-settings-object-origin" }], "title": "4.8. Steps to validate payment method data" }, { "refs": [{ "id": "ref-for-concept-settings-object-origin\u2460" }], "title": "4.9. Steps to check if a payment can be made" }], "url": "https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-origin" },
                 "464020c6": { "dfnID": "464020c6", "dfnText": "PublicKeyCredentialType", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-enumdef-publickeycredentialtype" }, { "id": "ref-for-enumdef-publickeycredentialtype\u2460" }], "title": "6.1. Creating a key pair" }], "url": "https://www.w3.org/TR/webauthn-3/#enumdef-publickeycredentialtype" },
                 "468e7b29": { "dfnID": "468e7b29", "dfnText": "standardized payment method identifier", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-dfn-standardized-payment-method-identifier" }], "title": "4. Authentication - the Secure Payment Confirmation payment method" }], "url": "https://www.w3.org/TR/payment-method-id/#dfn-standardized-payment-method-identifier" },
                 "47fe679e": { "dfnID": "47fe679e", "dfnText": "transient activation", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-transient-activation" }], "title": "4.3. Modification of user activation requirement" }], "url": "https://html.spec.whatwg.org/multipage/interaction.html#transient-activation" },
@@ -6236,13 +6483,13 @@ navigator<c- p>.</c->credentials<c- p>.</c->create<c- p>({</c-> publicKey <c- p>
                 "7482107b": { "dfnID": "7482107b", "dfnText": "WebDriver error code", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-dfn-error-code" }, { "id": "ref-for-dfn-error-code\u2460" }], "title": "10.1. Set SPC Transaction Mode" }], "url": "https://w3c.github.io/webdriver/#dfn-error-code" },
                 "75f46ef4": { "dfnID": "75f46ef4", "dfnText": "payment method", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-dfn-payment-method" }], "title": "1. Introduction" }], "url": "https://w3c.github.io/payment-request/#dfn-payment-method" },
                 "7787d359": { "dfnID": "7787d359", "dfnText": "record", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-idl-record" }], "title": "4.7. Availability of Secure Payment Confirmation capabilities" }], "url": "https://webidl.spec.whatwg.org/#idl-record" },
-                "77a62788": { "dfnID": "77a62788", "dfnText": "relying party", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-relying-party" }, { "id": "ref-for-relying-party\u2460" }, { "id": "ref-for-relying-party\u2461" }, { "id": "ref-for-relying-party\u2462" }, { "id": "ref-for-relying-party\u2463" }], "title": "1. Introduction" }, { "refs": [{ "id": "ref-for-relying-party\u2464" }], "title": "1.1.1. Cryptographic evidence of transaction confirmation" }, { "refs": [{ "id": "ref-for-relying-party\u2465" }, { "id": "ref-for-relying-party\u2466" }, { "id": "ref-for-relying-party\u2467" }], "title": "1.1.2. Merchant control of authentication" }, { "refs": [{ "id": "ref-for-relying-party\u2468" }, { "id": "ref-for-relying-party\u2460\u24ea" }, { "id": "ref-for-relying-party\u2460\u2460" }, { "id": "ref-for-relying-party\u2460\u2461" }, { "id": "ref-for-relying-party\u2460\u2462" }], "title": "2. Terminology" }, { "refs": [{ "id": "ref-for-relying-party\u2460\u2463" }], "title": "4. Authentication - the Secure Payment Confirmation payment method" }, { "refs": [{ "id": "ref-for-relying-party\u2460\u2464" }], "title": "4.10.1. Information presented to the user" }, { "refs": [{ "id": "ref-for-relying-party\u2460\u2465" }], "title": "4.11. Steps to respond to a payment request" }, { "refs": [{ "id": "ref-for-relying-party\u2460\u2466" }], "title": "5. WebAuthn Extension - \"payment\"" }, { "refs": [{ "id": "ref-for-relying-party\u2460\u2467" }], "title": "5.2. CollectedClientAdditionalPaymentData Dictionary" }, { "refs": [{ "id": "ref-for-relying-party\u2460\u2468" }, { "id": "ref-for-relying-party\u2461\u24ea" }], "title": "7.1. PaymentCredentialInstrument Dictionary" }, { "refs": [{ "id": "ref-for-relying-party\u2461\u2460" }, { "id": "ref-for-relying-party\u2461\u2461" }], "title": "7.2. PaymentEntityLogo Dictionary" }, { "refs": [{ "id": "ref-for-relying-party\u2461\u2462" }, { "id": "ref-for-relying-party\u2461\u2463" }, { "id": "ref-for-relying-party\u2461\u2464" }, { "id": "ref-for-relying-party\u2461\u2465" }, { "id": "ref-for-relying-party\u2461\u2466" }, { "id": "ref-for-relying-party\u2461\u2467" }, { "id": "ref-for-relying-party\u2461\u2468" }, { "id": "ref-for-relying-party\u2462\u24ea" }], "title": "9.1. Verifying an Authentication Assertion" }, { "refs": [{ "id": "ref-for-relying-party\u2462\u2460" }, { "id": "ref-for-relying-party\u2462\u2461" }], "title": "11.1. Cross-origin authentication ceremony" }, { "refs": [{ "id": "ref-for-relying-party\u2462\u2462" }, { "id": "ref-for-relying-party\u2462\u2463" }, { "id": "ref-for-relying-party\u2462\u2464" }, { "id": "ref-for-relying-party\u2462\u2465" }, { "id": "ref-for-relying-party\u2462\u2466" }, { "id": "ref-for-relying-party\u2462\u2467" }, { "id": "ref-for-relying-party\u2462\u2468" }], "title": "11.1.1. Login Attack" }, { "refs": [{ "id": "ref-for-relying-party\u2463\u24ea" }, { "id": "ref-for-relying-party\u2463\u2460" }, { "id": "ref-for-relying-party\u2463\u2461" }], "title": "11.1.2. Payment Attack" }, { "refs": [{ "id": "ref-for-relying-party\u2463\u2462" }, { "id": "ref-for-relying-party\u2463\u2463" }], "title": "11.2. Merchant-supplied authentication data" }, { "refs": [{ "id": "ref-for-relying-party\u2463\u2464" }, { "id": "ref-for-relying-party\u2463\u2465" }, { "id": "ref-for-relying-party\u2463\u2466" }, { "id": "ref-for-relying-party\u2463\u2467" }, { "id": "ref-for-relying-party\u2463\u2468" }], "title": "11.3. Attacker generated Browser Bound Key" }, { "refs": [{ "id": "ref-for-relying-party\u2464\u24ea" }, { "id": "ref-for-relying-party\u2464\u2460" }], "title": "12.1. Probing for credential ids" }, { "refs": [{ "id": "ref-for-relying-party\u2464\u2461" }, { "id": "ref-for-relying-party\u2464\u2462" }, { "id": "ref-for-relying-party\u2464\u2463" }, { "id": "ref-for-relying-party\u2464\u2464" }, { "id": "ref-for-relying-party\u2464\u2465" }], "title": "12.2. Joining different payment instruments" }, { "refs": [{ "id": "ref-for-relying-party\u2464\u2466" }, { "id": "ref-for-relying-party\u2464\u2467" }, { "id": "ref-for-relying-party\u2464\u2468" }], "title": "12.3. Credential ID(s) as a tracking vector" }, { "refs": [{ "id": "ref-for-relying-party\u2465\u24ea" }], "title": "12.4. Browser Bound Key as a tracking vector" }], "url": "https://w3c.github.io/webauthn/#relying-party" },
+                "77a62788": { "dfnID": "77a62788", "dfnText": "relying party", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-relying-party" }, { "id": "ref-for-relying-party\u2460" }, { "id": "ref-for-relying-party\u2461" }, { "id": "ref-for-relying-party\u2462" }, { "id": "ref-for-relying-party\u2463" }], "title": "1. Introduction" }, { "refs": [{ "id": "ref-for-relying-party\u2464" }], "title": "1.1.1. Cryptographic evidence of transaction confirmation" }, { "refs": [{ "id": "ref-for-relying-party\u2465" }, { "id": "ref-for-relying-party\u2466" }, { "id": "ref-for-relying-party\u2467" }], "title": "1.1.2. Merchant control of authentication" }, { "refs": [{ "id": "ref-for-relying-party\u2468" }, { "id": "ref-for-relying-party\u2460\u24ea" }, { "id": "ref-for-relying-party\u2460\u2460" }, { "id": "ref-for-relying-party\u2460\u2461" }, { "id": "ref-for-relying-party\u2460\u2462" }], "title": "2. Terminology" }, { "refs": [{ "id": "ref-for-relying-party\u2460\u2463" }], "title": "4. Authentication - the Secure Payment Confirmation payment method" }, { "refs": [{ "id": "ref-for-relying-party\u2460\u2464" }], "title": "4.4. SecurePaymentConfirmationRequest Dictionary" }, { "refs": [{ "id": "ref-for-relying-party\u2460\u2465" }], "title": "4.10.1. Information presented to the user" }, { "refs": [{ "id": "ref-for-relying-party\u2460\u2466" }], "title": "4.11. Steps to respond to a payment request" }, { "refs": [{ "id": "ref-for-relying-party\u2460\u2467" }], "title": "5. WebAuthn Extension - \"payment\"" }, { "refs": [{ "id": "ref-for-relying-party\u2460\u2468" }], "title": "5.2. CollectedClientAdditionalPaymentData Dictionary" }, { "refs": [{ "id": "ref-for-relying-party\u2461\u24ea" }, { "id": "ref-for-relying-party\u2461\u2460" }], "title": "7.1. PaymentCredentialInstrument Dictionary" }, { "refs": [{ "id": "ref-for-relying-party\u2461\u2461" }, { "id": "ref-for-relying-party\u2461\u2462" }], "title": "7.2. PaymentEntityLogo Dictionary" }, { "refs": [{ "id": "ref-for-relying-party\u2461\u2463" }, { "id": "ref-for-relying-party\u2461\u2464" }, { "id": "ref-for-relying-party\u2461\u2465" }, { "id": "ref-for-relying-party\u2461\u2466" }, { "id": "ref-for-relying-party\u2461\u2467" }, { "id": "ref-for-relying-party\u2461\u2468" }, { "id": "ref-for-relying-party\u2462\u24ea" }, { "id": "ref-for-relying-party\u2462\u2460" }], "title": "9.1. Verifying an Authentication Assertion" }, { "refs": [{ "id": "ref-for-relying-party\u2462\u2461" }, { "id": "ref-for-relying-party\u2462\u2462" }], "title": "11.1. Cross-origin authentication ceremony" }, { "refs": [{ "id": "ref-for-relying-party\u2462\u2463" }, { "id": "ref-for-relying-party\u2462\u2464" }, { "id": "ref-for-relying-party\u2462\u2465" }, { "id": "ref-for-relying-party\u2462\u2466" }, { "id": "ref-for-relying-party\u2462\u2467" }, { "id": "ref-for-relying-party\u2462\u2468" }, { "id": "ref-for-relying-party\u2463\u24ea" }], "title": "11.1.1. Login Attack" }, { "refs": [{ "id": "ref-for-relying-party\u2463\u2460" }, { "id": "ref-for-relying-party\u2463\u2461" }, { "id": "ref-for-relying-party\u2463\u2462" }], "title": "11.1.2. Payment Attack" }, { "refs": [{ "id": "ref-for-relying-party\u2463\u2463" }, { "id": "ref-for-relying-party\u2463\u2464" }, { "id": "ref-for-relying-party\u2463\u2465" }, { "id": "ref-for-relying-party\u2463\u2466" }, { "id": "ref-for-relying-party\u2463\u2467" }, { "id": "ref-for-relying-party\u2463\u2468" }], "title": "11.1.3. WebAuthn Extensions Only Allowed for the Relying Party" }, { "refs": [{ "id": "ref-for-relying-party\u2464\u24ea" }, { "id": "ref-for-relying-party\u2464\u2460" }], "title": "11.2. Merchant-supplied authentication data" }, { "refs": [{ "id": "ref-for-relying-party\u2464\u2461" }, { "id": "ref-for-relying-party\u2464\u2462" }, { "id": "ref-for-relying-party\u2464\u2463" }, { "id": "ref-for-relying-party\u2464\u2464" }, { "id": "ref-for-relying-party\u2464\u2465" }], "title": "11.3. Attacker generated Browser Bound Key" }, { "refs": [{ "id": "ref-for-relying-party\u2464\u2466" }, { "id": "ref-for-relying-party\u2464\u2467" }], "title": "12.1. Probing for credential ids" }, { "refs": [{ "id": "ref-for-relying-party\u2464\u2468" }, { "id": "ref-for-relying-party\u2465\u24ea" }, { "id": "ref-for-relying-party\u2465\u2460" }, { "id": "ref-for-relying-party\u2465\u2461" }, { "id": "ref-for-relying-party\u2465\u2462" }], "title": "12.2. Joining different payment instruments" }, { "refs": [{ "id": "ref-for-relying-party\u2465\u2463" }, { "id": "ref-for-relying-party\u2465\u2464" }, { "id": "ref-for-relying-party\u2465\u2465" }], "title": "12.3. Credential ID(s) as a tracking vector" }, { "refs": [{ "id": "ref-for-relying-party\u2465\u2466" }], "title": "12.4. Browser Bound Key as a tracking vector" }], "url": "https://w3c.github.io/webauthn/#relying-party" },
                 "797018a7": { "dfnID": "797018a7", "dfnText": "InvalidStateError", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-invalidstateerror" }], "title": "6.2. Binding a key pair" }], "url": "https://webidl.spec.whatwg.org/#invalidstateerror" },
                 "79cad4dd": { "dfnID": "79cad4dd", "dfnText": "valid domain", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-valid-domain" }], "title": "4.8. Steps to validate payment method data" }], "url": "https://url.spec.whatwg.org/#valid-domain" },
                 "7cbec8a9": { "dfnID": "7cbec8a9", "dfnText": "PublicKeyCredentialCreationOptions", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-dictdef-publickeycredentialcreationoptions" }, { "id": "ref-for-dictdef-publickeycredentialcreationoptions\u2460" }], "title": "5. WebAuthn Extension - \"payment\"" }], "url": "https://www.w3.org/TR/webauthn-3/#dictdef-publickeycredentialcreationoptions" },
                 "81dd847b": { "dfnID": "81dd847b", "dfnText": "UnknownError", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-unknownerror" }], "title": "5. WebAuthn Extension - \"payment\"" }], "url": "https://webidl.spec.whatwg.org/#unknownerror" },
                 "82c23298": { "dfnID": "82c23298", "dfnText": "remote end steps", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-dfn-remote-end-steps" }], "title": "10.1. Set SPC Transaction Mode" }], "url": "https://w3c.github.io/webdriver/#dfn-remote-end-steps" },
-                "82ca3efc": { "dfnID": "82ca3efc", "dfnText": "TypeError", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-exceptiondef-typeerror" }, { "id": "ref-for-exceptiondef-typeerror\u2460" }, { "id": "ref-for-exceptiondef-typeerror\u2461" }, { "id": "ref-for-exceptiondef-typeerror\u2462" }, { "id": "ref-for-exceptiondef-typeerror\u2463" }, { "id": "ref-for-exceptiondef-typeerror\u2464" }, { "id": "ref-for-exceptiondef-typeerror\u2465" }, { "id": "ref-for-exceptiondef-typeerror\u2466" }, { "id": "ref-for-exceptiondef-typeerror\u2467" }, { "id": "ref-for-exceptiondef-typeerror\u2468" }, { "id": "ref-for-exceptiondef-typeerror\u2460\u24ea" }, { "id": "ref-for-exceptiondef-typeerror\u2460\u2460" }, { "id": "ref-for-exceptiondef-typeerror\u2460\u2461" }, { "id": "ref-for-exceptiondef-typeerror\u2460\u2462" }], "title": "4.8. Steps to validate payment method data" }, { "refs": [{ "id": "ref-for-exceptiondef-typeerror\u2460\u2463" }], "title": "5. WebAuthn Extension - \"payment\"" }, { "refs": [{ "id": "ref-for-exceptiondef-typeerror\u2460\u2464" }], "title": "6.2. Binding a key pair" }], "url": "https://webidl.spec.whatwg.org/#exceptiondef-typeerror" },
+                "82ca3efc": { "dfnID": "82ca3efc", "dfnText": "TypeError", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-exceptiondef-typeerror" }, { "id": "ref-for-exceptiondef-typeerror\u2460" }, { "id": "ref-for-exceptiondef-typeerror\u2461" }, { "id": "ref-for-exceptiondef-typeerror\u2462" }, { "id": "ref-for-exceptiondef-typeerror\u2463" }, { "id": "ref-for-exceptiondef-typeerror\u2464" }, { "id": "ref-for-exceptiondef-typeerror\u2465" }, { "id": "ref-for-exceptiondef-typeerror\u2466" }, { "id": "ref-for-exceptiondef-typeerror\u2467" }, { "id": "ref-for-exceptiondef-typeerror\u2468" }, { "id": "ref-for-exceptiondef-typeerror\u2460\u24ea" }, { "id": "ref-for-exceptiondef-typeerror\u2460\u2460" }, { "id": "ref-for-exceptiondef-typeerror\u2460\u2461" }, { "id": "ref-for-exceptiondef-typeerror\u2460\u2462" }, { "id": "ref-for-exceptiondef-typeerror\u2460\u2463" }], "title": "4.8. Steps to validate payment method data" }, { "refs": [{ "id": "ref-for-exceptiondef-typeerror\u2460\u2464" }], "title": "5. WebAuthn Extension - \"payment\"" }, { "refs": [{ "id": "ref-for-exceptiondef-typeerror\u2460\u2465" }], "title": "6.2. Binding a key pair" }], "url": "https://webidl.spec.whatwg.org/#exceptiondef-typeerror" },
                 "85394472": { "dfnID": "85394472", "dfnText": "Document", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-document" }], "title": "4.6. Checking if Secure Payment Confirmation is available" }], "url": "https://dom.spec.whatwg.org/#document" },
                 "860300d4": { "dfnID": "860300d4", "dfnText": "implementation-defined", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-implementation-defined" }], "title": "2. Terminology" }, { "refs": [{ "id": "ref-for-implementation-defined\u2460" }], "title": "6.1. Creating a key pair" }], "url": "https://infra.spec.whatwg.org/#implementation-defined" },
                 "87335f73": { "dfnID": "87335f73", "dfnText": "payment method additional data type", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-dfn-additional-data-type" }], "title": "4.5. Payment Method additional data type" }], "url": "https://w3c.github.io/payment-request/#dfn-additional-data-type" },
@@ -6252,15 +6499,17 @@ navigator<c- p>.</c->credentials<c- p>.</c->create<c- p>({</c-> publicKey <c- p>
                 "8d1f4176": { "dfnID": "8d1f4176", "dfnText": "currency", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-dom-paymentcurrencyamount-currency" }], "title": "4.10.1. Information presented to the user" }], "url": "https://www.w3.org/TR/payment-request/#dom-paymentcurrencyamount-currency" },
                 "8da4d1e3": { "dfnID": "8da4d1e3", "dfnText": "invalid argument", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-dfn-invalid-argument" }, { "id": "ref-for-dfn-invalid-argument\u2460" }], "title": "10.1. Set SPC Transaction Mode" }], "url": "https://w3c.github.io/webdriver/#dfn-invalid-argument" },
                 "8e19bb11": { "dfnID": "8e19bb11", "dfnText": "publickey-credentials-create-feature", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-publickey-credentials-create-feature" }], "title": "1.2.1. Registration during a checkout" }], "url": "https://www.w3.org/TR/webauthn-3/#publickey-credentials-create-feature" },
+                "8e67c0a3": { "dfnID": "8e67c0a3", "dfnText": "is not empty (for map)", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-map-is-empty" }], "title": "4.8. Steps to validate payment method data" }], "url": "https://infra.spec.whatwg.org/#map-is-empty" },
                 "8f3d2845": { "dfnID": "8f3d2845", "dfnText": "authentication ceremony", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-authentication-ceremony" }], "title": "4. Authentication - the Secure Payment Confirmation payment method" }, { "refs": [{ "id": "ref-for-authentication-ceremony\u2460" }], "title": "9.1. Verifying an Authentication Assertion" }], "url": "https://w3c.github.io/webauthn/#authentication-ceremony" },
                 "959ad97b": { "dfnID": "959ad97b", "dfnText": "origin", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-concept-url-origin" }], "title": "4.9. Steps to check if a payment can be made" }], "url": "https://url.spec.whatwg.org/#concept-url-origin" },
+                "964302f4": { "dfnID": "964302f4", "dfnText": "largeBlob", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-largeblob" }], "title": "11.1.3. WebAuthn Extensions Only Allowed for the Relying Party" }], "url": "https://w3c.github.io/webauthn/#largeblob" },
                 "984221ca": { "dfnID": "984221ca", "dfnText": "struct", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-struct" }], "title": "2. Terminology" }], "url": "https://infra.spec.whatwg.org/#struct" },
                 "9877bbe9": { "dfnID": "9877bbe9", "dfnText": "credentialPublicKey", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-authdata-attestedcredentialdata-credentialpublickey" }], "title": "6.4. Getting the browser bound public key" }], "url": "https://w3c.github.io/webauthn/#authdata-attestedcredentialdata-credentialpublickey" },
                 "98e822a3": { "dfnID": "98e822a3", "dfnText": "platform", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-dom-authenticatorattachment-platform" }], "title": "5. WebAuthn Extension - \"payment\"" }], "url": "https://www.w3.org/TR/webauthn-3/#dom-authenticatorattachment-platform" },
                 "99c988d6": { "dfnID": "99c988d6", "dfnText": "remove", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-list-remove" }, { "id": "ref-for-list-remove\u2460" }], "title": "6.1. Creating a key pair" }], "url": "https://infra.spec.whatwg.org/#list-remove" },
                 "9b39aa25": { "dfnID": "9b39aa25", "dfnText": "publicKey", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-dom-credentialrequestoptions-publickey" }], "title": "4.11. Steps to respond to a payment request" }], "url": "https://www.w3.org/TR/webauthn-3/#dom-credentialrequestoptions-publickey" },
-                "9c4c1e66": { "dfnID": "9c4c1e66", "dfnText": "relevant settings object", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-relevant-settings-object" }], "title": "4.9. Steps to check if a payment can be made" }, { "refs": [{ "id": "ref-for-relevant-settings-object\u2460" }], "title": "4.11. Steps to respond to a payment request" }], "url": "https://html.spec.whatwg.org/multipage/webappapis.html#relevant-settings-object" },
-                "9c64cd22": { "dfnID": "9c64cd22", "dfnText": "authentication extension", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-authentication-extension" }, { "id": "ref-for-authentication-extension\u2460" }, { "id": "ref-for-authentication-extension\u2461" }], "title": "5. WebAuthn Extension - \"payment\"" }], "url": "https://w3c.github.io/webauthn/#authentication-extension" },
+                "9c4c1e66": { "dfnID": "9c4c1e66", "dfnText": "relevant settings object", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-relevant-settings-object" }], "title": "4.8. Steps to validate payment method data" }, { "refs": [{ "id": "ref-for-relevant-settings-object\u2460" }], "title": "4.9. Steps to check if a payment can be made" }, { "refs": [{ "id": "ref-for-relevant-settings-object\u2461" }], "title": "4.11. Steps to respond to a payment request" }], "url": "https://html.spec.whatwg.org/multipage/webappapis.html#relevant-settings-object" },
+                "9c64cd22": { "dfnID": "9c64cd22", "dfnText": "authentication extension", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-authentication-extension" }, { "id": "ref-for-authentication-extension\u2460" }, { "id": "ref-for-authentication-extension\u2461" }], "title": "5. WebAuthn Extension - \"payment\"" }, { "refs": [{ "id": "ref-for-authentication-extension\u2462" }], "title": "11.1.3. WebAuthn Extensions Only Allowed for the Relying Party" }], "url": "https://w3c.github.io/webauthn/#authentication-extension" },
                 "9cce47fd": { "dfnID": "9cce47fd", "dfnText": "sequence", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-idl-sequence" }, { "id": "ref-for-idl-sequence\u2460" }, { "id": "ref-for-idl-sequence\u2461" }, { "id": "ref-for-idl-sequence\u2462" }], "title": "4.4. SecurePaymentConfirmationRequest Dictionary" }, { "refs": [{ "id": "ref-for-idl-sequence\u2463" }, { "id": "ref-for-idl-sequence\u2464" }], "title": "5. WebAuthn Extension - \"payment\"" }, { "refs": [{ "id": "ref-for-idl-sequence\u2465" }], "title": "5.2. CollectedClientAdditionalPaymentData Dictionary" }], "url": "https://webidl.spec.whatwg.org/#idl-sequence" },
                 "a115429a": { "dfnID": "a115429a", "dfnText": "challenge (for PublicKeyCredentialRequestOptions)", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-dom-publickeycredentialrequestoptions-challenge" }], "title": "1.1.1. Cryptographic evidence of transaction confirmation" }, { "refs": [{ "id": "ref-for-dom-publickeycredentialrequestoptions-challenge\u2460" }], "title": "4.11. Steps to respond to a payment request" }], "url": "https://www.w3.org/TR/webauthn-3/#dom-publickeycredentialrequestoptions-challenge" },
                 "a384672a": { "dfnID": "a384672a", "dfnText": "create()", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-dom-credentialscontainer-create" }], "title": "3. Registration" }], "url": "https://www.w3.org/TR/credential-management-1/#dom-credentialscontainer-create" },
@@ -6314,7 +6563,7 @@ navigator<c- p>.</c->credentials<c- p>.</c->create<c- p>({</c-> publicKey <c- p>
                 "dc24f2fe": { "dfnID": "dc24f2fe", "dfnText": "payment permission string", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-dfn-payment" }, { "id": "ref-for-dfn-payment\u2460" }], "title": "4.6. Checking if Secure Payment Confirmation is available" }, { "refs": [{ "id": "ref-for-dfn-payment\u2461" }, { "id": "ref-for-dfn-payment\u2462" }], "title": "8. Permissions Policy integration" }, { "refs": [{ "id": "ref-for-dfn-payment\u2463" }], "title": "12.5. Fingerprinting via securePaymentConfirmationAvailability" }], "url": "https://w3c.github.io/payment-request/#dfn-payment" },
                 "dca2de17": { "dfnID": "dca2de17", "dfnText": "DOMException", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-idl-DOMException" }], "title": "4.3. Modification of user activation requirement" }, { "refs": [{ "id": "ref-for-idl-DOMException\u2460" }, { "id": "ref-for-idl-DOMException\u2461" }, { "id": "ref-for-idl-DOMException\u2462" }], "title": "4.10.2. Outcome of the transaction confirmation UX" }, { "refs": [{ "id": "ref-for-idl-DOMException\u2463" }, { "id": "ref-for-idl-DOMException\u2464" }], "title": "4.11. Steps to respond to a payment request" }, { "refs": [{ "id": "ref-for-idl-DOMException\u2465" }], "title": "5. WebAuthn Extension - \"payment\"" }, { "refs": [{ "id": "ref-for-idl-DOMException\u2466" }], "title": "12.1. Probing for credential ids" }], "url": "https://webidl.spec.whatwg.org/#idl-DOMException" },
                 "dcdc90bd": { "dfnID": "dcdc90bd", "dfnText": "internal", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-dom-authenticatortransport-internal" }], "title": "4.11. Steps to respond to a payment request" }], "url": "https://www.w3.org/TR/webauthn-3/#dom-authenticatortransport-internal" },
-                "dd460c8e": { "dfnID": "dd460c8e", "dfnText": "is not empty", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-list-is-empty" }], "title": "4.8. Steps to validate payment method data" }, { "refs": [{ "id": "ref-for-list-is-empty\u2460" }], "title": "6.1. Creating a key pair" }], "url": "https://infra.spec.whatwg.org/#list-is-empty" },
+                "dd460c8e": { "dfnID": "dd460c8e", "dfnText": "is not empty (for list)", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-list-is-empty" }], "title": "4.8. Steps to validate payment method data" }, { "refs": [{ "id": "ref-for-list-is-empty\u2460" }], "title": "6.1. Creating a key pair" }], "url": "https://infra.spec.whatwg.org/#list-is-empty" },
                 "ddee5d8d": { "dfnID": "ddee5d8d", "dfnText": "required (for UserVerificationRequirement)", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-dom-userverificationrequirement-required" }], "title": "4.11. Steps to respond to a payment request" }, { "refs": [{ "id": "ref-for-dom-userverificationrequirement-required\u2460" }], "title": "5. WebAuthn Extension - \"payment\"" }], "url": "https://www.w3.org/TR/webauthn-3/#dom-userverificationrequirement-required" },
                 "dea71296": { "dfnID": "dea71296", "dfnText": "id", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-dom-publickeycredentialdescriptor-id" }], "title": "4.11. Steps to respond to a payment request" }], "url": "https://www.w3.org/TR/webauthn-3/#dom-publickeycredentialdescriptor-id" },
                 "dffa578a": { "dfnID": "dffa578a", "dfnText": "canMakePayment()", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-dom-paymentrequest-canmakepayment" }], "title": "4.6. Checking if Secure Payment Confirmation is available" }], "url": "https://www.w3.org/TR/payment-request/#dom-paymentrequest-canmakepayment" },
@@ -6367,16 +6616,16 @@ navigator<c- p>.</c->credentials<c- p>.</c->create<c- p>({</c-> publicKey <c- p>
                 "dom-securepaymentconfirmationrequest-browserboundpubkeycredparams": { "dfnID": "dom-securepaymentconfirmationrequest-browserboundpubkeycredparams", "dfnText": "browserBoundPubKeyCredParams", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-browserboundpubkeycredparams" }], "title": "4.4. SecurePaymentConfirmationRequest Dictionary" }, { "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-browserboundpubkeycredparams\u2460" }], "title": "4.11. Steps to respond to a payment request" }, { "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-browserboundpubkeycredparams\u2461" }, { "id": "ref-for-dom-securepaymentconfirmationrequest-browserboundpubkeycredparams\u2462" }], "title": "5. WebAuthn Extension - \"payment\"" }], "url": "#dom-securepaymentconfirmationrequest-browserboundpubkeycredparams" },
                 "dom-securepaymentconfirmationrequest-challenge": { "dfnID": "dom-securepaymentconfirmationrequest-challenge", "dfnText": "challenge", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-challenge" }], "title": "4.4. SecurePaymentConfirmationRequest Dictionary" }, { "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-challenge\u2460" }], "title": "4.8. Steps to validate payment method data" }, { "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-challenge\u2461" }], "title": "4.11. Steps to respond to a payment request" }], "url": "#dom-securepaymentconfirmationrequest-challenge" },
                 "dom-securepaymentconfirmationrequest-credentialids": { "dfnID": "dom-securepaymentconfirmationrequest-credentialids", "dfnText": "credentialIds", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-credentialids" }], "title": "4.4. SecurePaymentConfirmationRequest Dictionary" }, { "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-credentialids\u2460" }, { "id": "ref-for-dom-securepaymentconfirmationrequest-credentialids\u2461" }], "title": "4.8. Steps to validate payment method data" }, { "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-credentialids\u2462" }, { "id": "ref-for-dom-securepaymentconfirmationrequest-credentialids\u2463" }, { "id": "ref-for-dom-securepaymentconfirmationrequest-credentialids\u2464" }], "title": "4.9. Steps to check if a payment can be made" }, { "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-credentialids\u2465" }, { "id": "ref-for-dom-securepaymentconfirmationrequest-credentialids\u2466" }], "title": "4.10.2. Outcome of the transaction confirmation UX" }, { "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-credentialids\u2467" }], "title": "4.10.3. Test automation support" }, { "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-credentialids\u2468" }, { "id": "ref-for-dom-securepaymentconfirmationrequest-credentialids\u2460\u24ea" }], "title": "4.11. Steps to respond to a payment request" }], "url": "#dom-securepaymentconfirmationrequest-credentialids" },
-                "dom-securepaymentconfirmationrequest-extensions": { "dfnID": "dom-securepaymentconfirmationrequest-extensions", "dfnText": "extensions", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-extensions" }], "title": "4.4. SecurePaymentConfirmationRequest Dictionary" }, { "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-extensions\u2460" }], "title": "4.11. Steps to respond to a payment request" }], "url": "#dom-securepaymentconfirmationrequest-extensions" },
+                "dom-securepaymentconfirmationrequest-extensions": { "dfnID": "dom-securepaymentconfirmationrequest-extensions", "dfnText": "extensions", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-extensions" }], "title": "4.4. SecurePaymentConfirmationRequest Dictionary" }, { "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-extensions\u2460" }], "title": "4.8. Steps to validate payment method data" }, { "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-extensions\u2461" }], "title": "4.11. Steps to respond to a payment request" }], "url": "#dom-securepaymentconfirmationrequest-extensions" },
                 "dom-securepaymentconfirmationrequest-instrument": { "dfnID": "dom-securepaymentconfirmationrequest-instrument", "dfnText": "instrument", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-instrument" }], "title": "4.4. SecurePaymentConfirmationRequest Dictionary" }, { "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-instrument\u2460" }, { "id": "ref-for-dom-securepaymentconfirmationrequest-instrument\u2461" }, { "id": "ref-for-dom-securepaymentconfirmationrequest-instrument\u2462" }, { "id": "ref-for-dom-securepaymentconfirmationrequest-instrument\u2463" }], "title": "4.8. Steps to validate payment method data" }, { "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-instrument\u2464" }, { "id": "ref-for-dom-securepaymentconfirmationrequest-instrument\u2465" }, { "id": "ref-for-dom-securepaymentconfirmationrequest-instrument\u2466" }], "title": "4.9. Steps to check if a payment can be made" }, { "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-instrument\u2467" }], "title": "4.11. Steps to respond to a payment request" }], "url": "#dom-securepaymentconfirmationrequest-instrument" },
                 "dom-securepaymentconfirmationrequest-locale": { "dfnID": "dom-securepaymentconfirmationrequest-locale", "dfnText": "locale", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-locale" }], "title": "4.4. SecurePaymentConfirmationRequest Dictionary" }, { "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-locale\u2460" }, { "id": "ref-for-dom-securepaymentconfirmationrequest-locale\u2461" }, { "id": "ref-for-dom-securepaymentconfirmationrequest-locale\u2462" }], "title": "4.8. Steps to validate payment method data" }, { "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-locale\u2463" }], "title": "4.10.1. Information presented to the user" }, { "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-locale\u2464" }, { "id": "ref-for-dom-securepaymentconfirmationrequest-locale\u2465" }], "title": "14. Internationalization Considerations" }], "url": "#dom-securepaymentconfirmationrequest-locale" },
                 "dom-securepaymentconfirmationrequest-payeename": { "dfnID": "dom-securepaymentconfirmationrequest-payeename", "dfnText": "payeeName", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-payeename" }, { "id": "ref-for-dom-securepaymentconfirmationrequest-payeename\u2460" }], "title": "4.4. SecurePaymentConfirmationRequest Dictionary" }, { "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-payeename\u2461" }, { "id": "ref-for-dom-securepaymentconfirmationrequest-payeename\u2462" }], "title": "4.8. Steps to validate payment method data" }, { "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-payeename\u2463" }], "title": "4.11. Steps to respond to a payment request" }], "url": "#dom-securepaymentconfirmationrequest-payeename" },
                 "dom-securepaymentconfirmationrequest-payeeorigin": { "dfnID": "dom-securepaymentconfirmationrequest-payeeorigin", "dfnText": "payeeOrigin", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-payeeorigin" }, { "id": "ref-for-dom-securepaymentconfirmationrequest-payeeorigin\u2460" }], "title": "4.4. SecurePaymentConfirmationRequest Dictionary" }, { "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-payeeorigin\u2461" }, { "id": "ref-for-dom-securepaymentconfirmationrequest-payeeorigin\u2462" }, { "id": "ref-for-dom-securepaymentconfirmationrequest-payeeorigin\u2463" }, { "id": "ref-for-dom-securepaymentconfirmationrequest-payeeorigin\u2464" }], "title": "4.8. Steps to validate payment method data" }, { "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-payeeorigin\u2465" }, { "id": "ref-for-dom-securepaymentconfirmationrequest-payeeorigin\u2466" }, { "id": "ref-for-dom-securepaymentconfirmationrequest-payeeorigin\u2467" }], "title": "4.9. Steps to check if a payment can be made" }, { "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-payeeorigin\u2468" }], "title": "4.11. Steps to respond to a payment request" }], "url": "#dom-securepaymentconfirmationrequest-payeeorigin" },
                 "dom-securepaymentconfirmationrequest-paymententitieslogos": { "dfnID": "dom-securepaymentconfirmationrequest-paymententitieslogos", "dfnText": "paymentEntitiesLogos", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-paymententitieslogos" }], "title": "4.4. SecurePaymentConfirmationRequest Dictionary" }, { "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-paymententitieslogos\u2460" }, { "id": "ref-for-dom-securepaymentconfirmationrequest-paymententitieslogos\u2461" }], "title": "4.8. Steps to validate payment method data" }, { "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-paymententitieslogos\u2462" }, { "id": "ref-for-dom-securepaymentconfirmationrequest-paymententitieslogos\u2463" }], "title": "4.9. Steps to check if a payment can be made" }, { "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-paymententitieslogos\u2464" }], "title": "4.11. Steps to respond to a payment request" }], "url": "#dom-securepaymentconfirmationrequest-paymententitieslogos" },
-                "dom-securepaymentconfirmationrequest-rpid": { "dfnID": "dom-securepaymentconfirmationrequest-rpid", "dfnText": "rpId", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-rpid" }], "title": "4.4. SecurePaymentConfirmationRequest Dictionary" }, { "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-rpid\u2460" }], "title": "4.8. Steps to validate payment method data" }, { "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-rpid\u2461" }, { "id": "ref-for-dom-securepaymentconfirmationrequest-rpid\u2462" }, { "id": "ref-for-dom-securepaymentconfirmationrequest-rpid\u2463" }], "title": "4.9. Steps to check if a payment can be made" }, { "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-rpid\u2464" }], "title": "4.10.1. Information presented to the user" }, { "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-rpid\u2465" }], "title": "4.10.2. Outcome of the transaction confirmation UX" }, { "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-rpid\u2466" }, { "id": "ref-for-dom-securepaymentconfirmationrequest-rpid\u2467" }], "title": "4.11. Steps to respond to a payment request" }], "url": "#dom-securepaymentconfirmationrequest-rpid" },
+                "dom-securepaymentconfirmationrequest-rpid": { "dfnID": "dom-securepaymentconfirmationrequest-rpid", "dfnText": "rpId", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-rpid" }], "title": "4.4. SecurePaymentConfirmationRequest Dictionary" }, { "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-rpid\u2460" }, { "id": "ref-for-dom-securepaymentconfirmationrequest-rpid\u2461" }], "title": "4.8. Steps to validate payment method data" }, { "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-rpid\u2462" }, { "id": "ref-for-dom-securepaymentconfirmationrequest-rpid\u2463" }, { "id": "ref-for-dom-securepaymentconfirmationrequest-rpid\u2464" }], "title": "4.9. Steps to check if a payment can be made" }, { "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-rpid\u2465" }], "title": "4.10.1. Information presented to the user" }, { "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-rpid\u2466" }], "title": "4.10.2. Outcome of the transaction confirmation UX" }, { "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-rpid\u2467" }, { "id": "ref-for-dom-securepaymentconfirmationrequest-rpid\u2468" }], "title": "4.11. Steps to respond to a payment request" }], "url": "#dom-securepaymentconfirmationrequest-rpid" },
                 "dom-securepaymentconfirmationrequest-showoptout": { "dfnID": "dom-securepaymentconfirmationrequest-showoptout", "dfnText": "showOptOut", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-showoptout" }], "title": "4.4. SecurePaymentConfirmationRequest Dictionary" }, { "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-showoptout\u2460" }], "title": "4.10.1. Information presented to the user" }, { "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-showoptout\u2461" }], "title": "4.10.2. Outcome of the transaction confirmation UX" }, { "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-showoptout\u2462" }], "title": "12.7. User opt out" }], "url": "#dom-securepaymentconfirmationrequest-showoptout" },
                 "dom-securepaymentconfirmationrequest-timeout": { "dfnID": "dom-securepaymentconfirmationrequest-timeout", "dfnText": "timeout", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-timeout" }], "title": "4.4. SecurePaymentConfirmationRequest Dictionary" }, { "refs": [{ "id": "ref-for-dom-securepaymentconfirmationrequest-timeout\u2460" }], "title": "4.11. Steps to respond to a payment request" }], "url": "#dom-securepaymentconfirmationrequest-timeout" },
-                "e4d7113a": { "dfnID": "e4d7113a", "dfnText": "credential ID", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-credential-id" }, { "id": "ref-for-credential-id\u2460" }], "title": "2. Terminology" }, { "refs": [{ "id": "ref-for-credential-id\u2461" }], "title": "6. Browser Bound Key Store" }, { "refs": [{ "id": "ref-for-credential-id\u2462" }], "title": "6.2. Binding a key pair" }, { "refs": [{ "id": "ref-for-credential-id\u2463" }], "title": "6.3. Retrieving a key pair" }], "url": "https://w3c.github.io/webauthn/#credential-id" },
+                "e4d7113a": { "dfnID": "e4d7113a", "dfnText": "credential ID", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-credential-id" }, { "id": "ref-for-credential-id\u2460" }], "title": "2. Terminology" }, { "refs": [{ "id": "ref-for-credential-id\u2461" }, { "id": "ref-for-credential-id\u2462" }], "title": "6. Browser Bound Key Store" }, { "refs": [{ "id": "ref-for-credential-id\u2463" }], "title": "6.2. Binding a key pair" }, { "refs": [{ "id": "ref-for-credential-id\u2464" }], "title": "6.3. Retrieving a key pair" }], "url": "https://w3c.github.io/webauthn/#credential-id" },
                 "e97a9688": { "dfnID": "e97a9688", "dfnText": "unsigned long", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-idl-unsigned-long" }], "title": "4.4. SecurePaymentConfirmationRequest Dictionary" }], "url": "https://webidl.spec.whatwg.org/#idl-unsigned-long" },
                 "e99bd18e": { "dfnID": "e99bd18e", "dfnText": "relevant global object", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-concept-relevant-global" }, { "id": "ref-for-concept-relevant-global\u2460" }], "title": "4.3. Modification of user activation requirement" }], "url": "https://html.spec.whatwg.org/multipage/webappapis.html#concept-relevant-global" },
                 "ec878a66": { "dfnID": "ec878a66", "dfnText": "RangeError", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-exceptiondef-rangeerror" }], "title": "4.2. Modification of Payment Request constructor" }, { "refs": [{ "id": "ref-for-exceptiondef-rangeerror\u2460" }, { "id": "ref-for-exceptiondef-rangeerror\u2461" }], "title": "4.8. Steps to validate payment method data" }], "url": "https://webidl.spec.whatwg.org/#exceptiondef-rangeerror" },
@@ -6894,6 +7143,7 @@ navigator<c- p>.</c->credentials<c- p>.</c->create<c- p>({</c-> publicKey <c- p>
                 "https://infra.spec.whatwg.org/#list-size": { "displayText": "size", "export": true, "for_": ["list", "stack", "queue", "set"], "level": "1", "normative": true, "shortname": "infra", "spec": "infra", "status": "current", "text": "size", "type": "dfn", "url": "https://infra.spec.whatwg.org/#list-size" },
                 "https://infra.spec.whatwg.org/#map-exists": { "displayText": "exist", "export": true, "for_": ["map"], "level": "1", "normative": true, "shortname": "infra", "spec": "infra", "status": "current", "text": "exist", "type": "dfn", "url": "https://infra.spec.whatwg.org/#map-exists" },
                 "https://infra.spec.whatwg.org/#map-getting-the-keys": { "displayText": "keys", "export": true, "for_": ["map"], "level": "1", "normative": true, "shortname": "infra", "spec": "infra", "status": "current", "text": "keys", "type": "dfn", "url": "https://infra.spec.whatwg.org/#map-getting-the-keys" },
+                "https://infra.spec.whatwg.org/#map-is-empty": { "displayText": "is not empty", "export": true, "for_": ["map"], "level": "1", "normative": true, "shortname": "infra", "spec": "infra", "status": "current", "text": "is not empty", "type": "dfn", "url": "https://infra.spec.whatwg.org/#map-is-empty" },
                 "https://infra.spec.whatwg.org/#map-set": { "displayText": "set", "export": true, "for_": ["map"], "level": "1", "normative": true, "shortname": "infra", "spec": "infra", "status": "current", "text": "set", "type": "dfn", "url": "https://infra.spec.whatwg.org/#map-set" },
                 "https://infra.spec.whatwg.org/#struct": { "displayText": "struct", "export": true, "for_": [], "level": "1", "normative": true, "shortname": "infra", "spec": "infra", "status": "current", "text": "struct", "type": "dfn", "url": "https://infra.spec.whatwg.org/#struct" },
                 "https://infra.spec.whatwg.org/#tuple": { "displayText": "tuple", "export": true, "for_": [], "level": "1", "normative": true, "shortname": "infra", "spec": "infra", "status": "current", "text": "tuple", "type": "dfn", "url": "https://infra.spec.whatwg.org/#tuple" },
@@ -6926,6 +7176,7 @@ navigator<c- p>.</c->credentials<c- p>.</c->create<c- p>({</c-> publicKey <c- p>
                 "https://w3c.github.io/webauthn/#discoverable-credential": { "displayText": "discoverable credential", "export": true, "for_": [], "level": "", "normative": true, "shortname": "web-authn", "spec": "web-authn", "status": "anchor-block", "text": "discoverable credential", "type": "dfn", "url": "https://w3c.github.io/webauthn/#discoverable-credential" },
                 "https://w3c.github.io/webauthn/#dom-publickeycredentialcreationoptions-user": { "displayText": "user member", "export": true, "for_": [], "level": "", "normative": true, "shortname": "web-authn", "spec": "web-authn", "status": "anchor-block", "text": "user member", "type": "dfn", "url": "https://w3c.github.io/webauthn/#dom-publickeycredentialcreationoptions-user" },
                 "https://w3c.github.io/webauthn/#extension-identifier": { "displayText": "extension identifier", "export": true, "for_": [], "level": "", "normative": true, "shortname": "web-authn", "spec": "web-authn", "status": "anchor-block", "text": "extension identifier", "type": "dfn", "url": "https://w3c.github.io/webauthn/#extension-identifier" },
+                "https://w3c.github.io/webauthn/#largeblob": { "displayText": "largeBlob", "export": true, "for_": [], "level": "", "normative": true, "shortname": "web-authn", "spec": "web-authn", "status": "anchor-block", "text": "largeblob", "type": "dfn", "url": "https://w3c.github.io/webauthn/#largeblob" },
                 "https://w3c.github.io/webauthn/#public-key-credential": { "displayText": "public key credential", "export": true, "for_": [], "level": "", "normative": true, "shortname": "web-authn", "spec": "web-authn", "status": "anchor-block", "text": "public key credential", "type": "dfn", "url": "https://w3c.github.io/webauthn/#public-key-credential" },
                 "https://w3c.github.io/webauthn/#registration-extension": { "displayText": "registration extension", "export": true, "for_": [], "level": "", "normative": true, "shortname": "web-authn", "spec": "web-authn", "status": "anchor-block", "text": "registration extension", "type": "dfn", "url": "https://w3c.github.io/webauthn/#registration-extension" },
                 "https://w3c.github.io/webauthn/#relying-party": { "displayText": "relying party", "export": true, "for_": [], "level": "", "normative": true, "shortname": "web-authn", "spec": "web-authn", "status": "anchor-block", "text": "relying party", "type": "dfn", "url": "https://w3c.github.io/webauthn/#relying-party" },
