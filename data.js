@@ -7,7 +7,7 @@ const links = [
         text: "HTML",
         href: "https://htmlspecs.com/",
         src: "https://html.spec.whatwg.org/",
-        "last-modified": "Fri, 03 Jul 2026 06:08:22 GMT",
+        "last-modified": "Fri, 03 Jul 2026 17:21:11 GMT",
         lang: "cjk",
         state: "LS"
     },
@@ -629,7 +629,7 @@ const links = [
         text: "OpenAPI Specification v3.2.0",
         href: "https://htmlspecs.com/openapi/",
         src: "https://spec.openapis.org/oas/latest.html",
-        "last-modified": "Thu, 02 Jul 2026 19:09:07 GMT",
+        "last-modified": "Fri, 03 Jul 2026 13:31:11 GMT",
         lang: "cjk",
         state: "Draft"
     },
@@ -1995,7 +1995,7 @@ const links = [
     {
         text: "WebGPU Shading Language",
         href: "https://htmlspecs.com/WGSL/",
-        src: "https://www.w3.org/TR/2026/CRD-WGSL-20260702/",
+        src: "https://www.w3.org/TR/2026/CRD-WGSL-20260703/",
         "last-modified": "-",
         lang: "cjk",
         state: "CRD"
