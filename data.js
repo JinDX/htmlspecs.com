@@ -2536,14 +2536,14 @@ const links = [
         lang: "cjk",
         state: "RFC"
     },
-    // {
-    //     text: "Threat Model for the Web",
-    //     href: "https://htmlspecs.com/threat-model-web/",
-    //     src: "https://www.w3.org/TR/2026/DNOTE-threat-model-web-20260617/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "DNOTE"
-    // },
+    {
+        text: "Threat Model for the Web",
+        href: "https://htmlspecs.com/threat-model-web/",
+        src: "https://www.w3.org/TR/2026/DNOTE-threat-model-web-20260617/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "DNOTE"
+    },
     {
         text: "Referrer Policy",
         href: "https://htmlspecs.com/referrer-policy/",
