@@ -329,14 +329,14 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
-    // {
-    //     text: "YAML-LD 1.0",
-    //     href: "https://htmlspecs.com/yaml-ld-10/",
-    //     src: "https://www.w3.org/TR/2026/WD-yaml-ld-10-20260703/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "YAML-LD 1.0",
+        href: "https://htmlspecs.com/yaml-ld-10/",
+        src: "https://www.w3.org/TR/2026/WD-yaml-ld-10-20260703/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     // {
     //     text: "CBOR-LD 1.0",
     //     href: "https://htmlspecs.com/cbor-ld-10/",
