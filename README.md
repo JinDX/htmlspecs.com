@@ -18,6 +18,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Web User Agents](https://htmlspecs.com/web-user-agents/)（[Source](https://www.w3.org/TR/2026/DNOTE-web-user-agents-20260319/) ![Note](https://img.shields.io/badge/NOTE-309c40)）
 - [Compatibility](https://htmlspecs.com/compat/)（[Source](https://compat.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [Web Platform Design Principles](https://htmlspecs.com/design-principles/)（[Source](https://www.w3.org/TR/2026/NOTE-design-principles-20260224/) ![Note](https://img.shields.io/badge/NOTE-309c40)）
+- [Web Sustainability Guidelines (WSG)](https://htmlspecs.com/web-sustainability-guidelines/)（[Source](https://www.w3.org/TR/2026/DNOTE-web-sustainability-guidelines-20260703/) ![Note Draft](https://img.shields.io/badge/DNOTE-ffcc00)）
 - [Compression](https://htmlspecs.com/compression/)（[Source](https://compression.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [Quirks Mode](https://htmlspecs.com/quirks/)（[Source](https://quirks.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [Minimum common web API](https://htmlspecs.com/min-common-api/)（[Source](https://min-common-api.proposal.wintertc.org/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
@@ -44,6 +45,8 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [JSON-LD 1.1](https://htmlspecs.com/json-ld11/)（[Source](https://www.w3.org/TR/2020/REC-json-ld11-20200716/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [JSON-LD 1.1 Processing Algorithms and API](https://htmlspecs.com/json-ld11-api/)（[Source](https://www.w3.org/TR/2020/REC-json-ld11-api-20200716/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [JSON-LD 1.1 Framing](https://htmlspecs.com/json-ld11-framing/)（[Source](https://www.w3.org/TR/2020/REC-json-ld11-framing-20200716/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
+- [YAML-LD 1.0](https://htmlspecs.com/yaml-ld-10/)（[Source](https://www.w3.org/TR/2026/WD-yaml-ld-10-20260703/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [CBOR-LD 1.0](https://htmlspecs.com/cbor-ld-10/)（[Source](https://www.w3.org/TR/2026/WD-cbor-ld-10-20260702/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [JavaScript Object Notation (JSON) Pointer](https://htmlspecs.com/json-pointer/)（[Source](https://www.rfc-editor.org/rfc/rfc6901.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [JSONPath: Query Expressions for JSON](https://htmlspecs.com/jsonpath/)（[Source](https://www.rfc-editor.org/rfc/rfc9535.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [JavaScript Object Notation (JSON) Patch](https://htmlspecs.com/json-patch/)（[Source](https://www.rfc-editor.org/rfc/rfc6902.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
