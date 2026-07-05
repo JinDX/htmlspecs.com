@@ -155,6 +155,14 @@ const links = [
         lang: "cjk",
         state: "NOTE"
     },
+    // {
+    //     text: "Web Sustainability Guidelines (WSG)",
+    //     href: "https://htmlspecs.com/web-sustainability-guidelines/",
+    //     src: "https://www.w3.org/TR/2026/DNOTE-web-sustainability-guidelines-20260703/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "DNOTE"
+    // },
     {
         text: "Compression",
         href: "https://htmlspecs.com/compression/",
@@ -321,6 +329,22 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
+    // {
+    //     text: "YAML-LD 1.0",
+    //     href: "https://htmlspecs.com/yaml-ld-10/",
+    //     src: "https://www.w3.org/TR/2026/WD-yaml-ld-10-20260703/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
+    // {
+    //     text: "CBOR-LD 1.0",
+    //     href: "https://htmlspecs.com/cbor-ld-10/",
+    //     src: "https://www.w3.org/TR/2026/WD-cbor-ld-10-20260702/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "JavaScript Object Notation (JSON) Pointer",
         href: "https://htmlspecs.com/json-pointer/",
@@ -593,6 +617,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "SHACL 1.2 Profiling",
+    //     href: "https://htmlspecs.com/shacl12-profiling/",
+    //     src: "https://www.w3.org/TR/2026/WD-shacl12-profiling-20260702/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "Data Catalog Vocabulary (DCAT) - Version 3",
         href: "https://htmlspecs.com/vocab-dcat-3/",
@@ -601,6 +633,14 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
+    // {
+    //     text: "Content Negotiation by Profile",
+    //     href: "https://htmlspecs.com/dx-prof-conneg/",
+    //     src: "https://www.w3.org/TR/2026/WD-dx-prof-conneg-20260703/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "ODRL Information Model 2.2",
         href: "https://htmlspecs.com/odrl-model/",
@@ -2496,6 +2536,14 @@ const links = [
         lang: "cjk",
         state: "RFC"
     },
+    // {
+    //     text: "Threat Model for the Web",
+    //     href: "https://htmlspecs.com/threat-model-web/",
+    //     src: "https://www.w3.org/TR/2026/DNOTE-threat-model-web-20260617/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "DNOTE"
+    // },
     {
         text: "Referrer Policy",
         href: "https://htmlspecs.com/referrer-policy/",
