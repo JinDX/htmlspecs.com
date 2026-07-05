@@ -155,14 +155,14 @@ const links = [
         lang: "cjk",
         state: "NOTE"
     },
-    // {
-    //     text: "Web Sustainability Guidelines (WSG)",
-    //     href: "https://htmlspecs.com/web-sustainability-guidelines/",
-    //     src: "https://www.w3.org/TR/2026/DNOTE-web-sustainability-guidelines-20260703/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "DNOTE"
-    // },
+    {
+        text: "Web Sustainability Guidelines (WSG)",
+        href: "https://htmlspecs.com/web-sustainability-guidelines/",
+        src: "https://www.w3.org/TR/2026/DNOTE-web-sustainability-guidelines-20260703/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "DNOTE"
+    },
     {
         text: "Compression",
         href: "https://htmlspecs.com/compression/",
