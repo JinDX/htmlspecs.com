@@ -617,14 +617,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "SHACL 1.2 Profiling",
-    //     href: "https://htmlspecs.com/shacl12-profiling/",
-    //     src: "https://www.w3.org/TR/2026/WD-shacl12-profiling-20260702/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "SHACL 1.2 Profiling",
+        href: "https://htmlspecs.com/shacl12-profiling/",
+        src: "https://www.w3.org/TR/2026/WD-shacl12-profiling-20260702/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     {
         text: "Data Catalog Vocabulary (DCAT) - Version 3",
         href: "https://htmlspecs.com/vocab-dcat-3/",
