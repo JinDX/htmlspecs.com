@@ -2892,14 +2892,14 @@ const links = [
         lang: "cjk",
         state: "RFC"
     },
-    // {
-    //     text: "OAuth 2.0 for Browser-Based Applications",
-    //     href: "https://htmlspecs.com/oauth-browser-based-apps/",
-    //     src: "https://datatracker.ietf.org/doc/html/draft-ietf-oauth-browser-based-apps",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "OAuth 2.0 for Browser-Based Applications",
+        href: "https://htmlspecs.com/oauth-browser-based-apps/",
+        src: "https://www.ietf.org/archive/id/draft-ietf-oauth-browser-based-apps-26.html",
+        "last-modified": "Thu, 04 Dec 2025 02:20:53 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
     {
         text: "Best Current Practice for OAuth 2.0 Security",
         href: "https://htmlspecs.com/oauth2-security-bcp/",

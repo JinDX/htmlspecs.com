@@ -402,6 +402,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [OAuth 2.0 Token Exchange](https://htmlspecs.com/rfc8693/)（[Source](https://www.rfc-editor.org/rfc/rfc8693.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [The OAuth 2.0 Authorization Framework: Bearer Token Usage](https://htmlspecs.com/oauth2-bearer/)（[Source](https://www.rfc-editor.org/rfc/rfc6750.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [Proof Key for Code Exchange by OAuth Public Clients](https://htmlspecs.com/pkce/)（[Source](https://www.rfc-editor.org/rfc/rfc7636.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [OAuth 2.0 for Browser-Based Applications](https://htmlspecs.com/oauth-browser-based-apps/)（[Source](https://www.ietf.org/archive/id/draft-ietf-oauth-browser-based-apps-26.html) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Best Current Practice for OAuth 2.0 Security](https://htmlspecs.com/oauth2-security-bcp/)（[Source](https://www.rfc-editor.org/rfc/rfc9700.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [OAuth 2.0 Demonstrating Proof of Possession (DPoP)](https://htmlspecs.com/dpop/)（[Source](https://www.rfc-editor.org/rfc/rfc9449.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [OAuth 2.0 Authorization Server Metadata](https://htmlspecs.com/oauth2-as-metadata/)（[Source](https://www.rfc-editor.org/rfc/rfc8414.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
