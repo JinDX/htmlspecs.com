@@ -625,14 +625,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "SHACL 1.2 SPARQL Extensions",
-    //     href: "https://htmlspecs.com/shacl12-sparql/",
-    //     src: "https://www.w3.org/TR/2026/WD-shacl12-sparql-20260630/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "SHACL 1.2 SPARQL Extensions",
+        href: "https://htmlspecs.com/shacl12-sparql/",
+        src: "https://www.w3.org/TR/2026/WD-shacl12-sparql-20260630/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     // {
     //     text: "SHACL 1.2 Rules",
     //     href: "https://htmlspecs.com/shacl12-rules/",
