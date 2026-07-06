@@ -2802,14 +2802,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "Bitstring Status List v1.0",
-    //     href: "https://htmlspecs.com/vc-bitstring-status-list/",
-    //     src: "https://www.w3.org/TR/2025/REC-vc-bitstring-status-list-20250515/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "REC"
-    // },
+    {
+        text: "Bitstring Status List v1.0",
+        href: "https://htmlspecs.com/vc-bitstring-status-list/",
+        src: "https://www.w3.org/TR/2025/REC-vc-bitstring-status-list-20250515/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "REC"
+    },
     // {
     //     text: "Verifiable Credential Barcodes v1.0",
     //     href: "https://htmlspecs.com/vc-barcodes-1.0/",
