@@ -2810,14 +2810,14 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
-    // {
-    //     text: "Verifiable Credential Barcodes v1.0",
-    //     href: "https://htmlspecs.com/vc-barcodes-1.0/",
-    //     src: "https://www.w3.org/TR/2026/WD-vc-barcodes-1.0-20260623/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "Verifiable Credential Barcodes v1.0",
+        href: "https://htmlspecs.com/vc-barcodes-1.0/",
+        src: "https://www.w3.org/TR/2026/WD-vc-barcodes-1.0-20260623/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     // {
     //     text: "Recognized Entities v1.0",
     //     href: "https://htmlspecs.com/vc-recognized-entities-1.0/",
