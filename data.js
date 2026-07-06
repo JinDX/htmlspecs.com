@@ -2818,14 +2818,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "Recognized Entities v1.0",
-    //     href: "https://htmlspecs.com/vc-recognized-entities-1.0/",
-    //     src: "https://www.w3.org/TR/2026/WD-vc-recognized-entities-1.0-20260512/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "Recognized Entities v1.0",
+        href: "https://htmlspecs.com/vc-recognized-entities-1.0/",
+        src: "https://www.w3.org/TR/2026/WD-vc-recognized-entities-1.0-20260512/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
 
     //### OAuth 与授权协议|OAuth 및 인가 프로토콜|OAuth・認可プロトコル
     {
