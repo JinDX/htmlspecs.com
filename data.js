@@ -2536,14 +2536,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "Connection Allowlists",
-    //     href: "https://htmlspecs.com/connection-allowlists/",
-    //     src: "https://wicg.github.io/connection-allowlists/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "Connection Allowlists",
+        href: "https://htmlspecs.com/connection-allowlists/",
+        src: "https://wicg.github.io/connection-allowlists/",
+        "last-modified": "Wed, 01 Jul 2026 14:58:27 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
     {
         text: "Secure Contexts",
         href: "https://htmlspecs.com/secure-contexts/",
