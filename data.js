@@ -2786,14 +2786,14 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
-    // {
-    //     text: "Verifiable Credential Data Integrity 1.1",
-    //     href: "https://htmlspecs.com/vc-data-integrity-1.1/",
-    //     src: "https://www.w3.org/TR/2026/WD-vc-data-integrity-1.1-20260416/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "Verifiable Credential Data Integrity 1.1",
+        href: "https://htmlspecs.com/vc-data-integrity-1.1/",
+        src: "https://www.w3.org/TR/2026/WD-vc-data-integrity-1.1-20260416/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     {
         text: "Verifiable Credential Rendering Methods v1.0",
         href: "https://htmlspecs.com/vc-render-method/",
