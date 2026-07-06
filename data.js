@@ -2454,14 +2454,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
-    // {
-    //     text: "Crash Reporting",
-    //     href: "https://htmlspecs.com/crash-reporting/",
-    //     src: "https://wicg.github.io/crash-reporting/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "Crash Reporting",
+        href: "https://htmlspecs.com/crash-reporting/",
+        src: "https://wicg.github.io/crash-reporting/",
+        "last-modified": "Mon, 02 Feb 2026 15:29:35 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
     {
         text: "Page Lifecycle",
         href: "https://htmlspecs.com/page-lifecycle/",
