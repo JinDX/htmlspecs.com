@@ -625,6 +625,22 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "SHACL 1.2 SPARQL Extensions",
+    //     href: "https://htmlspecs.com/shacl12-sparql/",
+    //     src: "https://www.w3.org/TR/2026/WD-shacl12-sparql-20260630/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
+    // {
+    //     text: "SHACL 1.2 Rules",
+    //     href: "https://htmlspecs.com/shacl12-rules/",
+    //     src: "https://www.w3.org/TR/2026/WD-shacl12-rules-20260703/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "Data Catalog Vocabulary (DCAT) - Version 3",
         href: "https://htmlspecs.com/vocab-dcat-3/",
@@ -2795,20 +2811,36 @@ const links = [
         state: "WD"
     },
     {
-        text: "Verifiable Credential Rendering Methods v1.0",
-        href: "https://htmlspecs.com/vc-render-method/",
-        src: "https://www.w3.org/TR/2026/WD-vc-render-method-20260405/",
-        "last-modified": "-",
-        lang: "cjk",
-        state: "WD"
-    },
-    {
         text: "Bitstring Status List v1.0",
         href: "https://htmlspecs.com/vc-bitstring-status-list/",
         src: "https://www.w3.org/TR/2025/REC-vc-bitstring-status-list-20250515/",
         "last-modified": "-",
         lang: "cjk",
         state: "REC"
+    },
+    // {
+    //     text: "VCALM v1.0",
+    //     href: "https://htmlspecs.com/vcalm-1.0/",
+    //     src: "https://www.w3.org/TR/2026/WD-vcalm-1.0-20260630/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
+    // {
+    //     text: "Verifiable Credential Forgery Defense v1.0",
+    //     href: "https://htmlspecs.com/vc-forgery-defense-1.0/",
+    //     src: "https://www.w3.org/TR/2026/WD-vc-forgery-defense-1.0-20260630/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
+    {
+        text: "Verifiable Credential Rendering Methods v1.0",
+        href: "https://htmlspecs.com/vc-render-method/",
+        src: "https://www.w3.org/TR/2026/WD-vc-render-method-20260405/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
     },
     {
         text: "Verifiable Credential Barcodes v1.0",
@@ -3300,6 +3332,30 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
+    // {
+    //     text: "EPUB 3.4",
+    //     href: "https://htmlspecs.com/epub-34/",
+    //     src: "https://www.w3.org/TR/2026/WD-epub-34-20260623/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
+    // {
+    //     text: "EPUB Reading Systems 3.4",
+    //     href: "https://htmlspecs.com/epub-rs-34/",
+    //     src: "https://www.w3.org/TR/2026/WD-epub-rs-34-20260626/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
+    // {
+    //     text: "EPUB Accessibility 1.2",
+    //     href: "https://htmlspecs.com/epub-a11y-12/",
+    //     src: "https://www.w3.org/TR/2026/WD-epub-a11y-12-20260626/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "Publication Manifest",
         href: "https://htmlspecs.com/pub-manifest/",
