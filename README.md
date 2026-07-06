@@ -646,6 +646,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [An HTTP Status Code to Report Legal Obstacles](https://htmlspecs.com/http/rfc7725.html)（[Source](https://httpwg.org/specs/rfc7725.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [An HTTP Status Code for Indicating Hints](https://htmlspecs.com/http/rfc8297.html)（[Source](https://httpwg.org/specs/rfc8297.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [Problem Details for HTTP APIs](https://htmlspecs.com/http/rfc9457.html)（[Source](https://www.rfc-editor.org/rfc/rfc9457.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [RateLimit header fields for HTTP](https://htmlspecs.com/http/ratelimit-headers.html)（[Source](https://www.ietf.org/archive/id/draft-ietf-httpapi-ratelimit-headers-11.html) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 
 ### 缓存与重用
 - [HTTP Cache-Control Extensions for Stale Content](https://htmlspecs.com/http/rfc5861.html)（[Source](https://httpwg.org/specs/rfc5861.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）

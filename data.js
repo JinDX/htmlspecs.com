@@ -4580,15 +4580,15 @@ const httpLinks = [
         lang: "cjk",
         state: "RFC"
     },
-    // {
-    //     text: "RateLimit header fields for HTTP",
-    //     href: "https://htmlspecs.com/http/ratelimit-headers.html",
-    //     src: "https://datatracker.ietf.org/doc/html/draft-ietf-httpapi-ratelimit-headers",
-    //     "last-modified": "-",
-    //     etag: null,
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "RateLimit header fields for HTTP",
+        href: "https://htmlspecs.com/http/ratelimit-headers.html",
+        src: "https://www.ietf.org/archive/id/draft-ietf-httpapi-ratelimit-headers-11.html",
+        "last-modified": "Sat, 23 May 2026 09:26:20 GMT",
+        etag: null,
+        lang: "cjk",
+        state: "Draft"
+    },
 
     //### 缓存与重用|캐시 및 재사용|キャッシュと再利用
     {
