@@ -2380,14 +2380,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "Container Timing API",
-    //     href: "https://htmlspecs.com/container-timing/",
-    //     src: "https://wicg.github.io/container-timing/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "Container Timing API",
+        href: "https://htmlspecs.com/container-timing/",
+        src: "https://wicg.github.io/container-timing/",
+        "last-modified": "Thu, 02 Apr 2026 12:00:01 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
     {
         text: "Performance measure memory",
         href: "https://htmlspecs.com/performance-measure-memory/",
