@@ -2380,6 +2380,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "Container Timing API",
+    //     href: "https://htmlspecs.com/container-timing/",
+    //     src: "https://wicg.github.io/container-timing/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
     {
         text: "Performance measure memory",
         href: "https://htmlspecs.com/performance-measure-memory/",
@@ -2446,6 +2454,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
+    // {
+    //     text: "Crash Reporting",
+    //     href: "https://htmlspecs.com/crash-reporting/",
+    //     src: "https://wicg.github.io/crash-reporting/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
     {
         text: "Page Lifecycle",
         href: "https://htmlspecs.com/page-lifecycle/",
@@ -2520,6 +2536,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "Connection Allowlists",
+    //     href: "https://htmlspecs.com/connection-allowlists/",
+    //     src: "https://wicg.github.io/connection-allowlists/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
     {
         text: "Secure Contexts",
         href: "https://htmlspecs.com/secure-contexts/",
@@ -2544,6 +2568,14 @@ const links = [
         lang: "cjk",
         state: "DNOTE"
     },
+    // {
+    //     text: "W3C Standards Vulnerability Disclosure & Handling Process and Policy",
+    //     href: "https://htmlspecs.com/security-disclosure/",
+    //     src: "https://www.w3.org/TR/2026/DNOTE-security-disclosure-20260630/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "DNOTE"
+    // },
     {
         text: "Referrer Policy",
         href: "https://htmlspecs.com/referrer-policy/",
@@ -2730,6 +2762,14 @@ const links = [
         lang: "cjk",
         state: "CR"
     },
+    // {
+    //     text: "Decentralized Identifier Resolution (DID Resolution) v0.3",
+    //     href: "https://htmlspecs.com/did-resolution/",
+    //     src: "https://www.w3.org/TR/2026/WD-did-resolution-20260611/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "Verifiable Credentials Data Model v2.0",
         href: "https://htmlspecs.com/vc-data-model-2.0/",
@@ -2746,6 +2786,14 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
+    // {
+    //     text: "Verifiable Credential Data Integrity 1.1",
+    //     href: "https://htmlspecs.com/vc-data-integrity-1.1/",
+    //     src: "https://www.w3.org/TR/2026/WD-vc-data-integrity-1.1-20260416/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
     {
         text: "Verifiable Credential Rendering Methods v1.0",
         href: "https://htmlspecs.com/vc-render-method/",
@@ -2754,6 +2802,30 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "Bitstring Status List v1.0",
+    //     href: "https://htmlspecs.com/vc-bitstring-status-list/",
+    //     src: "https://www.w3.org/TR/2025/REC-vc-bitstring-status-list-20250515/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "REC"
+    // },
+    // {
+    //     text: "Verifiable Credential Barcodes v1.0",
+    //     href: "https://htmlspecs.com/vc-barcodes-1.0/",
+    //     src: "https://www.w3.org/TR/2026/WD-vc-barcodes-1.0-20260623/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
+    // {
+    //     text: "Recognized Entities v1.0",
+    //     href: "https://htmlspecs.com/vc-recognized-entities-1.0/",
+    //     src: "https://www.w3.org/TR/2026/WD-vc-recognized-entities-1.0-20260512/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "WD"
+    // },
 
     //### OAuth 与授权协议|OAuth 및 인가 프로토콜|OAuth・認可プロトコル
     {
@@ -2764,6 +2836,14 @@ const links = [
         lang: "cjk",
         state: "RFC"
     },
+    // {
+    //     text: "The OAuth 2.1 Authorization Framework",
+    //     href: "https://htmlspecs.com/oauth2-1/",
+    //     src: "https://datatracker.ietf.org/doc/html/draft-ietf-oauth-v2-1",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
     {
         text: "OAuth 2.0 Pushed Authorization Requests",
         href: "https://htmlspecs.com/rfc9126/",
@@ -2812,6 +2892,14 @@ const links = [
         lang: "cjk",
         state: "RFC"
     },
+    // {
+    //     text: "OAuth 2.0 for Browser-Based Applications",
+    //     href: "https://htmlspecs.com/oauth-browser-based-apps/",
+    //     src: "https://datatracker.ietf.org/doc/html/draft-ietf-oauth-browser-based-apps",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
     {
         text: "Best Current Practice for OAuth 2.0 Security",
         href: "https://htmlspecs.com/oauth2-security-bcp/",
@@ -4492,6 +4580,15 @@ const httpLinks = [
         lang: "cjk",
         state: "RFC"
     },
+    // {
+    //     text: "RateLimit header fields for HTTP",
+    //     href: "https://htmlspecs.com/http/ratelimit-headers.html",
+    //     src: "https://datatracker.ietf.org/doc/html/draft-ietf-httpapi-ratelimit-headers",
+    //     "last-modified": "-",
+    //     etag: null,
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
 
     //### 缓存与重用|캐시 및 재사용|キャッシュと再利用
     {
