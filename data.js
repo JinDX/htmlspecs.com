@@ -2044,7 +2044,7 @@ const links = [
         text: "WebGL Specification",
         href: "https://htmlspecs.com/webgl/",
         src: "https://registry.khronos.org/webgl/specs/latest/1.0/",
-        "last-modified": "Tue, 14 Apr 2026 03:51:15 GMT",
+        "last-modified": "Tue, 30 Jun 2026 17:57:05 GMT",
         lang: "cjk",
         state: "Draft"
     },
