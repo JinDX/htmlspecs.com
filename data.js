@@ -2762,14 +2762,14 @@ const links = [
         lang: "cjk",
         state: "CR"
     },
-    // {
-    //     text: "Decentralized Identifier Resolution (DID Resolution) v0.3",
-    //     href: "https://htmlspecs.com/did-resolution/",
-    //     src: "https://www.w3.org/TR/2026/WD-did-resolution-20260611/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "Decentralized Identifier Resolution (DID Resolution) v0.3",
+        href: "https://htmlspecs.com/did-resolution/",
+        src: "https://www.w3.org/TR/2026/WD-did-resolution-20260611/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     {
         text: "Verifiable Credentials Data Model v2.0",
         href: "https://htmlspecs.com/vc-data-model-2.0/",
