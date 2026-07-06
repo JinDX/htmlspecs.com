@@ -2836,14 +2836,14 @@ const links = [
         lang: "cjk",
         state: "RFC"
     },
-    // {
-    //     text: "The OAuth 2.1 Authorization Framework",
-    //     href: "https://htmlspecs.com/oauth2-1/",
-    //     src: "https://datatracker.ietf.org/doc/html/draft-ietf-oauth-v2-1",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "The OAuth 2.1 Authorization Framework",
+        href: "https://htmlspecs.com/oauth2-1/",
+        src: "https://www.ietf.org/archive/id/draft-ietf-oauth-v2-1-15.html",
+        "last-modified": "Mon, 02 Mar 2026 18:51:55 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
     {
         text: "OAuth 2.0 Pushed Authorization Requests",
         href: "https://htmlspecs.com/rfc9126/",

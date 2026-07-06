@@ -395,6 +395,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 
 ### OAuth 与授权协议
 - [The OAuth 2.0 Authorization Framework](https://htmlspecs.com/oauth2/)（[Source](https://www.rfc-editor.org/rfc/rfc6749.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [The OAuth 2.1 Authorization Framework](https://htmlspecs.com/oauth2-1/)（[Source](https://www.ietf.org/archive/id/draft-ietf-oauth-v2-1-15.html) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [OAuth 2.0 Pushed Authorization Requests](https://htmlspecs.com/rfc9126/)（[Source](https://www.rfc-editor.org/rfc/rfc9126.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [OAuth 2.0 JWT-Secured Authorization Request (JAR)](https://htmlspecs.com/rfc9101/)（[Source](https://www.rfc-editor.org/rfc/rfc9101.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [OAuth 2.0 Rich Authorization Requests](https://htmlspecs.com/rfc9396/)（[Source](https://www.rfc-editor.org/rfc/rfc9396.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
