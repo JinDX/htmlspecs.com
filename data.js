@@ -2568,14 +2568,14 @@ const links = [
         lang: "cjk",
         state: "DNOTE"
     },
-    // {
-    //     text: "W3C Standards Vulnerability Disclosure & Handling Process and Policy",
-    //     href: "https://htmlspecs.com/security-disclosure/",
-    //     src: "https://www.w3.org/TR/2026/DNOTE-security-disclosure-20260630/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "DNOTE"
-    // },
+    {
+        text: "W3C Standards Vulnerability Disclosure & Handling Process and Policy",
+        href: "https://htmlspecs.com/security-disclosure/",
+        src: "https://www.w3.org/TR/2026/DNOTE-security-disclosure-20260630/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "DNOTE"
+    },
     {
         text: "Referrer Policy",
         href: "https://htmlspecs.com/referrer-policy/",
