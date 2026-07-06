@@ -71,7 +71,7 @@ const links = [
         text: "DOM",
         href: "https://htmlspecs.com/dom/",
         src: "https://dom.spec.whatwg.org/",
-        "last-modified": "Fri, 03 Jul 2026 08:51:58 GMT",
+        "last-modified": "Mon, 06 Jul 2026 06:15:01 GMT",
         lang: "cjk",
         state: "LS"
     },
