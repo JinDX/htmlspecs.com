@@ -143,7 +143,7 @@ const checkLinks = async (links, category) => {
               const oldTime = new Date(link['last-modified']);
               const diffMs = Math.abs(newTime - oldTime);
               const diffMin = diffMs / 1000 / 60;
-              if (diffMin >= 1) {
+              if (diffMin > 2) {
                 const info =
                   `- ${link.text} has been updated:\n  - New time: ${newTime.toUTCString()}\n  - Old time: ${oldTime.toUTCString()}\n  - Link: ${link.src}`;
                 logResult(info);
