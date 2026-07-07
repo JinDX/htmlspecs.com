@@ -3340,14 +3340,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "EPUB Reading Systems 3.4",
-    //     href: "https://htmlspecs.com/epub-rs-34/",
-    //     src: "https://www.w3.org/TR/2026/WD-epub-rs-34-20260626/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "EPUB Reading Systems 3.4",
+        href: "https://htmlspecs.com/epub-rs-34/",
+        src: "https://www.w3.org/TR/2026/WD-epub-rs-34-20260626/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     // {
     //     text: "EPUB Accessibility 1.2",
     //     href: "https://htmlspecs.com/epub-a11y-12/",
