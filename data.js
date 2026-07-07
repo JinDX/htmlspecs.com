@@ -3348,14 +3348,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "EPUB Accessibility 1.2",
-    //     href: "https://htmlspecs.com/epub-a11y-12/",
-    //     src: "https://www.w3.org/TR/2026/WD-epub-a11y-12-20260626/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "EPUB Accessibility 1.2",
+        href: "https://htmlspecs.com/epub-a11y-12/",
+        src: "https://www.w3.org/TR/2026/WD-epub-a11y-12-20260626/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     {
         text: "Publication Manifest",
         href: "https://htmlspecs.com/pub-manifest/",
