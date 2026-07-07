@@ -2818,14 +2818,14 @@ const links = [
         lang: "cjk",
         state: "REC"
     },
-    // {
-    //     text: "VCALM v1.0",
-    //     href: "https://htmlspecs.com/vcalm-1.0/",
-    //     src: "https://www.w3.org/TR/2026/WD-vcalm-1.0-20260630/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "WD"
-    // },
+    {
+        text: "VCALM v1.0",
+        href: "https://htmlspecs.com/vcalm-1.0/",
+        src: "https://www.w3.org/TR/2026/WD-vcalm-1.0-20260630/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "WD"
+    },
     // {
     //     text: "Verifiable Credential Forgery Defense v1.0",
     //     href: "https://htmlspecs.com/vc-forgery-defense-1.0/",
