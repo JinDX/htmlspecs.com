@@ -18,7 +18,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Web User Agents](https://htmlspecs.com/web-user-agents/)（[Source](https://www.w3.org/TR/2026/DNOTE-web-user-agents-20260319/) ![Note](https://img.shields.io/badge/NOTE-309c40)）
 - [Compatibility](https://htmlspecs.com/compat/)（[Source](https://compat.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [Web Platform Design Principles](https://htmlspecs.com/design-principles/)（[Source](https://www.w3.org/TR/2026/NOTE-design-principles-20260224/) ![Note](https://img.shields.io/badge/NOTE-309c40)）
-- [Web Sustainability Guidelines (WSG)](https://htmlspecs.com/web-sustainability-guidelines/)（[Source](https://www.w3.org/TR/2026/DNOTE-web-sustainability-guidelines-20260703/) ![Note Draft](https://img.shields.io/badge/DNOTE-ffcc00)）
+- [Web Sustainability Guidelines (WSG)](https://htmlspecs.com/web-sustainability-guidelines/)（[Source](https://www.w3.org/TR/2026/DNOTE-web-sustainability-guidelines-20260707/) ![Note Draft](https://img.shields.io/badge/DNOTE-ffcc00)）
 - [Compression](https://htmlspecs.com/compression/)（[Source](https://compression.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [Quirks Mode](https://htmlspecs.com/quirks/)（[Source](https://quirks.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [Minimum common web API](https://htmlspecs.com/min-common-api/)（[Source](https://min-common-api.proposal.wintertc.org/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
