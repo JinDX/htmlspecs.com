@@ -910,7 +910,7 @@ const links = [
     {
         text: "WebTransport",
         href: "https://htmlspecs.com/webtransport/",
-        src: "https://www.w3.org/TR/2026/WD-webtransport-20260618/",
+        src: "https://www.w3.org/TR/2026/WD-webtransport-20260706/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
