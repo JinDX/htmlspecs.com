@@ -604,7 +604,7 @@ const links = [
     {
         text: "SPARQL 1.2 Protocol",
         href: "https://htmlspecs.com/sparql12-protocol/",
-        src: "https://www.w3.org/TR/2026/WD-sparql12-protocol-20260426/",
+        src: "https://www.w3.org/TR/2026/WD-sparql12-protocol-20260708/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
