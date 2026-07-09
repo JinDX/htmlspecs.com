@@ -340,7 +340,7 @@ const links = [
     {
         text: "CBOR-LD 1.0",
         href: "https://htmlspecs.com/cbor-ld-10/",
-        src: "https://www.w3.org/TR/2026/WD-cbor-ld-10-20260702/",
+        src: "https://www.w3.org/TR/2026/WD-cbor-ld-10-20260708/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
