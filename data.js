@@ -71,7 +71,7 @@ const links = [
         text: "DOM",
         href: "https://htmlspecs.com/dom/",
         src: "https://dom.spec.whatwg.org/",
-        "last-modified": "Thu, 09 Jul 2026 10:21:39 GMT",
+        "last-modified": "Thu, 09 Jul 2026 17:11:02 GMT",
         lang: "cjk",
         state: "LS"
     },
@@ -685,7 +685,7 @@ const links = [
         text: "OpenAPI Specification v3.2.0",
         href: "https://htmlspecs.com/openapi/",
         src: "https://spec.openapis.org/oas/latest.html",
-        "last-modified": "Wed, 08 Jul 2026 21:29:57 GMT",
+        "last-modified": "Thu, 09 Jul 2026 23:07:22 GMT",
         lang: "cjk",
         state: "Draft"
     },
@@ -2781,7 +2781,7 @@ const links = [
     {
         text: "Decentralized Identifier Resolution (DID Resolution) v0.3",
         href: "https://htmlspecs.com/did-resolution/",
-        src: "https://www.w3.org/TR/2026/WD-did-resolution-20260611/",
+        src: "https://www.w3.org/TR/2026/WD-did-resolution-20260709/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
