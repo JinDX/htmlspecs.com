@@ -2203,6 +2203,14 @@ const links = [
         state: "CRD"
     },
     {
+        text: "WebMCP",
+        href: "https://htmlspecs.com/webmcp/",
+        src: "https://webmachinelearning.github.io/webmcp/",
+        "last-modified": "Fri, 10 Jul 2026 12:05:24 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
+    {
         text: "Model Loader API",
         href: "https://htmlspecs.com/model-loader/",
         src: "https://webmachinelearning.github.io/model-loader/",
