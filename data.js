@@ -219,7 +219,7 @@ const links = [
         text: "ECMAScript® 2027 Internationalization API Specification",
         href: "https://htmlspecs.com/ecma402/",
         src: "https://tc39.es/ecma402/",
-        "last-modified": "Thu, 09 Jul 2026 23:04:15 GMT",
+        "last-modified": "Sat, 11 Jul 2026 16:38:56 GMT",
         lang: "cjk",
         state: "Draft"
     },
