@@ -4705,7 +4705,7 @@ const httpLinks = [
         href: "https://htmlspecs.com/http/no-vary-search.html",
         src: "https://httpwg.org/http-extensions/draft-ietf-httpbis-no-vary-search.html",
         "last-modified": "-",
-        etag: "6a4bb513-1b733",
+        etag: "6a550720-1b737",
         lang: "cjk",
         state: "Draft"
     },
