@@ -2391,7 +2391,7 @@ const links = [
     {
         text: "Largest Contentful Paint",
         href: "https://htmlspecs.com/largest-contentful-paint/",
-        src: "https://www.w3.org/TR/2026/WD-largest-contentful-paint-20260408/",
+        src: "https://www.w3.org/TR/2026/WD-largest-contentful-paint-20260713/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
