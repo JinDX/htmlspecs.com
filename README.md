@@ -219,7 +219,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Fullscreen](https://htmlspecs.com/fullscreen/)（[Source](https://fullscreen.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [Contact Picker API](https://htmlspecs.com/contact-picker/)（[Source](https://www.w3.org/TR/2024/WD-contact-picker-20240708/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Window Controls Overlay](https://htmlspecs.com/window-controls-overlay/)（[Source](https://wicg.github.io/window-controls-overlay/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
-- [Window Management](https://htmlspecs.com/window-management/)（[Source](https://www.w3.org/TR/2024/WD-window-management-20240607/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Window Management](https://htmlspecs.com/window-management/)（[Source](https://www.w3.org/TR/2026/WD-window-management-20260714/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Web Printing API](https://htmlspecs.com/web-printing/)（[Source](https://wicg.github.io/web-printing/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Web Share API](https://htmlspecs.com/web-share/)（[Source](https://www.w3.org/TR/2023/REC-web-share-20230530/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Web Share Target API](https://htmlspecs.com/web-share-target/)（[Source](https://w3c.github.io/web-share-target/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
