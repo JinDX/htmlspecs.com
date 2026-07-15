@@ -393,7 +393,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Verifiable Credential Data Integrity 1.1](https://htmlspecs.com/vc-data-integrity-1.1/)（[Source](https://www.w3.org/TR/2026/WD-vc-data-integrity-1.1-20260416/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Bitstring Status List v1.0](https://htmlspecs.com/vc-bitstring-status-list/)（[Source](https://www.w3.org/TR/2025/REC-vc-bitstring-status-list-20250515/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [VCALM v1.0](https://htmlspecs.com/vcalm-1.0/)（[Source](https://www.w3.org/TR/2026/WD-vcalm-1.0-20260714/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
-- [Verifiable Credential Forgery Defense v1.0](https://htmlspecs.com/vc-forgery-defense-1.0/)（[Source](https://www.w3.org/TR/2026/WD-vc-forgery-defense-1.0-20260630/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Verifiable Credential Forgery Defense v1.0](https://htmlspecs.com/vc-forgery-defense-1.0/)（[Source](https://www.w3.org/TR/2026/WD-vc-forgery-defense-1.0-20260714/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Verifiable Credential Rendering Methods v1.0](https://htmlspecs.com/vc-render-method/)（[Source](https://www.w3.org/TR/2026/WD-vc-render-method-20260405/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Verifiable Credential Barcodes v1.0](https://htmlspecs.com/vc-barcodes-1.0/)（[Source](https://www.w3.org/TR/2026/WD-vc-barcodes-1.0-20260623/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Recognized Entities v1.0](https://htmlspecs.com/vc-recognized-entities-1.0/)（[Source](https://www.w3.org/TR/2026/WD-vc-recognized-entities-1.0-20260512/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
