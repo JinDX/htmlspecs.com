@@ -2829,7 +2829,7 @@ const links = [
     {
         text: "VCALM v1.0",
         href: "https://htmlspecs.com/vcalm-1.0/",
-        src: "https://www.w3.org/TR/2026/WD-vcalm-1.0-20260630/",
+        src: "https://www.w3.org/TR/2026/WD-vcalm-1.0-20260714/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
