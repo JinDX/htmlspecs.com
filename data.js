@@ -2264,7 +2264,7 @@ const links = [
         text: "CPU Performance API",
         href: "https://htmlspecs.com/cpu-performance/",
         src: "https://wicg.github.io/cpu-performance/",
-        "last-modified": "Thu, 18 Jun 2026 17:20:22 GMT",
+        "last-modified": "Wed, 15 Jul 2026 13:43:06 GMT",
         lang: "cjk",
         state: "Draft"
     },
