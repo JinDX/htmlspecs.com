@@ -237,12 +237,12 @@ const links = [
         src: "https://www.w3.org/TR/2026/WD-string-meta-20260716/",
         "last-modified": "-",
         lang: "cjk",
-        state: "NOTE"
+        state: "WD"
     },
     {
         text: "Internationalization Best Practices for Spec Developers",
         href: "https://htmlspecs.com/international-specs/",
-        src: "https://www.w3.org/TR/2025/NOTE-international-specs-20250808/",
+        src: "https://www.w3.org/TR/2026/NOTE-international-specs-20260716/",
         "last-modified": "-",
         lang: "cjk",
         state: "NOTE"
