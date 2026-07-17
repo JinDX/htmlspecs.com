@@ -234,7 +234,7 @@ const links = [
     {
         text: "Strings on the Web: Language and Direction Metadata",
         href: "https://htmlspecs.com/string-meta/",
-        src: "https://www.w3.org/TR/2024/NOTE-string-meta-20241017/",
+        src: "https://www.w3.org/TR/2026/WD-string-meta-20260716/",
         "last-modified": "-",
         lang: "cjk",
         state: "NOTE"
