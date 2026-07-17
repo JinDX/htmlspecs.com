@@ -250,10 +250,10 @@ const links = [
     {
         text: "Character Model for the World Wide Web: String Matching",
         href: "https://htmlspecs.com/charmod-norm/",
-        src: "https://www.w3.org/TR/2021/NOTE-charmod-norm-20210811/",
+        src: "https://www.w3.org/TR/2026/WD-charmod-norm-20260716/",
         "last-modified": "-",
         lang: "cjk",
-        state: "NOTE"
+        state: "WD"
     },
     {
         text: "String Searching",
