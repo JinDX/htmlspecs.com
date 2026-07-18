@@ -119,7 +119,7 @@ const links = [
         text: "MIME Sniffing",
         href: "https://htmlspecs.com/mimesniff/",
         src: "https://mimesniff.spec.whatwg.org/",
-        "last-modified": "Sun, 15 Mar 2026 09:08:47 GMT",
+        "last-modified": "Fri, 17 Jul 2026 13:17:54 GMT",
         lang: "cjk",
         state: "LS"
     },
