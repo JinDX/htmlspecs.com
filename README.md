@@ -45,7 +45,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [JSON-LD 1.1](https://htmlspecs.com/json-ld11/)（[Source](https://www.w3.org/TR/2020/REC-json-ld11-20200716/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [JSON-LD 1.1 Processing Algorithms and API](https://htmlspecs.com/json-ld11-api/)（[Source](https://www.w3.org/TR/2020/REC-json-ld11-api-20200716/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [JSON-LD 1.1 Framing](https://htmlspecs.com/json-ld11-framing/)（[Source](https://www.w3.org/TR/2020/REC-json-ld11-framing-20200716/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
-- [YAML-LD 1.0](https://htmlspecs.com/yaml-ld-10/)（[Source](https://www.w3.org/TR/2026/WD-yaml-ld-10-20260708/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [YAML-LD 1.0](https://htmlspecs.com/yaml-ld-10/)（[Source](https://www.w3.org/TR/2026/WD-yaml-ld-10-20260718/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CBOR-LD 1.0](https://htmlspecs.com/cbor-ld-10/)（[Source](https://www.w3.org/TR/2026/WD-cbor-ld-10-20260716/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [JavaScript Object Notation (JSON) Pointer](https://htmlspecs.com/json-pointer/)（[Source](https://www.rfc-editor.org/rfc/rfc6901.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [JSONPath: Query Expressions for JSON](https://htmlspecs.com/jsonpath/)（[Source](https://www.rfc-editor.org/rfc/rfc9535.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
