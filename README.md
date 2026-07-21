@@ -467,7 +467,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [EPUB Reading Systems 3.3](https://htmlspecs.com/epub-rs-33/)（[Source](https://www.w3.org/TR/2024/REC-epub-rs-33-20241017/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [EPUB 3.4](https://htmlspecs.com/epub-34/)（[Source](https://www.w3.org/TR/2026/CR-epub-34-20260721/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
 - [EPUB Reading Systems 3.4](https://htmlspecs.com/epub-rs-34/)（[Source](https://www.w3.org/TR/2026/CR-epub-rs-34-20260721/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
-- [EPUB Accessibility 1.2](https://htmlspecs.com/epub-a11y-12/)（[Source](https://www.w3.org/TR/2026/WD-epub-a11y-12-20260626/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [EPUB Accessibility 1.2](https://htmlspecs.com/epub-a11y-12/)（[Source](https://www.w3.org/TR/2026/CR-epub-a11y-12-20260721/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Publication Manifest](https://htmlspecs.com/pub-manifest/)（[Source](https://www.w3.org/TR/2020/REC-pub-manifest-20201110/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Audiobooks](https://htmlspecs.com/audiobooks/)（[Source](https://www.w3.org/TR/2020/REC-audiobooks-20201110/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 
