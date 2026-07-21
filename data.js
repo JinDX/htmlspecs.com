@@ -3343,10 +3343,10 @@ const links = [
     {
         text: "EPUB 3.4",
         href: "https://htmlspecs.com/epub-34/",
-        src: "https://www.w3.org/TR/2026/WD-epub-34-20260623/",
+        src: "https://www.w3.org/TR/2026/CR-epub-34-20260721/",
         "last-modified": "-",
         lang: "cjk",
-        state: "WD"
+        state: "CR"
     },
     {
         text: "EPUB Reading Systems 3.4",
