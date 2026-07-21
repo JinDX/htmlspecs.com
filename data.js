@@ -3081,7 +3081,7 @@ const links = [
     {
         text: "Attribution Level 1",
         href: "https://htmlspecs.com/attribution/",
-        src: "https://www.w3.org/TR/2026/WD-attribution-20260716/",
+        src: "https://www.w3.org/TR/2026/WD-attribution-20260720/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
