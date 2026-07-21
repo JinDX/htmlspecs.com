@@ -360,7 +360,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Connection Allowlists](https://htmlspecs.com/connection-allowlists/)（[Source](https://wicg.github.io/connection-allowlists/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Secure Contexts](https://htmlspecs.com/secure-contexts/)（[Source](https://www.w3.org/TR/2023/CRD-secure-contexts-20231110/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [The Web Origin Concept](https://htmlspecs.com/web-origin/)（[Source](https://www.rfc-editor.org/rfc/rfc6454.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
-- [Threat Model for the Web](https://htmlspecs.com/threat-model-web/)（[Source](https://www.w3.org/TR/2026/DNOTE-threat-model-web-20260617/) ![Note Draft](https://img.shields.io/badge/DNOTE-ffcc00)）
+- [Threat Model for the Web](https://htmlspecs.com/threat-model-web/)（[Source](https://www.w3.org/TR/2026/DNOTE-threat-model-web-20260721/) ![Note Draft](https://img.shields.io/badge/DNOTE-ffcc00)）
 - [W3C Standards Vulnerability Disclosure & Handling Process and Policy](https://htmlspecs.com/security-disclosure/)（[Source](https://www.w3.org/TR/2026/DNOTE-security-disclosure-20260630/) ![Note Draft](https://img.shields.io/badge/DNOTE-ffcc00)）
 - [Referrer Policy](https://htmlspecs.com/referrer-policy/)（[Source](https://www.w3.org/TR/2017/CR-referrer-policy-20170126/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
 - [Fetch Metadata Request Headers](https://htmlspecs.com/fetch-metadata/)（[Source](https://www.w3.org/TR/2025/WD-fetch-metadata-20250401/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
