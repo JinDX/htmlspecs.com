@@ -3359,7 +3359,7 @@ const links = [
     {
         text: "EPUB Accessibility 1.2",
         href: "https://htmlspecs.com/epub-a11y-12/",
-        src: "https://www.w3.org/TR/2026/WD-epub-a11y-12-20260626/",
+        src: "https://www.w3.org/TR/2026/CR-epub-a11y-12-20260721/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
