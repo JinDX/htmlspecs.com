@@ -134,7 +134,7 @@ const links = [
     {
         text: "Web User Agents",
         href: "https://htmlspecs.com/web-user-agents/",
-        src: "https://www.w3.org/TR/2026/DNOTE-web-user-agents-20260718/",
+        src: "https://www.w3.org/TR/2026/DNOTE-web-user-agents-20260720/",
         "last-modified": "-",
         lang: "cjk",
         state: "NOTE"

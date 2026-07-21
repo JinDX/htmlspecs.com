@@ -15,7 +15,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Encoding](https://htmlspecs.com/encoding/)（[Source](https://encoding.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [MIME Sniffing](https://htmlspecs.com/mimesniff/)（[Source](https://mimesniff.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [Infra](https://htmlspecs.com/infra/)（[Source](https://infra.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
-- [Web User Agents](https://htmlspecs.com/web-user-agents/)（[Source](https://www.w3.org/TR/2026/DNOTE-web-user-agents-20260718/) ![Note](https://img.shields.io/badge/NOTE-309c40)）
+- [Web User Agents](https://htmlspecs.com/web-user-agents/)（[Source](https://www.w3.org/TR/2026/DNOTE-web-user-agents-20260720/) ![Note](https://img.shields.io/badge/NOTE-309c40)）
 - [Compatibility](https://htmlspecs.com/compat/)（[Source](https://compat.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [Web Platform Design Principles](https://htmlspecs.com/design-principles/)（[Source](https://www.w3.org/TR/2026/NOTE-design-principles-20260224/) ![Note](https://img.shields.io/badge/NOTE-309c40)）
 - [Web Sustainability Guidelines (WSG)](https://htmlspecs.com/web-sustainability-guidelines/)（[Source](https://www.w3.org/TR/2026/DNOTE-web-sustainability-guidelines-20260716/) ![Note Draft](https://img.shields.io/badge/DNOTE-ffcc00)）
