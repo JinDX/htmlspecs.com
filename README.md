@@ -82,7 +82,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [SPARQL 1.2 Protocol](https://htmlspecs.com/sparql12-protocol/)（[Source](https://www.w3.org/TR/2026/WD-sparql12-protocol-20260708/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [SHACL 1.2 Core](https://htmlspecs.com/shacl12-core/)（[Source](https://www.w3.org/TR/2026/WD-shacl12-core-20260720/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [SHACL 1.2 Profiling](https://htmlspecs.com/shacl12-profiling/)（[Source](https://www.w3.org/TR/2026/WD-shacl12-profiling-20260702/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
-- [SHACL 1.2 SPARQL Extensions](https://htmlspecs.com/shacl12-sparql/)（[Source](https://www.w3.org/TR/2026/WD-shacl12-sparql-20260717/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [SHACL 1.2 SPARQL Extensions](https://htmlspecs.com/shacl12-sparql/)（[Source](https://www.w3.org/TR/2026/WD-shacl12-sparql-20260721/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [SHACL 1.2 Rules](https://htmlspecs.com/shacl12-rules/)（[Source](https://www.w3.org/TR/2026/WD-shacl12-rules-20260721/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Data Catalog Vocabulary (DCAT) - Version 3](https://htmlspecs.com/vocab-dcat-3/)（[Source](https://www.w3.org/TR/2024/REC-vocab-dcat-3-20240822/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Content Negotiation by Profile](https://htmlspecs.com/dx-prof-conneg/)（[Source](https://www.w3.org/TR/2026/WD-dx-prof-conneg-20260703/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
