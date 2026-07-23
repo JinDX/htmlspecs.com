@@ -62,7 +62,7 @@ const links = [
     {
         text: "WebAssembly Web API",
         href: "https://htmlspecs.com/wasm-web-api-2/",
-        src: "https://www.w3.org/TR/2026/CRD-wasm-web-api-2-20260722/",
+        src: "https://www.w3.org/TR/2026/CRD-wasm-web-api-2-20260723/",
         "last-modified": "-",
         lang: "cjk",
         state: "CRD"
