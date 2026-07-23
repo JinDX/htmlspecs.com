@@ -5010,15 +5010,14 @@ const httpLinks = [
         lang: "cjk",
         state: "RFC"
     },
-    
-    // {
-    //     text: "New Protocols Using TLS Must Require TLS 1.3",
-    //     href: "https://htmlspecs.com/http/rfc9852.html",
-    //     src: "https://www.rfc-editor.org/rfc/rfc9852.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
+    {
+        text: "New Protocols Using TLS Must Require TLS 1.3",
+        href: "https://htmlspecs.com/http/rfc9852.html",
+        src: "https://www.rfc-editor.org/rfc/rfc9852.html",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "RFC"
+    },
     {
         text: "The WebSocket Protocol",
         href: "https://htmlspecs.com/http/rfc6455.html",
