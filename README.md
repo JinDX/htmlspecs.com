@@ -80,7 +80,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [RDF 1.2 XML Syntax](https://htmlspecs.com/rdf12-xml/)（[Source](https://www.w3.org/TR/2026/WD-rdf12-xml-20260618/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [SPARQL 1.2 Query Language](https://htmlspecs.com/sparql12-query/)（[Source](https://www.w3.org/TR/2026/WD-sparql12-query-20260625/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [SPARQL 1.2 Protocol](https://htmlspecs.com/sparql12-protocol/)（[Source](https://www.w3.org/TR/2026/WD-sparql12-protocol-20260708/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
-- [SHACL 1.2 Core](https://htmlspecs.com/shacl12-core/)（[Source](https://www.w3.org/TR/2026/WD-shacl12-core-20260720/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [SHACL 1.2 Core](https://htmlspecs.com/shacl12-core/)（[Source](https://www.w3.org/TR/2026/WD-shacl12-core-20260723/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [SHACL 1.2 Profiling](https://htmlspecs.com/shacl12-profiling/)（[Source](https://www.w3.org/TR/2026/WD-shacl12-profiling-20260702/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [SHACL 1.2 SPARQL Extensions](https://htmlspecs.com/shacl12-sparql/)（[Source](https://www.w3.org/TR/2026/WD-shacl12-sparql-20260721/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [SHACL 1.2 Rules](https://htmlspecs.com/shacl12-rules/)（[Source](https://www.w3.org/TR/2026/WD-shacl12-rules-20260722/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
