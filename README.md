@@ -704,6 +704,6 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Using TLS to Secure QUIC](https://htmlspecs.com/http/rfc9001.html)（[Source](https://www.rfc-editor.org/rfc/rfc9001.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [QUIC Loss Detection and Congestion Control](https://htmlspecs.com/http/rfc9002.html)（[Source](https://www.rfc-editor.org/rfc/rfc9002.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [Version-Independent Properties of QUIC](https://htmlspecs.com/http/rfc8999.html)（[Source](https://www.rfc-editor.org/rfc/rfc8999.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
-- [The Transport Layer Security (TLS) Protocol Version 1.3](https://htmlspecs.com/http/rfc8446.html)（[Source](https://www.rfc-editor.org/rfc/rfc8446.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [The Transport Layer Security (TLS) Protocol Version 1.3](https://htmlspecs.com/http/rfc9846.html)（[Source](https://www.rfc-editor.org/rfc/rfc9846.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [The WebSocket Protocol](https://htmlspecs.com/http/rfc6455.html)（[Source](https://www.rfc-editor.org/rfc/rfc6455.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 

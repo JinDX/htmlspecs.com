@@ -5004,20 +5004,12 @@ const httpLinks = [
     },
     {
         text: "The Transport Layer Security (TLS) Protocol Version 1.3",
-        href: "https://htmlspecs.com/http/rfc8446.html",
-        src: "https://www.rfc-editor.org/rfc/rfc8446.html",
+        href: "https://htmlspecs.com/http/rfc9846.html",
+        src: "https://www.rfc-editor.org/rfc/rfc9846.html",
         "last-modified": "-",
         lang: "cjk",
         state: "RFC"
     },
-    // {
-    //     text: "The Transport Layer Security (TLS) Protocol Version 1.3",
-    //     href: "https://htmlspecs.com/http/rfc9846.html",
-    //     src: "https://www.rfc-editor.org/rfc/rfc9846.html",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "RFC"
-    // },
     
     // {
     //     text: "New Protocols Using TLS Must Require TLS 1.3",
