@@ -807,14 +807,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
-    // {
-    //     text: "Sub Apps API",
-    //     href: "https://htmlspecs.com/sub-apps/",
-    //     src: "https://wicg.github.io/sub-apps/",
-    //     "last-modified": "Fri, 17 Jul 2026 16:34:05 GMT",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "Sub Apps API",
+        href: "https://htmlspecs.com/sub-apps/",
+        src: "https://wicg.github.io/sub-apps/",
+        "last-modified": "Fri, 17 Jul 2026 16:35:37 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
     {
         text: "Service Workers Nightly",
         href: "https://htmlspecs.com/service-workers/",
