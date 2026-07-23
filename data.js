@@ -2564,7 +2564,7 @@ const links = [
         text: "Connection Allowlists",
         href: "https://htmlspecs.com/connection-allowlists/",
         src: "https://wicg.github.io/connection-allowlists/",
-        "last-modified": "Wed, 01 Jul 2026 14:58:27 GMT",
+        "last-modified": "Wed, 22 Jul 2026 15:34:16 GMT",
         lang: "cjk",
         state: "Draft"
     },
