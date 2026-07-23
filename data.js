@@ -807,6 +807,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
+    // {
+    //     text: "Sub Apps API",
+    //     href: "https://htmlspecs.com/sub-apps/",
+    //     src: "https://wicg.github.io/sub-apps/",
+    //     "last-modified": "Fri, 17 Jul 2026 16:34:05 GMT",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
     {
         text: "Service Workers Nightly",
         href: "https://htmlspecs.com/service-workers/",
@@ -5002,6 +5010,23 @@ const httpLinks = [
         lang: "cjk",
         state: "RFC"
     },
+    // {
+    //     text: "The Transport Layer Security (TLS) Protocol Version 1.3",
+    //     href: "https://htmlspecs.com/http/rfc9846.html",
+    //     src: "https://www.rfc-editor.org/rfc/rfc9846.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
+    
+    // {
+    //     text: "New Protocols Using TLS Must Require TLS 1.3",
+    //     href: "https://htmlspecs.com/http/rfc9852.html",
+    //     src: "https://www.rfc-editor.org/rfc/rfc9852.html",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "RFC"
+    // },
     {
         text: "The WebSocket Protocol",
         href: "https://htmlspecs.com/http/rfc6455.html",
