@@ -2797,7 +2797,7 @@ const links = [
     {
         text: "Decentralized Identifier Resolution (DID Resolution) v0.3",
         href: "https://htmlspecs.com/did-resolution/",
-        src: "https://www.w3.org/TR/2026/WD-did-resolution-20260716/",
+        src: "https://www.w3.org/TR/2026/WD-did-resolution-20260723/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
