@@ -1711,7 +1711,7 @@ const links = [
     {
         text: "Screen Capture",
         href: "https://htmlspecs.com/screen-capture/",
-        src: "https://www.w3.org/TR/2026/WD-screen-capture-20260716/",
+        src: "https://www.w3.org/TR/2026/WD-screen-capture-20260723/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
