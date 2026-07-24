@@ -104,7 +104,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [MathML4](https://htmlspecs.com/mathml4/)（[Source](https://www.w3.org/TR/2026/WD-mathml4-20260604/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 
 ### Web 应用、安装与生命周期
-- [Web Application Manifest](https://htmlspecs.com/appmanifest/)（[Source](https://www.w3.org/TR/2026/WD-appmanifest-20260507/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Web Application Manifest](https://htmlspecs.com/appmanifest/)（[Source](https://www.w3.org/TR/2026/WD-appmanifest-20260723/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Web App Launch Handler API](https://htmlspecs.com/web-app-launch/)（[Source](https://wicg.github.io/web-app-launch/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Manifest Incubations](https://htmlspecs.com/manifest-incubations/)（[Source](https://wicg.github.io/manifest-incubations/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Developing Localizable Manifests](https://htmlspecs.com/localizable-manifests/)（[Source](https://www.w3.org/TR/2025/NOTE-localizable-manifests-20250214/) ![Note](https://img.shields.io/badge/NOTE-309c40)）
