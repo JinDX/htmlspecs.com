@@ -3171,6 +3171,14 @@ const links = [
         state: "REC"
     },
     {
+        text: "WCAG Evaluation Methodology (WCAG-EM) 2.0",
+        href: "https://htmlspecs.com/wcag-em-2/",
+        src: "https://www.w3.org/TR/2026/NOTE-wcag-em-2-20260723/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "NOTE"
+    },
+    {
         text: "W3C Accessibility Guidelines (WCAG) 3.0",
         href: "https://htmlspecs.com/wcag-3.0/",
         src: "https://www.w3.org/TR/2026/WD-wcag-3.0-20260303/",
