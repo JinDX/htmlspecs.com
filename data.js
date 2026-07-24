@@ -811,7 +811,7 @@ const links = [
         text: "Sub Apps API",
         href: "https://htmlspecs.com/sub-apps/",
         src: "https://wicg.github.io/sub-apps/",
-        "last-modified": "Fri, 17 Jul 2026 16:35:37 GMT",
+        "last-modified": "Thu, 23 Jul 2026 14:26:52 GMT",
         lang: "cjk",
         state: "Draft"
     },
