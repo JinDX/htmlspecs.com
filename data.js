@@ -2552,14 +2552,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "Modern Algorithms in the Web Cryptography API",
-    //     href: "https://htmlspecs.com/webcrypto-modern-algos/",
-    //     src: "https://wicg.github.io/webcrypto-modern-algos/",
-    //     "last-modified": "Mon, 29 Jun 2026 12:11:38 GMT",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "Modern Algorithms in the Web Cryptography API",
+        href: "https://htmlspecs.com/webcrypto-modern-algos/",
+        src: "https://wicg.github.io/webcrypto-modern-algos/",
+        "last-modified": "Mon, 29 Jun 2026 12:11:38 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
     {
         text: "HTML Sanitizer API",
         href: "https://htmlspecs.com/sanitizer-api/",
