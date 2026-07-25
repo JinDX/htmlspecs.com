@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>JS Self-Profiling API</title>
+    <script src="https://www.w3.org/Tools/respec/respec-w3c" class="remove"></script>
+    <script class="remove">
+        var respecConfig = {
+            specStatus: "CG-DRAFT",
+            editors: [
+                {
+                    name: "Andrew Comminos",
+                    mailto: "acomminos@fb.com",
+                    company: "Facebook",
+                    companyURL: "https://facebook.com",
+                },
+                {
+                    name: "Vladan Djeric",
+                    mailto: "vdjeric@fb.com",
+                    company: "Facebook",
+                    companyURL: "https://facebook.com",
+                },
+            ],
+            shortName: "js-self-profiling",
+            group: "wicg",
+            xref: ["DOM", "HTML", "Infra", "WebIDL"],
+            github: "https://github.com/WICG/js-self-profiling/"
+        };
+    </script>
+</head>
+
+<body>
+    <section id="abstract">
+        <p>
+            This specification describes an API that allows web applications to control a sampling profiler for
+            measuring client JavaScript execution times.
+        </p>
+    </section>
+    <section id="sotd">
+    </section>
+    <section class="informative" id="introduction">
+        <h2>Introduction</h2>
+        <p>
+            Complex web applications currently have limited visibility into where JS
+            execution time is spent on clients. Without the ability to efficiently
+            collect stack samples, applications are forced to instrument their code
+            with profiling hooks that are imprecise and can significantly slow down
+            execution. By providing an API to manipulate a sampling profiler,
+            applications can gather rich execution data for aggregation and analysis
+            with minimal overhead.
+        </p>
+        <section class="informative">
+            <h2>Examples</h2>
+            <p>The following example demonstrates how a user may profile an expensive operation, gathering JS execution
+                samples every 10ms. The trace can be sent to a server for analysis to debug outliers and JS execution
+                characteristics in aggregate.</p>
+            <pre class="example" title="Profiling a computationally-intensive operation.">
+        const profiler = new Profiler({ sampleInterval: 10, maxBufferSize: 10000 });
+        const start = performance.now();
+        for (let i = 0; i &lt; 1000000; i++) {
+             doWork();
+        }
+        const duration = performance.now() - start;
+        const trace = await profiler.stop();
+        const traceJson = JSON.stringify({
+          duration,
+          trace,
+        });
+        sendTrace(traceJson);
+        </pre>
+            <p>Another common real-world scenario is profiling JS across a pageload. This example profiles the onload
+                event, sending performance timing data along with the trace.</p>
+            <pre class="example" title="Profiling a page load.">
+        const profiler = new Profiler({ sampleInterval: 10, maxBufferSize: 10000 });
+
+        window.addEventListener('load', async () => {
+          const trace = await profiler.stop();
+          const traceJson = JSON.stringify({
+            timing: performance.timing,
+            trace,
+          });
+          sendTrace(traceJson);
+        });
+
+        // Rest of the page's JS initialization logic
+        </pre>
+        </section>
+    </section>
+    <section id="conformance">
+    </section>
+    <section>
+        <h2>Definitions</h2>
+        <p>
+            A <dfn data-lt="sample|samples">sample</dfn> is a descriptor of the
+            instantaneous state of execution at a given point in time. Each sample is
+            associated with a <a>stack</a>.
+        </p>
+        <p>
+            A <dfn>stack</dfn> is a list of <a>frames</a> that MUST be ordered
+            sequentially from outermost to innermost frame.
+        </p>
+        <p>
+            A <dfn data-lt="frame|frames">frame</dfn> is an element in the context of a <a>stack</a>
+            containing information about the current execution state.
+        </p>
+    </section>
+    <section>
+        <h2>Profiling Sessions</h2>
+        <p>
+            A <dfn>profiling session</dfn> is an abstract producer of <a>samples</a>. Each session has:
+        </p>
+        <ol>
+            <li>A <dfn>state</dfn>, which is one of <code>{started, paused, stopped}</code>.</li>
+            <li>
+                A <dfn>sample interval</dfn>, defined as the periodicity at which the session obtains samples.
+                <p class="note">
+                    The UA is NOT REQUIRED to take samples at this rate. However, it is
+                    RECOMMENDED that sampling is prioritized to take samples at this rate to
+                    produce higher quality traces.
+                </p>
+            </li>
+            <li>An <dfn data-cite="!ECMA-262#agent">agent</dfn> to profile.</li>
+            <li>A <dfn data-cite="!ECMA-262#realm">realm</dfn> to profile.</li>
+            <li>A <dfn data-cite="!HR-TIME-2#dfn-time-origin">time origin</dfn> that samples' timestamps are measured
+                relative to.</li>
+            <li>A <dfn>sample buffer size limit</dfn>.</li>
+            <li>A <a>ProfilerTrace</a> storing captured <a>samples</a>.</li>
+        </ol>
+        <p>
+            Multiple profiling sessions on the same page SHOULD be supported.
+        </p>
+        <section>
+            <h2>States</h2>
+            <p>
+                In the <code>started</code> state, the UA SHOULD make a best-effort to
+                capture samples by executing the <a>take a sample</a> algorithm [= in
+                parallel =] each time the <a>sample interval</a> has elapsed.
+                In the <code>paused</code> and <code>stopped</code> states, the UA SHOULD NOT capture samples.
+            </p>
+            <p>
+                Profiling sessions MUST begin in the <code>started</code> state.
+            </p>
+            <p>
+                The UA MAY move a session from <code>started</code> to <code>paused</code>, and from <code>paused</code>
+                to <code>started</code>.
+            </p>
+            <p class="note">
+                The user agent is RECOMMENDED to pause the sampling of a profiling session if the browsing context is
+                not in the foreground.
+            </p>
+            <p>
+                A <code>stopped</code> session MUST NOT move to the <code>started</code> or <code>paused</code> states.
+            </p>
+        </section>
+    </section>
+    <section>
+        <h2>Processing Model</h2>
+        <p>
+            To <dfn>take a sample</dfn> given a <a>profiling session</a>, perform the following steps:
+        </p>
+        <ol>
+            <li>If the length of <a>ProfilerTrace.samples</a> is greater than or equal to the <a>sample buffer size
+                    limit</a> associated with the profiling session, fire a new event of type
+                <dfn>samplebufferfull</dfn> to the associated <a>Profiler</a>, move the state to <code>stopped</code>,
+                and return.
+            </li>
+            <li>Let <var>sample</var> be a new <a>ProfilerSample</a>.</li>
+            <li>Set the <a>ProfilerSample.timestamp</a> property of <var>sample</var> to the <dfn
+                    data-cite="!hr-time-2#dfn-current-high-resolution-time">current high resolution time</dfn> relative
+                to the <a>profiling session</a>'s <a>time origin</a>.</li>
+            <li>Let <var>stack</var> be the <dfn data-cite="!ECMA-262#execution-context-stack">execution context
+                    stack</dfn> associated with the profiling session's <a>agent</a>.</li>
+            <li>Set the <a>ProfilerSample.stackId</a> property of <var>sample</var> to the result of the <a>get a stack
+                    ID</a> algorithm on <var>stack</var>.</li>
+            <li>Add <var>sample</var> to the <a>ProfilerTrace.samples</a> associated with the session's
+                <a>ProfilerTrace</a>.
+            </li>
+        </ol>
+        <p>
+            To <dfn>get a stack ID</dfn> given an <a>execution context stack</a> bound to <var>stack</var>, perform the
+            following steps:
+        <ol>
+            <li>If <var>stack</var> is empty, return <code>undefined</code>.</li>
+            <li>Let <var>head</var> be the top element of <var>stack</var>, and <var>tail</var> be the remainder of
+                <var>stack</var> after removing its top element.
+            </li>
+            <li>Let <var>parentId</var> be the result of calling <a>get a stack ID</a> recursively on <var>tail</var>.
+            </li>
+            <li>Let <var>frameId</var> be the result of calling <a>get a frame ID</a> on <var>head</var>.</li>
+            <li>If <var>frameId</var> is <code>undefined</code>, return <var>parentId</var>.</li>
+            <li>Let <var>profilerStack</var> be a new <a>ProfilerStack</a> with <a>ProfilerStack.frameId</a> equal to
+                <var>frameId</var>, and <a>ProfilerStack.parentId</a> equal to <var>parentId</var>.</a>
+            <li>Return the result of running <a>get an element ID</a> on <var>profilerStack</var> and
+                <a>ProfilerTrace.stacks</a>.
+            </li>
+        </ol>
+        </p>
+        <p>
+            To <dfn>get a frame ID</dfn> given an <dfn data-cite="!ECMA-262#sec-execution-contexts">execution
+                context</dfn> bound to <var>context</var>, perform the following steps:
+        <ol>
+            <li>If the [= realm =] associated with <var>context</var> does not match the realm associated with the
+                profiling session, return <code>undefined</code>.</li>
+            <li>Let <var>instance</var> be equal to the <dfn data-cite="!ECMA-262#sec-function-instances">function
+                    instance</dfn> associated with <var>context</var>.</li>
+            <li>Let <var>scriptOrModule</var> be equal to the <code>ScriptOrModule</code> associated with
+                <var>context</var>.
+            </li>
+            <li>
+                Let |attributedScriptOrModule : ScriptOrModule| be equal to the result of running the following
+                algorithm:
+                <ol>
+                    <li>If |scriptOrModule| is non-null, return |scriptOrModule|.</li>
+                    <li>If |instance| is a built-in function object, return the <code>ScriptOrModule</code> containing
+                        the function that invoked |instance|.
+                        <p class="ednote">
+                            The purpose of the above logic is to ensure that built-in functions invoked by inaccessible
+                            scripts are not exposed in traces, by using the <code>ScriptOrModule</code> that invoked
+                            them for attribution.
+                        </p>
+                        <p class="issue">
+                            "[...] the <code>ScriptOrModule</code> containing the function that invoked |instance|"
+                            should be defined more rigorously. We could leverage the top-most execution context on the
+                            stack that defines a <code>ScriptOrModule</code> to provide this, but it's not ideal --
+                            there may (theoretically) be other mechanisms for a builtin to be enqueued on the execution
+                            context stack, in which case the attribution would be invalid.
+                        </p>
+                    </li>
+                    <li>Otherwise, return null.</li>
+                </ol>
+            </li>
+            <li>If |attributedScriptOrModule| is null, return <code>undefined</code>.</li>
+            <li>Let |attributedScript : Script| be the [= script =] obtained from
+                |attributedScriptOrModule|.[[\HostDefined]].</li>
+            <li>
+                If |attributedScript| is a [= classic script =] and its <dfn data-cite="HTML5#muted-errors">muted
+                    errors</dfn> boolean is equal to <code>true</code>, return <code>undefined</code>.
+                <p class="ednote">
+                    This check ensures that we avoid including stack frames from cross-origin scripts served in a
+                    CORS-cross-origin response. We may want to consider renaming <a>muted errors</a> to better reflect
+                    this use case.
+                <p>
+            </li>
+            <li>Let <var>frame</var> be a new <a>ProfilerFrame</a>.</li>
+            <li>Set <a>ProfilerFrame.name</a> of <var>frame</var> to the <dfn
+                    data-cite="!ECMA-262#sec-function-instances-name">function instance name</dfn> associated with
+                |instance|.</li>
+            <li>
+                If |scriptOrModule| is non-null:
+                <ol>
+                    <li>Let <var>script</var> be the <dfn data-cite="HTML5#concept-script">script</dfn> obtained from
+                        <var>scriptOrModule</var>.[[\HostDefined]].
+                    </li>
+                    <li>Let <var>resourceString</var> be equal to the <dfn
+                            data-cite="HTML5#concept-script-base-url">base URL</dfn> of <var>script</var>.</li>
+                    <li>Set <a>ProfilerFrame.resourceId</a> to the result of running <a>get an element ID</a> on
+                        <var>resourceString</var> and <a>ProfilerTrace.resources</a>.
+                    </li>
+                    <li>Set <a>ProfilerFrame.line</a> of <var>frame</var> to the 1-based index of the line at which
+                        <var>instance</var> is defined in |script|.
+                    </li>
+                    <li>Set <a>ProfilerFrame.column</a> of <var>frame</var> to the 1-based index of the column at which
+                        <var>instance</var> is defined in |script|.
+                    </li>
+                </ol>
+            <li>Return the result of running <a>get an element ID</a> on <var>frame</var> and
+                <a>ProfilerTrace.frames</a>.
+            </li>
+        </ol>
+        </p>
+        <p>
+            To <dfn>get an element ID</dfn> for an <var>item</var> in a <var>list</var>, run the following steps:
+        <ol>
+            <li>If there exists an element in <var>list</var> component-wise equal to <var>item</var>, return its index.
+            </li>
+            <li>Otherwise, append <var>item</var> to the end of <var>list</var> and return its index.</li>
+        </ol>
+        </p>
+    </section>
+
+    <section data-dfn-for="Profiler" data-link-for="Profiler">
+        <h2>The <dfn>Profiler</dfn> Interface</h2>
+        <pre class="idl">
+      [Exposed=(Window, Worker)]
+      interface Profiler : EventTarget {
+        readonly attribute DOMHighResTimeStamp sampleInterval;
+        readonly attribute boolean stopped;
+
+        constructor(ProfilerInitOptions options);
+        Promise&lt;ProfilerTrace&gt; stop();
+      };
+      </pre>
+        <p>Each <a>Profiler</a> MUST be associated with exactly one <a>profiling session</a>.</p>
+        <p>The <dfn>sampleInterval</dfn> attribute MUST reflect the <a>sample interval</a> of the associated
+            <a>profiling session</a> expressed as a <dfn
+                data-cite="!hr-time-2#sec-domhighrestimestamp">DOMHighResTimeStamp</dfn>.
+        </p>
+        <p>The <dfn>stopped</dfn> attribute MUST be true if and only if the <a>profiling session</a> has state
+            <code>stopped</code>.
+        </p>
+        <section>
+            <h2><dfn data-lt="constructor()">new Profiler(options)</dfn></h2>
+            <a>new Profiler(options)</a> runs the following steps given an object <var>options</var> of type
+            <a>ProfilerInitOptions</a>:
+            <ol>
+                <li>If <var>options</var>' {{ProfilerInitOptions/sampleInterval}} is less than 0, throw a
+                    <code>RangeError</code>.
+                </li>
+                <li>
+                    Let |globalObject| be the <dfn data-cite="!HTML5#current-global-object">current global object</dfn>.
+                </li>
+                <li>
+                    If |globalObject| is a <dfn data-cite="!HTML5#window">Window</dfn> or a <dfn
+                        data-cite="!HTML5#the-workerglobalscope-common-interface">WorkerGlobalScope</dfn>:
+                    <ol>
+                        <li>
+                            <a
+                                href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#algo-get-policy-value">Get
+                                the policy value</a> for <code>"js-profiling-mode"</code> from |globalObject|. Let
+                            |profilingMode| be the result.
+                        </li>
+                        <li>
+                            If |profilingMode| is not <code>"eager"</code> or <code>"lazy"</code>:
+                            <ol>
+                                <li>
+                                    <a
+                                        href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#algo-get-policy-value">Get
+                                        the policy value</a> for <code>"js-profiling"</code> from |globalObject|. Let
+                                    |jsProfilingEnabled| be the result.
+                                </li>
+                                <li>
+                                    If |jsProfilingEnabled| is false, throw a <code>"NotAllowedError"</code>
+                                    DOMException.
+                                </li>
+                            </ol>
+                        </li>
+                    </ol>
+                </li>
+                <li>
+                    Otherwise, throw a <code>"NotAllowedError"</code> DOMException.
+                </li>
+                <li>Create a new <a>profiling session</a> where:</li>
+                <ol>
+                    <li>The associated <a>sample interval</a> is set to either <a>ProfilerInitOptions.sampleInterval</a>
+                        OR the next lowest interval supported by the UA.</li>
+                    <li>The associated <a>time origin</a> is equal to the time origin of |globalObject|.</li>
+                    <li>The associated <a>sample buffer size limit</a> is set to {{ProfilerInitOptions/maxBufferSize}}.
+                    </li>
+                    <li>The associated [= agent =] is set to the <dfn
+                            data-cite="!ECMA-262#surrounding-agent">surrounding agent</dfn>.</li>
+                    <li>The associated [= realm =] is set to the <dfn data-cite="!ECMA-262#current-realm">current realm
+                            record</dfn>.</li>
+                    <li>The associated <a>ProfilerTrace</a> is set to
+                        <code>«[{{ProfilerTrace/resources}} → «», {{ProfilerTrace/frames}} → «», {{ProfilerTrace/stacks}} → «», {{ProfilerTrace/samples}} → «»]»</code>.
+                    </li>
+                </ol>
+                <li>Return a new <a>Profiler</a> associated with the newly created <a>profiling session</a>.</li>
+            </ol>
+            </p>
+        </section>
+        <section>
+            <h2><dfn>stop()</dfn> method</h2>
+            <p>
+                Stops the profiler and returns a trace. This method MUST run these steps:
+            </p>
+            <ol>
+                <li>If the associated [= profiling session =]'s state is <code>stopped</code>, return [= a promise
+                    rejected with =] an <code>"InvalidStateError"</code> DOMException.
+                <li>Set the [= profiling session =]'s state to <code>stopped</code>.</li>
+                <li>Let |p:Promise| be [= a new promise =].</li>
+                <li>
+                    Run the following steps [= in parallel =]:
+                    <ol>
+                        <li>Perform any [= implementation-defined =] work to stop the [= profiling session =].</li>
+                        <li>Resolve |p| with the {{ProfilerTrace}} associated with the profiler's [= profiling session
+                            =].</li>
+                    </ol>
+                </li>
+                <li>Return |p|.</li>
+            </ol>
+            <p>
+                Any <a>samples</a> taken after <a>stop()</a> is invoked SHOULD NOT be included by the <a>profiling
+                    session</a>.
+            </p>
+        </section>
+    </section>
+    <section data-dfn-for="ProfilerTrace" data-link-for="ProfilerTrace">
+        <h2>The <dfn>ProfilerTrace</dfn> Dictionary</h2>
+        <pre class="idl">
+      typedef DOMString ProfilerResource;
+
+      dictionary ProfilerTrace {
+        required sequence&lt;ProfilerResource&gt; resources;
+        required sequence&lt;ProfilerFrame&gt; frames;
+        required sequence&lt;ProfilerStack&gt; stacks;
+        required sequence&lt;ProfilerSample&gt; samples;
+      };
+      </pre>
+        <p>The <dfn>resources</dfn> attribute MUST return the <dfn>ProfilerResource</dfn> list set by the <a>take a
+                sample</a> algorithm.</p>
+
+        <p>The <dfn>frames</dfn> attribute MUST return the <a>ProfilerFrame</a> list set by the <a>take a sample</a>
+            algorithm.</p>
+        <p>The <dfn>stacks</dfn> attribute MUST return the <a>ProfilerStack</a> list set by the <a>take a sample</a>
+            algorithm.</p>
+        <p>The <dfn>samples</dfn> attribute MUST return the <a>ProfilerSample</a> list set by the <a>take a sample</a>
+            algorithm.</p>
+        <p class="note">
+            Inspired by the <a
+                href="https://docs.google.com/document/d/1CvAClvFfyA5R-PhYUmn5OOQtYMH4h6I0nSsKchNAySU/preview#">V8 trace
+                event format</a>
+            and <a
+                href="https://github.com/devtools-html/perf.html/blob/master/docs-developer/gecko-profile-format.md">Gecko
+                profile format</a>,
+            this representation is designed to be easily and efficiently serializable.
+        </p>
+        <section data-dfn-for="ProfilerSample" data-link-for="ProfilerSample">
+            <h2>The <dfn>ProfilerSample</dfn> Dictionary</h2>
+            <pre class="idl">
+        dictionary ProfilerSample {
+          required DOMHighResTimeStamp timestamp;
+          unsigned long long stackId;
+        };
+        </pre>
+            <p><dfn>timestamp</dfn> MUST return the value it was initialized to.</p>
+            <p><dfn>stackId</dfn> MUST return the value it was initialized to.</p>
+        </section>
+        <section data-dfn-for="ProfilerStack" data-link-for="ProfilerStack">
+            <h2>The <dfn>ProfilerStack</dfn> Dictionary</h2>
+            <pre class="idl">
+        dictionary ProfilerStack {
+          unsigned long long parentId;
+          required unsigned long long frameId;
+        };
+        </pre>
+            <p><dfn>parentId</dfn> MUST return the value it was initialized to.</p>
+            <p><dfn>frameId</dfn> MUST return the value it was iniitalized to.</p>
+        </section>
+        <section data-dfn-for="ProfilerFrame" data-link-for="ProfilerFrame">
+            <h2>The <dfn>ProfilerFrame</dfn> Dictionary</h2>
+            <pre class="idl">
+        dictionary ProfilerFrame {
+          required DOMString name;
+          unsigned long long resourceId;
+          unsigned long long line;
+          unsigned long long column;
+        };
+        </pre>
+            <p><dfn>name</dfn> MUST return the value it was initialized to.</p>
+            <p><dfn>resourceId</dfn> MUST return the value it was initialized to.</p>
+            <p><dfn>line</dfn> MUST return the value it was initialized to.</p>
+            <p><dfn>column</dfn> MUST return the value it was initialized to.</p>
+        </section>
+    </section>
+    <section data-dfn-for="ProfilerInitOptions" data-link-for="ProfilerInitOptions">
+        <h2>The <dfn>ProfilerInitOptions</dfn> dictionary</h2>
+        <pre class="idl">
+      dictionary ProfilerInitOptions {
+        required DOMHighResTimeStamp sampleInterval;
+        required unsigned long maxBufferSize;
+      };
+      </pre>
+        <p><a>ProfilerInitOptions</a> MUST support the following fields:</p>
+        <ul>
+            <li><dfn>sampleInterval</dfn> is the application's desired <a>sample interval</a>. This value MUST be
+                greater than or equal to zero.</li>
+            <li><dfn>maxBufferSize</dfn> is the desired <a>sample buffer size limit</a>, in samples.</li>
+        </ul>
+    </section>
+    <section id="document-policy">
+        <h2>Document Policy</h2>
+        <p>
+            This spec defines <a
+                href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#configuration-point">configuration
+                points</a> in <a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html">Document
+                Policy</a> to control profiling capability and initialization behavior.
+        </p>
+        <section>
+            <h2><code>js-profiling-mode</code></h2>
+            <p>
+                This spec defines a <a
+                    href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#configuration-point">configuration
+                    point</a> with name <code>js-profiling-mode</code>. Its <a
+                    href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#configuration-point-type">type</a>
+                is <code>enum</code> with allowed values <code>"eager"</code> and <code>"lazy"</code>. The <a
+                    href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#configuration-point-default-value">default
+                    value</a> is the empty string.
+            </p>
+            <p>
+                When set, this policy authorizes scripts to use the JS Self-Profiling API.
+            </p>
+            <section>
+                <h2><code>eager</code></h2>
+                <p>
+                    When <code>js-profiling-mode</code> is set to <code>"eager"</code>, it signals to the UA that
+                    profiling during page load is expected.
+                </p>
+                <p class="note">
+                    UAs can use this hint to perform early initialization of profiling infrastructure, storing required
+                    metadata and warming up profiling components as early as possible during document load. However,
+                    this may introduce non-trivial performance overhead even when profiling is not actively used. This
+                    overhead may negatively impact metrics such as First Contentful Paint (FCP) and Largest Contentful
+                    Paint (LCP).
+                </p>
+            </section>
+            <section>
+                <h2><code>lazy</code></h2>
+                <p>
+                    When <code>js-profiling-mode</code> is set to <code>"lazy"</code>, it signals to the UA that
+                    profiling will be used conditionally.
+                </p>
+                <p class="note">
+                    UAs can use this hint to defer profiling-related initialization overhead until the first
+                    <a>Profiler</a> is instantiated, avoiding performance costs during critical rendering periods when
+                    profiling is not actively used. However, if initialization occurs during user interaction
+                    processing, it may negatively impact Interaction to Next Paint (INP). This mode is particularly
+                    suitable for documents that conditionally enable profiling based on sampling decisions.
+                </p>
+            </section>
+        </section>
+        <section>
+            <h2><code>js-profiling</code> (deprecated)</h2>
+            <p>
+                This spec also defines a <a
+                    href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#configuration-point">configuration
+                    point</a> with name <code>js-profiling</code>. Its <a
+                    href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#configuration-point-type">type</a>
+                is <code>boolean</code> with <a
+                    href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#configuration-point-default-value">default
+                    value</a> <code>false</code>.
+            </p>
+            <p>
+                When enabled, this policy authorizes scripts to use the JS Self-Profiling API and signals to the UA to
+                perform early initialization of profiling infrastructure (semantically equivalent to
+                <code>js-profiling-mode=eager</code>).
+            </p>
+            <p class="note">
+                The <code>js-profiling</code> boolean configuration point is deprecated in favor of
+                <code>js-profiling-mode</code>. If both are specified, <code>js-profiling-mode</code> takes precedence
+                and <code>js-profiling</code> MUST be ignored. Implementations SHOULD support <code>js-profiling</code>
+                for backwards compatibility but MAY remove support in the future.
+            </p>
+        </section>
+    </section>
+    <section>
+        <h2>Automation</h2>
+        <p>
+            For the purposes of user-agent automation and application testing, this document defines the following
+            [[WebDriver]] <a data-cite="webdriver#dfn-extension-command">extension command</a>.
+        </p>
+        <section>
+            <h2>Force Sample</h2>
+            <table class="data">
+                <thead>
+                    <tr>
+                        <th>HTTP Method</th>
+                        <th>URI Template</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>POST</td>
+                        <td>`/session/{session id}/forcesample`</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p>
+                The <dfn>Force Sample</dfn> <a data-cite="webdriver#dfn-extension-command">extension command</a> forces
+                all [=profiling sessions=] to [=take a sample=] for the purpose of enabling more deterministic testing.
+            </p>
+            <p>
+                The <a data-cite="webdriver#dfn-remote-end-steps">remote end steps</a> are:
+            <ol>
+                <li>Let |sessions:list| be a [=list=] of all [=profiling sessions=] created in the <a
+                        data-cite="webdriver#dfn-current-browsing-context">current browsing context</a>.</li>
+                <li>
+                    For each |session:profiling session| of |sessions|:
+                    <ol>
+                        <li>If the [=state=] of |session| is <code>started</code>, [=take a sample=] with |session|.
+                        </li>
+                    </ol>
+                </li>
+                <li>Return <a data-cite="webdriver#dfn-success">success</a> with data <code>null</code>.</li>
+            </ol>
+            </p>
+        </section>
+    </section>
+    <section id="privacy-security" class="informative">
+        <h2>Privacy and Security</h2>
+        <p>The following sections detail some of the privacy and security choices of the API, illustrating protection
+            strategies against various types of attacks.</p>
+        <section>
+            <h2>Cross-origin script contents</h2>
+            <p>
+                The API avoids exposing contents of cross-origin scripts by requiring all functions included via the
+                <a>take a sample</a> algorithm to be defined in a script served with <dfn
+                    data-cite="HTML5#cors-same-origin">CORS-same-origin</dfn> through the <a>muted errors</a> property.
+                Browser builtins (such as <code>performance.now()</code>) must also only be included when invoked from
+                [= CORS-same-origin =] script.
+            </p>
+            <p>
+                As a result, the API does not expose any new insight into the contents or execution characteristics of
+                cross-origin script, beyond what is already possible through manual instrumentation. UAs are encouraged
+                to verify this holds if they choose to support extremely low <a>sample interval</a> values (e.g. less
+                than one millisecond).
+            </p>
+        </section>
+        <section>
+            <h2>Cross-origin execution</h2>
+            <p>
+                Cross-origin execution contexts should not be observable by the API through the realm check in the
+                <a>take a sample</a> algorithm. Cross-origin <code>iframes</code> and other execution contexts that
+                share an <a>agent</a> with a profiler will therefore not have their execution observable through this
+                API.
+            </p>
+        </section>
+        <section>
+            <h2>Timing attacks</h2>
+            <p>
+                Timing attacks remain a concern for any API that could introduce a new source of high-resolution timing
+                information. Timestamps gathered in traces should be obtained from the same source as [[?HR-Time]]'s
+                <a>current high resolution time</a> to avoid exposing a new vector for side-channel attacks.
+            <p class="note">
+                See [[?HR-Time]]'s discussion on <a href="https://www.w3.org/TR/hr-time-2/#clock-resolution">clock
+                    resolution</a>.
+            </p>
+        </section>
+    </section>
+</body>
+
+</html>

@@ -2292,14 +2292,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
-    // {
-    //     text: "JS Self-Profiling API",
-    //     href: "https://htmlspecs.com/js-self-profiling/",
-    //     src: "https://wicg.github.io/js-self-profiling/",
-    //     "last-modified": "Wed, 18 Feb 2026 22:08:14 GMT",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "JS Self-Profiling API",
+        href: "https://htmlspecs.com/js-self-profiling/",
+        src: "https://wicg.github.io/js-self-profiling/",
+        "last-modified": "Wed, 18 Feb 2026 22:08:14 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
     {
         text: "Timing Entry Names Registry",
         href: "https://htmlspecs.com/timing-entrytypes-registry/",
