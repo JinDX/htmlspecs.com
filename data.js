@@ -1144,6 +1144,14 @@ const links = [
         state: "Draft"
     },
     {
+        text: "Cross-Origin Storage",
+        href: "https://htmlspecs.com/cross-origin-storage/",
+        src: "https://wicg.github.io/cross-origin-storage/",
+        "last-modified": "Thu, 16 Jul 2026 15:21:00 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
+    {
         text: "Subresource Loading with Web Bundles",
         href: "https://htmlspecs.com/webpackage-subresource-loading/",
         src: "https://wicg.github.io/webpackage/subresource-loading.html",
