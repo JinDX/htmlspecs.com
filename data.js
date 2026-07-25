@@ -3030,14 +3030,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
-    // {
-    //     text: "The HTML Permission Elements",
-    //     href: "https://htmlspecs.com/permission-elements/",
-    //     src: "https://wicg.github.io/PEPC/permission-elements.html",
-    //     "last-modified": "Fri, 10 Jul 2026 15:21:00 GMT",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "The HTML Permission Elements",
+        href: "https://htmlspecs.com/permission-elements/",
+        src: "https://wicg.github.io/PEPC/permission-elements.html",
+        "last-modified": "Fri, 10 Jul 2026 15:21:00 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
     {
         text: "Self-Review Questionnaire: Security and Privacy",
         href: "https://htmlspecs.com/security-privacy-questionnaire/",
