@@ -1331,6 +1331,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
+    // {
+    //     text: "Web Smart Card API",
+    //     href: "https://htmlspecs.com/web-smart-card/",
+    //     src: "https://wicg.github.io/web-smart-card/",
+    //     "last-modified": "Tue, 23 Jun 2026 17:32:55 GMT",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
     {
         text: "Web MIDI API",
         href: "https://htmlspecs.com/webmidi/",
@@ -2284,6 +2292,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
+    // {
+    //     text: "JS Self-Profiling API",
+    //     href: "https://htmlspecs.com/js-self-profiling/",
+    //     src: "https://wicg.github.io/js-self-profiling/",
+    //     "last-modified": "Wed, 18 Feb 2026 22:08:14 GMT",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
     {
         text: "Timing Entry Names Registry",
         href: "https://htmlspecs.com/timing-entrytypes-registry/",
@@ -2536,6 +2552,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "Modern Algorithms in the Web Cryptography API",
+    //     href: "https://htmlspecs.com/webcrypto-modern-algos/",
+    //     src: "https://wicg.github.io/webcrypto-modern-algos/",
+    //     "last-modified": "Mon, 29 Jun 2026 12:11:38 GMT",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
     {
         text: "HTML Sanitizer API",
         href: "https://htmlspecs.com/sanitizer-api/",
@@ -3006,6 +3030,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
+    // {
+    //     text: "The HTML Permission Elements",
+    //     href: "https://htmlspecs.com/permission-elements/",
+    //     src: "https://wicg.github.io/PEPC/permission-elements.html",
+    //     "last-modified": "Fri, 10 Jul 2026 15:21:00 GMT",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
     {
         text: "Self-Review Questionnaire: Security and Privacy",
         href: "https://htmlspecs.com/security-privacy-questionnaire/",
