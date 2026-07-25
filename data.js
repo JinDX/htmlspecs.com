@@ -1331,14 +1331,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
-    // {
-    //     text: "Web Smart Card API",
-    //     href: "https://htmlspecs.com/web-smart-card/",
-    //     src: "https://wicg.github.io/web-smart-card/",
-    //     "last-modified": "Tue, 23 Jun 2026 17:32:55 GMT",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "Web Smart Card API",
+        href: "https://htmlspecs.com/web-smart-card/",
+        src: "https://wicg.github.io/web-smart-card/",
+        "last-modified": "Tue, 23 Jun 2026 17:32:55 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
     {
         text: "Web MIDI API",
         href: "https://htmlspecs.com/webmidi/",
