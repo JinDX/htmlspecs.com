@@ -1514,7 +1514,7 @@ const links = [
     {
         text: "Screen Orientation",
         href: "https://htmlspecs.com/screen-orientation/",
-        src: "https://www.w3.org/TR/2025/WD-screen-orientation-20251021/",
+        src: "https://www.w3.org/TR/2026/WD-screen-orientation-20260724/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
