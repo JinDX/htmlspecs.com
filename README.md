@@ -159,6 +159,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Web Locks API](https://htmlspecs.com/web-locks/)（[Source](https://www.w3.org/TR/2025/WD-web-locks-20250924/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Storage Access API](https://htmlspecs.com/storage-access/)（[Source](https://privacycg.github.io/storage-access/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Shared Storage API](https://htmlspecs.com/shared-storage/)（[Source](https://wicg.github.io/shared-storage/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
+- [Cross-Origin Storage](https://htmlspecs.com/cross-origin-storage/)（[Source](https://wicg.github.io/cross-origin-storage/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Subresource Loading with Web Bundles](https://htmlspecs.com/webpackage-subresource-loading/)（[Source](https://wicg.github.io/webpackage/subresource-loading.html) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 
 ### 输入、编辑与剪贴板
