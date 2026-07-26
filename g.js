@@ -1,221 +1,378 @@
 const fs = require('fs');
 const path = require('path');
 
-const langArg = (process.argv[2] || 'c').toLowerCase();
-const langIndexMap = { c: 0, k: 1, j: 2 };
-const langIndex = langIndexMap[langArg] ?? 0;
-const langHostMap = { k: 'https://ko.htmlspecs.com', j: 'https://jp.htmlspecs.com' };
-const ecmaLocaleMap = { c:'c', k: 'k', j: 'j' };
+function normalizeLangArg(value) {
+    const lang = String(value || 'c').trim().toLowerCase();
 
-const dataJsPath = './data.js';
+    const aliases = {
+        c: 'c',
+        cn: 'c',
+        zh: 'c',
+        'zh-cn': 'c',
+        chinese: 'c',
+
+        k: 'k',
+        ko: 'k',
+        kr: 'k',
+        'ko-kr': 'k',
+        korean: 'k',
+
+        j: 'j',
+        ja: 'j',
+        jp: 'j',
+        'ja-jp': 'j',
+        japanese: 'j'
+    };
+
+    return aliases[lang] || 'c';
+}
+
+const langArg = normalizeLangArg(process.argv[2]);
+const langIndexMap = { c: 0, k: 1, j: 2 };
+const langIndex = langIndexMap[langArg];
+const langHostMap = {
+    k: 'https://ko.htmlspecs.com',
+    j: 'https://jp.htmlspecs.com'
+};
+const ecmaLocaleMap = { c: 'c', k: 'k', j: 'j' };
+
+const dataJsPath = path.join(__dirname, 'data.js');
 const dataJsContent = fs.readFileSync(dataJsPath, 'utf8');
 
 function parseHeader() {
-    const headerMatch = dataJsContent.match(/\/\/\#\s*(.+)/);
+    const headerMatch = dataJsContent.match(/\/\/#\s*(.+)/);
     const descMatch = dataJsContent.match(/^(?:\s*\/\/)(?!#)(.*HTML[^\n]*)/m);
-    let titles = headerMatch[1].split('|').map(s => s.trim());
-    let descs = descMatch[1].split('|').map(s => s.trim());
+
+    const titles = (headerMatch?.[1] || 'htmlspecs.com')
+        .split('|')
+        .map(s => s.trim());
+
+    const descs = (descMatch?.[1] || '')
+        .split('|')
+        .map(s => s.trim());
+
     return {
-        title: titles[langIndex] || titles[0],
-        desc: descs[langIndex] || descs[0]
+        title: titles[langIndex] || titles[0] || 'htmlspecs.com',
+        desc: descs[langIndex] || descs[0] || ''
     };
+}
+
+function getArrayBlock(name) {
+    const match = dataJsContent.match(
+        new RegExp(`const\\s+${name}\\s*=\\s*\\[[\\s\\S]*?\\];`)
+    );
+
+    return match?.[0] || '';
 }
 
 function extractCategories(blockText) {
     const regex = /\/\/\s*#+\s*(.+)/g;
-    let raw = [];
-    let m;
-    while ((m = regex.exec(blockText)) !== null) {
-        raw.push(m[1].trim());
-    }
     const seen = new Set();
-    const list = [];
-    raw.forEach(line => {
-        const parts = line.split('|').map(s => s.trim()).filter(Boolean);
-        const names = [parts[0] || '', parts[1] || parts[0] || '', parts[2] || parts[0] || ''];
+    const categories = [];
+    let match;
+
+    while ((match = regex.exec(blockText)) !== null) {
+        const parts = match[1]
+            .trim()
+            .split('|')
+            .map(s => s.trim());
+
+        const names = [
+            parts[0] || '',
+            parts[1] || parts[0] || '',
+            parts[2] || parts[0] || ''
+        ];
+
         const id = names[0];
-        if (!seen.has(id)) {
+
+        if (id && !seen.has(id)) {
             seen.add(id);
-            list.push({ id, names, match: [] });
+            categories.push({ id, names, match: [] });
         }
-    });
-    return list;
+    }
+
+    return categories;
 }
 
-let categories = extractCategories(dataJsContent.match(/const\s+links\s*=\s*\[[\s\S]*?];/)?.[0] || '');
+function extractTextFromLine(line) {
+    const trimmed = line.trimStart();
 
-let currentCatIdx = -1;
-const lines = dataJsContent.split('\n');
-lines.forEach(line => {
-    const catMatch = line.match(/\/\/\s*#+\s*(.+)/);
-    if (catMatch) {
-        const firstSeg = catMatch[1].trim().split('|')[0].trim();
-        currentCatIdx = categories.findIndex(c => c.id === firstSeg);
+    if (trimmed.startsWith('//')) return null;
+
+    const match = line.match(
+        /\btext\s*:\s*((?:"(?:\\.|[^"\\])*")|(?:'(?:\\.|[^'\\])*'))/
+    );
+
+    if (!match) return null;
+
+    try {
+        return new Function(`return ${match[1]};`)();
+    } catch (error) {
+        console.warn(`无法读取标题：${line.trim()}`);
+        return null;
     }
-    const linkMatch = line.match(/text:\s*['"]([^'"]+)['"]/);
-    if (linkMatch && currentCatIdx >= 0) {
-        categories[currentCatIdx].match.push(linkMatch[1].trim());
-    }
-});
+}
+
+function fillCategoryMatches(blockText, categories) {
+    let currentCategoryIndex = -1;
+
+    blockText.split(/\r?\n/).forEach(line => {
+        const categoryMatch = line.match(/\/\/\s*#+\s*(.+)/);
+
+        if (categoryMatch) {
+            const firstSegment = categoryMatch[1]
+                .trim()
+                .split('|')[0]
+                .trim();
+
+            currentCategoryIndex = categories.findIndex(
+                category => category.id === firstSegment
+            );
+
+            return;
+        }
+
+        if (currentCategoryIndex < 0) return;
+
+        const text = extractTextFromLine(line);
+
+        if (typeof text === 'string' && text.trim()) {
+            categories[currentCategoryIndex].match.push(text.trim());
+        }
+    });
+}
 
 function extractArray(name) {
-    const match = dataJsContent.match(new RegExp(`const\\s+${name}\\s*=\\s*(\\[[\\s\\S]*?]);`));
-    if (!match) return [];
+    const block = getArrayBlock(name);
+
+    if (!block) {
+        console.error(`${name} 未找到。`);
+        return [];
+    }
+
+    const arrayMatch = block.match(
+        new RegExp(`const\\s+${name}\\s*=\\s*(\\[[\\s\\S]*\\]);`)
+    );
+
+    if (!arrayMatch) {
+        console.error(`${name} 数组内容未找到。`);
+        return [];
+    }
+
     try {
-        return (new Function('return ' + match[1]))();
-    } catch (e) {
-        console.error(name + ' 解析失败:', e.message);
+        return new Function(`return ${arrayMatch[1]};`)();
+    } catch (error) {
+        console.error(`${name} 解析失败：${error.message}`);
         return [];
     }
 }
-const links = extractArray('links').filter(l => !l.lang || l.lang.includes(langArg));
-const cssLinks = extractArray('cssLinks').filter(l => !l.lang || l.lang.includes(langArg));
-let cssCategories = extractCategories(dataJsContent.match(/const\s+cssLinks\s*=\s*\[[\s\S]*?];/)?.[0] || '');
 
-let currentCssIdx = -1;
-const cssBlockLines = (dataJsContent.match(/const\s+cssLinks\s*=\s*\[[\s\S]*?];/)?.[0] || '').split('\n');
-cssBlockLines.forEach(line => {
-    const catMatch = line.match(/\/\/\s*#+\s*(.+)/);
-    if (catMatch) {
-        const firstSeg = catMatch[1].trim().split('|')[0].trim();
-        currentCssIdx = cssCategories.findIndex(c => c.id === firstSeg);
-    }
-    const linkMatch = line.match(/text:\s*['"]([^'"]+)['"]/);
-    if (linkMatch && currentCssIdx >= 0) {
-        cssCategories[currentCssIdx].match.push(linkMatch[1].trim());
-    }
-});
+function languageMatches(item) {
+    if (!item || typeof item !== 'object') return false;
+    if (!item.lang) return true;
+    return String(item.lang).includes(langArg);
+}
 
-let httpCategories = extractCategories(dataJsContent.match(/const\s+httpLinks\s*=\s*\[[\s\S]*?];/)?.[0] || '');
+function prepareArray(name) {
+    const block = getArrayBlock(name);
+    const categories = extractCategories(block);
+    fillCategoryMatches(block, categories);
 
-let currentHttpIdx = -1;
-const httpBlockLines = (dataJsContent.match(/const\s+httpLinks\s*=\s*\[[\s\S]*?];/)?.[0] || '').split('\n');
-httpBlockLines.forEach(line => {
-    const catMatch = line.match(/\/\/\s*#+\s*(.+)/);
-    if (catMatch) {
-        const firstSeg = catMatch[1].trim().split('|')[0].trim();
-        currentHttpIdx = httpCategories.findIndex(c => c.id === firstSeg);
-    }
-    const linkMatch = line.match(/text:\s*['"]([^'"]+)['"]/);
-    if (linkMatch && currentHttpIdx >= 0) {
-        httpCategories[currentHttpIdx].match.push(linkMatch[1].trim());
-    }
-});
+    const items = extractArray(name).filter(languageMatches);
 
-function classifyLinks(list, cats) {
+    return { items, categories };
+}
+
+function classifyLinks(items, categories) {
     const result = {};
-    cats.forEach(c => result[c.id] = []);
-    list.forEach(item => {
-        if (!item || typeof item !== 'object' || !item.text) return;
-        for (const cat of cats) {
-            if (cat.match.includes(item.text.trim())) {
-                result[cat.id].push(item);
-                return;
+    const categoryByText = new Map();
+
+    categories.forEach(category => {
+        result[category.id] = [];
+
+        category.match.forEach(text => {
+            if (!categoryByText.has(text)) {
+                categoryByText.set(text, category.id);
             }
+        });
+    });
+
+    items.forEach(item => {
+        if (!item || typeof item !== 'object' || !item.text) return;
+
+        const categoryId = categoryByText.get(item.text.trim());
+
+        if (categoryId && result[categoryId]) {
+            result[categoryId].push(item);
         }
     });
+
     return result;
 }
 
 const stateMap = {
-    'LS': ['Living Standard', 'https://img.shields.io/badge/LS-3c790a'],
-    'Draft': ['Draft', 'https://img.shields.io/badge/Draft-ffcc00'],
-    'WD': ['Working Draft', 'https://img.shields.io/badge/WD-e66e33'],
-    'REC': ['Recommendation', 'https://img.shields.io/badge/REC-309c40'],
-    'SPSD': ['Superseded Recommendation', 'https://img.shields.io/badge/SPSD-6c757d'],
-    'CRD': ['Candidate Recommendation Draft', 'https://img.shields.io/badge/CRD-e2a669'],
-    'CR': ['Candidate Recommendation', 'https://img.shields.io/badge/CR-cfd510'],
+    LS: ['Living Standard', 'https://img.shields.io/badge/LS-3c790a'],
+    Draft: ['Draft', 'https://img.shields.io/badge/Draft-ffcc00'],
+    WD: ['Working Draft', 'https://img.shields.io/badge/WD-e66e33'],
+    REC: ['Recommendation', 'https://img.shields.io/badge/REC-309c40'],
+    SPSD: ['Superseded Recommendation', 'https://img.shields.io/badge/SPSD-6c757d'],
+    CRD: ['Candidate Recommendation Draft', 'https://img.shields.io/badge/CRD-e2a669'],
+    CR: ['Candidate Recommendation', 'https://img.shields.io/badge/CR-cfd510'],
     'CG-FINAL': ['Community Group Final Report', 'https://img.shields.io/badge/CG--FINAL-ffcc00'],
-    'DISC': ['Discontinued Draft', 'https://img.shields.io/badge/DISC-ffcc00'],
-    'NOTE': ['Note', 'https://img.shields.io/badge/NOTE-309c40'],
-    'DNOTE': ['Note Draft', 'https://img.shields.io/badge/DNOTE-ffcc00'],
-    'RFC': ['RFC', 'https://img.shields.io/badge/RFC-0057B8'],
-    'STMT': ['Statement', 'https://img.shields.io/badge/STMT-6c757d'],
-    'Guide': ['Guide', 'https://img.shields.io/badge/Guide-6c757d']
+    DISC: ['Discontinued Draft', 'https://img.shields.io/badge/DISC-ffcc00'],
+    NOTE: ['Note', 'https://img.shields.io/badge/NOTE-309c40'],
+    DNOTE: ['Note Draft', 'https://img.shields.io/badge/DNOTE-ffcc00'],
+    RFC: ['RFC', 'https://img.shields.io/badge/RFC-0057B8'],
+    STMT: ['Statement', 'https://img.shields.io/badge/STMT-6c757d'],
+    Guide: ['Guide', 'https://img.shields.io/badge/Guide-6c757d']
 };
 
-function linkToMd(link) {
-    const displayText = link.state === 'Guide' ? 'How to Read' : link.text.trim();
-    const st = link.state === 'Guide' ? null : stateMap[link.state];
-    const badge = st ? ` ![${st[0]}](${st[1]})` : '';
+function linkToMd(link, includeBullet = true) {
+    const displayText = link.state === 'Guide'
+        ? 'How to Read'
+        : link.text.trim();
+
+    const stateInfo = link.state === 'Guide'
+        ? null
+        : stateMap[link.state];
+
+    const badge = stateInfo
+        ? ` ![${stateInfo[0]}](${stateInfo[1]})`
+        : '';
+
+    const bullet = includeBullet ? '- ' : '';
     let displayHref = link.href;
     const baseDomain = 'https://htmlspecs.com';
-    if (langHostMap[langArg] && displayHref.startsWith(baseDomain)) {
-        displayHref = langHostMap[langArg] + displayHref.substring(baseDomain.length);
+
+    if (
+        langHostMap[langArg] &&
+        typeof displayHref === 'string' &&
+        displayHref.startsWith(baseDomain)
+    ) {
+        displayHref =
+            langHostMap[langArg] +
+            displayHref.substring(baseDomain.length);
     }
-    if (link.text === 'ECMAScript® 2027 Language Specification' && ecmaLocaleMap[langArg]) {
+
+    if (
+        link.text === 'ECMAScript® 2027 Language Specification' &&
+        ecmaLocaleMap[langArg]
+    ) {
         displayHref = `https://ecma262.com/${ecmaLocaleMap[langArg]}`;
     }
-    return `- [${displayText}](${displayHref})（[Source](${link.src})${badge}）`;
+
+    return `${bullet}[${displayText}](${displayHref})（[Source](${link.src})${badge}）`;
 }
 
-function generateMd(classified, cssClassified /*, ...existing params...*/ , httpClassified) {
-    const { title, desc } = parseHeader();
-    let md = `# ${title}\n${desc}\n\n`;
-    function renderLinksInline(items) {
-        let lines = [];
-        let i = 0;
-        while (i < items.length) {
-            const l = items[i];
-            if (l.state === 'Guide' && i > 0) {
-                lines[lines.length - 1] = lines[lines.length - 1].replace(/\n$/, '') + '，' + linkToMd(l) + '\n';
-                i++;
-            } else {
-                lines.push(linkToMd(l) + '\n');
-                i++;
-            }
-        }
-        return lines.join('');
-    }
-    for (const cat of categories) {
-        const items = classified[cat.id];
-        if (items && items.length) {
-            const displayName = cat.names[langIndex] || cat.names[0];
-            md += `### ${displayName}\n`;
-            md += renderLinksInline(items);
-            md += '\n';
-        }
-    }
-    for (const cat of cssCategories) {
-        const items = cssClassified[cat.id];
-        if (items && items.length) {
-            const displayName = cat.names[langIndex] || cat.names[0];
-            if (displayName === 'CSS') {
-                md += `## ${displayName}\n`;
-            } else {
-                md += `### ${displayName}\n`;
-            }
-            md += renderLinksInline(items);
-            md += '\n';
-        }
-    }
+function renderLinksInline(items) {
+    const lines = [];
 
-    for (const cat of httpCategories) {
-        const items = httpClassified[cat.id];
-        if (items && items.length) {
-            const displayName = cat.names[langIndex] || cat.names[0];
-            if (displayName === 'HTTP') {
-                md += `## ${displayName}\n`;
-            } else {
-                md += `### ${displayName}\n`;
-            }
-            md += renderLinksInline(items);
-            md += '\n';
+    items.forEach(link => {
+        if (link.state === 'Guide' && lines.length > 0) {
+            lines[lines.length - 1] += `，${linkToMd(link, false)}`;
+        } else {
+            lines.push(linkToMd(link));
         }
-    }
+    });
+
+    return lines.length ? `${lines.join('\n')}\n` : '';
+}
+
+function appendCategories(markdown, categories, classified, topHeading) {
+    let md = markdown;
+
+    categories.forEach(category => {
+        const items = classified[category.id];
+
+        if (!items || items.length === 0) return;
+
+        const displayName = category.names[langIndex] || category.names[0];
+        const heading = displayName === topHeading ? '##' : '###';
+
+        md += `${heading} ${displayName}\n`;
+        md += renderLinksInline(items);
+        md += '\n';
+    });
 
     return md;
 }
 
-const classified = classifyLinks(links, categories);
-const cssSpecs = cssLinks.filter(o => o && typeof o === 'object');
-const cssClassified = classifyLinks(cssSpecs, cssCategories);
+function generateMd(mainData, cssData, httpData) {
+    const { title, desc } = parseHeader();
+    let md = `# ${title}\n${desc}\n\n`;
 
-const httpSpecs = extractArray('httpLinks').filter(l => !l.lang || l.lang.includes(langArg));
-const httpClassified = classifyLinks(httpSpecs, httpCategories);
+    const mainClassified = classifyLinks(
+        mainData.items,
+        mainData.categories
+    );
+    const cssClassified = classifyLinks(
+        cssData.items,
+        cssData.categories
+    );
+    const httpClassified = classifyLinks(
+        httpData.items,
+        httpData.categories
+    );
 
-const mdContent = generateMd(classified, cssClassified, httpClassified);
+    md = appendCategories(
+        md,
+        mainData.categories,
+        mainClassified,
+        null
+    );
 
-const outFile = langArg === 'c' ? 'README.md' : `README.${langArg}.md`;
-fs.writeFileSync(path.join(__dirname, outFile), mdContent, 'utf8');
-console.log(outFile + ' Done!');
+    md = appendCategories(
+        md,
+        cssData.categories,
+        cssClassified,
+        'CSS'
+    );
+
+    md = appendCategories(
+        md,
+        httpData.categories,
+        httpClassified,
+        'HTTP'
+    );
+
+    return md;
+}
+
+const mainData = prepareArray('links');
+const cssData = prepareArray('cssLinks');
+const httpData = prepareArray('httpLinks');
+
+const totalItems =
+    mainData.items.length +
+    cssData.items.length +
+    httpData.items.length;
+
+if (totalItems === 0) {
+    throw new Error(
+        `没有读取到任何规范。当前语言参数：${langArg}。` +
+        '请确认 data.js 与 g.js 位于同一目录。'
+    );
+}
+
+const mdContent = generateMd(mainData, cssData, httpData);
+const renderedItemCount = (mdContent.match(/^- \[/gm) || []).length;
+
+if (renderedItemCount === 0) {
+    throw new Error(
+        '读取到了 data.js，但没有任何规范被分类。' +
+        '请检查分类注释是否仍使用 //## 或 //### 格式。'
+    );
+}
+
+const outFile = langArg === 'c'
+    ? 'README.md'
+    : `README.${langArg}.md`;
+
+const outPath = path.join(__dirname, outFile);
+fs.writeFileSync(outPath, mdContent, 'utf8');
+
+console.log(
+    `${outFile} Done! ` +
+    `(data: ${totalItems}, rendered: ${renderedItemCount}, ` +
+    `${Buffer.byteLength(mdContent, 'utf8')} bytes)`
+);
