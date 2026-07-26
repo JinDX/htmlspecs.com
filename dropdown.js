@@ -4,6 +4,8 @@ const BUTTON_HOVER_COLOR = "#5a6268";
 const LANGUAGES = {
     cn: {
         otherStandards: "其他标准",
+        searchPlaceholder: "搜索规范标题…",
+        noResults: "未找到匹配的规范",
         expandAll: "全部展开",
         collapseAll: "全部折叠",
         githubTitle: "查看 GitHub 源码，加星 ⭐",
@@ -14,6 +16,8 @@ const LANGUAGES = {
     },
     jp: {
         otherStandards: "他の仕様",
+        searchPlaceholder: "仕様タイトルを検索…",
+        noResults: "一致する仕様がありません",
         expandAll: "すべて展開",
         collapseAll: "すべて折りたたむ",
         githubTitle: "GitHub ソースコードを見る、スター ⭐",
@@ -24,6 +28,8 @@ const LANGUAGES = {
     },
     ko: {
         otherStandards: "다른 표준",
+        searchPlaceholder: "표준 제목 검색…",
+        noResults: "일치하는 표준이 없습니다",
         expandAll: "모두 펼치기",
         collapseAll: "모두 접기",
         githubTitle: "GitHub 소스 코드 보기, 별 달아주세요 ⭐",
@@ -193,6 +199,7 @@ function appendLinks(container, items) {
         }
 
         const itemWrapper = document.createElement("div");
+        itemWrapper.className = "standards-link-item";
         itemWrapper.appendChild(linkElement);
         container.appendChild(itemWrapper);
         lastLinkWrapper = itemWrapper;
@@ -308,6 +315,61 @@ function setAllCategories(container, expanded) {
         });
 }
 
+function filterCategories(container, query, noResultsElement) {
+    const normalizedQuery = query.trim().toLocaleLowerCase();
+    const linkItems = container.querySelectorAll(".standards-link-item");
+
+    if (!normalizedQuery) {
+        linkItems.forEach(item => {
+            item.hidden = false;
+        });
+        container.querySelectorAll(".standards-category").forEach(section => {
+            section.hidden = false;
+        });
+        noResultsElement.hidden = true;
+        setAllCategories(container, true);
+        return;
+    }
+
+    linkItems.forEach(item => {
+        const searchableText = Array.from(item.querySelectorAll("a"))
+            .map(link => `${link.textContent} ${link.title}`)
+            .join(" ")
+            .toLocaleLowerCase();
+        item.hidden = !searchableText.includes(normalizedQuery);
+    });
+
+    const sections = Array.from(
+        container.querySelectorAll(".standards-category")
+    ).reverse();
+
+    sections.forEach(section => {
+        const content = Array.from(section.children).find(child =>
+            child.classList.contains("standards-category-content")
+        );
+        if (!content) return;
+
+        const hasVisibleContent = Array.from(content.children).some(child =>
+            (
+                child.classList.contains("standards-link-item") ||
+                child.classList.contains("standards-category")
+            ) &&
+            !child.hidden
+        );
+
+        section.hidden = !hasVisibleContent;
+        if (hasVisibleContent) {
+            content.hidden = false;
+            const button = section.querySelector(
+                ":scope > .standards-category-button"
+            );
+            button?.setAttribute("aria-expanded", "true");
+        }
+    });
+
+    noResultsElement.hidden = !Array.from(linkItems).every(item => item.hidden);
+}
+
 loadDataScript(function () {
     const lang = getCurrentLang();
     const t = LANGUAGES[lang];
@@ -387,6 +449,31 @@ loadDataScript(function () {
     const categoryControls = document.createElement("div");
     categoryControls.className = "standards-category-controls";
 
+    const searchWrapper = document.createElement("label");
+    searchWrapper.className = "standards-search";
+
+    const searchIcon = document.createElement("span");
+    searchIcon.setAttribute("aria-hidden", "true");
+    searchIcon.innerHTML = `
+        <svg viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="6"/>
+            <path d="m16 16 4 4"/>
+        </svg>
+    `;
+
+    const searchInput = document.createElement("input");
+    searchInput.type = "search";
+    searchInput.placeholder = t.searchPlaceholder;
+    searchInput.setAttribute("aria-label", t.searchPlaceholder);
+
+    searchWrapper.appendChild(searchIcon);
+    searchWrapper.appendChild(searchInput);
+
+    const noResults = document.createElement("p");
+    noResults.className = "standards-no-results";
+    noResults.textContent = t.noResults;
+    noResults.hidden = true;
+
     const expandAllButton = document.createElement("button");
     expandAllButton.type = "button";
     expandAllButton.className = "standards-control-button";
@@ -415,9 +502,11 @@ loadDataScript(function () {
         setAllCategories(dropdownContent, false);
     };
 
+    categoryControls.appendChild(searchWrapper);
     categoryControls.appendChild(expandAllButton);
     categoryControls.appendChild(collapseAllButton);
     dropdownContent.appendChild(categoryControls);
+    dropdownContent.appendChild(noResults);
 
     if (visibleMainGroups.length > 0) {
         appendCategory(dropdownContent, visibleMainGroups[0], lang);
@@ -436,6 +525,10 @@ loadDataScript(function () {
         appendCategory(dropdownContent, group, lang);
     });
 
+    searchInput.oninput = function () {
+        filterCategories(dropdownContent, searchInput.value, noResults);
+    };
+
     window.onclick = function (event) {
         if (!event.target.matches('#dropdownButton') && !dropdownContent.contains(event.target)) {
             dropdownContent.style.display = "none";
@@ -449,17 +542,62 @@ loadDataScript(function () {
         }
         .standards-category-controls {
             position: sticky;
-            top: 8px;
+            top: 0;
             display: flex;
-            width: max-content;
-            margin: 8px 10px 8px auto;
-            padding: 3px;
-            border: 1px solid #c8cdd2;
-            border-radius: 999px;
+            align-items: center;
+            gap: 4px;
+            margin: 0;
+            padding: 8px 10px;
+            border-bottom: 1px solid #ddd;
             background: rgba(255, 255, 255, 0.94);
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
             backdrop-filter: blur(6px);
             z-index: 3;
+        }
+        .standards-search {
+            display: flex;
+            align-items: center;
+            flex: 1 1 auto;
+            min-width: 0;
+            height: 34px;
+            padding: 0 10px;
+            border: 1px solid #c8cdd2;
+            border-radius: 999px;
+            background: white;
+        }
+        .standards-search:focus-within {
+            border-color: #007bff;
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.16);
+        }
+        .standards-search span {
+            display: grid;
+            flex: 0 0 auto;
+            place-items: center;
+            color: #6c757d;
+        }
+        .standards-search svg {
+            width: 17px;
+            height: 17px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+        }
+        .standards-search input {
+            width: 100%;
+            min-width: 0;
+            padding: 0 0 0 7px;
+            border: 0;
+            outline: 0;
+            background: transparent;
+            color: #333;
+            font: inherit;
+            font-size: 13px;
+        }
+        .standards-no-results {
+            margin: 30px 15px;
+            color: #6c757d;
+            text-align: center;
         }
         .standards-control-button {
             display: grid;
