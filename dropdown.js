@@ -607,12 +607,14 @@ loadDataScript(function () {
             padding: 0;
             border: 0;
             border-radius: 50%;
-            background: transparent;
+            background: transparent !important;
+            box-shadow: none;
             color: #333;
             cursor: pointer;
         }
         .standards-control-button:hover {
-            background: #e9ecef;
+            background: transparent !important;
+            color: #007bff;
         }
         .standards-control-button:focus-visible {
             outline: 2px solid #007bff;
