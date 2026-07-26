@@ -4,6 +4,8 @@ const BUTTON_HOVER_COLOR = "#5a6268";
 const LANGUAGES = {
     cn: {
         otherStandards: "其他标准",
+        expandAll: "全部展开",
+        collapseAll: "全部折叠",
         githubTitle: "查看 GitHub 源码，加星 ⭐",
         cssRelated: "CSS 相关",
         httpRelated: "HTTP",
@@ -12,6 +14,8 @@ const LANGUAGES = {
     },
     jp: {
         otherStandards: "他の仕様",
+        expandAll: "すべて展開",
+        collapseAll: "すべて折りたたむ",
         githubTitle: "GitHub ソースコードを見る、スター ⭐",
         cssRelated: "CSS 関連",
         httpRelated: "HTTP",
@@ -20,29 +24,14 @@ const LANGUAGES = {
     },
     ko: {
         otherStandards: "다른 표준",
+        expandAll: "모두 펼치기",
+        collapseAll: "모두 접기",
         githubTitle: "GitHub 소스 코드 보기, 별 달아주세요 ⭐",
         cssRelated: "CSS 관련",
         httpRelated: "HTTP",
         marker: "【주의】",
         disclaimer: "이 번역은 자원봉사자의 번역본입니다. 번역에 오류가 있을 수 있습니다. 참고용으로만 사용하시고, 원본은 W3C 웹사이트의 영어 버전(<a href='{src}'>{text}</a>)을 참고하세요."
     }
-};
-
-const stateMap = {
-    'LS': ['Living Standard', 'https://img.shields.io/badge/LS-3c790a'],
-    'Draft': ['Draft', 'https://img.shields.io/badge/Draft-ffcc00'],
-    'WD': ['Working Draft', 'https://img.shields.io/badge/WD-e66e33'],
-    'REC': ['Recommendation', 'https://img.shields.io/badge/REC-309c40'],
-    'SPSD': ['Superseded Recommendation', 'https://img.shields.io/badge/SPSD-6c757d'],
-    'CRD': ['Candidate Recommendation Draft', 'https://img.shields.io/badge/CRD-e2a669'],
-    'CR': ['Candidate Recommendation', 'https://img.shields.io/badge/CR-cfd510'],
-    'CG-FINAL': ['Community Group Final Report', 'https://img.shields.io/badge/CG--FINAL-ffcc00'],
-    'DISC': ['Discontinued Draft', 'https://img.shields.io/badge/DISC-ffcc00'],
-    'NOTE': ['Note', 'https://img.shields.io/badge/NOTE-309c40'],
-    'DNOTE': ['Note Draft', 'https://img.shields.io/badge/DNOTE-ffcc00'],
-    'RFC': ['RFC', 'https://img.shields.io/badge/RFC-0057B8'],
-    'STMT': ['Statement', 'https://img.shields.io/badge/STMT-6c757d'],
-    'Guide': ['Guide', 'https://img.shields.io/badge/Guide-6c757d']
 };
 
 function getCurrentLang() {
@@ -158,23 +147,174 @@ function setButtonStyle(button) {
     `;
 }
 
+function filterGroupsByLanguage(groups, lang) {
+    const languageCode = lang === "jp" ? "j" : lang === "ko" ? "k" : null;
+
+    return groups
+        .map(group => ({
+            names: group.names,
+            items: languageCode
+                ? group.items.filter(link =>
+                    !link.lang || link.lang.includes(languageCode)
+                )
+                : group.items
+        }))
+        .filter(group => group.items.length > 0);
+}
+
+function getGroupName(group, lang) {
+    const languageIndex = lang === "ko" ? 1 : lang === "jp" ? 2 : 0;
+    return group.names[languageIndex] || group.names[0] || "";
+}
+
+function appendLinks(container, items) {
+    let lastLinkWrapper = null;
+
+    items.forEach(function (link) {
+        const linkElement = createLink(link.href, link.text, link.state);
+
+        if (link.state === "Guide" && lastLinkWrapper) {
+            const previousLink = lastLinkWrapper.querySelector("a");
+            if (previousLink) {
+                previousLink.style.width = "auto";
+                previousLink.style.flex = "1 1 calc(100% - 130px)";
+                previousLink.style.minWidth = "0";
+            }
+
+            lastLinkWrapper.style.display = "flex";
+            lastLinkWrapper.style.gap = "10px";
+            lastLinkWrapper.style.flexWrap = "nowrap";
+            linkElement.style.width = "auto";
+            linkElement.style.flex = "0 0 120px";
+            linkElement.style.minWidth = "0";
+            linkElement.style.justifyContent = "center";
+            lastLinkWrapper.appendChild(linkElement);
+            return;
+        }
+
+        const itemWrapper = document.createElement("div");
+        itemWrapper.appendChild(linkElement);
+        container.appendChild(itemWrapper);
+        lastLinkWrapper = itemWrapper;
+    });
+}
+
+function appendCategory(container, group, lang, level = 1) {
+    const section = document.createElement("section");
+    section.className = `standards-category standards-category-level-${level}`;
+
+    const categoryButton = document.createElement("button");
+    categoryButton.type = "button";
+    categoryButton.className = "standards-category-button";
+    categoryButton.setAttribute("aria-expanded", "true");
+
+    const triangle = document.createElement("span");
+    triangle.className = "standards-category-triangle";
+    triangle.setAttribute("aria-hidden", "true");
+
+    const title = document.createElement("span");
+    title.textContent = getGroupName(group, lang);
+
+    const count = document.createElement("span");
+    count.className = "standards-category-count";
+    count.textContent = group.items.length;
+
+    categoryButton.appendChild(triangle);
+    categoryButton.appendChild(title);
+    categoryButton.appendChild(count);
+
+    const categoryContent = document.createElement("div");
+    categoryContent.className = "standards-category-content";
+    categoryContent.hidden = false;
+    appendLinks(categoryContent, group.items);
+
+    categoryButton.onclick = function () {
+        const willOpen = categoryContent.hidden;
+        categoryContent.hidden = !willOpen;
+        categoryButton.setAttribute("aria-expanded", String(willOpen));
+    };
+
+    section.appendChild(categoryButton);
+    section.appendChild(categoryContent);
+    container.appendChild(section);
+}
+
+function appendParentCategory(container, groups, lang) {
+    if (!groups.length) return;
+
+    const totalItems = groups.reduce(
+        (total, group) => total + group.items.length,
+        0
+    );
+    const parent = {
+        names: groups[0].names,
+        items: []
+    };
+    const section = document.createElement("section");
+    section.className = "standards-category standards-parent-category";
+
+    const categoryButton = document.createElement("button");
+    categoryButton.type = "button";
+    categoryButton.className = "standards-category-button";
+    categoryButton.setAttribute("aria-expanded", "true");
+
+    const triangle = document.createElement("span");
+    triangle.className = "standards-category-triangle";
+    triangle.setAttribute("aria-hidden", "true");
+
+    const title = document.createElement("span");
+    title.textContent = getGroupName(parent, lang);
+
+    const count = document.createElement("span");
+    count.className = "standards-category-count";
+    count.textContent = totalItems;
+
+    categoryButton.appendChild(triangle);
+    categoryButton.appendChild(title);
+    categoryButton.appendChild(count);
+
+    const categoryContent = document.createElement("div");
+    categoryContent.className =
+        "standards-category-content standards-parent-content";
+    categoryContent.hidden = false;
+
+    appendLinks(categoryContent, groups[0].items);
+    groups.slice(1).forEach(function (group) {
+        appendCategory(categoryContent, group, lang, 2);
+    });
+
+    categoryButton.onclick = function () {
+        const willOpen = categoryContent.hidden;
+        categoryContent.hidden = !willOpen;
+        categoryButton.setAttribute("aria-expanded", String(willOpen));
+    };
+
+    section.appendChild(categoryButton);
+    section.appendChild(categoryContent);
+    container.appendChild(section);
+}
+
+function setAllCategories(container, expanded) {
+    container
+        .querySelectorAll(".standards-category-button")
+        .forEach(button => {
+            button.setAttribute("aria-expanded", String(expanded));
+        });
+
+    container
+        .querySelectorAll(".standards-category-content")
+        .forEach(content => {
+            content.hidden = !expanded;
+        });
+}
+
 loadDataScript(function () {
     const lang = getCurrentLang();
     const t = LANGUAGES[lang];
 
-    var filteredLinks = links;
-    var filteredCssLinks = cssLinks;
-    var filteredHttpLinks = httpLinks;
-
-    if (lang === "jp") {
-        filteredLinks = links.filter(link => link.lang.includes('j'));
-        filteredCssLinks = cssLinks.filter(link => link.lang.includes('j'));
-        filteredHttpLinks = httpLinks.filter(link => link.lang.includes('j'));
-    } else if (lang === "ko") {
-        filteredLinks = links.filter(link => link.lang.includes('k'));
-        filteredCssLinks = cssLinks.filter(link => link.lang.includes('k'));
-        filteredHttpLinks = httpLinks.filter(link => link.lang.includes('k'));
-    }
+    const visibleMainGroups = filterGroupsByLanguage(linkGroups, lang);
+    const visibleCssGroups = filterGroupsByLanguage(cssLinkGroups, lang);
+    const visibleHttpGroups = filterGroupsByLanguage(httpLinkGroups, lang);
 
     var githubRepo;
     if (window.location.hostname === 'ecma262.com') {
@@ -244,146 +384,56 @@ loadDataScript(function () {
     `;
     document.body.appendChild(dropdownContent);
 
-    let lastLinkWrapper = null;
-    filteredLinks.forEach(function (link) {
-        var linkElement = createLink(link.href, link.text, link.state);
+    const categoryControls = document.createElement("div");
+    categoryControls.className = "standards-category-controls";
 
-        if (link.state === "Guide" && lastLinkWrapper) {
-            const previousLink = lastLinkWrapper.querySelector('a');
-            if (previousLink) {
-                previousLink.style.width = "auto";
-                previousLink.style.flex = "1 1 calc(100% - 130px)";
-                previousLink.style.minWidth = "0";
-            }
-            lastLinkWrapper.style.display = "flex";
-            lastLinkWrapper.style.gap = "10px";
-            lastLinkWrapper.style.flexWrap = "nowrap";
-            linkElement.style.width = "auto";
-            linkElement.style.flex = "0 0 120px";
-            linkElement.style.minWidth = "0";
-            linkElement.style.justifyContent = "center";
-            lastLinkWrapper.appendChild(linkElement);
-            return;
-        }
+    const expandAllButton = document.createElement("button");
+    expandAllButton.type = "button";
+    expandAllButton.className = "standards-control-button";
+    expandAllButton.setAttribute("aria-label", t.expandAll);
+    expandAllButton.title = t.expandAll;
+    expandAllButton.innerHTML = `
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M7 10l5-5 5 5M7 14l5 5 5-5"/>
+        </svg>
+    `;
+    expandAllButton.onclick = function () {
+        setAllCategories(dropdownContent, true);
+    };
 
-        var itemWrapper = document.createElement("div");
-        itemWrapper.appendChild(linkElement);
-        dropdownContent.appendChild(itemWrapper);
-        lastLinkWrapper = itemWrapper;
+    const collapseAllButton = document.createElement("button");
+    collapseAllButton.type = "button";
+    collapseAllButton.className = "standards-control-button";
+    collapseAllButton.setAttribute("aria-label", t.collapseAll);
+    collapseAllButton.title = t.collapseAll;
+    collapseAllButton.innerHTML = `
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M7 5l5 5 5-5M7 19l5-5 5 5"/>
+        </svg>
+    `;
+    collapseAllButton.onclick = function () {
+        setAllCategories(dropdownContent, false);
+    };
 
-        if (["ECMAScript", "ECMA-262", "ECMAScript® 2027 Language Specification"].includes(link.text)) {
-            var cssTitle = createLink("#", t.cssRelated);
-            cssTitle.style.cursor = "pointer";
-            cssTitle.style.padding = "10px 15px";
-            var triangle = document.createElement("span");
-            triangle.style.cssText = `
-                border-top: 6px solid transparent;
-                border-bottom: 6px solid transparent;
-                border-left: 6px solid #333;
-                display: inline-block;
-                margin-right: 10px;
-                transition: transform 0.3s ease;
-            `;
-            cssTitle.prepend(triangle);
-            var cssContent = document.createElement("div");
-            cssContent.style.display = "none";
-            cssContent.style.padding = "0 15px";
+    categoryControls.appendChild(expandAllButton);
+    categoryControls.appendChild(collapseAllButton);
+    dropdownContent.appendChild(categoryControls);
 
-            let lastCssLinkWrapper = null;
-
-            filteredCssLinks.forEach(function (link) {
-                var cssLinkElement = createLink(link.href, link.text, link.state);
-
-                if (link.state === "Guide" && lastCssLinkWrapper) {
-                    const previousCssLink = lastCssLinkWrapper.querySelector('a');
-                    if (previousCssLink) {
-                        previousCssLink.style.width = "auto";
-                        previousCssLink.style.flex = "1 1 calc(100% - 130px)";
-                        previousCssLink.style.minWidth = "0";
-                    }
-                    lastCssLinkWrapper.style.display = "flex";
-                    lastCssLinkWrapper.style.gap = "10px";
-                    lastCssLinkWrapper.style.flexWrap = "nowrap";
-                    cssLinkElement.style.width = "auto";
-                    cssLinkElement.style.flex = "0 0 120px";
-                    cssLinkElement.style.minWidth = "0";
-                    cssLinkElement.style.justifyContent = "center";
-                    lastCssLinkWrapper.appendChild(cssLinkElement);
-                    return;
-                }
-
-                var cssItemWrapper = document.createElement("div");
-                cssItemWrapper.appendChild(cssLinkElement);
-                cssContent.appendChild(cssItemWrapper);
-                lastCssLinkWrapper = cssItemWrapper;
-            });
-
-            cssTitle.onclick = function (event) {
-                event.preventDefault();
-                var isCollapsed = cssContent.style.display === "none";
-                cssContent.style.display = isCollapsed ? "block" : "none";
-                triangle.style.transform = isCollapsed ? "rotate(90deg)" : "rotate(0deg)";
-            };
-
-            dropdownContent.appendChild(cssTitle);
-            dropdownContent.appendChild(cssContent);
-
-            var httpTitle = createLink("#", t.httpRelated);
-            httpTitle.style.cursor = "pointer";
-            httpTitle.style.padding = "10px 15px";
-            var triangle2 = document.createElement("span");
-            triangle2.style.cssText = `
-                border-top: 6px solid transparent;
-                border-bottom: 6px solid transparent;
-                border-left: 6px solid #333;
-                display: inline-block;
-                margin-right: 10px;
-                transition: transform 0.3s ease;
-            `;
-            httpTitle.prepend(triangle2);
-            var httpContent = document.createElement("div");
-            httpContent.style.display = "none";
-            httpContent.style.padding = "0 15px";
-
-            let lastHttpLinkWrapper = null;
-
-            filteredHttpLinks.forEach(function (link) {
-                var httpLinkElement = createLink(link.href, link.text, link.state);
-
-                if (link.state === "Guide" && lastHttpLinkWrapper) {
-                    const previousHttpLink = lastHttpLinkWrapper.querySelector('a');
-                    if (previousHttpLink) {
-                        previousHttpLink.style.width = "auto";
-                        previousHttpLink.style.flex = "1 1 calc(100% - 130px)";
-                        previousHttpLink.style.minWidth = "0";
-                    }
-                    lastHttpLinkWrapper.style.display = "flex";
-                    lastHttpLinkWrapper.style.gap = "10px";
-                    lastHttpLinkWrapper.style.flexWrap = "nowrap";
-                    httpLinkElement.style.width = "auto";
-                    httpLinkElement.style.flex = "0 0 120px";
-                    httpLinkElement.style.minWidth = "0";
-                    httpLinkElement.style.justifyContent = "center";
-                    lastHttpLinkWrapper.appendChild(httpLinkElement);
-                    return;
-                }
-
-                var httpItemWrapper = document.createElement("div");
-                httpItemWrapper.appendChild(httpLinkElement);
-                httpContent.appendChild(httpItemWrapper);
-                lastHttpLinkWrapper = httpItemWrapper;
-            });
-
-            httpTitle.onclick = function (event) {
-                event.preventDefault();
-                var isCollapsed = httpContent.style.display === "none";
-                httpContent.style.display = isCollapsed ? "block" : "none";
-                triangle2.style.transform = isCollapsed ? "rotate(90deg)" : "rotate(0deg)";
-            };
-
-            dropdownContent.appendChild(httpTitle);
-            dropdownContent.appendChild(httpContent);
-        }
+    if (visibleMainGroups.length > 0) {
+        appendCategory(dropdownContent, visibleMainGroups[0], lang);
+    }
+    appendParentCategory(
+        dropdownContent,
+        visibleCssGroups,
+        lang
+    );
+    appendParentCategory(
+        dropdownContent,
+        visibleHttpGroups,
+        lang
+    );
+    visibleMainGroups.slice(1).forEach(function (group) {
+        appendCategory(dropdownContent, group, lang);
     });
 
     window.onclick = function (event) {
@@ -394,6 +444,109 @@ loadDataScript(function () {
 
     var style = document.createElement('style');
     style.innerHTML = `
+        .standards-category {
+            border-bottom: 1px solid #eee;
+        }
+        .standards-category-controls {
+            position: sticky;
+            top: 8px;
+            display: flex;
+            width: max-content;
+            margin: 8px 10px 8px auto;
+            padding: 3px;
+            border: 1px solid #c8cdd2;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.94);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+            backdrop-filter: blur(6px);
+            z-index: 3;
+        }
+        .standards-control-button {
+            display: grid;
+            place-items: center;
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            border: 0;
+            border-radius: 50%;
+            background: transparent;
+            color: #333;
+            cursor: pointer;
+        }
+        .standards-control-button:hover {
+            background: #e9ecef;
+        }
+        .standards-control-button:focus-visible {
+            outline: 2px solid #007bff;
+            outline-offset: 1px;
+        }
+        .standards-control-button svg {
+            width: 20px;
+            height: 20px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .standards-category-button {
+            display: grid;
+            grid-template-columns: 12px minmax(0, 1fr) auto;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            padding: 12px 15px;
+            border: 0;
+            background: #f8f9fa;
+            color: #333;
+            font: inherit;
+            font-weight: 600;
+            text-align: left;
+            cursor: pointer;
+        }
+        .standards-category-button:hover {
+            background: #eef3f7;
+        }
+        .standards-category-triangle {
+            width: 0;
+            height: 0;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-left: 6px solid currentColor;
+            transition: transform 0.2s ease;
+        }
+        .standards-category-button[aria-expanded="true"]
+            .standards-category-triangle {
+            transform: rotate(90deg);
+        }
+        .standards-category-count {
+            min-width: 1.5em;
+            padding: 1px 6px;
+            border-radius: 999px;
+            background: #e2e6ea;
+            color: #555;
+            font-size: 12px;
+            font-weight: 400;
+            text-align: center;
+        }
+        .standards-category-content {
+            padding: 0 10px 6px 22px;
+        }
+        .standards-parent-category > .standards-category-button {
+            background: #f8f9fa;
+            font-size: 1.05em;
+        }
+        .standards-parent-content {
+            padding: 0 0 6px 12px;
+        }
+        .standards-category-level-2 {
+            margin-left: 10px;
+            border-left: 2px solid #e2e6ea;
+        }
+        .standards-category-level-2 > .standards-category-button {
+            background: #fff;
+            font-weight: 500;
+        }
         @media (max-width: 600px) {
             #dropdownContent { width: 100%; left: 0; right: 0; }
         }
