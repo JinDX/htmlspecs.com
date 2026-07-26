@@ -2168,14 +2168,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
-    // {
-    //     text: "WebXR Mesh Detection Module",
-    //     href: "https://htmlspecs.com/webxr-mesh-detection/",
-    //     src: "https://immersive-web.github.io/real-world-meshing/",
-    //     "last-modified": "Mon, 02 Feb 2026 16:49:38 GMT",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "WebXR Mesh Detection Module",
+        href: "https://htmlspecs.com/webxr-mesh-detection/",
+        src: "https://immersive-web.github.io/real-world-meshing/",
+        "last-modified": "Mon, 02 Feb 2026 16:49:38 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
     {
         text: "WebXR DOM Overlays Module",
         href: "https://htmlspecs.com/webxr-dom-overlays-1/",
