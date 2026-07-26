@@ -1135,6 +1135,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
+    // {
+    //     text: "requestStorageAccessFor API",
+    //     href: "https://htmlspecs.com/request-storage-access-for/",
+    //     src: "https://privacycg.github.io/requestStorageAccessFor/",
+    //     "last-modified": "Fri, 17 Oct 2025 14:41:20 GMT",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
     {
         text: "Shared Storage API",
         href: "https://htmlspecs.com/shared-storage/",
@@ -2152,6 +2160,22 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "WebXR Plane Detection Module",
+    //     href: "https://htmlspecs.com/webxr-plane-detection/",
+    //     src: "https://immersive-web.github.io/plane-detection/",
+    //     "last-modified": "Mon, 30 Mar 2026 18:03:00 GMT",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
+    // {
+    //     text: "WebXR Mesh Detection Module",
+    //     href: "https://htmlspecs.com/webxr-mesh-detection/",
+    //     src: "https://immersive-web.github.io/real-world-meshing/",
+    //     "last-modified": "Mon, 02 Feb 2026 16:49:38 GMT",
+    //     lang: "cjk",
+    //     state: "Draft"
+    // },
     {
         text: "WebXR DOM Overlays Module",
         href: "https://htmlspecs.com/webxr-dom-overlays-1/",
@@ -3785,6 +3809,14 @@ const cssLinks = [
         lang: "cjk",
         state: "WD"
     },
+    // {
+    //     text: "Incremental Font Transfer",
+    //     href: "https://htmlspecs.com/ift/",
+    //     src: "https://www.w3.org/TR/2025/CRD-IFT-20251118/",
+    //     "last-modified": "-",
+    //     lang: "cjk",
+    //     state: "CRD"
+    // },
     {
         text: "CSS Font Loading Module Level 3",
         href: "https://htmlspecs.com/css/css-font-loading/",
