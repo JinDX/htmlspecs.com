@@ -625,7 +625,7 @@
             }
         }
     </style>
-    <meta name="revision" content="485c780a90e542c9cbb81b4de6809b2306dc0984">
+    <meta name="revision" content="e2259cda458411d9c03c1a82d7acf0d221ab4307">
     <meta name="description" content="This document defines SHACL Rules.">
     <link rel="canonical" href="https://www.w3.org/TR/shacl12-rules/">
     <style>
@@ -915,12 +915,12 @@
     "informative-dfn": false,
     "no-unused-dfns": false
   },
-  "gitRevision": "485c780a90e542c9cbb81b4de6809b2306dc0984",
-  "publishDate": "2026-07-22",
+  "gitRevision": "e2259cda458411d9c03c1a82d7acf0d221ab4307",
+  "publishDate": "2026-07-25",
   "previousMaturity": "WD",
-  "previousPublishDate": "2026-07-21",
-  "publishISODate": "2026-07-22T00:00:00.000Z",
-  "generatedSubtitle": "W3C Working Draft 22 July 2026"
+  "previousPublishDate": "2026-07-25",
+  "publishISODate": "2026-07-25T00:00:00.000Z",
+  "generatedSubtitle": "W3C Working Draft 25 July 2026"
 }</script>
     <link rel="stylesheet" href="https://www.w3.org/StyleSheets/TR/2021/W3C-WD">
     <link rel="stylesheet" media="(prefers-color-scheme: dark)" href="https://www.w3.org/StyleSheets/TR/2021/dark.css">
@@ -933,14 +933,14 @@
             </a></p>
         <h1 id="title" class="title">SHACL 1.2 Rules</h1>
         <p id="w3c-state"><a href="https://www.w3.org/standards/types#WD">W3C Working Draft</a> <time
-                class="dt-published" datetime="2026-07-22">22 July 2026</time></p>
+                class="dt-published" datetime="2026-07-25">25 July 2026</time></p>
         <details open="">
             <summary>More details about this document</summary>
             <dl>
                 <dt>This version:</dt>
                 <dd>
                     <a class="u-url"
-                        href="https://www.w3.org/TR/2026/WD-shacl12-rules-20260722/">https://www.w3.org/TR/2026/WD-shacl12-rules-20260722/</a>
+                        href="https://www.w3.org/TR/2026/WD-shacl12-rules-20260725/">https://www.w3.org/TR/2026/WD-shacl12-rules-20260725/</a>
                 </dd>
                 <dt>Latest published version:</dt>
                 <dd>
@@ -1187,6 +1187,17 @@
                             a Rule</a></li>
                     <li class="tocline"><a class="tocxref" href="#eval-rule-set"><bdi class="secno">6.5 </bdi>Evaluation
                             of a Rule Set</a></li>
+                    <li class="tocline"><a class="tocxref" href="#eval-worked-example"><bdi class="secno">6.6
+                            </bdi>Worked Example</a>
+                        <ol class="toc">
+                            <li class="tocline"><a class="tocxref" href="#worked-example-dependencies"><bdi
+                                        class="secno">6.6.1 </bdi>Determining the Dependencies</a></li>
+                            <li class="tocline"><a class="tocxref" href="#worked-example-stratification"><bdi
+                                        class="secno">6.6.2 </bdi>Calculating the Stratification</a></li>
+                            <li class="tocline"><a class="tocxref" href="#worked-example-evaluation"><bdi
+                                        class="secno">6.6.3 </bdi>Evaluating the Strata</a></li>
+                        </ol>
+                    </li>
                 </ol>
             </li>
             <li class="tocline"><a class="tocxref" href="#shapes-rules-grammar"><bdi class="secno">7. </bdi>Shape Rules
@@ -1577,6 +1588,13 @@
             </div>
 
 
+            <p>
+                The examples in this section describe software components and
+                their dependencies: a frontend calls an application server, and
+                the application server queries a database that has a known
+                vulnerability.
+            </p>
+
             <p>In this first example, we have the following data graph and rule set:</p>
 
             <aside class="example" id="example-basic-example">
@@ -1584,41 +1602,40 @@
                     <a class="self-link" href="#example-basic-example">Example<bdi> 1</bdi></a><span
                         class="example-title">: Basic Example</span>
                 </div>
-                <pre class="block ex-data" aria-busy="false"><code class="hljs">:A :fatherOf :X .
-:B :motherOf :X .
-:C :motherOf :A .</code></pre>
-                <pre class="block ex-rules" aria-busy="false"><code class="hljs">RULE { ?x :childOf ?y } WHERE { ?y :fatherOf ?x }
-RULE { ?x :childOf ?y } WHERE { ?y :motherOf ?x }</code></pre>
-                <pre class="block ex-inferred" aria-busy="false"><code class="hljs">:X :childOf :A .
-:X :childOf :B .
-:A :childOf :C .</code></pre>
+                <pre class="block ex-data" aria-busy="false"><code class="hljs">:frontend :callsService :app .
+:app      :queriesDatabase :db .
+:db       :hasVulnerability :vuln1 .</code></pre>
+                <pre class="block ex-rules" aria-busy="false"><code class="hljs">RULE { ?x :dependsOn ?y } WHERE { ?x :callsService ?y }
+RULE { ?x :dependsOn ?y } WHERE { ?x :queriesDatabase ?y }</code></pre>
+                <pre class="block ex-inferred" aria-busy="false"><code class="hljs">:frontend :dependsOn :app .
+:app      :dependsOn :db .</code></pre>
             </aside>
 
-            <p>The above rules, applied to the data, will conclude
-                that: <code>:X</code> is the <code>:childOf</code> <code>:A</code> and <code>:B</code>:
+            <p>The above rules, applied to the data, will conclude that
+                <code>:frontend</code> depends on <code>:app</code>, and that <code>:app</code> depends on
+                <code>:db</code>, whatever the kind of dependency.
             </p>
 
             <p>
-                We can then derive <code>:descendedFrom</code> relationships by adding a rule that depends
-                on <code>:childOf</code> triples produced by the other rules:
+                We can then derive <code>:exposedTo</code> relationships by adding a rule that depends
+                on <code>:dependsOn</code> triples produced by the other rules (see also <a href="#rule-dependency"
+                    class="sectionRef sec-ref"><bdi class="secno">4.3 </bdi>Rule Dependency</a>) below:
             </p>
 
-            <aside class="example" id="example-2">
+            <aside class="example" id="example-depending-on-inferred-triples">
                 <div class="marker">
-                    <a class="self-link" href="#example-2">Example<bdi> 2</bdi></a>
+                    <a class="self-link" href="#example-depending-on-inferred-triples">Example<bdi> 2</bdi></a><span
+                        class="example-title">: Depending on inferred triples</span>
                 </div>
-                <pre class="block ex-data" aria-busy="false"><code class="hljs">:A :fatherOf :X .
-:B :motherOf :X .
-:C :motherOf :A .</code></pre>
-                <pre class="block ex-rules" aria-busy="false"><code class="hljs">RULE { ?x :childOf ?y } WHERE { ?y :fatherOf ?x }
-RULE { ?x :childOf ?y } WHERE { ?y :motherOf ?x }
-RULE { ?x :descendedFrom ?y } WHERE { ?x :childOf ?y }</code></pre>
-                <pre class="block ex-inferred" aria-busy="false"><code class="hljs">:A :descendedFrom :C .
-:X :descendedFrom :B .
-:X :descendedFrom :A .
-:X :childOf :B .
-:X :childOf :A .
-:A :childOf :C .</code></pre>
+                <pre class="block ex-data" aria-busy="false"><code class="hljs">:frontend :callsService :app .
+:app      :queriesDatabase :db .
+:db       :hasVulnerability :vuln1 .</code></pre>
+                <pre class="block ex-rules" aria-busy="false"><code class="hljs">RULE { ?x :dependsOn ?y } WHERE { ?x :callsService ?y }
+RULE { ?x :dependsOn ?y } WHERE { ?x :queriesDatabase ?y }
+RULE { ?x :exposedTo ?v } WHERE { ?x :dependsOn ?y . ?y :hasVulnerability ?v }</code></pre>
+                <pre class="block ex-inferred" aria-busy="false"><code class="hljs">:app      :exposedTo :vuln1 .
+:frontend :dependsOn :app .
+:app      :dependsOn :db .</code></pre>
             </aside>
 
         </section>
@@ -1629,8 +1646,13 @@ RULE { ?x :descendedFrom ?y } WHERE { ?x :childOf ?y }</code></pre>
             </div>
 
             <p>
-                We can add a rule that depends on <code>:descendedFrom</code> triples
-                to infer that <code>:X</code> is <code>:descendedFrom</code> <code>:C</code>:
+                The <code>:exposedTo</code> rule of the previous section only reaches direct
+                dependencies: <code>:frontend</code> does not depend directly on <code>:db</code>, so
+                no <code>:exposedTo</code> triple is inferred for <code>:frontend</code>.
+                To propagate exposure along dependency chains of any length, we
+                replace that rule with two rules: a component is exposed to a
+                vulnerability it has, and a component is exposed to any
+                vulnerability that its direct dependencies are exposed to:
             </p>
 
             <aside class="example" id="example-rule-recursion">
@@ -1638,22 +1660,29 @@ RULE { ?x :descendedFrom ?y } WHERE { ?x :childOf ?y }</code></pre>
                     <a class="self-link" href="#example-rule-recursion">Example<bdi> 3</bdi></a><span
                         class="example-title">: Rule Recursion</span>
                 </div>
-                <pre class="block ex-rules" aria-busy="false"><code class="hljs">RULE { ?x :childOf ?y } WHERE { ?y :fatherOf ?x }
-RULE { ?x :childOf ?y } WHERE { ?y :motherOf ?x }
-RULE { ?x :descendedFrom ?y } WHERE { ?x :childOf ?y }
-RULE { ?x :descendedFrom ?y } WHERE { ?x :childOf ?z . ?z :descendedFrom ?y }</code></pre>
-                <pre class="block ex-inferred" aria-busy="false"><code class="hljs">:A :descendedFrom :C .
-:X :descendedFrom :C .
-:X :descendedFrom :B .
-:X :descendedFrom :A .
-:X :childOf :B .
-:X :childOf :A .
-:A :childOf :C .</code></pre>
+                <pre class="block ex-data" aria-busy="false"><code class="hljs">:frontend :callsService :app .
+:app      :queriesDatabase :db .
+:db       :hasVulnerability :vuln1 .</code></pre>
+                <pre class="block ex-rules" aria-busy="false"><code class="hljs">RULE { ?x :dependsOn ?y } WHERE { ?x :callsService ?y }
+RULE { ?x :dependsOn ?y } WHERE { ?x :queriesDatabase ?y }
+RULE { ?x :exposedTo ?v } WHERE { ?x :hasVulnerability ?v }
+RULE { ?x :exposedTo ?v } WHERE { ?x :dependsOn ?y . ?y :exposedTo ?v }</code></pre>
+                <pre class="block ex-inferred" aria-busy="false"><code class="hljs">:db       :exposedTo :vuln1 .
+:app      :exposedTo :vuln1 .
+:frontend :exposedTo :vuln1 .
+:frontend :dependsOn :app .
+:app      :dependsOn :db .</code></pre>
             </aside>
 
-            <p>This adds the triple <code>:X :descendedFrom :C</code>.</p>
             <p>
-                This last rule is a <i>recursive</i> rule, the body of the rule
+                Compared with the previous example, this adds
+                <code>:db :exposedTo :vuln1</code> — the database is exposed to its
+                own vulnerability — and <code>:frontend :exposedTo :vuln1</code>:
+                the exposure reaches <code>:frontend</code> through the chain of
+                dependencies, however long the chain.
+            </p>
+            <p>
+                This last rule is a <i>recursive</i> rule: the body of the rule
                 depends on the head of the rule.
             </p>
 
@@ -1668,23 +1697,28 @@ RULE { ?x :descendedFrom ?y } WHERE { ?x :childOf ?z . ?z :descendedFrom ?y }</c
             <p>
                 We can use expressions in the body of rules to restrict the values of variables
                 in the matching of the body.
-                For example, given data about towns and their populations,
-                we can infer a class for towns with a population greater than 1500:
+                For example, given the severity of each vulnerability,
+                we can give a status to components that are exposed to a severe
+                vulnerability:
             </p>
 
-            <aside class="example" id="example-4">
+            <aside class="example" id="example-filtering">
                 <div class="marker">
-                    <a class="self-link" href="#example-4">Example<bdi> 4</bdi></a>
+                    <a class="self-link" href="#example-filtering">Example<bdi> 4</bdi></a><span class="example-title">:
+                        Filtering</span>
                 </div>
-                <pre class="block ex-data" aria-busy="false"><code class="hljs">:town1 :population 1000 .
-:town2 :population 2000 .</code></pre>
-                <pre class="block ex-rules" aria-busy="false"><code class="hljs">RULE { ?x rdf:type :largeTown } 
-WHERE { 
-    ?x :population ?p 
-    FILTER(?p &gt; 1500)
+                <pre class="block ex-data" aria-busy="false"><code class="hljs">:app1 :exposedTo :vuln1 .
+:app2 :exposedTo :vuln2 .
+:vuln1 :severity 9.1 .
+:vuln2 :severity 4.3 .</code></pre>
+                <pre class="block ex-rules" aria-busy="false"><code class="hljs">RULE { ?x :status :criticallyExposed }
+WHERE {
+    ?x :exposedTo ?v .
+    ?v :severity ?s .
+    FILTER(?s &gt;= 9.0)
 }</code></pre>
                 <pre class="block ex-inferred"
-                    aria-busy="false"><code class="hljs">:town2 rdf:type :largeTown .</code></pre>
+                    aria-busy="false"><code class="hljs">:app1 :status :criticallyExposed .</code></pre>
             </aside>
 
             <p>
@@ -1715,7 +1749,9 @@ WHERE {
                 <i><a data-link-type="dfn|abstract-op" href="#dfn-stratification" class="internalDFN"
                         id="ref-for-dfn-stratification-1">stratification</a></i> and ensures that the negation is based
                 on all the relevant possible triples, whether from the data or
-                from inferred triples inferred by other rules.
+                in the negation element have been completed. The rule containing the negation is said to _depend_ on the
+                rules generating these triples (see <a href="#rule-dependency" class="sectionRef sec-ref"><bdi
+                        class="secno">4.3 </bdi>Rule Dependency</a> below).
             </p>
 
             <aside class="example" id="example-negation-as-failure">
@@ -1723,20 +1759,17 @@ WHERE {
                     <a class="self-link" href="#example-negation-as-failure">Example<bdi> 5</bdi></a><span
                         class="example-title">: Negation as failure</span>
                 </div>
-                <pre class="block ex-data" aria-busy="false"><code class="hljs">:X1 rdf:type :Place ;
-:population 1000 .
+                <pre class="block ex-data" aria-busy="false"><code class="hljs">:app rdf:type :Component ;
+:status :criticallyExposed .
 
-:X2 rdf:type :Place ;
-:population 2000 .
-
-:X3 rdf:type :Place .</code></pre>
-                <pre class="block ex-rules" aria-busy="false"><code class="hljs">RULE { ?x rdf:type :UnclassifiedSize } 
-WHERE { 
-    ?x rdf:type :Place .
-    NOT { ?x :population ?p . }
+:logger rdf:type :Component .</code></pre>
+                <pre class="block ex-rules" aria-busy="false"><code class="hljs">RULE { ?x :status :safeToDeploy }
+WHERE {
+    ?x rdf:type :Component .
+    NOT { ?x :status :criticallyExposed }
 }</code></pre>
                 <pre class="block ex-inferred"
-                    aria-busy="false"><code class="hljs">:X3 rdf:type :UnclassifiedSize .</code></pre>
+                    aria-busy="false"><code class="hljs">:logger :status :safeToDeploy .</code></pre>
             </aside>
 
         </section>
@@ -1754,14 +1787,16 @@ WHERE {
                 on the data.
             </p>
 
-            <aside class="example" id="example-6">
+            <aside class="example" id="example-assignment">
                 <div class="marker">
-                    <a class="self-link" href="#example-6">Example<bdi> 6</bdi></a>
+                    <a class="self-link" href="#example-assignment">Example<bdi> 6</bdi></a><span
+                        class="example-title">: Assignment</span>
                 </div>
-                <pre class="block ex-rules" aria-busy="false"><code class="hljs">RULE { ?x :calculatedDistanceKm ?kilometers }
-WHERE { 
-    ?x :distanceMiles ?miles .
-    SET ( ?kilometers := ?miles * 1.60934 )
+                <pre class="block ex-rules" aria-busy="false"><code class="hljs">RULE { ?v :riskScore ?r }
+WHERE {
+    ?v :severity ?s .
+    ?v :exploitLikelihood ?p .
+    SET ( ?r := ?s * ?p )
 }</code></pre>
             </aside>
 
@@ -1770,16 +1805,13 @@ WHERE {
                 each time rule evaluation generates triples.
             </p>
 
-            <aside class="example" id="example-7">
+            <aside class="example" id="example-blank-node-in-the-rule-head">
                 <div class="marker">
-                    <a class="self-link" href="#example-7">Example<bdi> 7</bdi></a>
+                    <a class="self-link" href="#example-blank-node-in-the-rule-head">Example<bdi> 7</bdi></a><span
+                        class="example-title">: Blank node in the rule head</span>
                 </div>
-                <pre class="block ex-rules" aria-busy="false"><code class="hljs">RULE { [] rdf:type :Person ;
-          ex:name ?name 
-       }
-WHERE { 
-    ...
-}</code></pre>
+                <pre class="block ex-rules" aria-busy="false"><code class="hljs">RULE { [] rdf:type :Notification ; :concerns ?x }
+WHERE { ?x :status :criticallyExposed }</code></pre>
             </aside>
 
             <p>
@@ -1795,9 +1827,8 @@ WHERE {
                 RDF terms and are run-once rules.
             </p>
             <p>
-                This condition ensures that rules that create RDF terms do not generate new terms
-                multiple times, with potentially different outcomes, and also that such rules do not
-                loop back to themselves and cause an unbounded number of RDF terms.
+                This condition ensures that such rules do not loop back to themselves and cause an unbounded number of
+                RDF terms.
             </p>
             <p>
                 If evaluating the expression in an <a data-link-type="dfn|abstract-op" href="#dfn-assignment-element"
@@ -1842,7 +1873,11 @@ WHERE {
                 Triples in datablocks are added to the inference graph and are available for
                 matching in the body of rules.
             </p>
-            <p>@@examples to be updated</p>
+
+            <p>
+                For example, a rule set can ship with known facts asserted
+                directly, rather than derived from data:
+            </p>
 
             <aside class="example" id="example-include-data-in-a-rule-set">
                 <div class="marker">
@@ -1850,10 +1885,22 @@ WHERE {
                         class="example-title">: Include data in a rule set</span>
                 </div>
                 <pre class="block ex-rules" aria-busy="false"><code class="hljs">DATA {
-    :father rdfs:subClassOf :familyRelationship .
-    :mother rdfs:subClassOf :familyRelationship .
+    # Versions 2.0.0 and earlier suffer a known vulnerability
+    # and are assumed critically exposed.
+    :appV2 rdf:type :Component ;
+           :version "2.0.0" ;
+           :status :criticallyExposed .
 }</code></pre>
             </aside>
+
+            <div class="note" role="note" id="issue-container-generatedID-2">
+                <div class="note-title marker" id="h-note-1"><span>Note</span></div>
+                <p class="">
+                    A data block is equivalent to a rule with an empty body:
+                    its triples are part of the inference graph without any rule
+                    being evaluated.
+                </p>
+            </div>
 
         </section>
 
@@ -2005,7 +2052,7 @@ WHERE DATA { ... }</code></pre>
                 <li>
                     The syntax of a rule body is similar to a SPARQL <code>CONSTRUCT</code> query, but has
                     restrictions such as not having <code>UNION</code> or <code>OPTIONAL</code> syntax.
-                    These ensure that variables are always bound, whereas in SPARQL, some
+                    These restrictions ensure that variables are always bound, whereas in SPARQL, some
                     variables might not be bound in all pattern solutions.
                     The effect of these can be achieved using <a data-link-type="dfn|abstract-op"
                         href="#dfn-well-formed-rule" class="internalDFN" id="ref-for-dfn-well-formed-rule-1">well-formed
@@ -2025,8 +2072,8 @@ WHERE DATA { ... }</code></pre>
                 </li>
                 <li>
                     The syntax of <code>NOT</code>,
-                    unlike SPARQL <code>EXISTS</code> and <code>NOT EXISTS</code>
-                    has an inner body limited to triple patterns and filters,
+                    unlike SPARQL <code>EXISTS</code> and <code>NOT EXISTS</code>,
+                    limits the inner body to triple patterns and filters,
                     and does not allow nested patterns.
                 </li>
                 <li>
@@ -2369,8 +2416,8 @@ WHERE DATA { ... }</code></pre>
                 position 3 is informally called the <em>object</em>.
             </p>
 
-            <div class="note" role="note" id="issue-container-generatedID-2">
-                <div class="note-title marker" id="h-note-1"><span>Note</span></div>
+            <div class="note" role="note" id="issue-container-generatedID-3">
+                <div class="note-title marker" id="h-note-2"><span>Note</span></div>
                 <p class="">
                     The elements of a sequence of <a data-link-type="dfn|abstract-op" href="#dfn-rule-element"
                         class="internalDFN" id="ref-for-dfn-rule-element-7">rule elements</a> are labelled starting at
@@ -2597,20 +2644,30 @@ WHERE DATA { ... }</code></pre>
                     <a class="self-link" href="#example-open-dependency">Example<bdi> 9</bdi></a><span
                         class="example-title">: Open Dependency</span>
                 </div>
-                <pre class="block ex-rules" aria-busy="false"><code class="hljs">RULE { ?x :descendedFrom ?y } WHERE { ?x :childOf ?y }
-RULE { ?x :childOf ?y } WHERE { ?y :fatherOf ?x }</code></pre>
+                <pre class="block ex-rules" aria-busy="false"><code class="hljs">RULE { ?x :exposedTo ?v } WHERE { ?x :dependsOn ?y . ?y :hasVulnerability ?v }
+RULE { ?x :dependsOn ?y } WHERE { ?x :callsService ?y }</code></pre>
             </aside>
 
             <p>
                 In this second example, the first rule has a closed dependency
-                on the second rule.
+                on the second rule: the triple pattern <code>?x :status :criticallyExposed</code>
+                occurs inside a <a data-link-type="dfn|abstract-op" href="#dfn-negation-element" class="internalDFN"
+                    id="ref-for-dfn-negation-element-7">negation element</a> of the first rule and
+                matches the <a data-link-type="dfn|abstract-op" href="#dfn-triple-template" class="internalDFN"
+                    id="ref-for-dfn-triple-template-7">triple template</a> in the head of the second rule.
+                The first rule cannot be evaluated until the second rule
+                has generated all its possible output.
             </p>
 
-            <aside class="example" id="example-10">
+            <aside class="example" id="example-closed-dependency">
                 <div class="marker">
-                    <a class="self-link" href="#example-10">Example<bdi> 10</bdi></a>
+                    <a class="self-link" href="#example-closed-dependency">Example<bdi> 10</bdi></a><span
+                        class="example-title">: Closed Dependency</span>
                 </div>
-                <pre class="block ex-rules" aria-busy="false"><code class="hljs">RULE @@</code></pre>
+                <pre class="block ex-rules" aria-busy="false"><code class="hljs">RULE { ?x :status :safeToDeploy }
+WHERE { ?x rdf:type :Component . NOT { ?x :status :criticallyExposed } }
+
+RULE { ?x :status :criticallyExposed } WHERE { ?x :exposedTo ?v }</code></pre>
             </aside>
 
             <dl>
@@ -2621,7 +2678,7 @@ RULE { ?x :childOf ?y } WHERE { ?y :fatherOf ?x }</code></pre>
                         A <a data-link-type="dfn|abstract-op" href="#dfn-triple-pattern" class="internalDFN"
                             id="ref-for-dfn-triple-pattern-5">triple pattern</a> matches a <a
                             data-link-type="dfn|abstract-op" href="#dfn-triple-template" class="internalDFN"
-                            id="ref-for-dfn-triple-template-7">triple template</a> if
+                            id="ref-for-dfn-triple-template-8">triple template</a> if
                         the triple template can generate a triple that matches the triple pattern.
                     </p>
                 </dd>
@@ -2636,11 +2693,11 @@ RULE { ?x :childOf ?y } WHERE { ?y :fatherOf ?x }</code></pre>
                         <dfn data-local-lt="depends-pattern-template" id="dfn-depends-on-a-triple-template" tabindex="0"
                             aria-haspopup="dialog" data-dfn-type="dfn">depends on a <a data-link-type="dfn|abstract-op"
                                 href="#dfn-triple-template" class="internalDFN"
-                                id="ref-for-dfn-triple-template-8">triple template</a></dfn>
+                                id="ref-for-dfn-triple-template-9">triple template</a></dfn>
                         if the <a data-link-type="dfn|abstract-op" href="#dfn-triple-pattern" class="internalDFN"
                             id="ref-for-dfn-triple-pattern-7">triple pattern</a> could possibly match the <a
                             data-link-type="dfn|abstract-op" href="#dfn-triple-template" class="internalDFN"
-                            id="ref-for-dfn-triple-template-9">triple template</a>.
+                            id="ref-for-dfn-triple-template-10">triple template</a>.
                     </p>
                     <p>
                         A <a data-link-type="dfn|abstract-op" href="#dfn-triple-pattern" class="internalDFN"
@@ -2651,7 +2708,7 @@ RULE { ?x :childOf ?y } WHERE { ?y :fatherOf ?x }</code></pre>
                         if the <a data-link-type="dfn|abstract-op" href="#dfn-triple-pattern" class="internalDFN"
                             id="ref-for-dfn-triple-pattern-9">triple pattern</a> has dependency on any of the <a
                             data-link-type="dfn|abstract-op" href="#dfn-triple-template" class="internalDFN"
-                            id="ref-for-dfn-triple-template-10">triple templates</a>
+                            id="ref-for-dfn-triple-template-11">triple templates</a>
                         in the <a data-link-type="dfn|abstract-op" href="#dfn-rule-head" class="internalDFN"
                             id="ref-for-dfn-rule-head-9">head</a> of the rule.
                     </p>
@@ -2667,12 +2724,12 @@ RULE { ?x :childOf ?y } WHERE { ?y :fatherOf ?x }</code></pre>
                         whether as a <a data-link-type="dfn|abstract-op" href="#dfn-triple-pattern-element"
                             class="internalDFN" id="ref-for-dfn-triple-pattern-element-8">triple pattern element</a> or
                         inside a <a data-link-type="dfn|abstract-op" href="#dfn-negation-element" class="internalDFN"
-                            id="ref-for-dfn-negation-element-7">negation element</a>,
+                            id="ref-for-dfn-negation-element-8">negation element</a>,
 
                         <a href="#dfn-triple-pattern-dependency" id="ref-for-dfn-triple-pattern-dependency-1">depends
                             on</a>
                         a <a data-link-type="dfn|abstract-op" href="#dfn-triple-template" class="internalDFN"
-                            id="ref-for-dfn-triple-template-11">triple template</a> in the head of <code>R2</code>.
+                            id="ref-for-dfn-triple-template-12">triple template</a> in the head of <code>R2</code>.
                     </p>
                 </dd>
                 <dt><dfn data-plurals="closed dependencies" id="dfn-closed-dependency" tabindex="0"
@@ -2689,9 +2746,9 @@ RULE { ?x :childOf ?y } WHERE { ?y :fatherOf ?x }</code></pre>
                         <li>A <a data-link-type="dfn|abstract-op" href="#dfn-triple-pattern" class="internalDFN"
                                 id="ref-for-dfn-triple-pattern-11">triple pattern</a> occurring inside a <a
                                 data-link-type="dfn|abstract-op" href="#dfn-negation-element" class="internalDFN"
-                                id="ref-for-dfn-negation-element-8">negation element</a> of <code>R1</code>
+                                id="ref-for-dfn-negation-element-9">negation element</a> of <code>R1</code>
                             matches a <a data-link-type="dfn|abstract-op" href="#dfn-triple-template"
-                                class="internalDFN" id="ref-for-dfn-triple-template-12">triple template</a> in the <a
+                                class="internalDFN" id="ref-for-dfn-triple-template-13">triple template</a> in the <a
                                 data-link-type="dfn|abstract-op" href="#dfn-rule-head" class="internalDFN"
                                 id="ref-for-dfn-rule-head-10">rule head</a> of <code>R2</code>.
                         </li>
@@ -2730,12 +2787,12 @@ RULE { ?x :childOf ?y } WHERE { ?y :fatherOf ?x }</code></pre>
                 </dd>
             </dl>
 
-            <div class="note" role="note" id="issue-container-generatedID-3">
-                <div class="note-title marker" id="h-note-2"><span>Note</span></div>
+            <div class="note" role="note" id="issue-container-generatedID-4">
+                <div class="note-title marker" id="h-note-3"><span>Note</span></div>
                 <div class="">
                     <p>
                         A <a data-link-type="dfn|abstract-op" href="#dfn-triple-template" class="internalDFN"
-                            id="ref-for-dfn-triple-template-13">triple template</a> with components <code>tSubj</code>,
+                            id="ref-for-dfn-triple-template-14">triple template</a> with components <code>tSubj</code>,
                         <code>tPred</code>, <code>tObj</code>
                         can possibly generate a triple with component RDF terms
                         <code>s</code>, <code>p</code>, <code>o</code> if all of the following are true:
@@ -2825,8 +2882,8 @@ RULE { ?x :childOf ?y } WHERE { ?y :fatherOf ?x }</code></pre>
                         </p>
                     </dd>
                 </dl>
-                <div class="note" role="note" id="issue-container-generatedID-4">
-                    <div class="note-title marker" id="h-note-3"><span>Note</span></div>
+                <div class="note" role="note" id="issue-container-generatedID-5">
+                    <div class="note-title marker" id="h-note-4"><span>Note</span></div>
                     <p class="">
                         The dependency graph is not affected by the data graph.
                     </p>
@@ -2968,7 +3025,7 @@ RULE { ?x :childOf ?y } WHERE { ?y :fatherOf ?x }</code></pre>
                     data-link-type="dfn|abstract-op" href="#dfn-rule" class="internalDFN"
                     id="ref-for-dfn-rule-9">rules</a>
                 to ensure that <a data-link-type="dfn|abstract-op" href="#dfn-negation-element" class="internalDFN"
-                    id="ref-for-dfn-negation-element-9">negation elements</a>, <a data-link-type="dfn|abstract-op"
+                    id="ref-for-dfn-negation-element-10">negation elements</a>, <a data-link-type="dfn|abstract-op"
                     href="#dfn-assignment-element" class="internalDFN" id="ref-for-dfn-assignment-element-11">assignment
                     elements</a>, and
                 blank nodes created in a <a data-link-type="dfn|abstract-op" href="#dfn-rule-head" class="internalDFN"
@@ -2983,8 +3040,8 @@ RULE { ?x :childOf ?y } WHERE { ?y :fatherOf ?x }</code></pre>
                     data-link-type="dfn|abstract-op" href="#dfn-base-graph" class="internalDFN"
                     id="ref-for-dfn-base-graph-9">base graph</a>.
             </p>
-            <div class="note" role="note" id="issue-container-generatedID-5">
-                <div class="note-title marker" id="h-note-4"><span>Note</span></div>
+            <div class="note" role="note" id="issue-container-generatedID-6">
+                <div class="note-title marker" id="h-note-5"><span>Note</span></div>
                 <div class="">
                     <p>
                         A stratification process may also be used to make other evaluation
@@ -3073,7 +3130,7 @@ RULE { ?x :childOf ?y } WHERE { ?y :fatherOf ?x }</code></pre>
                 <p>
                     In other words, there is no <code>NOT</code> or run-once rule (assignment or rule <a
                         data-link-type="dfn|abstract-op" href="#dfn-triple-template" class="internalDFN"
-                        id="ref-for-dfn-triple-template-14">triple template</a>
+                        id="ref-for-dfn-triple-template-15">triple template</a>
                     involving a blank node) in any transitive dependency cycle of the <a
                         data-link-type="dfn|abstract-op" href="#dfn-dependency-graph" class="internalDFN"
                         id="ref-for-dfn-dependency-graph-7">dependency graph</a>.
@@ -3164,8 +3221,8 @@ RULE { ?x :childOf ?y } WHERE { ?y :fatherOf ?x }</code></pre>
     <span class="hljs-string">the</span> <span class="hljs-string">result</span> <span class="hljs-string">is</span> <span class="hljs-string">stratumLevels</span>
 <span class="hljs-string">enddefine</span></code></pre>
                 </div>
-                <div class="note" role="note" id="issue-container-generatedID-6">
-                    <div class="note-title marker" id="h-note-5"><span>Note</span></div>
+                <div class="note" role="note" id="issue-container-generatedID-7">
+                    <div class="note-title marker" id="h-note-6"><span>Note</span></div>
                     <p class="">
                         A consequence of the <a data-link-type="dfn|abstract-op" href="#dfn-stratification-condition"
                             class="internalDFN" id="ref-for-dfn-stratification-condition-2">stratification condition</a>
@@ -3176,6 +3233,13 @@ RULE { ?x :childOf ?y } WHERE { ?y :fatherOf ?x }</code></pre>
                         change during further evaluation.
                     </p>
                 </div>
+                <p>
+                    A step-by-step application of dependency analysis and
+                    stratification to a complete rule set, followed through to
+                    evaluation, is given in
+                    <a href="#eval-worked-example" class="sectionRef sec-ref"><bdi class="secno">6.6 </bdi>Worked
+                        Example</a>.
+                </p>
             </section>
         </section>
     </section>
@@ -3193,8 +3257,8 @@ RULE { ?x :childOf ?y } WHERE { ?y :fatherOf ?x }</code></pre>
             <li><a href="#rdf-rules-syntax">RDF Rule syntax</a></li>
         </ul>
 
-        <div class="note" role="note" id="issue-container-generatedID-7">
-            <div class="note-title marker" id="h-note-6"><span>Note</span></div>
+        <div class="note" role="note" id="issue-container-generatedID-8">
+            <div class="note-title marker" id="h-note-7"><span>Note</span></div>
             <aside class="">
                 The Shape Rules Language (SRL) syntax has an equivalent RDF syntax form.
                 Well-formed RDF syntax can be translated to the Shape Rules Language syntax.
@@ -3323,7 +3387,7 @@ PREFIX sparql: &lt;http://www.w3.org/ns/sparql#&gt;
             </div>
 
             <p>The <a href="#shapes-rules-grammar">grammar</a> is given below.</p>
-            <div class="note" id="issue-container-generatedID-8">
+            <div class="note" id="issue-container-generatedID-9">
                 <div class="ednote-title marker" id="h-ednote-0"><span>Editor's note</span></div>
                 <p class="">Mapping the AST to the abstract syntax.</p>
             </div>
@@ -3344,7 +3408,7 @@ PREFIX sparql: &lt;http://www.w3.org/ns/sparql#&gt;
                 SHACL shapes: <a href="./rules-rdf-syntax/rdf-syntax-shapes.ttl">rdf-syntax-shapes.ttl</a>
             </p>
 
-            <div class="note" id="issue-container-generatedID-9">
+            <div class="note" id="issue-container-generatedID-10">
                 <div class="ednote-title marker" id="h-ednote-1"><span>Editor's note</span></div>
                 <div class="">
                     <p>Well-formedness:</p>
@@ -3357,7 +3421,7 @@ PREFIX sparql: &lt;http://www.w3.org/ns/sparql#&gt;
                     </ul>
                 </div>
             </div>
-            <div class="note" id="issue-container-generatedID-10">
+            <div class="note" id="issue-container-generatedID-11">
                 <div class="ednote-title marker" id="h-ednote-2"><span>Editor's note</span></div>
                 <div class="">
                     <p>
@@ -3366,7 +3430,7 @@ PREFIX sparql: &lt;http://www.w3.org/ns/sparql#&gt;
                 </div>
             </div>
 
-            <div class="note" id="issue-container-generatedID-11">
+            <div class="note" id="issue-container-generatedID-12">
                 <div class="ednote-title marker" id="h-ednote-3"><span>Editor's note</span></div>
                 <div class="">
                     <p>Process : accumulators, bottom up/ Walk the structure.</p>
@@ -3675,7 +3739,7 @@ PREFIX srl:    &lt;http://www.w3.org/ns/shacl-rules#&gt;
                     and compatible(μ1, μ2)
                     μ(v) = merge(μ1, μ2) }</span></code></pre>
                     </div>
-                    <div class="note" id="issue-container-generatedID-12">
+                    <div class="note" id="issue-container-generatedID-13">
                         <div class="ednote-title marker" id="h-ednote-4"><span>Editor's note</span></div>
                         <div class="">
                             <p>
@@ -4016,6 +4080,494 @@ result is <span class="hljs-title function_">imports</span>(<span class="hljs-va
 <span class="hljs-string">the</span> <span class="hljs-string">result</span> <span class="hljs-string">is</span> <span class="hljs-string">GI</span></code></pre>
             </div>
         </section>
+
+        <section id="eval-worked-example" class="informative">
+            <div class="header-wrapper">
+                <h3 id="x6-6-worked-example"><bdi class="secno">6.6 </bdi>Worked Example</h3><a class="self-link"
+                    href="#eval-worked-example" aria-label="Permalink for Section 6.6"></a>
+            </div>
+            <p><em>This section is non-normative.</em></p>
+
+            <p>
+                This section steps through the evaluation of a complete
+                <a data-link-type="dfn|abstract-op" href="#dfn-rule-set" class="internalDFN"
+                    id="ref-for-dfn-rule-set-29">rule set</a>: determining the rule dependencies
+                (<a href="#rule-dependency" class="sectionRef sec-ref"><bdi class="secno">4.3 </bdi>Rule
+                    Dependency</a>),
+                calculating a stratification
+                (<a href="#stratification" class="sectionRef sec-ref"><bdi class="secno">4.4 </bdi>Stratification</a>),
+                and evaluating each stratum in turn to produce the
+                <a data-link-type="dfn|abstract-op" href="#dfn-inference-graph" class="internalDFN"
+                    id="ref-for-dfn-inference-graph-6">inference graph</a>
+                (<a href="#eval-rule-set" class="sectionRef sec-ref"><bdi class="secno">6.5 </bdi>Evaluation of a Rule
+                    Set</a>).
+            </p>
+            <p>
+                The example describes software components and their dependencies:
+                a frontend depends on an application server, which depends on a
+                database and on a logging library. The database has a known
+                vulnerability. The rules propagate exposure to vulnerabilities
+                along the dependency chain, give components exposed to a severe
+                vulnerability the status <code>:criticallyExposed</code>, give components that are
+                not critical the status <code>:safeToDeploy</code>, and create a
+                notification for each critically exposed component.
+                (In practice, whether a vulnerability affects a component
+                depends on the deployed version; the example elides versions and
+                states the vulnerability directly.)
+                For brevity, the base graph states <code>:dependsOn</code> triples directly,
+                rather than deriving them from more specific relations as in
+                <a href="#desc-basic" class="sectionRef sec-ref"><bdi class="secno">3.1 </bdi>Basic Patterns</a>.
+            </p>
+
+            <aside class="example" id="example-worked-example-data-and-rules">
+                <div class="marker">
+                    <a class="self-link" href="#example-worked-example-data-and-rules">Example<bdi> 15</bdi></a><span
+                        class="example-title">: Worked example: data and rules</span>
+                </div>
+                <pre class="block ex-data" aria-busy="false"><code class="hljs">:frontend rdf:type :Component ;
+          :dependsOn :app .
+:app      rdf:type :Component ;
+          :dependsOn :db ;
+          :dependsOn :logger .
+:db       rdf:type :Component ;
+          :hasVulnerability :vuln1 .
+:logger   rdf:type :Component .
+:vuln1    :severity 9.1 .</code></pre>
+                <pre class="block ex-rules" aria-busy="false"><code class="hljs"># R1
+RULE { ?x :exposedTo ?v } WHERE { ?x :hasVulnerability ?v }
+
+# R2
+RULE { ?x :exposedTo ?v } WHERE { ?x :dependsOn ?y . ?y :exposedTo ?v }
+
+# R3
+RULE { ?x :status :criticallyExposed }
+WHERE { ?x :exposedTo ?v . ?v :severity ?s . FILTER(?s &gt;= 9.0) }
+
+# R4
+RULE { ?x :status :safeToDeploy }
+WHERE { ?x rdf:type :Component . NOT { ?x :status :criticallyExposed } }
+
+# R5
+RULE { [] rdf:type :Notification ; :concerns ?x }
+WHERE { ?x :status :criticallyExposed }</code></pre>
+            </aside>
+
+            <p>
+                The rules are labeled <code>R1</code> to <code>R5</code> in comments and are referred
+                to by these labels in the rest of this section.
+                They are the rules introduced in
+                <a href="#desc-recursion" class="sectionRef sec-ref"><bdi class="secno">3.2 </bdi>Recursion</a> through
+                <a href="#desc-creating-rdf-terms" class="sectionRef sec-ref"><bdi class="secno">3.5 </bdi>Assignment
+                    and Creating RDF Terms</a>.
+                The rule set has no <code>IMPORTS</code>, so import processing
+                leaves it unchanged, and no <code>DATA</code> blocks, so evaluation starts
+                from the base graph alone.
+            </p>
+
+            <section id="worked-example-dependencies">
+                <div class="header-wrapper">
+                    <h4 id="x6-6-1-determining-the-dependencies"><bdi class="secno">6.6.1 </bdi>Determining the
+                        Dependencies</h4><a class="self-link" href="#worked-example-dependencies"
+                        aria-label="Permalink for Section 6.6.1"></a>
+                </div>
+
+                <p>
+                    Each triple pattern in each rule body is compared with the
+                    triple templates in every rule head, to determine which rules
+                    depend on which
+                    (<a href="#rule-dependency" class="sectionRef sec-ref"><bdi class="secno">4.3 </bdi>Rule
+                        Dependency</a>).
+                </p>
+                <ul>
+                    <li>
+                        The body of <code>R1</code> is the single triple pattern
+                        <code>?x :hasVulnerability ?v</code>. No rule head has a triple template
+                        that can generate a triple with predicate <code>:hasVulnerability</code>,
+                        so this pattern can only match the data.
+                        <code>R1</code> has no dependencies.
+                    </li>
+                    <li>
+                        The body of <code>R2</code> has two triple patterns.
+                        <code>?x :dependsOn ?y</code> cannot match any rule head, so it matches
+                        only the data. <code>?y :exposedTo ?v</code> matches the head template
+                        <code>?x :exposedTo ?v</code> of <code>R1</code>, and also matches the head of <code>R2</code>
+                        itself. Both occurrences are <a data-link-type="dfn|abstract-op"
+                            href="#dfn-triple-pattern-element" class="internalDFN"
+                            id="ref-for-dfn-triple-pattern-element-10">triple pattern elements</a>
+                        (they do not occur inside a <a data-link-type="dfn|abstract-op" href="#dfn-negation-element"
+                            class="internalDFN" id="ref-for-dfn-negation-element-11">negation element</a>, and
+                        <code>R2</code> has
+                        no <a data-link-type="dfn|abstract-op" href="#dfn-assignment-element" class="internalDFN"
+                            id="ref-for-dfn-assignment-element-14">assignment element</a> and no blank node in its
+                        head), so
+                        <code>R2</code> has an <em>open</em> dependency on <code>R1</code> and an
+                        <em>open</em> dependency on itself.
+                        The dependency of <code>R2</code> on itself makes <code>R2</code> a recursive rule.
+                    </li>
+                    <li>
+                        In the body of <code>R3</code>, the pattern <code>?x :exposedTo ?v</code> matches
+                        the heads of <code>R1</code> and <code>R2</code>, giving <code>R3</code> an <em>open</em>
+                        dependency on each. The pattern <code>?v :severity ?s</code> matches no
+                        rule head.
+                    </li>
+                    <li>
+                        In the body of <code>R4</code>, the pattern <code>?x rdf:type :Component</code>
+                        matches no rule head: the only head template with predicate
+                        <code>rdf:type</code> is in <code>R5</code>, and its object <code>:Notification</code> is
+                        a different RDF term from <code>:Component</code>, so no generated
+                        triple can match.
+                        The pattern <code>?x :status :criticallyExposed</code> occurs inside the
+                        <a data-link-type="dfn|abstract-op" href="#dfn-negation-element" class="internalDFN"
+                            id="ref-for-dfn-negation-element-12">negation element</a>
+                        <code>NOT { ?x :status :criticallyExposed }</code> and
+                        matches the head template of <code>R3</code>. Because the pattern
+                        occurs in a negation element, <code>R4</code> has a <em>closed</em>
+                        dependency on <code>R3</code>.
+                    </li>
+                    <li>
+                        In the body of <code>R5</code>, the pattern <code>?x :status :criticallyExposed</code>
+                        matches the head of <code>R3</code>. The head of <code>R5</code> contains a
+                        blank node, so its dependency on <code>R3</code> is a <em>closed</em>
+                        dependency, even though the pattern is an ordinary
+                        <a data-link-type="dfn|abstract-op" href="#dfn-triple-pattern-element" class="internalDFN"
+                            id="ref-for-dfn-triple-pattern-element-11">triple pattern element</a>.
+                        No pattern in any rule body matches the head templates of
+                        <code>R5</code>, so no rule depends on <code>R5</code>.
+                    </li>
+                </ul>
+                <p>
+                    The <a data-link-type="dfn|abstract-op" href="#dfn-dependency-graph" class="internalDFN"
+                        id="ref-for-dfn-dependency-graph-9">dependency graph</a> therefore has five vertices and six
+                    edges:
+                </p>
+                <ul>
+                    <li>
+                        <code>R2 → R1</code> (open)
+                    </li>
+                    <li>
+                        <code>R2 → R2</code> (open)
+                    </li>
+                    <li>
+                        <code>R3 → R1</code> (open)
+                    </li>
+                    <li>
+                        <code>R3 → R2</code> (open)
+                    </li>
+                    <li>
+                        <code>R4 → R3</code> (closed)
+                    </li>
+                    <li>
+                        <code>R5 → R3</code> (closed)
+                    </li>
+                </ul>
+                <p>
+                    Although <code>R4</code> and <code>R5</code> have no direct dependency on <code>R1</code> or
+                    <code>R2</code>, each has a <a data-link-type="dfn|abstract-op"
+                        href="#dfn-transitive-rule-dependency" class="internalDFN"
+                        id="ref-for-dfn-transitive-rule-dependency-2">transitive dependency</a> on both, through
+                    <code>R3</code>.
+                </p>
+
+                <figure id="fig-worked-example-dep-graph">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 350" width="480"
+                        style="max-width: 480px; height: auto;" role="img"
+                        aria-labelledby="depgraph-title depgraph-desc">
+                        <title id="depgraph-title">Dependency graph of the worked example rule set</title>
+                        <desc id="depgraph-desc">
+                            Five vertices labeled R1, R2, R3, R4, and R5.
+                            Dashed arrows mark open dependencies: from R2 to R1,
+                            from R2 to itself, from R3 to R1, and from R3 to R2.
+                            Solid arrows mark closed dependencies: from R4 to R3
+                            and from R5 to R3.
+                        </desc>
+                        <defs>
+                            <marker id="dep-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7"
+                                markerHeight="7" orient="auto-start-reverse">
+                                <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor"></path>
+                            </marker>
+                        </defs>
+                        <g fill="none" stroke="currentColor" stroke-width="1.5">
+
+                            <g stroke-dasharray="6 4" marker-end="url(#dep-arrow)">
+
+                                <line x1="223.6" y1="135.3" x2="156.4" y2="74.7"></line>
+
+                                <line x1="256.4" y1="135.3" x2="323.6" y2="74.7"></line>
+
+                                <line x1="162" y1="60" x2="316" y2="60"></line>
+
+                                <path d="M 124.4 44.4 C 60 15, 60 105, 124.4 75.6"></path>
+                            </g>
+
+                            <g marker-end="url(#dep-arrow)">
+
+                                <line x1="156.4" y1="225.3" x2="223.6" y2="164.7"></line>
+
+                                <line x1="323.6" y1="225.3" x2="256.4" y2="164.7"></line>
+                            </g>
+
+                            <circle cx="140" cy="60" r="22"></circle>
+                            <circle cx="340" cy="60" r="22"></circle>
+                            <circle cx="240" cy="150" r="22"></circle>
+                            <circle cx="140" cy="240" r="22"></circle>
+                            <circle cx="340" cy="240" r="22"></circle>
+                        </g>
+                        <g fill="currentColor" font-size="15" font-weight="bold" text-anchor="middle">
+                            <text x="140" y="65">R2</text>
+                            <text x="340" y="65">R1</text>
+                            <text x="240" y="155">R3</text>
+                            <text x="140" y="245">R4</text>
+                            <text x="340" y="245">R5</text>
+                        </g>
+
+                        <g stroke="currentColor" stroke-width="1.5">
+                            <line x1="55" y1="325" x2="105" y2="325" stroke-dasharray="6 4"></line>
+                            <line x1="245" y1="325" x2="295" y2="325"></line>
+                        </g>
+                        <g fill="currentColor" font-size="14">
+                            <text x="113" y="330">open dependency</text>
+                            <text x="303" y="330">closed dependency</text>
+                        </g>
+                    </svg>
+                    <figcaption><a class="self-link" href="#fig-worked-example-dep-graph">Figure <bdi
+                                class="figno">1</bdi></a> <span class="fig-title">
+                            The dependency graph of the worked example rule set.
+                            Open dependencies are drawn as dashed arrows and closed
+                            dependencies as solid arrows. Each edge points from the
+                            rule whose body contains the matching triple pattern to the
+                            rule whose head could generate the matching triples.
+                            Rules are arranged with stratum 0 at the top and higher
+                            strata below, matching the order of evaluation.
+                        </span></figcaption>
+                </figure>
+                <p>
+                    The only cycle in the graph is the self-edge <code>R2 → R2</code>,
+                    which is an open dependency. No cycle involves a closed
+                    dependency, so the <a data-link-type="dfn|abstract-op" href="#dfn-stratification-condition"
+                        class="internalDFN" id="ref-for-dfn-stratification-condition-3">stratification condition</a> is
+                    satisfied
+                    and the rule set has a well-defined outcome.
+                </p>
+            </section>
+
+            <section id="worked-example-stratification">
+                <div class="header-wrapper">
+                    <h4 id="x6-6-2-calculating-the-stratification"><bdi class="secno">6.6.2 </bdi>Calculating the
+                        Stratification</h4><a class="self-link" href="#worked-example-stratification"
+                        aria-label="Permalink for Section 6.6.2"></a>
+                </div>
+
+                <p>
+                    Following the
+                    <a href="#stratification-algorithm">stratification algorithm</a>,
+                    every rule starts in stratum 0. The edges are then inspected
+                    repeatedly until nothing changes:
+                </p>
+                <ul>
+                    <li>
+                        An <em>open</em> edge requires the source rule to be in the
+                        same stratum as its target or higher. All four open edges
+                        already satisfy this with every rule at stratum 0, so they
+                        cause no changes.
+                    </li>
+                    <li>
+                        A <em>closed</em> edge requires the source rule to be in a
+                        strictly higher stratum than its target, because the target
+                        must run to completion first. The edge <code>R4 → R3</code>
+                        (closed) finds <code>R4</code> and <code>R3</code> both at stratum 0, so <code>R4</code> is
+                        moved to stratum 1. Likewise the edge <code>R5 → R3</code>
+                        (closed) moves <code>R5</code> to stratum 1.
+                    </li>
+                </ul>
+                <p>
+                    A further pass over the edges makes no changes, so the strata
+                    are final. Each stratum is then partitioned into
+                    <a data-link-type="dfn|abstract-op" href="#dfn-run-once-rule" class="internalDFN"
+                        id="ref-for-dfn-run-once-rule-7">run-once rules</a> and <a data-link-type="dfn|abstract-op"
+                        href="#dfn-general-rule" class="internalDFN" id="ref-for-dfn-general-rule-3">general rules</a>.
+                    <code>R5</code> has a blank
+                    node in its head, so it is a <a data-link-type="dfn|abstract-op" href="#dfn-run-once-rule"
+                        class="internalDFN" id="ref-for-dfn-run-once-rule-8">run-once rule</a>; no other rule
+                    has an <a data-link-type="dfn|abstract-op" href="#dfn-assignment-element" class="internalDFN"
+                        id="ref-for-dfn-assignment-element-15">assignment element</a> or a blank node in its head.
+                    The stratification is:
+                </p>
+                <ul>
+                    <li>Stratum 0: general <code>R1</code>, <code>R2</code>, <code>R3</code>; no run-once rules</li>
+                    <li>Stratum 1: run-once <code>R5</code>; general <code>R4</code></li>
+                </ul>
+                <p>
+                    This ordering captures the intent of the rules in the higher
+                    stratum. Whether a component is safe to deploy, and which
+                    components need a notification, can only be decided after
+                    <em>all</em> <code>:status :criticallyExposed</code> triples have been derived
+                    — and the rule that derives them, <code>R3</code>, completes in the
+                    stratum below, together with the rules <code>R1</code> and <code>R2</code> that
+                    feed it.
+                </p>
+            </section>
+
+            <section id="worked-example-evaluation">
+                <div class="header-wrapper">
+                    <h4 id="x6-6-3-evaluating-the-strata"><bdi class="secno">6.6.3 </bdi>Evaluating the Strata</h4><a
+                        class="self-link" href="#worked-example-evaluation"
+                        aria-label="Permalink for Section 6.6.3"></a>
+                </div>
+
+                <p>
+                    Evaluation follows the algorithm of
+                    <a href="#eval-rule-set" class="sectionRef sec-ref"><bdi class="secno">6.5 </bdi>Evaluation of a
+                        Rule Set</a>.
+                    The evaluation graph <code>GE</code> starts as the base graph and the
+                    inference graph <code>GI</code> starts empty. Each stratum is evaluated to
+                    completion in order: the rules of the stratum are evaluated in
+                    passes, and passes repeat until a pass produces no new triples.
+                    The algorithm does not fix the order in which the rules of a
+                    stratum are evaluated within a pass; this trace uses the order
+                    <code>R1</code>, <code>R2</code>, <code>R3</code>. A different order can spread the same
+                    inferences across a different number of passes but, because
+                    stratum 0 runs to completion, it produces the same final graph.
+                </p>
+                <p>
+                    Because this rule set has no <code>DATA</code> blocks, <code>GE</code> is <code>G0</code> plus
+                    <code>GI</code> at every point in the evaluation. The trace therefore
+                    tracks only <code>GI</code>, showing its state as evaluation proceeds and
+                    marking each new triple with the rule that produced it.
+                </p>
+                <p><strong>Stratum 0, first pass.</strong></p>
+                <ul>
+                    <li>
+                        <code>R1</code>: the body matches
+                        <code>:db :hasVulnerability :vuln1</code>, binding
+                        <code>?x = :db</code> and <code>?v = :vuln1</code>.
+                        The head produces <code>:db :exposedTo :vuln1</code>.
+                        The triple is not in <code>GE</code>, so it is added to <code>GE</code> and <code>GI</code>.
+                    </li>
+                    <li>
+                        <code>R2</code>: the body joins <code>?x :dependsOn ?y</code> with
+                        <code>?y :exposedTo ?v</code>. <code>GE</code> now contains
+                        <code>:db :exposedTo :vuln1</code>, so the join yields one solution:
+                        <code>?x = :app</code>, <code>?y = :db</code>, and <code>?v = :vuln1</code>
+                        (from <code>:app :dependsOn :db</code>).
+                        The head produces <code>:app :exposedTo :vuln1</code>, which is new and
+                        is added. There is no solution for <code>:frontend</code> yet, because
+                        <code>:app :exposedTo :vuln1</code> was not in <code>GE</code> when this
+                        evaluation of <code>R2</code> started.
+                    </li>
+                    <li>
+                        <code>R3</code>: <code>?x :exposedTo ?v</code> now matches for <code>:db</code> and
+                        <code>:app</code>;
+                        joining with <code>:vuln1 :severity 9.1</code> and applying
+                        <code>FILTER(?s &gt;= 9.0)</code> keeps both solutions.
+                        The head produces <code>:db :status :criticallyExposed</code> and
+                        <code>:app :status :criticallyExposed</code>, both new.
+                    </li>
+                </ul>
+                <pre class="block ex-inferred" aria-busy="false"><code class="hljs"># GI after stratum 0, first pass
+:db  :exposedTo :vuln1 .                    # new (R1)
+:app :exposedTo :vuln1 .                    # new (R2)
+:db  :status :criticallyExposed .           # new (R3)
+:app :status :criticallyExposed .           # new (R3)</code></pre>
+                <p>
+                    New triples were produced, so evaluation of stratum 0
+                    continues with another pass.
+                </p>
+                <p><strong>Stratum 0, second pass.</strong></p>
+                <ul>
+                    <li>
+                        <code>R1</code>: matches as before; <code>:db :exposedTo :vuln1</code> is already
+                        in <code>GE</code>, so nothing new is produced.
+                    </li>
+                    <li>
+                        <code>R2</code>: the join now also yields
+                        <code>?x = :frontend</code>, <code>?y = :app</code>, and <code>?v = :vuln1</code>, producing
+                        the new triple <code>:frontend :exposedTo :vuln1</code>.
+                        The exposure has taken two passes to travel two steps along
+                        the dependency chain.
+                    </li>
+                    <li>
+                        <code>R3</code>: produces the new triple
+                        <code>:frontend :status :criticallyExposed</code>.
+                    </li>
+                </ul>
+                <pre class="block ex-inferred" aria-busy="false"><code class="hljs"># GI after stratum 0, second pass
+:db       :exposedTo :vuln1 .
+:app      :exposedTo :vuln1 .
+:frontend :exposedTo :vuln1 .               # new (R2)
+:db       :status :criticallyExposed .
+:app      :status :criticallyExposed .
+:frontend :status :criticallyExposed .      # new (R3)</code></pre>
+                <p><strong>Stratum 0, third pass.</strong>
+                    Every solution of every rule now produces only triples already
+                    in <code>GE</code>. <code>GI</code> is unchanged.
+                    No new triples means stratum 0 is complete: every
+                    <code>:exposedTo</code> triple and every <code>:status :criticallyExposed</code> triple that
+                    can ever be derived has been derived.
+                </p>
+                <p><strong>Stratum 1, run-once rules.</strong>
+                    The <a data-link-type="dfn|abstract-op" href="#dfn-run-once-rule" class="internalDFN"
+                        id="ref-for-dfn-run-once-rule-9">run-once rules</a> of the stratum are evaluated first,
+                    each exactly once.
+                </p>
+                <ul>
+                    <li>
+                        <code>R5</code>: the body matches the three <code>:status :criticallyExposed</code>
+                        triples, giving the solutions <code>?x = :db</code>, <code>?x = :app</code>, and
+                        <code>?x = :frontend</code>. For each solution, instantiating the head
+                        creates a <em>fresh</em> blank node, producing two triples
+                        per solution: a notification for each critical
+                        component. <code>R5</code> is not evaluated again, even though the
+                        general rules of the stratum will now be evaluated
+                        repeatedly.
+                    </li>
+                </ul>
+                <p><strong>Stratum 1, first pass of the general rules.</strong></p>
+                <ul>
+                    <li>
+                        <code>R4</code>: the pattern <code>?x rdf:type :Component</code> matches
+                        <code>:frontend</code>, <code>:app</code>, <code>:db</code>, and <code>:logger</code>.
+                        (It does not match the <code>rdf:type :Notification</code> triples
+                        just created by <code>R5</code>.)
+                        The negation element <code>NOT { ?x :status :criticallyExposed }</code> rejects
+                        the solutions for <code>:frontend</code>, <code>:app</code>, and <code>:db</code>, because
+                        <code>GE</code> contains a <code>:status :criticallyExposed</code> triple for each of them.
+                        Only the solution <code>?x = :logger</code> survives, producing the new
+                        triple <code>:logger :status :safeToDeploy</code>.
+                    </li>
+                </ul>
+                <pre class="block ex-inferred" aria-busy="false"><code class="hljs"># GI after stratum 1
+:db       :exposedTo :vuln1 .
+:app      :exposedTo :vuln1 .
+:frontend :exposedTo :vuln1 .
+:db       :status :criticallyExposed .
+:app      :status :criticallyExposed .
+:frontend :status :criticallyExposed .
+_:n1      rdf:type :Notification .          # new (R5)
+_:n1      :concerns :db .                   # new (R5)
+_:n2      rdf:type :Notification .          # new (R5)
+_:n2      :concerns :app .                  # new (R5)
+_:n3      rdf:type :Notification .          # new (R5)
+_:n3      :concerns :frontend .             # new (R5)
+:logger   :status :safeToDeploy .           # new (R4)</code></pre>
+                <p><strong>Stratum 1, second pass of the general rules.</strong>
+                    No new triples. Evaluation is complete, and <code>GI</code> as shown
+                    above is the resulting <a data-link-type="dfn|abstract-op" href="#dfn-inference-graph"
+                        class="internalDFN" id="ref-for-dfn-inference-graph-7">inference graph</a>.
+                </p>
+                <p>
+                    The stratification is what makes this outcome reliable.
+                    Evaluated during the first pass of stratum 0, before
+                    <code>:frontend :status :criticallyExposed</code> was derived, <code>R4</code> would have
+                    incorrectly concluded <code>:frontend :status :safeToDeploy</code>, and
+                    <code>R5</code> would have created notifications for <code>:db</code> and <code>:app</code>
+                    but none for <code>:frontend</code>.
+                    Deferring both to stratum 1 means they see the complete set of
+                    <code>:status :criticallyExposed</code> triples, so the order in which
+                    rules are evaluated within each stratum does not affect the
+                    final outcome.
+                </p>
+            </section>
+        </section>
     </section>
 
     <section id="shapes-rules-grammar">
@@ -4331,8 +4883,8 @@ result is <span class="hljs-title function_">imports</span>(<span class="hljs-va
                 </tbody>
             </table>
 
-            <div class="note" role="note" id="issue-container-generatedID-13">
-                <div class="note-title marker" id="h-note-7"><span>Note</span></div>
+            <div class="note" role="note" id="issue-container-generatedID-14">
+                <div class="note-title marker" id="h-note-8"><span>Note</span></div>
                 <p class="">%-encoded sequences are in the
                     <a href="#rIRIREF">character range for IRIs</a>
                     and are <a href="#rPERCENT">explicitly allowed</a> in local names.
@@ -6485,7 +7037,7 @@ result is <span class="hljs-title function_">imports</span>(<span class="hljs-va
                 <dt id="bib-rdf12-turtle">[RDF12-TURTLE]</dt>
                 <dd>
                     <a href="https://www.w3.org/TR/rdf12-turtle/"><cite>RDF 1.2 Turtle</cite></a>. Gregg Kellogg; Andy
-                    Seaborne; Dominik Tomaszuk. W3C. 12 June 2026. W3C Working Draft. URL: <a
+                    Seaborne; Dominik Tomaszuk. W3C. 23 July 2026. W3C Working Draft. URL: <a
                         href="https://www.w3.org/TR/rdf12-turtle/">https://www.w3.org/TR/rdf12-turtle/</a>
                 </dd>
                 <dt id="bib-rfc2119">[RFC2119]</dt>
@@ -6657,10 +7209,11 @@ result is <span class="hljs-title function_">imports</span>(<span class="hljs-va
                     href="#ref-for-dfn-triple-template-10" title="Reference 5">(5)</a> <a
                     href="#ref-for-dfn-triple-template-11" title="Reference 6">(6)</a> <a
                     href="#ref-for-dfn-triple-template-12" title="Reference 7">(7)</a> <a
-                    href="#ref-for-dfn-triple-template-13" title="Reference 8">(8)</a>
+                    href="#ref-for-dfn-triple-template-13" title="Reference 8">(8)</a> <a
+                    href="#ref-for-dfn-triple-template-14" title="Reference 9">(9)</a>
             </li>
             <li>
-                <a href="#ref-for-dfn-triple-template-14" title="§ 4.4.1 Stratification Condition">§ 4.4.1
+                <a href="#ref-for-dfn-triple-template-15" title="§ 4.4.1 Stratification Condition">§ 4.4.1
                     Stratification Condition</a>
             </li>
         </ul>
@@ -6757,6 +7310,11 @@ result is <span class="hljs-title function_">imports</span>(<span class="hljs-va
                 <a href="#ref-for-dfn-triple-pattern-element-8" title="Reference 2">(2)</a> <a
                     href="#ref-for-dfn-triple-pattern-element-9" title="Reference 3">(3)</a>
             </li>
+            <li>
+                <a href="#ref-for-dfn-triple-pattern-element-10" title="§ 6.6.1 Determining the Dependencies">§ 6.6.1
+                    Determining the Dependencies</a> <a href="#ref-for-dfn-triple-pattern-element-11"
+                    title="Reference 2">(2)</a>
+            </li>
         </ul>
     </div>
     <div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-negation-element"
@@ -6786,10 +7344,16 @@ result is <span class="hljs-title function_">imports</span>(<span class="hljs-va
             <li>
                 <a href="#ref-for-dfn-negation-element-6" title="§ 4.3 Rule Dependency">§ 4.3 Rule Dependency</a> <a
                     href="#ref-for-dfn-negation-element-7" title="Reference 2">(2)</a> <a
-                    href="#ref-for-dfn-negation-element-8" title="Reference 3">(3)</a>
+                    href="#ref-for-dfn-negation-element-8" title="Reference 3">(3)</a> <a
+                    href="#ref-for-dfn-negation-element-9" title="Reference 4">(4)</a>
             </li>
             <li>
-                <a href="#ref-for-dfn-negation-element-9" title="§ 4.4 Stratification">§ 4.4 Stratification</a>
+                <a href="#ref-for-dfn-negation-element-10" title="§ 4.4 Stratification">§ 4.4 Stratification</a>
+            </li>
+            <li>
+                <a href="#ref-for-dfn-negation-element-11" title="§ 6.6.1 Determining the Dependencies">§ 6.6.1
+                    Determining the Dependencies</a> <a href="#ref-for-dfn-negation-element-12"
+                    title="Reference 2">(2)</a>
             </li>
         </ul>
     </div>
@@ -6850,6 +7414,14 @@ result is <span class="hljs-title function_">imports</span>(<span class="hljs-va
             <li>
                 <a href="#ref-for-dfn-assignment-element-13" title="§ 6.3 Evaluation of an Expression">§ 6.3 Evaluation
                     of an Expression</a>
+            </li>
+            <li>
+                <a href="#ref-for-dfn-assignment-element-14" title="§ 6.6.1 Determining the Dependencies">§ 6.6.1
+                    Determining the Dependencies</a>
+            </li>
+            <li>
+                <a href="#ref-for-dfn-assignment-element-15" title="§ 6.6.2 Calculating the Stratification">§ 6.6.2
+                    Calculating the Stratification</a>
             </li>
         </ul>
     </div>
@@ -7072,6 +7644,15 @@ result is <span class="hljs-title function_">imports</span>(<span class="hljs-va
                 <a href="#ref-for-dfn-run-once-rule-6" title="§ 6.5 Evaluation of a Rule Set">§ 6.5 Evaluation of a Rule
                     Set</a>
             </li>
+            <li>
+                <a href="#ref-for-dfn-run-once-rule-7" title="§ 6.6.2 Calculating the Stratification">§ 6.6.2
+                    Calculating the Stratification</a> <a href="#ref-for-dfn-run-once-rule-8"
+                    title="Reference 2">(2)</a>
+            </li>
+            <li>
+                <a href="#ref-for-dfn-run-once-rule-9" title="§ 6.6.3 Evaluating the Strata">§ 6.6.3 Evaluating the
+                    Strata</a>
+            </li>
         </ul>
     </div>
     <div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-general-rule"
@@ -7092,6 +7673,10 @@ result is <span class="hljs-title function_">imports</span>(<span class="hljs-va
             <li>
                 <a href="#ref-for-dfn-general-rule-2" title="§ 6.5 Evaluation of a Rule Set">§ 6.5 Evaluation of a Rule
                     Set</a>
+            </li>
+            <li>
+                <a href="#ref-for-dfn-general-rule-3" title="§ 6.6.2 Calculating the Stratification">§ 6.6.2 Calculating
+                    the Stratification</a>
             </li>
         </ul>
     </div>
@@ -7163,6 +7748,9 @@ result is <span class="hljs-title function_">imports</span>(<span class="hljs-va
             <li>
                 <a href="#ref-for-dfn-rule-set-28" title="§ 6.5 Evaluation of a Rule Set">§ 6.5 Evaluation of a Rule
                     Set</a>
+            </li>
+            <li>
+                <a href="#ref-for-dfn-rule-set-29" title="§ 6.6 Worked Example">§ 6.6 Worked Example</a>
             </li>
         </ul>
     </div>
@@ -7248,6 +7836,13 @@ result is <span class="hljs-title function_">imports</span>(<span class="hljs-va
             <li>
                 <a href="#ref-for-dfn-inference-graph-4" title="§ 4.1 Elements of the Abstract Syntax">§ 4.1 Elements of
                     the Abstract Syntax</a> <a href="#ref-for-dfn-inference-graph-5" title="Reference 2">(2)</a>
+            </li>
+            <li>
+                <a href="#ref-for-dfn-inference-graph-6" title="§ 6.6 Worked Example">§ 6.6 Worked Example</a>
+            </li>
+            <li>
+                <a href="#ref-for-dfn-inference-graph-7" title="§ 6.6.3 Evaluating the Strata">§ 6.6.3 Evaluating the
+                    Strata</a>
             </li>
         </ul>
     </div>
@@ -7493,6 +8088,10 @@ result is <span class="hljs-title function_">imports</span>(<span class="hljs-va
                 <a href="#ref-for-dfn-dependency-graph-8" title="§ 6.2.2 Calculate Stratification">§ 6.2.2 Calculate
                     Stratification</a>
             </li>
+            <li>
+                <a href="#ref-for-dfn-dependency-graph-9" title="§ 6.6.1 Determining the Dependencies">§ 6.6.1
+                    Determining the Dependencies</a>
+            </li>
         </ul>
     </div>
     <div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-transitive-rule-dependency"
@@ -7509,6 +8108,10 @@ result is <span class="hljs-title function_">imports</span>(<span class="hljs-va
             <li>
                 <a href="#ref-for-dfn-transitive-rule-dependency-1" title="§ 4.3.1 Dependency Graph">§ 4.3.1 Dependency
                     Graph</a>
+            </li>
+            <li>
+                <a href="#ref-for-dfn-transitive-rule-dependency-2" title="§ 6.6.1 Determining the Dependencies">§ 6.6.1
+                    Determining the Dependencies</a>
             </li>
         </ul>
     </div>
@@ -7612,6 +8215,10 @@ result is <span class="hljs-title function_">imports</span>(<span class="hljs-va
             <li>
                 <a href="#ref-for-dfn-stratification-condition-2" title="§ 4.4.2 Stratification Algorithm">§ 4.4.2
                     Stratification Algorithm</a>
+            </li>
+            <li>
+                <a href="#ref-for-dfn-stratification-condition-3" title="§ 6.6.1 Determining the Dependencies">§ 6.6.1
+                    Determining the Dependencies</a>
             </li>
         </ul>
     </div>
@@ -8240,7 +8847,7 @@ result is <span class="hljs-title function_">imports</span>(<span class="hljs-va
                     [...HL_COLORS.keys()].forEach(key => HL_COLORS.set(key, true));
                 };
                 if (hightligtedElems.length) {
-                    document.body.addEventListener("click", resetListener, { once: true });
+                    document.body.addEventListener("click", resetListener, {once: true});
                 }
             }
 
@@ -8260,7 +8867,7 @@ result is <span class="hljs-title function_">imports</span>(<span class="hljs-va
              */
             function getHighlightColor(target) {
                 // return current colors if applicable
-                const { value } = target.classList;
+                const {value} = target.classList;
                 const re = /respec-hl-\w+/;
                 const activeClass = re.test(value) && value.match(re);
                 if (activeClass) return activeClass[0];
@@ -8351,7 +8958,7 @@ result is <span class="hljs-title function_">imports</span>(<span class="hljs-va
                                                     * @param {KeyboardEvent|MouseEvent} event
                                                     */
                                                    return event => {
-                                                       const { target, type } = event;
+                                                       const {target, type} = event;
 
                                                        if (!(target instanceof HTMLElement)) return;
 
@@ -8412,14 +9019,14 @@ result is <span class="hljs-title function_">imports</span>(<span class="hljs-va
                                                        event.clientY >= rect.top
                                                    ) {
                                                        // The event probably happened inside the bounding rect...
-                                                       return { x: event.clientX, y: event.clientY };
+                                                       return {x: event.clientX, y: event.clientY};
                                                    }
 
                                                    // Offset to the middle of the element
                                                    const x = rect.x + rect.width / 2;
                                                    // Placed at the bottom of the element
                                                    const y = rect.y + rect.height;
-                                                   return { x, y };
+                                                   return {x, y};
                                                }
 
                                                /**
@@ -8450,7 +9057,7 @@ result is <span class="hljs-title function_">imports</span>(<span class="hljs-va
                                                 * @param {HTMLElement} panel
                                                 * @param {{ x: number, y: number }} clickPosition
                                                 */
-                                               function displayPanel(dfn, panel, { x, y }) {
+                                               function displayPanel(dfn, panel, {x, y}) {
                                                    panel.hidden = false;
                                                    // distance (px) between edge of panel and the pointing triangle (caret)
                                                    const MARGIN = 20;
@@ -8460,7 +9067,7 @@ result is <span class="hljs-title function_">imports</span>(<span class="hljs-va
                                                    let closestTop = 0;
                                                    let minDiff = Infinity;
                                                    for (const rect of dfnRects) {
-                                                       const { top, bottom } = rect;
+                                                       const {top, bottom} = rect;
                                                        const diffFromClickY = Math.abs((top + bottom) / 2 - y);
                                                        if (diffFromClickY < minDiff) {
                                                            minDiff = diffFromClickY;
@@ -8518,7 +9125,7 @@ result is <span class="hljs-title function_">imports</span>(<span class="hljs-va
                                                            mo.disconnect();
                                                        }
                                                    });
-                                                   mo.observe(panel, { attributes: true, attributeFilter: ["hidden"] });
+                                                   mo.observe(panel, {attributes: true, attributeFilter: ["hidden"]});
                                                }
 
                                                /**
