@@ -1135,14 +1135,14 @@ const links = [
         lang: "cjk",
         state: "Draft"
     },
-    // {
-    //     text: "requestStorageAccessFor API",
-    //     href: "https://htmlspecs.com/request-storage-access-for/",
-    //     src: "https://privacycg.github.io/requestStorageAccessFor/",
-    //     "last-modified": "Fri, 17 Oct 2025 14:41:20 GMT",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "requestStorageAccessFor API",
+        href: "https://htmlspecs.com/request-storage-access-for/",
+        src: "https://privacycg.github.io/requestStorageAccessFor/",
+        "last-modified": "Fri, 17 Oct 2025 14:41:20 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
     {
         text: "Shared Storage API",
         href: "https://htmlspecs.com/shared-storage/",
