@@ -2160,14 +2160,14 @@ const links = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "WebXR Plane Detection Module",
-    //     href: "https://htmlspecs.com/webxr-plane-detection/",
-    //     src: "https://immersive-web.github.io/plane-detection/",
-    //     "last-modified": "Mon, 30 Mar 2026 18:03:00 GMT",
-    //     lang: "cjk",
-    //     state: "Draft"
-    // },
+    {
+        text: "WebXR Plane Detection Module",
+        href: "https://htmlspecs.com/webxr-plane-detection/",
+        src: "https://immersive-web.github.io/plane-detection/",
+        "last-modified": "Mon, 30 Mar 2026 18:03:00 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
     // {
     //     text: "WebXR Mesh Detection Module",
     //     href: "https://htmlspecs.com/webxr-mesh-detection/",
