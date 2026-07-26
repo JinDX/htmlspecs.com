@@ -333,7 +333,7 @@ function filterCategories(container, query, noResultsElement) {
 
     linkItems.forEach(item => {
         const searchableText = Array.from(item.querySelectorAll("a"))
-            .map(link => `${link.textContent} ${link.title}`)
+            .map(link => link.textContent)
             .join(" ")
             .toLocaleLowerCase();
         item.hidden = !searchableText.includes(normalizedQuery);
