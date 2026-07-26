@@ -3817,14 +3817,14 @@ const cssLinks = [
         lang: "cjk",
         state: "WD"
     },
-    // {
-    //     text: "Incremental Font Transfer",
-    //     href: "https://htmlspecs.com/ift/",
-    //     src: "https://www.w3.org/TR/2025/CRD-IFT-20251118/",
-    //     "last-modified": "-",
-    //     lang: "cjk",
-    //     state: "CRD"
-    // },
+    {
+        text: "Incremental Font Transfer",
+        href: "https://htmlspecs.com/IFT/",
+        src: "https://www.w3.org/TR/2025/CRD-IFT-20251118/",
+        "last-modified": "-",
+        lang: "cjk",
+        state: "CRD"
+    },
     {
         text: "CSS Font Loading Module Level 3",
         href: "https://htmlspecs.com/css/css-font-loading/",
