@@ -2811,6 +2811,14 @@ const links = [
         state: "WD"
     },
     {
+        text: "Email Verification API",
+        href: "https://htmlspecs.com/email-verification/",
+        src: "https://wicg.github.io/email-verification/",
+        "last-modified": "Wed, 17 Jun 2026 16:15:59 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
+    {
         text: "Digital Credentials",
         href: "https://htmlspecs.com/digital-credentials/",
         src: "https://www.w3.org/TR/2026/WD-digital-credentials-20260716/",
