@@ -636,7 +636,7 @@ const links = [
     {
         text: "SHACL 1.2 Rules",
         href: "https://htmlspecs.com/shacl12-rules/",
-        src: "https://www.w3.org/TR/2026/WD-shacl12-rules-20260722/",
+        src: "https://www.w3.org/TR/2026/WD-shacl12-rules-20260725/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"
@@ -2835,6 +2835,14 @@ const links = [
         state: "WD"
     },
     {
+        text: "Email Verification API",
+        href: "https://htmlspecs.com/email-verification/",
+        src: "https://wicg.github.io/email-verification/",
+        "last-modified": "Wed, 17 Jun 2026 16:15:59 GMT",
+        lang: "cjk",
+        state: "Draft"
+    },
+    {
         text: "Digital Credentials",
         href: "https://htmlspecs.com/digital-credentials/",
         src: "https://www.w3.org/TR/2026/WD-digital-credentials-20260716/",
@@ -3153,7 +3161,7 @@ const links = [
     {
         text: "Attribution Level 1",
         href: "https://htmlspecs.com/attribution/",
-        src: "https://www.w3.org/TR/2026/WD-attribution-20260722/",
+        src: "https://www.w3.org/TR/2026/WD-attribution-20260725/",
         "last-modified": "-",
         lang: "cjk",
         state: "WD"

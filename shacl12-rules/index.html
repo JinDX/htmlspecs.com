@@ -915,12 +915,12 @@
     "informative-dfn": false,
     "no-unused-dfns": false
   },
-  "gitRevision": "485c780a90e542c9cbb81b4de6809b2306dc0984",
-  "publishDate": "2026-07-22",
+  "gitRevision": "e2259cda458411d9c03c1a82d7acf0d221ab4307",
+  "publishDate": "2026-07-25",
   "previousMaturity": "WD",
-  "previousPublishDate": "2026-07-21",
-  "publishISODate": "2026-07-22T00:00:00.000Z",
-  "generatedSubtitle": "W3C Working Draft 22 July 2026"
+  "previousPublishDate": "2026-07-25",
+  "publishISODate": "2026-07-25T00:00:00.000Z",
+  "generatedSubtitle": "W3C Working Draft 25 July 2026"
 }</script>
     <link rel="stylesheet" href="https://www.w3.org/StyleSheets/TR/2021/W3C-WD">
     <link rel="stylesheet" media="(prefers-color-scheme: dark)" href="https://www.w3.org/StyleSheets/TR/2021/dark.css">
@@ -933,14 +933,14 @@
             </a></p>
         <h1 id="title" class="title">SHACL 1.2 规则</h1>
         <p id="w3c-state"><a href="https://www.w3.org/standards/types#WD">W3C 工作草案</a> <time class="dt-published"
-                datetime="2026-07-22">2026 年 7 月 22 日</time></p>
+                datetime="2026-07-25">2026 年 7 月 25 日</time></p>
         <details open="">
             <summary>关于本文档的更多详细信息</summary>
             <dl>
                 <dt>此版本：</dt>
                 <dd>
                     <a class="u-url"
-                        href="https://www.w3.org/TR/2026/WD-shacl12-rules-20260722/">https://www.w3.org/TR/2026/WD-shacl12-rules-20260722/</a>
+                        href="https://www.w3.org/TR/2026/WD-shacl12-rules-20260725/">https://www.w3.org/TR/2026/WD-shacl12-rules-20260725/</a>
                 </dd>
                 <dt>最新发布版本：</dt>
                 <dd>
@@ -1182,6 +1182,17 @@
                             </bdi>表达式的求值</a></li>
                     <li class="tocline"><a class="tocxref" href="#eval-rule"><bdi class="secno">6.4 </bdi>规则的求值</a></li>
                     <li class="tocline"><a class="tocxref" href="#eval-rule-set"><bdi class="secno">6.5 </bdi>规则集的求值</a>
+                    </li>
+                    <li class="tocline"><a class="tocxref" href="#eval-worked-example"><bdi class="secno">6.6
+                            </bdi>完整示例</a>
+                        <ol class="toc">
+                            <li class="tocline"><a class="tocxref" href="#worked-example-dependencies"><bdi
+                                        class="secno">6.6.1 </bdi>确定依赖关系</a></li>
+                            <li class="tocline"><a class="tocxref" href="#worked-example-stratification"><bdi
+                                        class="secno">6.6.2 </bdi>计算分层</a></li>
+                            <li class="tocline"><a class="tocxref" href="#worked-example-evaluation"><bdi
+                                        class="secno">6.6.3 </bdi>对各层求值</a></li>
+                        </ol>
                     </li>
                 </ol>
             </li>
@@ -1563,6 +1574,13 @@
             </div>
 
 
+            <p>
+                本节中的示例描述了软件组件及其
+                依赖关系：前端调用应用服务器，而
+                应用服务器查询一个存在已知
+                漏洞的数据库。
+            </p>
+
             <p>在第一个示例中，我们有以下数据图和规则集：</p>
 
             <aside class="example" id="example-basic-example">
@@ -1570,41 +1588,40 @@
                     <a class="self-link" href="#example-basic-example">示例<bdi> 1</bdi></a><span
                         class="example-title">：基本示例</span>
                 </div>
-                <pre class="block ex-data" aria-busy="false"><code class="hljs">:A :fatherOf :X .
-:B :motherOf :X .
-:C :motherOf :A .</code></pre>
-                <pre class="block ex-rules" aria-busy="false"><code class="hljs">RULE { ?x :childOf ?y } WHERE { ?y :fatherOf ?x }
-RULE { ?x :childOf ?y } WHERE { ?y :motherOf ?x }</code></pre>
-                <pre class="block ex-inferred" aria-busy="false"><code class="hljs">:X :childOf :A .
-:X :childOf :B .
-:A :childOf :C .</code></pre>
+                <pre class="block ex-data" aria-busy="false"><code class="hljs">:frontend :callsService :app .
+:app      :queriesDatabase :db .
+:db       :hasVulnerability :vuln1 .</code></pre>
+                <pre class="block ex-rules" aria-busy="false"><code class="hljs">RULE { ?x :dependsOn ?y } WHERE { ?x :callsService ?y }
+RULE { ?x :dependsOn ?y } WHERE { ?x :queriesDatabase ?y }</code></pre>
+                <pre class="block ex-inferred" aria-busy="false"><code class="hljs">:frontend :dependsOn :app .
+:app      :dependsOn :db .</code></pre>
             </aside>
 
-            <p>上述规则应用到数据后，将得出结论：
-                <code>:X</code> 是 <code>:A</code> 和 <code>:B</code> 的 <code>:childOf</code>：
+            <p>将上述规则应用于数据后，可以得出：
+                <code>:frontend</code> 依赖于 <code>:app</code>，而 <code>:app</code> 依赖于
+                <code>:db</code>，无论依赖关系属于何种类型。
             </p>
 
             <p>
-                然后我们可以通过添加一个依赖于其他规则产生的
-                <code>:childOf</code> 三元组的规则，派生 <code>:descendedFrom</code> 关系：
+                然后，我们可以添加一条依赖于其他规则所生成的 <code>:dependsOn</code> 三元组的规则，
+                以推导出 <code>:exposedTo</code> 关系（另请参阅下面的 <a href="#rule-dependency" class="sectionRef sec-ref"><bdi
+                        class="secno">4.3 </bdi>规则依赖关系</a>）：
             </p>
 
-            <aside class="example" id="example-2">
+            <aside class="example" id="example-depending-on-inferred-triples">
                 <div class="marker">
-                    <a class="self-link" href="#example-2">示例<bdi> 2</bdi></a>
+                    <a class="self-link" href="#example-depending-on-inferred-triples">示例<bdi> 2</bdi></a><span
+                        class="example-title">：依赖推断出的三元组</span>
                 </div>
-                <pre class="block ex-data" aria-busy="false"><code class="hljs">:A :fatherOf :X .
-:B :motherOf :X .
-:C :motherOf :A .</code></pre>
-                <pre class="block ex-rules" aria-busy="false"><code class="hljs">RULE { ?x :childOf ?y } WHERE { ?y :fatherOf ?x }
-RULE { ?x :childOf ?y } WHERE { ?y :motherOf ?x }
-RULE { ?x :descendedFrom ?y } WHERE { ?x :childOf ?y }</code></pre>
-                <pre class="block ex-inferred" aria-busy="false"><code class="hljs">:A :descendedFrom :C .
-:X :descendedFrom :B .
-:X :descendedFrom :A .
-:X :childOf :B .
-:X :childOf :A .
-:A :childOf :C .</code></pre>
+                <pre class="block ex-data" aria-busy="false"><code class="hljs">:frontend :callsService :app .
+:app      :queriesDatabase :db .
+:db       :hasVulnerability :vuln1 .</code></pre>
+                <pre class="block ex-rules" aria-busy="false"><code class="hljs">RULE { ?x :dependsOn ?y } WHERE { ?x :callsService ?y }
+RULE { ?x :dependsOn ?y } WHERE { ?x :queriesDatabase ?y }
+RULE { ?x :exposedTo ?v } WHERE { ?x :dependsOn ?y . ?y :hasVulnerability ?v }</code></pre>
+                <pre class="block ex-inferred" aria-busy="false"><code class="hljs">:app      :exposedTo :vuln1 .
+:frontend :dependsOn :app .
+:app      :dependsOn :db .</code></pre>
             </aside>
 
         </section>
@@ -1615,8 +1632,13 @@ RULE { ?x :descendedFrom ?y } WHERE { ?x :childOf ?y }</code></pre>
             </div>
 
             <p>
-                我们可以添加一个依赖于 <code>:descendedFrom</code> 三元组的规则，
-                以推断 <code>:X</code> 是 <code>:C</code> 的 <code>:descendedFrom</code>：
+                上一节中的 <code>:exposedTo</code> 规则只能覆盖直接
+                依赖关系：<code>:frontend</code> 并不直接依赖于 <code>:db</code>，因此
+                不会为 <code>:frontend</code> 推断出 <code>:exposedTo</code> 三元组。
+                为了沿任意长度的依赖链传播暴露关系，我们
+                将该规则替换为两条规则：组件会暴露于其自身具有的
+                漏洞，并且组件会暴露于其直接依赖项所暴露的任何
+                漏洞：
             </p>
 
             <aside class="example" id="example-rule-recursion">
@@ -1624,23 +1646,30 @@ RULE { ?x :descendedFrom ?y } WHERE { ?x :childOf ?y }</code></pre>
                     <a class="self-link" href="#example-rule-recursion">示例<bdi> 3</bdi></a><span
                         class="example-title">：规则递归</span>
                 </div>
-                <pre class="block ex-rules" aria-busy="false"><code class="hljs">RULE { ?x :childOf ?y } WHERE { ?y :fatherOf ?x }
-RULE { ?x :childOf ?y } WHERE { ?y :motherOf ?x }
-RULE { ?x :descendedFrom ?y } WHERE { ?x :childOf ?y }
-RULE { ?x :descendedFrom ?y } WHERE { ?x :childOf ?z . ?z :descendedFrom ?y }</code></pre>
-                <pre class="block ex-inferred" aria-busy="false"><code class="hljs">:A :descendedFrom :C .
-:X :descendedFrom :C .
-:X :descendedFrom :B .
-:X :descendedFrom :A .
-:X :childOf :B .
-:X :childOf :A .
-:A :childOf :C .</code></pre>
+                <pre class="block ex-data" aria-busy="false"><code class="hljs">:frontend :callsService :app .
+:app      :queriesDatabase :db .
+:db       :hasVulnerability :vuln1 .</code></pre>
+                <pre class="block ex-rules" aria-busy="false"><code class="hljs">RULE { ?x :dependsOn ?y } WHERE { ?x :callsService ?y }
+RULE { ?x :dependsOn ?y } WHERE { ?x :queriesDatabase ?y }
+RULE { ?x :exposedTo ?v } WHERE { ?x :hasVulnerability ?v }
+RULE { ?x :exposedTo ?v } WHERE { ?x :dependsOn ?y . ?y :exposedTo ?v }</code></pre>
+                <pre class="block ex-inferred" aria-busy="false"><code class="hljs">:db       :exposedTo :vuln1 .
+:app      :exposedTo :vuln1 .
+:frontend :exposedTo :vuln1 .
+:frontend :dependsOn :app .
+:app      :dependsOn :db .</code></pre>
             </aside>
 
-            <p>这会添加三元组 <code>:X :descendedFrom :C</code>。</p>
             <p>
-                最后一条规则是一个<i>递归</i>规则，其规则主体
-                依赖于该规则的头部。
+                与上一个示例相比，这里新增了
+                <code>:db :exposedTo :vuln1</code>——数据库暴露于其
+                自身的漏洞——以及 <code>:frontend :exposedTo :vuln1</code>：
+                暴露关系会沿依赖链传播至 <code>:frontend</code>，
+                无论该链有多长。
+            </p>
+            <p>
+                最后一条规则是一条<i>递归</i>规则：规则体
+                依赖于规则头。
             </p>
 
         </section>
@@ -1652,35 +1681,40 @@ RULE { ?x :descendedFrom ?y } WHERE { ?x :childOf ?z . ?z :descendedFrom ?y }</c
             </div>
 
             <p>
-                我们可以在规则主体中使用表达式来限制主体匹配中
+                我们可以在规则体中使用表达式，以限制规则体匹配过程中
                 变量的取值。
-                例如，给定关于城镇及其人口的数据，
-                我们可以为人口大于 1500 的城镇推断一个类：
+                例如，给定每个漏洞的严重程度，
+                我们可以为暴露于严重
+                漏洞的组件赋予状态：
             </p>
 
-            <aside class="example" id="example-4">
+            <aside class="example" id="example-filtering">
                 <div class="marker">
-                    <a class="self-link" href="#example-4">示例<bdi> 4</bdi></a>
+                    <a class="self-link" href="#example-filtering">示例<bdi> 4</bdi></a><span class="example-title">：
+                        过滤</span>
                 </div>
-                <pre class="block ex-data" aria-busy="false"><code class="hljs">:town1 :population 1000 .
-:town2 :population 2000 .</code></pre>
-                <pre class="block ex-rules" aria-busy="false"><code class="hljs">RULE { ?x rdf:type :largeTown } 
-WHERE { 
-    ?x :population ?p 
-    FILTER(?p &gt; 1500)
+                <pre class="block ex-data" aria-busy="false"><code class="hljs">:app1 :exposedTo :vuln1 .
+:app2 :exposedTo :vuln2 .
+:vuln1 :severity 9.1 .
+:vuln2 :severity 4.3 .</code></pre>
+                <pre class="block ex-rules" aria-busy="false"><code class="hljs">RULE { ?x :status :criticallyExposed }
+WHERE {
+    ?x :exposedTo ?v .
+    ?v :severity ?s .
+    FILTER(?s &gt;= 9.0)
 }</code></pre>
                 <pre class="block ex-inferred"
-                    aria-busy="false"><code class="hljs">:town2 rdf:type :largeTown .</code></pre>
+                    aria-busy="false"><code class="hljs">:app1 :status :criticallyExposed .</code></pre>
             </aside>
 
             <p>
-                <code>FILTER</code> 对表达式求值；如果表达式求值为 true，
-                则保留当前的变量绑定集合；如果表达式求值为 false，则丢弃
-                当前的变量绑定集合。
+                <code>FILTER</code> 对表达式求值，如果表达式求值为 true，则保留当前
+                变量绑定集；如果表达式求值为 false，则丢弃
+                当前变量绑定集。
                 这与
                 <a href="https://www.w3.org/TR/sparql12-query/#termConstraint"
                     id="ref-for-index-term-filter-operation-of-sparql-1">SPARQL 的 <code>FILTER</code> 操作</a>
-                相同，并且 SHACL 规则提供了许多与 SPARQL 相同的函数和运算符。
+                相同，并且 SHACL Rules 提供了许多与 SPARQL 相同的函数和运算符。
             </p>
         </section>
 
@@ -1695,13 +1729,15 @@ WHERE {
                 这称为“失败即否定”。
             </p>
             <p>
-                为了对否定元素求值，规则求值算法会确保
-                所有可能产生与否定元素中的模式匹配的三元组的规则
-                都已完成。这称为
+                为了对否定元素求值，规则求值算法
+                会确保所有可能生成与否定元素中的模式相匹配的三元组的规则
+                均已执行完毕。这称为
                 <i><a data-link-type="dfn|abstract-op" href="#dfn-stratification" class="internalDFN"
                         id="ref-for-dfn-stratification-1">分层</a></i>，并确保否定基于
-                所有相关的可能三元组，无论这些三元组来自数据，
-                还是来自其他规则推断出的推理三元组。
+                所有相关的可能三元组，无论这些三元组来自数据，还是
+                否定元素中的三元组均已执行完毕。包含该否定的规则被称为_依赖_于
+                生成这些三元组的规则（请参阅下面的 <a href="#rule-dependency" class="sectionRef sec-ref"><bdi class="secno">4.3
+                    </bdi>规则依赖关系</a>）。
             </p>
 
             <aside class="example" id="example-negation-as-failure">
@@ -1709,20 +1745,17 @@ WHERE {
                     <a class="self-link" href="#example-negation-as-failure">示例<bdi> 5</bdi></a><span
                         class="example-title">：失败即否定</span>
                 </div>
-                <pre class="block ex-data" aria-busy="false"><code class="hljs">:X1 rdf:type :Place ;
-:population 1000 .
+                <pre class="block ex-data" aria-busy="false"><code class="hljs">:app rdf:type :Component ;
+:status :criticallyExposed .
 
-:X2 rdf:type :Place ;
-:population 2000 .
-
-:X3 rdf:type :Place .</code></pre>
-                <pre class="block ex-rules" aria-busy="false"><code class="hljs">RULE { ?x rdf:type :UnclassifiedSize } 
-WHERE { 
-    ?x rdf:type :Place .
-    NOT { ?x :population ?p . }
+:logger rdf:type :Component .</code></pre>
+                <pre class="block ex-rules" aria-busy="false"><code class="hljs">RULE { ?x :status :safeToDeploy }
+WHERE {
+    ?x rdf:type :Component .
+    NOT { ?x :status :criticallyExposed }
 }</code></pre>
                 <pre class="block ex-inferred"
-                    aria-busy="false"><code class="hljs">:X3 rdf:type :UnclassifiedSize .</code></pre>
+                    aria-busy="false"><code class="hljs">:logger :status :safeToDeploy .</code></pre>
             </aside>
 
         </section>
@@ -1734,58 +1767,56 @@ WHERE {
             </div>
 
             <p>
-                赋值允许你将表达式的结果赋给规则主体中的一个变量。
-                这可用于基于数据创建新的 RDF 术语。
+                赋值允许你在规则体中将表达式的结果赋给变量。
+                这可用于根据数据创建新的 RDF 项。
             </p>
 
-            <aside class="example" id="example-6">
+            <aside class="example" id="example-assignment">
                 <div class="marker">
-                    <a class="self-link" href="#example-6">示例<bdi> 6</bdi></a>
+                    <a class="self-link" href="#example-assignment">示例<bdi> 6</bdi></a><span
+                        class="example-title">：赋值</span>
                 </div>
-                <pre class="block ex-rules" aria-busy="false"><code class="hljs">RULE { ?x :calculatedDistanceKm ?kilometers }
-WHERE { 
-    ?x :distanceMiles ?miles .
-    SET ( ?kilometers := ?miles * 1.60934 )
+                <pre class="block ex-rules" aria-busy="false"><code class="hljs">RULE { ?v :riskScore ?r }
+WHERE {
+    ?v :severity ?s .
+    ?v :exploitLikelihood ?p .
+    SET ( ?r := ?s * ?p )
 }</code></pre>
             </aside>
 
             <p>
-                空白节点可以用于规则头部，并且每次规则求值生成三元组时，
+                空白节点可以在规则头中使用，并且每当规则求值生成三元组时，
                 每个空白节点都会生成一个新的空白节点。
             </p>
 
-            <aside class="example" id="example-7">
+            <aside class="example" id="example-blank-node-in-the-rule-head">
                 <div class="marker">
-                    <a class="self-link" href="#example-7">示例<bdi> 7</bdi></a>
+                    <a class="self-link" href="#example-blank-node-in-the-rule-head">示例<bdi> 7</bdi></a><span
+                        class="example-title">：规则头中的空白节点</span>
                 </div>
-                <pre class="block ex-rules" aria-busy="false"><code class="hljs">RULE { [] rdf:type :Person ;
-          ex:name ?name 
-       }
-WHERE { 
-    ...
-}</code></pre>
+                <pre class="block ex-rules" aria-busy="false"><code class="hljs">RULE { [] rdf:type :Notification ; :concerns ?x }
+WHERE { ?x :status :criticallyExposed }</code></pre>
             </aside>
 
             <p>
                 涉及<a data-link-type="dfn|abstract-op" href="#dfn-assignment-element" class="internalDFN"
                     id="ref-for-dfn-assignment-element-1">赋值</a>的规则，以及在其
                 <a data-link-type="dfn|abstract-op" href="#dfn-rule-head" class="internalDFN"
-                    id="ref-for-dfn-rule-head-2">规则头部</a>中创建空白节点的规则，都是<a data-link-type="dfn|abstract-op"
-                    href="#dfn-run-once-rule" class="internalDFN" id="ref-for-dfn-run-once-rule-1">只运行一次规则</a>。
-                这类规则会在所有可能产生其所依赖数据的规则之后运行，
-                并在任何依赖其产生数据的规则之前运行。
+                    id="ref-for-dfn-rule-head-2">规则头</a>中创建空白节点的规则，都是<a data-link-type="dfn|abstract-op"
+                    href="#dfn-run-once-rule" class="internalDFN" id="ref-for-dfn-run-once-rule-1">仅运行一次的规则</a>。
+                此类规则会在所有可能生成其所依赖数据的规则之后运行，
+                并在任何依赖其所生成数据的规则之前运行。
                 在<a data-link-type="dfn|abstract-op" href="#dfn-rule-head" class="internalDFN"
-                    id="ref-for-dfn-rule-head-3">规则头部</a>中涉及空白节点的规则也会创建新的
-                RDF 术语，并且是只运行一次规则。
+                    id="ref-for-dfn-rule-head-3">规则头</a>中包含空白节点的规则也会创建新的
+                RDF 项，因此也是仅运行一次的规则。
             </p>
             <p>
-                此条件确保创建 RDF 术语的规则不会多次生成新术语，
-                从而导致潜在的不同结果；同时也确保此类规则不会
-                回到自身并造成无限数量的 RDF 术语。
+                此条件可确保此类规则不会循环回自身并导致生成数量不受限制的
+                RDF 项。
             </p>
             <p>
                 如果对<a data-link-type="dfn|abstract-op" href="#dfn-assignment-element" class="internalDFN"
-                    id="ref-for-dfn-assignment-element-2">赋值</a>中的表达式求值导致错误，
+                    id="ref-for-dfn-assignment-element-2">赋值</a>中的表达式求值时发生错误，
                 则当前解映射会被该<a data-link-type="dfn|abstract-op" href="#dfn-assignment-element" class="internalDFN"
                     id="ref-for-dfn-assignment-element-3">赋值</a>拒绝。
             </p>
@@ -1822,11 +1853,15 @@ WHERE {
             </div>
 
             <p>
-                数据块允许以简洁方式直接向规则集求值提供 RDF 三元组。
-                数据块中的三元组会被添加到推理图中，并可用于
-                规则主体中的匹配。
+                数据块允许直接向规则集求值简洁地提供 RDF 三元组。
+                数据块中的三元组会添加到推理图中，并可供
+                规则体进行匹配。
             </p>
-            <p>@@示例待更新</p>
+
+            <p>
+                例如，规则集可以直接附带已断言的已知事实，
+                而不是从数据中推导这些事实：
+            </p>
 
             <aside class="example" id="example-include-data-in-a-rule-set">
                 <div class="marker">
@@ -1834,10 +1869,22 @@ WHERE {
                         class="example-title">：在规则集中包含数据</span>
                 </div>
                 <pre class="block ex-rules" aria-busy="false"><code class="hljs">DATA {
-    :father rdfs:subClassOf :familyRelationship .
-    :mother rdfs:subClassOf :familyRelationship .
+    # 2.0.0 及更早版本存在一个已知漏洞
+    # 并被视为处于严重暴露状态。
+    :appV2 rdf:type :Component ;
+           :version "2.0.0" ;
+           :status :criticallyExposed .
 }</code></pre>
             </aside>
+
+            <div class="note" role="note" id="issue-container-generatedID-2">
+                <div class="note-title marker" id="h-note-1"><span>注</span></div>
+                <p class="">
+                    数据块等同于一条规则体为空的规则：
+                    无需对任何规则求值，其三元组便会成为推理图的
+                    一部分。
+                </p>
+            </div>
 
         </section>
 
@@ -1901,61 +1948,6 @@ WHERE {
             </p>
         </section>
 
-        <section id="rules-sparql-relationship" class="informative">
-            <div class="header-wrapper">
-                <h3 id="x3-9-relationship-between-shacl-rules-and-sparql"><bdi class="secno">3.9 </bdi>SHACL 规则与
-                    SPARQL 之间的关系</h3><a class="self-link" href="#rules-sparql-relationship"
-                    aria-label="第 3.9 节的永久链接"></a>
-            </div>
-            <p><em>本节为非规范性内容。</em></p>
-
-            <p>
-                SHACL 规则与 SPARQL 关系密切。SHACL 规则被设计为与
-                SPARQL 兼容，并且 SHACL 规则中的许多构造都受到 SPARQL 的启发。
-                但是，也存在一些差异：
-            </p>
-            <ul>
-                <li>
-                    规则具有额外的良构性条件，以确保
-                    变量在使用前始终已绑定。
-                </li>
-                <li>
-                    规则主体类似于 SPARQL <code>CONSTRUCT</code> 查询，
-                    但有一些限制，例如不允许 <code>OPTIONAL</code>。
-                    这些限制确保变量始终被绑定；而在 SPARQL 中，某些
-                    变量可能并未在所有模式解中绑定。
-                </li>
-                <li>
-                    规则 <code>SET</code> 形式和 SPARQL <code>BIND</code> 形式具有不同的错误处理
-                    行为。在
-                    <code>SET</code> 中遇到错误会导致当前解被过滤掉，而
-                    <code>BIND</code> 不会在当前解中设置该变量。
-                    <code>SET(?var := <i>expr</i>)</code> 等同于
-                    SPARQL 中的
-                    <code>BIND(<i>expr</i> AS ?var)</code> 后跟
-                    <code>FILTER(BOUND(?var))</code>。
-
-                </li>
-                <li>
-                    与 SPARQL <code>EXISTS</code> 和 <code>NOT EXISTS</code> 不同，规则
-                    <code>NOT</code> 的主体被限制为
-                    三元组模式和过滤器。它不允许嵌套模式。
-                </li>
-                <li>
-                    属性路径语法仅覆盖可展开为三元组模式的路径。
-                    它不允许任意长度运算符 <code>*</code> 和 <code>+</code>。
-                </li>
-                <li>
-                    某些函数不包含在 SRL 语法中。
-                    没有 <code>COALESCE</code>，也没有 <code>BOUND</code>。
-                    没有哈希函数。
-                    没有 <code>RAND</code>，因为它每次
-                    被调用时都会产生不同结果；允许使用 <code>NOW()</code>，且它被定义为在
-                    整个规则集求值过程中返回同一时间点，类似于
-                    SPARQL 中的行为。
-                </li>
-            </ul>
-        </section>
 
         <section id="ground-data">
             <div class="header-wrapper">
@@ -2388,8 +2380,8 @@ WHERE DATA { ... }</code></pre>
                 位置 3 非正式地称为<em>宾语</em>。
             </p>
 
-            <div class="note" role="note" id="issue-container-generatedID-2">
-                <div class="note-title marker" id="h-note-1"><span>注</span></div>
+            <div class="note" role="note" id="issue-container-generatedID-3">
+                <div class="note-title marker" id="h-note-2"><span>注</span></div>
                 <p class="">
                     一系列<a data-link-type="dfn|abstract-op" href="#dfn-rule-element" class="internalDFN"
                         id="ref-for-dfn-rule-element-7">规则元素</a>中的元素从
@@ -2610,21 +2602,32 @@ WHERE DATA { ... }</code></pre>
             <aside class="example" id="example-open-dependency">
                 <div class="marker">
                     <a class="self-link" href="#example-open-dependency">示例<bdi> 9</bdi></a><span
-                        class="example-title">：开放依赖</span>
+                        class="example-title">：开放依赖关系</span>
                 </div>
-                <pre class="block ex-rules" aria-busy="false"><code class="hljs">RULE { ?x :descendedFrom ?y } WHERE { ?x :childOf ?y }
-RULE { ?x :childOf ?y } WHERE { ?y :fatherOf ?x }</code></pre>
+                <pre class="block ex-rules" aria-busy="false"><code class="hljs">RULE { ?x :exposedTo ?v } WHERE { ?x :dependsOn ?y . ?y :hasVulnerability ?v }
+RULE { ?x :dependsOn ?y } WHERE { ?x :callsService ?y }</code></pre>
             </aside>
 
             <p>
-                在第二个示例中，第一条规则对第二条规则具有封闭依赖。
+                在第二个示例中，第一条规则对第二条规则具有封闭依赖关系：
+                三元组模式 <code>?x :status :criticallyExposed</code>
+                出现在第一条规则的<a data-link-type="dfn|abstract-op" href="#dfn-negation-element" class="internalDFN"
+                    id="ref-for-dfn-negation-element-7">否定元素</a>内，并且
+                与第二条规则头中的<a data-link-type="dfn|abstract-op" href="#dfn-triple-template" class="internalDFN"
+                    id="ref-for-dfn-triple-template-7">三元组模板</a>相匹配。
+                在第二条规则生成其所有可能的输出之前，
+                无法对第一条规则求值。
             </p>
 
-            <aside class="example" id="example-10">
+            <aside class="example" id="example-closed-dependency">
                 <div class="marker">
-                    <a class="self-link" href="#example-10">示例<bdi> 10</bdi></a>
+                    <a class="self-link" href="#example-closed-dependency">示例<bdi> 10</bdi></a><span
+                        class="example-title">：封闭依赖关系</span>
                 </div>
-                <pre class="block ex-rules" aria-busy="false"><code class="hljs">RULE @@</code></pre>
+                <pre class="block ex-rules" aria-busy="false"><code class="hljs">RULE { ?x :status :safeToDeploy }
+WHERE { ?x rdf:type :Component . NOT { ?x :status :criticallyExposed } }
+
+RULE { ?x :status :criticallyExposed } WHERE { ?x :exposedTo ?v }</code></pre>
             </aside>
 
             <dl>
@@ -2633,144 +2636,143 @@ RULE { ?x :childOf ?y } WHERE { ?y :fatherOf ?x }</code></pre>
                 <dd>
                     <p>
                         如果一个<a data-link-type="dfn|abstract-op" href="#dfn-triple-template" class="internalDFN"
-                            id="ref-for-dfn-triple-template-7">三元组模板</a>能够生成一个与
-                        <a data-link-type="dfn|abstract-op" href="#dfn-triple-pattern" class="internalDFN"
-                            id="ref-for-dfn-triple-pattern-5">三元组模式</a>匹配的三元组，
-                        则该三元组模式匹配该三元组模板。
+                            id="ref-for-dfn-triple-template-8">三元组模板</a>能够生成与某个<a data-link-type="dfn|abstract-op"
+                            href="#dfn-triple-pattern" class="internalDFN"
+                            id="ref-for-dfn-triple-pattern-5">三元组模式</a>相匹配的三元组，则
+                        该三元组模式与该三元组模板相匹配。
                     </p>
                 </dd>
 
                 <dt><dfn data-lt="triple-pattern-dependency|Triple pattern dependency"
                         id="dfn-triple-pattern-dependency" tabindex="0" aria-haspopup="dialog"
-                        data-dfn-type="dfn">三元组模式依赖</dfn></dt>
+                        data-dfn-type="dfn">三元组模式依赖关系</dfn></dt>
                 <dd>
                     <p>
-                        如果一个<a data-link-type="dfn|abstract-op" href="#dfn-triple-template" class="internalDFN"
-                            id="ref-for-dfn-triple-template-8">三元组模板</a>可能被某个
-                        <a data-link-type="dfn|abstract-op" href="#dfn-triple-pattern" class="internalDFN"
-                            id="ref-for-dfn-triple-pattern-7">三元组模式</a>匹配，则该
-                        <a data-link-type="dfn|abstract-op" href="#dfn-triple-pattern" class="internalDFN"
+                        如果一个<a data-link-type="dfn|abstract-op" href="#dfn-triple-pattern" class="internalDFN"
                             id="ref-for-dfn-triple-pattern-6">三元组模式</a>
+                        可能与某个三元组模板相匹配，则该三元组模式
                         <dfn data-local-lt="depends-pattern-template" id="dfn-depends-on-a-triple-template" tabindex="0"
-                            aria-haspopup="dialog" data-dfn-type="dfn">依赖于该三元组模板</dfn>。
+                            aria-haspopup="dialog" data-dfn-type="dfn">依赖于一个<a data-link-type="dfn|abstract-op"
+                                href="#dfn-triple-template" class="internalDFN"
+                                id="ref-for-dfn-triple-template-9">三元组模板</a></dfn>。
                     </p>
                     <p>
-                        如果<a data-link-type="dfn|abstract-op" href="#dfn-triple-pattern" class="internalDFN"
-                            id="ref-for-dfn-triple-pattern-9">三元组模式</a>对规则的
-                        <a data-link-type="dfn|abstract-op" href="#dfn-rule-head" class="internalDFN"
-                            id="ref-for-dfn-rule-head-9">头部</a>中的任何<a data-link-type="dfn|abstract-op"
-                            href="#dfn-triple-template" class="internalDFN"
-                            id="ref-for-dfn-triple-template-10">三元组模板</a>有依赖，
-                        则该<a data-link-type="dfn|abstract-op" href="#dfn-triple-pattern" class="internalDFN"
+                        如果一个<a data-link-type="dfn|abstract-op" href="#dfn-triple-pattern" class="internalDFN"
                             id="ref-for-dfn-triple-pattern-8">三元组模式</a>
+                        依赖于规则<a data-link-type="dfn|abstract-op" href="#dfn-rule-head" class="internalDFN"
+                            id="ref-for-dfn-rule-head-9">头</a>中的任意<a data-link-type="dfn|abstract-op"
+                            href="#dfn-triple-template" class="internalDFN"
+                            id="ref-for-dfn-triple-template-11">三元组模板</a>，
+                        则该三元组模式
                         <dfn data-local-lt="depends-pattern-rule" id="dfn-depends-on-a-rule" tabindex="0"
-                            aria-haspopup="dialog" data-dfn-type="dfn">依赖于该<a data-link-type="dfn|abstract-op"
+                            aria-haspopup="dialog" data-dfn-type="dfn">依赖于一条<a data-link-type="dfn|abstract-op"
                                 href="#dfn-rule" class="internalDFN" id="ref-for-dfn-rule-7">规则</a></dfn>。
                     </p>
                 </dd>
                 <dt><dfn data-lt="rule dependency|depends on|Rule dependency" id="dfn-rule-dependency" tabindex="0"
-                        aria-haspopup="dialog" data-dfn-type="dfn">规则依赖</dfn></dt>
+                        aria-haspopup="dialog" data-dfn-type="dfn">规则依赖关系</dfn></dt>
                 <dd>
                     <p>
-                        如果 <code>R1</code> 主体中的任何
+                        如果 <code>R1</code> 规则体中的任意
                         <a data-link-type="dfn|abstract-op" href="#dfn-triple-pattern" class="internalDFN"
-                            id="ref-for-dfn-triple-pattern-10">三元组模式</a>，
-                        无论作为<a data-link-type="dfn|abstract-op" href="#dfn-triple-pattern-element" class="internalDFN"
-                            id="ref-for-dfn-triple-pattern-element-8">三元组模式元素</a>还是
-                        出现在<a data-link-type="dfn|abstract-op" href="#dfn-negation-element" class="internalDFN"
-                            id="ref-for-dfn-negation-element-7">否定元素</a>内部，
+                            id="ref-for-dfn-triple-pattern-10">三元组模式</a>，无论是作为<a data-link-type="dfn|abstract-op"
+                            href="#dfn-triple-pattern-element" class="internalDFN"
+                            id="ref-for-dfn-triple-pattern-element-8">三元组模式元素</a>，还是
+                        位于<a data-link-type="dfn|abstract-op" href="#dfn-negation-element" class="internalDFN"
+                            id="ref-for-dfn-negation-element-8">否定元素</a>内，
 
                         <a href="#dfn-triple-pattern-dependency" id="ref-for-dfn-triple-pattern-dependency-1">依赖
                             于</a>
-                        <code>R2</code> 头部中的<a data-link-type="dfn|abstract-op" href="#dfn-triple-template"
-                            class="internalDFN" id="ref-for-dfn-triple-template-11">三元组模板</a>，
-                        则规则 <code>R1</code> <a data-link-type="dfn|abstract-op" href="#dfn-rule-dependency"
-                            class="internalDFN" id="ref-for-dfn-rule-dependency-1">依赖于</a> <code>R2</code>。
+                        <code>R2</code> 规则头中的某个<a data-link-type="dfn|abstract-op" href="#dfn-triple-template"
+                            class="internalDFN" id="ref-for-dfn-triple-template-12">三元组模板</a>，则规则 <code>R1</code>
+                        <a data-link-type="dfn|abstract-op" href="#dfn-rule-dependency" class="internalDFN"
+                            id="ref-for-dfn-rule-dependency-1">依赖于</a> <code>R2</code>。
                     </p>
                 </dd>
                 <dt><dfn data-plurals="closed dependencies" id="dfn-closed-dependency" tabindex="0"
-                        aria-haspopup="dialog" data-dfn-type="dfn">封闭依赖</dfn></dt>
+                        aria-haspopup="dialog" data-dfn-type="dfn">封闭依赖关系</dfn></dt>
                 <dd>
                     <p>
                         如果满足以下任一条件，则规则 <code>R1</code> 对规则
                         <code>R2</code> 的<a data-link-type="dfn|abstract-op" href="#dfn-rule-dependency"
-                            class="internalDFN" id="ref-for-dfn-rule-dependency-2">规则依赖</a>是
-                        <a data-link-type="dfn|abstract-op" href="#dfn-closed-dependency" class="internalDFN"
-                            id="ref-for-dfn-closed-dependency-2">封闭依赖</a>：
+                            class="internalDFN" id="ref-for-dfn-rule-dependency-2">规则依赖关系</a>是<a
+                            data-link-type="dfn|abstract-op" href="#dfn-closed-dependency" class="internalDFN"
+                            id="ref-for-dfn-closed-dependency-2">封闭依赖关系</a>：
                     </p>
                     <ul>
-                        <li><code>R1</code> 的<a data-link-type="dfn|abstract-op" href="#dfn-negation-element"
-                                class="internalDFN" id="ref-for-dfn-negation-element-8">否定元素</a>内部出现的
-                            <a data-link-type="dfn|abstract-op" href="#dfn-triple-pattern" class="internalDFN"
+                        <li>出现在 <code>R1</code> 的<a data-link-type="dfn|abstract-op" href="#dfn-negation-element"
+                                class="internalDFN" id="ref-for-dfn-negation-element-9">否定元素</a>内的<a
+                                data-link-type="dfn|abstract-op" href="#dfn-triple-pattern" class="internalDFN"
                                 id="ref-for-dfn-triple-pattern-11">三元组模式</a>
-                            匹配 <code>R2</code> 的<a data-link-type="dfn|abstract-op" href="#dfn-rule-head"
-                                class="internalDFN" id="ref-for-dfn-rule-head-10">规则头部</a>中的
-                            <a data-link-type="dfn|abstract-op" href="#dfn-triple-template" class="internalDFN"
-                                id="ref-for-dfn-triple-template-12">三元组模板</a>。
+                            与 <code>R2</code> 的<a data-link-type="dfn|abstract-op" href="#dfn-rule-head"
+                                class="internalDFN" id="ref-for-dfn-rule-head-10">规则头</a>中的某个<a
+                                data-link-type="dfn|abstract-op" href="#dfn-triple-template" class="internalDFN"
+                                id="ref-for-dfn-triple-template-13">三元组模板</a>相匹配。
                         </li>
                         <li>规则 <code>R1</code> <a data-link-type="dfn|abstract-op" href="#dfn-rule-dependency"
                                 class="internalDFN" id="ref-for-dfn-rule-dependency-3">依赖于</a>规则
                             <code>R2</code>，
-                            且 <code>R1</code> 有<a data-link-type="dfn|abstract-op" href="#dfn-assignment-element"
+                            并且 <code>R1</code> 具有一个<a data-link-type="dfn|abstract-op" href="#dfn-assignment-element"
                                 class="internalDFN" id="ref-for-dfn-assignment-element-10">赋值元素</a>。
                         </li>
                         <li>规则 <code>R1</code> <a data-link-type="dfn|abstract-op" href="#dfn-rule-dependency"
                                 class="internalDFN" id="ref-for-dfn-rule-dependency-4">依赖于</a>规则
                             <code>R2</code>，
-                            且 <code>R1</code> 的<a data-link-type="dfn|abstract-op" href="#dfn-rule-head"
-                                class="internalDFN" id="ref-for-dfn-rule-head-11">规则头部</a>具有空白节点。
+                            并且 <code>R1</code> 的<a data-link-type="dfn|abstract-op" href="#dfn-rule-head"
+                                class="internalDFN" id="ref-for-dfn-rule-head-11">规则头</a>中具有空白节点。
                         </li>
                     </ul>
                 </dd>
                 <dt><dfn data-plurals="open dependencies" id="dfn-open-dependency" tabindex="0" aria-haspopup="dialog"
-                        data-dfn-type="dfn">开放依赖</dfn></dt>
+                        data-dfn-type="dfn">开放依赖关系</dfn></dt>
                 <dd>
                     <p>
                         如果规则 <code>R1</code> 对规则
                         <code>R2</code> 的<a data-link-type="dfn|abstract-op" href="#dfn-rule-dependency"
-                            class="internalDFN" id="ref-for-dfn-rule-dependency-5">规则依赖</a>不是
-                        <a data-link-type="dfn|abstract-op" href="#dfn-closed-dependency" class="internalDFN"
-                            id="ref-for-dfn-closed-dependency-3">封闭依赖</a>，
-                        则它是<a data-link-type="dfn|abstract-op" href="#dfn-open-dependency" class="internalDFN"
-                            id="ref-for-dfn-open-dependency-2">开放依赖</a>。
-                        也就是说，<code>R1</code> 中依赖于
-                        <code>R2</code> 的任何<a data-link-type="dfn|abstract-op" href="#dfn-triple-pattern"
-                            class="internalDFN" id="ref-for-dfn-triple-pattern-12">三元组模式</a>都只作为
-                        <a data-link-type="dfn|abstract-op" href="#dfn-triple-pattern-element" class="internalDFN"
+                            class="internalDFN" id="ref-for-dfn-rule-dependency-5">规则依赖关系</a>
+                        不是<a data-link-type="dfn|abstract-op" href="#dfn-closed-dependency" class="internalDFN"
+                            id="ref-for-dfn-closed-dependency-3">封闭依赖关系</a>，则该依赖关系是<a data-link-type="dfn|abstract-op"
+                            href="#dfn-open-dependency" class="internalDFN"
+                            id="ref-for-dfn-open-dependency-2">开放依赖关系</a>。
+                        也就是说，<code>R1</code> 中依赖于 <code>R2</code> 的任意<a data-link-type="dfn|abstract-op"
+                            href="#dfn-triple-pattern" class="internalDFN"
+                            id="ref-for-dfn-triple-pattern-12">三元组模式</a>仅作为<a data-link-type="dfn|abstract-op"
+                            href="#dfn-triple-pattern-element" class="internalDFN"
                             id="ref-for-dfn-triple-pattern-element-9">三元组模式元素</a>出现。
                     </p>
                 </dd>
             </dl>
 
-            <div class="note" role="note" id="issue-container-generatedID-3">
-                <div class="note-title marker" id="h-note-2"><span>注</span></div>
+            <div class="note" role="note" id="issue-container-generatedID-4">
+                <div class="note-title marker" id="h-note-3"><span>注</span></div>
                 <div class="">
                     <p>
-                        具有组件 <code>tSubj</code>、
-                        <code>tPred</code>、<code>tObj</code>
-                        的<a data-link-type="dfn|abstract-op" href="#dfn-triple-template" class="internalDFN"
-                            id="ref-for-dfn-triple-template-13">三元组模板</a>，
-                        如果以下所有条件均为真，则可能生成一个具有组件 RDF 术语
+                        如果满足以下所有条件，则具有组成部分 <code>tSubj</code>、
+                        <code>tPred</code>、<code>tObj</code> 的<a data-link-type="dfn|abstract-op"
+                            href="#dfn-triple-template" class="internalDFN"
+                            id="ref-for-dfn-triple-template-14">三元组模板</a>
+                        可能生成一个组成部分 RDF 项分别为
                         <code>s</code>、<code>p</code>、<code>o</code> 的三元组：
                     </p>
                     <ul>
-                        <li><code>tSubj</code> 是变量，或者 <code>tSubj</code> 与 <code>s</code>
-                            是<a href="https://www.w3.org/TR/rdf12-concepts/#dfn-rdf-term-equality"
-                                id="ref-for-index-term-same-rdf-term-1">相同 RDF 术语</a>
+                        <li><code>tSubj</code> 是变量，或者 <code>tSubj</code> 与 <code>s</code> 是
+                            <a href="https://www.w3.org/TR/rdf12-concepts/#dfn-rdf-term-equality"
+                                id="ref-for-index-term-same-rdf-term-1">同一个 RDF 项</a>
                         </li>
-                        <li><code>tPred</code> 是变量，或者 <code>tPred</code> 与 <code>p</code>
-                            是<a href="https://www.w3.org/TR/rdf12-concepts/#dfn-rdf-term-equality"
-                                id="ref-for-index-term-same-rdf-term-2">相同 RDF 术语</a>
+                        <li><code>tPred</code> 是变量，或者 <code>tPred</code> 与 <code>p</code> 是
+                            <a href="https://www.w3.org/TR/rdf12-concepts/#dfn-rdf-term-equality"
+                                id="ref-for-index-term-same-rdf-term-2">同一个 RDF 项</a>
                         </li>
-                        <li><code>tObj</code> 是变量，或者 <code>tObj</code> 与 <code>o</code>
-                            是<a href="https://www.w3.org/TR/rdf12-concepts/#dfn-rdf-term-equality"
-                                id="ref-for-index-term-same-rdf-term-3">相同 RDF 术语</a>
+                        <li><code>tObj</code> 是变量，或者 <code>tObj</code> 与 <code>o</code> 是
+                            <a href="https://www.w3.org/TR/rdf12-concepts/#dfn-rdf-term-equality"
+                                id="ref-for-index-term-same-rdf-term-3">同一个 RDF 项</a>
                         </li>
                     </ul>
                     <p>
-                        此外，如果 <code>tSubj</code>、<code>tPred</code> 和 <code>tObj</code> 中的任意一对
-                        是同一个变量，
-                        那么 <code>s</code>、<code>p</code> 和 <code>o</code> 中对应的一对也必须相同。
+                        此外，如果 <code>tSubj</code>、<code>tPred</code> 和 <code>tObj</code> 中的任意两个是
+                        同一个变量，
+                        则 <code>s</code>、<code>p</code> 和 <code>o</code> 中对应的两个也必须
+                        相同。
                     </p>
                 </div>
             </div>
@@ -2835,8 +2837,8 @@ RULE { ?x :childOf ?y } WHERE { ?y :fatherOf ?x }</code></pre>
                         </p>
                     </dd>
                 </dl>
-                <div class="note" role="note" id="issue-container-generatedID-4">
-                    <div class="note-title marker" id="h-note-3"><span>注</span></div>
+                <div class="note" role="note" id="issue-container-generatedID-5">
+                    <div class="note-title marker" id="h-note-4"><span>注</span></div>
                     <p class="">
                         依赖图不受数据图影响。
                     </p>
@@ -2974,7 +2976,7 @@ RULE { ?x :childOf ?y } WHERE { ?y :fatherOf ?x }</code></pre>
                     id="ref-for-dfn-stratification-5">分层</a>对<a data-link-type="dfn|abstract-op" href="#dfn-rule"
                     class="internalDFN" id="ref-for-dfn-rule-9">规则</a>之间的依赖施加约束，
                 以确保<a data-link-type="dfn|abstract-op" href="#dfn-negation-element" class="internalDFN"
-                    id="ref-for-dfn-negation-element-9">否定元素</a>、<a data-link-type="dfn|abstract-op"
+                    id="ref-for-dfn-negation-element-10">否定元素</a>、<a data-link-type="dfn|abstract-op"
                     href="#dfn-assignment-element" class="internalDFN" id="ref-for-dfn-assignment-element-11">赋值
                     元素</a>，以及在<a data-link-type="dfn|abstract-op" href="#dfn-rule-head" class="internalDFN"
                     id="ref-for-dfn-rule-head-12">规则头部</a>中创建的空白节点，
@@ -2987,8 +2989,8 @@ RULE { ?x :childOf ?y } WHERE { ?y :fatherOf ?x }</code></pre>
                     class="internalDFN" id="ref-for-dfn-rule-set-19">规则集</a>求值会得到单一、明确定义且有限的
                 结果。
             </p>
-            <div class="note" role="note" id="issue-container-generatedID-5">
-                <div class="note-title marker" id="h-note-4"><span>注</span></div>
+            <div class="note" role="note" id="issue-container-generatedID-6">
+                <div class="note-title marker" id="h-note-5"><span>注</span></div>
                 <div class="">
                     <p>
                         分层过程也可以用于作出其他求值
@@ -3075,7 +3077,7 @@ RULE { ?x :childOf ?y } WHERE { ?y :fatherOf ?x }</code></pre>
                     换言之，在<a data-link-type="dfn|abstract-op" href="#dfn-dependency-graph" class="internalDFN"
                         id="ref-for-dfn-dependency-graph-7">依赖图</a>的任何传递依赖循环中，
                     都不存在 <code>NOT</code> 或只运行一次规则（赋值，或涉及空白节点的规则<a data-link-type="dfn|abstract-op"
-                        href="#dfn-triple-template" class="internalDFN" id="ref-for-dfn-triple-template-14">三元组模板</a>）。
+                        href="#dfn-triple-template" class="internalDFN" id="ref-for-dfn-triple-template-15">三元组模板</a>）。
                 </p>
             </section>
 
@@ -3161,8 +3163,8 @@ RULE { ?x :childOf ?y } WHERE { ?y :fatherOf ?x }</code></pre>
     <span class="hljs-string">the</span> <span class="hljs-string">result</span> <span class="hljs-string">is</span> <span class="hljs-string">stratumLevels</span>
 <span class="hljs-string">enddefine</span></code></pre>
                 </div>
-                <div class="note" role="note" id="issue-container-generatedID-6">
-                    <div class="note-title marker" id="h-note-5"><span>注</span></div>
+                <div class="note" role="note" id="issue-container-generatedID-7">
+                    <div class="note-title marker" id="h-note-6"><span>注</span></div>
                     <p class="">
                         <a data-link-type="dfn|abstract-op" href="#dfn-stratification-condition" class="internalDFN"
                             id="ref-for-dfn-stratification-condition-2">分层条件</a>
@@ -3173,6 +3175,13 @@ RULE { ?x :childOf ?y } WHERE { ?y :fatherOf ?x }</code></pre>
                         改变。
                     </p>
                 </div>
+                <p>
+                    有关如何逐步对完整规则集应用依赖关系分析和
+                    分层，并继续完成
+                    求值，请参阅
+                    <a href="#eval-worked-example" class="sectionRef sec-ref"><bdi class="secno">6.6 </bdi>完整
+                        示例</a>。
+                </p>
             </section>
         </section>
     </section>
@@ -3189,8 +3198,8 @@ RULE { ?x :childOf ?y } WHERE { ?y :fatherOf ?x }</code></pre>
             <li><a href="#rdf-rules-syntax">RDF 规则语法</a></li>
         </ul>
 
-        <div class="note" role="note" id="issue-container-generatedID-7">
-            <div class="note-title marker" id="h-note-6"><span>注</span></div>
+        <div class="note" role="note" id="issue-container-generatedID-8">
+            <div class="note-title marker" id="h-note-7"><span>注</span></div>
             <aside class="">
                 形状规则语言（SRL）语法有等价的 RDF 语法形式。
                 良构的 RDF 语法可以被翻译为形状规则语言语法。
@@ -3319,7 +3328,7 @@ PREFIX sparql: &lt;http://www.w3.org/ns/sparql#&gt;
             </div>
 
             <p><a href="#shapes-rules-grammar">语法</a>如下所示。</p>
-            <div class="note" id="issue-container-generatedID-8">
+            <div class="note" id="issue-container-generatedID-9">
                 <div class="ednote-title marker" id="h-ednote-0"><span>编辑者注</span></div>
                 <p class="">将 AST 映射到抽象语法。</p>
             </div>
@@ -3339,7 +3348,7 @@ PREFIX sparql: &lt;http://www.w3.org/ns/sparql#&gt;
                 SHACL 形状：<a href="./rules-rdf-syntax/rdf-syntax-shapes.ttl">rdf-syntax-shapes.ttl</a>
             </p>
 
-            <div class="note" id="issue-container-generatedID-9">
+            <div class="note" id="issue-container-generatedID-10">
                 <div class="ednote-title marker" id="h-ednote-1"><span>编者注</span></div>
                 <div class="">
                     <p>良构性：</p>
@@ -3352,7 +3361,7 @@ PREFIX sparql: &lt;http://www.w3.org/ns/sparql#&gt;
                     </ul>
                 </div>
             </div>
-            <div class="note" id="issue-container-generatedID-10">
+            <div class="note" id="issue-container-generatedID-11">
                 <div class="ednote-title marker" id="h-ednote-2"><span>编者注</span></div>
                 <div class="">
                     <p>
@@ -3361,7 +3370,7 @@ PREFIX sparql: &lt;http://www.w3.org/ns/sparql#&gt;
                 </div>
             </div>
 
-            <div class="note" id="issue-container-generatedID-11">
+            <div class="note" id="issue-container-generatedID-12">
                 <div class="ednote-title marker" id="h-ednote-3"><span>编者注</span></div>
                 <div class="">
                     <p>过程：累加器、自底向上／遍历结构。</p>
@@ -3668,7 +3677,7 @@ PREFIX srl:    &lt;http://www.w3.org/ns/shacl-rules#&gt;
                     and compatible(μ1, μ2)
                     μ(v) = merge(μ1, μ2) }</span></code></pre>
                     </div>
-                    <div class="note" id="issue-container-generatedID-12">
+                    <div class="note" id="issue-container-generatedID-13">
                         <div class="ednote-title marker" id="h-ednote-4"><span>编辑者注</span></div>
                         <div class="">
                             <p>
@@ -4005,6 +4014,487 @@ result is <span class="hljs-title function_">imports</span>(<span class="hljs-va
 <span class="hljs-string">the</span> <span class="hljs-string">result</span> <span class="hljs-string">is</span> <span class="hljs-string">GI</span></code></pre>
             </div>
         </section>
+        <section id="eval-worked-example" class="informative">
+            <div class="header-wrapper">
+                <h3 id="x6-6-worked-example"><bdi class="secno">6.6 </bdi>完整示例</h3><a class="self-link"
+                    href="#eval-worked-example" aria-label="第 6.6 节的永久链接"></a>
+            </div>
+            <p><em>本节为非规范性内容。</em></p>
+
+            <p>
+                本节逐步介绍完整
+                <a data-link-type="dfn|abstract-op" href="#dfn-rule-set" class="internalDFN"
+                    id="ref-for-dfn-rule-set-29">规则集</a>的求值过程：确定规则依赖关系
+                （<a href="#rule-dependency" class="sectionRef sec-ref"><bdi class="secno">4.3 </bdi>规则
+                    依赖关系</a>）、
+                计算分层
+                （<a href="#stratification" class="sectionRef sec-ref"><bdi class="secno">4.4 </bdi>分层</a>），
+                然后依次对每一层求值，以生成
+                <a data-link-type="dfn|abstract-op" href="#dfn-inference-graph" class="internalDFN"
+                    id="ref-for-dfn-inference-graph-6">推理图</a>
+                （<a href="#eval-rule-set" class="sectionRef sec-ref"><bdi class="secno">6.5 </bdi>规则集
+                    求值</a>）。
+            </p>
+            <p>
+                该示例描述了软件组件及其依赖关系：
+                前端依赖于应用服务器，应用服务器又依赖于
+                数据库和日志记录库。数据库存在一个已知
+                漏洞。规则沿依赖链传播漏洞暴露关系，
+                将暴露于严重漏洞的组件状态设为 <code>:criticallyExposed</code>，
+                将不处于严重状态的组件状态设为 <code>:safeToDeploy</code>，并为每个
+                严重暴露的组件创建一条通知。
+                （实际上，漏洞是否会影响组件
+                取决于所部署的版本；本示例省略了版本信息，
+                并直接声明漏洞。）
+                为简洁起见，基础图直接声明 <code>:dependsOn</code> 三元组，
+                而不像
+                <a href="#desc-basic" class="sectionRef sec-ref"><bdi class="secno">3.1 </bdi>基本模式</a>中那样
+                从更具体的关系中推导它们。
+            </p>
+
+            <aside class="example" id="example-worked-example-data-and-rules">
+                <div class="marker">
+                    <a class="self-link" href="#example-worked-example-data-and-rules">示例<bdi> 15</bdi></a><span
+                        class="example-title">：完整示例：数据和规则</span>
+                </div>
+                <pre class="block ex-data" aria-busy="false"><code class="hljs">:frontend rdf:type :Component ;
+          :dependsOn :app .
+:app      rdf:type :Component ;
+          :dependsOn :db ;
+          :dependsOn :logger .
+:db       rdf:type :Component ;
+          :hasVulnerability :vuln1 .
+:logger   rdf:type :Component .
+:vuln1    :severity 9.1 .</code></pre>
+                <pre class="block ex-rules" aria-busy="false"><code class="hljs"># R1
+RULE { ?x :exposedTo ?v } WHERE { ?x :hasVulnerability ?v }
+
+# R2
+RULE { ?x :exposedTo ?v } WHERE { ?x :dependsOn ?y . ?y :exposedTo ?v }
+
+# R3
+RULE { ?x :status :criticallyExposed }
+WHERE { ?x :exposedTo ?v . ?v :severity ?s . FILTER(?s &gt;= 9.0) }
+
+# R4
+RULE { ?x :status :safeToDeploy }
+WHERE { ?x rdf:type :Component . NOT { ?x :status :criticallyExposed } }
+
+# R5
+RULE { [] rdf:type :Notification ; :concerns ?x }
+WHERE { ?x :status :criticallyExposed }</code></pre>
+            </aside>
+
+            <p>
+                这些规则在注释中标记为 <code>R1</code> 到 <code>R5</code>，本节其余部分
+                使用这些标签引用它们。
+                它们是从
+                <a href="#desc-recursion" class="sectionRef sec-ref"><bdi class="secno">3.2 </bdi>递归</a>到
+                <a href="#desc-creating-rdf-terms" class="sectionRef sec-ref"><bdi class="secno">3.5 </bdi>赋值
+                    和创建 RDF 项</a>中引入的规则。
+                该规则集没有 <code>IMPORTS</code>，因此导入处理
+                不会对其进行更改；也没有 <code>DATA</code> 块，因此求值
+                仅从基础图开始。
+            </p>
+
+            <section id="worked-example-dependencies">
+                <div class="header-wrapper">
+                    <h4 id="x6-6-1-determining-the-dependencies"><bdi class="secno">6.6.1 </bdi>确定
+                        依赖关系</h4><a class="self-link" href="#worked-example-dependencies"
+                        aria-label="第 6.6.1 节的永久链接"></a>
+                </div>
+
+                <p>
+                    将每个规则体中的每个三元组模式与
+                    每个规则头中的三元组模板进行比较，以确定哪些规则
+                    依赖于哪些规则
+                    （<a href="#rule-dependency" class="sectionRef sec-ref"><bdi class="secno">4.3 </bdi>规则
+                        依赖关系</a>）。
+                </p>
+                <ul>
+                    <li>
+                        <code>R1</code> 的规则体是单个三元组模式
+                        <code>?x :hasVulnerability ?v</code>。没有任何规则头包含
+                        能够生成谓词为 <code>:hasVulnerability</code> 的三元组的三元组模板，
+                        因此该模式只能与数据匹配。
+                        <code>R1</code> 没有依赖关系。
+                    </li>
+                    <li>
+                        <code>R2</code> 的规则体包含两个三元组模式。
+                        <code>?x :dependsOn ?y</code> 无法与任何规则头匹配，因此它只能
+                        与数据匹配。<code>?y :exposedTo ?v</code> 与 <code>R1</code> 的规则头模板
+                        <code>?x :exposedTo ?v</code> 相匹配，也与 <code>R2</code>
+                        自身的规则头相匹配。两处出现的模式都是<a data-link-type="dfn|abstract-op" href="#dfn-triple-pattern-element"
+                            class="internalDFN" id="ref-for-dfn-triple-pattern-element-10">三元组模式元素</a>
+                        （它们未出现在<a data-link-type="dfn|abstract-op" href="#dfn-negation-element" class="internalDFN"
+                            id="ref-for-dfn-negation-element-11">否定元素</a>内，并且
+                        <code>R2</code>
+                        没有<a data-link-type="dfn|abstract-op" href="#dfn-assignment-element" class="internalDFN"
+                            id="ref-for-dfn-assignment-element-14">赋值元素</a>，其
+                        规则头中也没有空白节点），因此
+                        <code>R2</code> 对 <code>R1</code> 具有一个<em>开放</em>依赖关系，并且
+                        对自身也具有一个<em>开放</em>依赖关系。
+                        <code>R2</code> 对自身的依赖关系使 <code>R2</code> 成为一条递归规则。
+                    </li>
+                    <li>
+                        在 <code>R3</code> 的规则体中，模式 <code>?x :exposedTo ?v</code> 与
+                        <code>R1</code> 和 <code>R2</code> 的规则头相匹配，使 <code>R3</code> 分别对二者具有一个<em>开放</em>
+                        依赖关系。模式 <code>?v :severity ?s</code> 不与任何
+                        规则头匹配。
+                    </li>
+                    <li>
+                        在 <code>R4</code> 的规则体中，模式 <code>?x rdf:type :Component</code>
+                        不与任何规则头匹配：唯一一个谓词为
+                        <code>rdf:type</code> 的规则头模板位于 <code>R5</code> 中，而其对象 <code>:Notification</code>
+                        与 <code>:Component</code> 是不同的 RDF 项，因此生成的
+                        三元组均无法匹配。
+                        模式 <code>?x :status :criticallyExposed</code> 出现在
+                        <a data-link-type="dfn|abstract-op" href="#dfn-negation-element" class="internalDFN"
+                            id="ref-for-dfn-negation-element-12">否定元素</a>
+                        <code>NOT { ?x :status :criticallyExposed }</code> 内，并且
+                        与 <code>R3</code> 的规则头模板相匹配。由于该模式
+                        出现在否定元素中，因此 <code>R4</code> 对 <code>R3</code> 具有一个<em>封闭</em>
+                        依赖关系。
+                    </li>
+                    <li>
+                        在 <code>R5</code> 的规则体中，模式 <code>?x :status :criticallyExposed</code>
+                        与 <code>R3</code> 的规则头相匹配。<code>R5</code> 的规则头包含一个
+                        空白节点，因此它对 <code>R3</code> 的依赖关系是一个<em>封闭</em>
+                        依赖关系，即使该模式是普通的
+                        <a data-link-type="dfn|abstract-op" href="#dfn-triple-pattern-element" class="internalDFN"
+                            id="ref-for-dfn-triple-pattern-element-11">三元组模式元素</a>。
+                        所有规则体中的模式均不与
+                        <code>R5</code> 的规则头模板匹配，因此没有规则依赖于 <code>R5</code>。
+                    </li>
+                </ul>
+                <p>
+                    因此，<a data-link-type="dfn|abstract-op" href="#dfn-dependency-graph" class="internalDFN"
+                        id="ref-for-dfn-dependency-graph-9">依赖图</a>包含五个顶点和六条
+                    边：
+                </p>
+                <ul>
+                    <li>
+                        <code>R2 → R1</code>（开放）
+                    </li>
+                    <li>
+                        <code>R2 → R2</code>（开放）
+                    </li>
+                    <li>
+                        <code>R3 → R1</code>（开放）
+                    </li>
+                    <li>
+                        <code>R3 → R2</code>（开放）
+                    </li>
+                    <li>
+                        <code>R4 → R3</code>（封闭）
+                    </li>
+                    <li>
+                        <code>R5 → R3</code>（封闭）
+                    </li>
+                </ul>
+                <p>
+                    尽管 <code>R4</code> 和 <code>R5</code> 均不直接依赖于 <code>R1</code> 或
+                    <code>R2</code>，但二者都通过
+                    <code>R3</code> 对它们具有<a data-link-type="dfn|abstract-op" href="#dfn-transitive-rule-dependency"
+                        class="internalDFN" id="ref-for-dfn-transitive-rule-dependency-2">传递依赖关系</a>。
+                </p>
+
+                <figure id="fig-worked-example-dep-graph">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 350" width="480"
+                        style="max-width: 480px; height: auto;" role="img"
+                        aria-labelledby="depgraph-title depgraph-desc">
+                        <title id="depgraph-title">完整示例规则集的依赖图</title>
+                        <desc id="depgraph-desc">
+                            五个分别标记为 R1、R2、R3、R4 和 R5 的顶点。
+                            虚线箭头表示开放依赖关系：从 R2 指向 R1、
+                            从 R2 指向自身、从 R3 指向 R1，以及从 R3 指向 R2。
+                            实线箭头表示封闭依赖关系：从 R4 指向 R3，
+                            以及从 R5 指向 R3。
+                        </desc>
+                        <defs>
+                            <marker id="dep-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7"
+                                markerHeight="7" orient="auto-start-reverse">
+                                <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor"></path>
+                            </marker>
+                        </defs>
+                        <g fill="none" stroke="currentColor" stroke-width="1.5">
+
+                            <g stroke-dasharray="6 4" marker-end="url(#dep-arrow)">
+
+                                <line x1="223.6" y1="135.3" x2="156.4" y2="74.7"></line>
+
+                                <line x1="256.4" y1="135.3" x2="323.6" y2="74.7"></line>
+
+                                <line x1="162" y1="60" x2="316" y2="60"></line>
+
+                                <path d="M 124.4 44.4 C 60 15, 60 105, 124.4 75.6"></path>
+                            </g>
+
+                            <g marker-end="url(#dep-arrow)">
+
+                                <line x1="156.4" y1="225.3" x2="223.6" y2="164.7"></line>
+
+                                <line x1="323.6" y1="225.3" x2="256.4" y2="164.7"></line>
+                            </g>
+
+                            <circle cx="140" cy="60" r="22"></circle>
+                            <circle cx="340" cy="60" r="22"></circle>
+                            <circle cx="240" cy="150" r="22"></circle>
+                            <circle cx="140" cy="240" r="22"></circle>
+                            <circle cx="340" cy="240" r="22"></circle>
+                        </g>
+                        <g fill="currentColor" font-size="15" font-weight="bold" text-anchor="middle">
+                            <text x="140" y="65">R2</text>
+                            <text x="340" y="65">R1</text>
+                            <text x="240" y="155">R3</text>
+                            <text x="140" y="245">R4</text>
+                            <text x="340" y="245">R5</text>
+                        </g>
+
+                        <g stroke="currentColor" stroke-width="1.5">
+                            <line x1="55" y1="325" x2="105" y2="325" stroke-dasharray="6 4"></line>
+                            <line x1="245" y1="325" x2="295" y2="325"></line>
+                        </g>
+                        <g fill="currentColor" font-size="14">
+                            <text x="113" y="330">开放依赖关系</text>
+                            <text x="303" y="330">封闭依赖关系</text>
+                        </g>
+                    </svg>
+                    <figcaption><a class="self-link" href="#fig-worked-example-dep-graph">图 <bdi
+                                class="figno">1</bdi></a> <span class="fig-title">
+                            完整示例规则集的依赖图。
+                            开放依赖关系绘制为虚线箭头，封闭
+                            依赖关系绘制为实线箭头。每条边都从
+                            规则体包含匹配三元组模式的规则指向
+                            规则头可能生成匹配三元组的规则。
+                            规则按第 0 层位于顶部、更高
+                            层位于下方的方式排列，与求值顺序一致。
+                        </span></figcaption>
+                </figure>
+                <p>
+                    图中唯一的环是自环边 <code>R2 → R2</code>，
+                    它是开放依赖关系。没有任何环涉及封闭
+                    依赖关系，因此满足<a data-link-type="dfn|abstract-op" href="#dfn-stratification-condition"
+                        class="internalDFN" id="ref-for-dfn-stratification-condition-3">分层条件</a>，
+                    并且该规则集具有明确定义的结果。
+                </p>
+            </section>
+
+            <section id="worked-example-stratification">
+                <div class="header-wrapper">
+                    <h4 id="x6-6-2-calculating-the-stratification"><bdi class="secno">6.6.2 </bdi>计算
+                        分层</h4><a class="self-link" href="#worked-example-stratification"
+                        aria-label="第 6.6.2 节的永久链接"></a>
+                </div>
+
+                <p>
+                    按照
+                    <a href="#stratification-algorithm">分层算法</a>，
+                    每条规则最初都位于第 0 层。随后反复检查
+                    各条边，直到不再发生变化：
+                </p>
+                <ul>
+                    <li>
+                        一条<em>开放</em>边要求源规则与其
+                        目标规则位于同一层或更高层。当所有规则均位于第 0 层时，
+                        四条开放边已经满足此条件，因此它们
+                        不会引起任何变化。
+                    </li>
+                    <li>
+                        一条<em>封闭</em>边要求源规则位于
+                        严格高于目标规则的层，因为目标规则
+                        必须先运行至完成。边 <code>R4 → R3</code>
+                        （封闭）发现 <code>R4</code> 和 <code>R3</code> 均位于第 0 层，因此将 <code>R4</code>
+                        移至第 1 层。同样，边 <code>R5 → R3</code>
+                        （封闭）将 <code>R5</code> 移至第 1 层。
+                    </li>
+                </ul>
+                <p>
+                    再次遍历各条边不会产生任何变化，因此各层
+                    已最终确定。随后将每一层划分为
+                    <a data-link-type="dfn|abstract-op" href="#dfn-run-once-rule" class="internalDFN"
+                        id="ref-for-dfn-run-once-rule-7">仅运行一次的规则</a>和<a data-link-type="dfn|abstract-op"
+                        href="#dfn-general-rule" class="internalDFN" id="ref-for-dfn-general-rule-3">一般规则</a>。
+                    <code>R5</code> 的规则头中有一个空白
+                    节点，因此它是一条<a data-link-type="dfn|abstract-op" href="#dfn-run-once-rule" class="internalDFN"
+                        id="ref-for-dfn-run-once-rule-8">仅运行一次的规则</a>；其他规则
+                    均没有<a data-link-type="dfn|abstract-op" href="#dfn-assignment-element" class="internalDFN"
+                        id="ref-for-dfn-assignment-element-15">赋值元素</a>，其规则头中也没有空白节点。
+                    分层结果为：
+                </p>
+                <ul>
+                    <li>第 0 层：一般规则 <code>R1</code>、<code>R2</code>、<code>R3</code>；没有仅运行一次的规则</li>
+                    <li>第 1 层：仅运行一次的规则 <code>R5</code>；一般规则 <code>R4</code></li>
+                </ul>
+                <p>
+                    此顺序体现了较高
+                    层中规则的意图。只有在
+                    推导出<em>所有</em> <code>:status :criticallyExposed</code> 三元组之后，才能确定组件是否可以安全部署，
+                    以及哪些组件需要通知——而推导这些三元组的规则
+                    <code>R3</code> 会在下一层完成，同时与向其提供数据的
+                    规则 <code>R1</code> 和 <code>R2</code> 一同完成。
+                </p>
+            </section>
+
+            <section id="worked-example-evaluation">
+                <div class="header-wrapper">
+                    <h4 id="x6-6-3-evaluating-the-strata"><bdi class="secno">6.6.3 </bdi>对各层求值</h4><a class="self-link"
+                        href="#worked-example-evaluation" aria-label="第 6.6.3 节的永久链接"></a>
+                </div>
+
+                <p>
+                    求值遵循
+                    <a href="#eval-rule-set" class="sectionRef sec-ref"><bdi class="secno">6.5 </bdi>规则集
+                        求值</a>算法。
+                    求值图 <code>GE</code> 初始为基础图，而
+                    推理图 <code>GI</code> 初始为空。按顺序对每一层求值直至
+                    完成：分轮对该层的规则求值，
+                    并重复各轮，直到某一轮不再生成新的三元组。
+                    该算法未规定一轮中同一层规则的
+                    求值顺序；此处的执行轨迹采用
+                    <code>R1</code>、<code>R2</code>、<code>R3</code> 的顺序。不同顺序可能会将相同的
+                    推理结果分散到不同数量的轮次中，但由于
+                    第 0 层会运行至完成，因此最终生成的图相同。
+                </p>
+                <p>
+                    由于此规则集没有 <code>DATA</code> 块，因此在求值过程中的每个时刻，
+                    <code>GE</code> 都等于 <code>G0</code> 加上
+                    <code>GI</code>。因此，执行轨迹仅跟踪 <code>GI</code>，显示求值进行过程中
+                    它的状态，并用生成每个新三元组的规则进行标记。
+                </p>
+                <p><strong>第 0 层，第一轮。</strong></p>
+                <ul>
+                    <li>
+                        <code>R1</code>：规则体与
+                        <code>:db :hasVulnerability :vuln1</code> 匹配，将
+                        <code>?x = :db</code> 和 <code>?v = :vuln1</code> 绑定。
+                        规则头生成 <code>:db :exposedTo :vuln1</code>。
+                        该三元组不在 <code>GE</code> 中，因此将其添加到 <code>GE</code> 和 <code>GI</code>。
+                    </li>
+                    <li>
+                        <code>R2</code>：规则体将 <code>?x :dependsOn ?y</code> 与
+                        <code>?y :exposedTo ?v</code> 连接。此时 <code>GE</code> 包含
+                        <code>:db :exposedTo :vuln1</code>，因此连接产生一个解：
+                        <code>?x = :app</code>、<code>?y = :db</code> 和 <code>?v = :vuln1</code>
+                        （来自 <code>:app :dependsOn :db</code>）。
+                        规则头生成 <code>:app :exposedTo :vuln1</code>，这是一个新三元组，
+                        因此将其添加。目前还没有 <code>:frontend</code> 的解，因为
+                        本次开始对 <code>R2</code> 求值时，
+                        <code>:app :exposedTo :vuln1</code> 尚不在 <code>GE</code> 中。
+                    </li>
+                    <li>
+                        <code>R3</code>：此时 <code>?x :exposedTo ?v</code> 可与 <code>:db</code> 和
+                        <code>:app</code> 匹配；
+                        将其与 <code>:vuln1 :severity 9.1</code> 连接并应用
+                        <code>FILTER(?s &gt;= 9.0)</code> 后，两个解均被保留。
+                        规则头生成 <code>:db :status :criticallyExposed</code> 和
+                        <code>:app :status :criticallyExposed</code>，二者均为新三元组。
+                    </li>
+                </ul>
+                <pre class="block ex-inferred" aria-busy="false"><code class="hljs"># 第 0 层第一轮后的 GI
+:db  :exposedTo :vuln1 .                    # 新增（R1）
+:app :exposedTo :vuln1 .                    # 新增（R2）
+:db  :status :criticallyExposed .           # 新增（R3）
+:app :status :criticallyExposed .           # 新增（R3）</code></pre>
+                <p>
+                    生成了新的三元组，因此继续对第 0 层
+                    进行下一轮求值。
+                </p>
+                <p><strong>第 0 层，第二轮。</strong></p>
+                <ul>
+                    <li>
+                        <code>R1</code>：与之前相同地匹配；<code>:db :exposedTo :vuln1</code> 已经
+                        位于 <code>GE</code> 中，因此不会生成新内容。
+                    </li>
+                    <li>
+                        <code>R2</code>：此时连接还会产生
+                        <code>?x = :frontend</code>、<code>?y = :app</code> 和 <code>?v = :vuln1</code>，从而生成
+                        新三元组 <code>:frontend :exposedTo :vuln1</code>。
+                        暴露关系经过两轮才沿
+                        依赖链传播两步。
+                    </li>
+                    <li>
+                        <code>R3</code>：生成新三元组
+                        <code>:frontend :status :criticallyExposed</code>。
+                    </li>
+                </ul>
+                <pre class="block ex-inferred" aria-busy="false"><code class="hljs"># 第 0 层第二轮后的 GI
+:db       :exposedTo :vuln1 .
+:app      :exposedTo :vuln1 .
+:frontend :exposedTo :vuln1 .               # 新增（R2）
+:db       :status :criticallyExposed .
+:app      :status :criticallyExposed .
+:frontend :status :criticallyExposed .      # 新增（R3）</code></pre>
+                <p><strong>第 0 层，第三轮。</strong>
+                    此时每条规则的每个解都只会生成
+                    已经位于 <code>GE</code> 中的三元组。<code>GI</code> 保持不变。
+                    没有新的三元组意味着第 0 层已完成：所有
+                    能够推导出的 <code>:exposedTo</code> 三元组和 <code>:status :criticallyExposed</code> 三元组
+                    均已推导出来。
+                </p>
+                <p><strong>第 1 层，仅运行一次的规则。</strong>
+                    首先对该层的<a data-link-type="dfn|abstract-op" href="#dfn-run-once-rule" class="internalDFN"
+                        id="ref-for-dfn-run-once-rule-9">仅运行一次的规则</a>求值，
+                    每条规则恰好求值一次。
+                </p>
+                <ul>
+                    <li>
+                        <code>R5</code>：规则体与三个 <code>:status :criticallyExposed</code>
+                        三元组匹配，产生解 <code>?x = :db</code>、<code>?x = :app</code> 和
+                        <code>?x = :frontend</code>。对于每个解，实例化规则头
+                        都会创建一个<em>新的</em>空白节点，每个解生成两个
+                        三元组：为每个严重暴露
+                        的组件生成一条通知。即使该层的一般规则随后会
+                        反复求值，也不会再次对 <code>R5</code> 求值。
+                    </li>
+                </ul>
+                <p><strong>第 1 层，一般规则的第一轮。</strong></p>
+                <ul>
+                    <li>
+                        <code>R4</code>：模式 <code>?x rdf:type :Component</code> 与
+                        <code>:frontend</code>、<code>:app</code>、<code>:db</code> 和 <code>:logger</code> 匹配。
+                        （它不与 <code>R5</code> 刚刚创建的
+                        <code>rdf:type :Notification</code> 三元组匹配。）
+                        否定元素 <code>NOT { ?x :status :criticallyExposed }</code> 会拒绝
+                        <code>:frontend</code>、<code>:app</code> 和 <code>:db</code> 的解，因为
+                        <code>GE</code> 中分别包含它们各自的 <code>:status :criticallyExposed</code> 三元组。
+                        只有解 <code>?x = :logger</code> 被保留下来，从而生成新的
+                        三元组 <code>:logger :status :safeToDeploy</code>。
+                    </li>
+                </ul>
+                <pre class="block ex-inferred" aria-busy="false"><code class="hljs"># 第 1 层后的 GI
+:db       :exposedTo :vuln1 .
+:app      :exposedTo :vuln1 .
+:frontend :exposedTo :vuln1 .
+:db       :status :criticallyExposed .
+:app      :status :criticallyExposed .
+:frontend :status :criticallyExposed .
+_:n1      rdf:type :Notification .          # 新增（R5）
+_:n1      :concerns :db .                   # 新增（R5）
+_:n2      rdf:type :Notification .          # 新增（R5）
+_:n2      :concerns :app .                  # 新增（R5）
+_:n3      rdf:type :Notification .          # 新增（R5）
+_:n3      :concerns :frontend .             # 新增（R5）
+:logger   :status :safeToDeploy .           # 新增（R4）</code></pre>
+                <p><strong>第 1 层，一般规则的第二轮。</strong>
+                    没有新的三元组。求值完成，上面所示的 <code>GI</code>
+                    即为所得的<a data-link-type="dfn|abstract-op" href="#dfn-inference-graph" class="internalDFN"
+                        id="ref-for-dfn-inference-graph-7">推理图</a>。
+                </p>
+                <p>
+                    正是分层使该结果可靠。
+                    如果在第 0 层第一轮期间、
+                    尚未推导出 <code>:frontend :status :criticallyExposed</code> 时对 <code>R4</code> 求值，
+                    它就会错误地得出 <code>:frontend :status :safeToDeploy</code>，而
+                    <code>R5</code> 会为 <code>:db</code> 和 <code>:app</code> 创建通知，
+                    却不会为 <code>:frontend</code> 创建通知。
+                    将二者推迟到第 1 层，意味着它们可以看到完整的
+                    <code>:status :criticallyExposed</code> 三元组集合，因此每一层中
+                    规则的求值顺序不会影响
+                    最终结果。
+                </p>
+            </section>
+        </section>
     </section>
 
     <section id="shapes-rules-grammar">
@@ -4312,8 +4802,8 @@ result is <span class="hljs-title function_">imports</span>(<span class="hljs-va
                 </tbody>
             </table>
 
-            <div class="note" role="note" id="issue-container-generatedID-13">
-                <div class="note-title marker" id="h-note-7"><span>注</span></div>
+            <div class="note" role="note" id="issue-container-generatedID-14">
+                <div class="note-title marker" id="h-note-8"><span>注</span></div>
                 <p class="">%-编码序列位于
                     <a href="#rIRIREF">IRI 的字符范围</a>中，
                     并且在局部名称中被<a href="#rPERCENT">显式允许</a>。
@@ -6459,7 +6949,7 @@ result is <span class="hljs-title function_">imports</span>(<span class="hljs-va
                 <dt id="bib-rdf12-turtle">[RDF12-TURTLE]</dt>
                 <dd>
                     <a href="https://www.w3.org/TR/rdf12-turtle/"><cite>RDF 1.2 Turtle</cite></a>. Gregg Kellogg; Andy
-                    Seaborne; Dominik Tomaszuk. W3C. 2026 年 6 月 12 日. W3C 工作草案. URL: <a
+                    Seaborne; Dominik Tomaszuk. W3C. 2026 年 7 月 23 日. W3C 工作草案. URL: <a
                         href="https://www.w3.org/TR/rdf12-turtle/">https://www.w3.org/TR/rdf12-turtle/</a>
                 </dd>
                 <dt id="bib-rfc2119">[RFC2119]</dt>
@@ -6632,10 +7122,11 @@ result is <span class="hljs-title function_">imports</span>(<span class="hljs-va
                     href="#ref-for-dfn-triple-template-10" title="Reference 5">(5)</a> <a
                     href="#ref-for-dfn-triple-template-11" title="Reference 6">(6)</a> <a
                     href="#ref-for-dfn-triple-template-12" title="Reference 7">(7)</a> <a
-                    href="#ref-for-dfn-triple-template-13" title="Reference 8">(8)</a>
+                    href="#ref-for-dfn-triple-template-13" title="Reference 8">(8)</a> <a
+                    href="#ref-for-dfn-triple-template-14" title="Reference 9">(9)</a>
             </li>
             <li>
-                <a href="#ref-for-dfn-triple-template-14" title="§ 4.4.1 Stratification Condition">§ 4.4.1
+                <a href="#ref-for-dfn-triple-template-15" title="§ 4.4.1 Stratification Condition">§ 4.4.1
                     Stratification Condition</a>
             </li>
         </ul>
@@ -6732,6 +7223,11 @@ result is <span class="hljs-title function_">imports</span>(<span class="hljs-va
                 <a href="#ref-for-dfn-triple-pattern-element-8" title="Reference 2">(2)</a> <a
                     href="#ref-for-dfn-triple-pattern-element-9" title="Reference 3">(3)</a>
             </li>
+            <li>
+                <a href="#ref-for-dfn-triple-pattern-element-10" title="§ 6.6.1 Determining the Dependencies">§ 6.6.1
+                    Determining the Dependencies</a> <a href="#ref-for-dfn-triple-pattern-element-11"
+                    title="Reference 2">(2)</a>
+            </li>
         </ul>
     </div>
     <div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-negation-element"
@@ -6761,10 +7257,16 @@ result is <span class="hljs-title function_">imports</span>(<span class="hljs-va
             <li>
                 <a href="#ref-for-dfn-negation-element-6" title="§ 4.3 Rule Dependency">§ 4.3 Rule Dependency</a> <a
                     href="#ref-for-dfn-negation-element-7" title="Reference 2">(2)</a> <a
-                    href="#ref-for-dfn-negation-element-8" title="Reference 3">(3)</a>
+                    href="#ref-for-dfn-negation-element-8" title="Reference 3">(3)</a> <a
+                    href="#ref-for-dfn-negation-element-9" title="Reference 4">(4)</a>
             </li>
             <li>
-                <a href="#ref-for-dfn-negation-element-9" title="§ 4.4 Stratification">§ 4.4 Stratification</a>
+                <a href="#ref-for-dfn-negation-element-10" title="§ 4.4 Stratification">§ 4.4 Stratification</a>
+            </li>
+            <li>
+                <a href="#ref-for-dfn-negation-element-11" title="§ 6.6.1 Determining the Dependencies">§ 6.6.1
+                    Determining the Dependencies</a> <a href="#ref-for-dfn-negation-element-12"
+                    title="Reference 2">(2)</a>
             </li>
         </ul>
     </div>
@@ -6825,6 +7327,14 @@ result is <span class="hljs-title function_">imports</span>(<span class="hljs-va
             <li>
                 <a href="#ref-for-dfn-assignment-element-13" title="§ 6.3 Evaluation of an Expression">§ 6.3 Evaluation
                     of an Expression</a>
+            </li>
+            <li>
+                <a href="#ref-for-dfn-assignment-element-14" title="§ 6.6.1 Determining the Dependencies">§ 6.6.1
+                    Determining the Dependencies</a>
+            </li>
+            <li>
+                <a href="#ref-for-dfn-assignment-element-15" title="§ 6.6.2 Calculating the Stratification">§ 6.6.2
+                    Calculating the Stratification</a>
             </li>
         </ul>
     </div>
@@ -7047,6 +7557,15 @@ result is <span class="hljs-title function_">imports</span>(<span class="hljs-va
                 <a href="#ref-for-dfn-run-once-rule-6" title="§ 6.5 Evaluation of a Rule Set">§ 6.5 Evaluation of a Rule
                     Set</a>
             </li>
+            <li>
+                <a href="#ref-for-dfn-run-once-rule-7" title="§ 6.6.2 Calculating the Stratification">§ 6.6.2
+                    Calculating the Stratification</a> <a href="#ref-for-dfn-run-once-rule-8"
+                    title="Reference 2">(2)</a>
+            </li>
+            <li>
+                <a href="#ref-for-dfn-run-once-rule-9" title="§ 6.6.3 Evaluating the Strata">§ 6.6.3 Evaluating the
+                    Strata</a>
+            </li>
         </ul>
     </div>
     <div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-general-rule"
@@ -7067,6 +7586,10 @@ result is <span class="hljs-title function_">imports</span>(<span class="hljs-va
             <li>
                 <a href="#ref-for-dfn-general-rule-2" title="§ 6.5 Evaluation of a Rule Set">§ 6.5 Evaluation of a Rule
                     Set</a>
+            </li>
+            <li>
+                <a href="#ref-for-dfn-general-rule-3" title="§ 6.6.2 Calculating the Stratification">§ 6.6.2 Calculating
+                    the Stratification</a>
             </li>
         </ul>
     </div>
@@ -7138,6 +7661,9 @@ result is <span class="hljs-title function_">imports</span>(<span class="hljs-va
             <li>
                 <a href="#ref-for-dfn-rule-set-28" title="§ 6.5 Evaluation of a Rule Set">§ 6.5 Evaluation of a Rule
                     Set</a>
+            </li>
+            <li>
+                <a href="#ref-for-dfn-rule-set-29" title="§ 6.6 Worked Example">§ 6.6 Worked Example</a>
             </li>
         </ul>
     </div>
@@ -7223,6 +7749,13 @@ result is <span class="hljs-title function_">imports</span>(<span class="hljs-va
             <li>
                 <a href="#ref-for-dfn-inference-graph-4" title="§ 4.1 Elements of the Abstract Syntax">§ 4.1 Elements of
                     the Abstract Syntax</a> <a href="#ref-for-dfn-inference-graph-5" title="Reference 2">(2)</a>
+            </li>
+            <li>
+                <a href="#ref-for-dfn-inference-graph-6" title="§ 6.6 Worked Example">§ 6.6 Worked Example</a>
+            </li>
+            <li>
+                <a href="#ref-for-dfn-inference-graph-7" title="§ 6.6.3 Evaluating the Strata">§ 6.6.3 Evaluating the
+                    Strata</a>
             </li>
         </ul>
     </div>
@@ -7468,6 +8001,10 @@ result is <span class="hljs-title function_">imports</span>(<span class="hljs-va
                 <a href="#ref-for-dfn-dependency-graph-8" title="§ 6.2.2 Calculate Stratification">§ 6.2.2 Calculate
                     Stratification</a>
             </li>
+            <li>
+                <a href="#ref-for-dfn-dependency-graph-9" title="§ 6.6.1 Determining the Dependencies">§ 6.6.1
+                    Determining the Dependencies</a>
+            </li>
         </ul>
     </div>
     <div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-transitive-rule-dependency"
@@ -7484,6 +8021,10 @@ result is <span class="hljs-title function_">imports</span>(<span class="hljs-va
             <li>
                 <a href="#ref-for-dfn-transitive-rule-dependency-1" title="§ 4.3.1 Dependency Graph">§ 4.3.1 Dependency
                     Graph</a>
+            </li>
+            <li>
+                <a href="#ref-for-dfn-transitive-rule-dependency-2" title="§ 6.6.1 Determining the Dependencies">§ 6.6.1
+                    Determining the Dependencies</a>
             </li>
         </ul>
     </div>
@@ -7587,6 +8128,10 @@ result is <span class="hljs-title function_">imports</span>(<span class="hljs-va
             <li>
                 <a href="#ref-for-dfn-stratification-condition-2" title="§ 4.4.2 Stratification Algorithm">§ 4.4.2
                     Stratification Algorithm</a>
+            </li>
+            <li>
+                <a href="#ref-for-dfn-stratification-condition-3" title="§ 6.6.1 Determining the Dependencies">§ 6.6.1
+                    Determining the Dependencies</a>
             </li>
         </ul>
     </div>
@@ -8215,7 +8760,7 @@ result is <span class="hljs-title function_">imports</span>(<span class="hljs-va
                     [...HL_COLORS.keys()].forEach(key => HL_COLORS.set(key, true));
                 };
                 if (hightligtedElems.length) {
-                    document.body.addEventListener("click", resetListener, { once: true });
+                    document.body.addEventListener("click", resetListener, {once: true});
                 }
             }
 
@@ -8235,7 +8780,7 @@ result is <span class="hljs-title function_">imports</span>(<span class="hljs-va
              */
             function getHighlightColor(target) {
                 // return current colors if applicable
-                const { value } = target.classList;
+                const {value} = target.classList;
                 const re = /respec-hl-\w+/;
                 const activeClass = re.test(value) && value.match(re);
                 if (activeClass) return activeClass[0];
@@ -8326,7 +8871,7 @@ result is <span class="hljs-title function_">imports</span>(<span class="hljs-va
                                                     * @param {KeyboardEvent|MouseEvent} event
                                                     */
                                                    return event => {
-                                                       const { target, type } = event;
+                                                       const {target, type} = event;
 
                                                        if (!(target instanceof HTMLElement)) return;
 
@@ -8387,14 +8932,14 @@ result is <span class="hljs-title function_">imports</span>(<span class="hljs-va
                                                        event.clientY >= rect.top
                                                    ) {
                                                        // The event probably happened inside the bounding rect...
-                                                       return { x: event.clientX, y: event.clientY };
+                                                       return {x: event.clientX, y: event.clientY};
                                                    }
 
                                                    // Offset to the middle of the element
                                                    const x = rect.x + rect.width / 2;
                                                    // Placed at the bottom of the element
                                                    const y = rect.y + rect.height;
-                                                   return { x, y };
+                                                   return {x, y};
                                                }
 
                                                /**
@@ -8425,7 +8970,7 @@ result is <span class="hljs-title function_">imports</span>(<span class="hljs-va
                                                 * @param {HTMLElement} panel
                                                 * @param {{ x: number, y: number }} clickPosition
                                                 */
-                                               function displayPanel(dfn, panel, { x, y }) {
+                                               function displayPanel(dfn, panel, {x, y}) {
                                                    panel.hidden = false;
                                                    // distance (px) between edge of panel and the pointing triangle (caret)
                                                    const MARGIN = 20;
@@ -8435,7 +8980,7 @@ result is <span class="hljs-title function_">imports</span>(<span class="hljs-va
                                                    let closestTop = 0;
                                                    let minDiff = Infinity;
                                                    for (const rect of dfnRects) {
-                                                       const { top, bottom } = rect;
+                                                       const {top, bottom} = rect;
                                                        const diffFromClickY = Math.abs((top + bottom) / 2 - y);
                                                        if (diffFromClickY < minDiff) {
                                                            minDiff = diffFromClickY;
@@ -8493,7 +9038,7 @@ result is <span class="hljs-title function_">imports</span>(<span class="hljs-va
                                                            mo.disconnect();
                                                        }
                                                    });
-                                                   mo.observe(panel, { attributes: true, attributeFilter: ["hidden"] });
+                                                   mo.observe(panel, {attributes: true, attributeFilter: ["hidden"]});
                                                }
 
                                                /**
