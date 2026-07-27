@@ -3,6 +3,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 
 ### 平台核心、语言与基础设施
 - [HTML](https://htmlspecs.com/)（[Source](https://html.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
+- [HTML Ruby Markup Extensions](https://htmlspecs.com/html-ruby-extensions/)（[Source](https://www.w3.org/TR/2026/CR-html-ruby-extensions-20260604/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
 - [ECMAScript® 2027 Language Specification](https://ecma262.com/c)（[Source](https://tc39.es/ecma262/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)），[How to Read](https://htmlspecs.com/es-howto/)（[Source](https://timothygu.me/es-howto/)）
 - [Source map format specification](https://htmlspecs.com/ecma426/)（[Source](https://tc39.es/ecma426/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [WebAssembly JavaScript Interface](https://htmlspecs.com/wasm-js-api-2/)（[Source](https://www.w3.org/TR/2026/CRD-wasm-js-api-2-20260724/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）

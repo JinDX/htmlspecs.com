@@ -39,14 +39,14 @@ const linkGroups = [
                 lang: "cjk",
                 state: "LS"
             },
-            // {
-            //     text: "HTML Ruby Markup Extensions",
-            //     href: "https://htmlspecs.com/html-ruby-extensions/",
-            //     src: "https://www.w3.org/TR/2026/CR-html-ruby-extensions-20260604/",
-            //     "last-modified": "-",
-            //     lang: "cjk",
-            //     state: "CR"
-            // },
+            {
+                text: "HTML Ruby Markup Extensions",
+                href: "https://htmlspecs.com/html-ruby-extensions/",
+                src: "https://www.w3.org/TR/2026/CR-html-ruby-extensions-20260604/",
+                "last-modified": "-",
+                lang: "cjk",
+                state: "CR"
+            },
             {
                 text: "ECMAScript® 2027 Language Specification",
                 href: "https://ecma262.com/",
