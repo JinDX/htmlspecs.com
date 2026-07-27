@@ -39,6 +39,14 @@ const linkGroups = [
                 lang: "cjk",
                 state: "LS"
             },
+            // {
+            //     text: "HTML Ruby Markup Extensions",
+            //     href: "https://htmlspecs.com/html-ruby-extensions/",
+            //     src: "https://www.w3.org/TR/2026/CR-html-ruby-extensions-20260604/",
+            //     "last-modified": "-",
+            //     lang: "cjk",
+            //     state: "CR"
+            // },
             {
                 text: "ECMAScript® 2027 Language Specification",
                 href: "https://ecma262.com/",
@@ -660,6 +668,14 @@ const linkGroups = [
                 lang: "cjk",
                 state: "WD"
             },
+            // {
+            //     text: "SHACL 1.2 Node Expressions",
+            //     href: "https://htmlspecs.com/shacl12-node-expr/",
+            //     src: "https://www.w3.org/TR/2026/WD-shacl12-node-expr-20260108/",
+            //     "last-modified": "-",
+            //     lang: "cjk",
+            //     state: "WD"
+            // },
             {
                 text: "SHACL 1.2 Profiling",
                 href: "https://htmlspecs.com/shacl12-profiling/",
@@ -668,6 +684,14 @@ const linkGroups = [
                 lang: "cjk",
                 state: "WD"
             },
+            // {
+            //     text: "SHACL 1.2 User Interfaces",
+            //     href: "https://htmlspecs.com/shacl12-ui/",
+            //     src: "https://www.w3.org/TR/2026/WD-shacl12-ui-20260526/",
+            //     "last-modified": "-",
+            //     lang: "cjk",
+            //     state: "WD"
+            // },
             {
                 text: "SHACL 1.2 SPARQL Extensions",
                 href: "https://htmlspecs.com/shacl12-sparql/",
@@ -1427,6 +1451,14 @@ const linkGroups = [
                 lang: "cjk",
                 state: "Draft"
             },
+            // {
+            //     text: "WebUSB Testing API",
+            //     href: "https://htmlspecs.com/webusb-testing/",
+            //     src: "https://wicg.github.io/webusb/test/",
+            //     "last-modified": "-",
+            //     lang: "cjk",
+            //     state: "Draft"
+            // },
             {
                 text: "Web Smart Card API",
                 href: "https://htmlspecs.com/web-smart-card/",
@@ -3018,6 +3050,14 @@ const linkGroups = [
                 lang: "cjk",
                 state: "REC"
             },
+            // {
+            //     text: "Verifiable Credentials JSON Schema Specification",
+            //     href: "https://htmlspecs.com/vc-json-schema/",
+            //     src: "https://www.w3.org/TR/2025/CRD-vc-json-schema-20250204/",
+            //     "last-modified": "-",
+            //     lang: "cjk",
+            //     state: "CRD"
+            // },
             {
                 text: "Securing Verifiable Credentials using JOSE and COSE",
                 href: "https://htmlspecs.com/vc-jose-cose/",
@@ -3034,6 +3074,14 @@ const linkGroups = [
                 lang: "cjk",
                 state: "WD"
             },
+            // {
+            //     text: "Data Integrity BBS Cryptosuites v1.0",
+            //     href: "https://htmlspecs.com/vc-di-bbs/",
+            //     src: "https://www.w3.org/TR/2026/CRD-vc-di-bbs-20260407/",
+            //     "last-modified": "-",
+            //     lang: "cjk",
+            //     state: "CRD"
+            // },
             {
                 text: "Bitstring Status List v1.0",
                 href: "https://htmlspecs.com/vc-bitstring-status-list/",
@@ -3462,6 +3510,14 @@ const linkGroups = [
                 lang: "cjk",
                 state: "WD"
             },
+            // {
+            //     text: "Text-to-Speech Rendering of Electronic Documents Containing Ruby: User Requirements",
+            //     href: "https://htmlspecs.com/ruby-tts-req/",
+            //     src: "https://www.w3.org/TR/2026/DNOTE-ruby-tts-req-20260425/",
+            //     "last-modified": "-",
+            //     lang: "cjk",
+            //     state: "DNOTE"
+            // },
             {
                 text: "Accessible Rich Internet Applications (WAI-ARIA) 1.2",
                 href: "https://htmlspecs.com/wai-aria-1.2/",
