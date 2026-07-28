@@ -4998,7 +4998,6 @@ const httpLinkGroups = [
                 href: "https://htmlspecs.com/http/rfc9457.html",
                 src: "https://www.rfc-editor.org/rfc/rfc9457.html",
                 "last-modified": "-",
-                etag: null,
                 lang: "cjk",
                 state: "RFC"
             },
@@ -5007,7 +5006,6 @@ const httpLinkGroups = [
                 href: "https://htmlspecs.com/http/ratelimit-headers.html",
                 src: "https://www.ietf.org/archive/id/draft-ietf-httpapi-ratelimit-headers-11.html",
                 "last-modified": "Sat, 23 May 2026 09:26:20 GMT",
-                etag: null,
                 lang: "cjk",
                 state: "Draft"
             },
@@ -5129,7 +5127,6 @@ const httpLinkGroups = [
                 href: "https://htmlspecs.com/http/rfc8615.html",
                 src: "https://www.rfc-editor.org/rfc/rfc8615.html",
                 "last-modified": "-",
-                etag: null,
                 lang: "cjk",
                 state: "RFC"
             },
@@ -5251,7 +5248,6 @@ const httpLinkGroups = [
                 href: "https://htmlspecs.com/http/rfc9298.html",
                 src: "https://www.rfc-editor.org/rfc/rfc9298",
                 "last-modified": "0",
-                etag: null,
                 lang: "cjk",
                 state: "RFC"
             },
@@ -5339,7 +5335,6 @@ const httpLinkGroups = [
                 href: "https://htmlspecs.com/http/rfc6797.html",
                 src: "https://www.rfc-editor.org/rfc/rfc6797.html",
                 "last-modified": "-",
-                etag: null,
                 lang: "cjk",
                 state: "RFC"
             },
