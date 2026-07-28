@@ -391,7 +391,7 @@ const linkGroups = [
             {
                 text: "CBOR-LD 1.0",
                 href: "https://htmlspecs.com/cbor-ld-10/",
-                src: "https://www.w3.org/TR/2026/WD-cbor-ld-10-20260720/",
+                src: "https://www.w3.org/TR/2026/WD-cbor-ld-10-20260727/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
