@@ -535,7 +535,7 @@ const linkGroups = [
             {
                 text: "Linked Web Storage Protocol 1.0",
                 href: "https://htmlspecs.com/lws10-core/",
-                src: "https://www.w3.org/TR/2026/WD-lws10-core-20260724/",
+                src: "https://www.w3.org/TR/2026/WD-lws10-core-20260728/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
