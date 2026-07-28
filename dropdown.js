@@ -673,10 +673,6 @@ loadDataScript(function () {
         .standards-category-content {
             padding: 0 10px 6px 22px;
         }
-        .standards-parent-category > .standards-category-button {
-            background: #f8f9fa;
-            font-size: 1.05em;
-        }
         .standards-parent-content {
             padding: 0 0 6px 12px;
         }
