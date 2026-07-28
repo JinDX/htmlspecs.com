@@ -173,7 +173,7 @@ const linkGroups = [
                 src: "https://www.w3.org/TR/2026/DNOTE-web-user-agents-20260724/",
                 "last-modified": "-",
                 lang: "cjk",
-                state: "NOTE"
+                state: "DNOTE"
             },
             {
                 text: "Compatibility",
@@ -2030,7 +2030,7 @@ const linkGroups = [
                 src: "https://www.w3.org/TR/2026/CRD-webvtt1-20260520/",
                 "last-modified": "-",
                 lang: "cjk",
-                state: "CR"
+                state: "CRD"
             },
             {
                 text: "Timed Text Markup Language 2 (TTML2)",
@@ -3292,7 +3292,7 @@ const linkGroups = [
                 text: "Controlled Frame API",
                 href: "https://htmlspecs.com/controlled-frame/",
                 src: "https://wicg.github.io/controlled-frame/",
-                "last-modified": "Wed, 10 Dec 2025 18:08:30 GMT·",
+                "last-modified": "Wed, 10 Dec 2025 18:08:30 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
@@ -3978,7 +3978,7 @@ const cssLinkGroups = [
                 src: "https://www.w3.org/TR/2025/WD-css-backgrounds-4-20251125/",
                 "last-modified": "-",
                 lang: "cjk",
-                state: "CRD"
+                state: "WD"
             },
             {
                 text: "CSS Borders and Box Decorations Module Level 4",
