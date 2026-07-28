@@ -539,6 +539,7 @@ loadDataScript(function () {
     style.innerHTML = `
         .standards-category {
             border-bottom: 1px solid #eee;
+            margin-bottom: 0;
         }
         .standards-category-controls {
             position: sticky;
