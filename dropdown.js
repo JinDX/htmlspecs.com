@@ -529,11 +529,25 @@ loadDataScript(function () {
         filterCategories(dropdownContent, searchInput.value, noResults);
     };
 
-    window.onclick = function (event) {
-        if (!event.target.matches('#dropdownButton') && !dropdownContent.contains(event.target)) {
+    window.addEventListener("click", function (event) {
+        if (
+            event.target instanceof Element &&
+            !event.target.closest("#dropdownButton") &&
+            !dropdownContent.contains(event.target)
+        ) {
             dropdownContent.style.display = "none";
         }
-    };
+    });
+
+    window.addEventListener("keydown", function (event) {
+        if (
+            event.key === "Escape" &&
+            dropdownContent.style.display === "block"
+        ) {
+            dropdownContent.style.display = "none";
+            dropdownButton.focus();
+        }
+    });
 
     var style = document.createElement('style');
     style.innerHTML = `
