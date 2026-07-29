@@ -3323,7 +3323,7 @@ const linkGroups = [
             {
                 text: "Attribution Level 1",
                 href: "https://htmlspecs.com/attribution/",
-                src: "https://www.w3.org/TR/2026/WD-attribution-20260729/,
+                src: "https://www.w3.org/TR/2026/WD-attribution-20260729/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
@@ -3911,7 +3911,7 @@ const cssLinkGroups = [
             {
                 text: "CSS Color Module Level 4",
                 href: "https://htmlspecs.com/css/css-color-4/",
-                src: "https://www.w3.org/TR/2026/CRD-css-color-4-20260717/",
+                src: "https://www.w3.org/TR/2026/CRD-css-color-4-20260728/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "CRD"
