@@ -194,7 +194,7 @@ const linkGroups = [
             {
                 text: "Web Sustainability Guidelines (WSG)",
                 href: "https://htmlspecs.com/web-sustainability-guidelines/",
-                src: "https://www.w3.org/TR/2026/DNOTE-web-sustainability-guidelines-20260724/",
+                src: "https://www.w3.org/TR/2026/DNOTE-web-sustainability-guidelines-20260728/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "DNOTE"
@@ -383,7 +383,7 @@ const linkGroups = [
             {
                 text: "YAML-LD 1.0",
                 href: "https://htmlspecs.com/yaml-ld-10/",
-                src: "https://www.w3.org/TR/2026/WD-yaml-ld-10-20260723/",
+                src: "https://www.w3.org/TR/2026/WD-yaml-ld-10-20260728/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
@@ -2386,7 +2386,7 @@ const linkGroups = [
                 text: "WebMCP",
                 href: "https://htmlspecs.com/webmcp/",
                 src: "https://webmachinelearning.github.io/webmcp/",
-                "last-modified": "Tue, 21 Jul 2026 19:24:31 GMT",
+                "last-modified": "Tue, 28 Jul 2026 17:30:00 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
@@ -2775,7 +2775,7 @@ const linkGroups = [
                 text: "Connection Allowlists",
                 href: "https://htmlspecs.com/connection-allowlists/",
                 src: "https://wicg.github.io/connection-allowlists/",
-                "last-modified": "Fri, 24 Jul 2026 20:39:49 GMT",
+                "last-modified": "Tue, 28 Jul 2026 17:01:20 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
@@ -3077,7 +3077,7 @@ const linkGroups = [
             {
                 text: "Verifiable Credential Barcodes v1.0",
                 href: "https://htmlspecs.com/vc-barcodes-1.0/",
-                src: "https://www.w3.org/TR/2026/WD-vc-barcodes-1.0-20260715/",
+                src: "https://www.w3.org/TR/2026/WD-vc-barcodes-1.0-20260728/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
@@ -3323,7 +3323,7 @@ const linkGroups = [
             {
                 text: "Attribution Level 1",
                 href: "https://htmlspecs.com/attribution/",
-                src: "https://www.w3.org/TR/2026/WD-attribution-20260727/",
+                src: "https://www.w3.org/TR/2026/WD-attribution-20260729/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
@@ -3911,7 +3911,7 @@ const cssLinkGroups = [
             {
                 text: "CSS Color Module Level 4",
                 href: "https://htmlspecs.com/css/css-color-4/",
-                src: "https://www.w3.org/TR/2026/CRD-css-color-4-20260717/",
+                src: "https://www.w3.org/TR/2026/CRD-css-color-4-20260728/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "CRD"
@@ -3935,7 +3935,7 @@ const cssLinkGroups = [
             {
                 text: "CSS Color HDR Module Level 1",
                 href: "https://htmlspecs.com/css/css-color-hdr-1/",
-                src: "https://www.w3.org/TR/2026/WD-css-color-hdr-1-20260624/",
+                src: "https://www.w3.org/TR/2026/WD-css-color-hdr-1-20260728/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
