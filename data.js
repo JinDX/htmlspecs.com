@@ -2601,7 +2601,7 @@ const linkGroups = [
                 text: "Container Timing API",
                 href: "https://htmlspecs.com/container-timing/",
                 src: "https://wicg.github.io/container-timing/",
-                "last-modified": "Wed, 22 Jul 2026 09:31:52 GMT",
+                "last-modified": "Wed, 29 Jul 2026 13:48:46 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
