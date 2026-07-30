@@ -5091,7 +5091,7 @@ const httpLinkGroups = [
                 href: "https://htmlspecs.com/http/draft-ietf-httpbis-rfc6265bis.html",
                 src: "https://httpwg.org/http-extensions/draft-ietf-httpbis-rfc6265bis.html",
                 "last-modified": "-",
-                etag: "6a550720-44988",
+                etag: "6a6aac80-44984",
                 lang: "cjk",
                 state: "Draft"
             },
