@@ -994,10 +994,10 @@ const linkGroups = [
             {
                 text: "WebTransport",
                 href: "https://htmlspecs.com/webtransport/",
-                src: "https://www.w3.org/TR/2026/WD-webtransport-20260706/",
+                src: "https://www.w3.org/TR/2026/CR-webtransport-20260730/",
                 "last-modified": "-",
                 lang: "cjk",
-                state: "WD"
+                state: "CR"
             },
             {
                 text: "User-Agent Client Hints",
