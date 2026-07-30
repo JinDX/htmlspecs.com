@@ -9,9 +9,9 @@
     <meta content="Domenic Denicola" name="author">
     <meta content="Jeremy Roman" name="author">
     <meta content="Nidhi Jaju" name="author">
-    <meta content="
-       本规范定义了对 HTTP 缓存的扩展，改变 URI 查询参数影响缓存的方式。 
-    " name="description">
+    <meta content='
+       本规范定义了 HTTP 缓存的一项扩展，改变了 URI 查询参数对缓存的影响方式。它引入了 "No-Vary-Search" 响应标头字段，允许源服务器向缓存表明，某些查询参数在语义上不会影响所提供的响应，因此在进行缓存匹配时可以忽略这些参数。 
+    ' name="description">
     <meta content="xml2rfc 3.33.0" name="generator">
     <meta content="http" name="keyword">
     <meta content="caching" name="keyword">
@@ -194,7 +194,6 @@
             font-display: swap;
             src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin.woff2') format('woff2');
             unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-        }
         }
 
         @font-face {
@@ -1280,7 +1279,7 @@
         <tfoot>
             <tr>
                 <td class="left">Denicola 等人</td>
-                <td class="center">2027 年 1 月 28 日过期</td>
+                <td class="center">2027 年 1 月 30 日过期</td>
                 <td class="right">[页]</td>
             </tr>
         </tfoot>
@@ -1294,12 +1293,12 @@
             <dd class="internet-draft">draft-ietf-httpbis-no-vary-search-latest</dd>
             <dt class="label-published">发布：</dt>
             <dd class="published">
-                <time datetime="2026-07-27" class="published">2026 年 7 月 27 日</time>
+                <time datetime="2026-07-29" class="published">2026 年 7 月 29 日</time>
             </dd>
             <dt class="label-intended-status">预期状态：</dt>
             <dd class="intended-status">标准轨道</dd>
             <dt class="label-expires">过期：</dt>
-            <dd class="expires"><time datetime="2027-01-28">2027 年 1 月 28 日</time></dd>
+            <dd class="expires"><time datetime="2027-01-30">2027 年 1 月 30 日</time></dd>
             <dt class="label-authors">作者：</dt>
             <dd class="authors">
                 <div class="author">
@@ -1321,8 +1320,10 @@
     <h1 id="title">No-Vary-Search HTTP 缓存扩展</h1>
     <section id="section-abstract">
         <h2 id="abstract"><a href="#abstract" class="selfRef">摘要</a></h2>
-        <p id="section-abstract-1">本规范定义了 HTTP 缓存的一项扩展，用于改变 URI 查询
-            参数对缓存的影响。<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+        <p id="section-abstract-1">本规范定义了 HTTP 缓存的一项扩展，改变了 URI 查询
+            参数对缓存的影响方式。它引入了 <code>"No-Vary-Search"</code> 响应标头字段，该字段
+            允许源服务器向缓存表明，某些查询参数在语义上不会影响所提供的
+            响应，因此在进行缓存匹配时可以忽略这些参数。<a href="#section-abstract-1" class="pilcrow">¶</a></p>
     </section>
     <section class="note rfcEditorRemove" id="section-note.1">
         <h2 id="name-about-this-document">
@@ -1368,7 +1369,7 @@
                 更新、替换或废止。不宜将其用作参考资料，或以“进行中的工作”之外的方式
                 引用它们。<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
             <p id="section-boilerplate.1-4">
-                本互联网草案将于 2027 年 1 月 28 日过期。<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+                本互联网草案将于 2027 年 1 月 30 日过期。<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
         </section>
     </div>
     <div id="copyright">
@@ -1560,22 +1561,30 @@ No-Vary-Search: params=("utm_source" "utm_medium" "utm_campaign")
 No-Vary-Search: except=("productId")
 </pre><a href="#section-1-7" class="pilcrow">¶</a>
             </div>
-            <p id="section-1-8">请注意，通过发送唯一查询参数以避免取回
-                缓存响应的“缓存清除”可能会被 <code>No-Vary-Search</code> 标头字段变得无效。<a href="#section-1-8" class="pilcrow">¶</a></p>
-            <p id="section-1-9"><a href="#header-definition" class="auto internal xref">第 3 节</a> 使用 <span>[<a
-                        href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span> 框架定义新的
-                响应标头字段 <code>No-Vary-Search</code>。<a href="#data-model" class="auto internal xref">第 4 节</a> 和 <a
+            <p id="section-1-8">请注意，“缓存破坏”（即更改查询参数以创建
+                不同的缓存键并强制获取更新响应的做法）可能会因
+                <code>"No-Vary-Search"</code> 响应标头字段而失效。<a href="#section-1-8" class="pilcrow">¶</a>
+            </p>
+            <p id="section-1-9"><a href="#header-definition" class="auto internal xref">第 3 节</a>使用 <span>[<a
+                        href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span> 框架定义了新的
+                <code>"No-Vary-Search"</code> 响应标头字段。<a href="#data-model" class="auto internal xref">第 4 节</a>和<a
                     href="#parsing" class="auto internal xref">第
-                    5 节</a> 说明字段值如何在规范中表示的数据模型，以及
-                将结构化字段解析器的原始输出解析为该数据模型的过程。<a href="#comparing" class="auto internal xref">第 6 节</a> 给出用于比较
-                两个 URL 在该标头字段影响下是否等价的关键算法；值得注意的是，它依赖
-                <span>[<a href="#WHATWG-URL" class="cite xref">WHATWG-URL</a>]</span> 中指定的
-                <a href="https://url.spec.whatwg.org/#concept-urlencoded">application/x-www-form-urlencoded</a> 格式
-                对查询组件给出的键和值分解。（因此，此
-                标头字段不适用于查询组件不遵循该格式的 URL。）最后，<a href="#caching" class="auto internal xref">第 7 节</a> 解释如何扩展 <span><a
-                        href="https://rfc-editor.org/rfc/rfc9111#section-4" class="relref">[<a href="#HTTP-CACHING"
-                            class="cite xref">HTTP-CACHING</a>] 的第 4 节</span>，以考虑这种新的等价性。<a href="#section-1-9"
-                    class="pilcrow">¶</a>
+                    5 节</a>说明了如何在规范中表示字段值的数据模型，以及
+                将结构化字段解析器的原始输出解析为该数据模型的过程。<a href="#comparing" class="auto internal xref">第 6 节</a>给出了用于比较
+                两个 URL 在该标头字段影响下是否等效的关键算法；值得注意的是，该算法依赖于将查询
+                组件分解为 <a href="https://url.spec.whatwg.org/#concept-urlencoded">application/x-www-form-urlencoded</a>
+                格式所给出的键和值，
+                该格式在 <span>[<a href="#WHATWG-URL" class="cite xref">WHATWG-URL</a>]</span> 中规定。（因此，此
+                标头字段不适用于查询组件不遵循该格式的 URL。）最后，<a href="#caching" class="auto internal xref">第 7 节</a>说明了如何扩展 <span><a
+                        href="https://rfc-editor.org/rfc/rfc9111#section-4" class="relref">第 4 节</a>（见 [<a
+                        href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]）</span>，以将这种新的等效关系
+                纳入考虑。<a href="#section-1-9" class="pilcrow">¶</a>
+            </p>
+            <p id="section-1-10">从部署角度来看，此扩展由 HTTP 缓存实现，包括
+                浏览器缓存、内容分发网络和正向代理。源服务器发送
+                <code>"No-Vary-Search"</code> 响应标头字段，以向这些缓存提供指令。实现
+                此扩展的缓存使用这些指令来确定何时可以安全地为新请求
+                重用先前存储的响应，即使目标 URI 的查询组件不同。<a href="#section-1-10" class="pilcrow">¶</a>
             </p>
         </section>
     </div>
@@ -1628,10 +1637,10 @@ No-Vary-Search: except=("productId")
                 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-http-header-field-definitio"
                     class="section-name selfRef">HTTP 标头字段定义</a>
             </h2>
-            <p id="section-3-1"><code>No-Vary-Search</code> HTTP 标头字段是一个结构化字段 <span>[<a href="#STRUCTURED-FIELDS"
-                        class="cite xref">STRUCTURED-FIELDS</a>]</span>，其值 <span class="bcp14">MUST</span>
-                是一个字典（<span>[<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>] 的 <a
-                        href="https://rfc-editor.org/rfc/rfc9651#section-3.2" class="relref">第 3.2 节</a></span>）。<a
+            <p id="section-3-1"><code>"No-Vary-Search"</code> 响应标头字段是一个结构化字段 <span>[<a href="#STRUCTURED-FIELDS"
+                        class="cite xref">STRUCTURED-FIELDS</a>]</span>，其值<span class="bcp14">必须</span>是一个字典（<span><a
+                        href="https://rfc-editor.org/rfc/rfc9651#section-3.2" class="relref">第 3.2 节</a>，见 [<a
+                        href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>）。<a
                     href="#section-3-1" class="pilcrow">¶</a></p>
             <p id="section-3-2">它有以下约束：<a href="#section-3-2" class="pilcrow">¶</a></p>
             <ul class="normal">
@@ -1884,11 +1893,12 @@ No-Vary-Search: except=("productId")
                     </p>
                     <ol start="1" type="1" class="normal type-1" id="section-5.2-2">
                         <li id="section-5.2-2.1">
-                            <p id="section-5.2-2.1.1">令 <em>fieldValue</em> 为从 <em>response</em> 中将
-                                <code>No-Vary-Search</code> 字段作为 Dictionary（<span>[<a href="#STRUCTURED-FIELDS"
-                                        class="cite xref">STRUCTURED-FIELDS</a>] 的 <a
-                                        href="https://rfc-editor.org/rfc/rfc9651#section-4.2" class="relref">第
-                                        4.2 节</a></span>）进行解析所得的结果。<a href="#section-5.2-2.1.1" class="pilcrow">¶</a>
+                            <p id="section-5.2-2.1.1">令 <em>fieldValue</em> 为将
+                                <em>response</em> 中的 <code>"No-Vary-Search"</code> 响应标头字段作为
+                                字典进行解析的结果（<span><a href="https://rfc-editor.org/rfc/rfc9651#section-4.2"
+                                        class="relref">第 4.2 节</a>，见 [<a href="#STRUCTURED-FIELDS"
+                                        class="cite xref">STRUCTURED-FIELDS</a>]</span>）。<a href="#section-5.2-2.1.1"
+                                    class="pilcrow">¶</a>
                             </p>
                         </li>
                         <li id="section-5.2-2.2">
@@ -1915,6 +1925,14 @@ No-Vary-Search: except=("productId")
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    <tr>
+                                        <td class="text-left" rowspan="1" colspan="1">
+                                            <code>No-Vary-Search: key-order</code>
+                                        </td>
+                                        <td class="text-left" rowspan="1" colspan="1">no-vary params: (empty
+                                            list)<br>vary params: <strong>wildcard</strong><br>vary on key order: false
+                                        </td>
+                                    </tr>
                                     <tr>
                                         <td class="text-left" rowspan="1" colspan="1">
                                             <code>No-Vary-Search: params=("a")</code>
@@ -1952,62 +1970,109 @@ No-Vary-Search: except=("productId")
                             <p id="section-5.2.1-3">以下输入全部无效，并且会导致返回<span id="iref-default-url-variation-config-2"
                                     class="iref"></span>默认 URL 变化
                                 配置：<a href="#section-5.2.1-3" class="pilcrow">¶</a></p>
-                            <ul class="compact">
-                                <li class="compact" id="section-5.2.1-4.1">
-                                    <p id="section-5.2.1-4.1.1"><code>No-Vary-Search: key-order="not a boolean"</code><a
-                                            href="#section-5.2.1-4.1.1" class="pilcrow">¶</a></p>
-                                </li>
-                                <li class="compact" id="section-5.2.1-4.2">
-                                    <p id="section-5.2.1-4.2.1">
-                                        <code>No-Vary-Search: params="not an inner list"</code><a
-                                            href="#section-5.2.1-4.2.1" class="pilcrow">¶</a>
-                                    </p>
-                                </li>
-                                <li class="compact" id="section-5.2.1-4.3">
-                                    <p id="section-5.2.1-4.3.1"><code>No-Vary-Search: params=(not-a-string)</code><a
-                                            href="#section-5.2.1-4.3.1" class="pilcrow">¶</a></p>
-                                </li>
-                                <li class="compact" id="section-5.2.1-4.4">
-                                    <p id="section-5.2.1-4.4.1"><code>No-Vary-Search: params=?0</code><a
-                                            href="#section-5.2.1-4.4.1" class="pilcrow">¶</a></p>
-                                </li>
-                                <li class="compact" id="section-5.2.1-4.5">
-                                    <p id="section-5.2.1-4.5.1"><code>No-Vary-Search: params=?1</code><a
-                                            href="#section-5.2.1-4.5.1" class="pilcrow">¶</a></p>
-                                </li>
-                                <li class="compact" id="section-5.2.1-4.6">
-                                    <p id="section-5.2.1-4.6.1"><code>No-Vary-Search: params=?1, except=("x")</code><a
-                                            href="#section-5.2.1-4.6.1" class="pilcrow">¶</a></p>
-                                </li>
-                                <li class="compact" id="section-5.2.1-4.7">
-                                    <p id="section-5.2.1-4.7.1">
-                                        <code>No-Vary-Search: params=("a"), except=("x")</code><a
-                                            href="#section-5.2.1-4.7.1" class="pilcrow">¶</a>
-                                    </p>
-                                </li>
-                                <li class="compact" id="section-5.2.1-4.8">
-                                    <p id="section-5.2.1-4.8.1"><code>No-Vary-Search: params=(), except=()</code><a
-                                            href="#section-5.2.1-4.8.1" class="pilcrow">¶</a></p>
-                                </li>
-                                <li class="compact" id="section-5.2.1-4.9">
-                                    <p id="section-5.2.1-4.9.1">
-                                        <code>No-Vary-Search: except="not an inner list"</code><a
-                                            href="#section-5.2.1-4.9.1" class="pilcrow">¶</a>
-                                    </p>
-                                </li>
-                                <li class="compact" id="section-5.2.1-4.10">
-                                    <p id="section-5.2.1-4.10.1"><code>No-Vary-Search: except=(not-a-string)</code><a
-                                            href="#section-5.2.1-4.10.1" class="pilcrow">¶</a></p>
-                                </li>
-                                <li class="compact" id="section-5.2.1-4.11">
-                                    <p id="section-5.2.1-4.11.1"><code>No-Vary-Search: except=?1</code><a
-                                            href="#section-5.2.1-4.11.1" class="pilcrow">¶</a></p>
-                                </li>
-                            </ul>
-                            <p id="section-5.2.1-5">以下输入是有效的，但有些非常规。它们会与其更常规的形式一并
-                                显示。<a href="#section-5.2.1-5" class="pilcrow">¶</a></p>
                             <table class="center" id="table-2">
                                 <caption><a href="#table-2" class="selfRef">表 2</a></caption>
+                                <thead>
+                                    <tr>
+                                        <th class="text-left" rowspan="1" colspan="1">输入</th>
+                                        <th class="text-left" rowspan="1" colspan="1">说明</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="text-left" rowspan="1" colspan="1">
+                                            <code>No-Vary-Search: key-order="not a boolean"</code>
+                                        </td>
+                                        <td class="text-left" rowspan="1" colspan="1">
+                                            <code>key-order</code> 预期为布尔值，而不是字符串
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left" rowspan="1" colspan="1">
+                                            <code>No-Vary-Search: params="not an inner list"</code>
+                                        </td>
+                                        <td class="text-left" rowspan="1" colspan="1">
+                                            <code>params</code> 预期为内部列表，而不是字符串
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left" rowspan="1" colspan="1">
+                                            <code>No-Vary-Search: params=(not-a-string)</code>
+                                        </td>
+                                        <td class="text-left" rowspan="1" colspan="1">
+                                            <code>params</code> 的项必须是字符串（令牌无效）
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left" rowspan="1" colspan="1">
+                                            <code>No-Vary-Search: params=?0</code>
+                                        </td>
+                                        <td class="text-left" rowspan="1" colspan="1">
+                                            <code>params</code> 预期为内部列表，而不是布尔值
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left" rowspan="1" colspan="1">
+                                            <code>No-Vary-Search: params=?1</code>
+                                        </td>
+                                        <td class="text-left" rowspan="1" colspan="1">
+                                            <code>params</code> 预期为内部列表，而不是布尔值
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left" rowspan="1" colspan="1">
+                                            <code>No-Vary-Search: params=?1, except=("x")</code>
+                                        </td>
+                                        <td class="text-left" rowspan="1" colspan="1">
+                                            <code>params</code> 和 <code>except</code> 不能同时存在
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left" rowspan="1" colspan="1">
+                                            <code>No-Vary-Search: params=("a"), except=("x")</code>
+                                        </td>
+                                        <td class="text-left" rowspan="1" colspan="1">
+                                            <code>params</code> 和 <code>except</code> 不能同时存在
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left" rowspan="1" colspan="1">
+                                            <code>No-Vary-Search: params=(), except=()</code>
+                                        </td>
+                                        <td class="text-left" rowspan="1" colspan="1">
+                                            <code>params</code> 和 <code>except</code> 不能同时存在
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left" rowspan="1" colspan="1">
+                                            <code>No-Vary-Search: except="not an inner list"</code>
+                                        </td>
+                                        <td class="text-left" rowspan="1" colspan="1">
+                                            <code>except</code> 预期为内部列表，而不是字符串
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left" rowspan="1" colspan="1">
+                                            <code>No-Vary-Search: except=(not-a-string)</code>
+                                        </td>
+                                        <td class="text-left" rowspan="1" colspan="1">
+                                            <code>except</code> 的项必须是字符串（令牌无效）
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left" rowspan="1" colspan="1">
+                                            <code>No-Vary-Search: except=?1</code>
+                                        </td>
+                                        <td class="text-left" rowspan="1" colspan="1">
+                                            <code>except</code> 预期为内部列表，而不是布尔值
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p id="section-5.2.1-5">以下输入是有效的，但有些不合常规。这里将它们
+                                与更常规的形式并列显示。<a href="#section-5.2.1-5" class="pilcrow">¶</a></p>
+                            <table class="center" id="table-3">
+                                <caption><a href="#table-3" class="selfRef">表 3</a></caption>
                                 <thead>
                                     <tr>
                                         <th class="text-left" rowspan="1" colspan="1">输入</th>
@@ -2112,8 +2177,7 @@ No-Vary-Search: params=("%C3%A9+%E6%B0%97")
                             <p id="section-5.3.1-3">将生成一个 URL 变体配置，其 vary 参数为 «
                                 "<code>é 気</code>" »。请注意，编码字符串中的 "<code>+</code>" 字符会
                                 映射为空格（SP）。如后面的示例所述，等价性测试期间的规范化过程
-                                意味着这会将如下 URI 视为等价：<a
-                                    href="#section-5.3.1-3" class="pilcrow">¶</a></p>
+                                意味着这会将如下 URI 视为等价：<a href="#section-5.3.1-3" class="pilcrow">¶</a></p>
                             <ul class="normal">
                                 <li class="normal" id="section-5.3.1-4.1">
                                     <p id="section-5.3.1-4.1.1"><code>https://example.com/?é 気=1</code><a
@@ -2323,11 +2387,12 @@ No-Vary-Search: params=("%C3%A9+%E6%B0%97")
                     <p id="section-6.1-1">由于 application/x-www-form-urlencoded 解析器对查询
                         字符串进行规范化的方式，有些查询字符串虽然看起来并不明显等价，但在解析后最终会被视为等价。<a href="#section-6.1-1" class="pilcrow">¶</a>
                     </p>
-                    <p id="section-6.1-2">因此，例如，给定 <code>No-Vary-Search</code> 的任何非默认值，
-                        如 <code>No-Vary-Search: key-order</code>，我们将得到以下等价关系：<a href="#section-6.1-2"
-                            class="pilcrow">¶</a></p>
-                    <table class="center" id="table-3">
-                        <caption><a href="#table-3" class="selfRef">表 3</a></caption>
+                    <p id="section-6.1-2">因此，例如，给定
+                        <code>"No-Vary-Search"</code> 响应标头字段的任意非默认值，例如
+                        <code>No-Vary-Search: key-order</code>，将得到以下等价关系：<a href="#section-6.1-2" class="pilcrow">¶</a>
+                    </p>
+                    <table class="center" id="table-4">
+                        <caption><a href="#table-4" class="selfRef">表 4</a></caption>
                         <thead>
                             <tr>
                                 <th class="text-left" rowspan="1" colspan="1">第一个查询</th>
@@ -2444,31 +2509,30 @@ No-Vary-Search: params=("%C3%A9+%E6%B0%97")
                 存储了一个响应，该响应：<a href="#section-7-5" class="pilcrow">¶</a></p>
             <ul class="normal">
                 <li class="normal" id="section-7-6.1">
-                    <p id="section-7-6.1.1">具有一个与所呈现目标 URI 相等的目标 URI（排除
-                        query），并且<a href="#section-7-6.1.1" class="pilcrow">¶</a></p>
-                </li>
-                <li class="normal" id="section-7-6.2">
-                    <p id="section-7-6.2.1">其 <code>No-Vary-Search</code> 字段具有非空值，并且<a href="#section-7-6.2.1"
+                    <p id="section-7-6.1.1">其目标 URI 除查询部分外与所呈现的目标 URI 相等，并且<a href="#section-7-6.1.1"
                             class="pilcrow">¶</a></p>
                 </li>
+                <li class="normal" id="section-7-6.2">
+                    <p id="section-7-6.2.1">其 <code>"No-Vary-Search"</code> 响应标头
+                        字段具有非空值，并且<a href="#section-7-6.2.1" class="pilcrow">¶</a></p>
+                </li>
                 <li class="normal" id="section-7-6.3">
-                    <p id="section-7-6.3.1">其 <code>No-Vary-Search</code> 字段值不同于正被考虑复用的
-                        已存储响应。<a href="#section-7-6.3.1" class="pilcrow">¶</a></p>
+                    <p id="section-7-6.3.1">其 <code>"No-Vary-Search"</code> 响应标头字段值不同
+                        于正在考虑重用的已存储响应。<a href="#section-7-6.3.1" class="pilcrow">¶</a></p>
                 </li>
             </ul>
             <aside id="section-7-7">
-                <p id="section-7-7.1">一般来说，并不要求缓存复用已存储响应。然而，上述内容
-                    明确授权缓存在出于性能或其他原因有利时，搜索
-                    更少数量的已存储响应。<a href="#section-7-7.1" class="pilcrow">¶</a></p>
-                <p id="section-7-7.2">也就是说，因为缓存可能为给定 pathname 存储多个响应，
-                    它们需要一种无需访问所有缓存响应即可高效查找 No-Vary-Search 值的方法。
-                    这样的缓存可能会采取如下步骤，以高性能方式识别一个已存储响应，
-                    然后再检查 <span><a href="https://rfc-editor.org/rfc/rfc9111#section-4" class="relref">[<a
-                                href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>] 的第 4 节</span> 中的其他条件：<a
-                        href="#section-7-7.2" class="pilcrow">¶</a></p>
+                <p id="section-7-7.1">通常不要求缓存重用已存储的响应。不过，如果这样做有利于性能或出于其他原因，上述规定
+                    明确允许缓存搜索数量更少的已存储响应。<a href="#section-7-7.1" class="pilcrow">¶</a></p>
+                <p id="section-7-7.2">也就是说，由于缓存可能会为给定路径名存储多个响应，
+                    因此它们需要一种无需访问所有缓存响应即可高效查找 <code>"No-Vary-Search"</code> 响应标头字段值
+                    的方法。在检查 <span>[<a href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]</span> 的<span><a
+                            href="https://rfc-editor.org/rfc/rfc9111#section-4" class="relref">第 4
+                            节</a></span>中的其他条件之前，这类缓存可以采取如下
+                    步骤，以高效地识别已存储响应：<a href="#section-7-7.2" class="pilcrow">¶</a></p>
                 <ol start="1" type="1" class="normal type-1" id="section-7-7.3">
                     <li id="section-7-7.3.1">
-                        <p id="section-7-7.3.1.1">令 exactMatch 为 cache[presentedTargetURI]。如果它是可复用的已存储
+                        <p id="section-7-7.3.1.1">令 exactMatch 为 cache[presentedTargetURI]。如果它是可重用的已存储
                             响应，则返回它。<a href="#section-7-7.3.1.1" class="pilcrow">¶</a>
                         </p>
                     </li>
@@ -2482,36 +2546,38 @@ No-Vary-Search: params=("%C3%A9+%E6%B0%97")
                     </li>
                     <li id="section-7-7.3.4">
                         <p id="section-7-7.3.4.1">令 simplifiedURL 为根据 lastNVS 简化 presentedTargetURI
-                            的结果（通过移除不重要的查询参数，并在应忽略键顺序时
-                            按键升序<a href="https://infra.spec.whatwg.org/#list-sort-in-ascending-order">排序</a> <span>[<a
-                                    href="#WHATWG-INFRA" class="cite xref">WHATWG-INFRA</a>]</span>
-                            参数）。<a href="#section-7-7.3.4.1" class="pilcrow">¶</a></p>
+                            的结果（通过移除不重要的查询参数，并且如果要忽略键顺序，则按键的升序
+                            <a href="https://infra.spec.whatwg.org/#list-sort-in-ascending-order">排序</a> <span>[<a
+                                    href="#WHATWG-INFRA" class="cite xref">WHATWG-INFRA</a>]</span> 参数）。<a
+                                href="#section-7-7.3.4.1" class="pilcrow">¶</a>
+                        </p>
                     </li>
                     <li id="section-7-7.3.5">
                         <p id="section-7-7.3.5.1">令 nvsMatch 为 cache[simplifiedURL]。如果它不存在，则返回
-                            null。（假定这是在写入缓存时，除了精确 URL 外也写入的。）<a href="#section-7-7.3.5.1" class="pilcrow">¶</a></p>
+                            null。（假定在存入缓存时，除精确 URL 外还写入了此项。）<a href="#section-7-7.3.5.1" class="pilcrow">¶</a></p>
                     </li>
                     <li id="section-7-7.3.6">
-                        <p id="section-7-7.3.6.1">令 variationConfig 从 nvsMatch 中获取（<a
+                        <p id="section-7-7.3.6.1">令 variationConfig 从 nvsMatch 获取（<a
                                 href="#obtain-a-url-variation-config" class="auto internal xref">第 5.2 节</a>）。<a
                                 href="#section-7-7.3.6.1" class="pilcrow">¶</a></p>
                     </li>
                     <li id="section-7-7.3.7">
-                        <p id="section-7-7.3.7.1">如果 nvsMatch 的目标 URI 和 presentedTargetURI 在给定 variationConfig 时
-                            不是按 URL 变体配置模等价（<a href="#comparing" class="auto internal xref">第 6 节</a>），
+                        <p id="section-7-7.3.7.1">如果在给定 variationConfig 的情况下，nvsMatch 的目标 URI 与 presentedTargetURI 在
+                            URL 变体配置下并不等价（<a href="#comparing" class="auto internal xref">第 6 节</a>），
                             则返回 null。<a href="#section-7-7.3.7.1" class="pilcrow">¶</a>
                         </p>
                     </li>
                     <li id="section-7-7.3.8">
-                        <p id="section-7-7.3.8.1">如果 nvsMatch 是可复用的已存储响应，则返回它。
+                        <p id="section-7-7.3.8.1">如果 nvsMatch 是可重用的已存储响应，则返回它。
                             否则，返回 null。<a href="#section-7-7.3.8.1" class="pilcrow">¶</a></p>
                     </li>
                 </ol>
             </aside>
-            <p id="section-7-8">为了帮助提高缓存实现效率，服务器 <span class="bcp14">SHOULD NOT</span>
-                对某个给定 pathname 的请求随时间发送不同的非空 <code>No-Vary-Search</code> 字段值，
-                除非需要更新它们处理 query 组件的方式。这样做
-                会导致使用上述策略的缓存实现错过一些本可被复用的已存储响应。<a href="#section-7-8" class="pilcrow">¶</a></p>
+            <p id="section-7-8">为提高缓存实现的效率，除非需要更新其处理查询
+                组件的方式，否则服务器<span class="bcp14">不应</span>
+                随时间推移，针对给定路径名的请求在 <code>"No-Vary-Search"</code> 响应标头字段中发送
+                不同的非空值。这样做会导致采用上述策略的缓存实现遗漏一些
+                原本可以重用的已存储响应。<a href="#section-7-8" class="pilcrow">¶</a></p>
         </section>
     </div>
     <div id="security-considerations">
@@ -2520,19 +2586,22 @@ No-Vary-Search: params=("%C3%A9+%E6%B0%97")
                 <a href="#section-8" class="section-number selfRef">8. </a><a href="#name-security-considerations"
                     class="section-name selfRef">安全考虑事项</a>
             </h2>
-            <p id="section-8-1">需要注意的主要风险是 URL 不匹配的影响。具体而言，这可能
-                导致用户看到的响应最初取自一个不同于其悬停链接时所显示
-                URL 或 URL 栏中所显示 URL 的 URL。<a href="#section-8-1" class="pilcrow">¶</a></p>
-            <p id="section-8-2">然而，由于影响仅限于查询参数，因此这并没有跨越
-                相关的安全边界，也就是源（<span>[<a href="#ORIGIN" class="cite xref">ORIGIN</a>]</span>）。（或者从<a
-                    href="https://url.spec.whatwg.org/#url-rendering-simplification">Web 浏览器
-                    安全 UI 的角度</a>来看，也许只是 <a href="https://url.spec.whatwg.org/#concept-url-host">host</a>。
-                <span>[<a href="#WHATWG-URL" class="cite xref">WHATWG-URL</a>]</span>）事实上，我们
-                已经给予源对其如何呈现（URL, response body）对的完全控制权，
-                包括在客户端通过 <a
+            <p id="section-8-1">需要注意的主要风险是 URL 不匹配所带来的影响。具体而言，这可能会
+                导致用户看到最初从不同于其悬停链接时所显示的 URL，或 URL 栏中所显示的 URL
+                获取的响应。<a href="#section-8-1" class="pilcrow">¶</a></p>
+            <p id="section-8-2">此字段配置不正确可能会加剧缓存投毒或数据泄露
+                风险。如果忽略参数会绕过安全重用响应所需的服务器处理，则<span class="bcp14">不得</span>忽略这些参数。
+                这包括用于授权、用户身份识别、签名验证、用户同意、路由、审计、撤销或任何其他
+                安全敏感操作的参数。<a href="#section-8-2" class="pilcrow">¶</a></p>
+            <p id="section-8-3">但是，由于其影响仅限于查询参数，因此不会跨越
+                相关的安全边界，即源（<span>[<a href="#ORIGIN" class="cite xref">ORIGIN</a>]</span>）。（另请参阅从<a
+                    href="https://url.spec.whatwg.org/#url-rendering-simplification">Web 浏览器安全 UI 的角度</a>来看
+                的 <a href="https://url.spec.whatwg.org/#concept-url-host">主机</a>。<span>[<a href="#WHATWG-URL"
+                        class="cite xref">WHATWG-URL</a>]</span>）事实上，
+                源已经可以完全控制其呈现 URL 和响应正文的方式，包括在
+                客户端通过 <a
                     href="https://html.spec.whatwg.org/multipage/nav-history-apis.html#dom-history-replacestate">history.replaceState()</a>
-                或 Service Worker 等技术实现。<a href="#section-8-2" class="pilcrow">¶</a>
-            </p>
+                或服务工作线程等技术进行控制。<a href="#section-8-3" class="pilcrow">¶</a></p>
         </section>
     </div>
     <div id="privacy-considerations">
@@ -2552,6 +2621,11 @@ No-Vary-Search: params=("%C3%A9+%E6%B0%97")
                         class="cite xref">NAV-TRACKING-MITIGATIONS</a>]</span><a href="#section-9-1"
                     class="pilcrow">¶</a>
             </p>
+            <p id="section-9-2">但是，错误地忽略与用户
+                身份或私有状态相关参数的不当配置，可能会将原本面向某一用户的缓存内容暴露给另一用户。虽然这种错误
+                在使用标准缓存时也可能发生，但 <code>"No-Vary-Search"</code> 响应标头字段扩大了
+                此类错误配置的影响范围，因此源准确地对其查询
+                参数进行分类至关重要。<a href="#section-9-2" class="pilcrow">¶</a></p>
         </section>
     </div>
     <div id="iana-considerations">
