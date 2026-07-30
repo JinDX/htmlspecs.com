@@ -1818,6 +1818,14 @@ const linkGroups = [
                 state: "REC"
             },
             {
+                text: "WebRTC Diagnostic Logging API",
+                href: "https://htmlspecs.com/webrtc-diagnostic-logging/",
+                src: "https://wicg.github.io/webrtc-diagnostic-logging/",
+                "last-modified": "Tue, 28 Jul 2026 17:24:28 GMT",
+                lang: "cjk",
+                state: "Draft"
+            },
+            {
                 text: "WebRTC Priority Control API",
                 href: "https://htmlspecs.com/webrtc-priority/",
                 src: "https://www.w3.org/TR/2021/CR-webrtc-priority-20210318/",
