@@ -3331,7 +3331,7 @@ const linkGroups = [
             {
                 text: "Attribution Level 1",
                 href: "https://htmlspecs.com/attribution/",
-                src: "https://www.w3.org/TR/2026/WD-attribution-20260729/",
+                src: "https://www.w3.org/TR/2026/WD-attribution-20260730/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
