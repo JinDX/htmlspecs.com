@@ -5074,7 +5074,7 @@ const httpLinkGroups = [
                 href: "https://htmlspecs.com/http/no-vary-search.html",
                 src: "https://httpwg.org/http-extensions/draft-ietf-httpbis-no-vary-search.html",
                 "last-modified": "-",
-                etag: "6a6aac80-1c776",
+                etag: "6a6c9e7e-1c896",
                 lang: "cjk",
                 state: "Draft"
             },
