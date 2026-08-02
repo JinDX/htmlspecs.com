@@ -3894,6 +3894,14 @@ const cssLinkGroups = [
                 state: "WD"
             },
             {
+                text: "CSS Linked Parameters Module Level 1",
+                href: "https://htmlspecs.com/css/css-link-params-1/",
+                src: "https://www.w3.org/TR/2026/WD-css-link-params-1-20260714/",
+                "last-modified": "-",
+                lang: "cjk",
+                state: "WD"
+            },
+            {
                 text: "CSS Logical Properties and Values Level 1",
                 href: "https://htmlspecs.com/css/css-logical-1/",
                 src: "https://www.w3.org/TR/2025/WD-css-logical-1-20251204/",
