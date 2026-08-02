@@ -183,6 +183,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Selection API](https://htmlspecs.com/selection-api/)（[Source](https://www.w3.org/TR/2026/WD-selection-api-20260611/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Input Events Level 1](https://htmlspecs.com/input-events-1/)（[Source](https://www.w3.org/TR/2023/DISC-input-events-1-20230928/) ![Discontinued Draft](https://img.shields.io/badge/DISC-ffcc00)）
 - [Input Events Level 2](https://htmlspecs.com/input-events-2/)（[Source](https://www.w3.org/TR/2026/WD-input-events-2-20260501/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Autofill Event](https://htmlspecs.com/autofill-event/)（[Source](https://wicg.github.io/autofill-event/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 
 ### 设备、传感器与硬件接口
 - [Web Serial API](https://htmlspecs.com/serial/)（[Source](https://wicg.github.io/serial/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
