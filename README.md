@@ -408,7 +408,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Verifiable Credential Forgery Defense v1.0](https://htmlspecs.com/vc-forgery-defense-1.0/)（[Source](https://www.w3.org/TR/2026/WD-vc-forgery-defense-1.0-20260714/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Verifiable Credential Rendering Methods v1.0](https://htmlspecs.com/vc-render-method/)（[Source](https://www.w3.org/TR/2026/WD-vc-render-method-20260405/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Verifiable Credential Barcodes v1.0](https://htmlspecs.com/vc-barcodes-1.0/)（[Source](https://www.w3.org/TR/2026/WD-vc-barcodes-1.0-20260728/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
-- [Recognized Entities v1.0](https://htmlspecs.com/vc-recognized-entities-1.0/)（[Source](https://www.w3.org/TR/2026/WD-vc-recognized-entities-1.0-20260726/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Recognized Entities v1.0](https://htmlspecs.com/vc-recognized-entities-1.0/)（[Source](https://www.w3.org/TR/2026/WD-vc-recognized-entities-1.0-20260802/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 
 ### OAuth 与授权协议
 - [The OAuth 2.0 Authorization Framework](https://htmlspecs.com/oauth2/)（[Source](https://www.rfc-editor.org/rfc/rfc6749.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
