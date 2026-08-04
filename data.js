@@ -2417,7 +2417,7 @@ const linkGroups = [
                 text: "Translator and Language Detector APIs",
                 href: "https://htmlspecs.com/translation-api/",
                 src: "https://webmachinelearning.github.io/translation-api/",
-                "last-modified": "Mon, 22 Jun 2026 23:39:31 GMT",
+                "last-modified": "Mon, 03 Aug 2026 20:45:02 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
