@@ -2441,7 +2441,7 @@ const linkGroups = [
                 text: "Proofreader API",
                 href: "https://htmlspecs.com/proofreader-api/",
                 src: "https://webmachinelearning.github.io/proofreader-api/",
-                "last-modified": "Wed, 29 Jul 2026 23:06:10 GMT",
+                "last-modified": "Mon, 03 Aug 2026 18:15:11 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
