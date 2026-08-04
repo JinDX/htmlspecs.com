@@ -67,7 +67,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Data on the Web Best Practices](https://htmlspecs.com/dwbp/)（[Source](https://www.w3.org/TR/2017/REC-dwbp-20170131/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Linked Web Storage Protocol 1.0](https://htmlspecs.com/lws10-core/)（[Source](https://www.w3.org/TR/2026/WD-lws10-core-20260803/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [LWS 1.0 Authentication Suite: OpenID Connect](https://htmlspecs.com/lws10-authn-openid/)（[Source](https://www.w3.org/TR/2026/WD-lws10-authn-openid-20260803/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
-- [LWS 1.0 Authentication Suite: SAML 2.0](https://htmlspecs.com/lws10-authn-saml/)（[Source](https://www.w3.org/TR/2026/WD-lws10-authn-saml-20260609/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [LWS 1.0 Authentication Suite: SAML 2.0](https://htmlspecs.com/lws10-authn-saml/)（[Source](https://www.w3.org/TR/2026/WD-lws10-authn-saml-20260803/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [LWS 1.0 Authentication Suite: Self-signed Identity using Controlled Identifiers](https://htmlspecs.com/lws10-authn-ssi-cid/)（[Source](https://www.w3.org/TR/2026/WD-lws10-authn-ssi-cid-20260609/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [LWS 1.0 Authentication Suite: Self-signed Identity using did:key](https://htmlspecs.com/lws10-authn-ssi-did-key/)（[Source](https://www.w3.org/TR/2026/WD-lws10-authn-ssi-did-key-20260609/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Linked Web Storage Use Cases](https://htmlspecs.com/lws-ucs/)（[Source](https://www.w3.org/TR/2026/DNOTE-lws-ucs-20260210/) ![Note Draft](https://img.shields.io/badge/DNOTE-ffcc00)）
