@@ -3512,7 +3512,7 @@ const linkGroups = [
             {
                 text: "Core Accessibility API Mappings 1.2",
                 href: "https://htmlspecs.com/core-aam-1.2/",
-                src: "https://www.w3.org/TR/2026/CRD-core-aam-1.2-20260702/",
+                src: "https://www.w3.org/TR/2026/CRD-core-aam-1.2-20260805/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "CRD"
