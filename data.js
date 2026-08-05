@@ -845,7 +845,7 @@ const linkGroups = [
                 text: "Manifest Incubations",
                 href: "https://htmlspecs.com/manifest-incubations/",
                 src: "https://wicg.github.io/manifest-incubations/",
-                "last-modified": "Sat, 01 Aug 2026 00:14:58 GMT",
+                "last-modified": "Tue, 04 Aug 2026 23:51:11 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
