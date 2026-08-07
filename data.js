@@ -336,7 +336,7 @@ const linkGroups = [
                 text: "The JavaScript Object Notation (JSON) Data Interchange Format",
                 href: "https://htmlspecs.com/json/",
                 src: "https://www.rfc-editor.org/rfc/rfc8259.html",
-                "last-modified": "0",
+                "last-modified": "-",
                 lang: "cjk",
                 state: "RFC"
             },
@@ -4838,7 +4838,7 @@ const cssLinkGroups = [
                 text: "Design Tokens Technical Reports 2025.10",
                 href: "https://htmlspecs.com/css/design-tokens/",
                 src: "https://www.designtokens.org/tr/2025.10/",
-                "last-modified": "0",
+                "last-modified": "-",
                 lang: "cjk",
                 state: "CG-FINAL"
             },
@@ -4846,7 +4846,7 @@ const cssLinkGroups = [
                 text: "Design Tokens Format Module 2025.10",
                 href: "https://htmlspecs.com/css/design-tokens-format/",
                 src: "https://www.designtokens.org/tr/2025.10/format/",
-                "last-modified": "0",
+                "last-modified": "-",
                 lang: "cjk",
                 state: "CG-FINAL"
             },
@@ -4854,7 +4854,7 @@ const cssLinkGroups = [
                 text: "Design Tokens Color Module 2025.10",
                 href: "https://htmlspecs.com/css/design-tokens-color/",
                 src: "https://www.designtokens.org/tr/2025.10/color/",
-                "last-modified": "0",
+                "last-modified": "-",
                 lang: "cjk",
                 state: "CG-FINAL"
             },
@@ -4862,7 +4862,7 @@ const cssLinkGroups = [
                 text: "Design Tokens Resolver Module 2025.10",
                 href: "https://htmlspecs.com/css/design-tokens-resolver/",
                 src: "https://www.designtokens.org/tr/2025.10/resolver/",
-                "last-modified": "0",
+                "last-modified": "-",
                 lang: "cjk",
                 state: "CG-FINAL"
             }
@@ -5270,7 +5270,7 @@ const httpLinkGroups = [
                 text: "Proxying UDP in HTTP",
                 href: "https://htmlspecs.com/http/rfc9298.html",
                 src: "https://www.rfc-editor.org/rfc/rfc9298",
-                "last-modified": "0",
+                "last-modified": "-",
                 lang: "cjk",
                 state: "RFC"
             },
