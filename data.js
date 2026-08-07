@@ -2234,7 +2234,7 @@ const linkGroups = [
                 text: "WebGL Specification",
                 href: "https://htmlspecs.com/webgl/",
                 src: "https://registry.khronos.org/webgl/specs/latest/1.0/",
-                "last-modified": "Tue, 30 Jun 2026 17:57:05 GMT",
+                "last-modified": "Fri, 17 Jul 2026 19:05:37 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
@@ -2242,7 +2242,7 @@ const linkGroups = [
                 text: "WebGL 2.0 Specification",
                 href: "https://htmlspecs.com/webgl2/",
                 src: "https://registry.khronos.org/webgl/specs/latest/2.0/",
-                "last-modified": "Tue, 30 Jun 2026 17:57:05 GMT",
+                "last-modified": "Fri, 17 Jul 2026 19:05:37 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
