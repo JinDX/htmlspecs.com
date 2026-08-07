@@ -2742,7 +2742,7 @@ const linkGroups = [
                 text: "Modern Algorithms in the Web Cryptography API",
                 href: "https://htmlspecs.com/webcrypto-modern-algos/",
                 src: "https://wicg.github.io/webcrypto-modern-algos/",
-                "last-modified": "Mon, 29 Jun 2026 12:11:38 GMT",
+                "last-modified": "Thu, 06 Aug 2026 23:02:37 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
