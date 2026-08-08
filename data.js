@@ -987,7 +987,7 @@ const linkGroups = [
                 text: "Local Network Access",
                 href: "https://htmlspecs.com/local-network-access/",
                 src: "https://wicg.github.io/local-network-access/",
-                "last-modified": "Thu, 23 Jul 2026 17:19:31 GMT",
+                "last-modified": "Fri, 07 Aug 2026 23:30:32 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
