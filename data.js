@@ -288,7 +288,7 @@ const linkGroups = [
             {
                 text: "Internationalization Best Practices for Spec Developers",
                 href: "https://htmlspecs.com/international-specs/",
-                src: "https://www.w3.org/TR/2026/NOTE-international-specs-20260716/",
+                src: "https://www.w3.org/TR/2026/NOTE-international-specs-20260807/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "NOTE"
