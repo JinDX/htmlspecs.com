@@ -51,7 +51,7 @@ const linkGroups = [
                 text: "ECMAScript® 2027 Language Specification",
                 href: "https://ecma262.com/",
                 src: "https://tc39.es/ecma262/",
-                "last-modified": "Thu, 06 Aug 2026 22:27:57 GMT",
+                "last-modified": "Fri, 07 Aug 2026 19:39:48 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
@@ -67,7 +67,7 @@ const linkGroups = [
                 text: "Source map format specification",
                 href: "https://htmlspecs.com/ecma426/",
                 src: "https://tc39.es/ecma426/",
-                "last-modified": "Fri, 31 Jul 2026 22:17:56 GMT",
+                "last-modified": "Fri, 07 Aug 2026 14:54:22 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
@@ -288,7 +288,7 @@ const linkGroups = [
             {
                 text: "Internationalization Best Practices for Spec Developers",
                 href: "https://htmlspecs.com/international-specs/",
-                src: "https://www.w3.org/TR/2026/NOTE-international-specs-20260716/",
+                src: "https://www.w3.org/TR/2026/NOTE-international-specs-20260807/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "NOTE"
@@ -679,7 +679,7 @@ const linkGroups = [
             {
                 text: "SHACL 1.2 SPARQL Extensions",
                 href: "https://htmlspecs.com/shacl12-sparql/",
-                src: "https://www.w3.org/TR/2026/WD-shacl12-sparql-20260806/",
+                src: "https://www.w3.org/TR/2026/WD-shacl12-sparql-20260808/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
@@ -987,7 +987,7 @@ const linkGroups = [
                 text: "Local Network Access",
                 href: "https://htmlspecs.com/local-network-access/",
                 src: "https://wicg.github.io/local-network-access/",
-                "last-modified": "Thu, 23 Jul 2026 17:19:31 GMT",
+                "last-modified": "Fri, 07 Aug 2026 23:30:32 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
@@ -1241,7 +1241,7 @@ const linkGroups = [
                 text: "Cross-Origin Storage",
                 href: "https://htmlspecs.com/cross-origin-storage/",
                 src: "https://wicg.github.io/cross-origin-storage/",
-                "last-modified": "Fri, 07 Aug 2026 09:17:20 GMT",
+                "last-modified": "Fri, 07 Aug 2026 11:41:34 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
@@ -2074,7 +2074,7 @@ const linkGroups = [
             {
                 text: "Media Source Extensions",
                 href: "https://htmlspecs.com/media-source-2/",
-                src: "https://www.w3.org/TR/2025/WD-media-source-2-20251104/",
+                src: "https://www.w3.org/TR/2026/WD-media-source-2-20260807/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"

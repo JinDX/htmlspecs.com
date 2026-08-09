@@ -33,7 +33,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [ECMAScript® 2027 Internationalization API Specification](https://htmlspecs.com/ecma402/)（[Source](https://tc39.es/ecma402/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Language Tags and Locale Identifiers for the World Wide Web](https://htmlspecs.com/ltli/)（[Source](https://www.w3.org/TR/2020/WD-ltli-20201007) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Strings on the Web: Language and Direction Metadata](https://htmlspecs.com/string-meta/)（[Source](https://www.w3.org/TR/2026/WD-string-meta-20260716/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
-- [Internationalization Best Practices for Spec Developers](https://htmlspecs.com/international-specs/)（[Source](https://www.w3.org/TR/2026/NOTE-international-specs-20260716/) ![Note](https://img.shields.io/badge/NOTE-309c40)）
+- [Internationalization Best Practices for Spec Developers](https://htmlspecs.com/international-specs/)（[Source](https://www.w3.org/TR/2026/NOTE-international-specs-20260807/) ![Note](https://img.shields.io/badge/NOTE-309c40)）
 - [Character Model for the World Wide Web: String Matching](https://htmlspecs.com/charmod-norm/)（[Source](https://www.w3.org/TR/2026/WD-charmod-norm-20260716/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [String Searching](https://htmlspecs.com/string-search/)（[Source](https://www.w3.org/TR/2025/DNOTE-string-search-20250107/) ![Note Draft](https://img.shields.io/badge/DNOTE-ffcc00)）
 - [Language enablement index](https://htmlspecs.com/typography/)（[Source](https://www.w3.org/TR/2024/DNOTE-typography-20241115/) ![Note Draft](https://img.shields.io/badge/DNOTE-ffcc00)）
@@ -83,7 +83,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [SPARQL 1.2 Protocol](https://htmlspecs.com/sparql12-protocol/)（[Source](https://www.w3.org/TR/2026/WD-sparql12-protocol-20260723/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [SHACL 1.2 Core](https://htmlspecs.com/shacl12-core/)（[Source](https://www.w3.org/TR/2026/WD-shacl12-core-20260803/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [SHACL 1.2 Profiling](https://htmlspecs.com/shacl12-profiling/)（[Source](https://www.w3.org/TR/2026/WD-shacl12-profiling-20260702/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
-- [SHACL 1.2 SPARQL Extensions](https://htmlspecs.com/shacl12-sparql/)（[Source](https://www.w3.org/TR/2026/WD-shacl12-sparql-20260806/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [SHACL 1.2 SPARQL Extensions](https://htmlspecs.com/shacl12-sparql/)（[Source](https://www.w3.org/TR/2026/WD-shacl12-sparql-20260808/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [SHACL 1.2 Rules](https://htmlspecs.com/shacl12-rules/)（[Source](https://www.w3.org/TR/2026/WD-shacl12-rules-20260730/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Data Catalog Vocabulary (DCAT) - Version 3](https://htmlspecs.com/vocab-dcat-3/)（[Source](https://www.w3.org/TR/2024/REC-vocab-dcat-3-20240822/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Content Negotiation by Profile](https://htmlspecs.com/dx-prof-conneg/)（[Source](https://www.w3.org/TR/2026/WD-dx-prof-conneg-20260703/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
@@ -273,7 +273,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Timed Text Markup Language 2 (TTML2)](https://htmlspecs.com/ttml2/)（[Source](https://www.w3.org/TR/2018/REC-ttml2-20181108/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [IMSC Text Profile 1.3](https://htmlspecs.com/ttml-imsc1.3/)（[Source](https://www.w3.org/TR/2026/REC-ttml-imsc1.3-20260521/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Dubbing and Audio description Profiles of TTML2](https://htmlspecs.com/dapt/)（[Source](https://www.w3.org/TR/2026/CRD-dapt-20260626/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
-- [Media Source Extensions](https://htmlspecs.com/media-source-2/)（[Source](https://www.w3.org/TR/2025/WD-media-source-2-20251104/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Media Source Extensions](https://htmlspecs.com/media-source-2/)（[Source](https://www.w3.org/TR/2026/WD-media-source-2-20260807/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [WebCodecs](https://htmlspecs.com/webcodecs/)（[Source](https://www.w3.org/TR/2026/WD-webcodecs-20260708/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [WebCodecs Codec Registry](https://htmlspecs.com/webcodecs-codec-registry/)（[Source](https://www.w3.org/TR/2026/DRY-webcodecs-codec-registry-20260212/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [AAC WebCodecs Registration](https://htmlspecs.com/webcodecs-aac-codec-registration/)（[Source](https://www.w3.org/TR/2026/DNOTE-webcodecs-aac-codec-registration-20260319/) ![Note Draft](https://img.shields.io/badge/DNOTE-ffcc00)）
