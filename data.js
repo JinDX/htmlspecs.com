@@ -894,43 +894,43 @@ const linkGroups = [
     },
 
 
-    {
-        names: ["MiniApp、小程序与跨端应用", "MiniApp, 소형 앱 및 크로스 플랫폼 앱", "MiniApp・ミニアプリ・クロスプラットフォームアプリ"], items: [
-            {
-                text: "MiniApp Manifest",
-                href: "https://htmlspecs.com/miniapp-manifest/",
-                src: "https://www.w3.org/TR/2025/WD-miniapp-manifest-20250128/",
-                "last-modified": "-",
-                lang: "cjk",
-                state: "WD"
-            },
-            {
-                text: "MiniApp Packaging",
-                href: "https://htmlspecs.com/miniapp-packaging/",
-                src: "https://www.w3.org/TR/2025/WD-miniapp-packaging-20250128/",
-                "last-modified": "-",
-                lang: "cjk",
-                state: "WD"
-            },
-            {
-                text: "MiniApp Lifecycle",
-                href: "https://htmlspecs.com/miniapp-lifecycle/",
-                src: "https://www.w3.org/TR/2023/WD-miniapp-lifecycle-20230529/",
-                "last-modified": "-",
-                lang: "cjk",
-                state: "WD"
-            },
-            {
-                text: "MiniApp Standardization White Paper version 2",
-                href: "https://htmlspecs.com/mini-app-white-paper/",
-                src: "https://www.w3.org/TR/2022/DNOTE-mini-app-white-paper-20220701/",
-                "last-modified": "-",
-                lang: "cjk",
-                state: "DNOTE"
-            },
+    // {
+    //     names: ["MiniApp、小程序与跨端应用", "MiniApp, 소형 앱 및 크로스 플랫폼 앱", "MiniApp・ミニアプリ・クロスプラットフォームアプリ"], items: [
+    //         {
+    //             text: "MiniApp Manifest",
+    //             href: "https://htmlspecs.com/miniapp-manifest/",
+    //             src: "https://www.w3.org/TR/2025/WD-miniapp-manifest-20250128/",
+    //             "last-modified": "-",
+    //             lang: "cjk",
+    //             state: "WD"
+    //         },
+    //         {
+    //             text: "MiniApp Packaging",
+    //             href: "https://htmlspecs.com/miniapp-packaging/",
+    //             src: "https://www.w3.org/TR/2025/WD-miniapp-packaging-20250128/",
+    //             "last-modified": "-",
+    //             lang: "cjk",
+    //             state: "WD"
+    //         },
+    //         {
+    //             text: "MiniApp Lifecycle",
+    //             href: "https://htmlspecs.com/miniapp-lifecycle/",
+    //             src: "https://www.w3.org/TR/2023/WD-miniapp-lifecycle-20230529/",
+    //             "last-modified": "-",
+    //             lang: "cjk",
+    //             state: "WD"
+    //         },
+    //         {
+    //             text: "MiniApp Standardization White Paper version 2",
+    //             href: "https://htmlspecs.com/mini-app-white-paper/",
+    //             src: "https://www.w3.org/TR/2022/DNOTE-mini-app-white-paper-20220701/",
+    //             "last-modified": "-",
+    //             lang: "cjk",
+    //             state: "DNOTE"
+    //         },
 
-        ]
-    },
+    //     ]
+    // },
 
 
     {
