@@ -2433,7 +2433,7 @@ const linkGroups = [
                 text: "Writing Assistance APIs",
                 href: "https://htmlspecs.com/writing-assistance-apis/",
                 src: "https://webmachinelearning.github.io/writing-assistance-apis/",
-                "last-modified": "Mon, 03 Aug 2026 18:12:44 GMT",
+                "last-modified": "Mon, 10 Aug 2026 21:04:34 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
