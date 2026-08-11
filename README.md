@@ -464,7 +464,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Digital Publishing Accessibility API Mappings 1.1](https://htmlspecs.com/dpub-aam-1.1/)（[Source](https://www.w3.org/TR/2025/REC-dpub-aam-1.1-20250612/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Graphics Accessibility API Mappings](https://htmlspecs.com/graphics-aam-1.0/)（[Source](https://www.w3.org/TR/2018/REC-graphics-aam-1.0-20181002/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [WAI-ARIA Graphics Module](https://htmlspecs.com/graphics-aria-1.0/)（[Source](https://www.w3.org/TR/2018/REC-graphics-aria-1.0-20181002/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
-- [ARIA in HTML](https://htmlspecs.com/html-aria/)（[Source](https://www.w3.org/TR/2026/REC-html-aria-20260415/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
+- [ARIA in HTML](https://htmlspecs.com/html-aria/)（[Source](https://www.w3.org/TR/2026/REC-html-aria-20260811/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Accessible Name and Description Computation 1.1](https://htmlspecs.com/accname-1.1/)（[Source](https://www.w3.org/TR/2018/REC-accname-1.1-20181218/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Accessible Name and Description Computation 1.2](https://htmlspecs.com/accname-1.2/)（[Source](https://www.w3.org/TR/2026/WD-accname-1.2-20260805/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Accessibility Conformance Testing (ACT) Rules Format 1.1](https://htmlspecs.com/act-rules-format/)（[Source](https://www.w3.org/TR/2026/REC-act-rules-format-1.1-20260205/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
