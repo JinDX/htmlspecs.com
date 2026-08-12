@@ -300,7 +300,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [WebXR Plane Detection Module](https://htmlspecs.com/webxr-plane-detection/)（[Source](https://immersive-web.github.io/plane-detection/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [WebXR Mesh Detection Module](https://htmlspecs.com/webxr-mesh-detection/)（[Source](https://immersive-web.github.io/real-world-meshing/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [WebXR DOM Overlays Module](https://htmlspecs.com/webxr-dom-overlays-1/)（[Source](https://www.w3.org/TR/2024/WD-webxr-dom-overlays-1-20240924/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
-- [WebXR Layers API Level 1](https://htmlspecs.com/webxrlayers-1/)（[Source](https://www.w3.org/TR/2026/WD-webxrlayers-1-20260612/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [WebXR Layers API Level 1](https://htmlspecs.com/webxrlayers-1/)（[Source](https://www.w3.org/TR/2026/WD-webxrlayers-1-20260811/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [WebXR Depth Sensing Module](https://htmlspecs.com/webxr-depth-sensing-1/)（[Source](https://www.w3.org/TR/2025/WD-webxr-depth-sensing-1-20251210/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [WebXR Anchors Module](https://htmlspecs.com/webxr-anchors/)（[Source](https://immersive-web.github.io/anchors/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [WebXR Lighting Estimation API Level 1](https://htmlspecs.com/webxr-lighting-estimation/)（[Source](https://www.w3.org/TR/2025/WD-webxr-lighting-estimation-1-20251211/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
