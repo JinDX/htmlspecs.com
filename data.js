@@ -5084,15 +5084,15 @@ const httpLinkGroups = [
                 lang: "cjk",
                 state: "RFC"
             },
-            {
-                text: "The No-Vary-Search HTTP Caching Extension",
-                href: "https://htmlspecs.com/http/no-vary-search.html",
-                src: "https://httpwg.org/http-extensions/draft-ietf-httpbis-no-vary-search.html",
-                "last-modified": "-",
-                etag: "6a701870-1cfa6",
-                lang: "cjk",
-                state: "Draft"
-            },
+            // {
+            //     text: "The No-Vary-Search HTTP Caching Extension",
+            //     href: "https://htmlspecs.com/http/no-vary-search.html",
+            //     src: "https://httpwg.org/http-extensions/draft-ietf-httpbis-no-vary-search.html",
+            //     "last-modified": "-",
+            //     etag: "6a701870-1cfa6",
+            //     lang: "cjk",
+            //     state: "Draft"
+            // },
 
         ]
     },
@@ -5109,15 +5109,15 @@ const httpLinkGroups = [
                 lang: "cjk",
                 state: "RFC"
             },
-            {
-                text: "Cookies: HTTP State Management Mechanism",
-                href: "https://htmlspecs.com/http/draft-ietf-httpbis-rfc6265bis.html",
-                src: "https://httpwg.org/http-extensions/draft-ietf-httpbis-rfc6265bis.html",
-                "last-modified": "-",
-                etag: "6a701870-44987",
-                lang: "cjk",
-                state: "Draft"
-            },
+            // {
+            //     text: "Cookies: HTTP State Management Mechanism",
+            //     href: "https://htmlspecs.com/http/draft-ietf-httpbis-rfc6265bis.html",
+            //     src: "https://httpwg.org/http-extensions/draft-ietf-httpbis-rfc6265bis.html",
+            //     "last-modified": "-",
+            //     etag: "6a701870-44987",
+            //     lang: "cjk",
+            //     state: "Draft"
+            // },
             {
                 text: "Use of the Content-Disposition Header Field in the Hypertext Transfer Protocol (HTTP)",
                 href: "https://htmlspecs.com/http/rfc6266.html",
