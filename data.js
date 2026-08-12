@@ -3068,7 +3068,7 @@ const linkGroups = [
             {
                 text: "VCALM v1.0",
                 href: "https://htmlspecs.com/vcalm-1.0/",
-                src: "https://www.w3.org/TR/2026/WD-vcalm-1.0-20260721/",
+                src: "https://www.w3.org/TR/2026/WD-vcalm-1.0-20260811/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
