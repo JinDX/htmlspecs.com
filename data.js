@@ -2217,7 +2217,7 @@ const linkGroups = [
             {
                 text: "WebGPU",
                 href: "https://htmlspecs.com/webgpu/",
-                src: "https://www.w3.org/TR/2026/CRD-webgpu-20260810/",
+                src: "https://www.w3.org/TR/2026/CRD-webgpu-20260812/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "CRD"
