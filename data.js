@@ -2773,7 +2773,7 @@ const linkGroups = [
             {
                 text: "Content Security Policy Level 3",
                 href: "https://htmlspecs.com/CSP3/",
-                src: "https://www.w3.org/TR/2026/WD-CSP3-20260729/",
+                src: "https://www.w3.org/TR/2026/WD-CSP3-20260813/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
