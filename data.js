@@ -3713,7 +3713,7 @@ const cssLinkGroups = [
                 text: "CSS current work",
                 href: "https://htmlspecs.com/css/",
                 src: "https://www.w3.org/Style/CSS/current-work",
-                "last-modified": "Wed, 29 Jul 2026 22:33:49 GMT",
+                "last-modified": "Wed, 12 Aug 2026 20:11:48 GMT",
                 lang: "cjk",
                 state: ""
             },
