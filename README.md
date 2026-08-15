@@ -532,7 +532,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [CSS Fonts Module Level 5](https://htmlspecs.com/css/css-fonts-5/)（[Source](https://www.w3.org/TR/2026/WD-css-fonts-5-20260811/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Incremental Font Transfer](https://htmlspecs.com/IFT/)（[Source](https://www.w3.org/TR/2025/CRD-IFT-20251118/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [CSS Font Loading Module Level 3](https://htmlspecs.com/css/css-font-loading/)（[Source](https://www.w3.org/TR/2023/WD-css-font-loading-3-20230406/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
-- [CSS Text Module Level 3](https://htmlspecs.com/css/css-text-3/)（[Source](https://www.w3.org/TR/2026/CRD-css-text-3-20260608/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
+- [CSS Text Module Level 3](https://htmlspecs.com/css/css-text-3/)（[Source](https://www.w3.org/TR/2026/CRD-css-text-3-20260814/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [CSS Text Module Level 4](https://htmlspecs.com/css/css-text-4/)（[Source](https://www.w3.org/TR/2026/WD-css-text-4-20260608/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Counter Styles Level 3](https://htmlspecs.com/css/css-counter-styles-3/)（[Source](https://www.w3.org/TR/2021/CR-css-counter-styles-3-20210727/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
 - [CSS Lists and Counters Module Level 3](https://htmlspecs.com/css/css-lists-3/)（[Source](https://www.w3.org/TR/2020/WD-css-lists-3-20201117/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）

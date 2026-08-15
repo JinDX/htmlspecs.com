@@ -4061,7 +4061,7 @@ const cssLinkGroups = [
             {
                 text: "CSS Text Module Level 3",
                 href: "https://htmlspecs.com/css/css-text-3/",
-                src: "https://www.w3.org/TR/2026/CRD-css-text-3-20260608/",
+                src: "https://www.w3.org/TR/2026/CRD-css-text-3-20260814/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "CRD"
