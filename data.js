@@ -687,7 +687,7 @@ const linkGroups = [
             {
                 text: "SHACL 1.2 Rules",
                 href: "https://htmlspecs.com/shacl12-rules/",
-                src: "https://www.w3.org/TR/2026/WD-shacl12-rules-20260812/",
+                src: "https://www.w3.org/TR/2026/WD-shacl12-rules-20260817/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
