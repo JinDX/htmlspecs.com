@@ -2225,7 +2225,7 @@ const linkGroups = [
             {
                 text: "WebGPU Shading Language",
                 href: "https://htmlspecs.com/WGSL/",
-                src: "https://www.w3.org/TR/2026/CRD-WGSL-20260817//",
+                src: "https://www.w3.org/TR/2026/CRD-WGSL-20260817/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "CRD"
@@ -4029,7 +4029,7 @@ const cssLinkGroups = [
             {
                 text: "CSS Fonts Module Level 4",
                 href: "https://htmlspecs.com/css/css-fonts-4/",
-                src: "https://www.w3.org/TR/2026/WD-css-fonts-4-20260817/",
+                src: "https://www.w3.org/TR/2026/WD-css-fonts-4-20260818/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
