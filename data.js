@@ -4029,7 +4029,7 @@ const cssLinkGroups = [
             {
                 text: "CSS Fonts Module Level 4",
                 href: "https://htmlspecs.com/css/css-fonts-4/",
-                src: "https://www.w3.org/TR/2026/WD-css-fonts-4-20260811/",
+                src: "https://www.w3.org/TR/2026/WD-css-fonts-4-20260817/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
