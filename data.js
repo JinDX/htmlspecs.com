@@ -194,7 +194,7 @@ const linkGroups = [
             {
                 text: "Web Sustainability Guidelines (WSG)",
                 href: "https://htmlspecs.com/web-sustainability-guidelines/",
-                src: "https://www.w3.org/TR/2026/DNOTE-web-sustainability-guidelines-20260805/",
+                src: "https://www.w3.org/TR/2026/DNOTE-web-sustainability-guidelines-20260819/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "DNOTE"
