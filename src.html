@@ -59,7 +59,7 @@
             <code>whatwg/html repository</code></span></a>
         <a href="https://github.com/whatwg/html/commits" class="changes"><span><strong>Commits</strong>
             <code>on GitHub</code></span></a>
-        <a id="commit-snapshot-link" href="/commit-snapshots/56335688c9eca4959981fcbda2113a7d82b94270/"
+        <a id="commit-snapshot-link" href="/commit-snapshots/25f1766848291832c231954a97b092c00f5aac0c/"
           class="changes"><span><strong>Snapshot</strong> <code>as of this commit</code></span></a>
       </div>
       <div>
@@ -7173,9 +7173,12 @@ a<c- p="">.</c->setAttribute<c- p="">(</c-><c- t="">'href'</c-><c- p="">,</c-> <
                 descendant</a></dfn>,
             <dfn id="shadow-including-inclusive-descendant"><a
                 href="https://dom.spec.whatwg.org/#concept-shadow-including-inclusive-descendant">shadow-including
-                inclusive descendant</a></dfn>, and
+                inclusive descendant</a></dfn>,
             <dfn id="shadow-including-inclusive-ancestor"><a
                 href="https://dom.spec.whatwg.org/#concept-shadow-including-inclusive-ancestor">shadow-including
+                inclusive ancestor</a></dfn>, and
+            <dfn id="host-including-inclusive-ancestor"><a
+                href="https://dom.spec.whatwg.org/#concept-tree-host-including-inclusive-ancestor">host-including
                 inclusive ancestor</a></dfn> concepts
           </li>
           <li>The <dfn id="first-child"><a href="https://dom.spec.whatwg.org/#concept-tree-first-child">first
@@ -7224,7 +7227,10 @@ a<c- p="">.</c->setAttribute<c- p="">(</c-><c- t="">'href'</c-><c- p="">,</c-> <
             algorithm</li>
           <li>The <dfn id="pre-insert"><a
                 href="https://dom.spec.whatwg.org/#concept-node-pre-insert">pre-insert</a></dfn>, <dfn
-              id="concept-node-insert"><a href="https://dom.spec.whatwg.org/#concept-node-insert">insert</a></dfn>, <dfn
+              id="ensure-pre-insert-validity"><a
+                href="https://dom.spec.whatwg.org/#concept-node-ensure-pre-insertion-validity">ensure pre-insert
+                validity</a></dfn>, <dfn id="concept-node-insert"><a
+                href="https://dom.spec.whatwg.org/#concept-node-insert">insert</a></dfn>, <dfn
               id="concept-node-append"><a href="https://dom.spec.whatwg.org/#concept-node-append">append</a></dfn>, <dfn
               id="concept-node-replace"><a href="https://dom.spec.whatwg.org/#concept-node-replace">replace</a></dfn>,
             <dfn id="concept-node-replace-all"><a href="https://dom.spec.whatwg.org/#concept-node-replace-all">replace
@@ -247827,7 +247833,7 @@ window<c- p="">.</c->fakeWorklet1<c- p="">.</c->addModule<c- p="">(</c-><c- u=""
   <div data-algorithm="">
     <p>The <dfn id="appropriate-place-for-inserting-a-node">appropriate place for inserting a node</dfn>, optionally
       using a particular
-      <i>override target</i>, is the position in an element returned by running the following steps:
+      <i>override target</i>, is the position in a node returned by running the following steps:
     </p>
 
     <ol>
@@ -248236,17 +248242,30 @@ window<c- p="">.</c->fakeWorklet1<c- p="">.</c->addModule<c- p="">(</c-><c- u=""
   <div data-algorithm="">
     <p>To <dfn id="insert-an-element-at-the-adjusted-insertion-location">insert an element at the adjusted insertion
         location</dfn> with an element
-      <var>element</var>:
+      <var>element</var> and an optional insertion location <var>insertionLocation</var> (default
+      null):
     </p>
 
     <ol>
       <li>
-        <p>Let <var>insertionLocation</var> be the <a href="#adjusted-insertion-location"
-            id="creating-and-inserting-nodes:adjusted-insertion-location">adjusted insertion location</a>.</p>
+        <p>Set <var>insertionLocation</var> to the <a href="#adjusted-insertion-location"
+            id="creating-and-inserting-nodes:adjusted-insertion-location">adjusted insertion location</a> given
+          <var>insertionLocation</var>.
+        </p>
       </li>
       <li>
-        <p>If it is not possible to insert <var>element</var> at <var>insertionLocation</var>, abort
-          these steps.</p>
+        <p>If <var>insertionLocation</var> is in a <code
+            id="creating-and-inserting-nodes:document"><a href="#document">Document</a></code> node and that
+          <code id="creating-and-inserting-nodes:document-2"><a href="#document">Document</a></code> node has an element
+          child, then return.
+        </p>
+      </li>
+      <li>
+        <p><a id="creating-and-inserting-nodes:assert" href="https://infra.spec.whatwg.org/#assert"
+            data-x-internal="assert">Assert</a>: <a id="creating-and-inserting-nodes:ensure-pre-insert-validity"
+            href="https://dom.spec.whatwg.org/#concept-node-ensure-pre-insertion-validity"
+            data-x-internal="ensure-pre-insert-validity">ensure pre-insert validity</a> given <var>element</var>, the
+          node in which <var>insertionLocation</var> finds itself, null, and « » does not throw.</p>
       </li>
       <li>
         <p>If the parser was not created as part of the <a href="#html-fragment-parsing-algorithm"
@@ -248275,13 +248294,6 @@ window<c- p="">.</c->fakeWorklet1<c- p="">.</c->addModule<c- p="">(</c-><c- u=""
         </p>
       </li>
     </ol>
-
-    <p class="note">If the <a href="#adjusted-insertion-location"
-        id="creating-and-inserting-nodes:adjusted-insertion-location-2">adjusted insertion location</a> cannot accept
-      more elements, e.g.,
-      because it's a <code id="creating-and-inserting-nodes:document"><a href="#document">Document</a></code> that
-      already has an element child, then <var>element</var> is
-      dropped on the floor.</p>
   </div>
 
 
@@ -248301,7 +248313,7 @@ window<c- p="">.</c->fakeWorklet1<c- p="">.</c->addModule<c- p="">(</c-><c- u=""
         <p>Let <var>element</var> be the result of <a href="#create-an-element-for-the-token"
             id="creating-and-inserting-nodes:create-an-element-for-the-token">creating an element for the token</a>
           given <var>token</var>, <var>namespace</var>,
-          and the element in which the <var>adjustedInsertionLocation</var> finds itself.</p>
+          and the node in which the <var>adjustedInsertionLocation</var> finds itself.</p>
       </li>
       <li>
         <p>If <var>onlyAddToElementStack</var> is false, then run <a
@@ -248788,14 +248800,14 @@ window<c- p="">.</c->fakeWorklet1<c- p="">.</c->addModule<c- p="">(</c-><c- u=""
       </li>
       <li>
         <p>Let <var>insertionLocation</var> be the <a href="#adjusted-insertion-location"
-            id="creating-and-inserting-nodes:adjusted-insertion-location-3">adjusted insertion location</a>.</p>
+            id="creating-and-inserting-nodes:adjusted-insertion-location-2">adjusted insertion location</a>.</p>
       </li>
       <li>
         <p>If <var>insertionLocation</var> is in a <code
-            id="creating-and-inserting-nodes:document-2"><a href="#document">Document</a></code> node, then return.</p>
+            id="creating-and-inserting-nodes:document-3"><a href="#document">Document</a></code> node, then return.</p>
 
         <p class="note">The DOM will not let <code
-            id="creating-and-inserting-nodes:document-3"><a href="#document">Document</a></code> nodes have <code
+            id="creating-and-inserting-nodes:document-4"><a href="#document">Document</a></code> nodes have <code
             id="creating-and-inserting-nodes:text"><a data-x-internal="text" href="https://dom.spec.whatwg.org/#interface-text">Text</a></code>
           node
           children, so they are dropped on the floor.</p>
@@ -248813,7 +248825,7 @@ window<c- p="">.</c->fakeWorklet1<c- p="">.</c->addModule<c- p="">(</c-><c- u=""
             id="creating-and-inserting-nodes:create-a-text-node" data-x-internal="create-a-text-node">creating a
             text node</a> given the <a id="creating-and-inserting-nodes:node-document-2"
             href="https://dom.spec.whatwg.org/#concept-node-document" data-x-internal="node-document">node document</a>
-          of the element in which
+          of the node in which
           <var>insertionLocation</var> finds itself and <var>data</var>, and insert <var>text</var> at
           <var>insertionLocation</var>.
         </p>
@@ -248933,7 +248945,7 @@ document<c- p="">.</c->body<c- p="">.</c->appendChild<c- p="">(</c->text<c- p=""
       </li>
       <li>
         <p>Set <var>insertionLocation</var> to the <a href="#adjusted-insertion-location"
-            id="creating-and-inserting-nodes:adjusted-insertion-location-4">adjusted insertion location</a> given
+            id="creating-and-inserting-nodes:adjusted-insertion-location-3">adjusted insertion location</a> given
           <var>insertionLocation</var>.
         </p>
       </li>
@@ -248971,7 +248983,7 @@ document<c- p="">.</c->body<c- p="">.</c->appendChild<c- p="">(</c->text<c- p=""
       </li>
       <li>
         <p>Set <var>insertionLocation</var> to the <a href="#adjusted-insertion-location"
-            id="creating-and-inserting-nodes:adjusted-insertion-location-5">adjusted insertion location</a> given
+            id="creating-and-inserting-nodes:adjusted-insertion-location-4">adjusted insertion location</a> given
           <var>insertionLocation</var>.
         </p>
       </li>
@@ -249170,18 +249182,22 @@ document<c- p="">.</c->body<c- p="">.</c->appendChild<c- p="">(</c->text<c- p=""
           the DOCTYPE token (or the
           empty string if the name was missing), the public identifier given in the DOCTYPE token (or the
           empty string if the public identifier was missing), and the system identifier given in the
-          DOCTYPE token (or the empty string if the system identifier was missing). Then append
-          <var>doctype</var> to the <code
-            id="the-initial-insertion-mode:document-5"><a href="#document">Document</a></code> node.
+          DOCTYPE token (or the empty string if the system identifier was missing). Then, if the
+          <code id="the-initial-insertion-mode:document-5"><a href="#document">Document</a></code> node has neither a
+          <code
+            id="the-initial-insertion-mode:documenttype"><a data-x-internal="documenttype" href="https://dom.spec.whatwg.org/#interface-documenttype">DocumentType</a></code>
+          child nor an element child,
+          append <var>doctype</var> to the <code
+            id="the-initial-insertion-mode:document-6"><a href="#document">Document</a></code> node.
         </p>
 
         <p class="note">This also ensures that the <code
-            id="the-initial-insertion-mode:documenttype"><a data-x-internal="documenttype" href="https://dom.spec.whatwg.org/#interface-documenttype">DocumentType</a></code>
+            id="the-initial-insertion-mode:documenttype-2"><a data-x-internal="documenttype" href="https://dom.spec.whatwg.org/#interface-documenttype">DocumentType</a></code>
           node is returned as the
           value of the <code
             id="the-initial-insertion-mode:dom-document-doctype"><a data-x-internal="dom-document-doctype" href="https://dom.spec.whatwg.org/#dom-document-doctype">doctype</a></code>
           attribute of the
-          <code id="the-initial-insertion-mode:document-6"><a href="#document">Document</a></code> object.
+          <code id="the-initial-insertion-mode:document-7"><a href="#document">Document</a></code> object.
         </p>
 
         <p id="quirks-mode-doctypes">Then, if the document is <em>not</em> <a href="#an-iframe-srcdoc-document"
@@ -249190,7 +249206,7 @@ document<c- p="">.</c->body<c- p="">.</c->appendChild<c- p="">(</c->text<c- p=""
             id="the-initial-insertion-mode:parser-cannot-change-the-mode-flag">parser cannot
             change the mode flag</a> is false, and the DOCTYPE token matches one of the conditions in the
           following list, then set the <code
-            id="the-initial-insertion-mode:document-7"><a href="#document">Document</a></code> to <a
+            id="the-initial-insertion-mode:document-8"><a href="#document">Document</a></code> to <a
             id="the-initial-insertion-mode:quirks-mode" href="https://dom.spec.whatwg.org/#concept-document-quirks"
             data-x-internal="quirks-mode">quirks mode</a>:</p>
 
@@ -249278,7 +249294,7 @@ document<c- p="">.</c->body<c- p="">.</c->appendChild<c- p="">(</c->text<c- p=""
             id="the-initial-insertion-mode:parser-cannot-change-the-mode-flag-2">parser cannot change
             the mode flag</a> is false, and the DOCTYPE token matches one of the conditions in the
           following list, then set the <code
-            id="the-initial-insertion-mode:document-8"><a href="#document">Document</a></code> to <a
+            id="the-initial-insertion-mode:document-9"><a href="#document">Document</a></code> to <a
             id="the-initial-insertion-mode:limited-quirks-mode"
             href="https://dom.spec.whatwg.org/#concept-document-limited-quirks"
             data-x-internal="limited-quirks-mode">limited-quirks mode</a>:</p>
@@ -249311,7 +249327,7 @@ document<c- p="">.</c->body<c- p="">.</c->appendChild<c- p="">(</c->text<c- p=""
             error</a>; if the <a href="#parser-cannot-change-the-mode-flag"
             id="the-initial-insertion-mode:parser-cannot-change-the-mode-flag-3">parser cannot change the mode flag</a>
           is false, set the
-          <code id="the-initial-insertion-mode:document-9"><a href="#document">Document</a></code> to <a
+          <code id="the-initial-insertion-mode:document-10"><a href="#document">Document</a></code> to <a
             id="the-initial-insertion-mode:quirks-mode-2" href="https://dom.spec.whatwg.org/#concept-document-quirks"
             data-x-internal="quirks-mode">quirks mode</a>.
         </p>
@@ -249367,9 +249383,13 @@ document<c- p="">.</c->body<c- p="">.</c->appendChild<c- p="">(</c->text<c- p=""
             href="https://infra.spec.whatwg.org/#html-namespace" data-x-internal="html-namespace-2">HTML namespace</a>,
           with the
           <code id="the-before-html-insertion-mode:document-3"><a href="#document">Document</a></code> as the intended
-          parent. Append it to the <code
-            id="the-before-html-insertion-mode:document-4"><a href="#document">Document</a></code> object. Put
-          this element in the <a href="#stack-of-open-elements"
+          parent. <a href="#insert-an-element-at-the-adjusted-insertion-location"
+            id="the-before-html-insertion-mode:insert-an-element-at-the-adjusted-insertion-location">Insert an element
+            at the adjusted insertion
+            location</a> with that element and the <code
+            id="the-before-html-insertion-mode:document-4"><a href="#document">Document</a></code>, after its last child
+          (if any).
+          Put this element in the <a href="#stack-of-open-elements"
             id="the-before-html-insertion-mode:stack-of-open-elements">stack of open elements</a>.
         </p>
 
@@ -249647,7 +249667,7 @@ document<c- p="">.</c->body<c- p="">.</c->appendChild<c- p="">(</c->text<c- p=""
                 id="parsing-main-inhead:create-an-element-for-the-token">Create an element for the token</a> in the <a
                 id="parsing-main-inhead:html-namespace-2" href="https://infra.spec.whatwg.org/#html-namespace"
                 data-x-internal="html-namespace-2">HTML namespace</a>, with
-              the intended parent being the element in which the <var>adjustedInsertionLocation</var> finds
+              the intended parent being the node in which the <var>adjustedInsertionLocation</var> finds
               itself.</p>
           </li>
           <li>
@@ -249788,7 +249808,7 @@ document<c- p="">.</c->body<c- p="">.</c->appendChild<c- p="">(</c->text<c- p=""
                 inserting a node</a>.</p>
           </li>
           <li>
-            <p>Let <var>intendedParent</var> be the element in which the
+            <p>Let <var>intendedParent</var> be the node in which the
               <var>adjustedInsertionLocation</var> finds itself.
             </p>
           </li>
@@ -252159,10 +252179,64 @@ document<c- p="">.</c->body<c- p="">.</c->appendChild<c- p="">(</c->text<c- p=""
               any.</p>
           </li>
           <li>
-            <p>Insert whatever <var>lastNode</var> ended up being in the previous step at the
-              <a href="#adjusted-insertion-location" id="parsing-main-inbody:adjusted-insertion-location">adjusted
-                insertion location</a> given <var>insertionLocation</var>.
+            <p>Let <var>adjustedInsertionLocation</var> be the <a href="#adjusted-insertion-location"
+                id="parsing-main-inbody:adjusted-insertion-location">adjusted insertion location</a>
+              given <var>insertionLocation</var>.</p>
+          </li>
+          <li>
+            <p>Let <var>target</var> be the node in which <var>adjustedInsertionLocation</var> finds
+              itself.</p>
+          </li>
+          <li>
+            <p>Let <var>refNode</var> be the node <var>adjustedInsertionLocation</var> is immediately
+              before, or null if <var>adjustedInsertionLocation</var> is after <var>target</var>'s last
+              child.</p>
+          </li>
+          <li>
+            <p>If <var>lastNode</var>'s <a id="parsing-main-inbody:parent"
+                href="https://dom.spec.whatwg.org/#concept-tree-parent" data-x-internal="parent">parent</a> is non-null,
+              then <a href="https://dom.spec.whatwg.org/#concept-node-remove"
+                id="parsing-main-inbody:concept-node-remove" data-x-internal="concept-node-remove">remove</a>
+              <var>lastNode</var>.
             </p>
+          </li>
+          <li>
+            <p>If all of the following are true:</p>
+
+            <ul>
+              <li><var>lastNode</var>'s <a id="parsing-main-inbody:parent-2"
+                  href="https://dom.spec.whatwg.org/#concept-tree-parent" data-x-internal="parent">parent</a> is null;
+              </li>
+              <li><var>lastNode</var> is not a <a id="parsing-main-inbody:host-including-inclusive-ancestor"
+                  href="https://dom.spec.whatwg.org/#concept-tree-host-including-inclusive-ancestor"
+                  data-x-internal="host-including-inclusive-ancestor">host-including inclusive ancestor</a> of
+                <var>target</var>;
+              </li>
+              <li><var>target</var> is not a <code
+                  id="parsing-main-inbody:document-2"><a href="#document">Document</a></code> node, or it does not have
+                an element
+                child; and</li>
+              <li><var>refNode</var> is null or its <a id="parsing-main-inbody:parent-3"
+                  href="https://dom.spec.whatwg.org/#concept-tree-parent" data-x-internal="parent">parent</a> is
+                <var>target</var>,
+              </li>
+            </ul>
+
+            <p>then:</p>
+
+            <ol>
+              <li>
+                <p><a id="parsing-main-inbody:assert" href="https://infra.spec.whatwg.org/#assert"
+                    data-x-internal="assert">Assert</a>: <a id="parsing-main-inbody:ensure-pre-insert-validity"
+                    href="https://dom.spec.whatwg.org/#concept-node-ensure-pre-insertion-validity"
+                    data-x-internal="ensure-pre-insert-validity">ensure pre-insert validity</a> given
+                  <var>lastNode</var>, <var>target</var>, <var>refNode</var>, and « » does not throw.
+                </p>
+              </li>
+              <li>
+                <p>Insert <var>lastNode</var> at <var>adjustedInsertionLocation</var>.</p>
+              </li>
+            </ol>
           </li>
           <li>
             <p><a href="#create-an-element-for-the-token"
