@@ -51,7 +51,7 @@ const linkGroups = [
                 text: "ECMAScript® 2027 Language Specification",
                 href: "https://ecma262.com/",
                 src: "https://tc39.es/ecma262/",
-                "last-modified": "Sun, 16 Aug 2026 23:44:01 GMT",
+                "last-modified": "Thu, 20 Aug 2026 23:32:32 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
@@ -67,7 +67,7 @@ const linkGroups = [
                 text: "Source map format specification",
                 href: "https://htmlspecs.com/ecma426/",
                 src: "https://tc39.es/ecma426/",
-                "last-modified": "Thu, 13 Aug 2026 04:04:17 GMT",
+                "last-modified": "Thu, 20 Aug 2026 12:52:03 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
