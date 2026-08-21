@@ -679,7 +679,7 @@ const linkGroups = [
             {
                 text: "SHACL 1.2 SPARQL Extensions",
                 href: "https://htmlspecs.com/shacl12-sparql/",
-                src: "https://www.w3.org/TR/2026/WD-shacl12-sparql-20260808/",
+                src: "https://www.w3.org/TR/2026/WD-shacl12-sparql-20260820/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
