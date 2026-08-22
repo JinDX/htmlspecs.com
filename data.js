@@ -559,7 +559,7 @@ const linkGroups = [
             {
                 text: "LWS 1.0 Authentication Suite: Self-signed Identity using Controlled Identifiers",
                 href: "https://htmlspecs.com/lws10-authn-ssi-cid/",
-                src: "https://www.w3.org/TR/2026/WD-lws10-authn-ssi-cid-20260803/",
+                src: "https://www.w3.org/TR/2026/WD-lws10-authn-ssi-cid-20260821/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
