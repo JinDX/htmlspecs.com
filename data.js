@@ -3092,7 +3092,7 @@ const linkGroups = [
             {
                 text: "Verifiable Credential Barcodes v1.0",
                 href: "https://htmlspecs.com/vc-barcodes-1.0/",
-                src: "https://www.w3.org/TR/2026/WD-vc-barcodes-1.0-20260806/",
+                src: "https://www.w3.org/TR/2026/WD-vc-barcodes-1.0-20260822/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
