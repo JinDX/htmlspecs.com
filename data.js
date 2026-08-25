@@ -2964,10 +2964,10 @@ const linkGroups = [
             {
                 text: "Web Authentication: An API for accessing Public Key Credentials Level 3",
                 href: "https://htmlspecs.com/webauthn-3/",
-                src: "https://www.w3.org/TR/2026/CR-webauthn-3-20260526/",
+                src: "https://www.w3.org/TR/2026/REC-webauthn-3-20260825/",
                 "last-modified": "-",
                 lang: "cjk",
-                state: "CR"
+                state: "REC"
             },
             {
                 text: "A Well-Known URL for Relying Party Passkey Endpoints",
