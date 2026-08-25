@@ -2821,7 +2821,7 @@ const linkGroups = [
             {
                 text: "W3C Standards Vulnerability Disclosure & Handling Process and Policy",
                 href: "https://htmlspecs.com/security-disclosure/",
-                src: "https://www.w3.org/TR/2026/DNOTE-security-disclosure-20260630/",
+                src: "https://www.w3.org/TR/2026/DNOTE-security-disclosure-20260824/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "DNOTE"
