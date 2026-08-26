@@ -3076,7 +3076,7 @@ const linkGroups = [
             {
                 text: "Verifiable Credential Forgery Defense v1.0",
                 href: "https://htmlspecs.com/vc-forgery-defense-1.0/",
-                src: "https://www.w3.org/TR/2026/WD-vc-forgery-defense-1.0-20260824/",
+                src: "https://www.w3.org/TR/2026/WD-vc-forgery-defense-1.0-20260825/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
