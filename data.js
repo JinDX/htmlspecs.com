@@ -2337,7 +2337,7 @@ const linkGroups = [
             {
                 text: "WebXR Depth Sensing Module",
                 href: "https://htmlspecs.com/webxr-depth-sensing-1/",
-                src: "https://www.w3.org/TR/2025/WD-webxr-depth-sensing-1-20251210/",
+                src: "https://www.w3.org/TR/2026/WD-webxr-depth-sensing-1-20260825/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
