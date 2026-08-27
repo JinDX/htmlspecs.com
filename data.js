@@ -591,7 +591,7 @@ const linkGroups = [
             {
                 text: "RDF 1.2 Primer",
                 href: "https://htmlspecs.com/rdf12-primer/",
-                src: "https://www.w3.org/TR/2026/DNOTE-rdf12-primer-20260416/",
+                src: "https://www.w3.org/TR/2026/DNOTE-rdf12-primer-20260826/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "DNOTE"
