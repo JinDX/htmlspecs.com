@@ -2719,7 +2719,7 @@ const linkGroups = [
                 text: "Prerendering Revamped",
                 href: "https://htmlspecs.com/prerendering/",
                 src: "https://wicg.github.io/nav-speculation/prerendering.html",
-                "last-modified": "Thu, 14 May 2026 10:43:04 GMT",
+                "last-modified": "Thu, 27 Aug 2026 00:58:33 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
