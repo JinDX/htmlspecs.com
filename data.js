@@ -98,7 +98,7 @@ const linkGroups = [
             {
                 text: "WebAssembly Web API",
                 href: "https://htmlspecs.com/wasm-web-api-2/",
-                src: "https://www.w3.org/TR/2026/CRD-wasm-web-api-2-20260812/",
+                src: "https://www.w3.org/TR/2026/CRD-wasm-web-api-2-20260826/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "CRD"
