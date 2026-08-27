@@ -2599,7 +2599,7 @@ const linkGroups = [
             {
                 text: "Largest Contentful Paint",
                 href: "https://htmlspecs.com/largest-contentful-paint/",
-                src: "https://www.w3.org/TR/2026/WD-largest-contentful-paint-20260713/",
+                src: "https://www.w3.org/TR/2026/WD-largest-contentful-paint-20260826/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
