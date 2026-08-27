@@ -3512,7 +3512,7 @@ const linkGroups = [
             {
                 text: "Core Accessibility API Mappings 1.2",
                 href: "https://htmlspecs.com/core-aam-1.2/",
-                src: "https://www.w3.org/TR/2026/CRD-core-aam-1.2-20260805/",
+                src: "https://www.w3.org/TR/2026/CRD-core-aam-1.2-20260827/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "CRD"
@@ -3520,7 +3520,7 @@ const linkGroups = [
             {
                 text: "HTML Accessibility API Mappings 1.0",
                 href: "https://htmlspecs.com/html-aam-1.0/",
-                src: "https://www.w3.org/TR/2026/WD-html-aam-1.0-20260805/",
+                src: "https://www.w3.org/TR/2026/WD-html-aam-1.0-20260827/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
@@ -3528,7 +3528,7 @@ const linkGroups = [
             {
                 text: "SVG Accessibility API Mappings",
                 href: "https://htmlspecs.com/svg-aam-1.0/",
-                src: "https://www.w3.org/TR/2026/WD-svg-aam-1.0-20260805/",
+                src: "https://www.w3.org/TR/2026/WD-svg-aam-1.0-20260827/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
@@ -3576,7 +3576,7 @@ const linkGroups = [
             {
                 text: "Accessible Name and Description Computation 1.2",
                 href: "https://htmlspecs.com/accname-1.2/",
-                src: "https://www.w3.org/TR/2026/WD-accname-1.2-20260805/",
+                src: "https://www.w3.org/TR/2026/WD-accname-1.2-20260827/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
