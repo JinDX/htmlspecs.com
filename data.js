@@ -1867,7 +1867,7 @@ const linkGroups = [
             {
                 text: "Screen Capture",
                 href: "https://htmlspecs.com/screen-capture/",
-                src: "https://www.w3.org/TR/2026/WD-screen-capture-20260723/",
+                src: "https://www.w3.org/TR/2026/WD-screen-capture-20260827/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
