@@ -3028,10 +3028,10 @@ const linkGroups = [
             {
                 text: "Decentralized Identifier Resolution (DID Resolution) v1",
                 href: "https://htmlspecs.com/did-resolution/",
-                src: "https://www.w3.org/TR/2026/CR-did-resolution-1.0-20260806/",
+                src: "https://www.w3.org/TR/2026/CRD-did-resolution-1.0-20260828/",
                 "last-modified": "-",
                 lang: "cjk",
-                state: "CR"
+                state: "CRD"
             },
             {
                 text: "Verifiable Credentials Data Model v2.0",
