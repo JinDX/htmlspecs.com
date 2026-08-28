@@ -647,7 +647,7 @@ const linkGroups = [
             {
                 text: "SPARQL 1.2 Query Language",
                 href: "https://htmlspecs.com/sparql12-query/",
-                src: "https://www.w3.org/TR/2026/WD-sparql12-query-20260820/",
+                src: "https://www.w3.org/TR/2026/WD-sparql12-query-20260827/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
