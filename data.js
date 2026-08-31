@@ -3179,10 +3179,10 @@ const linkGroups = [
             {
                 text: "OAuth 2.0 for Browser-Based Applications",
                 href: "https://htmlspecs.com/oauth-browser-based-apps/",
-                src: "https://www.ietf.org/archive/id/draft-ietf-oauth-browser-based-apps-26.html",
-                "last-modified": "Thu, 04 Dec 2025 02:20:53 GMT",
+                src: "https://www.rfc-editor.org/rfc/rfc10017.html",
+                "last-modified": "-",
                 lang: "cjk",
-                state: "Draft"
+                state: "RFC"
             },
             {
                 text: "Best Current Practice for OAuth 2.0 Security",
