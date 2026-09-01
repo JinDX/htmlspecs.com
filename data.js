@@ -2746,14 +2746,14 @@ const linkGroups = [
                 lang: "cjk",
                 state: "Draft"
             },
-            {
-                text: "HTML Sanitizer API",
-                href: "https://htmlspecs.com/sanitizer-api/",
-                src: "https://wicg.github.io/sanitizer-api/",
-                "last-modified": "Fri, 12 Jun 2026 10:15:57 GMT",
-                lang: "cjk",
-                state: "Draft"
-            },
+            // {
+            //     text: "HTML Sanitizer API",
+            //     href: "https://htmlspecs.com/sanitizer-api/",
+            //     src: "https://wicg.github.io/sanitizer-api/",
+            //     "last-modified": "Fri, 12 Jun 2026 10:15:57 GMT",
+            //     lang: "cjk",
+            //     state: "Draft"
+            // },
             {
                 text: "Subresource Integrity (SRI)",
                 href: "https://htmlspecs.com/sri/",
