@@ -90,7 +90,7 @@ const linkGroups = [
             {
                 text: "WebAssembly JavaScript Interface",
                 href: "https://htmlspecs.com/wasm-js-api-2/",
-                src: "https://www.w3.org/TR/2026/CRD-wasm-js-api-2-20260831/",
+                src: "https://www.w3.org/TR/2026/CRD-wasm-js-api-2-20260901/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "CRD"
@@ -98,7 +98,7 @@ const linkGroups = [
             {
                 text: "WebAssembly Web API",
                 href: "https://htmlspecs.com/wasm-web-api-2/",
-                src: "https://www.w3.org/TR/2026/CRD-wasm-web-api-2-20260831/",
+                src: "https://www.w3.org/TR/2026/CRD-wasm-web-api-2-20260901/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "CRD"
@@ -939,7 +939,7 @@ const linkGroups = [
                 text: "Fetch",
                 href: "https://htmlspecs.com/fetch/",
                 src: "https://fetch.spec.whatwg.org/",
-                "last-modified": "Mon, 31 Aug 2026 06:20:52 GMT",
+                "last-modified": "Tue, 01 Sep 2026 14:42:40 GMT",
                 lang: "cjk",
                 state: "LS"
             },
@@ -1241,7 +1241,7 @@ const linkGroups = [
                 text: "Cross-Origin Storage",
                 href: "https://htmlspecs.com/cross-origin-storage/",
                 src: "https://wicg.github.io/cross-origin-storage/",
-                "last-modified": "Mon, 31 Aug 2026 10:30:52 GMT",
+                "last-modified": "Tue, 01 Sep 2026 17:50:16 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
@@ -1715,7 +1715,7 @@ const linkGroups = [
             {
                 text: "Window Management",
                 href: "https://htmlspecs.com/window-management/",
-                src: "https://www.w3.org/TR/2026/WD-window-management-20260828/",
+                src: "https://www.w3.org/TR/2026/WD-window-management-20260901/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
@@ -2217,7 +2217,7 @@ const linkGroups = [
             {
                 text: "WebGPU",
                 href: "https://htmlspecs.com/webgpu/",
-                src: "https://www.w3.org/TR/2026/CRD-webgpu-20260820/",
+                src: "https://www.w3.org/TR/2026/CRD-webgpu-20260901/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "CRD"
@@ -2495,7 +2495,7 @@ const linkGroups = [
             {
                 text: "High Resolution Time",
                 href: "https://htmlspecs.com/hr-time-3/",
-                src: "https://www.w3.org/TR/2026/WD-hr-time-3-20260324/",
+                src: "https://www.w3.org/TR/2026/WD-hr-time-3-20260901/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
@@ -2519,7 +2519,7 @@ const linkGroups = [
             {
                 text: "Navigation Timing Level 2",
                 href: "https://htmlspecs.com/navigation-timing-2/",
-                src: "https://www.w3.org/TR/2026/WD-navigation-timing-2-20260225/",
+                src: "https://www.w3.org/TR/2026/WD-navigation-timing-2-20260901/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
@@ -2535,7 +2535,7 @@ const linkGroups = [
             {
                 text: "Resource Timing",
                 href: "https://htmlspecs.com/resource-timing/",
-                src: "https://www.w3.org/TR/2026/CRD-resource-timing-20260420/",
+                src: "https://www.w3.org/TR/2026/CRD-resource-timing-20260901/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "CRD"
@@ -3934,7 +3934,7 @@ const cssLinkGroups = [
             {
                 text: "CSS Color Module Level 4",
                 href: "https://htmlspecs.com/css/css-color-4/",
-                src: "https://www.w3.org/TR/2026/CRD-css-color-4-20260830/",
+                src: "https://www.w3.org/TR/2026/CRD-css-color-4-20260901/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "CRD"
