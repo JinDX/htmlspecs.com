@@ -8,7 +8,7 @@
     <meta content="CRD" name="w3c-status">
     <meta content="Bikeshed version ac92c2f0d, updated Fri Aug 21 16:01:29 2026 -0700" name="generator">
     <link href="https://www.w3.org/TR/css-color-4/" rel="canonical">
-    <meta content="37cc7367ae86722feddacdd1a0be5f6884a274e7" name="revision">
+    <meta content="cbca081425c1d488556b9ce42e69370eefe3edc4" name="revision">
     <meta content="dark light" name="color-scheme">
     <link href="style.css" rel="stylesheet">
     <style>
@@ -1726,7 +1726,7 @@ For darkmode:
         </p>
         <h1 class="no-ref p-name" id="title">CSS Color Module Level 4</h1>
         <p id="w3c-state"><a href="https://www.w3.org/standards/types/#CRD">W3C Candidate Recommendation Draft</a>,
-            <time class="dt-updated" datetime="2026-08-30">30 August 2026</time>
+            <time class="dt-updated" datetime="2026-09-01">1 September 2026</time>
         </p>
         <details open>
             <summary>More details about this document</summary>
@@ -1734,14 +1734,14 @@ For darkmode:
                 <dl>
                     <dt>This version:
                     <dd><a class="u-url"
-                            href="https://www.w3.org/TR/2026/CRD-css-color-4-20260830/">https://www.w3.org/TR/2026/CRD-css-color-4-20260830/</a>
+                            href="https://www.w3.org/TR/2026/CRD-css-color-4-20260901/">https://www.w3.org/TR/2026/CRD-css-color-4-20260901/</a>
                     <dt>Latest published version:
                     <dd><a href="https://www.w3.org/TR/css-color-4/">https://www.w3.org/TR/css-color-4/</a>
                     <dt>Editor's Draft:
                     <dd><a href="https://drafts.csswg.org/css-color-4/">https://drafts.csswg.org/css-color-4/</a>
                     <dt>Previous Versions:
-                    <dd><a href="https://www.w3.org/TR/2026/CRD-css-color-4-20260825/"
-                            rel="prev">https://www.w3.org/TR/2026/CRD-css-color-4-20260825/</a>
+                    <dd><a href="https://www.w3.org/TR/2026/CRD-css-color-4-20260830/"
+                            rel="prev">https://www.w3.org/TR/2026/CRD-css-color-4-20260830/</a>
                     <dt>History:
                     <dd><a class="u-url"
                             href="https://www.w3.org/standards/history/css-color-4/">https://www.w3.org/standards/history/css-color-4/</a>
@@ -12884,18 +12884,44 @@ else if <c- p>(</c-><c- m>-180</c-> &lt; θ₂ - θ₁ &lt;= <c- m>0</c-><c- p>)
                 CSS Gamut Mapping to an RGB Destination</span><a class="self-link" href="#css-gamut-mapping"></a></h3>
         <details class="wpt-tests-block" dir="ltr" lang="en" open>
             <summary>Tests</summary>
-            <p>Actual values of color are not exposed to script, making this hard to test in an automated manner.</p>
+            <p>Actual values of color are not exposed to script, making this hard to test in an automated manner. A
+                choice of three algorithms also makes this harder to test</p>
             <ul class="wpt-tests-list"></ul>
             <hr>
         </details>
         <p>The three <dfn class="dfn-paneled" data-dfn-type="dfn" data-export id="css-gamut-mapping-algorithms">CSS
                 gamut mapping algorithms</dfn>
-            apply to individual,
+            apply to
             Standard Dynamic Range (SDR) CSS colors
-            which are out of gamut
-            of an RGB display
-            and thus require to be <dfn class="dfn-paneled" data-dfn-type="dfn" data-export id="css-gamut-mapped">css
+            which are out of gamut of:</p>
+        <ul>
+            <li>an RGB display (which cannot represent out of gamut values in the frame buffer)
+            <li>a canvas, with <a
+                    href="https://html.spec.whatwg.org/multipage/canvas.html#dom-canvascolortype-unorm8">unorm8</a>
+                backing store (thus, unable to store out of gamut values)
+        </ul>
+        <p>They thus require to be <dfn class="dfn-paneled" data-dfn-type="dfn" data-export id="css-gamut-mapped">css
                 gamut mapped</dfn>.</p>
+        <div class="example" id="ex-p3-oog-display"><a class="self-link" href="#ex-p3-oog-display"></a>
+            For example, given a Display P3 screen,
+            attempting to display the color color(display-p3 1.1 0.4 0.2)
+            will trigger gamut mapping,
+            because the red coordinate is outside the range 0 to 1;
+            gamut mapping will produce a similar, but lower chroma,
+            color, such as <span class="swatch" style="--color: #ff764f"></span> color(display-p3 1 0.473 0.314).
+        </div>
+        <div class="example" id="ex-p3-oog-canvas"><a class="self-link" href="#ex-p3-oog-canvas"></a>
+            For example, given a 2d context
+            with colorSpace set to "display-p3"
+            and colorType set to "unorm8";
+            attempting to paint the color oklch(76% 0.27 60)
+            will trigger gamut mapping,
+            because once converted to Display P3,
+            the value color(display-p3 1.062 0.4954 -0.3115)
+            has a red coordinate greater than 1 and a negative blue coordinate.
+            Gamut mapping will produce a similar, but lower chroma,
+            color, such as <span class="swatch" style="--color: #ff8900"></span> color(display-p3 1 0.546 0).
+        </div>
         <p>Implementations my choose any of the three algorithms
             based on their quality and runtime efficiency tradeoffs,
             and must use their chosen algorithm
@@ -12905,8 +12931,8 @@ else if <c- p>(</c-><c- m>-180</c-> &lt; θ₂ - θ₁ &lt;= <c- m>0</c-><c- p>)
             <li><a href="#GMA-EdgeSeeker">EdgeSeeker Gamut Mapping</a>
             <li><a href="#GMA-Raytrace">Ray Trace Gamut Mapping</a>
         </ul>
-        <p>They all implement a relative colorimetric intent,
-            thus colors inside the destination gamut are unchanged.</p>
+        <p>They all implement a <strong>relative colorimetric intent</strong>,
+            thus colors inside the destination gamut are <strong>unchanged</strong>.</p>
         <p class="note" role="note"><span class="marker">Note:</span> other situations,
             in particular mapping to printer gamuts
             where the maximum black level is significantly above zero,
@@ -12914,16 +12940,18 @@ else if <c- p>(</c-><c- m>-180</c-> &lt; θ₂ - θ₁ &lt;= <c- m>0</c-><c- p>)
             which align the respective black and white points,
             which will result in lightness changes
             for very light and very dark colors
-            as chroma is reduced..</p>
-        <p class="note" role="note"><span class="marker">Note:</span> these algorithms are for individual, distinct
-            colors;
-            for color images,
+            as chroma is reduced.</p>
+        <p class="note" role="note"><span class="marker">Note:</span> these algorithms are for individuallly specified
+            colors,
+            used either singly (on page elements) or in combination (as with gradients);
+            for photographic images,
             where relationships between neighboring pixels are important
             and the aim is to preserve detail and texture,
-            a perceptual rendering intent is more appropriate
+            a <strong>perceptual rendering intent</strong> is more appropriate
             and in that case,
-            colors inside the destination gamut
-            could be changed.</p>
+            colors <em>inside</em> the destination gamut
+            <strong>could be changed</strong>.
+        </p>
         <p>All three CSS gamut mapping algorithms aim at
             constant-lightness, constant-hue chroma reduction
             in the <a href="#ok-lab">OkLCh color space</a>.</p>
@@ -12932,6 +12960,43 @@ else if <c- p>(</c-><c- m>-180</c-> &lt; θ₂ - θ₁ &lt;= <c- m>0</c-><c- p>)
             if the Lightness is greater than or equal to 1.0,
             while black is returned in the destination color space
             if the Lightness is less than or equal to 0.0.</p>
+        <details class="wpt-tests-block" dir="ltr" lang="en" open>
+            <summary>Tests</summary>
+            <ul class="wpt-tests-list">
+                <li class="wpt-test"><a class="wpt-name" href="https://wpt.fyi/results/css/css-color/lch-009.html"
+                        title="css/css-color/lch-009.html">lch-009.html</a> <a class="wpt-live"
+                        href="http://wpt.live/css/css-color/lch-009.html"><small>(live test)</small></a> <a
+                        class="wpt-source"
+                        href="https://github.com/web-platform-tests/wpt/blob/master/css/css-color/lch-009.html"><small>(source)</small></a>
+                <li class="wpt-test"><a class="wpt-name" href="https://wpt.fyi/results/css/css-color/lch-010.html"
+                        title="css/css-color/lch-010.html">lch-010.html</a> <a class="wpt-live"
+                        href="http://wpt.live/css/css-color/lch-010.html"><small>(live test)</small></a> <a
+                        class="wpt-source"
+                        href="https://github.com/web-platform-tests/wpt/blob/master/css/css-color/lch-010.html"><small>(source)</small></a>
+                <li class="wpt-test"><a class="wpt-name"
+                        href="https://wpt.fyi/results/css/css-color/lch-l-over-100-1.html"
+                        title="css/css-color/lch-l-over-100-1.html">lch-l-over-100-1.html</a> <a class="wpt-live"
+                        href="http://wpt.live/css/css-color/lch-l-over-100-1.html"><small>(live test)</small></a> <a
+                        class="wpt-source"
+                        href="https://github.com/web-platform-tests/wpt/blob/master/css/css-color/lch-l-over-100-1.html"><small>(source)</small></a>
+                <li class="wpt-test"><a class="wpt-name"
+                        href="https://wpt.fyi/results/css/css-color/lch-l-over-100-2.html"
+                        title="css/css-color/lch-l-over-100-2.html">lch-l-over-100-2.html</a> <a class="wpt-live"
+                        href="http://wpt.live/css/css-color/lch-l-over-100-2.html"><small>(live test)</small></a> <a
+                        class="wpt-source"
+                        href="https://github.com/web-platform-tests/wpt/blob/master/css/css-color/lch-l-over-100-2.html"><small>(source)</small></a>
+                <li class="wpt-test"><a class="wpt-name" href="https://wpt.fyi/results/css/css-color/oklch-009.html"
+                        title="css/css-color/oklch-009.html">oklch-009.html</a> <a class="wpt-live"
+                        href="http://wpt.live/css/css-color/oklch-009.html"><small>(live test)</small></a> <a
+                        class="wpt-source"
+                        href="https://github.com/web-platform-tests/wpt/blob/master/css/css-color/oklch-009.html"><small>(source)</small></a>
+                <li class="wpt-test"><a class="wpt-name" href="https://wpt.fyi/results/css/css-color/oklch-010.html"
+                        title="css/css-color/oklch-010.html">oklch-010.html</a> <a class="wpt-live"
+                        href="http://wpt.live/css/css-color/oklch-010.html"><small>(live test)</small></a> <a
+                        class="wpt-source"
+                        href="https://github.com/web-platform-tests/wpt/blob/master/css/css-color/oklch-010.html"><small>(source)</small></a>
+            </ul>
+        </details>
         <h4 class="heading settled" data-level="14.2.1" id="GMA-Binary-local-MINDE"><span class="secno">14.2.1.
             </span><span class="content">
                 Binary Search Gamut Mapping with Local MINDE
@@ -16228,6 +16293,12 @@ console<c- p>.</c->log<c- p>(</c->context<c- p>.</c->fillStyle<c- p>);</c-> <c- 
                 <a href="https://www.w3.org/TR/2025/CRD-css-color-4-20250424/">Candidate Recommendation Draft of 24
                     April 2025</a></span><a class="self-link" href="#changes-from-20250424"></a></h3>
         <ul>
+            <li>Gamut mapping applies to unorm8 canvas as well as displays
+                (<a href="https://github.com/w3c/csswg-drafts/issues/10112">Issue 10112</a>)
+
+            <li>Clarified that relative colorimetric is good for gradients, while perceptual is for photographic images
+                (<a href="https://github.com/w3c/csswg-drafts/issues/14051">Issue 14051</a>)
+
             <li>Explained relationship between progress and quantities, in color interpolation. Defined linear
                 interpolation precisely.
                 (<a href="https://github.com/w3c/csswg-drafts/issues/14021">Issue 14201</a>)
@@ -17626,7 +17697,7 @@ console<c- p>.</c->log<c- p>(</c->context<c- p>.</c->fillStyle<c- p>);</c-> <c- 
                 href="https://www.w3.org/TR/css-cascade-5/">https://www.w3.org/TR/css-cascade-5/</a>
         <dt id="biblio-css-color-5">[CSS-COLOR-5]
         <dd>Chris Lilley; Una Kravets; Lea Verou. <a href="https://www.w3.org/TR/css-color-5/"><cite>CSS Color Module
-                    Level 5</cite></a>. 7 May 2026. WD. URL: <a
+                    Level 5</cite></a>. 31 July 2026. WD. URL: <a
                 href="https://www.w3.org/TR/css-color-5/">https://www.w3.org/TR/css-color-5/</a>
         <dt id="biblio-css-color-adjust-1">[CSS-COLOR-ADJUST-1]
         <dd>Elika Etemad; et al. <a href="https://www.w3.org/TR/css-color-adjust-1/"><cite>CSS Color Adjustment Module
