@@ -2988,7 +2988,7 @@ const linkGroups = [
             {
                 text: "Credential Management Level 1",
                 href: "https://htmlspecs.com/credential-management-1/",
-                src: "https://www.w3.org/TR/2026/WD-credential-management-1-20260702/",
+                src: "https://www.w3.org/TR/2026/WD-credential-management-1-20260903/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
