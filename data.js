@@ -1828,7 +1828,7 @@ const linkGroups = [
                 text: "WebRTC Diagnostic Logging API",
                 href: "https://htmlspecs.com/webrtc-diagnostic-logging/",
                 src: "https://wicg.github.io/webrtc-diagnostic-logging/",
-                "last-modified": "Tue, 28 Jul 2026 17:24:28 GMT",
+                "last-modified": "Thu, 03 Sep 2026 12:24:04 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
