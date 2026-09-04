@@ -1,0 +1,3558 @@
+<!DOCTYPE html>
+<html lang="zh-hans" class="RFC">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="Common,Latin" name="scripts">
+    <meta content="initial-scale=1.0" name="viewport">
+    <title>RFC 10008：HTTP QUERY 方法</title>
+    <meta content="Julian Reschke" name="author">
+    <meta content="James M Snell" name="author">
+    <meta content="Mike Bishop" name="author">
+    <meta content="
+       
+        本规范定义了 HTTP 的 QUERY 方法。
+        QUERY 请求要求请求目标以安全且幂等的方式处理其中包含的
+        内容，然后以该处理的结果进行响应。这类似于 POST 请求，但 QUERY 请求
+        可以自动重复或重新启动，而无需担心
+        部分状态更改。
+       
+    " name="description">
+    <meta content="xml2rfc 3.33.0" name="generator">
+    <meta content="http" name="keyword">
+    <meta content="query" name="keyword">
+    <meta content="method" name="keyword">
+    <meta content="10008" name="rfc.number">
+    <!-- Generator version information:
+  xml2rfc 3.33.0
+    Python 3.14.4
+    ConfigArgParse 1.7.5
+    google-i18n-address 3.1.1
+    intervaltree 3.2.1
+    Jinja2 3.1.6
+    lxml 6.1.0
+    platformdirs 4.9.6
+    pycountry 26.2.16
+    PyYAML 6.0.3
+    requests 2.33.1
+    wcwidth 0.6.0
+    weasyprint 68.0
+-->
+    <link href="rfc10008.xml" rel="alternate" type="application/rfc+xml">
+    <link href="#copyright" rel="license">
+    <style type="text/css">
+        /*
+
+  NOTE: Changes at the bottom of this file overrides some earlier settings.
+
+  Once the style has stabilized and has been adopted as an official RFC style,
+  this can be consolidated so that style settings occur only in one place, but
+  for now the contents of this file consists first of the initial CSS work as
+  provided to the RFC Formatter (xml2rfc) work, followed by itemized and
+  commented changes found necessary during the development of the v3
+  formatters.
+
+*/
+
+        /* fonts */
+        @import url('https://static.ietf.org/fonts/noto-sans/import.css');
+        /* Sans-serif */
+        @import url('https://static.ietf.org/fonts/noto-serif/import.css');
+        /* Serif (print) */
+        @import url('https://static.ietf.org/fonts/roboto-mono/import.css');
+        /* Monospace */
+
+        :root {
+            --font-sans: 'Noto Sans', Arial, Helvetica, sans-serif;
+            --font-serif: 'Noto Serif', 'Times', 'Times New Roman', serif;
+            --font-mono: 'Roboto Mono', Courier, 'Courier New', monospace;
+        }
+
+        @viewport {
+            zoom: 1.0;
+        }
+
+        @-ms-viewport {
+            width: extend-to-zoom;
+            zoom: 1.0;
+        }
+
+        /* general and mobile first */
+        html {}
+
+        body {
+            max-width: 90%;
+            margin: 1.5em auto;
+            color: #222;
+            background-color: #fff;
+            font-size: 14px;
+            font-family: var(--font-sans);
+            line-height: 1.6;
+            scroll-behavior: smooth;
+            overflow-wrap: break-word;
+        }
+
+        .ears {
+            display: none;
+        }
+
+        /* headings */
+        #title,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            margin: 1em 0 0.5em;
+            font-weight: bold;
+            line-height: 1.3;
+        }
+
+        #title {
+            clear: both;
+            border-bottom: 1px solid #ddd;
+            margin: 0 0 0.5em 0;
+            padding: 1em 0 0.5em;
+        }
+
+        .author {
+            padding-bottom: 4px;
+        }
+
+        h1 {
+            font-size: 26px;
+            margin: 1em 0;
+        }
+
+        h2 {
+            font-size: 22px;
+            margin-top: -20px;
+            /* provide offset for in-page anchors */
+            padding-top: 33px;
+        }
+
+        h3 {
+            font-size: 18px;
+            margin-top: -36px;
+            /* provide offset for in-page anchors */
+            padding-top: 42px;
+        }
+
+        h4 {
+            font-size: 16px;
+            margin-top: -36px;
+            /* provide offset for in-page anchors */
+            padding-top: 42px;
+        }
+
+        h5,
+        h6 {
+            font-size: 14px;
+        }
+
+        #n-copyright-notice {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 1em;
+            margin-bottom: 1em;
+        }
+
+        /* general structure */
+        p {
+            padding: 0;
+            margin: 0 0 1em 0;
+            text-align: left;
+        }
+
+        div,
+        span {
+            position: relative;
+        }
+
+        div {
+            margin: 0;
+        }
+
+        .alignRight.art-text {
+            background-color: #f9f9f9;
+            border: 1px solid #eee;
+            border-radius: 3px;
+            padding: 1em 1em 0;
+            margin-bottom: 1.5em;
+        }
+
+        .alignRight.art-text pre {
+            padding: 0;
+        }
+
+        .alignRight {
+            margin: 1em 0;
+        }
+
+        .alignRight>*:first-child {
+            border: none;
+            margin: 0;
+            float: right;
+            clear: both;
+        }
+
+        .alignRight>*:nth-child(2) {
+            clear: both;
+            display: block;
+            border: none;
+        }
+
+        svg {
+            display: block;
+        }
+
+        @media print {
+            svg {
+                max-height: 850px;
+                max-width: 660px;
+            }
+        }
+
+        svg[font-family~="serif" i],
+        svg [font-family~="serif" i] {
+            font-family: var(--font-serif);
+        }
+
+        svg[font-family~="sans-serif" i],
+        svg [font-family~="sans-serif" i] {
+            font-family: var(--font-sans);
+        }
+
+        svg[font-family~="monospace" i],
+        svg [font-family~="monospace" i] {
+            font-family: var(--font-mono);
+        }
+
+        .alignCenter.art-text {
+            background-color: #f9f9f9;
+            border: 1px solid #eee;
+            border-radius: 3px;
+            padding: 1em 1em 0;
+            margin-bottom: 1.5em;
+        }
+
+        .alignCenter.art-text pre {
+            padding: 0;
+        }
+
+        .alignCenter {
+            margin: 1em 0;
+        }
+
+        .alignCenter>*:first-child {
+            display: table;
+            border: none;
+            margin: 0 auto;
+        }
+
+        /* lists */
+        ol,
+        ul {
+            padding: 0;
+            margin: 0 0 1em 2em;
+        }
+
+        ol ol,
+        ul ul,
+        ol ul,
+        ul ol {
+            margin-left: 1em;
+        }
+
+        li {
+            margin: 0 0 0.25em 0;
+        }
+
+        .ulCompact li {
+            margin: 0;
+        }
+
+        ul.empty,
+        .ulEmpty {
+            list-style-type: none;
+        }
+
+        ul.empty li,
+        .ulEmpty li {
+            margin-top: 0.5em;
+        }
+
+        ul.ulBare,
+        li.ulBare {
+            margin-left: 0em !important;
+        }
+
+        ul.compact,
+        .ulCompact,
+        ol.compact,
+        .olCompact {
+            line-height: 100%;
+            margin: 0 0 0 2em;
+        }
+
+        /* definition lists */
+        dl {}
+
+        dl>dt {
+            float: left;
+            margin-right: 1em;
+        }
+
+        /* 
+dl.nohang > dt {
+  float: none;
+}
+*/
+        dl>dd {
+            margin-bottom: .8em;
+            min-height: 1.3em;
+        }
+
+        dl.compact>dd,
+        .dlCompact>dd {
+            margin-bottom: 0em;
+        }
+
+        dl>dd>dl {
+            margin-top: 0.5em;
+            margin-bottom: 0em;
+        }
+
+        /* links */
+        a {
+            text-decoration: none;
+        }
+
+        a[href] {
+            color: #22e;
+            /* Arlen: WCAG 2019 */
+        }
+
+        a[href]:hover {
+            background-color: #f2f2f2;
+        }
+
+        figcaption a[href],
+        a[href].selfRef {
+            color: #222;
+        }
+
+        /* XXX probably not this:
+a.selfRef:hover {
+  background-color: transparent;
+  cursor: default;
+} */
+
+        /* Figures */
+        tt,
+        code,
+        pre {
+            background-color: #f9f9f9;
+            font-family: var(--font-mono);
+        }
+
+        pre {
+            border: 1px solid #eee;
+            margin: 0;
+            padding: 1em;
+        }
+
+        img {
+            max-width: 100%;
+        }
+
+        figure {
+            margin: 0;
+        }
+
+        figure blockquote {
+            margin: 0.8em 0.4em 0.4em;
+        }
+
+        figcaption {
+            font-style: italic;
+            margin: 0 0 1em 0;
+        }
+
+        @media screen {
+            pre {
+                overflow-x: auto;
+                max-width: 100%;
+                max-width: calc(100% - 22px);
+            }
+        }
+
+        /* aside, blockquote */
+        aside,
+        blockquote {
+            margin-left: 0;
+            padding: 1.2em 2em;
+        }
+
+        blockquote {
+            background-color: #f9f9f9;
+            color: #111;
+            /* Arlen: WCAG 2019 */
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            margin: 1em 0;
+        }
+
+        blockquote>*:last-child {
+            margin-bottom: 0;
+        }
+
+        cite {
+            display: block;
+            text-align: right;
+            font-style: italic;
+        }
+
+        .xref {
+            overflow-wrap: normal;
+        }
+
+        /* tables */
+        table {
+            width: 100%;
+            margin: 0 0 1em;
+            border-collapse: collapse;
+            border: 1px solid #eee;
+        }
+
+        th,
+        td {
+            text-align: left;
+            vertical-align: top;
+            padding: 0.5em 0.75em;
+        }
+
+        th {
+            text-align: left;
+            background-color: #e9e9e9;
+        }
+
+        tr:nth-child(2n+1)>td {
+            background-color: #f5f5f5;
+        }
+
+        table caption {
+            font-style: italic;
+            margin: 0;
+            padding: 0;
+            text-align: left;
+        }
+
+        table p {
+            /* XXX to avoid bottom margin on table row signifiers. If paragraphs should
+     be allowed within tables more generally, it would be far better to select on a class. */
+            margin: 0;
+        }
+
+        /* pilcrow */
+        a.pilcrow {
+            color: #666;
+            /* Arlen: AHDJ 2019 */
+            text-decoration: none;
+            visibility: hidden;
+            user-select: none;
+            -ms-user-select: none;
+            -o-user-select: none;
+            -moz-user-select: none;
+            -khtml-user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
+        }
+
+        @media screen {
+
+            aside:hover>a.pilcrow,
+            p:hover>a.pilcrow,
+            blockquote:hover>a.pilcrow,
+            div:hover>a.pilcrow,
+            li:hover>a.pilcrow,
+            pre:hover>a.pilcrow {
+                visibility: visible;
+            }
+
+            a.pilcrow:hover {
+                background-color: transparent;
+            }
+        }
+
+        /* misc */
+        hr {
+            border: 0;
+            border-top: 1px solid #eee;
+        }
+
+        .bcp14 {
+            font-variant: small-caps;
+        }
+
+        .role {
+            font-variant: all-small-caps;
+        }
+
+        /* info block */
+        #identifiers {
+            margin: 0;
+            font-size: 0.9em;
+        }
+
+        #identifiers dt {
+            width: 3em;
+            clear: left;
+        }
+
+        #identifiers dd {
+            float: left;
+            margin-bottom: 0;
+        }
+
+        /* Fix PDF info block run off issue */
+        @media print {
+            #identifiers dd {
+                max-width: 100%;
+            }
+        }
+
+        #identifiers .authors .author {
+            display: inline-block;
+            margin-right: 1.5em;
+        }
+
+        #identifiers .authors .org {
+            font-style: italic;
+        }
+
+        /* The prepared/rendered info at the very bottom of the page */
+        .docInfo {
+            color: #666;
+            /* Arlen: WCAG 2019 */
+            font-size: 0.9em;
+            font-style: italic;
+            margin-top: 2em;
+        }
+
+        .docInfo .prepared {
+            float: left;
+        }
+
+        .docInfo .prepared {
+            float: right;
+        }
+
+        /* table of contents */
+        #toc {
+            padding: 0.75em 0 2em 0;
+            margin-bottom: 1em;
+        }
+
+        nav.toc ul {
+            margin: 0 0.5em 0 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        nav.toc li {
+            line-height: 1.3em;
+            margin: 0.75em 0;
+            padding-left: 1.2em;
+            text-indent: -1.2em;
+        }
+
+        /* references */
+        .references dt {
+            text-align: right;
+            font-weight: bold;
+            min-width: 7em;
+        }
+
+        .references dd {
+            margin-left: 8em;
+            overflow: auto;
+        }
+
+        .refInstance {
+            margin-bottom: 1.25em;
+        }
+
+        .refSubseries {
+            margin-bottom: 1.25em;
+        }
+
+        .references .ascii {
+            margin-bottom: 0.25em;
+        }
+
+        /* index */
+        .index ul {
+            margin: 0 0 0 1em;
+            padding: 0;
+            list-style: none;
+        }
+
+        .index ul ul {
+            margin: 0;
+        }
+
+        .index li {
+            margin: 0;
+            text-indent: -2em;
+            padding-left: 2em;
+            padding-bottom: 5px;
+        }
+
+        .indexIndex {
+            margin: 0.5em 0 1em;
+        }
+
+        .index a {
+            font-weight: 700;
+        }
+
+        /* make the index two-column on all but the smallest screens */
+        @media (min-width: 600px) {
+            .index ul {
+                -moz-column-count: 2;
+                -moz-column-gap: 20px;
+            }
+
+            .index ul ul {
+                -moz-column-count: 1;
+                -moz-column-gap: 0;
+            }
+        }
+
+        /* authors */
+        address.vcard {
+            font-style: normal;
+            margin: 1em 0;
+        }
+
+        address.vcard .nameRole {
+            font-weight: 700;
+            margin-left: 0;
+        }
+
+        address.vcard .label {
+            font-family: var(--font-sans);
+            margin: 0.5em 0;
+        }
+
+        address.vcard .type {
+            display: none;
+        }
+
+        .alternative-contact {
+            margin: 1.5em 0 1em;
+        }
+
+        hr.addr {
+            border-top: 1px dashed;
+            margin: 0;
+            color: #ddd;
+            max-width: calc(100% - 16px);
+        }
+
+        /* temporary notes */
+        .rfcEditorRemove::before {
+            position: absolute;
+            top: 0.2em;
+            right: 0.2em;
+            padding: 0.2em;
+            content: "The RFC Editor will remove this note";
+            color: #9e2a00;
+            /* Arlen: WCAG 2019 */
+            background-color: #ffd;
+            /* Arlen: WCAG 2019 */
+        }
+
+        .rfcEditorRemove {
+            position: relative;
+            padding-top: 1.8em;
+            background-color: #ffd;
+            /* Arlen: WCAG 2019 */
+            border-radius: 3px;
+        }
+
+        .cref {
+            background-color: #ffd;
+            /* Arlen: WCAG 2019 */
+            padding: 2px 4px;
+        }
+
+        .crefSource {
+            font-style: italic;
+        }
+
+        /* alternative layout for smaller screens */
+        @media screen and (max-width: 1023px) {
+            body {
+                padding-top: 2em;
+            }
+
+            #title {
+                padding: 1em 0;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            h2 {
+                font-size: 20px;
+                margin-top: -18px;
+                /* provide offset for in-page anchors */
+                padding-top: 38px;
+            }
+
+            #identifiers dd {
+                max-width: 60%;
+            }
+
+            #toc {
+                position: fixed;
+                z-index: 2;
+                top: 0;
+                right: 0;
+                padding: 0;
+                margin: 0;
+                background-color: inherit;
+                border-bottom: 1px solid #ccc;
+            }
+
+            #toc h2 {
+                margin: -1px 0 0 0;
+                padding: 4px 0 4px 6px;
+                padding-right: 1em;
+                min-width: 190px;
+                font-size: 1.1em;
+                text-align: right;
+                background-color: #444;
+                color: white;
+                cursor: pointer;
+            }
+
+            #toc h2::before {
+                /* css hamburger */
+                float: right;
+                position: relative;
+                width: 1em;
+                height: 1px;
+                left: -164px;
+                margin: 6px 0 0 0;
+                background: white none repeat scroll 0 0;
+                box-shadow: 0 4px 0 0 white, 0 8px 0 0 white;
+                content: "";
+            }
+
+            #toc nav {
+                display: none;
+                padding: 0.5em 1em 1em;
+                overflow: auto;
+                height: calc(100vh - 48px);
+                border-left: 1px solid #ddd;
+            }
+        }
+
+        /* alternative layout for wide screens */
+        @media screen and (min-width: 1024px) {
+            body {
+                max-width: 724px;
+                margin: 42px auto;
+                padding-left: 1.5em;
+                padding-right: 29em;
+            }
+
+            #toc {
+                position: fixed;
+                top: 42px;
+                right: 42px;
+                width: 25%;
+                margin: 0;
+                padding: 0 1em;
+                z-index: 1;
+            }
+
+            #toc h2 {
+                border-top: none;
+                border-bottom: 1px solid #ddd;
+                font-size: 1em;
+                font-weight: normal;
+                margin: 0;
+                padding: 0.25em 1em 1em 0;
+            }
+
+            #toc nav {
+                display: block;
+                height: calc(90vh - 84px);
+                bottom: 0;
+                padding: 0.5em 0 0;
+                overflow: auto;
+            }
+
+            img {
+                /* future proofing */
+                max-width: 100%;
+                height: auto;
+            }
+        }
+
+        /* pagination */
+        @media print {
+            body {
+                width: 100%;
+            }
+
+            p {
+                orphans: 3;
+                widows: 3;
+            }
+
+            #n-copyright-notice {
+                border-bottom: none;
+            }
+
+            #toc,
+            #n-introduction {
+                page-break-before: always;
+            }
+
+            #toc {
+                border-top: none;
+                padding-top: 0;
+            }
+
+            figure,
+            pre {
+                page-break-inside: avoid;
+            }
+
+            figure {
+                overflow: scroll;
+            }
+
+            .breakable pre {
+                break-inside: auto;
+            }
+
+            h1,
+            h2,
+            h3,
+            h4,
+            h5,
+            h6 {
+                page-break-after: avoid;
+            }
+
+            h2+*,
+            h3+*,
+            h4+*,
+            h5+*,
+            h6+* {
+                page-break-before: avoid;
+            }
+
+            pre {
+                white-space: pre-wrap;
+                word-wrap: break-word;
+                font-size: 10pt;
+            }
+
+            table {
+                border: 1px solid #ddd;
+            }
+
+            td {
+                border-top: 1px solid #ddd;
+            }
+        }
+
+        /* This is commented out here, as the string-set: doesn't
+   pass W3C validation currently */
+        /*
+.ears thead .left {
+  string-set: ears-top-left content();
+}
+
+.ears thead .center {
+  string-set: ears-top-center content();
+}
+
+.ears thead .right {
+  string-set: ears-top-right content();
+}
+
+.ears tfoot .left {
+  string-set: ears-bottom-left content();
+}
+
+.ears tfoot .center {
+  string-set: ears-bottom-center content();
+}
+
+.ears tfoot .right {
+  string-set: ears-bottom-right content();
+}
+*/
+
+        @page :first {
+            padding-top: 0;
+
+            @top-left {
+                content: normal;
+                border: none;
+            }
+
+            @top-center {
+                content: normal;
+                border: none;
+            }
+
+            @top-right {
+                content: normal;
+                border: none;
+            }
+        }
+
+        @page {
+            size: A4;
+            margin-bottom: 45mm;
+            padding-top: 20px;
+            /* The following is commented out here, but set appropriately by in code, as
+     the content depends on the document */
+            /*
+  @top-left {
+    content: 'Internet-Draft';
+    vertical-align: bottom;
+    border-bottom: solid 1px #ccc;
+  }
+  @top-left {
+    content: string(ears-top-left);
+    vertical-align: bottom;
+    border-bottom: solid 1px #ccc;
+  }
+  @top-center {
+    content: string(ears-top-center);
+    vertical-align: bottom;
+    border-bottom: solid 1px #ccc;
+  }
+  @top-right {
+    content: string(ears-top-right);
+    vertical-align: bottom;
+    border-bottom: solid 1px #ccc;
+  }
+  @bottom-left {
+    content: string(ears-bottom-left);
+    vertical-align: top;
+    border-top: solid 1px #ccc;
+  }
+  @bottom-center {
+    content: string(ears-bottom-center);
+    vertical-align: top;
+    border-top: solid 1px #ccc;
+  }
+  @bottom-right {
+      content: '[Page ' counter(page) ']';
+      vertical-align: top;
+      border-top: solid 1px #ccc;
+  }
+  */
+
+        }
+
+        /* Changes introduced to fix issues found during implementation */
+        /* Make sure links are clickable even if overlapped by following H* */
+        a {
+            z-index: 2;
+        }
+
+        /* Separate body from document info even without intervening H1 */
+        section {
+            clear: both;
+        }
+
+
+        /* Top align author divs, to avoid names without organization dropping level with org names */
+        .author {
+            vertical-align: top;
+        }
+
+        /* Leave room in document info to show Internet-Draft on one line */
+        #identifiers dt {
+            width: 8em;
+        }
+
+        /* Don't waste quite as much whitespace between label and value in doc info */
+        #identifiers dd {
+            margin-left: 1em;
+        }
+
+        /* Give floating toc a background color (needed when it's a div inside section */
+        #toc {
+            background-color: white;
+        }
+
+        /* Make the collapsed ToC header render white on gray also when it's a link */
+        @media screen and (max-width: 1023px) {
+
+            #toc h2 a,
+            #toc h2 a:link,
+            #toc h2 a:focus,
+            #toc h2 a:hover,
+            #toc a.toplink,
+            #toc a.toplink:hover {
+                color: white;
+                background-color: #444;
+                text-decoration: none;
+            }
+        }
+
+        /* Give the bottom of the ToC some whitespace */
+        @media screen and (min-width: 1024px) {
+            #toc {
+                padding: 0 0 1em 1em;
+            }
+        }
+
+        /* Style section numbers with more space between number and title */
+        .section-number {
+            padding-right: 0.5em;
+        }
+
+        /* prevent monospace from becoming overly large */
+        tt,
+        code,
+        pre {
+            font-size: 95%;
+        }
+
+        /* Fix the height/width aspect for ascii art*/
+        .sourcecode pre,
+        .art-text pre {
+            line-height: 1.12;
+        }
+
+
+        /* Add styling for a link in the ToC that points to the top of the document */
+        a.toplink {
+            float: right;
+            margin-right: 0.5em;
+        }
+
+        /* Fix the dl styling to match the RFC 7992 attributes */
+        dl>dt,
+        dl.dlParallel>dt {
+            float: left;
+            margin-right: 1em;
+        }
+
+        dl.dlNewline>dt {
+            float: none;
+        }
+
+        /* Provide styling for table cell text alignment */
+        table td.text-left,
+        table th.text-left {
+            text-align: left;
+        }
+
+        table td.text-center,
+        table th.text-center {
+            text-align: center;
+        }
+
+        table td.text-right,
+        table th.text-right {
+            text-align: right;
+        }
+
+        /* Make the alternative author contact information look less like just another
+   author, and group it closer with the primary author contact information */
+        .alternative-contact {
+            margin: 0.5em 0 0.25em 0;
+        }
+
+        address .non-ascii {
+            margin: 0 0 0 2em;
+        }
+
+        /* With it being possible to set tables with alignment
+  left, center, and right, { width: 100%; } does not make sense */
+        table {
+            width: auto;
+        }
+
+        /* Avoid reference text that sits in a block with very wide left margin,
+   because of a long floating dt label.*/
+        .references dd {
+            overflow: visible;
+        }
+
+        /* Control caption placement */
+        caption {
+            caption-side: bottom;
+        }
+
+        /* Limit the width of the author address vcard, so names in right-to-left
+   script don't end up on the other side of the page. */
+
+        address.vcard {
+            max-width: 30em;
+            margin-right: auto;
+        }
+
+        /* For address alignment dependent on LTR or RTL scripts */
+        address div.left {
+            text-align: left;
+        }
+
+        address div.right {
+            text-align: right;
+        }
+
+        /* Provide table alignment support.  We can't use the alignX classes above
+   since they do unwanted things with caption and other styling. */
+        table.right {
+            margin-left: auto;
+            margin-right: 0;
+        }
+
+        table.center {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        table.left {
+            margin-left: 0;
+            margin-right: auto;
+        }
+
+        /* Give the table caption label the same styling as the figcaption */
+        caption a[href] {
+            color: #222;
+        }
+
+        @media print {
+            .toplink {
+                display: none;
+            }
+
+            /* avoid overwriting the top border line with the ToC header */
+            #toc {
+                padding-top: 1px;
+            }
+
+            /* Avoid page breaks inside dl and author address entries */
+            .vcard {
+                page-break-inside: avoid;
+            }
+
+        }
+
+        /* Tweak the bcp14 keyword presentation */
+        .bcp14 {
+            font-variant: small-caps;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        /* Tweak the invisible space above H* in order not to overlay links in text above */
+        h2 {
+            margin-top: -18px;
+            /* provide offset for in-page anchors */
+            padding-top: 31px;
+        }
+
+        h3 {
+            margin-top: -18px;
+            /* provide offset for in-page anchors */
+            padding-top: 24px;
+        }
+
+        h4 {
+            margin-top: -18px;
+            /* provide offset for in-page anchors */
+            padding-top: 24px;
+        }
+
+        /* Float artwork pilcrow to the right */
+        @media screen {
+            .artwork a.pilcrow {
+                display: block;
+                line-height: 0.7;
+                margin-top: 0.15em;
+            }
+        }
+
+        /* Make pilcrows on dd visible */
+        @media screen {
+            dd:hover>a.pilcrow {
+                visibility: visible;
+            }
+        }
+
+        /* Make the placement of figcaption match that of a table's caption
+   by removing the figure's added bottom margin */
+        .alignLeft.art-text,
+        .alignCenter.art-text,
+        .alignRight.art-text {
+            margin-bottom: 0;
+        }
+
+        .alignLeft,
+        .alignCenter,
+        .alignRight {
+            margin: 1em 0 0 0;
+        }
+
+        /* In print, the pilcrow won't show on hover, so prevent it from taking up space,
+   possibly even requiring a new line */
+        @media print {
+            a.pilcrow {
+                display: none;
+            }
+        }
+
+        /* Styling for the external metadata */
+        div#external-metadata {
+            background-color: #eee;
+            padding: 0.5em;
+            margin-bottom: 0.5em;
+            display: none;
+        }
+
+        div#internal-metadata {
+            padding: 0.5em;
+            /* to match the external-metadata padding */
+        }
+
+        /* Styling for title RFC Number */
+        h1#rfcnum {
+            clear: both;
+            margin: 0 0 -1em;
+            padding: 1em 0 0 0;
+        }
+
+        /* Make .olPercent look the same as <ol><li> */
+        dl.olPercent>dd {
+            margin-bottom: 0.25em;
+            min-height: initial;
+        }
+
+        /* Give aside some styling to set it apart */
+        aside {
+            border-left: 1px solid #ddd;
+            margin: 1em 0 1em 2em;
+            padding: 0.2em 2em;
+        }
+
+        aside>dl,
+        aside>ol,
+        aside>ul,
+        aside>table,
+        aside>p {
+            margin-bottom: 0.5em;
+        }
+
+        /* Additional page break settings */
+        @media print {
+
+            figcaption,
+            table caption {
+                page-break-before: avoid;
+            }
+        }
+
+        /* Font size adjustments for print */
+        @media print {
+            body {
+                font-size: 10pt;
+                line-height: normal;
+                max-width: 96%;
+            }
+
+            h1 {
+                font-size: 1.72em;
+                padding-top: 1.5em;
+            }
+
+            /* 1*1.2*1.2*1.2 */
+            h2 {
+                font-size: 1.44em;
+                padding-top: 1.5em;
+            }
+
+            /* 1*1.2*1.2 */
+            h3 {
+                font-size: 1.2em;
+                padding-top: 1.5em;
+            }
+
+            /* 1*1.2 */
+            h4 {
+                font-size: 1em;
+                padding-top: 1.5em;
+            }
+
+            h5,
+            h6 {
+                font-size: 1em;
+                margin: initial;
+                padding: 0.5em 0 0.3em;
+            }
+        }
+
+        /* Sourcecode margin in print, when there's no pilcrow */
+        @media print {
+
+            .artwork,
+            .artwork>pre,
+            .sourcecode {
+                margin-bottom: 1em;
+            }
+        }
+
+        /* Avoid narrow tables forcing too narrow table captions, which may render badly */
+        table {
+            min-width: 20em;
+        }
+
+        /* ol type a */
+        ol.type-a {
+            list-style-type: lower-alpha;
+        }
+
+        ol.type-A {
+            list-style-type: upper-alpha;
+        }
+
+        ol.type-i {
+            list-style-type: lower-roman;
+        }
+
+        ol.type-I {
+            list-style-type: upper-roman;
+        }
+
+        /* Apply the print table and row borders in general, on request from the RPC,
+and increase the contrast between border and odd row background slightly */
+        table {
+            border: 1px solid #ddd;
+        }
+
+        td {
+            border-top: 1px solid #ddd;
+        }
+
+        tr {
+            break-inside: avoid;
+        }
+
+        tr:nth-child(2n+1)>td {
+            background-color: #f8f8f8;
+        }
+
+        /* Use style rules to govern display of the TOC. */
+        @media screen and (max-width: 1023px) {
+            #toc nav {
+                display: none;
+            }
+
+            #toc.active nav {
+                display: block;
+            }
+        }
+
+        /* Add support for keepWithNext */
+        .keepWithNext {
+            break-after: avoid-page;
+            break-after: avoid-page;
+        }
+
+        /* Add support for keepWithPrevious */
+        .keepWithPrevious {
+            break-before: avoid-page;
+        }
+
+        /* Change the approach to avoiding breaks inside artwork etc. */
+        figure,
+        pre,
+        table,
+        .artwork,
+        .sourcecode {
+            break-before: auto;
+            break-after: auto;
+        }
+
+        /* Avoid breaks between <dt> and <dd> */
+        dl {
+            break-before: auto;
+            break-inside: auto;
+        }
+
+        dt {
+            break-before: auto;
+            break-after: avoid-page;
+        }
+
+        dd {
+            break-before: avoid-page;
+            break-after: auto;
+            orphans: 3;
+            widows: 3
+        }
+
+        span.break,
+        dd.break {
+            margin-bottom: 0;
+            min-height: 0;
+            break-before: auto;
+            break-inside: auto;
+            break-after: auto;
+        }
+
+        /* Undo break-before ToC */
+        @media print {
+            #toc {
+                break-before: auto;
+            }
+        }
+
+        /* Text in compact lists should not get extra bottom margin space,
+   since that would makes the list not compact */
+        ul.compact p,
+        .ulCompact p,
+        ol.compact p,
+        .olCompact p {
+            margin: 0;
+        }
+
+        /* But the list as a whole needs the extra space at the end */
+        section ul.compact,
+        section .ulCompact,
+        section ol.compact,
+        section .olCompact {
+            margin-bottom: 1em;
+            /* same as p not within ul.compact etc. */
+        }
+
+        /* The tt and code background above interferes with for instance table cell
+   backgrounds.  Changed to something a bit more selective. */
+        tt,
+        code {
+            background-color: transparent;
+        }
+
+        p tt,
+        p code,
+        li tt,
+        li code,
+        dt tt,
+        dt code {
+            background-color: #f8f8f8;
+        }
+
+        /* Tweak the pre margin -- 0px doesn't come out well */
+        pre {
+            margin-top: 0.5px;
+        }
+
+        /* Tweak the compact list text */
+        ul.compact,
+        .ulCompact,
+        ol.compact,
+        .olCompact,
+        dl.compact,
+        .dlCompact {
+            line-height: normal;
+        }
+
+        /* Don't add top margin for nested lists */
+        li>ul,
+        li>ol,
+        li>dl,
+        dd>ul,
+        dd>ol,
+        dd>dl,
+        dl>dd>dl {
+            margin-top: initial;
+        }
+
+        /* Elements that should not be rendered on the same line as a <dt> */
+        /* This should match the element list in writer.text.TextWriter.render_dl() */
+        dd>div.artwork:first-child,
+        dd>aside:first-child,
+        dd>blockquote:first-child,
+        dd>figure:first-child,
+        dd>ol:first-child,
+        dd>div.sourcecode:first-child,
+        dd>table:first-child,
+        dd>ul:first-child {
+            clear: left;
+        }
+
+        /* fix for weird browser behaviour when <dd/> is empty */
+        dt+dd:empty::before {
+            content: "\00a0";
+        }
+
+        /* Make paragraph spacing inside <li> smaller than in body text, to fit better within the list */
+        li>p {
+            margin-bottom: 0.5em
+        }
+
+        /* Don't let p margin spill out from inside list items */
+        li>p:last-of-type:only-child {
+            margin-bottom: 0;
+        }
+    </style>
+    <link href="https://www.rfc-editor.org/rfc/rfc-local.css" rel="stylesheet" type="text/css">
+    <link href="https://datatracker.ietf.org/doc/draft-ietf-httpbis-safe-method-w-body-14" rel="prev">
+    <link href="https://dx.doi.org/10.17487/rfc10008" rel="alternate">
+    <link href="urn:issn:2070-1721" rel="alternate">
+</head>
+
+<body class="xml2rfc">
+    <script src="https://www.rfc-editor.org/js/metadata.min.js"></script>
+    <table class="ears">
+        <thead>
+            <tr>
+                <td class="left">RFC 10008</td>
+                <td class="center">HTTP QUERY 方法</td>
+                <td class="right">2026 年 6 月</td>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <td class="left">Reschke 等</td>
+                <td class="center">标准跟踪</td>
+                <td class="right">[页码]</td>
+            </tr>
+        </tfoot>
+    </table>
+    <div id="external-metadata" class="document-information"></div>
+    <div id="internal-metadata" class="document-information">
+        <dl id="identifiers">
+            <dt class="label-stream">文档流：</dt>
+            <dd class="stream">互联网工程任务组 (IETF)</dd>
+            <dt class="label-rfc">RFC：</dt>
+            <dd class="rfc"><a href="https://www.rfc-editor.org/rfc/rfc10008" class="eref">10008</a></dd>
+            <dt class="label-category">类别：</dt>
+            <dd class="category">标准跟踪</dd>
+            <dt class="label-published">发布日期：</dt>
+            <dd class="published">
+                <time datetime="2026-06" class="published">2026 年 6 月</time>
+            </dd>
+            <dt class="label-issn">ISSN：</dt>
+            <dd class="issn">2070-1721</dd>
+            <dt class="label-authors">作者：</dt>
+            <dd class="authors">
+                <div class="author">
+                    <div class="author-name">J. Reschke</div>
+                    <div class="org">greenbytes</div>
+                </div>
+                <div class="author">
+                    <div class="author-name">J.M. Snell</div>
+                    <div class="org">Cloudflare</div>
+                </div>
+                <div class="author">
+                    <div class="author-name">M. Bishop</div>
+                    <div class="org">Akamai</div>
+                </div>
+            </dd>
+        </dl>
+    </div>
+    <h1 id="rfcnum">RFC 10008</h1>
+    <h1 id="title">HTTP QUERY 方法</h1>
+    <section id="section-abstract">
+        <h2 id="abstract"><a href="#abstract" class="selfRef">摘要</a></h2>
+        <p id="section-abstract-1">
+            本规范定义了 HTTP 的 QUERY 方法。
+            QUERY 请求要求请求目标以安全且幂等的方式处理其中包含的
+            内容，然后以该处理的结果进行响应。这类似于 POST 请求，但 QUERY 请求
+            可以自动重复或重新启动，而无需担心
+            部分状态更改。<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+    </section>
+    <div id="status-of-memo">
+        <section id="section-boilerplate.1">
+            <h2 id="name-status-of-this-memo">
+                <a href="#name-status-of-this-memo" class="section-name selfRef">本备忘录的状态</a>
+            </h2>
+            <p id="section-boilerplate.1-1">
+                这是一份互联网标准跟踪文档。<a href="#section-boilerplate.1-1" class="pilcrow">¶</a>
+            </p>
+            <p id="section-boilerplate.1-2">
+                本文档是互联网工程任务组
+                (IETF) 的成果。它代表了 IETF 社区的共识。本文档已经
+                过公开评审，并已获互联网工程指导组
+                (IESG) 批准发布。有关
+                互联网标准的更多信息，请参阅
+                RFC 7841 第 2 节。<a href="#section-boilerplate.1-2" class="pilcrow">¶</a></p>
+            <p id="section-boilerplate.1-3">
+                有关本文档当前状态、任何
+                勘误以及如何提供反馈的信息，可在
+                <span><a
+                        href="https://www.rfc-editor.org/info/rfc10008">https://www.rfc-editor.org/info/rfc10008</a></span> 获取。<a
+                    href="#section-boilerplate.1-3" class="pilcrow">¶</a>
+            </p>
+        </section>
+    </div>
+    <div id="copyright">
+        <section id="section-boilerplate.2">
+            <h2 id="name-copyright-notice">
+                <a href="#name-copyright-notice" class="section-name selfRef">Copyright Notice</a>
+            </h2>
+            <p id="section-boilerplate.2-1">
+                Copyright (c) 2026 IETF Trust and the persons identified as the
+                document authors. All rights reserved.<a href="#section-boilerplate.2-1" class="pilcrow">¶</a></p>
+            <p id="section-boilerplate.2-2">
+                This document is subject to BCP 78 and the IETF Trust's Legal
+                Provisions Relating to IETF Documents
+                (<span><a href="https://trustee.ietf.org/license-info">https://trustee.ietf.org/license-info</a></span>)
+                in effect on the date of
+                publication of this document. Please review these documents
+                carefully, as they describe your rights and restrictions with
+                respect to this document. Code Components extracted from this
+                document must include Revised BSD License text as described in
+                Section 4.e of the Trust Legal Provisions and are provided without
+                warranty as described in the Revised BSD License.<a href="#section-boilerplate.2-2"
+                    class="pilcrow">¶</a></p>
+        </section>
+    </div>
+    <div id="toc">
+        <section id="section-toc.1">
+            <a href="#" onclick="scroll(0,0)" class="toplink">▲</a>
+            <h2 id="name-table-of-contents">
+                <a href="#name-table-of-contents" class="section-name selfRef">目录</a>
+            </h2>
+            <nav class="toc">
+                <ul class="compact toc ulBare ulEmpty">
+                    <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1">
+                        <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1"
+                                class="auto internal xref">1</a>. <a href="#name-introduction"
+                                class="internal xref">引言</a></p>
+                        <ul class="compact toc ulBare ulEmpty">
+                            <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.1">
+                                <p id="section-toc.1-1.1.2.1.1" class="keepWithNext"><a href="#section-1.1"
+                                        class="auto internal xref">1.1</a>. <a href="#name-terminology"
+                                        class="internal xref">术语</a></p>
+                            </li>
+                            <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.2">
+                                <p id="section-toc.1-1.1.2.2.1" class="keepWithNext"><a href="#section-1.2"
+                                        class="auto internal xref">1.2</a>. <a href="#name-notational-conventions"
+                                        class="internal xref">符号约定</a></p>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2">
+                        <p id="section-toc.1-1.2.1"><a href="#section-2" class="auto internal xref">2</a>. <a
+                                href="#name-query-method" class="internal xref">QUERY 方法</a></p>
+                        <ul class="compact toc ulBare ulEmpty">
+                            <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.1">
+                                <p id="section-toc.1-1.2.2.1.1"><a href="#section-2.1"
+                                        class="auto internal xref">2.1</a>. <a href="#name-media-types-and-content-neg"
+                                        class="internal xref">媒体类型和内容协商</a></p>
+                            </li>
+                            <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.2">
+                                <p id="section-toc.1-1.2.2.2.1"><a href="#section-2.2"
+                                        class="auto internal xref">2.2</a>. <a href="#name-equivalent-resource"
+                                        class="internal xref">等效资源</a></p>
+                            </li>
+                            <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.3">
+                                <p id="section-toc.1-1.2.2.3.1"><a href="#section-2.3"
+                                        class="auto internal xref">2.3</a>. <a href="#name-content-location-response-f"
+                                        class="internal xref">Content-Location 响应字段</a></p>
+                            </li>
+                            <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.4">
+                                <p id="section-toc.1-1.2.2.4.1"><a href="#section-2.4"
+                                        class="auto internal xref">2.4</a>. <a href="#name-location-response-field"
+                                        class="internal xref">Location 响应字段</a></p>
+                            </li>
+                            <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.5">
+                                <p id="section-toc.1-1.2.2.5.1"><a href="#section-2.5"
+                                        class="auto internal xref">2.5</a>. <a href="#name-redirection"
+                                        class="internal xref">重定向</a></p>
+                            </li>
+                            <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.6">
+                                <p id="section-toc.1-1.2.2.6.1"><a href="#section-2.6"
+                                        class="auto internal xref">2.6</a>. <a href="#name-conditional-requests"
+                                        class="internal xref">条件请求</a></p>
+                            </li>
+                            <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.7">
+                                <p id="section-toc.1-1.2.2.7.1"><a href="#section-2.7"
+                                        class="auto internal xref">2.7</a>. <a href="#name-caching"
+                                        class="internal xref">缓存</a></p>
+                            </li>
+                            <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.8">
+                                <p id="section-toc.1-1.2.2.8.1"><a href="#section-2.8"
+                                        class="auto internal xref">2.8</a>. <a href="#name-range-requests"
+                                        class="internal xref">范围请求</a></p>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
+                        <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>. <a
+                                href="#name-the-accept-query-header-fie" class="internal xref">Accept-Query 标头
+                                字段</a></p>
+                    </li>
+                    <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
+                        <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>. <a
+                                href="#name-security-considerations" class="internal xref">安全注意事项</a>
+                        </p>
+                    </li>
+                    <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
+                        <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>. <a
+                                href="#name-iana-considerations" class="internal xref">IANA 注意事项</a></p>
+                        <ul class="compact toc ulBare ulEmpty">
+                            <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1">
+                                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1"
+                                        class="auto internal xref">5.1</a>. <a href="#name-registration-of-the-query-m"
+                                        class="internal xref">QUERY 方法的注册</a></p>
+                            </li>
+                            <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2">
+                                <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2"
+                                        class="auto internal xref">5.2</a>. <a href="#name-registration-of-the-accept-"
+                                        class="internal xref">Accept-Query 字段的注册</a></p>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
+                        <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>. <a
+                                href="#name-references" class="internal xref">参考文献</a></p>
+                        <ul class="compact toc ulBare ulEmpty">
+                            <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.1">
+                                <p id="section-toc.1-1.6.2.1.1"><a href="#section-6.1"
+                                        class="auto internal xref">6.1</a>. <a href="#name-normative-references"
+                                        class="internal xref">规范性参考文献</a></p>
+                            </li>
+                            <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.2">
+                                <p id="section-toc.1-1.6.2.2.1"><a href="#section-6.2"
+                                        class="auto internal xref">6.2</a>. <a href="#name-informative-references"
+                                        class="internal xref">资料性参考文献</a></p>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
+                        <p id="section-toc.1-1.7.1"><a href="#appendix-A" class="auto internal xref">附录 A</a>. <a
+                                href="#name-examples" class="internal xref">示例</a></p>
+                        <ul class="compact toc ulBare ulEmpty">
+                            <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.1">
+                                <p id="section-toc.1-1.7.2.1.1"><a href="#appendix-A.1"
+                                        class="auto internal xref">A.1</a>. <a href="#name-simple-query"
+                                        class="internal xref">简单查询</a></p>
+                            </li>
+                            <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.2">
+                                <p id="section-toc.1-1.7.2.2.1"><a href="#appendix-A.2"
+                                        class="auto internal xref">A.2</a>. <a href="#name-discovery-of-query-support"
+                                        class="internal xref">发现 QUERY 支持</a></p>
+                            </li>
+                            <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.3">
+                                <p id="section-toc.1-1.7.2.3.1"><a href="#appendix-A.3"
+                                        class="auto internal xref">A.3</a>. <a href="#name-discovery-of-query-formats"
+                                        class="internal xref">发现 QUERY 格式</a></p>
+                            </li>
+                            <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.4">
+                                <p id="section-toc.1-1.7.2.4.1"><a href="#appendix-A.4"
+                                        class="auto internal xref">A.4</a>. <a href="#name-content-location-location-a"
+                                        class="internal xref">Content-Location、Location 和间接响应</a></p>
+                                <ul class="compact toc ulBare ulEmpty">
+                                    <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.4.2.1">
+                                        <p id="section-toc.1-1.7.2.4.2.1.1"><a href="#appendix-A.4.1"
+                                                class="auto internal xref">A.4.1</a>. <a
+                                                href="#name-using-content-location" class="internal xref">使用
+                                                Content-Location</a></p>
+                                    </li>
+                                    <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.4.2.2">
+                                        <p id="section-toc.1-1.7.2.4.2.2.1"><a href="#appendix-A.4.2"
+                                                class="auto internal xref">A.4.2</a>. <a href="#name-using-location"
+                                                class="internal xref">使用 Location</a></p>
+                                    </li>
+                                    <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.4.2.3">
+                                        <p id="section-toc.1-1.7.2.4.2.3.1"><a href="#appendix-A.4.3"
+                                                class="auto internal xref">A.4.3</a>. <a href="#name-indirect-responses"
+                                                class="internal xref">间接响应</a></p>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.5">
+                                <p id="section-toc.1-1.7.2.5.1"><a href="#appendix-A.5"
+                                        class="auto internal xref">A.5</a>. <a href="#name-conditional-requests-2"
+                                        class="internal xref">条件请求</a></p>
+                            </li>
+                            <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.6">
+                                <p id="section-toc.1-1.7.2.6.1"><a href="#appendix-A.6"
+                                        class="auto internal xref">A.6</a>. <a href="#name-more-query-formats"
+                                        class="internal xref">更多查询格式</a></p>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
+                        <p id="section-toc.1-1.8.1"><a href="#appendix-B" class="auto internal xref">附录 B</a>. <a
+                                href="#name-selection-of-the-method-nam" class="internal xref">方法名称
+                                “QUERY”的选择</a></p>
+                    </li>
+                    <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9">
+                        <p id="section-toc.1-1.9.1"><a href="#appendix-C" class="auto internal xref"></a><a
+                                href="#name-acknowledgements" class="internal xref">致谢</a></p>
+                    </li>
+                    <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
+                        <p id="section-toc.1-1.10.1"><a href="#appendix-D" class="auto internal xref"></a><a
+                                href="#name-contributors" class="internal xref">贡献者</a></p>
+                    </li>
+                    <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
+                        <p id="section-toc.1-1.11.1"><a href="#appendix-E" class="auto internal xref"></a><a
+                                href="#name-authors-addresses" class="internal xref">作者地址</a></p>
+                    </li>
+                </ul>
+            </nav>
+        </section>
+    </div>
+    <div id="introduction">
+        <section id="section-1">
+            <h2 id="name-introduction">
+                <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction"
+                    class="section-name selfRef">引言</a>
+            </h2>
+            <p id="section-1-1">
+                本规范定义了 HTTP QUERY 请求方法，作为一种
+                发出安全、幂等请求（[<a href="#RFC9110" class="cite xref">HTTP</a>] 的 <span><a href="https://rfc-editor.org/rfc/rfc9110#section-9.2"
+                        class="relref">第 9.2 节</a></span>）的方式，该请求
+                包含一个表示形式，用于描述目标资源应如何处理该请求。<a
+                    href="#section-1-1" class="pilcrow">¶</a></p>
+            <p id="section-1-2">
+                一种常见的查询模式是：<a href="#section-1-2" class="pilcrow">¶</a></p>
+            <div class="lang-http-message sourcecode" id="section-1-3">
+                <pre>
+GET /feed?q=foo&amp;limit=10&amp;sort=-published HTTP/1.1
+Host: example.org</pre><a href="#section-1-3" class="pilcrow">¶</a>
+            </div>
+            <p id="section-1-4">
+                但是，当所传递的数据量太大，无法编码到请求的 URI 中时，
+                这种模式就会出现问题：<a href="#section-1-4" class="pilcrow">¶</a></p>
+            <ul class="normal">
+                <li class="normal" id="section-1-5.1">大小限制通常无法预先得知，因为一个请求
+                    可能经过许多彼此不协调的
+                    系统（不过请注意，[<a href="#RFC9110" class="cite xref">HTTP</a>] 的 <span><a href="https://rfc-editor.org/rfc/rfc9110#section-4.1"
+                            class="relref">第 4.1 节</a></span>
+                    建议发送方和接收方至少支持 8000 个八位字节），<a href="#section-1-5.1"
+                        class="pilcrow">¶</a>
+                </li>
+                <li class="normal" id="section-1-5.2">在目标 URI 中表达某些类型的数据效率较低，
+                    因为将这些数据编码成有效 URI 会产生额外开销，<a href="#section-1-5.2"
+                        class="pilcrow">¶</a>
+                </li>
+                <li class="normal" id="section-1-5.3">与请求内容相比，请求 URI 更有可能被记录，
+                    并且还可能出现在书签中，<a href="#section-1-5.3" class="pilcrow">¶</a>
+                </li>
+                <li class="normal" id="section-1-5.4">将查询直接编码到请求 URI 中，实际上会把
+                    查询输入的每一种可能组合都视为不同的
+                    资源。<a href="#section-1-5.4" class="pilcrow">¶</a>
+                </li>
+            </ul>
+            <p id="section-1-6">
+                作为使用 GET 的替代方案，许多实现会使用
+                HTTP POST 方法来执行查询，如下面的示例
+                所示。在这种情况下，查询操作的输入
+                作为请求内容传递，而不是使用
+                请求 URI 的查询组件。<a href="#section-1-6" class="pilcrow">¶</a></p>
+            <p id="section-1-7">
+                使用 HTTP POST 请求查询的一种典型方式是：<a href="#section-1-7" class="pilcrow">¶</a></p>
+            <div class="lang-http-message sourcecode" id="section-1-8">
+                <pre>
+POST /feed HTTP/1.1
+Host: example.org
+Content-Type: application/x-www-form-urlencoded
+
+q=foo&amp;limit=10&amp;sort=-published</pre><a href="#section-1-8" class="pilcrow">¶</a>
+            </div>
+            <p id="section-1-9">
+                然而，在这种变体中，如果不了解该请求所发送到的
+                资源和服务器的具体信息，就无法轻易看出正在执行的是一个安全、
+                幂等的查询。<a href="#section-1-9" class="pilcrow">¶</a></p>
+            <p id="section-1-10">
+                QUERY 方法提供了一种跨越 GET 和 POST 使用方式之间差距的解决方案，上面的
+                示例可以表示为：<a href="#section-1-10" class="pilcrow">¶</a></p>
+            <div class="lang-http-message sourcecode" id="section-1-11">
+                <pre>
+QUERY /feed HTTP/1.1
+Host: example.org
+Content-Type: application/x-www-form-urlencoded
+
+q=foo&amp;limit=10&amp;sort=-published</pre><a href="#section-1-11" class="pilcrow">¶</a>
+            </div>
+            <p id="section-1-12">
+                与 POST 一样，查询操作的输入作为请求内容传递，
+                而不是作为请求 URI 的一部分。但是，与 POST 不同，该方法明确是安全且
+                幂等的，因此可以使用缓存和自动重试等功能。<a href="#section-1-12"
+                    class="pilcrow">¶</a></p>
+            <p id="section-1-13">
+                鉴于任何重要资源都应当由 URI
+                标识这一设计原则，本规范描述了服务器如何为查询本身或
+                特定查询结果分配 URI，以便以后在 GET 请求中使用。<a href="#section-1-13"
+                    class="pilcrow">¶</a></p>
+            <p id="section-1-14">总结如下：<a href="#section-1-14" class="pilcrow">¶</a></p>
+            <span id="name-summary-of-relevant-method-"></span>
+            <table class="center" id="table-1">
+                <caption>
+                    <a href="#table-1" class="selfRef">表 1</a>：
+                    <a href="#name-summary-of-relevant-method-" class="selfRef">相关方法
+                        属性摘要</a>
+                </caption>
+                <thead>
+                    <tr>
+                        <th class="text-left" rowspan="1" colspan="1"></th>
+                        <th class="text-left" rowspan="1" colspan="1">GET</th>
+                        <th class="text-left" rowspan="1" colspan="1">QUERY</th>
+                        <th class="text-left" rowspan="1" colspan="1">POST</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="text-left" rowspan="1" colspan="1">安全</td>
+                        <td class="text-left" rowspan="1" colspan="1">是</td>
+                        <td class="text-left" rowspan="1" colspan="1">是</td>
+                        <td class="text-left" rowspan="1" colspan="1">可能不是</td>
+                    </tr>
+                    <tr>
+                        <td class="text-left" rowspan="1" colspan="1">幂等</td>
+                        <td class="text-left" rowspan="1" colspan="1">是</td>
+                        <td class="text-left" rowspan="1" colspan="1">是</td>
+                        <td class="text-left" rowspan="1" colspan="1">可能不是</td>
+                    </tr>
+                    <tr>
+                        <td class="text-left" rowspan="1" colspan="1">查询本身的 URI</td>
+                        <td class="text-left" rowspan="1" colspan="1">是（按定义）</td>
+                        <td class="text-left" rowspan="1" colspan="1">可选（Location 响应字段）</td>
+                        <td class="text-left" rowspan="1" colspan="1">否</td>
+                    </tr>
+                    <tr>
+                        <td class="text-left" rowspan="1" colspan="1">查询结果的 URI</td>
+                        <td class="text-left" rowspan="1" colspan="1">可选（Content-Location 响应字段）</td>
+                        <td class="text-left" rowspan="1" colspan="1">可选（Content-Location 响应字段）</td>
+                        <td class="text-left" rowspan="1" colspan="1">可选（Content-Location 响应字段）</td>
+                    </tr>
+                    <tr>
+                        <td class="text-left" rowspan="1" colspan="1">可缓存</td>
+                        <td class="text-left" rowspan="1" colspan="1">是</td>
+                        <td class="text-left" rowspan="1" colspan="1">是</td>
+                        <td class="text-left" rowspan="1" colspan="1">是，但仅用于未来的 GET 或 HEAD 请求</td>
+                    </tr>
+                    <tr>
+                        <td class="text-left" rowspan="1" colspan="1">内容（正文）</td>
+                        <td class="text-left" rowspan="1" colspan="1">“没有定义的语义”</td>
+                        <td class="text-left" rowspan="1" colspan="1">预期存在（语义由目标资源定义）</td>
+                        <td class="text-left" rowspan="1" colspan="1">预期存在（语义由目标资源定义）</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div id="terminology">
+                <section id="section-1.1">
+                    <h3 id="name-terminology">
+                        <a href="#section-1.1" class="section-number selfRef">1.1. </a><a href="#name-terminology"
+                            class="section-name selfRef">术语</a>
+                    </h3>
+                    <p id="section-1.1-1">
+                        本文档使用 [<a
+                                href="#RFC9110" class="cite xref">HTTP</a>] <span><a
+                                href="https://rfc-editor.org/rfc/rfc9110#section-3" class="relref">第 3 节</a></span>中定义的术语。<a href="#section-1.1-1"
+                            class="pilcrow">¶</a></p>
+                    <p id="section-1.1-2">
+                        此外，它使用术语 <em>URI 查询参数</em> 指代 URI
+                        查询组件中的参数（[<a href="#RFC9110" class="cite xref">HTTP</a>] 的 <span><a
+                                href="https://rfc-editor.org/rfc/rfc9110#section-4.2.2" class="relref">第 4.2.2 节</a></span>），并使用
+                        <em>查询内容</em> 指代 QUERY 请求的请求内容（[<a
+                                href="#RFC9110" class="cite xref">HTTP</a>] 的 <span><a
+                                href="https://rfc-editor.org/rfc/rfc9110#section-6.4" class="relref">第 6.4 节</a></span>）。<a href="#section-1.1-2" class="pilcrow">¶</a>
+                    </p>
+                </section>
+            </div>
+            <div id="notational.conventions">
+                <section id="section-1.2">
+                    <h3 id="name-notational-conventions">
+                        <a href="#section-1.2" class="section-number selfRef">1.2. </a><a
+                            href="#name-notational-conventions" class="section-name selfRef">符号约定</a>
+                    </h3>
+                    <p id="section-1.2-1">
+                        本文档中的关键词“<span class="bcp14">必须</span>（MUST）”、“<span class="bcp14">不得</span>（MUST NOT）”、“<span
+                            class="bcp14">要求</span>（REQUIRED）”、“<span class="bcp14">应当</span>（SHALL）”、“<span
+                            class="bcp14">不应当</span>（SHALL NOT）”、“<span class="bcp14">应该</span>（SHOULD）”、“<span
+                            class="bcp14">不应该</span>（SHOULD NOT）”、“<span class="bcp14">建议</span>（RECOMMENDED）”、“<span
+                            class="bcp14">不建议</span>（NOT RECOMMENDED）”、
+                        “<span class="bcp14">可以</span>（MAY）”和“<span class="bcp14">可选</span>（OPTIONAL）”
+                        仅当它们像此处所示以全大写形式出现时，
+                        才应按照 BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a
+                                href="#RFC8174" class="cite xref">RFC8174</a>]</span>
+                        中的描述进行解释。<a href="#section-1.2-1"
+                            class="pilcrow">¶</a></p>
+                </section>
+            </div>
+        </section>
+    </div>
+    <div id="query">
+        <section id="section-2">
+            <h2 id="name-query-method">
+                <a href="#section-2" class="section-number selfRef">2. </a><a href="#name-query-method"
+                    class="section-name selfRef">QUERY 方法</a>
+            </h2>
+            <p id="section-2-1">
+                QUERY 方法用于发起服务器端查询。与
+                GET 方法不同，GET 方法请求由目标 URI 标识的资源的
+                表示形式
+                （如 [<a href="#RFC9110" class="cite xref">HTTP</a>] 的 <span><a href="https://rfc-editor.org/rfc/rfc9110#section-7.1" class="relref">第
+                        7.1 节</a></span>所定义），QUERY
+                方法用于请求目标资源在
+                该目标资源的范围内执行查询操作。<a href="#section-2-1" class="pilcrow">¶</a></p>
+            <p id="section-2-2">
+                请求的内容及其媒体类型定义查询。
+                源服务器根据目标资源确定操作的范围。<a
+                    href="#section-2-2" class="pilcrow">¶</a></p>
+            <p id="section-2-3">
+                如果 Content-Type 请求字段
+                （[<a href="#RFC9110" class="cite xref">HTTP</a>]，<span><a
+                        href="https://rfc-editor.org/rfc/rfc9110#section-8.3" class="relref">第 8.3 节</a></span>）
+                缺失或与请求内容不一致，服务器<span class="bcp14">必须</span>使请求失败。<a href="#section-2-3" class="pilcrow">¶</a></p>
+            <p id="section-2-4">
+                与所有 HTTP 方法一样，目标 URI 的查询部分
+                参与标识被查询的资源。它是否以及如何
+                直接影响查询结果由资源本身决定，
+                不属于本规范的范围。<a href="#section-2-4" class="pilcrow">¶</a></p>
+            <p id="section-2-5">
+                QUERY 请求对于目标资源而言是安全的
+                （[<a href="#RFC9110" class="cite xref">HTTP</a>]，<span><a
+                        href="https://rfc-editor.org/rfc/rfc9110#section-9.2.1" class="relref">第
+                        9.2.1 节</a></span>）；
+                也就是说，客户端不会请求或期望对
+                目标资源的状态作任何更改。这并不妨碍服务器
+                创建额外的 HTTP 资源，通过这些资源可以检索额外
+                信息（参见第 <a href="#content-location"
+                    class="auto internal xref">2.3</a>
+                节和第 <a href="#location" class="auto internal xref">2.4</a> 节）。<a href="#section-2-5" class="pilcrow">¶</a>
+            </p>
+            <p id="section-2-6">
+                此外，QUERY 请求是幂等的
+                （[<a href="#RFC9110" class="cite xref">HTTP</a>]，<span><a
+                        href="https://rfc-editor.org/rfc/rfc9110#section-9.2.2" class="relref">第
+                        9.2.2 节</a></span>）；
+                它们可以在需要时重试或重复，例如在
+                连接失败之后。<a href="#section-2-6" class="pilcrow">¶</a></p>
+            <p id="section-2-7">
+                根据 [<a href="#RFC9110" class="cite xref">HTTP</a>] 的 <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.3" class="relref">第 15.3 节</a></span>，2xx（成功）响应代码表示
+                请求已被成功接收、理解并接受。<a href="#section-2-7"
+                    class="pilcrow">¶</a></p>
+            <p id="section-2-8">
+                特别是，200（OK）响应表示查询
+                已被成功处理，并且该处理的结果
+                包含在响应内容中。<a href="#section-2-8" class="pilcrow">¶</a></p>
+            <div id="media.types.and.conneg">
+                <section id="section-2.1">
+                    <h3 id="name-media-types-and-content-neg">
+                        <a href="#section-2.1" class="section-number selfRef">2.1. </a><a
+                            href="#name-media-types-and-content-neg" class="section-name selfRef">媒体类型和
+                            内容协商</a>
+                    </h3>
+                    <p id="section-2.1-1">
+                        QUERY 请求的语义同时取决于请求内容和相关的
+                        元数据，例如媒体类型（[<a href="#RFC9110" class="cite xref">HTTP</a>]，<span><a
+                                href="https://rfc-editor.org/rfc/rfc9110#section-8.3.1" class="relref">第
+                                8.3.1 节</a></span>）。
+                        一般而言，任何内容与元数据不一致的请求问题都<span
+                            class="bcp14">必须</span>
+                        使用 4xx（客户端错误）响应拒绝（[<a href="#RFC9110"
+                                class="cite xref">HTTP</a>]，<span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.5"
+                                class="relref">第 15.5 节</a></span>）。<a href="#section-2.1-1" class="pilcrow">¶</a>
+                    </p>
+                    <p id="section-2.1-2">
+                        下面的列表描述了各种失败情况，并建议了具体的状态代码：<a
+                            href="#section-2.1-2" class="pilcrow">¶</a></p>
+                    <ul class="normal">
+                        <li class="normal" id="section-2.1-3.1">
+                            如果请求缺少媒体类型信息，则根据定义它是不正确的，需要以
+                            4xx 状态代码失败，例如 400（客户端错误）。<a href="#section-2.1-3.1"
+                                class="pilcrow">¶</a>
+                        </li>
+                        <li class="normal" id="section-2.1-3.2">
+                            如果指定了媒体类型，但资源不支持该类型，则 415（不支持的媒体
+                            类型）
+                            是适当的。这尤其包括媒体类型原则上
+                            已知，但对于针对目标资源的 QUERY 缺乏特定语义的情况。在
+                            这两种情况下，
+                            可以使用 Accept-Query 响应字段（<a href="#field.accept-query"
+                                class="auto internal xref">第 3 节</a>）告知
+                            客户端所支持的媒体类型。<a href="#section-2.1-3.2"
+                                class="pilcrow">¶</a>
+                        </li>
+                        <li class="normal" id="section-2.1-3.3">
+                            如果指定了媒体类型，但它与实际请求内容不一致，
+                            可以返回 400（错误请求）。也就是说，不允许服务器从
+                            请求内容推断媒体类型，然后覆盖缺失或“错误”的值
+                            （即“内容嗅探”）。<a href="#section-2.1-3.3" class="pilcrow">¶</a>
+                        </li>
+                        <li class="normal" id="section-2.1-3.4">
+                            如果媒体类型已指定且可理解，并且内容确实与该
+                            类型一致，但由于查询的实际内容而无法处理查询，
+                            可以使用状态 422（无法处理的内容）。例如，一个语法上
+                            正确但标识了不存在表的 SQL 查询。<a href="#section-2.1-3.4"
+                                class="pilcrow">¶</a>
+                        </li>
+                        <li class="normal" id="section-2.1-3.5">
+                            如果客户端使用 Accept
+                            字段（[<a href="#RFC9110" class="cite xref">HTTP</a>]，<span><a
+                                    href="https://rfc-editor.org/rfc/rfc9110#section-12.5.1" class="relref">第
+                                    12.5.1 节</a></span>）请求资源不支持的特定响应媒体类型，
+                            则状态代码 406（不可接受）是适当的。<a
+                                href="#section-2.1-3.5" class="pilcrow">¶</a>
+                        </li>
+                    </ul>
+                </section>
+            </div>
+            <div id="equivalent-resource">
+                <section id="section-2.2">
+                    <h3 id="name-equivalent-resource">
+                        <a href="#section-2.2" class="section-number selfRef">2.2. </a><a
+                            href="#name-equivalent-resource" class="section-name selfRef">等效资源</a>
+                    </h3>
+                    <p id="section-2.2-1">
+                        对于任何给定的 QUERY 请求，其<em>等效资源</em>是这样一种资源：
+                        它响应 GET 请求，表示该 QUERY 请求及其目标，并同时考虑
+                        消息内容和元数据（[<a
+                                href="#RFC9110" class="cite xref">HTTP</a>] 的 <span><a
+                                href="https://rfc-editor.org/rfc/rfc9110#section-6" class="relref">第 6 节</a></span>）。
+                        特别是，这包括表示形式元数据（[<a
+                                href="#RFC9110" class="cite xref">HTTP</a>] 的 <span><a
+                                href="https://rfc-editor.org/rfc/rfc9110#section-8" class="relref">第 8 节</a></span>），
+                        例如内容的媒体类型。<a href="#section-2.2-1" class="pilcrow">¶</a></p>
+                    <p id="section-2.2-2">
+                        换句话说，等效资源是通过纳入请求内容，
+                        从实现 QUERY 的资源派生出来的。<a href="#section-2.2-2"
+                            class="pilcrow">¶</a></p>
+                    <p id="section-2.2-3">
+                        术语<em>等效资源</em>用于定义
+                        其他 HTTP 方面的行为，例如所选择的表示形式。服务器可以
+                        为这些资源分配 URI，但并非必须如此（参见
+                        [<a href="#RFC3986" class="cite xref">URI</a>] 的 <span><a href="https://rfc-editor.org/rfc/rfc3986#section-1.1" class="relref">第 1.1 节</a></span>）。如果这样做，这些资源将
+                        可通过 GET 请求访问。<a href="#section-2.2-3" class="pilcrow">¶</a>
+                    </p>
+                </section>
+            </div>
+            <div id="content-location">
+                <section id="section-2.3">
+                    <h3 id="name-content-location-response-f">
+                        <a href="#section-2.3" class="section-number selfRef">2.3. </a><a
+                            href="#name-content-location-response-f" class="section-name selfRef">Content-Location
+                            响应字段</a>
+                    </h3>
+                    <p id="section-2.3-1">
+                        成功响应（2xx，[<a href="#RFC9110"
+                                class="cite xref">HTTP</a>] 的 <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.3"
+                                class="relref">第 15.3 节</a></span>）
+                        可以包含一个 Content-Location
+                        标头字段，其中包含一个与
+                        操作结果相对应的资源标识符；详情参见 [<a href="#RFC9110" class="cite xref">HTTP</a>] 的 <span><a href="https://rfc-editor.org/rfc/rfc9110#section-8.7"
+                                class="relref">第 8.7 节</a></span>。
+                        这表示服务器声称客户端可以向
+                        指示的 URI 发送 GET 请求，以检索刚刚执行的查询
+                        操作的结果。所指示的资源可能是临时的。<a href="#section-2.3-1"
+                            class="pilcrow">¶</a></p>
+                    <p id="section-2.3-2">
+                        示例参见<a href="#example.content-location" class="auto internal xref">附录 A.4.1</a>。<a href="#section-2.3-2" class="pilcrow">¶</a></p>
+                </section>
+            </div>
+            <div id="location">
+                <section id="section-2.4">
+                    <h3 id="name-location-response-field">
+                        <a href="#section-2.4" class="section-number selfRef">2.4. </a><a
+                            href="#name-location-response-field" class="section-name selfRef">Location 响应
+                            字段</a>
+                    </h3>
+                    <p id="section-2.4-1">
+                        服务器可以为 QUERY 请求的等效资源（<a href="#equivalent-resource"
+                            class="auto internal xref">第 2.2 节</a>）
+                        分配 URI。如果服务器这样做，该资源的 URI
+                        可以包含在 2xx 响应的 Location 标头字段中（参见 [<a href="#RFC9110" class="cite xref">HTTP</a>] 的 <span><a
+                                href="https://rfc-editor.org/rfc/rfc9110#section-10.2.2" class="relref">第
+                                10.2.2 节</a></span>）。这表示服务器声称客户端可以
+                        向所指示的 URI 发送 GET 请求，以重复刚刚
+                        执行的查询操作，而无需重新发送查询内容。该资源的 URI 可能是
+                        临时的；如果未来的请求失败，客户端可以使用
+                        原始 QUERY 请求目标和先前提交的内容重试。<a href="#section-2.4-1"
+                            class="pilcrow">¶</a></p>
+                    <p id="section-2.4-2">
+                        示例参见<a href="#example.location" class="auto internal xref">附录 A.4.2</a>。<a
+                            href="#section-2.4-2" class="pilcrow">¶</a></p>
+                </section>
+            </div>
+            <div id="redirection">
+                <section id="section-2.5">
+                    <h3 id="name-redirection">
+                        <a href="#section-2.5" class="section-number selfRef">2.5. </a><a href="#name-redirection"
+                            class="section-name selfRef">重定向</a>
+                    </h3>
+                    <p id="section-2.5-1">
+                        在某些情况下，服务器可以选择通过将用户代理重定向到不同的 URI，
+                        以间接方式响应 QUERY
+                        请求（参见
+                        [<a href="#RFC9110" class="cite xref">HTTP</a>] 的 <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.4" class="relref">第 15.4 节</a></span>）。<a href="#section-2.5-1"
+                            class="pilcrow">¶</a>
+                    </p>
+                    <p id="section-2.5-2">
+                        状态代码为
+                        301（永久移动，[<a href="#RFC9110" class="cite xref">HTTP</a>]，<span><a
+                                href="https://rfc-editor.org/rfc/rfc9110#section-15.4.2" class="relref">第
+                                15.4.2 节</a></span>）或
+                        308（永久重定向，[<a href="#RFC9110" class="cite xref">HTTP</a>]，<span><a
+                                href="https://rfc-editor.org/rfc/rfc9110#section-15.4.9" class="relref">第
+                                15.4.9 节</a></span>）
+                        的响应表示目标资源已经永久移动到由
+                        Location 响应字段引用的另一个 URI（[<a href="#RFC9110" class="cite xref">HTTP</a>]，<span><a
+                                href="https://rfc-editor.org/rfc/rfc9110#section-10.2.2" class="relref">第
+                                10.2.2 节</a></span>）。
+                        同样，状态代码为
+                        302（已找到，[<a href="#RFC9110" class="cite xref">HTTP</a>]，<span><a
+                                href="https://rfc-editor.org/rfc/rfc9110#section-15.4.3" class="relref">第
+                                15.4.3 节</a></span>）或
+                        307（临时重定向，[<a href="#RFC9110" class="cite xref">HTTP</a>]，<span><a
+                                href="https://rfc-editor.org/rfc/rfc9110#section-15.4.8" class="relref">第
+                                15.4.8 节</a></span>）
+                        的响应表示目标资源已临时移动。在所有这四种情况下，服务器都在
+                        建议用户代理可以通过向 Location 引用的新目标 URI 发送一个
+                        类似的 QUERY 请求来完成其原始 QUERY 请求。<a href="#section-2.5-2"
+                            class="pilcrow">¶</a></p>
+                    <p id="section-2.5-3">
+                        请注意，在 301 或 302 响应后将 POST 重定向为 GET 请求的例外
+                        不适用于 QUERY 请求。<a href="#section-2.5-3" class="pilcrow">¶</a></p>
+                    <p id="section-2.5-4">
+                        对 QUERY 的状态代码 303（参见其他，[<a href="#RFC9110" class="cite xref">HTTP</a>] 的 <span><a
+                                href="https://rfc-editor.org/rfc/rfc9110#section-15.4.4" class="relref">第
+                                15.4.4 节</a></span>）
+                        响应表示原始查询可以通过对 Location 响应字段所引用的 URI
+                        发出普通检索请求来完成
+                        （[<a href="#RFC9110" class="cite xref">HTTP</a>]，<span><a
+                                href="https://rfc-editor.org/rfc/rfc9110#section-10.2.2" class="relref">第
+                                10.2.2 节</a></span>）。
+                        对于 HTTP，这意味着向新的目标 URI 发送 GET 请求，如
+                        <a href="#example.indirect" class="auto internal xref">附录 A.4.3</a>中的示例所示。<a
+                            href="#section-2.5-4" class="pilcrow">¶</a></p>
+                </section>
+            </div>
+            <div id="conditional">
+                <section id="section-2.6">
+                    <h3 id="name-conditional-requests">
+                        <a href="#section-2.6" class="section-number selfRef">2.6. </a><a
+                            href="#name-conditional-requests" class="section-name selfRef">条件请求</a>
+                    </h3>
+                    <p id="section-2.6-1">
+                        QUERY 请求的所选择表示形式（[<a href="#RFC9110"
+                                class="cite xref">HTTP</a>] 的 <span><a href="https://rfc-editor.org/rfc/rfc9110#section-3.2"
+                                class="relref">第 3.2 节</a></span>）
+                        与向该 QUERY 请求的等效资源
+                        （<a href="#equivalent-resource" class="auto internal xref">第 2.2 节</a>）发送 GET 请求时相同。<a href="#section-2.6-1" class="pilcrow">¶</a></p>
+                    <p id="section-2.6-2">
+                        条件 QUERY 请求要求仅在
+                        条件标头字段所描述的情况下，才在响应中
+                        返回所选择的表示形式
+                        （即经过任何内容协商后的查询结果），如
+                        [<a href="#RFC9110" class="cite xref">HTTP</a>] 的 <span><a href="https://rfc-editor.org/rfc/rfc9110#section-13" class="relref">第 13 节</a></span>所定义。<a href="#section-2.6-2"
+                            class="pilcrow">¶</a>
+                    </p>
+                    <p id="section-2.6-3">
+                        示例参见<a href="#example.conditional" class="auto internal xref">附录 A.5</a>。<a
+                            href="#section-2.6-3" class="pilcrow">¶</a></p>
+                </section>
+            </div>
+            <div id="caching">
+                <section id="section-2.7">
+                    <h3 id="name-caching">
+                        <a href="#section-2.7" class="section-number selfRef">2.7. </a><a href="#name-caching"
+                            class="section-name selfRef">缓存</a>
+                    </h3>
+                    <p id="section-2.7-1">
+                        QUERY 方法的响应是可缓存的；缓存<span class="bcp14">可以</span>按照 [<a href="#RFC9111"
+                                class="cite xref">HTTP-CACHING</a>] 的 <span><a href="https://rfc-editor.org/rfc/rfc9111#section-4"
+                                class="relref">第 4 节</a></span>使用它来
+                        满足后续 QUERY 请求。<a href="#section-2.7-1"
+                            class="pilcrow">¶</a></p>
+                    <p id="section-2.7-2">
+                        QUERY 请求的缓存键（[<a href="#RFC9111"
+                                class="cite xref">HTTP-CACHING</a>] 的 <span><a href="https://rfc-editor.org/rfc/rfc9111#section-2"
+                                class="relref">第 2 节</a></span>）<span class="bcp14">必须</span>
+                        纳入请求内容（[<a href="#RFC9111"
+                                class="cite xref">HTTP-CACHING</a>] 的 <span><a href="https://rfc-editor.org/rfc/rfc9111#section-6"
+                                class="relref">第 6 节</a></span>）以及相关的
+                        元数据（[<a href="#RFC9110" class="cite xref">HTTP</a>] 的 <span><a href="https://rfc-editor.org/rfc/rfc9110#section-8" class="relref">第
+                                8 节</a></span>）。<a
+                            href="#section-2.7-2" class="pilcrow">¶</a></p>
+                    <p id="section-2.7-3">
+                        为了提高缓存效率，缓存<span class="bcp14">可以</span>先从请求内容和相关元数据中移除
+                        语义上无关紧要的差异。例如，可以：<a
+                            href="#section-2.7-3" class="pilcrow">¶</a></p>
+                    <ul class="normal">
+                        <li class="normal" id="section-2.7-4.1">移除内容编码（[<a
+                                    href="#RFC9110" class="cite xref">HTTP</a>] 的 <span><a
+                                    href="https://rfc-editor.org/rfc/rfc9110#section-8.4" class="relref">第 8.4 节</a></span>）。<a href="#section-2.7-4.1"
+                                class="pilcrow">¶</a>
+                        </li>
+                        <li class="normal" id="section-2.7-4.2">根据对格式约定的了解进行规范化，
+                            如请求的 Content-Type 字段中任何
+                            媒体子类型后缀所指示的那样（例如“+json”；参见
+                            [<a href="#RFC6838" class="cite xref">RFC6838</a>] 的 <span><a href="https://rfc-editor.org/rfc/rfc6838#section-4.2.8" class="relref">第
+                                    4.2.8 节</a></span>）。<a
+                                href="#section-2.7-4.2" class="pilcrow">¶</a>
+                        </li>
+                        <li class="normal" id="section-2.7-4.3">根据对内容本身语义的了解进行规范化，
+                            如请求的 Content-Type 字段所指示。<a href="#section-2.7-4.3" class="pilcrow">¶</a>
+                        </li>
+                    </ul>
+                    <p id="section-2.7-5">
+                        请注意，任何此类转换都仅用于生成缓存键；
+                        它
+                        不会改变请求本身。<a href="#section-2.7-5" class="pilcrow">¶</a></p>
+                    <p id="section-2.7-6">
+                        客户端可以使用“no-transform”缓存指令（[<a href="#RFC9111" class="cite xref">HTTP-CACHING</a>] 的 <span><a
+                                href="https://rfc-editor.org/rfc/rfc9111#section-5.2.1.6" class="relref">第
+                                5.2.1.6 节</a></span>）
+                        表明它们希望不发生此类转换（但请注意，该指令仅具有
+                        建议性质）。<a href="#section-2.7-6" class="pilcrow">¶</a></p>
+                    <p id="section-2.7-7">
+                        请注意，缓存 QUERY 方法响应本质上比缓存
+                        GET 响应更复杂，因为需要完整读取请求内容才能确定
+                        缓存键。如果 QUERY 响应提供 Location 响应字段（<a href="#location"
+                            class="auto internal xref">第 2.4 节</a>）
+                        来指示等效资源（<a href="#equivalent-resource"
+                            class="auto internal xref">第 2.2 节</a>）的 URI，客户端
+                        可以在后续请求中切换到 GET，从而简化处理。<a
+                            href="#section-2.7-7" class="pilcrow">¶</a></p>
+                </section>
+            </div>
+            <div id="range">
+                <section id="section-2.8">
+                    <h3 id="name-range-requests">
+                        <a href="#section-2.8" class="section-number selfRef">2.8. </a><a href="#name-range-requests"
+                            class="section-name selfRef">范围请求</a>
+                    </h3>
+                    <p id="section-2.8-1">
+                        QUERY 的范围请求语义与 GET 完全相同，
+                        如 [<a href="#RFC9110" class="cite xref">HTTP</a>] 的 <span><a href="https://rfc-editor.org/rfc/rfc9110#section-14"
+                                class="relref">第 14 节</a></span>所定义。
+                        然而，字节范围请求（撰写本文时唯一已定义的范围单位）
+                        对 QUERY 请求的结果几乎没有价值。<a href="#section-2.8-1"
+                            class="pilcrow">¶</a></p>
+                    <p id="section-2.8-2">
+                        查询格式通常会定义自己限制结果集或对结果集分页的方式，
+                        例如 SQL 中的“FETCH FIRST ... ROWS ONLY”。预期将使用这些
+                        内置功能，而不是 HTTP 范围请求。<a href="#section-2.8-2"
+                            class="pilcrow">¶</a></p>
+                </section>
+            </div>
+        </section>
+    </div>
+    <div id="field.accept-query">
+        <section id="section-3">
+            <h2 id="name-the-accept-query-header-fie">
+                <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-the-accept-query-header-fie"
+                    class="section-name selfRef">Accept-Query 标头字段</a>
+            </h2>
+            <p id="section-3-1">
+                资源可以使用“Accept-Query”响应标头字段
+                直接表示对 QUERY 方法的支持，同时标识
+                可以使用的具体查询格式媒体类型。<a href="#section-3-1" class="pilcrow">¶</a>
+            </p>
+            <p id="section-3-2">
+                Accept-Query 包含一个媒体范围列表（[<a
+                        href="#RFC9110" class="cite xref">HTTP</a>] 的 <span><a
+                        href="https://rfc-editor.org/rfc/rfc9110#section-12.5.1" class="relref">第 12.5.1 节</a></span>），
+                使用“结构化字段”语法 <span>[<a href="#RFC9651"
+                        class="cite xref">STRUCTURED-FIELDS</a>]</span>。
+                媒体范围由 Token 或
+                String 组成的 List 结构化标头字段表示，其中包含不带参数的媒体范围值。<a href="#section-3-2"
+                    class="pilcrow">¶</a></p>
+            <p id="section-3-3">
+                媒体类型参数（如果有）映射到
+                String 或 Token 类型的结构化字段参数。选择 Token 还是 String
+                在语义上没有区别。也就是说，接收方<span class="bcp14">可以</span>
+                将 Token 转换为 String，但<span class="bcp14">不得</span>根据接收到的类型
+                对它们进行不同处理。<a href="#section-3-3" class="pilcrow">¶</a></p>
+            <p id="section-3-4">
+                媒体类型并不能完全映射到 Token；例如，它们
+                允许以数字开头。在此类情况下，需要
+                使用 String 格式。<a href="#section-3-4" class="pilcrow">¶</a></p>
+            <p id="section-3-5">
+                通配符唯一受支持的用法是“*/*”（匹配任何类型）
+                或“xxxx/*”（匹配所指示类型的任何子类型）。<a href="#section-3-5"
+                    class="pilcrow">¶</a></p>
+            <p id="section-3-6">
+                字段值中所列类型的顺序无关紧要。<a href="#section-3-6"
+                    class="pilcrow">¶</a></p>
+            <p id="section-3-7">
+                Accept-Query 字段的值适用于服务器上共享相同路径的每个 URI；换言之，
+                查询组件会被忽略。如果对同一资源的请求返回
+                不同的 Accept-Query 值，则使用最近收到的仍然新鲜的值（按照
+                [<a href="#RFC9111" class="cite xref">HTTP-CACHING</a>] 的 <span><a
+                        href="https://rfc-editor.org/rfc/rfc9111#section-4.2" class="relref">第 4.2 节</a></span>）。<a href="#section-3-7"
+                    class="pilcrow">¶</a>
+            </p>
+            <p id="section-3-8">
+                例如：<a href="#section-3-8" class="pilcrow">¶</a></p>
+            <div class="sourcecode" id="section-3-9">
+                <pre>
+Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</pre><a href="#section-3-9" class="pilcrow">¶</a>
+            </div>
+            <p id="section-3-10">
+                尽管该字段的语法看起来与其他
+                字段（例如“Accept”（[<a href="#RFC9110" class="cite xref">HTTP</a>] 的 <span><a href="https://rfc-editor.org/rfc/rfc9110#section-12.5.1"
+                        class="relref">第 12.5.1 节</a></span>））相似，
+                但它是一个结构化字段，因此<span class="bcp14">必须</span>按照
+                [<a href="#RFC9651" class="cite xref">STRUCTURED-FIELDS</a>] 的 <span><a
+                        href="https://rfc-editor.org/rfc/rfc9651#section-4" class="relref">第 4 节</a></span>中的规定进行处理。<a href="#section-3-10"
+                    class="pilcrow">¶</a>
+            </p>
+        </section>
+    </div>
+    <section id="section-4">
+        <h2 id="name-security-considerations">
+            <a href="#section-4" class="section-number selfRef">4. </a><a href="#name-security-considerations"
+                class="section-name selfRef">安全注意事项</a>
+        </h2>
+        <p id="section-4-1">
+            QUERY 方法与所有 HTTP 方法一样，受到
+            <span>[<a href="#RFC9110" class="cite xref">HTTP</a>]</span> 中所述的一般安全
+            注意事项约束。<a href="#section-4-1" class="pilcrow">¶</a>
+        </p>
+        <p id="section-4-2">
+            它可以作为在 URI 中传递请求
+            信息（例如在查询组件中）的替代方案。在某些
+            情况下，这是首选方式，因为与请求内容相比，URI 更可能被
+            中间设备记录或以其他方式处理。在其他情况下，当查询
+            包含敏感信息时，URI 可能被记录这一点可能
+            促使使用 QUERY 而不是 GET。<a href="#section-4-2" class="pilcrow">¶</a></p>
+        <p id="section-4-3">
+            如果服务器创建临时资源来表示 QUERY
+            请求的结果（例如用于 Location 或 Content-Location 字段），为该资源分配 URI，
+            并且请求包含不能被记录的敏感信息，
+            那么该 URI<span class="bcp14">应该</span>选择为不包含原始请求内容的任何敏感
+            部分。<a href="#section-4-3" class="pilcrow">¶</a></p>
+        <p id="section-4-4">
+            如果缓存以不正确的方式规范化 QUERY 内容，或者其方式与
+            资源处理内容的方式存在显著差异，
+            那么当规范化导致误判时，可能会返回错误响应。<a href="#section-4-4"
+                class="pilcrow">¶</a></p>
+        <p id="section-4-5">
+            实现跨源资源共享（CORS）的用户代理所发出的 QUERY 请求
+            将需要“预检”请求，
+            因为 QUERY 不属于 CORS 安全列出的方法集合
+            （参见 <span>[<a href="#FETCH" class="cite xref">FETCH</a>]</span>）。<a href="#section-4-5"
+                class="pilcrow">¶</a></p>
+    </section>
+    <div id="iana.considerations">
+        <section id="section-5">
+            <h2 id="name-iana-considerations">
+                <a href="#section-5" class="section-number selfRef">5. </a><a href="#name-iana-considerations"
+                    class="section-name selfRef">IANA 注意事项</a>
+            </h2>
+            <div id="method.registration">
+                <section id="section-5.1">
+                    <h3 id="name-registration-of-the-query-m">
+                        <a href="#section-5.1" class="section-number selfRef">5.1. </a><a
+                            href="#name-registration-of-the-query-m" class="section-name selfRef">QUERY
+                            方法的注册</a>
+                    </h3>
+                    <p id="section-5.1-1">
+                        IANA 已将 QUERY 方法添加到位于
+                        <span>&lt;<a
+                                href="http://www.iana.org/assignments/http-methods">http://www.iana.org/assignments/http-methods</a>&gt;</span>
+                        的“超文本传输协议（HTTP）方法注册表”
+                        （参见 [<a href="#RFC9110" class="cite xref">HTTP</a>] 的 <span><a href="https://rfc-editor.org/rfc/rfc9110#section-16.3.1" class="relref">第
+                                16.3.1 节</a></span>）。<a
+                            href="#section-5.1-1" class="pilcrow">¶</a>
+                    </p>
+                    <span id="name-query-method-definition"></span>
+                    <table class="center" id="table-2">
+                        <caption>
+                            <a href="#table-2" class="selfRef">表 2</a>：
+                            <a href="#name-query-method-definition" class="selfRef">QUERY 方法定义</a>
+                        </caption>
+                        <thead>
+                            <tr>
+                                <th class="text-left" rowspan="1" colspan="1">方法名称</th>
+                                <th class="text-left" rowspan="1" colspan="1">安全</th>
+                                <th class="text-left" rowspan="1" colspan="1">幂等</th>
+                                <th class="text-left" rowspan="1" colspan="1">规范</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-left" rowspan="1" colspan="1">QUERY</td>
+                                <td class="text-left" rowspan="1" colspan="1">是</td>
+                                <td class="text-left" rowspan="1" colspan="1">是</td>
+                                <td class="text-left" rowspan="1" colspan="1">
+                                    RFC 10008 的<a href="#query" class="auto internal xref">第 2 节</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+            </div>
+            <div id="field.registration">
+                <section id="section-5.2">
+                    <h3 id="name-registration-of-the-accept-">
+                        <a href="#section-5.2" class="section-number selfRef">5.2. </a><a
+                            href="#name-registration-of-the-accept-" class="section-name selfRef">Accept-Query
+                            字段的注册</a>
+                    </h3>
+                    <p id="section-5.2-1">
+                        IANA 已将 Accept-Query 字段添加到“超文本传输协议（HTTP）字段名称
+                        注册表”，
+                        地址为 <span>&lt;<a
+                                href="https://www.iana.org/assignments/http-fields">https://www.iana.org/assignments/http-fields</a>&gt;</span>
+                        （参见 [<a href="#RFC9110" class="cite xref">HTTP</a>] 的 <span><a href="https://rfc-editor.org/rfc/rfc9110#section-16.1.1" class="relref">第
+                                16.1.1 节</a></span>）。<a
+                            href="#section-5.2-1" class="pilcrow">¶</a></p>
+                    <span id="name-accept-query-field-definiti"></span>
+                    <table class="center" id="table-3">
+                        <caption>
+                            <a href="#table-3" class="selfRef">表 3</a>：
+                            <a href="#name-accept-query-field-definiti" class="selfRef">Accept-Query 字段
+                                定义</a>
+                        </caption>
+                        <thead>
+                            <tr>
+                                <th class="text-left" rowspan="1" colspan="1">字段名称</th>
+                                <th class="text-left" rowspan="1" colspan="1">状态</th>
+                                <th class="text-left" rowspan="1" colspan="1">结构化类型</th>
+                                <th class="text-left" rowspan="1" colspan="1">参考</th>
+                                <th class="text-left" rowspan="1" colspan="1">注释</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-left" rowspan="1" colspan="1">Accept-Query</td>
+                                <td class="text-left" rowspan="1" colspan="1">永久</td>
+                                <td class="text-left" rowspan="1" colspan="1">List</td>
+                                <td class="text-left" rowspan="1" colspan="1">
+                                    RFC 10008 的<a href="#field.accept-query" class="auto internal xref">第 3 节</a>
+                                </td>
+                                <td class="text-left" rowspan="1" colspan="1"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+            </div>
+        </section>
+    </div>
+    <section id="section-6">
+        <h2 id="name-references">
+            <a href="#section-6" class="section-number selfRef">6. </a><a href="#name-references"
+                class="section-name selfRef">参考文献</a>
+        </h2>
+        <section id="section-6.1">
+            <h3 id="name-normative-references">
+                <a href="#section-6.1" class="section-number selfRef">6.1. </a><a href="#name-normative-references"
+                    class="section-name selfRef">规范性参考文献</a>
+            </h3>
+            <dl class="references">
+                <dt id="RFC9110">[HTTP]</dt>
+                <dd>
+                    <span class="refAuthor">Fielding, R.，编辑</span>、<span class="refAuthor">Nottingham, M.，
+                        编辑</span>和 <span class="refAuthor">J. Reschke，编辑</span>，<span class="refTitle">“HTTP
+                        语义”</span>，<span class="seriesInfo">STD 97</span>，<span class="seriesInfo">RFC
+                        9110</span>，<span class="seriesInfo">DOI 10.17487/RFC9110</span>，<time datetime="2022-06"
+                        class="refDate">2022 年 6 月</time>，<span>&lt;<a
+                            href="https://www.rfc-editor.org/info/rfc9110">https://www.rfc-editor.org/info/rfc9110</a>&gt;</span>。
+                </dd>
+                <dd class="break"></dd>
+                <dt id="RFC9111">[HTTP-CACHING]</dt>
+                <dd>
+                    <span class="refAuthor">Fielding, R.，编辑</span>、<span class="refAuthor">Nottingham, M.，
+                        编辑</span>和 <span class="refAuthor">J. Reschke，编辑</span>，<span class="refTitle">“HTTP
+                        缓存”</span>，<span class="seriesInfo">STD 98</span>，<span class="seriesInfo">RFC
+                        9111</span>，<span class="seriesInfo">DOI 10.17487/RFC9111</span>，<time datetime="2022-06"
+                        class="refDate">2022 年 6 月</time>，<span>&lt;<a
+                            href="https://www.rfc-editor.org/info/rfc9111">https://www.rfc-editor.org/info/rfc9111</a>&gt;</span>。
+                </dd>
+                <dd class="break"></dd>
+                <dt id="RFC2119">[RFC2119]</dt>
+                <dd>
+                    <span class="refAuthor">Bradner, S.</span>，<span class="refTitle">“用于
+                        表示 RFC 要求级别的关键词”</span>，<span class="seriesInfo">BCP 14</span>，<span
+                        class="seriesInfo">RFC 2119</span>，<span class="seriesInfo">DOI 10.17487/RFC2119</span>，<time
+                        datetime="1997-03" class="refDate">1997 年 3 月</time>，<span>&lt;<a
+                            href="https://www.rfc-editor.org/info/rfc2119">https://www.rfc-editor.org/info/rfc2119</a>&gt;</span>。
+                </dd>
+                <dd class="break"></dd>
+                <dt id="RFC8174">[RFC8174]</dt>
+                <dd>
+                    <span class="refAuthor">Leiba, B.</span>，<span class="refTitle">“RFC 2119 关键词中大写与
+                        小写的歧义”</span>，<span class="seriesInfo">BCP 14</span>，<span
+                        class="seriesInfo">RFC 8174</span>，<span class="seriesInfo">DOI 10.17487/RFC8174</span>，<time
+                        datetime="2017-05" class="refDate">2017 年 5 月</time>，<span>&lt;<a
+                            href="https://www.rfc-editor.org/info/rfc8174">https://www.rfc-editor.org/info/rfc8174</a>&gt;</span>。
+                </dd>
+                <dd class="break"></dd>
+                <dt id="RFC9651">[STRUCTURED-FIELDS]</dt>
+                <dd>
+                    <span class="refAuthor">Nottingham, M.</span> 和 <span class="refAuthor">P. Kamp</span>，<span
+                        class="refTitle">“HTTP 的结构化字段值”</span>，<span class="seriesInfo">RFC
+                        9651</span>，<span class="seriesInfo">DOI 10.17487/RFC9651</span>，<time datetime="2024-09"
+                        class="refDate">2024 年 9 月</time>，<span>&lt;<a
+                            href="https://www.rfc-editor.org/info/rfc9651">https://www.rfc-editor.org/info/rfc9651</a>&gt;</span>。
+                </dd>
+                <dd class="break"></dd>
+                <dt id="RFC3986">[URI]</dt>
+                <dd>
+                    <span class="refAuthor">Berners-Lee, T.</span>、<span class="refAuthor">Fielding, R.</span> 和
+                    <span class="refAuthor">L. Masinter</span>，<span class="refTitle">“统一资源标识符
+                        （URI）：通用语法”</span>，<span class="seriesInfo">STD 66</span>，<span
+                        class="seriesInfo">RFC 3986</span>，<span class="seriesInfo">DOI 10.17487/RFC3986</span>，<time
+                        datetime="2005-01" class="refDate">2005 年 1 月</time>，<span>&lt;<a
+                            href="https://www.rfc-editor.org/info/rfc3986">https://www.rfc-editor.org/info/rfc3986</a>&gt;</span>。
+                </dd>
+                <dd class="break"></dd>
+            </dl>
+        </section>
+        <section id="section-6.2">
+            <h3 id="name-informative-references">
+                <a href="#section-6.2" class="section-number selfRef">6.2. </a><a href="#name-informative-references"
+                    class="section-name selfRef">资料性参考文献</a>
+            </h3>
+            <dl class="references">
+                <dt id="FETCH">[FETCH]</dt>
+                <dd>
+                    <span class="refAuthor">WHATWG</span>，<span class="refTitle">“FETCH”</span>，<span
+                        class="refContent">WHATWG 现行标准</span>，<span>&lt;<a
+                            href="https://fetch.spec.whatwg.org">https://fetch.spec.whatwg.org</a>&gt;</span>。<span
+                        class="annotation">提交快照：<span>&lt;<a
+                                href="https://fetch.spec.whatwg.org/commit-snapshots/3bab31a55154bda73f25b45a23df718616f2f64e/">https://fetch.spec.whatwg.org/commit-snapshots/3bab31a55154bda73f25b45a23df718616f2f64e/</a>&gt;</span>。</span>
+                </dd>
+                <dd class="break"></dd>
+                <dt id="RFC3253">[RFC3253]</dt>
+                <dd>
+                    <span class="refAuthor">Clemm, G.</span>、<span class="refAuthor">Amsden, J.</span>、<span
+                        class="refAuthor">Ellison, T.</span>、<span class="refAuthor">Kaler, C.</span> 和 <span
+                        class="refAuthor">J. Whitehead</span>，<span class="refTitle">“WebDAV
+                        （Web 分布式创作和版本控制）的版本控制扩展”</span>，<span class="seriesInfo">RFC 3253</span>，
+                    <span class="seriesInfo">DOI 10.17487/RFC3253</span>，<time datetime="2002-03" class="refDate">2002 年 3 月</time>，<span>&lt;<a
+                            href="https://www.rfc-editor.org/info/rfc3253">https://www.rfc-editor.org/info/rfc3253</a>&gt;</span>。
+                </dd>
+                <dd class="break"></dd>
+                <dt id="RFC4918">[RFC4918]</dt>
+                <dd>
+                    <span class="refAuthor">Dusseault, L.，编辑</span>，<span class="refTitle">“Web
+                        分布式创作和版本控制（WebDAV）的 HTTP 扩展”</span>，<span class="seriesInfo">RFC 4918</span>，
+                    <span class="seriesInfo">DOI 10.17487/RFC4918</span>，<time datetime="2007-06" class="refDate">2007 年 6 月</time>，<span>&lt;<a
+                            href="https://www.rfc-editor.org/info/rfc4918">https://www.rfc-editor.org/info/rfc4918</a>&gt;</span>。
+                </dd>
+                <dd class="break"></dd>
+                <dt id="RFC5323">[RFC5323]</dt>
+                <dd>
+                    <span class="refAuthor">Reschke, J.，编辑</span>、<span class="refAuthor">Reddy, S.</span>、<span
+                        class="refAuthor">Davis, J.</span> 和 <span class="refAuthor">A. Babich</span>，<span
+                        class="refTitle">“Web 分布式创作和版本控制（WebDAV）SEARCH”</span>，<span
+                        class="seriesInfo">RFC 5323</span>，<span class="seriesInfo">DOI 10.17487/RFC5323</span>，<time
+                        datetime="2008-11" class="refDate">2008 年 11 月</time>，<span>&lt;<a
+                            href="https://www.rfc-editor.org/info/rfc5323">https://www.rfc-editor.org/info/rfc5323</a>&gt;</span>。
+                </dd>
+                <dd class="break"></dd>
+                <dt id="RFC6838">[RFC6838]</dt>
+                <dd>
+                    <span class="refAuthor">Freed, N.</span>、<span class="refAuthor">Klensin, J.</span> 和 <span
+                        class="refAuthor">T. Hansen</span>，<span class="refTitle">“媒体类型规范和
+                        注册程序”</span>，<span class="seriesInfo">BCP 13</span>，<span
+                        class="seriesInfo">RFC 6838</span>，<span class="seriesInfo">DOI 10.17487/RFC6838</span>，<time
+                        datetime="2013-01" class="refDate">2013 年 1 月</time>，<span>&lt;<a
+                            href="https://www.rfc-editor.org/info/rfc6838">https://www.rfc-editor.org/info/rfc6838</a>&gt;</span>。
+                </dd>
+                <dd class="break"></dd>
+                <dt id="RFC8259">[RFC8259]</dt>
+                <dd>
+                    <span class="refAuthor">Bray, T.，编辑</span>，<span class="refTitle">“JavaScript 对象表示法
+                        （JSON）数据交换格式”</span>，<span class="seriesInfo">STD 90</span>，<span
+                        class="seriesInfo">RFC 8259</span>，<span class="seriesInfo">DOI 10.17487/RFC8259</span>，<time
+                        datetime="2017-12" class="refDate">2017 年 12 月</time>，<span>&lt;<a
+                            href="https://www.rfc-editor.org/info/rfc8259">https://www.rfc-editor.org/info/rfc8259</a>&gt;</span>。
+                </dd>
+                <dd class="break"></dd>
+                <dt id="RFC9535">[RFC9535]</dt>
+                <dd>
+                    <span class="refAuthor">Gössner, S.，编辑</span>、<span class="refAuthor">Normington, G.，编辑</span>
+                    和 <span class="refAuthor">C. Bormann，编辑</span>，<span class="refTitle">“JSONPath：JSON
+                        查询表达式”</span>，<span class="seriesInfo">RFC 9535</span>，<span
+                        class="seriesInfo">DOI 10.17487/RFC9535</span>，<time datetime="2024-02"
+                        class="refDate">2024 年 2 月</time>，<span>&lt;<a
+                            href="https://www.rfc-editor.org/info/rfc9535">https://www.rfc-editor.org/info/rfc9535</a>&gt;</span>。
+                </dd>
+                <dd class="break"></dd>
+                <dt id="URL">[URL]</dt>
+                <dd>
+                    <span class="refAuthor">WHATWG</span>，<span class="refTitle">“URL”</span>，<span
+                        class="refContent">WHATWG 现行标准</span>，<span>&lt;<a
+                            href="https://url.spec.whatwg.org">https://url.spec.whatwg.org</a>&gt;</span>。<span
+                        class="annotation">提交快照：<span>&lt;<a
+                                href="https://url.spec.whatwg.org/commit-snapshots/52526653e848c5a56598c84aa4bc8ac9025fb66b/">https://url.spec.whatwg.org/commit-snapshots/52526653e848c5a56598c84aa4bc8ac9025fb66b/</a>&gt;</span>。</span>
+                </dd>
+                <dd class="break"></dd>
+                <dt id="XSLT">[XSLT]</dt>
+                <dd>
+                    <span class="refAuthor">Kay, M.，编辑</span>，<span class="refTitle">“XSL 转换（XSLT）
+                        3.0 版”</span>，<span class="refContent">W3C 推荐标准</span>，<time
+                        datetime="2017-06-08" class="refDate">2017 年 6 月 8 日</time>，<span>&lt;<a
+                            href="https://www.w3.org/TR/2017/REC-xslt-30-20170608/">https://www.w3.org/TR/2017/REC-xslt-30-20170608/</a>&gt;</span>。
+                    <span class="annotation">
+                        最新版本位于
+                        <span><a href="https://www.w3.org/TR/xslt-30/">https://www.w3.org/TR/xslt-30/</a></span>。
+                    </span>
+                </dd>
+                <dd class="break"></dd>
+            </dl>
+        </section>
+    </section>
+    <div id="examples">
+        <section id="appendix-A">
+            <h2 id="name-examples">
+                <a href="#appendix-A" class="section-number selfRef">附录 A. </a><a href="#name-examples"
+                    class="section-name selfRef">示例</a>
+            </h2>
+            <p id="appendix-A-1">
+                下面的示例仅用于说明；如果确实需要
+                发送这么短的查询，那么使用 GET 可能更合适。<a href="#appendix-A-1"
+                    class="pilcrow">¶</a></p>
+            <p id="appendix-A-2">
+                大多数示例中使用的媒体类型是“application/x-www-form-urlencoded”
+                （如浏览器用户客户端的 POST 请求所使用，并在
+                <span>[<a href="#URL" class="cite xref">URL</a>]</span> 中的
+                <a
+                    href="https://url.spec.whatwg.org/#application/x-www-form-urlencoded">“application/x-www-form-urlencoded”</a>
+                中定义）。
+                为简洁起见，省略了 Content-Length 字段。<a href="#appendix-A-2" class="pilcrow">¶</a>
+            </p>
+            <div id="example.simple">
+                <section id="appendix-A.1">
+                    <h3 id="name-simple-query">
+                        <a href="#appendix-A.1" class="section-number selfRef">A.1. </a><a href="#name-simple-query"
+                            class="section-name selfRef">简单查询</a>
+                    </h3>
+                    <p id="appendix-A.1-1">下面是一个带有直接响应的简单查询：<a href="#appendix-A.1-1"
+                            class="pilcrow">¶</a></p>
+                    <div class="lang-http-message sourcecode" id="appendix-A.1-2">
+                        <pre>
+QUERY /contacts HTTP/1.1
+Host: example.org
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+
+select=surname,givenname,email&amp;limit=10&amp;match=%22email=*@example.*%22</pre><a href="#appendix-A.1-2"
+                            class="pilcrow">¶</a>
+                    </div>
+                    <p id="appendix-A.1-3">响应：<a href="#appendix-A.1-3" class="pilcrow">¶</a></p>
+                    <div class="lang-http-message sourcecode" id="appendix-A.1-4">
+                        <pre>
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+[
+  { "surname": "Smith",
+    "givenname": "John",
+    "email": "smith@example.org" },
+  { "surname": "Jones",
+    "givenname": "Sally",
+    "email": "sally.jones@example.com" },
+  { "surname": "Dubois",
+    "givenname": "Camille",
+    "email": "camille.dubois@example.net" }
+]</pre><a href="#appendix-A.1-4" class="pilcrow">¶</a>
+                    </div>
+                </section>
+            </div>
+            <div id="example.discovery.method">
+                <section id="appendix-A.2">
+                    <h3 id="name-discovery-of-query-support">
+                        <a href="#appendix-A.2" class="section-number selfRef">A.2. </a><a
+                            href="#name-discovery-of-query-support" class="section-name selfRef">发现 QUERY
+                            支持</a>
+                    </h3>
+                    <p id="appendix-A.2-1">
+                        OPTIONS
+                        （[<a href="#RFC9110" class="cite xref">HTTP</a>] 的 <span><a href="https://rfc-editor.org/rfc/rfc9110#section-9.3.7" class="relref">第
+                                9.3.7 节</a></span>）方法提供了一种发现 QUERY 支持的简单方式：<a
+                            href="#appendix-A.2-1" class="pilcrow">¶</a></p>
+                    <div class="lang-http-message sourcecode" id="appendix-A.2-2">
+                        <pre>
+OPTIONS /contacts HTTP/1.1
+Host: example.org</pre><a href="#appendix-A.2-2" class="pilcrow">¶</a>
+                    </div>
+                    <p id="appendix-A.2-3">响应：<a href="#appendix-A.2-3" class="pilcrow">¶</a></p>
+                    <div class="lang-http-message sourcecode" id="appendix-A.2-4">
+                        <pre>
+HTTP/1.1 200 OK
+Allow: GET, QUERY, OPTIONS, HEAD</pre><a href="#appendix-A.2-4" class="pilcrow">¶</a>
+                    </div>
+                    <p id="appendix-A.2-5">
+                        Allow 响应字段（[<a href="#RFC9110"
+                                class="cite xref">HTTP</a>] 的 <span><a href="https://rfc-editor.org/rfc/rfc9110#section-10.2.1"
+                                class="relref">第 10.2.1 节</a></span>）表示指定资源上
+                        支持的方法集合。<a href="#appendix-A.2-5" class="pilcrow">¶</a></p>
+                    <p id="appendix-A.2-6">
+                        除使用 OPTIONS 外，还有其他替代方式。例如，可以在
+                        事先不知道服务器是否支持的情况下尝试 QUERY 请求。服务器随后
+                        要么处理该请求，要么可以返回 4xx 状态，例如 405（方法不
+                        允许，
+                        [<a href="#RFC9110" class="cite xref">HTTP</a>] 的 <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.5.6" class="relref">第
+                                15.5.6 节</a></span>），并包含
+                        Allow 响应字段。<a href="#appendix-A.2-6" class="pilcrow">¶</a>
+                    </p>
+                </section>
+            </div>
+            <div id="example.discovery.formats">
+                <section id="appendix-A.3">
+                    <h3 id="name-discovery-of-query-formats">
+                        <a href="#appendix-A.3" class="section-number selfRef">A.3. </a><a
+                            href="#name-discovery-of-query-formats" class="section-name selfRef">发现 QUERY
+                            格式</a>
+                    </h3>
+                    <p id="appendix-A.3-1">
+                        可以通过 Accept-Query
+                        响应字段（<a href="#field.accept-query" class="auto internal xref">第 3 节</a>）发现 QUERY 支持的媒体类型：<a
+                            href="#appendix-A.3-1" class="pilcrow">¶</a></p>
+                    <div class="lang-http-message sourcecode" id="appendix-A.3-2">
+                        <pre>
+HEAD /contacts HTTP/1.1
+Host: example.org</pre><a href="#appendix-A.3-2" class="pilcrow">¶</a>
+                    </div>
+                    <p id="appendix-A.3-3">响应：<a href="#appendix-A.3-3" class="pilcrow">¶</a></p>
+                    <div class="lang-http-message sourcecode" id="appendix-A.3-4">
+                        <pre>
+HTTP/1.1 200 OK
+Content-Type: application/xhtml
+Accept-Query: application/x-www-form-urlencoded, application/sql</pre><a href="#appendix-A.3-4" class="pilcrow">¶</a>
+                    </div>
+                    <p id="appendix-A.3-5">
+                        哪些请求方法的响应会包含 Accept-Query，取决于
+                        正在访问的资源。<a href="#appendix-A.3-5" class="pilcrow">¶</a></p>
+                    <p id="appendix-A.3-6">
+                        检查 Accept-Query 的另一种方式是发出 QUERY 请求，然后
+                        ——如果返回 4xx 状态，例如 415 响应（不支持的媒体类型，[<a href="#RFC9110" class="cite xref">HTTP</a>] 的 <span><a
+                                href="https://rfc-editor.org/rfc/rfc9110#section-15.5.16" class="relref">第
+                                15.5.16 节</a></span>）——
+                        检查 Accept 响应字段（[<a href="#RFC9110" class="cite xref">HTTP</a>] 的 <span><a
+                                href="https://rfc-editor.org/rfc/rfc9110#section-12.5.1" class="relref">第
+                                12.5.1 节</a></span>）：<a
+                            href="#appendix-A.3-6" class="pilcrow">¶</a></p>
+                    <div class="lang-http-message sourcecode" id="appendix-A.3-7">
+                        <pre>
+HTTP/1.1 415 Unsupported Media Type
+Content-Type: application/xhtml
+Accept: application/x-www-form-urlencoded, application/sql</pre><a href="#appendix-A.3-7" class="pilcrow">¶</a>
+                    </div>
+                </section>
+            </div>
+            <div id="example.content-location.location.indirect">
+                <section id="appendix-A.4">
+                    <h3 id="name-content-location-location-a">
+                        <a href="#appendix-A.4" class="section-number selfRef">A.4. </a><a
+                            href="#name-content-location-location-a" class="section-name selfRef">Content-Location、
+                            Location 和间接响应</a>
+                    </h3>
+                    <p id="appendix-A.4-1">
+                        如第 <a href="#content-location" class="auto internal xref">2.3</a> 节和第
+                        <a href="#location" class="auto internal xref">2.4</a> 节所述，成功响应中的 Content-Location 和 Location
+                        响应字段
+                        （2xx，[<a href="#RFC9110" class="cite xref">HTTP</a>] 的 <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.3" class="relref">第
+                                15.3 节</a></span>）提供了一种
+                        标识替代资源的方式，
+                        这些资源会响应 GET 请求，既可以用于获取已收到的请求结果，也可以用于未来
+                        执行相同操作的请求。回到<a href="#example.simple"
+                            class="auto internal xref">附录 A.1</a>中的示例：<a href="#appendix-A.4-1" class="pilcrow">¶</a>
+                    </p>
+                    <div class="lang-http-message sourcecode" id="appendix-A.4-2">
+                        <pre>
+QUERY /contacts HTTP/1.1
+Host: example.org
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+
+select=surname,givenname,email&amp;limit=10&amp;match=%22email=*@example.*%22</pre><a href="#appendix-A.4-2"
+                            class="pilcrow">¶</a>
+                    </div>
+                    <p id="appendix-A.4-3">响应：<a href="#appendix-A.4-3" class="pilcrow">¶</a></p>
+                    <div class="lang-http-message sourcecode" id="appendix-A.4-4">
+                        <pre>
+HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Location: /contacts/stored-results/17
+Location: /contacts/stored-queries/42
+Last-Modified: Sat, 25 Aug 2012 23:34:45 GMT
+Date: Sun, 17 Nov 2024, 16:10:24 GMT
+
+[
+  { "surname": "Smith",
+    "givenname": "John",
+    "email": "smith@example.org" },
+  { "surname": "Jones",
+    "givenname": "Sally",
+    "email": "sally.jones@example.com" },
+  { "surname": "Dubois",
+    "givenname": "Camille",
+    "email": "camille.dubois@example.net" }
+]</pre><a href="#appendix-A.4-4" class="pilcrow">¶</a>
+                    </div>
+                    <div id="example.content-location">
+                        <section id="appendix-A.4.1">
+                            <h4 id="name-using-content-location">
+                                <a href="#appendix-A.4.1" class="section-number selfRef">A.4.1. </a><a
+                                    href="#name-using-content-location" class="section-name selfRef">使用
+                                    Content-Location</a>
+                            </h4>
+                            <p id="appendix-A.4.1-1">
+                                上面收到的 Content-Location 响应字段标识了一个保存
+                                其所在 QUERY 响应结果的资源：<a href="#appendix-A.4.1-1"
+                                    class="pilcrow">¶</a></p>
+                            <div class="lang-http-message sourcecode" id="appendix-A.4.1-2">
+                                <pre>
+GET /contacts/stored-results/17 HTTP/1.1
+Host: example.org
+Accept: application/json</pre><a href="#appendix-A.4.1-2" class="pilcrow">¶</a>
+                            </div>
+                            <p id="appendix-A.4.1-3">响应：<a href="#appendix-A.4.1-3" class="pilcrow">¶</a></p>
+                            <div class="lang-http-message sourcecode" id="appendix-A.4.1-4">
+                                <pre>
+HTTP/1.1 200 OK
+Last-Modified: Sat, 25 Aug 2012 23:34:45 GMT
+Date: Sun, 17 Nov 2024, 16:10:25 GMT
+
+[
+  { "surname": "Smith",
+    "givenname": "John",
+    "email": "smith@example.org" },
+  { "surname": "Jones",
+    "givenname": "Sally",
+    "email": "sally.jones@example.com" },
+  { "surname": "Dubois",
+    "givenname": "Camille",
+    "email": "camille.dubois@example.net" }
+]</pre><a href="#appendix-A.4.1-4" class="pilcrow">¶</a>
+                            </div>
+                            <p id="appendix-A.4.1-5">
+                                请注意，无法保证服务器会无限期地实现此资源，
+                                因此，在收到错误响应后，客户端需要重新发出
+                                原始 QUERY 请求，以获得新的替代位置。<a
+                                    href="#appendix-A.4.1-5" class="pilcrow">¶</a></p>
+                        </section>
+                    </div>
+                    <div id="example.location">
+                        <section id="appendix-A.4.2">
+                            <h4 id="name-using-location">
+                                <a href="#appendix-A.4.2" class="section-number selfRef">A.4.2. </a><a
+                                    href="#name-using-location" class="section-name selfRef">使用 Location</a>
+                            </h4>
+                            <p id="appendix-A.4.2-1">
+                                Location 响应字段标识一个资源，该资源会响应 GET，
+                                返回与原始
+                                QUERY 请求相同过程和参数的当前结果。<a href="#appendix-A.4.2-1" class="pilcrow">¶</a></p>
+                            <div class="lang-http-message sourcecode" id="appendix-A.4.2-2">
+                                <pre>
+GET /contacts/stored-queries/42 HTTP/1.1
+Host: example.org
+Accept: application/json</pre><a href="#appendix-A.4.2-2" class="pilcrow">¶</a>
+                            </div>
+                            <p id="appendix-A.4.2-3">
+                                在此示例中，一条记录于 2024-11-17T16:12:01Z 被移除（如
+                                Last-Modified 字段所示），因此响应只包含两条记录：<a
+                                    href="#appendix-A.4.2-3" class="pilcrow">¶</a></p>
+                            <div class="lang-http-message sourcecode" id="appendix-A.4.2-4">
+                                <pre>
+HTTP/1.1 200 OK
+Content-Type: application/json
+Last-Modified: Sun, 17 November 2024, 16:12:01 GMT
+ETag: "42-1"
+Date: Sun, 17 Nov 2024, 16:13:17 GMT
+
+[
+  { "surname": "Smith",
+    "givenname": "John",
+    "email": "smith@example.org" },
+  { "surname": "Dubois",
+    "givenname": "Camille",
+    "email": "camille.dubois@example.net" }
+]</pre><a href="#appendix-A.4.2-4" class="pilcrow">¶</a>
+                            </div>
+                            <p id="appendix-A.4.2-5">
+                                假设服务器仍然公开该资源，并且查询结果没有变化，
+                                则随后带有以下内容的条件 GET 请求：<a
+                                    href="#appendix-A.4.2-5" class="pilcrow">¶</a></p>
+                            <div class="lang-http-message sourcecode" id="appendix-A.4.2-6">
+                                <pre>
+If-None-Match: "42-1"</pre><a href="#appendix-A.4.2-6" class="pilcrow">¶</a>
+                            </div>
+                            <p id="appendix-A.4.2-7">
+                                将产生 304（未修改）响应（[<a href="#RFC9110" class="cite xref">HTTP</a>] 的 <span><a
+                                        href="https://rfc-editor.org/rfc/rfc9110#section-15.4.5" class="relref">第
+                                        15.4.5 节</a></span>）。<a
+                                    href="#appendix-A.4.2-7" class="pilcrow">¶</a></p>
+                        </section>
+                    </div>
+                    <div id="example.indirect">
+                        <section id="appendix-A.4.3">
+                            <h4 id="name-indirect-responses">
+                                <a href="#appendix-A.4.3" class="section-number selfRef">A.4.3. </a><a
+                                    href="#name-indirect-responses" class="section-name selfRef">间接响应</a>
+                            </h4>
+                            <p id="appendix-A.4.3-1">
+                                服务器可以使用状态代码 303（参见其他，
+                                [<a href="#RFC9110" class="cite xref">HTTP</a>] 的 <span><a
+                                        href="https://rfc-editor.org/rfc/rfc9110#section-15.4.4" class="relref">第
+                                        15.4.4 节</a></span>）发送“间接”响应（<a href="#redirection"
+                                    class="auto internal xref">第 2.5 节</a>）。<a
+                                    href="#appendix-A.4.3-1" class="pilcrow">¶</a>
+                            </p>
+                            <p id="appendix-A.4.3-2">
+                                对于<a
+                                    href="#example.content-location.location.indirect"
+                                    class="auto internal xref">附录 A.4</a>开头的请求，
+                                服务器可以响应：<a href="#appendix-A.4.3-2" class="pilcrow">¶</a></p>
+                            <div class="lang-http-message sourcecode" id="appendix-A.4.3-3">
+                                <pre>
+HTTP/1.1 303 See Other
+Content-Type: text/plain
+Date: Sun, 17 Nov 2024, 16:13:17 GMT
+Location: /contacts/stored-queries/42
+
+在“/contacts/stored-queries/42”查看已存储的查询。</pre><a href="#appendix-A.4.3-3" class="pilcrow">¶</a>
+                            </div>
+                            <p id="appendix-A.4.3-4">
+                                这类似于在直接响应中包含 Location，只是不会返回
+                                查询结果。这允许服务器仅生成或复用一个
+                                替代
+                                资源。然后可以像
+                                <a href="#example.location" class="auto internal xref">附录 A.4.2</a>中所示那样使用该资源。<a
+                                    href="#appendix-A.4.3-4" class="pilcrow">¶</a>
+                            </p>
+                        </section>
+                    </div>
+                </section>
+            </div>
+            <div id="example.conditional">
+                <section id="appendix-A.5">
+                    <h3 id="name-conditional-requests-2">
+                        <a href="#appendix-A.5" class="section-number selfRef">A.5. </a><a
+                            href="#name-conditional-requests-2" class="section-name selfRef">条件请求</a>
+                    </h3>
+                    <p id="appendix-A.5-1">
+                        考虑一个实现 QUERY 的资源，它支持“application/sql”和
+                        “application/xslt+xml” <span>[<a href="#XSLT" class="cite xref">XSLT</a>]</span> 作为请求
+                        媒体类型，并且
+                        可以生成“text/csv”响应。被查询的数据集包含 RFC 文档
+                        信息，并且查询返回按十年分组的信息：<a href="#appendix-A.5-1"
+                            class="pilcrow">¶</a></p>
+                    <div class="lang-http-message sourcecode" id="appendix-A.5-2">
+                        <pre>
+QUERY /rfc-index.xml HTTP/1.1
+Host: example.org
+Date: Sun, 7 Sep 2025, 00:00:00 GMT
+Content-Type: application/xslt+xml
+Accept: text/csv
+
+...Query content using XSLT...</pre><a href="#appendix-A.5-2" class="pilcrow">¶</a>
+                    </div>
+                    <p id="appendix-A.5-3">
+                        响应：<a href="#appendix-A.5-3" class="pilcrow">¶</a></p>
+                    <div class="lang-http-message sourcecode" id="appendix-A.5-4">
+                        <pre>
+HTTP/1.1 200 OK
+Date: Sun, 7 Sep 2025, 00:00:00 GMT
+Location: /stored-queries/4815162342
+Content-Type: text/csv
+Accept-Query: "application/sql", "application/xslt+xml"
+Last-Modified: Sun, 31 Aug 2025, 08:44:00 GMT
+Vary: Accept-Query, Content-Encoding, Content-Type
+
+decade, total, with errata, % with errata, average page count
+1960, 26, 5, 19.2, 5.3
+1970, 666, 18, 2.7, 6.1
+1980, 376, 44, 11.7, 23.4
+1990, 1593, 269, 16.9, 25.5
+2000, 2888, 1048, 36.3, 27.3
+2010, 2954, 895, 30.3, 26.1
+2020, 1133, 230, 20.3, 26.2</pre><a href="#appendix-A.5-4" class="pilcrow">¶</a>
+                    </div>
+                    <p id="appendix-A.5-5">
+                        此处，服务器已将路径“/stored-queries/4815162342”分配给等效
+                        资源（<a href="#location" class="auto internal xref">第 2.4 节</a>），以便随后
+                        与 GET 一起使用。<a href="#appendix-A.5-5" class="pilcrow">¶</a></p>
+                    <p id="appendix-A.5-6">
+                        稍后，客户端重复该查询，但指定只有当结果
+                        发生变化时才返回：<a href="#appendix-A.5-6" class="pilcrow">¶</a></p>
+                    <div class="lang-http-message sourcecode" id="appendix-A.5-7">
+                        <pre>
+QUERY /rfc-index.xml HTTP/1.1
+Host: example.org
+Date: Mon, 8, Sep 2025, 11:00:00 GMT
+Content-Type: application/sql
+Accept: text/csv
+If-Modified-Since: Sun, 31 Aug 2025, 08:44:00 GMT
+Vary: Accept-Query, Content-Type
+
+...Same query, but using SQL...</pre><a href="#appendix-A.5-7" class="pilcrow">¶</a>
+                    </div>
+                    <p id="appendix-A.5-8">
+                        被查询的数据没有变化，因此服务器响应：<a
+                            href="#appendix-A.5-8" class="pilcrow">¶</a></p>
+                    <div class="lang-http-message sourcecode" id="appendix-A.5-9">
+                        <pre>
+HTTP/1.1 304 Not Modified
+Date: Mon, 8 Sep 2025, 11:00:00 GMT
+Content-Type: text/csv
+Location: /stored-queries/4815162342
+Accept-Query: "application/sql", "application/xslt+xml"
+Last-Modified: Sun, 31 Aug 2025, 08:44:00 GMT
+Vary: Accept-Query, Content-Type</pre><a href="#appendix-A.5-9" class="pilcrow">¶</a>
+                    </div>
+                    <p id="appendix-A.5-10">
+                        由于服务器为等效资源标识了 URI，因此可以
+                        使用 GET 访问该资源。特别是，这避免了重新发送查询请求的
+                        内容：<a href="#appendix-A.5-10" class="pilcrow">¶</a></p>
+                    <div class="lang-http-message sourcecode" id="appendix-A.5-11">
+                        <pre>
+GET /stored-queries/4815162342 HTTP/1.1
+Host: example.org
+Date: Sun, 21, Sep 2025, 12:08:00 GMT
+Accept: text/csv
+If-Modified-Since: Sun, 31 Aug 2025, 00:00:00 GMT</pre><a href="#appendix-A.5-11" class="pilcrow">¶</a>
+                    </div>
+                    <p id="appendix-A.5-12">
+                        此处，数据集的状态确实发生了变化，因此返回新内容：<a
+                            href="#appendix-A.5-12" class="pilcrow">¶</a></p>
+                    <div class="lang-http-message sourcecode" id="appendix-A.5-13">
+                        <pre>
+HTTP/1.1 200 OK
+Date: Sun, 21, Sep 2025, 12:08:00 GMT
+Content-Type: text/csv
+Last-Modified: Thu, 18 Sep 2025, 19:56:00 GMT
+Vary: Accept-Query, Content-Encoding, Content-Type
+
+decade, total, with errata, % with errata, average page count
+1960, 26, 5, 19.2, 5.3
+1970, 666, 18, 2.7, 6.1
+1980, 376, 44, 11.7, 23.4
+1990, 1593, 269, 16.9, 25.5
+2000, 2888, 1048, 36.3, 27.3
+2010, 2954, 895, 30.3, 26.1
+2020, 1133, 230, 20.3, 26.2</pre><a href="#appendix-A.5-13" class="pilcrow">¶</a>
+                    </div>
+                    <p id="appendix-A.5-14">
+                        （请注意本十年对应行中的变化。）<a href="#appendix-A.5-14" class="pilcrow">¶</a>
+                    </p>
+                    <p id="appendix-A.5-15">
+                        下面的图示说明了条件请求的使用方式，以及当为等效资源分配 URI 时
+                        （以及客户端利用该 URI 时）它们可能有何不同。
+                        虚构的字段名称“Validator”仅用于演示。<a
+                            href="#appendix-A.5-15" class="pilcrow">¶</a></p>
+                    <span id="name-data-flow-with-query-only"></span>
+                    <figure id="figure-1">
+                        <div id="appendix-A.5-16.1">
+                            <div class="alignLeft art-svg artwork" id="appendix-A.5-16.1.2">
+                                <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="496" width="416"
+                                    viewBox="0 0 416 496" class="diagram" text-anchor="middle" font-family="monospace"
+                                    font-size="13px" stroke-linecap="round">
+                                    <path d="M 8,48 L 8,480" fill="none" stroke="black"></path>
+                                    <path d="M 288,304 L 288,336" fill="none" stroke="black"></path>
+                                    <path d="M 344,48 L 344,296" fill="none" stroke="black"></path>
+                                    <path d="M 344,344 L 344,480" fill="none" stroke="black"></path>
+                                    <path d="M 408,304 L 408,336" fill="none" stroke="black"></path>
+                                    <path d="M 8,80 L 336,80" fill="none" stroke="black"></path>
+                                    <path d="M 16,144 L 344,144" fill="none" stroke="black"></path>
+                                    <path d="M 8,208 L 336,208" fill="none" stroke="black"></path>
+                                    <path d="M 16,272 L 344,272" fill="none" stroke="black"></path>
+                                    <path d="M 288,304 L 408,304" fill="none" stroke="black"></path>
+                                    <path d="M 288,336 L 408,336" fill="none" stroke="black"></path>
+                                    <path d="M 8,400 L 336,400" fill="none" stroke="black"></path>
+                                    <path d="M 16,464 L 344,464" fill="none" stroke="black"></path>
+                                    <polygon class="arrowhead" points="344,400 332,394.4 332,405.6" fill="black"
+                                        transform="rotate(0,336,400)"></polygon>
+                                    <polygon class="arrowhead" points="344,208 332,202.4 332,213.6" fill="black"
+                                        transform="rotate(0,336,208)"></polygon>
+                                    <polygon class="arrowhead" points="344,80 332,74.4 332,85.6" fill="black"
+                                        transform="rotate(0,336,80)"></polygon>
+                                    <polygon class="arrowhead" points="24,464 12,458.4 12,469.6" fill="black"
+                                        transform="rotate(180,16,464)"></polygon>
+                                    <polygon class="arrowhead" points="24,272 12,266.4 12,277.6" fill="black"
+                                        transform="rotate(180,16,272)"></polygon>
+                                    <polygon class="arrowhead" points="24,144 12,138.4 12,149.6" fill="black"
+                                        transform="rotate(180,16,144)"></polygon>
+                                    <g class="text">
+                                        <text x="28" y="36">客户端</text>
+                                        <text x="316" y="36">资源</text>
+                                        <text x="92" y="68">带内容的 QUERY</text>
+                                        <text x="308" y="116">200 OK</text>
+                                        <text x="276" y="132">Validator: foo</text>
+                                        <text x="92" y="180">带内容的 QUERY</text>
+                                        <text x="108" y="196">（以“foo”为条件）</text>
+                                        <text x="268" y="244">304 未修改</text>
+                                        <text x="276" y="260">Validator: foo</text>
+                                        <text x="348" y="324">状态变化</text>
+                                        <text x="92" y="372">带内容的 QUERY</text>
+                                        <text x="108" y="388">（以“foo”为条件）</text>
+                                        <text x="308" y="436">200 OK</text>
+                                        <text x="276" y="452">Validator: bar</text>
+                                    </g>
+                                </svg><a href="#appendix-A.5-16.1.2" class="pilcrow">¶</a>
+                            </div>
+                        </div>
+                        <figcaption><a href="#figure-1" class="selfRef">图 1</a>：
+                            <a href="#name-data-flow-with-query-only" class="selfRef">仅使用 QUERY 时的数据流</a>
+                        </figcaption>
+                    </figure>
+                    <span id="name-data-flow-with-get-to-equiv"></span>
+                    <figure id="figure-2">
+                        <div id="appendix-A.5-17.1">
+                            <div class="alignLeft art-svg artwork" id="appendix-A.5-17.1.2">
+                                <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="512" width="560"
+                                    viewBox="0 0 560 512" class="diagram" text-anchor="middle" font-family="monospace"
+                                    font-size="13px" stroke-linecap="round">
+                                    <path d="M 8,48 L 8,496" fill="none" stroke="black"></path>
+                                    <path d="M 264,48 L 264,192" fill="none" stroke="black"></path>
+                                    <path d="M 432,336 L 432,368" fill="none" stroke="black"></path>
+                                    <path d="M 488,88 L 488,328" fill="none" stroke="black"></path>
+                                    <path d="M 488,376 L 488,496" fill="none" stroke="black"></path>
+                                    <path d="M 552,336 L 552,368" fill="none" stroke="black"></path>
+                                    <path d="M 8,80 L 256,80" fill="none" stroke="black"></path>
+                                    <path d="M 264,96 L 480,96" fill="none" stroke="black"></path>
+                                    <path d="M 16,176 L 264,176" fill="none" stroke="black"></path>
+                                    <path d="M 8,240 L 480,240" fill="none" stroke="black"></path>
+                                    <path d="M 16,304 L 488,304" fill="none" stroke="black"></path>
+                                    <path d="M 432,336 L 552,336" fill="none" stroke="black"></path>
+                                    <path d="M 432,368 L 552,368" fill="none" stroke="black"></path>
+                                    <path d="M 8,416 L 480,416" fill="none" stroke="black"></path>
+                                    <path d="M 16,480 L 488,480" fill="none" stroke="black"></path>
+                                    <polygon class="arrowhead" points="488,416 476,410.4 476,421.6" fill="black"
+                                        transform="rotate(0,480,416)"></polygon>
+                                    <polygon class="arrowhead" points="488,240 476,234.4 476,245.6" fill="black"
+                                        transform="rotate(0,480,240)"></polygon>
+                                    <polygon class="arrowhead" points="264,80 252,74.4 252,85.6" fill="black"
+                                        transform="rotate(0,256,80)"></polygon>
+                                    <polygon class="arrowhead" points="24,480 12,474.4 12,485.6" fill="black"
+                                        transform="rotate(180,16,480)"></polygon>
+                                    <polygon class="arrowhead" points="24,304 12,298.4 12,309.6" fill="black"
+                                        transform="rotate(180,16,304)"></polygon>
+                                    <polygon class="arrowhead" points="24,176 12,170.4 12,181.6" fill="black"
+                                        transform="rotate(180,16,176)"></polygon>
+                                    <circle cx="488" cy="96" r="6" class="opendot" fill="white" stroke="black"></circle>
+                                    <g class="text">
+                                        <text x="28" y="36">客户端</text>
+                                        <text x="236" y="36">资源</text>
+                                        <text x="92" y="68">带内容的 QUERY</text>
+                                        <text x="416" y="68">等效资源</text>
+                                        <text x="428" y="84">（生成 /xyz）</text>
+                                        <text x="228" y="132">200 OK</text>
+                                        <text x="196" y="148">Validator: foo</text>
+                                        <text x="196" y="164">Location: /xyz</text>
+                                        <text x="32" y="212">GET</text>
+                                        <text x="108" y="228">（以“foo”为条件）</text>
+                                        <text x="412" y="276">304 未修改</text>
+                                        <text x="420" y="292">Validator: foo</text>
+                                        <text x="492" y="356">状态变化</text>
+                                        <text x="32" y="388">GET</text>
+                                        <text x="108" y="404">（以“foo”为条件）</text>
+                                        <text x="452" y="452">200 OK</text>
+                                        <text x="420" y="468">Validator: bar</text>
+                                    </g>
+                                </svg><a href="#appendix-A.5-17.1.2" class="pilcrow">¶</a>
+                            </div>
+                        </div>
+                        <figcaption><a href="#figure-2" class="selfRef">图 2</a>：
+                            <a href="#name-data-flow-with-get-to-equiv" class="selfRef">使用 GET 访问等效
+                                资源时的数据流</a>
+                        </figcaption>
+                    </figure>
+                </section>
+            </div>
+            <div id="example.more.query.formats">
+                <section id="appendix-A.6">
+                    <h3 id="name-more-query-formats">
+                        <a href="#appendix-A.6" class="section-number selfRef">A.6. </a><a
+                            href="#name-more-query-formats" class="section-name selfRef">更多查询格式</a>
+                    </h3>
+                    <p id="appendix-A.6-1">
+                        以下示例展示了对一个采用 JSON 结构的 <span>[<a href="#RFC8259"
+                                class="cite xref">RFC8259</a>]</span> RFC 勘误
+                        数据库发出的请求。<a href="#appendix-A.6-1" class="pilcrow">¶</a></p>
+                    <p id="appendix-A.6-2">
+                        下面的请求使用可扩展样式表语言转换（XSLT）来提取
+                        按年份和
+                        已定义勘误类型汇总的勘误信息。<a href="#appendix-A.6-2" class="pilcrow">¶</a></p>
+                    <div class="lang-http-message sourcecode" id="appendix-A.6-3">
+                        <pre>
+QUERY /errata.json HTTP/1.1
+Host: example.org
+Content-Type: application/xslt+xml
+Accept: application/xml, text/csv
+
+&lt;transform xmlns="http://www.w3.org/1999/XSL/Transform"
+  xmlns:j="http://www.w3.org/2005/xpath-functions"
+  version="3.0"&gt;
+
+  &lt;output method="text"/&gt;
+
+  &lt;param name="input"/&gt;
+
+  &lt;variable name="json"
+    select="json-to-xml(unparsed-text($input))"/&gt;
+
+  &lt;variable name="sc"&gt;errata_status_code&lt;/variable&gt;
+  &lt;variable name="sd"&gt;submit_date&lt;/variable&gt;
+
+  &lt;template match="/"&gt;
+    &lt;text&gt;year, total, rejected, verified, hdu, reported&lt;/text&gt;
+    &lt;text&gt;&amp;#10;&lt;/text&gt;
+    &lt;variable name="en" select="$json//j:map"/&gt;
+    &lt;for-each-group select="$en"
+      group-by="substring-before(j:string[@key=$sd],'-')"&gt;
+      &lt;sort select="current-grouping-key()"/&gt;
+      &lt;variable name="year" select="current-grouping-key()"/&gt;
+      &lt;variable name="errata" select=
+        "$en[$year=substring-before(j:string[@key=$sd],'-')]"/&gt;
+      &lt;value-of select="concat(
+        $year,
+        ', ',
+        count($errata),
+        ', ',
+        count($errata['Rejected'=j:string[@key=$sc]]),
+        ', ',
+        count($errata['Verified'=j:string[@key=$sc]]),
+        ', ',
+        count(
+          $errata['Held for Document Update'=j:string[@key=$sc]]),
+        ', ',
+        count($errata['Reported'=j:string[@key=$sc]]),
+        '&amp;#10;')"/&gt;
+    &lt;/for-each-group&gt;
+  &lt;/template&gt;
+
+&lt;/transform&gt;</pre><a href="#appendix-A.6-3" class="pilcrow">¶</a>
+                    </div>
+                    <p id="appendix-A.6-4">
+                        响应：<a href="#appendix-A.6-4" class="pilcrow">¶</a></p>
+                    <div class="lang-http-message sourcecode" id="appendix-A.6-5">
+                        <pre>
+HTTP/1.1 200 OK
+Content-Type: text/csv
+Accept-Query: "application/jsonpath", "application/xslt+xml"
+Date: Wed, 19 Feb 2025, 17:10:01 GMT
+
+year, total, rejected, verified, hdu, reported
+2000, 14, 0, 14, 0, 0
+2001, 72, 1, 70, 1, 0
+2002, 124, 8, 104, 12, 0
+2003, 63, 0, 61, 2, 0
+2004, 89, 1, 83, 5, 0
+2005, 156, 10, 96, 50, 0
+2006, 444, 54, 176, 214, 0
+2007, 429, 48, 188, 193, 0
+2008, 423, 52, 165, 206, 0
+2009, 331, 39, 148, 144, 0
+2010, 538, 80, 232, 222, 4
+2011, 367, 47, 170, 150, 0
+2012, 348, 54, 149, 145, 0
+2013, 341, 61, 169, 106, 5
+2014, 342, 73, 180, 72, 17
+2015, 343, 79, 145, 89, 30
+2016, 295, 46, 122, 82, 45
+2017, 303, 46, 120, 84, 53
+2018, 350, 61, 118, 98, 73
+2019, 335, 47, 131, 94, 63
+2020, 387, 68, 117, 123, 79
+2021, 321, 44, 148, 63, 66
+2022, 358, 37, 198, 40, 83
+2023, 262, 38, 121, 33, 70
+2024, 322, 33, 125, 23, 141
+9999, 1, 0, 0, 1, 0</pre><a href="#appendix-A.6-5" class="pilcrow">¶</a>
+                    </div>
+                    <p id="appendix-A.6-6">
+                        请注意，Accept-Query 响应字段表明还支持另一种查询格式 JSONPath
+                        <span>[<a href="#RFC9535" class="cite xref">RFC9535</a>]</span>。下面的
+                        请求将报告自 2024 年以来提交的所有被拒绝勘误的
+                        标识符：<a href="#appendix-A.6-6"
+                            class="pilcrow">¶</a>
+                    </p>
+                    <div class="lang-http-message sourcecode" id="appendix-A.6-7">
+                        <pre>
+QUERY /errata.json HTTP/1.1
+Host: example.org
+Content-Type: application/jsonpath
+Accept: application/json
+
+$..[
+     ?@.errata_status_code=="Rejected"
+     &amp;&amp; @.submit_date&gt;"2024"
+   ]
+   ["doc-id"]</pre><a href="#appendix-A.6-7" class="pilcrow">¶</a>
+                    </div>
+                    <p id="appendix-A.6-8">
+                        响应：<a href="#appendix-A.6-8" class="pilcrow">¶</a></p>
+                    <div class="lang-http-message sourcecode" id="appendix-A.6-9">
+                        <pre>
+HTTP/1.1 200 OK
+Content-Type: application/json
+Accept-Query: "application/jsonpath", "application/xslt+xml"
+Date: Thu, 20 Feb 2025, 09:55:42 GMT
+Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
+
+[
+  "RFC1185","RFC8407","RFC6350","RFC8467","RFC1157","RFC9543",
+  "RFC9076","RFC7656","RFC2822","RFC9460","RFC2104","RFC6797",
+  "RFC9499","RFC9557","RFC2131","RFC2328","RFC9001","RFC3325",
+  "RFC9438","RFC2526","RFC2985","RFC7643","RFC9132","RFC6376",
+  "RFC9110","RFC9460","RFC7748","RFC9497","RFC8463","RFC4035",
+  "RFC7239","RFC9083","RFC9537","RFC9537","RFC9420","RFC9000",
+  "RFC9656","RFC9110","RFC2324","RFC2549","RFC6797","RFC2549",
+  "RFC8894"
+]</pre><a href="#appendix-A.6-9" class="pilcrow">¶</a>
+                    </div>
+                </section>
+            </div>
+        </section>
+    </div>
+    <div id="selection.method.name">
+        <section id="appendix-B">
+            <h2 id="name-selection-of-the-method-nam">
+                <a href="#appendix-B" class="section-number selfRef">附录 B. </a><a
+                    href="#name-selection-of-the-method-nam" class="section-name selfRef">方法名称
+                    “QUERY”的选择</a>
+            </h2>
+            <p id="appendix-B-1">
+                “超文本传输协议（HTTP）方法注册表”（<span>&lt;<a
+                        href="http://www.iana.org/assignments/http-methods">http://www.iana.org/assignments/http-methods</a>&gt;</span>）
+                已经包含另外三个具有“安全”和“幂等”属性的方法：
+                “PROPFIND” <span>[<a href="#RFC4918" class="cite xref">RFC4918</a>]</span>、“REPORT” <span>[<a
+                        href="#RFC3253" class="cite xref">RFC3253</a>]</span> 和
+                “SEARCH” <span>[<a href="#RFC5323" class="cite xref">RFC5323</a>]</span>。<a href="#appendix-B-1"
+                    class="pilcrow">¶</a></p>
+            <p id="appendix-B-2">
+                本来可以复用其中任何一个方法，并对其进行更新，使其匹配
+                本规范定义的新方法“QUERY”。实际上，本规范的早期阶段
+                使用的是“SEARCH”。<a href="#appendix-B-2" class="pilcrow">¶</a></p>
+            <p id="appendix-B-3">
+                最终选择方法名称“QUERY”的原因是：<a href="#appendix-B-3" class="pilcrow">¶</a></p>
+            <ul class="normal">
+                <li class="normal" id="appendix-B-4.1">这些替代方法对请求内容使用通用媒体类型
+                    （“application/xml”）；请求的
+                    语义完全取决于请求内容。<a href="#appendix-B-4.1"
+                        class="pilcrow">¶</a>
+                </li>
+                <li class="normal" id="appendix-B-4.2">此外，它们都源自 WebDAV 活动，而
+                    许多人对此褒贬不一。<a href="#appendix-B-4.2" class="pilcrow">¶</a>
+                </li>
+                <li class="normal" id="appendix-B-4.3">“QUERY”很好地体现了它与 URI 查询组件之间的关系。<a href="#appendix-B-4.3" class="pilcrow">¶</a>
+                </li>
+            </ul>
+        </section>
+    </div>
+    <div id="acknowledgements">
+        <section id="appendix-C">
+            <h2 id="name-acknowledgements">
+                <a href="#name-acknowledgements" class="section-name selfRef">致谢</a>
+            </h2>
+            <p id="appendix-C-1">
+                感谢 HTTP 工作组的所有成员提供想法、评审和反馈。<a
+                    href="#appendix-C-1" class="pilcrow">¶</a></p>
+            <p id="appendix-C-2">
+                以下人员值得特别致谢：
+                <span class="contact-name">Carsten Bormann</span>、
+                <span class="contact-name">Mark Nottingham</span>、
+                <span class="contact-name">Martin Thomson</span>、
+                <span class="contact-name">Michael Thornburgh</span>、
+                <span class="contact-name">Roberto Polli</span>、
+                <span class="contact-name">Roy Fielding</span> 和
+                <span class="contact-name">Will Hawkins</span>。<a href="#appendix-C-2" class="pilcrow">¶</a>
+            </p>
+        </section>
+    </div>
+    <div id="contributors">
+        <section id="appendix-D">
+            <h2 id="name-contributors">
+                <a href="#name-contributors" class="section-name selfRef">贡献者</a>
+            </h2>
+            <p id="appendix-D-1">
+                <span class="contact-name">Ashok Malhotra</span> 参与了促成本
+                规范形成的早期讨论：<a href="#appendix-D-1" class="pilcrow">¶</a>
+            </p>
+            <address class="vcard">
+                <div dir="auto" class="left"><span class="fn nameRole">Ashok Malhotra</span></div>
+                <div class="email">
+                    <span>电子邮件：</span>
+                    <a href="mailto:malhotrasahib@gmail.com" class="email">malhotrasahib@gmail.com</a>
+                </div>
+            </address>
+            <p id="appendix-D-2">
+                <span class="contact-name">Asbjørn Ulsberg</span> 在
+                2019 年 HTTP 研讨会上重新开启了关于该 HTTP 方法的讨论：<a href="#appendix-D-2" class="pilcrow">¶</a></p>
+            <address class="vcard">
+                <div dir="auto" class="left"><span class="fn nameRole">Asbjørn Ulsberg</span></div>
+                <div class="email">
+                    <span>电子邮件：</span>
+                    <a href="mailto:asbjorn@ulsberg.no" class="email">asbjorn@ulsberg.no</a>
+                </div>
+                <div class="url">
+                    <span>URI：</span>
+                    <a href="https://asbjor.nu/" class="url">https://asbjor.nu/</a>
+                </div>
+            </address>
+        </section>
+    </div>
+    <div id="authors-addresses">
+        <section id="appendix-E">
+            <h2 id="name-authors-addresses">
+                <a href="#name-authors-addresses" class="section-name selfRef">作者地址</a>
+            </h2>
+            <address class="vcard">
+                <div dir="auto" class="left"><span class="fn nameRole">Julian Reschke</span></div>
+                <div dir="auto" class="left"><span class="org">greenbytes GmbH</span></div>
+                <div dir="auto" class="left"><span class="street-address">Hafenweg 16</span></div>
+                <div dir="auto" class="left">
+                    <span class="postal-code">48155</span> <span class="locality">Münster</span>
+                </div>
+                <div dir="auto" class="left"><span class="country-name">德国</span></div>
+                <div class="email">
+                    <span>电子邮件：</span>
+                    <a href="mailto:julian.reschke@greenbytes.de" class="email">julian.reschke@greenbytes.de</a>
+                </div>
+                <div class="url">
+                    <span>URI：</span>
+                    <a href="https://greenbytes.de/tech/webdav/" class="url">https://greenbytes.de/tech/webdav/</a>
+                </div>
+            </address>
+            <address class="vcard">
+                <div dir="auto" class="left"><span class="fn nameRole">James M Snell</span></div>
+                <div dir="auto" class="left"><span class="org">Cloudflare</span></div>
+                <div class="email">
+                    <span>电子邮件：</span>
+                    <a href="mailto:jasnell@gmail.com" class="email">jasnell@gmail.com</a>
+                </div>
+            </address>
+            <address class="vcard">
+                <div dir="auto" class="left"><span class="fn nameRole">Mike Bishop</span></div>
+                <div dir="auto" class="left"><span class="org">Akamai</span></div>
+                <div class="email">
+                    <span>电子邮件：</span>
+                    <a href="mailto:mbishop@evequefou.be" class="email">mbishop@evequefou.be</a>
+                </div>
+            </address>
+        </section>
+    </div>
+    <script>const toc = document.getElementById("toc");
+        toc.querySelector("h2").addEventListener("click", e => {
+            toc.classList.toggle("active");
+        });
+        toc.querySelector("nav").addEventListener("click", e => {
+            toc.classList.remove("active");
+        });
+    </script>
+    <script src="https://htmlspecs.com/dropdown.js"></script>
+</body>
+
+</html>
