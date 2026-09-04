@@ -4881,7 +4881,7 @@ const httpLinkGroups = [
                 href: "https://htmlspecs.com/http/",
                 src: "https://httpwg.org/specs/",
                 "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
-                etag: "695b0d14-2f19",
+                etag: "6a9a988b-2f7a",
                 lang: "cjk",
                 state: ""
             },
