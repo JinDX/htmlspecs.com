@@ -2544,7 +2544,7 @@ const linkGroups = [
                 text: "Element Timing API",
                 href: "https://htmlspecs.com/element-timing/",
                 src: "https://w3c.github.io/element-timing/",
-                "last-modified": "Thu, 19 Mar 2026 18:29:54 GMT",
+                "last-modified": "Thu, 03 Sep 2026 18:22:22 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
