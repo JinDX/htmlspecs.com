@@ -659,6 +659,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 ### 方法、状态码与协议构建
 - [Building Protocols with HTTP](https://htmlspecs.com/http/rfc9205.html)（[Source](https://httpwg.org/specs/rfc9205.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [PATCH Method for HTTP](https://htmlspecs.com/http/rfc5789.html)（[Source](https://httpwg.org/specs/rfc5789.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
+- [The HTTP QUERY Method](https://htmlspecs.com/http/rfc10008.html)（[Source](https://www.rfc-editor.org/rfc/rfc10008.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [Additional HTTP Status Codes](https://htmlspecs.com/http/rfc6585.html)（[Source](https://httpwg.org/specs/rfc6585.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [An HTTP Status Code to Report Legal Obstacles](https://htmlspecs.com/http/rfc7725.html)（[Source](https://httpwg.org/specs/rfc7725.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [An HTTP Status Code for Indicating Hints](https://htmlspecs.com/http/rfc8297.html)（[Source](https://httpwg.org/specs/rfc8297.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
