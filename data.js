@@ -35,7 +35,7 @@ const linkGroups = [
                 text: "HTML",
                 href: "https://htmlspecs.com/",
                 src: "https://html.spec.whatwg.org/",
-                "last-modified": "Thu, 03 Sep 2026 15:38:15 GMT",
+                "last-modified": "Fri, 04 Sep 2026 08:17:52 GMT",
                 lang: "cjk",
                 state: "LS"
             },
@@ -51,7 +51,7 @@ const linkGroups = [
                 text: "ECMAScript® 2027 Language Specification",
                 href: "https://ecma262.com/",
                 src: "https://tc39.es/ecma262/",
-                "last-modified": "Thu, 03 Sep 2026 19:45:08 GMTT",
+                "last-modified": "Thu, 03 Sep 2026 19:45:08 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
