@@ -4989,6 +4989,14 @@ const httpLinkGroups = [
                 lang: "cjk",
                 state: "RFC"
             },
+            // {
+            //     text: "The HTTP QUERY Method",
+            //     href: "https://htmlspecs.com/http/rfc10008.html",
+            //     src: "https://www.rfc-editor.org/rfc/rfc10008.html",
+            //     "last-modified": "-",
+            //     lang: "cjk",
+            //     state: "RFC"
+            // },
             {
                 text: "Additional HTTP Status Codes",
                 href: "https://htmlspecs.com/http/rfc6585.html",
@@ -5254,6 +5262,14 @@ const httpLinkGroups = [
                 src: "https://httpwg.org/specs/rfc9209.html",
                 "last-modified": "Mon, 20 Oct 2025 04:56:46 GMT",
                 etag: "695b0d14-14f69",
+                lang: "cjk",
+                state: "RFC"
+            },
+            {
+                text: "Incremental Forwarding of HTTP Messages",
+                href: "https://htmlspecs.com/http/rfc10036.html",
+                src: "https://www.rfc-editor.org/rfc/rfc10036.html",
+                "last-modified": "-",
                 lang: "cjk",
                 state: "RFC"
             },
