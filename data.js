@@ -4268,7 +4268,7 @@ const cssLinkGroups = [
             {
                 text: "CSS Box Sizing Module Level 3",
                 href: "https://htmlspecs.com/css/css-sizing-3/",
-                src: "https://www.w3.org/TR/2021/WD-css-sizing-3-20211217/",
+                src: "https://www.w3.org/TR/2026/WD-css-sizing-3-20260904/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
