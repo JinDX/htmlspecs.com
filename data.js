@@ -3123,8 +3123,8 @@ const linkGroups = [
             {
                 text: "The OAuth 2.1 Authorization Framework",
                 href: "https://htmlspecs.com/oauth2-1/",
-                src: "https://www.ietf.org/archive/id/draft-ietf-oauth-v2-1-15.html",
-                "last-modified": "Mon, 02 Mar 2026 18:51:55 GMT",
+                src: "https://www.ietf.org/archive/id/draft-ietf-oauth-v2-1-16.html",
+                "last-modified": "-",
                 lang: "cjk",
                 state: "Draft"
             },
