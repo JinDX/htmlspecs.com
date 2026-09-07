@@ -3074,6 +3074,14 @@ const linkGroups = [
                 state: "CRD"
             },
             {
+                text: "Verifiable Credential Confidence Methods v1.0",
+                href: "https://htmlspecs.com/vc-confidence-method/",
+                src: "https://www.w3.org/TR/2026/WD-vc-confidence-method-20260903/",
+                "last-modified": "-",
+                lang: "cjk",
+                state: "WD"
+            },
+            {
                 text: "Bitstring Status List v1.0",
                 href: "https://htmlspecs.com/vc-bitstring-status-list/",
                 src: "https://www.w3.org/TR/2025/REC-vc-bitstring-status-list-20250515/",
