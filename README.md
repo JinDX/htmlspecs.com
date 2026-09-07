@@ -397,6 +397,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Verifiable Credentials Data Model v2.1](https://htmlspecs.com/vc-data-model-2.1/)（[Source](https://www.w3.org/TR/2026/WD-vc-data-model-2.1-20260905/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Securing Verifiable Credentials using JOSE and COSE](https://htmlspecs.com/vc-jose-cose/)（[Source](https://www.w3.org/TR/2025/REC-vc-jose-cose-20250515/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Verifiable Credential Data Integrity 1.1](https://htmlspecs.com/vc-data-integrity-1.1/)（[Source](https://www.w3.org/TR/2026/WD-vc-data-integrity-1.1-20260902/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Data Integrity BBS Cryptosuites v1.0](https://htmlspecs.com/vc-di-bbs/)（[Source](https://www.w3.org/TR/2026/CRD-vc-di-bbs-20260902/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [Bitstring Status List v1.0](https://htmlspecs.com/vc-bitstring-status-list/)（[Source](https://www.w3.org/TR/2025/REC-vc-bitstring-status-list-20250515/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [VCALM v1.0](https://htmlspecs.com/vcalm-1.0/)（[Source](https://www.w3.org/TR/2026/WD-vcalm-1.0-20260821/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Verifiable Credential Forgery Defense v1.0](https://htmlspecs.com/vc-forgery-defense-1.0/)（[Source](https://www.w3.org/TR/2026/WD-vc-forgery-defense-1.0-20260825/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
