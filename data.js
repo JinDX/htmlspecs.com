@@ -3042,6 +3042,14 @@ const linkGroups = [
                 state: "REC"
             },
             {
+                text: "Verifiable Credentials Data Model v2.1",
+                href: "https://htmlspecs.com/vc-data-model-2.1/",
+                src: "https://www.w3.org/TR/2026/WD-vc-data-model-2.1-20260905/",
+                "last-modified": "-",
+                lang: "cjk",
+                state: "WD"
+            },
+            {
                 text: "Securing Verifiable Credentials using JOSE and COSE",
                 href: "https://htmlspecs.com/vc-jose-cose/",
                 src: "https://www.w3.org/TR/2025/REC-vc-jose-cose-20250515/",
