@@ -3066,6 +3066,14 @@ const linkGroups = [
                 state: "WD"
             },
             {
+                text: "Data Integrity BBS Cryptosuites v1.0",
+                href: "https://htmlspecs.com/vc-di-bbs/",
+                src: "https://www.w3.org/TR/2026/CRD-vc-di-bbs-20260902/",
+                "last-modified": "-",
+                lang: "cjk",
+                state: "CRD"
+            },
+            {
                 text: "Bitstring Status List v1.0",
                 href: "https://htmlspecs.com/vc-bitstring-status-list/",
                 src: "https://www.w3.org/TR/2025/REC-vc-bitstring-status-list-20250515/",
