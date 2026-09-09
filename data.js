@@ -1715,7 +1715,7 @@ const linkGroups = [
             {
                 text: "Window Management",
                 href: "https://htmlspecs.com/window-management/",
-                src: "https://www.w3.org/TR/2026/WD-window-management-20260901/",
+                src: "https://www.w3.org/TR/2026/WD-window-management-20260908/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
