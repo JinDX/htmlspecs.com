@@ -1263,7 +1263,7 @@ const linkGroups = [
             {
                 text: "EditContext API",
                 href: "https://htmlspecs.com/edit-context/",
-                src: "https://www.w3.org/TR/2026/WD-edit-context-20260909/",
+                src: "https://www.w3.org/TR/2026/WD-edit-context-20260910/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
