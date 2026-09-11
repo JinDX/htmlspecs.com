@@ -3068,7 +3068,7 @@ const linkGroups = [
             {
                 text: "Data Integrity BBS Cryptosuites v1.0",
                 href: "https://htmlspecs.com/vc-di-bbs/",
-                src: "https://www.w3.org/TR/2026/CRD-vc-di-bbs-20260902/",
+                src: "https://www.w3.org/TR/2026/CRD-vc-di-bbs-20260910/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "CRD"
