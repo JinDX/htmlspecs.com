@@ -3076,7 +3076,7 @@ const linkGroups = [
             {
                 text: "Verifiable Credential Confidence Methods v1.0",
                 href: "https://htmlspecs.com/vc-confidence-method/",
-                src: "https://www.w3.org/TR/2026/WD-vc-confidence-method-20260903/",
+                src: "https://www.w3.org/TR/2026/WD-vc-confidence-method-20260910/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
