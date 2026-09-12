@@ -186,7 +186,7 @@ const linkGroups = [
             {
                 text: "Web Platform Design Principles",
                 href: "https://htmlspecs.com/design-principles/",
-                src: "https://www.w3.org/TR/2026/NOTE-design-principles-20260224/",
+                src: "https://www.w3.org/TR/2026/NOTE-design-principles-20260911/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "NOTE"
