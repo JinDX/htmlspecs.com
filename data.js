@@ -51,7 +51,7 @@ const linkGroups = [
                 text: "ECMAScript® 2027 Language Specification",
                 href: "https://ecma262.com/",
                 src: "https://tc39.es/ecma262/",
-                "last-modified": "Wed, 09 Sep 2026 22:57:14 GMT",
+                "last-modified": "Sun, 13 Sep 2026 16:49:11 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
@@ -647,7 +647,7 @@ const linkGroups = [
             {
                 text: "SPARQL 1.2 Query Language",
                 href: "https://htmlspecs.com/sparql12-query/",
-                src: "https://www.w3.org/TR/2026/WD-sparql12-query-20260910/",
+                src: "https://www.w3.org/TR/2026/WD-sparql12-query-20260913/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
@@ -1168,7 +1168,7 @@ const linkGroups = [
             {
                 text: "File API",
                 href: "https://htmlspecs.com/FileAPI/",
-                src: "https://www.w3.org/TR/2026/WD-FileAPI-20260823/",
+                src: "https://www.w3.org/TR/2026/WD-FileAPI-20260912/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
@@ -3044,7 +3044,7 @@ const linkGroups = [
             {
                 text: "Verifiable Credentials Data Model v2.1",
                 href: "https://htmlspecs.com/vc-data-model-2.1/",
-                src: "https://www.w3.org/TR/2026/WD-vc-data-model-2.1-20260905/",
+                src: "https://www.w3.org/TR/2026/WD-vc-data-model-2.1-20260913/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
@@ -3663,7 +3663,7 @@ const linkGroups = [
             {
                 text: "EPUB Accessibility 1.2",
                 href: "https://htmlspecs.com/epub-a11y-12/",
-                src: "https://www.w3.org/TR/2026/CRD-epub-a11y-12-20260818/",
+                src: "https://www.w3.org/TR/2026/CRD-epub-a11y-12-20260912/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "CRD"
@@ -3958,7 +3958,7 @@ const cssLinkGroups = [
             {
                 text: "CSS Color Module Level 4",
                 href: "https://htmlspecs.com/css/css-color-4/",
-                src: "https://www.w3.org/TR/2026/CRD-css-color-4-20260908/",
+                src: "https://www.w3.org/TR/2026/CRD-css-color-4-20260913/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "CRD"
@@ -3966,7 +3966,7 @@ const cssLinkGroups = [
             {
                 text: "CSS Color Module Level 5",
                 href: "https://htmlspecs.com/css/css-color-5/",
-                src: "https://www.w3.org/TR/2026/WD-css-color-5-20260908/",
+                src: "https://www.w3.org/TR/2026/WD-css-color-5-20260913/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
@@ -4053,7 +4053,7 @@ const cssLinkGroups = [
             {
                 text: "CSS Fonts Module Level 4",
                 href: "https://htmlspecs.com/css/css-fonts-4/",
-                src: "https://www.w3.org/TR/2026/WD-css-fonts-4-20260907/",
+                src: "https://www.w3.org/TR/2026/WD-css-fonts-4-20260913/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
@@ -4061,7 +4061,7 @@ const cssLinkGroups = [
             {
                 text: "CSS Fonts Module Level 5",
                 href: "https://htmlspecs.com/css/css-fonts-5/",
-                src: "https://www.w3.org/TR/2026/WD-css-fonts-5-20260811/",
+                src: "https://www.w3.org/TR/2026/WD-css-fonts-5-20260913/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"

@@ -79,7 +79,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [RDF 1.2 TriG](https://htmlspecs.com/rdf12-trig/)（[Source](https://www.w3.org/TR/2026/WD-rdf12-trig-20260612/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [RDF 1.2 N-Quads](https://htmlspecs.com/rdf12-n-quads/)（[Source](https://www.w3.org/TR/2026/WD-rdf12-n-quads-20260723/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [RDF 1.2 XML Syntax](https://htmlspecs.com/rdf12-xml/)（[Source](https://www.w3.org/TR/2026/WD-rdf12-xml-20260618/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
-- [SPARQL 1.2 Query Language](https://htmlspecs.com/sparql12-query/)（[Source](https://www.w3.org/TR/2026/WD-sparql12-query-20260910/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [SPARQL 1.2 Query Language](https://htmlspecs.com/sparql12-query/)（[Source](https://www.w3.org/TR/2026/WD-sparql12-query-20260913/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [SPARQL 1.2 Protocol](https://htmlspecs.com/sparql12-protocol/)（[Source](https://www.w3.org/TR/2026/WD-sparql12-protocol-20260723/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [SHACL 1.2 Core](https://htmlspecs.com/shacl12-core/)（[Source](https://www.w3.org/TR/2026/WD-shacl12-core-20260828/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [SHACL 1.2 Profiling](https://htmlspecs.com/shacl12-profiling/)（[Source](https://www.w3.org/TR/2026/WD-shacl12-profiling-20260702/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
@@ -146,7 +146,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Indexed Database API 3.0](https://htmlspecs.com/IndexedDB/)（[Source](https://www.w3.org/TR/2025/WD-IndexedDB-3-20250813/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Storage](https://htmlspecs.com/storage/)（[Source](https://storage.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [Storage Buckets](https://htmlspecs.com/storage-buckets/)（[Source](https://wicg.github.io/storage-buckets/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
-- [File API](https://htmlspecs.com/FileAPI/)（[Source](https://www.w3.org/TR/2026/WD-FileAPI-20260823/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [File API](https://htmlspecs.com/FileAPI/)（[Source](https://www.w3.org/TR/2026/WD-FileAPI-20260912/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [File System](https://htmlspecs.com/fs/)（[Source](https://fs.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [File System Access API](https://htmlspecs.com/file-system-access/)（[Source](https://wicg.github.io/file-system-access/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Cookie Store API](https://htmlspecs.com/cookiestore/)（[Source](https://cookiestore.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
@@ -394,7 +394,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Decentralized Identifiers (DIDs) v1.1](https://htmlspecs.com/did-1.1/)（[Source](https://www.w3.org/TR/2026/CR-did-1.1-20260305/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
 - [Decentralized Identifier Resolution (DID Resolution) v1](https://htmlspecs.com/did-resolution/)（[Source](https://www.w3.org/TR/2026/CRD-did-resolution-1.0-20260828/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [Verifiable Credentials Data Model v2.0](https://htmlspecs.com/vc-data-model-2.0/)（[Source](https://www.w3.org/TR/2025/REC-vc-data-model-2.0-20250515/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
-- [Verifiable Credentials Data Model v2.1](https://htmlspecs.com/vc-data-model-2.1/)（[Source](https://www.w3.org/TR/2026/WD-vc-data-model-2.1-20260905/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Verifiable Credentials Data Model v2.1](https://htmlspecs.com/vc-data-model-2.1/)（[Source](https://www.w3.org/TR/2026/WD-vc-data-model-2.1-20260913/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Securing Verifiable Credentials using JOSE and COSE](https://htmlspecs.com/vc-jose-cose/)（[Source](https://www.w3.org/TR/2025/REC-vc-jose-cose-20250515/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Verifiable Credential Data Integrity 1.1](https://htmlspecs.com/vc-data-integrity-1.1/)（[Source](https://www.w3.org/TR/2026/WD-vc-data-integrity-1.1-20260902/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Data Integrity BBS Cryptosuites v1.0](https://htmlspecs.com/vc-di-bbs/)（[Source](https://www.w3.org/TR/2026/CRD-vc-di-bbs-20260910/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
@@ -477,7 +477,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [EPUB Reading Systems 3.3](https://htmlspecs.com/epub-rs-33/)（[Source](https://www.w3.org/TR/2024/REC-epub-rs-33-20241017/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [EPUB 3.4](https://htmlspecs.com/epub-34/)（[Source](https://www.w3.org/TR/2026/CRD-epub-34-20260803/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [EPUB Reading Systems 3.4](https://htmlspecs.com/epub-rs-34/)（[Source](https://www.w3.org/TR/2026/CRD-epub-rs-34-20260721/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
-- [EPUB Accessibility 1.2](https://htmlspecs.com/epub-a11y-12/)（[Source](https://www.w3.org/TR/2026/CRD-epub-a11y-12-20260818/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
+- [EPUB Accessibility 1.2](https://htmlspecs.com/epub-a11y-12/)（[Source](https://www.w3.org/TR/2026/CRD-epub-a11y-12-20260912/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [Publication Manifest](https://htmlspecs.com/pub-manifest/)（[Source](https://www.w3.org/TR/2020/REC-pub-manifest-20201110/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Audiobooks](https://htmlspecs.com/audiobooks/)（[Source](https://www.w3.org/TR/2020/REC-audiobooks-20201110/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 
@@ -517,8 +517,8 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 
 ### 颜色、背景、边框与视觉效果
 - [CSS Color Module Level 3](https://htmlspecs.com/css/css-color-3/)（[Source](https://www.w3.org/TR/2022/REC-css-color-3-20220118/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
-- [CSS Color Module Level 4](https://htmlspecs.com/css/css-color-4/)（[Source](https://www.w3.org/TR/2026/CRD-css-color-4-20260908/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
-- [CSS Color Module Level 5](https://htmlspecs.com/css/css-color-5/)（[Source](https://www.w3.org/TR/2026/WD-css-color-5-20260908/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [CSS Color Module Level 4](https://htmlspecs.com/css/css-color-4/)（[Source](https://www.w3.org/TR/2026/CRD-css-color-4-20260913/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
+- [CSS Color Module Level 5](https://htmlspecs.com/css/css-color-5/)（[Source](https://www.w3.org/TR/2026/WD-css-color-5-20260913/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Color Adjustment Module Level 1](https://htmlspecs.com/css/css-color-adjust-1/)（[Source](https://www.w3.org/TR/2025/CR-css-color-adjust-1-20251216/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
 - [CSS Color HDR Module Level 1](https://htmlspecs.com/css/css-color-hdr-1/)（[Source](https://www.w3.org/TR/2026/WD-css-color-hdr-1-20260907/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Filter Effects Module Level 1](https://htmlspecs.com/css/filter-effects-1/)（[Source](https://www.w3.org/TR/2018/WD-filter-effects-1-20181218/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
@@ -530,8 +530,8 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 
 ### 字体、文本、列表与书写模式
 - [CSS Fonts Module Level 3](https://htmlspecs.com/css/css-fonts-3/)（[Source](https://www.w3.org/TR/2018/REC-css-fonts-3-20180920/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
-- [CSS Fonts Module Level 4](https://htmlspecs.com/css/css-fonts-4/)（[Source](https://www.w3.org/TR/2026/WD-css-fonts-4-20260907/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
-- [CSS Fonts Module Level 5](https://htmlspecs.com/css/css-fonts-5/)（[Source](https://www.w3.org/TR/2026/WD-css-fonts-5-20260811/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [CSS Fonts Module Level 4](https://htmlspecs.com/css/css-fonts-4/)（[Source](https://www.w3.org/TR/2026/WD-css-fonts-4-20260913/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [CSS Fonts Module Level 5](https://htmlspecs.com/css/css-fonts-5/)（[Source](https://www.w3.org/TR/2026/WD-css-fonts-5-20260913/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Incremental Font Transfer](https://htmlspecs.com/IFT/)（[Source](https://www.w3.org/TR/2025/CRD-IFT-20251118/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [CSS Font Loading Module Level 3](https://htmlspecs.com/css/css-font-loading/)（[Source](https://www.w3.org/TR/2023/WD-css-font-loading-3-20230406/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Text Module Level 3](https://htmlspecs.com/css/css-text-3/)（[Source](https://www.w3.org/TR/2026/CRD-css-text-3-20260814/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
