@@ -639,7 +639,7 @@ const linkGroups = [
             {
                 text: "RDF 1.2 XML Syntax",
                 href: "https://htmlspecs.com/rdf12-xml/",
-                src: "https://www.w3.org/TR/2026/WD-rdf12-xml-20260618/",
+                src: "https://www.w3.org/TR/2026/WD-rdf12-xml-20260914/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
