@@ -1859,7 +1859,7 @@ const linkGroups = [
             {
                 text: "Scalable Video Coding (SVC) Extension for WebRTC",
                 href: "https://htmlspecs.com/webrtc-svc/",
-                src: "https://www.w3.org/TR/2024/WD-webrtc-svc-20240817/",
+                src: "https://www.w3.org/TR/2026/WD-webrtc-svc-20260914/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
