@@ -2970,6 +2970,14 @@ const linkGroups = [
                 state: "REC"
             },
             {
+                text: "Web Authentication: An API for accessing Public Key Credentials Level 4",
+                href: "https://htmlspecs.com/webauthn-4/",
+                src: "https://www.w3.org/TR/2026/WD-webauthn-4-20260915/",
+                "last-modified": "-",
+                lang: "cjk",
+                state: "WD"
+            },
+            {
                 text: "A Well-Known URL for Relying Party Passkey Endpoints",
                 href: "https://htmlspecs.com/passkey-endpoints/",
                 src: "https://www.w3.org/TR/2026/WD-passkey-endpoints-1-20260114/",
