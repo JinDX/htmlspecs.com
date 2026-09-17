@@ -663,7 +663,7 @@ const linkGroups = [
             {
                 text: "SHACL 1.2 Core",
                 href: "https://htmlspecs.com/shacl12-core/",
-                src: "https://www.w3.org/TR/2026/WD-shacl12-core-20260828/",
+                src: "https://www.w3.org/TR/2026/WD-shacl12-core-20260917/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
