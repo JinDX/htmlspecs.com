@@ -1421,8 +1421,8 @@ const linkGroups = [
             {
                 text: "Web Serial API",
                 href: "https://htmlspecs.com/serial/",
-                src: "https://wicg.github.io/serial/",
-                "last-modified": "Tue, 02 Jun 2026 00:22:10 GMT",
+                src: "https://serial.spec.whatwg.org/",
+                "last-modified": "Tue, 15 Sep 2026 19:07:44 GMT",
                 lang: "cjk",
                 state: "Draft"
             },

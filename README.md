@@ -180,7 +180,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Autofill Event](https://htmlspecs.com/autofill-event/)（[Source](https://wicg.github.io/autofill-event/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 
 ### 设备、传感器与硬件接口
-- [Web Serial API](https://htmlspecs.com/serial/)（[Source](https://wicg.github.io/serial/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
+- [Web Serial API](https://htmlspecs.com/serial/)（[Source](https://serial.spec.whatwg.org/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [WebHID API](https://htmlspecs.com/hid/)（[Source](https://hid.spec.whatwg.org/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [WebUSB API](https://htmlspecs.com/webusb/)（[Source](https://wicg.github.io/webusb/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Web Smart Card API](https://htmlspecs.com/web-smart-card/)（[Source](https://wicg.github.io/web-smart-card/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
