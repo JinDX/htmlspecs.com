@@ -185,7 +185,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [WebUSB API](https://htmlspecs.com/webusb/)（[Source](https://wicg.github.io/webusb/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Web Smart Card API](https://htmlspecs.com/web-smart-card/)（[Source](https://wicg.github.io/web-smart-card/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Web MIDI API](https://htmlspecs.com/webmidi/)（[Source](https://www.w3.org/TR/2025/WD-webmidi-20250121/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
-- [Web Bluetooth API](https://htmlspecs.com/web-bluetooth/)（[Source](https://webbluetoothcg.github.io/web-bluetooth/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
+- [Web Bluetooth API](https://htmlspecs.com/bluetooth/)（[Source](https://bluetooth.spec.whatwg.org/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Web NFC API](https://htmlspecs.com/web-nfc/)（[Source](https://w3c-cg.github.io/web-nfc/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Geolocation API](https://htmlspecs.com/geolocation/)（[Source](https://www.w3.org/TR/2026/CR-geolocation-20260326/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
 - [Device Orientation and Motion](https://htmlspecs.com/orientation-event/)（[Source](https://www.w3.org/TR/2025/CRD-orientation-event-20250212/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
