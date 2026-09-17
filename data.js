@@ -1436,9 +1436,9 @@ const linkGroups = [
             },
             {
                 text: "WebUSB API",
-                href: "https://htmlspecs.com/webusb/",
-                src: "https://wicg.github.io/webusb/",
-                "last-modified": "Fri, 05 Jun 2026 19:46:05 GMT",
+                href: "https://htmlspecs.com/usb/",
+                src: "https://usb.spec.whatwg.org/",
+                "last-modified": "Tue, 15 Sep 2026 19:08:31 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
