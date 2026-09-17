@@ -1428,9 +1428,9 @@ const linkGroups = [
             },
             {
                 text: "WebHID API",
-                href: "https://htmlspecs.com/webhid/",
-                src: "https://wicg.github.io/webhid/",
-                "last-modified": "Fri, 13 Sep 2024 20:42:40 GMT",
+                href: "https://htmlspecs.com/hid/",
+                src: "https://hid.spec.whatwg.org/",
+                "last-modified": "Tue, 15 Sep 2026 19:07:03 GMT",
                 lang: "cjk",
                 state: "Draft"
             },

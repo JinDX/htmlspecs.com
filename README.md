@@ -181,7 +181,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 
 ### 设备、传感器与硬件接口
 - [Web Serial API](https://htmlspecs.com/serial/)（[Source](https://wicg.github.io/serial/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
-- [WebHID API](https://htmlspecs.com/webhid/)（[Source](https://wicg.github.io/webhid/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
+- [WebHID API](https://htmlspecs.com/hid/)（[Source](https://hid.spec.whatwg.org/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [WebUSB API](https://htmlspecs.com/webusb/)（[Source](https://wicg.github.io/webusb/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Web Smart Card API](https://htmlspecs.com/web-smart-card/)（[Source](https://wicg.github.io/web-smart-card/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Web MIDI API](https://htmlspecs.com/webmidi/)（[Source](https://www.w3.org/TR/2025/WD-webmidi-20250121/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
