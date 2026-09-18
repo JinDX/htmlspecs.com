@@ -736,7 +736,7 @@ const linkGroups = [
                 text: "OpenAPI Specification v3.2.1",
                 href: "https://htmlspecs.com/openapi/",
                 src: "https://spec.openapis.org/oas/latest.html",
-                "last-modified": "Thu, 17 Sep 2026 21:25:26 GMT",
+                "last-modified": "Fri, 18 Sep 2026 09:55:41 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
