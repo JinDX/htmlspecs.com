@@ -2837,7 +2837,7 @@ const linkGroups = [
             {
                 text: "Fetch Metadata Request Headers",
                 href: "https://htmlspecs.com/fetch-metadata/",
-                src: "https://www.w3.org/TR/2025/WD-fetch-metadata-20250401/",
+                src: "https://www.w3.org/TR/2026/WD-fetch-metadata-20260921/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
