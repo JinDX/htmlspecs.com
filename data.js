@@ -2425,7 +2425,7 @@ const linkGroups = [
                 text: "Prompt API",
                 href: "https://htmlspecs.com/prompt-api/",
                 src: "https://webmachinelearning.github.io/prompt-api/",
-                "last-modified": "Tue, 11 Aug 2026 18:55:55 GMT",
+                "last-modified": "Tue, 22 Sep 2026 00:10:00 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
