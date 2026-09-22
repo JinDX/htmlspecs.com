@@ -433,8 +433,6 @@ loadDataScript(function () {
         display: none;
         position: absolute;
         top: 60px;
-        right: 20px;
-        width: 405px;
         height: 80%;
         max-height: 80vh;
         background-color: white;
@@ -551,6 +549,15 @@ loadDataScript(function () {
 
     var style = document.createElement('style');
     style.innerHTML = `
+        #dropdownContent {
+            right: 20px;
+            width: 405px;
+            max-width: calc(100vw - 40px);
+            box-sizing: border-box;
+        }
+        #dropdownContent [hidden] {
+            display: none !important;
+        }
         .standards-category {
             border-bottom: 1px solid #eee;
             margin-bottom: 0;
@@ -699,7 +706,12 @@ loadDataScript(function () {
             font-weight: 500;
         }
         @media (max-width: 600px) {
-            #dropdownContent { width: 100%; left: 0; right: 0; }
+            #dropdownContent {
+                left: 12px;
+                right: 12px;
+                width: auto;
+                max-width: calc(100vw - 24px);
+            }
         }
         table.def th { min-width: 5em; }
     `;
