@@ -2813,7 +2813,7 @@ const linkGroups = [
             {
                 text: "Threat Model for the Web",
                 href: "https://htmlspecs.com/threat-model-web/",
-                src: "https://www.w3.org/TR/2026/DNOTE-threat-model-web-20260721/",
+                src: "https://www.w3.org/TR/2026/DNOTE-threat-model-web-20260921/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "DNOTE"
