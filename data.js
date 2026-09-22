@@ -1780,7 +1780,7 @@ const linkGroups = [
             {
                 text: "Web Audio API",
                 href: "https://htmlspecs.com/webaudio/",
-                src: "https://www.w3.org/TR/2024/WD-webaudio-1.1-20241105/",
+                src: "https://www.w3.org/TR/2026/WD-webaudio-1.1-20260922/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
