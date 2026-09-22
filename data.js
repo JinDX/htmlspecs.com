@@ -3290,7 +3290,7 @@ const linkGroups = [
             {
                 text: "Permissions Policy",
                 href: "https://htmlspecs.com/permissions-policy/",
-                src: "https://www.w3.org/TR/2026/WD-permissions-policy-1-20260618/",
+                src: "https://www.w3.org/TR/2026/WD-permissions-policy-1-20260922/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
