@@ -3299,7 +3299,7 @@ const linkGroups = [
                 text: "Document Policy",
                 href: "https://htmlspecs.com/document-policy/",
                 src: "https://wicg.github.io/document-policy/",
-                "last-modified": "Wed, 30 Mar 2022 14:51:34 GMT",
+                "last-modified": "Tue, 22 Sep 2026 16:43:28 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
