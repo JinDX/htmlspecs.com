@@ -51,7 +51,7 @@ const linkGroups = [
                 text: "ECMAScript® 2027 Language Specification",
                 href: "https://ecma262.com/",
                 src: "https://tc39.es/ecma262/",
-                "last-modified": "Wed, 23 Sep 2026 11:51:52 GMT",
+                "last-modified": "Thu, 24 Sep 2026 01:43:05 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
@@ -170,7 +170,7 @@ const linkGroups = [
             {
                 text: "Web User Agents",
                 href: "https://htmlspecs.com/web-user-agents/",
-                src: "https://www.w3.org/TR/2026/DNOTE-web-user-agents-20260908/",
+                src: "https://www.w3.org/TR/2026/DNOTE-web-user-agents-20260923/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "DNOTE"
@@ -194,7 +194,7 @@ const linkGroups = [
             {
                 text: "Web Sustainability Guidelines (WSG)",
                 href: "https://htmlspecs.com/web-sustainability-guidelines/",
-                src: "https://www.w3.org/TR/2026/DNOTE-web-sustainability-guidelines-20260820/",
+                src: "https://www.w3.org/TR/2026/DNOTE-web-sustainability-guidelines-20260923/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "DNOTE"
@@ -265,7 +265,7 @@ const linkGroups = [
                 text: "ECMAScript® 2027 Internationalization API Specification",
                 href: "https://htmlspecs.com/ecma402/",
                 src: "https://tc39.es/ecma402/",
-                "last-modified": "Tue, 22 Sep 2026 18:40:25 GMT",
+                "last-modified": "Wed, 23 Sep 2026 16:47:38 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
@@ -1241,7 +1241,7 @@ const linkGroups = [
                 text: "Cross-Origin Storage",
                 href: "https://htmlspecs.com/cross-origin-storage/",
                 src: "https://wicg.github.io/cross-origin-storage/",
-                "last-modified": "Wed, 23 Sep 2026 09:33:48 GMT",
+                "last-modified": "Wed, 23 Sep 2026 16:43:54 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
@@ -3544,7 +3544,7 @@ const linkGroups = [
             {
                 text: "Core Accessibility API Mappings 1.2",
                 href: "https://htmlspecs.com/core-aam-1.2/",
-                src: "https://www.w3.org/TR/2026/CRD-core-aam-1.2-20260922/",
+                src: "https://www.w3.org/TR/2026/CRD-core-aam-1.2-20260923/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "CRD"
@@ -3552,7 +3552,7 @@ const linkGroups = [
             {
                 text: "HTML Accessibility API Mappings 1.0",
                 href: "https://htmlspecs.com/html-aam-1.0/",
-                src: "https://www.w3.org/TR/2026/WD-html-aam-1.0-20260922/",
+                src: "https://www.w3.org/TR/2026/WD-html-aam-1.0-20260923/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
@@ -3560,7 +3560,7 @@ const linkGroups = [
             {
                 text: "SVG Accessibility API Mappings",
                 href: "https://htmlspecs.com/svg-aam-1.0/",
-                src: "https://www.w3.org/TR/2026/WD-svg-aam-1.0-20260922/",
+                src: "https://www.w3.org/TR/2026/WD-svg-aam-1.0-20260923/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
@@ -3608,7 +3608,7 @@ const linkGroups = [
             {
                 text: "Accessible Name and Description Computation 1.2",
                 href: "https://htmlspecs.com/accname-1.2/",
-                src: "https://www.w3.org/TR/2026/WD-accname-1.2-20260922/",
+                src: "https://www.w3.org/TR/2026/WD-accname-1.2-20260923/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
