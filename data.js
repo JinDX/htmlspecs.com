@@ -3608,7 +3608,7 @@ const linkGroups = [
             {
                 text: "Accessible Name and Description Computation 1.2",
                 href: "https://htmlspecs.com/accname-1.2/",
-                src: "https://www.w3.org/TR/2026/WD-accname-1.2-20260922/",
+                src: "https://www.w3.org/TR/2026/WD-accname-1.2-20260923/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
