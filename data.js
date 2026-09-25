@@ -2146,7 +2146,7 @@ const linkGroups = [
             {
                 text: "MP3 WebCodecs Registration",
                 href: "https://htmlspecs.com/webcodecs-mp3-codec-registration/",
-                src: "https://www.w3.org/TR/2026/DNOTE-webcodecs-mp3-codec-registration-20260608/",
+                src: "https://www.w3.org/TR/2026/DNOTE-webcodecs-mp3-codec-registration-20260924/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "DNOTE"
