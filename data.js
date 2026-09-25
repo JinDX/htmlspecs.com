@@ -2098,7 +2098,7 @@ const linkGroups = [
             {
                 text: "AAC WebCodecs Registration",
                 href: "https://htmlspecs.com/webcodecs-aac-codec-registration/",
-                src: "https://www.w3.org/TR/2026/DNOTE-webcodecs-aac-codec-registration-20260319/",
+                src: "https://www.w3.org/TR/2026/DNOTE-webcodecs-aac-codec-registration-20260924/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "DNOTE"
