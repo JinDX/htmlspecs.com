@@ -2090,7 +2090,7 @@ const linkGroups = [
             {
                 text: "WebCodecs Codec Registry",
                 href: "https://htmlspecs.com/webcodecs-codec-registry/",
-                src: "https://www.w3.org/TR/2026/DRY-webcodecs-codec-registry-20260212/",
+                src: "https://www.w3.org/TR/2026/DRY-webcodecs-codec-registry-20260924/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "Draft"
