@@ -3307,7 +3307,7 @@ const linkGroups = [
                 text: "Capability Delegation",
                 href: "https://htmlspecs.com/capability-delegation/",
                 src: "https://wicg.github.io/capability-delegation/spec.html",
-                "last-modified": "Fri, 17 Feb 2023 20:15:54 GMT",
+                "last-modified": "Fri, 25 Sep 2026 18:42:53 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
