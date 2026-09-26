@@ -77,12 +77,29 @@ function createChecker({
   retries = 2,
   retryDelayMs = 500,
   w3GapMs = 500,
-  w3Endpoint = 'https://www.w3.org/TR/tr-outdated-spec'
+  w3Endpoint = 'https://www.w3.org/TR/tr-outdated-spec',
+  w3ApiBase = 'https://api.w3.org/specifications/'
 } = {}) {
   let nextW3Start = 0;
+  let w3Queue = Promise.resolve();
 
-  async function request(url, { method = 'HEAD', headers = {}, json = false } = {}) {
+  // One W3C request at a time, with a gap after the preceding response.
+  // Every attempt, including retries and version-API fallbacks, uses this queue.
+  async function acquireW3Slot() {
+    const previous = w3Queue;
+    let release;
+    w3Queue = new Promise(resolve => { release = resolve; });
+    await previous;
+    await sleep(Math.max(0, nextW3Start - Date.now()));
+    return (retryAfterMs = 0) => {
+      nextW3Start = Date.now() + Math.max(w3GapMs, retryAfterMs);
+      release();
+    };
+  }
+
+  async function request(url, { method = 'HEAD', headers = {}, json = false, w3 = false } = {}) {
     for (let attempt = 0; ; attempt++) {
+      const releaseW3 = w3 ? await acquireW3Slot() : null;
       const controller = new AbortController();
       // Covers connection, redirect handling, and (for W3C) reading the JSON body.
       const timer = setTimeout(() => controller.abort(), timeoutMs);
@@ -98,6 +115,13 @@ function createChecker({
           if (response.body) await response.body.cancel();
           const error = new Error(`HTTP ${response.status}: ${response.url || url}`);
           error.status = response.status;
+          const retryAfter = response.headers.get('retry-after');
+          if (retryAfter) {
+            const seconds = Number(retryAfter);
+            error.retryAfterMs = Number.isFinite(seconds)
+              ? Math.max(0, seconds * 1000)
+              : Math.max(0, Date.parse(retryAfter) - Date.now()) || 0;
+          }
           throw error;
         }
         const result = {
@@ -114,13 +138,43 @@ function createChecker({
           : error;
       } finally {
         clearTimeout(timer);
+        releaseW3?.(failure?.retryAfterMs || 0);
       }
       const retryable = failure.status === undefined
         ? !(failure instanceof SyntaxError)
         : [408, 429, 500, 502, 503, 504].includes(failure.status);
       if (!retryable || attempt >= retries) throw failure;
-      await sleep(retryDelayMs * 2 ** attempt);
+      await sleep(Math.max(retryDelayMs * 2 ** attempt, failure.retryAfterMs || 0));
     }
+  }
+
+  async function checkW3Version(link, source) {
+    const match = /^\/TR\/\d{4}\/[A-Z]+-(.+)-(\d{8})(?:\/|$)/.exec(source.pathname);
+    if (!match) return { link, status: 'unknown', detail: 'No W3C outdated warning; no dated version is available for comparison.' };
+    const apiUrl = new URL(`${encodeURIComponent(match[1])}/versions/latest`, w3ApiBase);
+    let response;
+    try {
+      response = await request(apiUrl.href, { method: 'GET', json: true, w3: true });
+    } catch (error) {
+      if (error.status === 404) return { link, status: 'unknown', detail: 'No W3C outdated warning or matching version metadata.' };
+      throw error;
+    }
+    let latest;
+    try { latest = new URL(response.data?.uri); } catch {
+      throw new Error('Invalid W3C latest-version response.');
+    }
+    const latestMatch = /^\/TR\/\d{4}\/[A-Z]+-(.+)-(\d{8})(?:\/|$)/.exec(latest.pathname);
+    if (!/^(?:www\.)?w3\.org$/i.test(latest.hostname) || !latestMatch) {
+      throw new Error('Invalid W3C latest-version URI.');
+    }
+    const normalizePath = value => value.replace(/\/Overview\.html$/, '/').replace(/\/$/, '');
+    if (normalizePath(latest.pathname) === normalizePath(source.pathname)) {
+      return { link, status: 'unchanged', detail: 'W3C version metadata confirms this is the latest published version.' };
+    }
+    if (latestMatch[2] >= match[2]) {
+      return { link, status: 'changed', detail: `W3C reports a newer version: ${latest.href}` };
+    }
+    return { link, status: 'unknown', detail: 'W3C version metadata is older than the saved source; no update inferred.' };
   }
 
   async function check(link) {
@@ -128,12 +182,17 @@ function createChecker({
       const url = new URL(link.src);
       const isW3 = /(^|\.)w3\.org$/i.test(url.hostname) && /^\/TR(?:\/|$)/.test(url.pathname);
       if (isW3) {
-        const start = Math.max(Date.now(), nextW3Start);
-        nextW3Start = start + w3GapMs;
-        await sleep(Math.max(0, start - Date.now()));
-        const response = await request(w3Endpoint, {
-          method: 'GET', headers: { Referer: link.src }, json: true
-        });
+        let response;
+        try {
+          response = await request(w3Endpoint, {
+            method: 'GET', headers: { Referer: link.src }, json: true, w3: true
+          });
+        } catch (error) {
+          // This warning endpoint also returns 404 for current/exempt specs.
+          // Confirm via published-version metadata instead of calling it a failure.
+          if (error.status === 404) return await checkW3Version(link, url);
+          throw error;
+        }
         const info = response.data;
         if (!info || typeof info !== 'object' || Array.isArray(info)) {
           throw new Error('Invalid W3C JSON response.');
@@ -174,7 +233,12 @@ async function mapLimit(items, limit, callback) {
   return results;
 }
 
-async function runChecks(data, { concurrency = 6, ...options } = {}) {
+async function runChecks(data, {
+  concurrency = 6,
+  log = () => {},
+  progressIntervalMs = 10000,
+  ...options
+} = {}) {
   if (!Number.isInteger(concurrency) || concurrency < 1) throw new Error('Invalid concurrency.');
   const checker = createChecker(options);
   const groups = [
@@ -184,10 +248,41 @@ async function runChecks(data, { concurrency = 6, ...options } = {}) {
   ];
   const categories = [];
   const counts = { changed: 0, unchanged: 0, failed: 0, unknown: 0, skipped: 0 };
-  for (const [name, links] of groups) {
-    const results = await mapLimit(links, concurrency, checker.check);
-    for (const result of results) counts[result.status]++;
-    categories.push({ name, results });
+  const total = groups.reduce((sum, [, links]) => sum + links.length, 0);
+  const startedAt = Date.now();
+  const active = new Map();
+  let finished = 0;
+  const progress = () => `Progress: ${finished}/${total} (${total ? (finished / total * 100).toFixed(1) : '100.0'}%)`;
+
+  // Newline-delimited output is visible in both a local terminal and Actions.
+  log(`${progress()} | starting | concurrency: ${concurrency}`);
+  const heartbeat = total && progressIntervalMs > 0 ? setInterval(() => {
+    const pending = [...active.values()].map(({ link, started }) =>
+      `${link.text || link.src} (${Math.floor((Date.now() - started) / 1000)}s)`);
+    log(`${progress()} | elapsed: ${Math.floor((Date.now() - startedAt) / 1000)}s | still checking: ${pending.join('; ')}`);
+  }, progressIntervalMs) : null;
+  heartbeat?.unref();
+  try {
+    for (const [name, links] of groups) {
+      log(`Checking ${name}: ${links.length} specifications`);
+      const results = await mapLimit(links, concurrency, async link => {
+        const token = Symbol();
+        active.set(token, { link, started: Date.now() });
+        try {
+          const result = await checker.check(link);
+          counts[result.status]++;
+          finished++;
+          log(`${progress()} | ${result.status.toUpperCase()} | ${link.text || link.src}`);
+          if (result.status === 'failed') log(`  ${result.detail}`);
+          return result;
+        } finally {
+          active.delete(token);
+        }
+      });
+      categories.push({ name, results });
+    }
+  } finally {
+    if (heartbeat) clearInterval(heartbeat);
   }
   return { categories, counts, exitCode: counts.failed ? 1 : 0 };
 }
@@ -195,25 +290,40 @@ async function runChecks(data, { concurrency = 6, ...options } = {}) {
 function renderReport({ categories, counts }) {
   const lines = ['# Specification Check Summary', ''];
   for (const { name, results } of categories) {
+    const changes = results.filter(result => result.status === 'changed');
+    if (!changes.length) continue;
     lines.push(`## ${name}`, '');
-    for (const { link, status, detail, finalUrl } of results) {
-      if (status === 'unchanged' || status === 'skipped') continue;
-      lines.push(`- **${status.toUpperCase()}** ${link.text}`, `  - Source: ${link.src}`, `  - ${detail}`);
+    for (const { link, detail, finalUrl } of changes) {
+      lines.push(`- [${link.text}](${link.src})`, `  - ${detail}`);
       if (finalUrl && finalUrl !== link.src) lines.push(`  - Final URL: ${finalUrl}`);
     }
-    const checked = results.filter(result => result.status === 'unchanged').length;
-    const skipped = results.filter(result => result.status === 'skipped').length;
-    lines.push(`Unchanged: ${checked}; intentionally skipped: ${skipped}.`, '');
+    lines.push('');
   }
-  lines.push('## Totals', '',
-    `Changed: ${counts.changed}; unchanged: ${counts.unchanged}; failed: ${counts.failed}; unknown: ${counts.unknown}; skipped: ${counts.skipped}.`, '',
-    'UNKNOWN means the check could not determine whether the specification changed. It does not mean unchanged.',
-    'Version-header changes are update signals; review the source before updating a translation.', '');
+  if (!counts.changed) lines.push('No updates detected among successfully compared specifications.', '');
+  lines.push('## Check status', '',
+    `Changed: ${counts.changed}; unchanged: ${counts.unchanged}; failed: ${counts.failed}; unknown: ${counts.unknown}; skipped: ${counts.skipped}.`, '');
+  if (counts.failed) {
+    const failures = new Map();
+    for (const { results } of categories) {
+      for (const result of results) {
+        if (result.status !== 'failed') continue;
+        failures.set(result.detail, (failures.get(result.detail) || 0) + 1);
+      }
+    }
+    lines.push('Some checks could not finish:', '');
+    const entries = [...failures].sort((a, b) => b[1] - a[1]);
+    for (const [detail, count] of entries.slice(0, 10)) {
+      lines.push(`- ${detail} (${count} specification${count === 1 ? '' : 's'})`);
+    }
+    if (entries.length > 10) lines.push(`- ${entries.length - 10} additional error types; see the execution log.`);
+    lines.push('');
+  }
+  if (counts.unknown) lines.push(`${counts.unknown} specifications lacked enough information to compare. They are not counted as unchanged.`, '');
   return lines.join('\n');
 }
 
 async function main() {
-  const summary = await runChecks(require('./data.js'));
+  const summary = await runChecks(require('./data.js'), { log: message => console.log(message) });
   const report = renderReport(summary);
   if (SAVE_RESULTS) {
     fs.writeFileSync(RESULT_FILE, report, 'utf8');
