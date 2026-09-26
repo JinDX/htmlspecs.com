@@ -66,9 +66,32 @@ function rewriteHref(href) {
 }
 
 function loadDataScript(callback) {
+    var dataLoaded = false;
+    var domReady = document.readyState !== 'loading';
+    var initialized = false;
+
+    function initializeWhenReady() {
+        if (initialized || !dataLoaded || !domReady) return;
+        initialized = true;
+        callback();
+    }
+
+    if (!domReady) {
+        document.addEventListener('DOMContentLoaded', function () {
+            domReady = true;
+            initializeWhenReady();
+        }, { once: true });
+    }
+
     var script = document.createElement('script');
     script.src = 'https://htmlspecs.com/data.js';
-    script.onload = callback;
+    script.onload = function () {
+        dataLoaded = true;
+        initializeWhenReady();
+    };
+    script.onerror = function () {
+        console.error('Failed to load https://htmlspecs.com/data.js');
+    };
     document.head.appendChild(script);
 }
 
