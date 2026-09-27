@@ -2050,7 +2050,7 @@ const linkGroups = [
             {
                 text: "Timed Text Markup Language 2 (TTML2)",
                 href: "https://htmlspecs.com/ttml2/",
-                src: "https://www.w3.org/TR/2018/REC-ttml2-20181108/",
+                src: "https://www.w3.org/TR/2021/CR-ttml2-20210309/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "REC"
