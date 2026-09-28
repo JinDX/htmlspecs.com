@@ -728,7 +728,7 @@ const linkGroups = [
                 text: "GraphQL",
                 href: "https://htmlspecs.com/graphql/",
                 src: "https://spec.graphql.org/draft/",
-                "last-modified": "Thu, 17 Sep 2026 18:18:54 GMT",
+                "last-modified": "Mon, 28 Sep 2026 09:13:43 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
@@ -736,7 +736,7 @@ const linkGroups = [
                 text: "OpenAPI Specification v3.2.1",
                 href: "https://htmlspecs.com/openapi/",
                 src: "https://spec.openapis.org/oas/latest.html",
-                "last-modified": "Thu, 24 Sep 2026 11:38:18 GMT",
+                "last-modified": "Mon, 28 Sep 2026 10:07:18 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
