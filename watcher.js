@@ -1,4 +1,3 @@
-const https = require('https');
 const fs = require('fs');
 const data = require('./data.js');
 
@@ -231,166 +230,207 @@ async function mapWithConcurrency(
   await Promise.all(workers);
 }
 
-function checkOtherLink(link) {
-  return new Promise(resolve => {
-    let attempt = 0;
+// HEAD 请求与 W3C API 请求一样跟随跳转，并对限流和临时故障重试。
+async function getHeadWithRetry(url, maxRetry = 2) {
+  for (let attempt = 0; ; attempt++) {
+    let res;
 
-    function tryHead() {
-      const req = https.request(
-        link.src,
-        {
-          method: 'HEAD',
-          headers: {
-            'User-Agent': 'htmlspecs-checker/1.0'
-          }
+    try {
+      res = await fetch(url, {
+        method: 'HEAD',
+        headers: {
+          'User-Agent': 'htmlspecs-checker/1.0'
         },
-        res => {
-          const etag =
-            res.headers.etag;
-
-          const lastModified =
-            res.headers['last-modified'];
-
-          function getEtagSuffix(raw) {
-            if (!raw) {
-              return null;
-            }
-
-            const cleaned =
-              raw.replace(/"/g, '');
-
-            const parts =
-              cleaned.split('-');
-
-            return (
-              parts[parts.length - 1] ||
-              cleaned
-            );
-          }
-
-          const etagSuffix =
-            getEtagSuffix(etag);
-
-          const hasStoredEtag =
-            Object.prototype
-              .hasOwnProperty
-              .call(link, 'etag');
-
-          const storedLastIsZero =
-            link['last-modified'] === '0';
-
-          if (hasStoredEtag) {
-            let stored = link.etag;
-
-            if (stored) {
-              stored =
-                stored.replace(/"/g, '');
-            }
-
-            const storedSuffix =
-              getEtagSuffix(stored);
-
-            if (etagSuffix) {
-              if (
-                storedSuffix !== etagSuffix
-              ) {
-                logResult(
-                  `- ${link.text} ETag changed:\n` +
-                  `  - Old ETag suffix: ${storedSuffix}\n` +
-                  `  - New ETag suffix: ${etagSuffix}\n` +
-                  `  - Link: ${link.src}`
-                );
-              }
-            } else if (
-              !storedLastIsZero &&
-              lastModified &&
-              link['last-modified']
-            ) {
-              const newTime =
-                new Date(lastModified);
-
-              const oldTime =
-                new Date(
-                  link['last-modified']
-                );
-
-              const diffMs =
-                Math.abs(newTime - oldTime);
-
-              const diffMin =
-                diffMs / 1000 / 60;
-
-              if (diffMin > 2) {
-                logResult(
-                  `- ${link.text} has been updated (no ETag from server):\n` +
-                  `  - New time: ${newTime.toUTCString()}\n` +
-                  `  - Old time: ${oldTime.toUTCString()}\n` +
-                  `  - Link: ${link.src}`
-                );
-              }
-            }
-          } else if (
-            !storedLastIsZero &&
-            lastModified &&
-            link['last-modified']
-          ) {
-            const newTime =
-              new Date(lastModified);
-
-            const oldTime =
-              new Date(
-                link['last-modified']
-              );
-
-            const diffMs =
-              Math.abs(newTime - oldTime);
-
-            const diffMin =
-              diffMs / 1000 / 60;
-
-            if (diffMin > 2) {
-              logResult(
-                `- ${link.text} has been updated:\n` +
-                `  - New time: ${newTime.toUTCString()}\n` +
-                `  - Old time: ${oldTime.toUTCString()}\n` +
-                `  - Link: ${link.src}`
-              );
-            }
-          }
-
-          res.resume();
-          resolve();
-        }
-      );
-
-      req.setTimeout(15000, () => {
-        req.destroy(
-          new Error('Request timeout')
-        );
+        redirect: 'follow',
+        signal: AbortSignal.timeout(15000)
       });
+    } catch (err) {
+      if (attempt >= maxRetry) {
+        throw err;
+      }
 
-      req.on('error', err => {
-        if (attempt < 2) {
-          attempt++;
-
-          setTimeout(
-            tryHead,
-            attempt * 1000
-          );
-        } else {
-          logResult(
-            `- Failed to fetch ${link.src}: ${err.message} 😢`
-          );
-
-          resolve();
-        }
-      });
-
-      req.end();
+      await sleep((attempt + 1) * 1000);
+      continue;
     }
 
-    tryHead();
-  });
+    // 只有成功响应才能用于版本比较；304 表示未修改。
+    if (res.ok || res.status === 304) {
+      return res;
+    }
+
+    const finalUrlInfo =
+      res.url && res.url !== url
+        ? ` (final URL: ${res.url})`
+        : '';
+
+    const error = new Error(
+      `HTTP ${res.status}${finalUrlInfo}`
+    );
+
+    const retryable =
+      res.status === 429 ||
+      (res.status >= 500 && res.status < 600);
+
+    // 404 等永久错误立即报告，不能比较错误页面的响应头。
+    if (!retryable || attempt >= maxRetry) {
+      throw error;
+    }
+
+    const retryAfterHeader =
+      res.headers.get('retry-after');
+
+    let delay = (attempt + 1) * 1000;
+
+    if (
+      retryAfterHeader &&
+      /^\d+$/.test(retryAfterHeader)
+    ) {
+      const retryDelay = Number(retryAfterHeader) * 1000;
+
+      if (Number.isSafeInteger(retryDelay)) {
+        delay = retryDelay;
+      }
+    } else if (retryAfterHeader) {
+      const retryDate = Date.parse(retryAfterHeader);
+
+      if (Number.isFinite(retryDate)) {
+        delay = Math.max(retryDate - Date.now(), 0);
+      }
+    }
+
+    // 分段等待，避免超大的 Retry-After 导致 setTimeout 溢出后立即重试。
+    while (delay > 0) {
+      const chunk = Math.min(delay, 60000);
+
+      await sleep(chunk);
+      delay -= chunk;
+    }
+  }
+}
+
+async function checkOtherLink(link) {
+  try {
+    const res = await getHeadWithRetry(link.src);
+
+    if (res.status === 304) {
+      return;
+    }
+
+    const etag = res.headers.get('etag');
+    const lastModified =
+      res.headers.get('last-modified');
+
+    function getEtagSuffix(raw) {
+      if (!raw) {
+        return null;
+      }
+
+      const cleaned =
+        raw.replace(/"/g, '');
+
+      const parts =
+        cleaned.split('-');
+
+      return (
+        parts[parts.length - 1] ||
+        cleaned
+      );
+    }
+
+    const etagSuffix =
+      getEtagSuffix(etag);
+
+    const hasStoredEtag =
+      Object.prototype
+        .hasOwnProperty
+        .call(link, 'etag');
+
+    const storedLastIsZero =
+      link['last-modified'] === '0';
+
+    if (hasStoredEtag) {
+      let stored = link.etag;
+
+      if (stored) {
+        stored =
+          stored.replace(/"/g, '');
+      }
+
+      const storedSuffix =
+        getEtagSuffix(stored);
+
+      if (etagSuffix) {
+        if (
+          storedSuffix !== etagSuffix
+        ) {
+          logResult(
+            `- ${link.text} ETag changed:\n` +
+            `  - Old ETag suffix: ${storedSuffix}\n` +
+            `  - New ETag suffix: ${etagSuffix}\n` +
+            `  - Link: ${link.src}`
+          );
+        }
+      } else if (
+        !storedLastIsZero &&
+        lastModified &&
+        link['last-modified']
+      ) {
+        const newTime =
+          new Date(lastModified);
+
+        const oldTime =
+          new Date(
+            link['last-modified']
+          );
+
+        const diffMs =
+          Math.abs(newTime - oldTime);
+
+        const diffMin =
+          diffMs / 1000 / 60;
+
+        if (diffMin > 2) {
+          logResult(
+            `- ${link.text} has been updated (no ETag from server):\n` +
+            `  - New time: ${newTime.toUTCString()}\n` +
+            `  - Old time: ${oldTime.toUTCString()}\n` +
+            `  - Link: ${link.src}`
+          );
+        }
+      }
+    } else if (
+      !storedLastIsZero &&
+      lastModified &&
+      link['last-modified']
+    ) {
+      const newTime =
+        new Date(lastModified);
+
+      const oldTime =
+        new Date(
+          link['last-modified']
+        );
+
+      const diffMs =
+        Math.abs(newTime - oldTime);
+
+      const diffMin =
+        diffMs / 1000 / 60;
+
+      if (diffMin > 2) {
+        logResult(
+          `- ${link.text} has been updated:\n` +
+          `  - New time: ${newTime.toUTCString()}\n` +
+          `  - Old time: ${oldTime.toUTCString()}\n` +
+          `  - Link: ${link.src}`
+        );
+      }
+    }
+  } catch (err) {
+    logResult(
+      `- Failed to fetch ${link.src}: ${err.message} 😢`
+    );
+  }
 }
 
 const checkLinks = async (
