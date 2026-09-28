@@ -2790,7 +2790,7 @@ const linkGroups = [
                 text: "Connection Allowlists",
                 href: "https://htmlspecs.com/connection-allowlists/",
                 src: "https://wicg.github.io/connection-allowlists/",
-                "last-modified": "Wed, 26 Aug 2026 12:22:46 GMT",
+                "last-modified": "Sun, 27 Sep 2026 19:51:06 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
