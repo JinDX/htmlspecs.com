@@ -138,7 +138,8 @@ async function getJsonWithRetry(url, maxRetry = 2) {
           Accept: 'application/json',
           'User-Agent': 'htmlspecs-checker/1.0'
         },
-        redirect: 'follow'
+        redirect: 'follow',
+        signal: AbortSignal.timeout(15000)
       });
 
       if (
@@ -230,7 +231,6 @@ async function mapWithConcurrency(
   await Promise.all(workers);
 }
 
-// HEAD 请求与 W3C API 请求一样跟随跳转，并对限流和临时故障重试。
 async function getHeadWithRetry(url, maxRetry = 2) {
   for (let attempt = 0; ; attempt++) {
     let res;
@@ -253,7 +253,6 @@ async function getHeadWithRetry(url, maxRetry = 2) {
       continue;
     }
 
-    // 只有成功响应才能用于版本比较；304 表示未修改。
     if (res.ok || res.status === 304) {
       return res;
     }
@@ -271,7 +270,6 @@ async function getHeadWithRetry(url, maxRetry = 2) {
       res.status === 429 ||
       (res.status >= 500 && res.status < 600);
 
-    // 404 等永久错误立即报告，不能比较错误页面的响应头。
     if (!retryable || attempt >= maxRetry) {
       throw error;
     }
@@ -298,7 +296,6 @@ async function getHeadWithRetry(url, maxRetry = 2) {
       }
     }
 
-    // 分段等待，避免超大的 Retry-After 导致 setTimeout 溢出后立即重试。
     while (delay > 0) {
       const chunk = Math.min(delay, 60000);
 
@@ -308,7 +305,83 @@ async function getHeadWithRetry(url, maxRetry = 2) {
   }
 }
 
+function getWebGLSourcePath(src) {
+  try {
+    const url = new URL(src);
+
+    if (url.hostname !== 'registry.khronos.org') {
+      return null;
+    }
+
+    const match = url.pathname.match(
+      /^\/webgl\/specs\/latest\/(1\.0|2\.0)(?:\/(?:index\.html)?)?$/
+    );
+
+    return match
+      ? `specs/latest/${match[1]}/index.html`
+      : null;
+  } catch {
+    return null;
+  }
+}
+
+async function checkWebGLSource(link, sourcePath) {
+  const apiUrl = new URL(
+    'https://api.github.com/repos/KhronosGroup/WebGL/commits'
+  );
+
+  apiUrl.searchParams.set('path', sourcePath);
+  apiUrl.searchParams.set('per_page', '1');
+
+  try {
+    const commits = await getJsonWithRetry(apiUrl.href);
+    const latest = Array.isArray(commits) ? commits[0] : null;
+    const commitTime = Date.parse(latest?.commit?.committer?.date);
+
+    if (
+      !latest ||
+      !/^[a-f0-9]{40}$/i.test(latest.sha || '') ||
+      !Number.isFinite(commitTime)
+    ) {
+      throw new Error('GitHub API returned no valid specification commit');
+    }
+
+    if (link['last-modified'] === '0') {
+      return;
+    }
+
+    const baselineTime = Date.parse(link['last-modified']);
+
+    if (!Number.isFinite(baselineTime)) {
+      throw new Error('Missing or invalid last-modified baseline in data.js');
+    }
+
+    if (commitTime > baselineTime) {
+      logResult(
+        `- ${link.text} official source has a newer commit:\n` +
+        `  - Source commit time: ${new Date(commitTime).toUTCString()}\n` +
+        `  - Recorded baseline: ${new Date(baselineTime).toUTCString()}\n` +
+        `  - Commit: https://github.com/KhronosGroup/WebGL/commit/${latest.sha}\n` +
+        `  - Link: ${link.src}\n` +
+        `  - Note: source change detected; registry publication not verified.`
+      );
+    }
+  } catch (err) {
+    logResult(
+      `- Failed to check official WebGL source for ${link.src}: ${err.message} 😢\n` +
+      `  - API: ${apiUrl.href}`
+    );
+  }
+}
+
 async function checkOtherLink(link) {
+  const webGLSourcePath = getWebGLSourcePath(link.src);
+
+  if (webGLSourcePath) {
+    await checkWebGLSource(link, webGLSourcePath);
+    return;
+  }
+
   try {
     const res = await getHeadWithRetry(link.src);
 
