@@ -2754,14 +2754,14 @@ const linkGroups = [
             //     lang: "cjk",
             //     state: "Draft"
             // },
-            {
-                text: "Subresource Integrity (SRI)",
-                href: "https://htmlspecs.com/sri/",
-                src: "https://www.w3.org/TR/2016/REC-SRI-20160623/",
-                "last-modified": "-",
-                lang: "cjk",
-                state: "REC"
-            },
+            // {
+            //     text: "Subresource Integrity (SRI)",
+            //     href: "https://htmlspecs.com/sri/",
+            //     src: "https://www.w3.org/TR/2016/REC-SRI-20160623/",
+            //     "last-modified": "-",
+            //     lang: "cjk",
+            //     state: "REC"
+            // },
             {
                 text: "Subresource Integrity (SRI) 2",
                 href: "https://htmlspecs.com/sri-2/",
