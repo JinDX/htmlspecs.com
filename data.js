@@ -3116,7 +3116,7 @@ const linkGroups = [
             {
                 text: "Verifiable Credential Rendering Methods v1.0",
                 href: "https://htmlspecs.com/vc-render-method/",
-                src: "https://www.w3.org/TR/2026/WD-vc-render-method-20260908/",
+                src: "https://www.w3.org/TR/2026/WD-vc-render-method-20260929/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
