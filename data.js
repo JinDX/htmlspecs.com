@@ -304,7 +304,7 @@ const linkGroups = [
             {
                 text: "String Searching",
                 href: "https://htmlspecs.com/string-search/",
-                src: "https://www.w3.org/TR/2025/DNOTE-string-search-20260927/",
+                src: "https://www.w3.org/TR/2026/DNOTE-string-search-20260930/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "DNOTE"
