@@ -953,7 +953,7 @@
             }
         }
     </style>
-    <meta name="revision" content="5ff2230cc0d1d0dae66df44f3a207e6abfeede46">
+    <meta name="revision" content="7f707ffea120bc1170eb71c65bef6a1901c25128">
     <meta name="description" content="RDF is a directed, labeled graph data model for representing information in the
         Web. This specification defines the syntax and semantics of the SPARQL Query Language for
         RDF. SPARQL can be used to express queries across diverse data sources, whether the data is
@@ -1325,7 +1325,7 @@
   "copyrightStart": "2008",
   "github": "https://github.com/w3c/sparql-query",
   "wgPublicList": "public-rdf-star-wg",
-  "previousPublishDate": "2026-09-21",
+  "previousPublishDate": "2026-09-30",
   "prevRecURI": "https://www.w3.org/TR/2013/REC-sparql11-query-20130321",
   "prevRecShortname": "sparql11-query",
   "previousMaturity": "WD",
@@ -1365,10 +1365,10 @@
   "lint": {
     "no-unused-dfns": false
   },
-  "gitRevision": "5ff2230cc0d1d0dae66df44f3a207e6abfeede46",
-  "publishDate": "2026-09-30",
-  "publishISODate": "2026-09-30T00:00:00.000Z",
-  "generatedSubtitle": "W3C Working Draft 30 September 2026"
+  "gitRevision": "7f707ffea120bc1170eb71c65bef6a1901c25128",
+  "publishDate": "2026-10-01",
+  "publishISODate": "2026-10-01T00:00:00.000Z",
+  "generatedSubtitle": "W3C Working Draft 01 October 2026"
 }</script>
     <link rel="stylesheet" href="https://www.w3.org/StyleSheets/TR/2021/W3C-WD">
     <link rel="stylesheet" href="https://www.w3.org/StyleSheets/TR/2021/dark.css" disabled="">
@@ -1381,14 +1381,14 @@
             </a></p>
         <h1 id="title" class="title">SPARQL 1.2 Query Language</h1>
         <p id="w3c-state"><a href="https://www.w3.org/standards/types#WD">W3C Working Draft</a> <time
-                class="dt-published" datetime="2026-09-30">30 September 2026</time></p>
+                class="dt-published" datetime="2026-10-01">01 October 2026</time></p>
         <details open="">
             <summary>More details about this document</summary>
             <dl>
                 <dt>This version:</dt>
                 <dd>
                     <a class="u-url"
-                        href="https://www.w3.org/TR/2026/WD-sparql12-query-20260930/">https://www.w3.org/TR/2026/WD-sparql12-query-20260930/</a>
+                        href="https://www.w3.org/TR/2026/WD-sparql12-query-20261001/">https://www.w3.org/TR/2026/WD-sparql12-query-20261001/</a>
                 </dd>
                 <dt>Latest published version:</dt>
                 <dd>
@@ -7543,6 +7543,14 @@ WHERE { ?annot  a:annotates  &lt;http://www.w3.org/TR/rdf-sparql-query/&gt; .
                     that encounters errors on both branches will produce <em>either</em> of the <a
                         data-link-type="dfn|abstract-op" href="#dfn-sparql-eval-error" class="internalDFN"
                         id="ref-for-dfn-sparql-eval-error-4">errors</a>.
+                </li>
+                <li>
+                    If the SPARQL expression is a variable
+                    and the solution mapping with respect to which the expression is evaluated contains that variable,
+                    then the result of this evaluation is the RDF term that the solution mapping assigns to that
+                    variable.
+                    If the SPARQL expression is a variable that the solution mapping does not contain,
+                    then the result of evaluating the expression is an error.
                 </li>
             </ul>
             <p>The logical-and and logical-or truth table for true (<span class="truth">T</span>), false
@@ -14268,15 +14276,24 @@ ppeval(<var>x</var>:term, <a href="#defn_ppeOneOrMorePath" class="ppeOp">OneOrMo
             </div>
             <div class="defn">
                 <p><b>Definition: <span id="eval_negatedPropertySet">Evaluation of NegatedPropertySet</span></b></p>
-                <pre class="nohighlight">Write <var>μ'</var> as the extension of a solution mapping:
-<var>μ'</var>(<var>μ</var>, <var>x</var>) = <var>μ</var>(<var>x</var>)   if <var>x</var> is a variable
-<var>μ'</var>(<var>μ</var>, <var>t</var>) = <var>t</var>      if <var>t</var> is an RDF term</pre>
+                <p>Let <var>S</var> be a nonempty set of IRIs.
+                    Let <var>G</var> be the <a href="#defn_ActiveGraph">active graph</a>.</p>
                 <pre
-                    class="nohighlight">Let <var>x</var> and <var>y</var> be variables or RDF terms, <var>S</var> a set of IRIs,
-and <var>G</var> the <a href="#defn_ActiveGraph">active graph</a>.
+                    class="nohighlight">ppeval(<var>vx</var>:var, <a href="#defn_ppeNPS" class="ppeOp">NPS</a>(<var>S</var>), <var>vy</var>:var) =
+     { { (<var>vx</var>, <var>s</var>), (<var>vy</var>, <var>o</var>) } |
+         ∃ an IRI <var>p</var> such that <var>p</var> ∉ <var>S</var> and the triple (<var>s</var>, <var>p</var>, <var>o</var>) is in <var>G</var> }
 
-   ppeval(<var>x</var>, <a href="#defn_ppeNPS" class="ppeOp">NPS</a>(<var>S</var>), <var>y</var>) =
-       { <var>μ</var> | ∃ triple(<var>μ'</var>(<var>μ</var>, <var>x</var>), <var>p</var>, <var>μ'</var>(<var>μ</var>, <var>y</var>)) in <var>G</var>, such that the IRI of <var>p</var> ∉ <var>S</var> }</pre>
+ppeval(<var>vx</var>:var, <a href="#defn_ppeNPS" class="ppeOp">NPS</a>(<var>S</var>), <var>y</var>:term) =
+     { { (<var>vx</var>, <var>s</var>) } |
+         ∃ an IRI <var>p</var> such that <var>p</var> ∉ <var>S</var> and the triple (<var>s</var>, <var>p</var>, <var>y</var>) is in <var>G</var> }
+
+ppeval(<var>x</var>:term, <a href="#defn_ppeNPS" class="ppeOp">NPS</a>(<var>S</var>), <var>vy</var>:var) =
+     { { (<var>vy</var>, <var>o</var>) } |
+         ∃ an IRI <var>p</var> such that <var>p</var> ∉ <var>S</var> and the triple (<var>x</var>, <var>p</var>, <var>o</var>) is in <var>G</var> }
+
+ppeval(<var>x</var>:term, <a href="#defn_ppeNPS" class="ppeOp">NPS</a>(<var>S</var>), <var>y</var>:term) =
+     { {} |
+         ∃ an IRI <var>p</var> such that <var>p</var> ∉ <var>S</var> and the triple (<var>x</var>, <var>p</var>, <var>y</var>) is in <var>G</var> }</pre>
             </div>
         </section>
         <section id="sparqlAlgebra">
@@ -19318,7 +19335,7 @@ _:x rdf:type xsd:decimal .</pre>
                 <dt id="bib-sparql12-query">[SPARQL12-Query]</dt>
                 <dd>
                     <a href="https://www.w3.org/TR/sparql12-query/"><cite>SPARQL 1.2 Query Language</cite></a>. Olaf
-                    Hartig; Andy Seaborne; Ruben Taelman; Gregory Williams; Thomas Pellissier Tanon. W3C. 21 September
+                    Hartig; Andy Seaborne; Ruben Taelman; Gregory Williams; Thomas Pellissier Tanon. W3C. 30 September
                     2026. W3C Working Draft. URL: <a
                         href="https://www.w3.org/TR/sparql12-query/">https://www.w3.org/TR/sparql12-query/</a>
                 </dd>
