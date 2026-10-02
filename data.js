@@ -813,7 +813,7 @@ const linkGroups = [
             {
                 text: "MathML4",
                 href: "https://htmlspecs.com/mathml4/",
-                src: "https://www.w3.org/TR/2026/WD-mathml4-20260604/",
+                src: "https://www.w3.org/TR/2026/WD-mathml4-20261001/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
