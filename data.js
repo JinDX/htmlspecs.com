@@ -3655,7 +3655,7 @@ const linkGroups = [
             {
                 text: "EPUB 3.4",
                 href: "https://htmlspecs.com/epub-34/",
-                src: "https://www.w3.org/TR/2026/CRD-epub-34-20260803/",
+                src: "https://www.w3.org/TR/2026/CRD-epub-34-20261002/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "CRD"
