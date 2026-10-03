@@ -325,7 +325,7 @@ function getWebGLSourcePath(src) {
   }
 }
 
-async function checkWebGLSource(link, sourcePath) {
+async function checkWebGLSource(link, sourcePath, logResult) {
   const apiUrl = new URL(
     'https://api.github.com/repos/KhronosGroup/WebGL/commits'
   );
@@ -374,11 +374,11 @@ async function checkWebGLSource(link, sourcePath) {
   }
 }
 
-async function checkOtherLink(link) {
+async function checkOtherLink(link, logResult) {
   const webGLSourcePath = getWebGLSourcePath(link.src);
 
   if (webGLSourcePath) {
-    await checkWebGLSource(link, webGLSourcePath);
+    await checkWebGLSource(link, webGLSourcePath, logResult);
     return;
   }
 
@@ -513,6 +513,9 @@ const checkLinks = async (
   const total = links.length;
   let finished = 0;
 
+  const results = links.map(() => []);
+  const indexedLinks = links.map((link, index) => ({ link, index }));
+
   logResult(
     `## Checking category: ${category} 😊\n`
   );
@@ -529,24 +532,26 @@ const checkLinks = async (
   };
 
   const w3Links =
-    links.filter(
-      item =>
-        item.src &&
-        item.src.includes('w3.org/TR')
+    indexedLinks.filter(
+      ({ link }) =>
+        link.src &&
+        link.src.includes('w3.org/TR')
     );
 
   const otherLinks =
-    links.filter(
-      item =>
-        !item.src ||
-        !item.src.includes('w3.org/TR')
+    indexedLinks.filter(
+      ({ link }) =>
+        !link.src ||
+        !link.src.includes('w3.org/TR')
     );
 
   const w3Requests =
     mapWithConcurrency(
       w3Links,
       W3C_CONCURRENCY,
-      async link => {
+      async ({ link, index }) => {
+        const logResult = text => results[index].push(text);
+
         const shortname =
           getW3Shortname(link.src);
 
@@ -658,8 +663,8 @@ const checkLinks = async (
     mapWithConcurrency(
       otherLinks,
       OTHER_CONCURRENCY,
-      async link => {
-        await checkOtherLink(link);
+      async ({ link, index }) => {
+        await checkOtherLink(link, text => results[index].push(text));
         showProgress();
       }
     );
@@ -672,6 +677,12 @@ const checkLinks = async (
   progressText = '';
 
   process.stdout.write('\n');
+
+  for (const messages of results) {
+    for (const message of messages) {
+      logResult(message);
+    }
+  }
 
   logResult('\n');
 };
