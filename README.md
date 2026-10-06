@@ -131,7 +131,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 
 ### 离线、后台与通知
 - [Web Background Synchronization](https://htmlspecs.com/background-sync/)（[Source](https://wicg.github.io/background-sync/spec/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
-- [Push API](https://htmlspecs.com/push-api/)（[Source](https://www.w3.org/TR/2025/WD-push-api-20251201/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Push API](https://htmlspecs.com/push-api/)（[Source](https://www.w3.org/TR/2026/WD-push-api-20261005/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Generic Event Delivery Using HTTP Push](https://htmlspecs.com/rfc8030/)（[Source](https://www.rfc-editor.org/rfc/rfc8030.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [Message Encryption for Web Push](https://htmlspecs.com/rfc8291/)（[Source](https://www.rfc-editor.org/rfc/rfc8291.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 - [Voluntary Application Server Identification (VAPID) for Web Push](https://htmlspecs.com/rfc8292/)（[Source](https://www.rfc-editor.org/rfc/rfc8292.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
