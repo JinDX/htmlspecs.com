@@ -2249,7 +2249,7 @@ const linkGroups = [
             {
                 text: "Scalable Vector Graphics (SVG) 2",
                 href: "https://htmlspecs.com/SVG2/",
-                src: "https://www.w3.org/TR/2018/CR-SVG2-20181004/",
+                src: "https://www.w3.org/TR/2026/CR-SVG2-20261006/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "CR"
