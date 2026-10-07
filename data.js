@@ -2082,7 +2082,7 @@ const linkGroups = [
             {
                 text: "WebCodecs",
                 href: "https://htmlspecs.com/webcodecs/",
-                src: "https://www.w3.org/TR/2026/WD-webcodecs-20260921/",
+                src: "https://www.w3.org/TR/2026/WD-webcodecs-20261007/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
