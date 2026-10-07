@@ -2853,7 +2853,7 @@ const linkGroups = [
             {
                 text: "Trusted Types",
                 href: "https://htmlspecs.com/trusted-types/",
-                src: "https://www.w3.org/TR/2026/WD-trusted-types-20260623/",
+                src: "https://www.w3.org/TR/2026/WD-trusted-types-20261007/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
