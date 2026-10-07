@@ -289,7 +289,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [WebGPU Shading Language](https://htmlspecs.com/WGSL/)（[Source](https://www.w3.org/TR/2026/CRD-WGSL-20260921/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [WebGL Specification](https://htmlspecs.com/webgl/)（[Source](https://registry.khronos.org/webgl/specs/latest/1.0/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [WebGL 2.0 Specification](https://htmlspecs.com/webgl2/)（[Source](https://registry.khronos.org/webgl/specs/latest/2.0/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
-- [Scalable Vector Graphics (SVG) 2](https://htmlspecs.com/SVG2/)（[Source](https://www.w3.org/TR/2018/CR-SVG2-20181004/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
+- [Scalable Vector Graphics (SVG) 2](https://htmlspecs.com/SVG2/)（[Source](https://www.w3.org/TR/2026/CR-SVG2-20261006/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
 - [Scroll-driven Animations](https://htmlspecs.com/scroll-animations-1/)（[Source](https://www.w3.org/TR/2023/WD-scroll-animations-1-20230606/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [WebXR Device API](https://htmlspecs.com/webxr/)（[Source](https://www.w3.org/TR/2026/CRD-webxr-20260609/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [WebXR Augmented Reality Module - Level 1](https://htmlspecs.com/webxr-ar-module-1/)（[Source](https://www.w3.org/TR/2025/CRD-webxr-ar-module-1-20250425/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
