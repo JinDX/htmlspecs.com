@@ -1003,7 +1003,7 @@ const linkGroups = [
                 text: "User-Agent Client Hints",
                 href: "https://htmlspecs.com/ua-client-hints/",
                 src: "https://wicg.github.io/ua-client-hints/",
-                "last-modified": "Tue, 22 Sep 2026 13:27:49 GMT",
+                "last-modified": "Tue, 06 Oct 2026 14:39:27 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
