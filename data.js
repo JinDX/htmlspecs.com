@@ -1422,7 +1422,7 @@ const linkGroups = [
                 text: "Web Serial API",
                 href: "https://htmlspecs.com/serial/",
                 src: "https://serial.spec.whatwg.org/",
-                "last-modified": "Tue, 15 Sep 2026 19:07:44 GMT",
+                "last-modified": "Wed, 07 Oct 2026 23:04:18 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
