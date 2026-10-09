@@ -631,7 +631,7 @@ const linkGroups = [
             {
                 text: "RDF 1.2 N-Quads",
                 href: "https://htmlspecs.com/rdf12-n-quads/",
-                src: "https://www.w3.org/TR/2026/WD-rdf12-n-quads-20260723/",
+                src: "https://www.w3.org/TR/2026/WD-rdf12-n-quads-20261008/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
