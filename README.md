@@ -101,7 +101,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 
 ### 数学
 - [MathML Core](https://htmlspecs.com/mathml-core/)（[Source](https://www.w3.org/TR/2025/CR-mathml-core-20250624/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
-- [MathML4](https://htmlspecs.com/mathml4/)（[Source](https://www.w3.org/TR/2026/WD-mathml4-20261002/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [MathML4](https://htmlspecs.com/mathml4/)（[Source](https://www.w3.org/TR/2026/WD-mathml4-20261008/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 
 ### Web 应用、安装与生命周期
 - [Web Application Manifest](https://htmlspecs.com/appmanifest/)（[Source](https://www.w3.org/TR/2026/WD-appmanifest-20261008/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
