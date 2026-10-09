@@ -3966,7 +3966,7 @@ const cssLinkGroups = [
             {
                 text: "CSS Color Module Level 4",
                 href: "https://htmlspecs.com/css/css-color-4/",
-                src: "https://www.w3.org/TR/2026/CRD-css-color-4-20261007/",
+                src: "https://www.w3.org/TR/2026/CRD-css-color-4-20261008/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "CRD"
