@@ -828,7 +828,7 @@ const linkGroups = [
             {
                 text: "Web Application Manifest",
                 href: "https://htmlspecs.com/appmanifest/",
-                src: "https://www.w3.org/TR/2026/WD-appmanifest-20261008/",
+                src: "https://www.w3.org/TR/2026/WD-appmanifest-20261009/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
