@@ -8,7 +8,7 @@
     <meta content="CRD" name="w3c-status">
     <meta content="Bikeshed version ea4009a02, updated Thu Sep 17 15:24:44 2026 -0700" name="generator">
     <link href="https://www.w3.org/TR/css-color-4/" rel="canonical">
-    <meta content="e13fe879106ad83dd89faecab5edad868c7efbfa" name="revision">
+    <meta content="3cfa13e88561688b47392ab3ee171fbb8d76d949" name="revision">
     <meta content="dark light" name="color-scheme">
     <link href="style.css" rel="stylesheet">
     <style>
@@ -1561,7 +1561,7 @@ For darkmode:
         </p>
         <h1 class="no-ref p-name" id="title">CSS Color Module Level 4</h1>
         <p id="w3c-state"><a href="https://www.w3.org/standards/types/#CRD">W3C Candidate Recommendation Draft</a>,
-            <time class="dt-updated" datetime="2026-10-08">8 October 2026</time>
+            <time class="dt-updated" datetime="2026-10-09">9 October 2026</time>
         </p>
         <details open>
             <summary>More details about this document</summary>
@@ -1569,14 +1569,14 @@ For darkmode:
                 <dl>
                     <dt>This version:
                     <dd><a class="u-url"
-                            href="https://www.w3.org/TR/2026/CRD-css-color-4-20261008/">https://www.w3.org/TR/2026/CRD-css-color-4-20261008/</a>
+                            href="https://www.w3.org/TR/2026/CRD-css-color-4-20261009/">https://www.w3.org/TR/2026/CRD-css-color-4-20261009/</a>
                     <dt>Latest published version:
                     <dd><a href="https://www.w3.org/TR/css-color-4/">https://www.w3.org/TR/css-color-4/</a>
                     <dt>Editor's Draft:
                     <dd><a href="https://drafts.csswg.org/css-color-4/">https://drafts.csswg.org/css-color-4/</a>
                     <dt>Previous Versions:
-                    <dd><a href="https://www.w3.org/TR/2026/CRD-css-color-4-20261007/"
-                            rel="prev">https://www.w3.org/TR/2026/CRD-css-color-4-20261007/</a>
+                    <dd><a href="https://www.w3.org/TR/2026/CRD-css-color-4-20261008/"
+                            rel="prev">https://www.w3.org/TR/2026/CRD-css-color-4-20261008/</a>
                     <dt>History:
                     <dd><a class="u-url"
                             href="https://www.w3.org/standards/history/css-color-4/">https://www.w3.org/standards/history/css-color-4/</a>
@@ -1584,7 +1584,6 @@ For darkmode:
                     <dd><a href="https://wpt.fyi/results/css/css-color">https://wpt.fyi/results/css/css-color</a>
                     <dt>Feedback:
                     <dd><a href="https://github.com/w3c/csswg-drafts/labels/css-color-4">CSSWG Issues Repository</a>
-                    <dd><a href="#issues-index">Inline In Spec</a>
                     <dt class="editor">Editors:
                     <dd class="editor h-card p-author vcard" data-editor-id="42199"><a class="fn p-name u-url url"
                             href="http://xanthir.com/contact">Tab Atkins Jr.</a> (<span class="org p-org">Google</span>)
@@ -2106,7 +2105,6 @@ For darkmode:
                                 References</span></a>
                 </ol>
             <li><a href="#property-index"><span class="secno"></span> <span class="content">Property Index</span></a>
-            <li><a href="#issues-index"><span class="secno"></span> <span class="content">Issues Index</span></a>
         </ol>
     </nav>
     <main>
@@ -11023,8 +11021,313 @@ else if <c- p>(</c-><c- m>-180</c-> &lt; θ₂ - θ₁ &lt;= <c- m>0</c-><c- p>)
                 class="content">
                 Sample Pseudocode for the EdgeSeeker Gamut Mapping</span><a class="self-link"
                 href="#pseudo-edgeseeker"></a></h4>
-        <p class="issue" id="issue-4b1038ec"><a class="self-link" href="#issue-4b1038ec"></a> add pseudocode for
-            EdgeSeeker GMA</p>
+        <p>The EdgeSeeker algorithm relies on a lookup table (LUT)
+            which is constructed once for a given RGB destination color space
+            with non-imaginary primaries (not, for example, ProPhoto RGB)
+            and then reused to gamut map every color mapped into that space.
+            The following describes how the LUT is constructed,
+            and how it is then used to gamut map an individual color.</p>
+        <div class="algorithm" data-algorithm="to construct an EdgeSeeker lookup table">
+
+            To <dfn class="dfn-paneled" data-dfn-type="dfn" data-export
+                id="construct-an-edgeseeker-lookup-table">construct an EdgeSeeker lookup table</dfn>
+            for an RGB destination color space <var>destination</var>
+            with non-imaginary primaries (not, for example, ProPhoto RGB),
+            given a number of hue samples per region <var>N</var> (for example, 400):
+
+
+            <ol>
+                <li>let <var>cusps</var> and <var>curve</var> each be an empty list
+                <li>
+                    for each of the six 60deg hue regions
+                    (0deg to 60deg, 60deg to 120deg, and so on up to 300deg to 360deg):
+
+                    <ol>
+                        <li>let <var>regionCusps</var> and <var>regionCurve</var> each be an empty list
+                        <li>
+                            for each of <var>N</var> hues <var>h</var> evenly spaced across that region,
+                            inclusive of both endpoints, in increasing order:
+
+                            <ol>
+                                <li>let <var>r</var>, <var>g</var> and <var>b</var> be the result of
+                                    converting the HSL triplet (<var>h</var>, 100%, 50%) to RGB
+                                    using the <a href="#hsl-to-rgb">HSL to RGB conversion</a>
+                                <li>let <var>cusp</var> be the color with coordinates <var>r</var>, <var>g</var>,
+                                    <var>b</var> in <var>destination</var>,
+                                    converted to the OkLCh color space
+                                <li>append {l: <var>cusp</var>’s Lightness, c: <var>cusp</var>’s Chroma, h:
+                                    <var>cusp</var>’s Hue} to <var>regionCusps</var>
+                                <li>let <var>r2</var>, <var>g2</var> and <var>b2</var> be the result of
+                                    converting the HSL triplet (<var>h</var>, 100%, 75%) to RGB
+                                    using the <a href="#hsl-to-rgb">HSL to RGB conversion</a>
+                                <li>let <var>curvePoint</var> be the color with coordinates <var>r2</var>,
+                                    <var>g2</var>, <var>b2</var> in <var>destination</var>,
+                                    converted to the OkLCh color space
+                                <li>append {l: <var>curvePoint</var>’s Lightness, c: <var>curvePoint</var>’s Chroma, h:
+                                    <var>curvePoint</var>’s Hue}
+                                    to <var>regionCurve</var>
+                            </ol>
+                        <li><a data-link-type="dfn" href="#remove-hue-folds" id="ref-for-remove-hue-folds">remove hue
+                                folds</a> from <var>regionCusps</var>, and from <var>regionCurve</var>
+                        <li>append every entry of <var>regionCusps</var> except the last to <var>cusps</var>,
+                            and every entry of <var>regionCurve</var> except the last to <var>curve</var>
+                    </ol>
+                <li>sort <var>cusps</var> and <var>curve</var> each by ascending hue
+                <li>
+                    for each of <var>cusps</var> and <var>curve</var>:
+
+                    <ol>
+                        <li>let <var>last</var> be its highest-hue entry,
+                            and let <var>first</var> be its lowest-hue entry with 360deg added to its hue
+                        <li>let <var>end</var> be the entry whose Lightness and Chroma are obtained by
+                            linearly interpolating, by hue, between <var>last</var> and <var>first</var>
+                            at hue 360deg
+                        <li>prepend to the list an entry with <var>end</var>’s Lightness and Chroma at hue 0deg,
+                            and append <var>end</var> at hue 360deg
+                    </ol>
+                <li>let <var>LUT</var> be an empty list
+                <li>
+                    for each entry <var>cusp</var> in <var>cusps</var>:
+
+                    <ol>
+                        <li>let <var>curvePoint</var> be the entry whose Lightness and Chroma are obtained by
+                            linearly interpolating, by hue,
+                            between the two entries in <var>curve</var>
+                            whose hues most closely bracket <var>cusp</var>’s hue
+                        <li>let <var>curvature</var> be the result of
+                            <a data-link-type="dfn" href="#calculate-the-curvature"
+                                id="ref-for-calculate-the-curvature">calculating the curvature</a>
+                            for <var>cusp</var> and <var>curvePoint</var>
+                        <li>append {l: <var>cusp</var>’s l, c: <var>cusp</var>’s c, h: <var>cusp</var>’s h, curvature:
+                            <var>curvature</var>} to <var>LUT</var>
+                    </ol>
+                <li>return <var>LUT</var>
+            </ol>
+            <p class="note" role="note"><span class="marker">Note:</span> The number of hue samples,
+                and any pruning of entries which can be linearly interpolated
+                from their neighbors,
+                are implementation choices
+                that trade off precomputation time, memory, and accuracy;
+                they do not affect the definition of the algorithm.
+                See the reference implementation <a data-link-type="biblio" href="#biblio-colorjs-edgeseeker"
+                    title="EdgeSeeker Gamut Mapping algorithm">[colorjs-EdgeSeeker]</a>
+                for one such approach.</p>
+        </div>
+        <div class="algorithm" data-algorithm="to remove hue folds from a list of EdgeSeeker samples">
+
+            To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="remove-hue-folds">remove hue folds</dfn>
+            from a list <var>samples</var>
+            of OkLCh entries in order of increasing sampled HSL hue:
+
+
+            <p>Because the entries are keyed by OkLCh hue,
+                a monotonically increasing sequence of sampled HSL hues
+                does not always produce a monotonically increasing sequence of OkLCh hues:
+                the boundary can fold back on itself.
+                Simply discarding each entry whose hue does not advance
+                keeps the overshoot before the fold and discards the good entries after it,
+                which is worse than doing nothing.
+                Instead, the overshoot is removed,
+                and the boundary resumes at the end of the backward run.</p>
+            <p>Here the <em>hue step</em> from hue <var>a</var> to hue <var>b</var> is
+                (<var>b</var> − <var>a</var>) modulo 360deg, in the range [0deg, 360deg),
+                and it is <em>forward</em> if it is less than or equal to 180deg.</p>
+            <ol>
+                <li>let <var>kept</var> be a list containing the first entry of <var>samples</var>
+                <li>let <var>i</var> be 1
+                <li>
+                    while <var>i</var> is less than the number of entries in <var>samples</var>:
+
+                    <ol>
+                        <li>if the hue step from <var>samples</var>[<var>i</var> − 1]'s hue to
+                            <var>samples</var>[<var>i</var>]'s hue is forward,
+                            append <var>samples</var>[<var>i</var>] to <var>kept</var>, set <var>i</var> to <var>i</var>
+                            + 1,
+                            and continue with the next iteration
+                        <li>let <var>j</var> be <var>i</var>
+                        <li>while <var>j</var> is less than the index of the last entry of <var>samples</var>,
+                            and the hue step from <var>samples</var>[<var>j</var>]'s hue to
+                            <var>samples</var>[<var>j</var> + 1]'s hue is not forward,
+                            set <var>j</var> to <var>j</var> + 1
+                        <li>let <var>resume</var> be <var>samples</var>[<var>j</var>]
+                        <li>let <var>first</var> be the index of the first entry of <var>kept</var>
+                            whose hue step to <var>resume</var>’s hue is not forward,
+                            that is, the first kept entry past <var>resume</var>’s hue
+                        <li>Assert: there is such an entry, and <var>first</var> is at least 1
+                        <li>let <var>bridge</var> be the entry at hue <var>resume</var>’s hue − 0.0001deg
+                            whose Lightness and Chroma are obtained by
+                            linearly interpolating, by hue, between <var>kept</var>[<var>first</var> − 1] and
+                            <var>kept</var>[<var>first</var>],
+                            with the interpolation factor clamped to [0, 1]
+                        <li>remove <var>kept</var>[<var>first</var>] and every entry after it from <var>kept</var>
+                        <li>if the hue step from the hue of the last entry of <var>kept</var> to <var>bridge</var>’s hue
+                            is forward and not 0deg, append <var>bridge</var> to <var>kept</var>
+                        <li>append <var>resume</var> to <var>kept</var>
+                        <li>set <var>i</var> to <var>j</var> + 1
+                    </ol>
+                <li>replace the contents of <var>samples</var> with <var>kept</var>
+            </ol>
+        </div>
+        <div class="algorithm" data-algorithm="to calculate the curvature of a gamut boundary section">
+
+            To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="calculate-the-curvature">calculate the
+                curvature</dfn> of a gamut boundary section,
+            given a cusp point <var>cusp</var>
+            (the OkLCh Lightness and Chroma of the point of highest chroma for a hue)
+            and a second point <var>curvePoint</var>
+            on the lighter part of the boundary at the same hue:
+
+
+            <p>The boundary section is normalized into a unit square
+                in which (0, 0) is white
+                and (1, 1) is the cusp.
+                The curvature is that of the circle
+                which passes through those two points
+                and through the normalized <var>curvePoint</var>.</p>
+            <ol>
+                <li>let <var>x</var> be (100% − <var>curvePoint</var>’s Lightness) / (100% − <var>cusp</var>’s
+                    Lightness)
+                <li>let <var>y</var> be <var>curvePoint</var>’s Chroma / <var>cusp</var>’s Chroma
+                <li>if <var>x</var> equals <var>y</var>, return 0
+                <li>let <var>p1</var> be the point (0, 0)
+                <li>let <var>p2</var> be the point (<var>x</var>, <var>y</var>)
+                <li>let <var>p3</var> be the point (1, 1)
+                <li>let <var>m1</var> be
+                    −1 / ((<var>p2</var>’s y − <var>p1</var>’s y) / (<var>p2</var>’s x − <var>p1</var>’s x)),
+                    the slope of the perpendicular bisector of the segment from <var>p1</var> to <var>p2</var>
+                <li>let <var>m2</var> be
+                    −1 / ((<var>p3</var>’s y − <var>p1</var>’s y) / (<var>p3</var>’s x − <var>p1</var>’s x)),
+                    the slope of the perpendicular bisector of the segment from <var>p1</var> to <var>p3</var>
+                <li>let <var>mid1</var> be the midpoint of <var>p1</var> and <var>p2</var>
+                <li>let <var>mid2</var> be the midpoint of <var>p1</var> and <var>p3</var>
+                <li>let <var>centerX</var> be
+                    (<var>m1</var> × <var>mid1</var>’s x − <var>m2</var> × <var>mid2</var>’s x + <var>mid2</var>’s y −
+                    <var>mid1</var>’s y) / (<var>m1</var> − <var>m2</var>)
+                <li>let <var>centerY</var> be <var>m1</var> × (<var>centerX</var> − <var>mid1</var>’s x) +
+                    <var>mid1</var>’s y
+                <li>let <var>radius</var> be sqrt(<var>centerX</var>² + <var>centerY</var>²)
+                <li>let <var>curvature</var> be 1 / <var>radius</var>
+                <li>if <var>centerX</var> is less than <var>centerY</var>, return −<var>curvature</var>
+                <li>return <var>curvature</var>
+            </ol>
+        </div>
+        <div class="algorithm" data-algorithm="to gamut map a color by EdgeSeeker">
+
+            To <dfn class="dfn-paneled" data-dfn-type="dfn" data-export id="edgeseeker-gamut-map">EdgeSeeker Gamut
+                Map</dfn> a color <var>origin</var>
+            in color space <var>origin color space</var>
+            to be in gamut of an RGB destination color space <var>destination</var>
+            with non-imaginary primaries (not, for example, ProPhoto RGB),
+            given an EdgeSeeker lookup table <var>LUT</var>
+            previously constructed for <var>destination</var>:
+
+
+            <ol>
+                <li>if <var>destination</var> has no gamut limits (XYZ-D65, XYZ-D50, Lab, LCH, Oklab, OkLCh) convert
+                    <var>origin</var> to <var>destination</var> and return it as the gamut mapped color
+                <li>if <var>destination</var> is HSL or HWB, let <var>LUT</var> be the lookup table constructed for sRGB
+                <li>let clip(<var>color</var>) be a function which converts <var>color</var> to <var>destination</var>,
+                    clamps each component to the bounds of the reference range for that component
+                    and returns the result
+                <li>if <var>origin</var> is in gamut of <var>destination</var>, return clip(<var>origin</var>)
+                <li>let <var>origin_OkLCh</var> be <var>origin</var> converted
+                    from <var>origin color space</var> to the OkLCh color space
+                <li>if the Lightness of <var>origin_OkLCh</var> is greater than or equal to 100%,
+                    convert `oklab(1 0 0 / origin.alpha)` to <var>destination</var> and return it as the gamut mapped
+                    color
+                <li>if the Lightness of <var>origin_OkLCh</var> is less than or equal to 0%,
+                    convert `oklab(0 0 0 / origin.alpha)` to <var>destination</var> and return it as the gamut mapped
+                    color
+                <li>let <var>l</var>, <var>c</var> and <var>h</var> be the Lightness, Chroma and Hue of
+                    <var>origin_OkLCh</var>, respectively
+                <li>if <var>h</var> is <a data-link-type="dfn" href="#missing-color-component"
+                        id="ref-for-missing-color-component④⑤">missing</a>, set <var>h</var> to 0deg
+                <li>let <var>maxChroma</var> be the result of
+                    <a data-link-type="dfn" href="#find-the-maximum-chroma" id="ref-for-find-the-maximum-chroma">finding
+                        the maximum chroma</a> for <var>l</var> and <var>h</var>, using <var>LUT</var>
+                <li>if <var>c</var> is greater than <var>maxChroma</var>, set <var>c</var> to <var>maxChroma</var>
+                <li>let <var>mapped</var> be the OkLCh color with Lightness <var>l</var>, Chroma <var>c</var>, hue
+                    <var>h</var>
+                    and the same alpha as <var>origin</var>
+                <li>set <var>clipped</var> to clip(<var>mapped</var>)
+                <li>return <var>clipped</var> as the gamut mapped color
+            </ol>
+        </div>
+        <div class="algorithm"
+            data-algorithm="to find the maximum in-gamut OkLCh chroma using an EdgeSeeker lookup table">
+
+            To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="find-the-maximum-chroma">find the maximum
+                chroma</dfn>
+            for a given OkLCh Lightness <var>l</var> and hue <var>h</var>,
+            using an EdgeSeeker lookup table <var>LUT</var>
+            (a list of entries, each with a Lightness, a Chroma, a hue and a curvature,
+            sorted by ascending hue and together spanning
+            the full hue range from 0deg to 360deg inclusive):
+
+
+            <ol>
+                <li>if <var>l</var> is less than or equal to 0%, or <var>l</var> is greater than or equal to 100%,
+                    return 0
+                <li>set <var>h</var> to <var>h</var> modulo 360deg,
+                    adding 360deg to the result if it is negative,
+                    so that <var>h</var> is in the range [0deg, 360deg)
+                <li>let <var>lower</var> and <var>upper</var> be the two entries in <var>LUT</var>
+                    whose hues most closely bracket <var>h</var>,
+                    such that <var>lower</var>’s hue is less than or equal to <var>h</var>
+                    and <var>upper</var>’s hue is greater than or equal to <var>h</var>
+                <li>let <var>t</var> be (<var>h</var> − <var>lower</var>’s hue) / (<var>upper</var>’s hue −
+                    <var>lower</var>’s hue),
+                    or 0 if <var>lower</var> and <var>upper</var> have the same hue
+                <li>let <var>cuspLightness</var> be
+                    <var>lower</var>’s Lightness + <var>t</var> × (<var>upper</var>’s Lightness − <var>lower</var>’s
+                    Lightness)
+                <li>let <var>cuspChroma</var> be
+                    <var>lower</var>’s Chroma + <var>t</var> × (<var>upper</var>’s Chroma − <var>lower</var>’s Chroma)
+                <li>let <var>curvature</var> be
+                    <var>lower</var>’s curvature + <var>t</var> × (<var>upper</var>’s curvature − <var>lower</var>’s
+                    curvature)
+                <li>if <var>l</var> is less than or equal to <var>cuspLightness</var>,
+                    return (<var>l</var> / <var>cuspLightness</var>) × <var>cuspChroma</var>
+                <li>let <var>x</var> be (100% − <var>l</var>) / (100% − <var>cuspLightness</var>)
+                <li>return <var>cuspChroma</var> × the result of
+                    <a data-link-type="dfn" href="#find-the-normalized-chroma-on-the-upper-gamut-boundary-arc"
+                        id="ref-for-find-the-normalized-chroma-on-the-upper-gamut-boundary-arc">finding the normalized
+                        chroma on the upper gamut boundary arc</a>
+                    for <var>x</var> and <var>curvature</var>
+            </ol>
+        </div>
+        <div class="algorithm" data-algorithm="to find the normalized chroma on the upper gamut boundary arc">
+
+            To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport
+                id="find-the-normalized-chroma-on-the-upper-gamut-boundary-arc">find the normalized chroma on the upper
+                gamut boundary arc</dfn>,
+            given a normalized position <var>x</var> along the upper boundary section
+            (1 at the cusp, 0 at white)
+            and a <var>curvature</var> whose absolute value is less than 1,
+            returning the normalized chroma at that position:
+
+
+            <p>The boundary section is the arc of the circle
+                which passes through (0, 0) and (1, 1) with the given signed curvature.
+                Rather than locating the center of that circle,
+                which is very far away when the curvature is close to 0,
+                the circle’s equation is multiplied through by the curvature
+                and solved directly for the chroma,
+                which avoids subtracting large, nearly equal quantities.</p>
+            <ol>
+                <li>let <var>t</var> be sqrt(2 − <var>curvature</var>²)
+                <li>let <var>b</var> be <var>t</var> − <var>curvature</var>
+                <li>let <var>d</var> be <var>x</var> × (<var>t</var> + <var>curvature</var> × (1 − <var>x</var>))
+                <li>let <var>disc</var> be max(0, <var>b</var>² + 4 × <var>curvature</var> × <var>d</var>)
+                <li>return 2 × <var>d</var> / (<var>b</var> + sqrt(<var>disc</var>))
+            </ol>
+            <p class="note" role="note"><span class="marker">Note:</span> When the absolute value of the curvature is 1
+                or more,
+                the arc overhangs x = 0 or x = 1
+                and the chroma is no longer a single-valued function of <var>x</var>.
+                The lookup tables for typical RGB display color spaces
+                have curvatures well within this limit.</p>
+        </div>
         <h4 class="heading settled" data-level="14.2.5" id="GMA-Raytrace"><span class="secno">14.2.5. </span><span
                 class="content">
                 The Ray Trace Gamut Mapping
@@ -11693,7 +11996,7 @@ p::firstline <c- p>{</c->
             regardless of locale,
             and there shall be no thousands separator.</p>
         <p>For syntactic forms which support <a data-link-type="dfn" href="#missing-color-component"
-                id="ref-for-missing-color-component④⑤">missing color components</a>,
+                id="ref-for-missing-color-component④⑥">missing color components</a>,
             the value <a class="css" data-link-type="maybe" href="#valdef-color-none"
                 id="ref-for-valdef-color-none①②">none</a> (equivalently NONE, nOnE, etc),
             shall be serialized in all-lowercase
@@ -11944,7 +12247,7 @@ p::firstline <c- p>{</c->
             is the corresponding sRGB value.</p>
         <p>During serialization,
             any <a data-link-type="dfn" href="#missing-color-component"
-                id="ref-for-missing-color-component④⑥">missing</a> values
+                id="ref-for-missing-color-component④⑦">missing</a> values
             are converted to 0
             if the chosen serialization form
             (such as the <a data-link-type="dfn" href="#legacy-color-syntax" id="ref-for-legacy-color-syntax①③">legacy
@@ -11954,12 +12257,12 @@ p::firstline <c- p>{</c->
             of sRGB values)
             cannot represent the <a class="css" data-link-type="maybe" href="#valdef-color-none"
                 id="ref-for-valdef-color-none①③">none</a> keyword.
-            When at least one component is <span id="ref-for-missing-color-component④⑦">missing</span>
+            When at least one component is <span id="ref-for-missing-color-component④⑧">missing</span>
             and the value can be serialized in a form which supports <span class="css"
                 id="ref-for-valdef-color-none①④">none</span>,
             the form is chosen as described in
             <a href="#css-serialization-of-srgb">§ 16.2.2 CSS serialization of sRGB values</a>
-            so that <span id="ref-for-missing-color-component④⑧">missing color components</span> are preserved as <span
+            so that <span id="ref-for-missing-color-component④⑨">missing color components</span> are preserved as <span
                 class="css" id="ref-for-valdef-color-none①⑤">none</span>.
         </p>
         <h4 class="heading settled" data-level="16.2.1" id="HTML-compatible-serialization-of-srgb"><span
@@ -12026,7 +12329,7 @@ console<c- p>.</c->log<c- p>(</c->context<c- p>.</c->fillStyle<c- p>);</c-> <c- 
             </span><span class="content">CSS serialization of sRGB values</span><a class="self-link"
                 href="#css-serialization-of-srgb"></a></h4>
         <p>If the value has no <a data-link-type="dfn" href="#missing-color-component"
-                id="ref-for-missing-color-component④⑨">missing color components</a>,
+                id="ref-for-missing-color-component⑤⓪">missing color components</a>,
             corresponding sRGB values use either the <a class="css" data-link-type="maybe" href="#funcdef-rgb"
                 id="ref-for-funcdef-rgb①⑦">rgb()</a> or <a class="css" data-link-type="maybe" href="#funcdef-rgba"
                 id="ref-for-funcdef-rgba①②">rgba()</a> form
@@ -12064,7 +12367,7 @@ console<c- p>.</c->log<c- p>(</c->context<c- p>.</c->fillStyle<c- p>);</c-> <c- 
             cannot represent <a class="css" data-link-type="maybe" href="#valdef-color-none"
                 id="ref-for-valdef-color-none①⑦">none</a>.
             If the value has at least one <a data-link-type="dfn" href="#missing-color-component"
-                id="ref-for-missing-color-component⑤⓪">missing color component</a>,
+                id="ref-for-missing-color-component⑤①">missing color component</a>,
             the serialization form is chosen
             to preserve those components as the <span class="css" id="ref-for-valdef-color-none①⑧">none</span> keyword,
             based on the color function of the <a data-link-type="dfn"
@@ -12085,7 +12388,7 @@ console<c- p>.</c->log<c- p>(</c->context<c- p>.</c->fillStyle<c- p>);</c-> <c- 
                     and <a class="css" data-link-type="maybe" href="#valdef-color-transparent"
                         id="ref-for-valdef-color-transparent⑨">transparent</a> have no parametric syntax
                     and so never have <a data-link-type="dfn" href="#missing-color-component"
-                        id="ref-for-missing-color-component⑤①">missing color components</a>),
+                        id="ref-for-missing-color-component⑤②">missing color components</a>),
                     the value is serialized as a <a class="css" data-link-type="maybe" href="#funcdef-color"
                         id="ref-for-funcdef-color①①">color()</a> function
                     in the <a class="css" data-link-type="maybe" href="#valdef-color-srgb"
@@ -12103,15 +12406,15 @@ console<c- p>.</c->log<c- p>(</c->context<c- p>.</c->fillStyle<c- p>);</c-> <c- 
                         id="ref-for-number-value③⑧">&lt;number></a>s
                     in the [0, 1] reference range
                     (or as <span class="css" id="ref-for-valdef-color-none②①">none</span> if <span
-                        id="ref-for-missing-color-component⑤②">missing</span>),
+                        id="ref-for-missing-color-component⑤③">missing</span>),
                     followed (only if the alpha is non-unity or <span
-                        id="ref-for-missing-color-component⑤③">missing</span>)
+                        id="ref-for-missing-color-component⑤④">missing</span>)
                     by " / "
                     and the alpha component
                     (serialized per the
                     <a href="#serializing-alpha-values">alpha rules</a>,
                     or as <span class="css" id="ref-for-valdef-color-none②②">none</span> if <span
-                        id="ref-for-missing-color-component⑤④">missing</span>),
+                        id="ref-for-missing-color-component⑤⑤">missing</span>),
                     followed by ")".
                 </p>
             <li data-md>
@@ -12133,9 +12436,9 @@ console<c- p>.</c->log<c- p>(</c->context<c- p>.</c->fillStyle<c- p>);</c-> <c- 
                         id="ref-for-percentage-value③⑧">&lt;percentage></a>s,
                     and the alpha
                     (included only if non-unity or <a data-link-type="dfn" href="#missing-color-component"
-                        id="ref-for-missing-color-component⑤⑤">missing</a>)
+                        id="ref-for-missing-color-component⑤⑥">missing</a>)
                     per the <a href="#serializing-alpha-values">alpha rules</a>;
-                    any <span id="ref-for-missing-color-component⑤⑥">missing component</span> is serialized as the <a
+                    any <span id="ref-for-missing-color-component⑤⑦">missing component</span> is serialized as the <a
                         class="css" data-link-type="maybe" href="#valdef-color-none"
                         id="ref-for-valdef-color-none②③">none</a> keyword.
                 </p>
@@ -12155,9 +12458,9 @@ console<c- p>.</c->log<c- p>(</c->context<c- p>.</c->fillStyle<c- p>);</c-> <c- 
                         id="ref-for-percentage-value③⑨">&lt;percentage></a>s,
                     and the alpha
                     (included only if non-unity or <a data-link-type="dfn" href="#missing-color-component"
-                        id="ref-for-missing-color-component⑤⑦">missing</a>)
+                        id="ref-for-missing-color-component⑤⑧">missing</a>)
                     per the <a href="#serializing-alpha-values">alpha rules</a>;
-                    any <span id="ref-for-missing-color-component⑤⑧">missing component</span> is serialized as the <a
+                    any <span id="ref-for-missing-color-component⑤⑨">missing component</span> is serialized as the <a
                         class="css" data-link-type="maybe" href="#valdef-color-none"
                         id="ref-for-valdef-color-none②④">none</a> keyword.</p>
         </ul>
@@ -12215,7 +12518,7 @@ console<c- p>.</c->log<c- p>(</c->context<c- p>.</c->fillStyle<c- p>);</c-> <c- 
             <pre
                 class="highlight lang-css"><c- nf>hwb</c-><c- p>(</c-><c- m>20</c-> none <c- m>30</c-><c- k>%</c-> / none<c- p>)</c-></pre>
             <p>contains <a data-link-type="dfn" href="#missing-color-component"
-                    id="ref-for-missing-color-component⑤⑨">missing color components</a>
+                    id="ref-for-missing-color-component⑥⓪">missing color components</a>
                 (both the whiteness and the alpha are <a class="css" data-link-type="maybe" href="#valdef-color-none"
                     id="ref-for-valdef-color-none②⑨">none</a>),
                 so it is <em>not</em> serialized through <a class="css" data-link-type="maybe" href="#funcdef-rgba"
@@ -13906,7 +14209,7 @@ console<c- p>.</c->log<c- p>(</c->context<c- p>.</c->fillStyle<c- p>);</c-> <c- 
                     href="#typedef-color" id="ref-for-typedef-color③⓪">&lt;color></a> values are <a data-link-type="dfn"
                     href="#equivalent-colors" id="ref-for-equivalent-colors①⑥">equivalent colors</a>,
                 covering same-color-space component comparison, the treatment of <a data-link-type="dfn"
-                    href="#missing-color-component" id="ref-for-missing-color-component⑥⓪">missing component</a>s,
+                    href="#missing-color-component" id="ref-for-missing-color-component⑥①">missing component</a>s,
                 and cross-color-space comparison via <a class="css" data-link-type="maybe" href="#valdef-oklab-oklab"
                     id="ref-for-valdef-oklab-oklab⑧">oklab</a>.
                 (<a href="https://github.com/w3c/csswg-drafts/issues/13157">Issue 13157</a>)
@@ -14777,6 +15080,7 @@ console<c- p>.</c->log<c- p>(</c->context<c- p>.</c->fillStyle<c- p>);</c-> <c- 
         <li><a href="#valdef-color-buttonshadow">ButtonShadow</a><span>, in § Unnumbered section</span>
         <li><a href="#valdef-color-buttontext">ButtonText</a><span>, in § 6.2</span>
         <li><a href="#valdef-color-cadetblue">cadetblue</a><span>, in § 6.1</span>
+        <li><a href="#calculate-the-curvature">calculate the curvature</a><span>, in § 14.2.4</span>
         <li><a href="#calibrated">calibrated</a><span>, in § 2</span>
         <li><a href="#can-be-displayed">can be displayed</a><span>, in § 10.1</span>
         <li><a href="#cant-be-displayed">can’t be displayed</a><span>, in § 10.1</span>
@@ -14808,6 +15112,8 @@ console<c- p>.</c->log<c- p>(</c->context<c- p>.</c->fillStyle<c- p>);</c-> <c- 
         <li><a href="#color-space">color space</a><span>, in § 2</span>
         <li><a href="#typedef-colorspace-params">&lt;colorspace-params></a><span>, in § 10.1</span>
         <li><a href="#computed-color">computed color</a><span>, in § 15</span>
+        <li><a href="#construct-an-edgeseeker-lookup-table">construct an EdgeSeeker lookup table</a><span>, in
+                § 14.2.4</span>
         <li><a href="#convert-a-color">convert a color</a><span>, in § 11.2</span>
         <li><a href="#valdef-color-coral">coral</a><span>, in § 6.1</span>
         <li><a href="#valdef-color-cornflowerblue">cornflowerblue</a><span>, in § 6.1</span>
@@ -14848,9 +15154,13 @@ console<c- p>.</c->log<c- p>(</c->context<c- p>.</c->fillStyle<c- p>);</c-> <c- 
         <li><a href="#valdef-color-display-p3">display-p3</a><span>, in § 10.4</span>
         <li><a href="#valdef-color-display-p3-linear">display-p3-linear</a><span>, in § 10.5</span>
         <li><a href="#valdef-color-dodgerblue">dodgerblue</a><span>, in § 6.1</span>
+        <li><a href="#edgeseeker-gamut-map">EdgeSeeker Gamut Map</a><span>, in § 14.2.4</span>
         <li><a href="#equivalent-colors">equivalent colors</a><span>, in § 12</span>
         <li><a href="#valdef-color-field">Field</a><span>, in § 6.2</span>
         <li><a href="#valdef-color-fieldtext">FieldText</a><span>, in § 6.2</span>
+        <li><a href="#find-the-maximum-chroma">find the maximum chroma</a><span>, in § 14.2.4</span>
+        <li><a href="#find-the-normalized-chroma-on-the-upper-gamut-boundary-arc">find the normalized chroma on the
+                upper gamut boundary arc</a><span>, in § 14.2.4</span>
         <li><a href="#valdef-color-firebrick">firebrick</a><span>, in § 6.1</span>
         <li><a href="#valdef-color-floralwhite">floralwhite</a><span>, in § 6.1</span>
         <li><a href="#valdef-color-forestgreen">forestgreen</a><span>, in § 6.1</span>
@@ -15005,6 +15315,7 @@ console<c- p>.</c->log<c- p>(</c->context<c- p>.</c->fillStyle<c- p>);</c-> <c- 
         <li><a href="#typedef-rectangular-color-space">&lt;rectangular-color-space></a><span>, in § 13.2</span>
         <li><a href="#rectangular-orthogonal-color">rectangular orthogonal color</a><span>, in § 4</span>
         <li><a href="#valdef-color-red">red</a><span>, in § 6.1</span>
+        <li><a href="#remove-hue-folds">remove hue folds</a><span>, in § 14.2.4</span>
         <li><a href="#resolve-to-srgb">resolve to sRGB</a><span>, in § 4.1</span>
         <li><a href="#funcdef-rgb">rgb()</a><span>, in § 5.1</span>
         <li><a href="#funcdef-rgba">rgba()</a><span>, in § 5.1</span>
@@ -15379,9 +15690,9 @@ console<c- p>.</c->log<c- p>(</c->context<c- p>.</c->fillStyle<c- p>);</c-> <c- 
                 href="https://facelessuser.github.io/coloraide/gamut/#ray-tracing-chroma-reduction">https://facelessuser.github.io/coloraide/gamut/#ray-tracing-chroma-reduction</a>
         <dt id="biblio-colorjs-edgeseeker">[colorjs-EdgeSeeker]
         <dd>Alexey Ardov. <a
-                href="https://github.com/color-js/apps/tree/main/gamut-mapping/edge-seeker"><cite>EdgeSeeker Gamut
-                    Mapping algorithm</cite></a>. 2023. URL: <a
-                href="https://github.com/color-js/apps/tree/main/gamut-mapping/edge-seeker">https://github.com/color-js/apps/tree/main/gamut-mapping/edge-seeker</a>
+                href="https://github.com/color-js/apps/tree/main/gamut-mapping/methods/edge-seeker"><cite>EdgeSeeker
+                    Gamut Mapping algorithm</cite></a>. 2023. URL: <a
+                href="https://github.com/color-js/apps/tree/main/gamut-mapping/methods/edge-seeker">https://github.com/color-js/apps/tree/main/gamut-mapping/methods/edge-seeker</a>
         <dt id="biblio-colorjs-minde">[colorjs-MINDE]
         <dd>Chris Lilley. <a href="https://colorjs.io/docs/gamut-mapping"><cite>Gamut mapping</cite></a>. 2022. URL: <a
                 href="https://colorjs.io/docs/gamut-mapping">https://colorjs.io/docs/gamut-mapping</a>
@@ -15496,12 +15807,6 @@ console<c- p>.</c->log<c- p>(</c->context<c- p>.</c->fillStyle<c- p>);</c-> <c- 
                     <td>per grammar
                     <td>specified number, clamped to the range [0,1]
         </table>
-    </div>
-    <h2 class="heading no-num no-ref settled" id="issues-index"><span class="content">Issues Index</span><a
-            class="self-link" href="#issues-index"></a></h2>
-    <div style="counter-reset:issue">
-        <div class="issue"> add pseudocode for EdgeSeeker GMA <a class="issue-return" href="#issue-4b1038ec"
-                title="Jump to section">↵</a></div>
     </div>
     <script>/* Boilerplate: script-dom-helper */
         "use strict";
@@ -15754,6 +16059,7 @@ console<c- p>.</c->log<c- p>(</c->context<c- p>.</c->fillStyle<c- p>);</c-> <c- 
                 "b9babad7": { "dfnID": "b9babad7", "dfnText": "NaN", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-valdef-calc-nan" }], "title": "15.1. \nResolving sRGB values" }], "url": "https://www.w3.org/TR/css-values-4/#valdef-calc-nan" },
                 "binary-search-gamut-map-with-local-minde": { "dfnID": "binary-search-gamut-map-with-local-minde", "dfnText": "Binary Search Gamut Map with Local MINDE", "external": false, "refSections": [], "url": "#binary-search-gamut-map-with-local-minde" },
                 "c297b070": { "dfnID": "c297b070", "dfnText": "#", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-mult-comma" }, { "id": "ref-for-mult-comma\u2460" }, { "id": "ref-for-mult-comma\u2461" }, { "id": "ref-for-mult-comma\u2462" }], "title": "5.1. \nThe RGB functions: rgb() and rgba()" }], "url": "https://www.w3.org/TR/css-values-4/#mult-comma" },
+                "calculate-the-curvature": { "dfnID": "calculate-the-curvature", "dfnText": "calculate the curvature", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-calculate-the-curvature" }], "title": "14.2.4. Sample Pseudocode for the EdgeSeeker Gamut Mapping" }], "url": "#calculate-the-curvature" },
                 "calibrated": { "dfnID": "calibrated", "dfnText": "calibrated", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-calibrated" }], "title": "2. Color Terminology" }], "url": "#calibrated" },
                 "can-be-displayed": { "dfnID": "can-be-displayed", "dfnText": "can be displayed", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-can-be-displayed" }], "title": "11.2. Algorithm for Converting Colors" }], "url": "#can-be-displayed" },
                 "cant-be-displayed": { "dfnID": "cant-be-displayed", "dfnText": "can\u2019t be displayed", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-cant-be-displayed" }], "title": "10.1. Specifying Predefined Colors: the color() function" }], "url": "#cant-be-displayed" },
@@ -15771,6 +16077,7 @@ console<c- p>.</c->log<c- p>(</c->context<c- p>.</c->fillStyle<c- p>);</c-> <c- 
                 "color-serialization-html-compatible-serialization-is-requested": { "dfnID": "color-serialization-html-compatible-serialization-is-requested", "dfnText": "HTML-compatible serialization is requested", "external": false, "refSections": [], "url": "#color-serialization-html-compatible-serialization-is-requested" },
                 "color-space": { "dfnID": "color-space", "dfnText": "color space", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-color-space" }], "title": "1. Introduction" }, { "refs": [{ "id": "ref-for-color-space\u2460" }, { "id": "ref-for-color-space\u2461" }], "title": "2. Color Terminology" }, { "refs": [{ "id": "ref-for-color-space\u2462" }], "title": "4. Representing Colors: the <color> type" }, { "refs": [{ "id": "ref-for-color-space\u2463" }], "title": "5. sRGB Colors" }, { "refs": [{ "id": "ref-for-color-space\u2464" }], "title": "10.1. Specifying Predefined Colors: the color() function" }, { "refs": [{ "id": "ref-for-color-space\u2465" }], "title": "15.1. Resolving sRGB values" }, { "refs": [{ "id": "ref-for-color-space\u2466" }, { "id": "ref-for-color-space\u2467" }, { "id": "ref-for-color-space\u2468" }, { "id": "ref-for-color-space\u2460\u24ea" }], "title": "15.4. Resolving values of the color() function" }, { "refs": [{ "id": "ref-for-color-space\u2460\u2460" }, { "id": "ref-for-color-space\u2460\u2461" }], "title": "16.2.2. CSS serialization of sRGB values" }], "url": "#color-space" },
                 "computed-color": { "dfnID": "computed-color", "dfnText": "computed colors", "external": false, "refSections": [], "url": "#computed-color" },
+                "construct-an-edgeseeker-lookup-table": { "dfnID": "construct-an-edgeseeker-lookup-table", "dfnText": "construct an EdgeSeeker lookup table", "external": false, "refSections": [], "url": "#construct-an-edgeseeker-lookup-table" },
                 "convert-a-color": { "dfnID": "convert-a-color", "dfnText": "convert a color", "external": false, "refSections": [], "url": "#convert-a-color" },
                 "css-gamut-mapped": { "dfnID": "css-gamut-mapped", "dfnText": "css gamut mapped", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-css-gamut-mapped" }], "title": "2. Color Terminology" }, { "refs": [{ "id": "ref-for-css-gamut-mapped\u2460" }, { "id": "ref-for-css-gamut-mapped\u2461" }], "title": "10.1. Specifying Predefined Colors: the color() function" }, { "refs": [{ "id": "ref-for-css-gamut-mapped\u2462" }], "title": "11.2. Algorithm for Converting Colors" }], "url": "#css-gamut-mapped" },
                 "css-gamut-mapping-algorithms": { "dfnID": "css-gamut-mapping-algorithms", "dfnText": "CSS gamut mapping algorithms", "external": false, "refSections": [], "url": "#css-gamut-mapping-algorithms" },
@@ -15791,6 +16098,7 @@ console<c- p>.</c->log<c- p>(</c->context<c- p>.</c->fillStyle<c- p>);</c-> <c- 
                 "decreasing": { "dfnID": "decreasing", "dfnText": "decreasing", "external": false, "refSections": [], "url": "#decreasing" },
                 "e2ddaaa8": { "dfnID": "e2ddaaa8", "dfnText": "border-left-color", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-propdef-border-left-color" }], "title": "\nAppendix B: Deprecated Quirky Hex Colors" }], "url": "https://www.w3.org/TR/css-backgrounds-3/#propdef-border-left-color" },
                 "e9f6aadb": { "dfnID": "e9f6aadb", "dfnText": "filter", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-propdef-filter" }], "title": "13.2. \nColor Space for Interpolation" }], "url": "https://www.w3.org/TR/filter-effects-1/#propdef-filter" },
+                "edgeseeker-gamut-map": { "dfnID": "edgeseeker-gamut-map", "dfnText": "EdgeSeeker Gamut Map", "external": false, "refSections": [], "url": "#edgeseeker-gamut-map" },
                 "ee6b9315": { "dfnID": "ee6b9315", "dfnText": "h", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-valdef-oklch-h" }, { "id": "ref-for-valdef-oklch-h\u2460" }], "title": "13.3. \nInterpolating with Missing Components" }], "url": "https://www.w3.org/TR/css-color-5/#valdef-oklch-h" },
                 "eebbfe3d": { "dfnID": "eebbfe3d", "dfnText": "<number-token>", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-typedef-number-token" }, { "id": "ref-for-typedef-number-token\u2460" }], "title": "\nAppendix B: Deprecated Quirky Hex Colors" }], "url": "https://www.w3.org/TR/css-syntax-3/#typedef-number-token" },
                 "equivalent-colors": { "dfnID": "equivalent-colors", "dfnText": "equivalent colors", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-equivalent-colors" }, { "id": "ref-for-equivalent-colors\u2460" }, { "id": "ref-for-equivalent-colors\u2461" }, { "id": "ref-for-equivalent-colors\u2462" }, { "id": "ref-for-equivalent-colors\u2463" }, { "id": "ref-for-equivalent-colors\u2464" }, { "id": "ref-for-equivalent-colors\u2465" }, { "id": "ref-for-equivalent-colors\u2466" }, { "id": "ref-for-equivalent-colors\u2467" }, { "id": "ref-for-equivalent-colors\u2468" }, { "id": "ref-for-equivalent-colors\u2460\u24ea" }, { "id": "ref-for-equivalent-colors\u2460\u2460" }, { "id": "ref-for-equivalent-colors\u2460\u2461" }, { "id": "ref-for-equivalent-colors\u2460\u2462" }, { "id": "ref-for-equivalent-colors\u2460\u2463" }, { "id": "ref-for-equivalent-colors\u2460\u2464" }], "title": "12. Comparing <color> Values" }, { "refs": [{ "id": "ref-for-equivalent-colors\u2460\u2465" }], "title": "Changes since the Candidate Recommendation Draft of 24 April 2025" }], "url": "#equivalent-colors" },
@@ -15799,6 +16107,8 @@ console<c- p>.</c->log<c- p>(</c->context<c- p>.</c->fillStyle<c- p>);</c-> <c- 
                 "f83d1822": { "dfnID": "f83d1822", "dfnText": "b", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-valdef-oklab-b" }, { "id": "ref-for-valdef-oklab-b\u2460" }], "title": "13.3. \nInterpolating with Missing Components" }, { "refs": [{ "id": "ref-for-valdef-oklab-b\u2461" }], "title": "20.4. \u0394EOK2" }, { "refs": [{ "id": "ref-for-valdef-oklab-b\u2462" }], "title": "20.5. \u0394EOKr2" }], "url": "https://www.w3.org/TR/css-color-5/#valdef-oklab-b" },
                 "fc19454a": { "dfnID": "fc19454a", "dfnText": "resolved value", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-resolved-value" }], "title": "15. \nResolving <color> Values" }], "url": "https://www.w3.org/TR/cssom-1/#resolved-value" },
                 "fd11cdcd": { "dfnID": "fd11cdcd", "dfnText": "quirks mode", "external": true, "refSections": [{ "refs": [{ "id": "ref-for-concept-document-quirks" }], "title": "\nAppendix B: Deprecated Quirky Hex Colors" }], "url": "https://dom.spec.whatwg.org/#concept-document-quirks" },
+                "find-the-maximum-chroma": { "dfnID": "find-the-maximum-chroma", "dfnText": "find the maximum chroma", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-find-the-maximum-chroma" }], "title": "14.2.4. Sample Pseudocode for the EdgeSeeker Gamut Mapping" }], "url": "#find-the-maximum-chroma" },
+                "find-the-normalized-chroma-on-the-upper-gamut-boundary-arc": { "dfnID": "find-the-normalized-chroma-on-the-upper-gamut-boundary-arc", "dfnText": "find the normalized chroma on the upper gamut boundary arc", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-find-the-normalized-chroma-on-the-upper-gamut-boundary-arc" }], "title": "14.2.4. Sample Pseudocode for the EdgeSeeker Gamut Mapping" }], "url": "#find-the-normalized-chroma-on-the-upper-gamut-boundary-arc" },
                 "funcdef-color": { "dfnID": "funcdef-color", "dfnText": "color()", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-funcdef-color" }], "title": "4. Representing Colors: the <color> type" }, { "refs": [{ "id": "ref-for-funcdef-color\u2460" }], "title": "4.1. The <color> syntax" }, { "refs": [{ "id": "ref-for-funcdef-color\u2461" }, { "id": "ref-for-funcdef-color\u2462" }, { "id": "ref-for-funcdef-color\u2463" }, { "id": "ref-for-funcdef-color\u2464" }, { "id": "ref-for-funcdef-color\u2465" }], "title": "10.1. Specifying Predefined Colors: the color() function" }, { "refs": [{ "id": "ref-for-funcdef-color\u2466" }], "title": "12. Comparing <color> Values" }, { "refs": [{ "id": "ref-for-funcdef-color\u2467" }], "title": "13.2. Color Space for Interpolation" }, { "refs": [{ "id": "ref-for-funcdef-color\u2468" }], "title": "15.1. Resolving sRGB values" }, { "refs": [{ "id": "ref-for-funcdef-color\u2460\u24ea" }], "title": "15.4. Resolving values of the color() function" }, { "refs": [{ "id": "ref-for-funcdef-color\u2460\u2460" }], "title": "16.2.2. CSS serialization of sRGB values" }, { "refs": [{ "id": "ref-for-funcdef-color\u2460\u2461" }, { "id": "ref-for-funcdef-color\u2460\u2462" }, { "id": "ref-for-funcdef-color\u2460\u2463" }], "title": "16.5. Serializing values of the color() function" }, { "refs": [{ "id": "ref-for-funcdef-color\u2460\u2464" }, { "id": "ref-for-funcdef-color\u2460\u2465" }, { "id": "ref-for-funcdef-color\u2460\u2466" }, { "id": "ref-for-funcdef-color\u2460\u2467" }, { "id": "ref-for-funcdef-color\u2460\u2468" }, { "id": "ref-for-funcdef-color\u2461\u24ea" }], "title": "Changes since the Working Draft of 12 November 2020" }, { "refs": [{ "id": "ref-for-funcdef-color\u2461\u2460" }, { "id": "ref-for-funcdef-color\u2461\u2461" }], "title": "Changes since Working Draft of 5 November 2019" }], "url": "#funcdef-color" },
                 "funcdef-hsl": { "dfnID": "funcdef-hsl", "dfnText": "hsl()", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-funcdef-hsl" }], "title": "4. Representing Colors: the <color> type" }, { "refs": [{ "id": "ref-for-funcdef-hsl\u2460" }, { "id": "ref-for-funcdef-hsl\u2461" }, { "id": "ref-for-funcdef-hsl\u2462" }, { "id": "ref-for-funcdef-hsl\u2463" }], "title": "4.1. The <color> syntax" }, { "refs": [{ "id": "ref-for-funcdef-hsl\u2464" }, { "id": "ref-for-funcdef-hsl\u2465" }], "title": "4.1.2. Legacy (Comma-separated) Color Function Syntax" }, { "refs": [{ "id": "ref-for-funcdef-hsl\u2466" }], "title": "4.4. \u201cMissing\u201d Color Components and the none Keyword" }, { "refs": [{ "id": "ref-for-funcdef-hsl\u2467" }], "title": "4.4.1. \u201cPowerless\u201d Color Components" }, { "refs": [{ "id": "ref-for-funcdef-hsl\u2468" }], "title": "5. sRGB Colors" }, { "refs": [{ "id": "ref-for-funcdef-hsl\u2460\u24ea" }, { "id": "ref-for-funcdef-hsl\u2460\u2460" }, { "id": "ref-for-funcdef-hsl\u2460\u2461" }], "title": "7. HSL Colors: hsl() and hsla() functions" }, { "refs": [{ "id": "ref-for-funcdef-hsl\u2460\u2462" }], "title": "8. HWB Colors: hwb() function" }, { "refs": [{ "id": "ref-for-funcdef-hsl\u2460\u2463" }], "title": "9.3. Specifying Lab and LCH: the lab() and lch() functional notations" }, { "refs": [{ "id": "ref-for-funcdef-hsl\u2460\u2464" }], "title": "9.4. Specifying Oklab and OkLCh: the oklab() and oklch() functional notations" }, { "refs": [{ "id": "ref-for-funcdef-hsl\u2460\u2465" }, { "id": "ref-for-funcdef-hsl\u2460\u2466" }], "title": "12. Comparing <color> Values" }, { "refs": [{ "id": "ref-for-funcdef-hsl\u2460\u2467" }], "title": "13.2. Color Space for Interpolation" }, { "refs": [{ "id": "ref-for-funcdef-hsl\u2460\u2468" }], "title": "15.1. Resolving sRGB values" }, { "refs": [{ "id": "ref-for-funcdef-hsl\u2461\u24ea" }], "title": "16.2. Serializing sRGB values" }, { "refs": [{ "id": "ref-for-funcdef-hsl\u2461\u2460" }, { "id": "ref-for-funcdef-hsl\u2461\u2461" }, { "id": "ref-for-funcdef-hsl\u2461\u2462" }], "title": "16.2.2. CSS serialization of sRGB values" }, { "refs": [{ "id": "ref-for-funcdef-hsl\u2461\u2463" }], "title": "16.5. Serializing values of the color() function" }, { "refs": [{ "id": "ref-for-funcdef-hsl\u2461\u2464" }, { "id": "ref-for-funcdef-hsl\u2461\u2465" }, { "id": "ref-for-funcdef-hsl\u2461\u2466" }], "title": "Changes from Colors 3" }], "url": "#funcdef-hsl" },
                 "funcdef-hsla": { "dfnID": "funcdef-hsla", "dfnText": "hsla()", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-funcdef-hsla" }], "title": "4. Representing Colors: the <color> type" }, { "refs": [{ "id": "ref-for-funcdef-hsla\u2460" }, { "id": "ref-for-funcdef-hsla\u2461" }, { "id": "ref-for-funcdef-hsla\u2462" }, { "id": "ref-for-funcdef-hsla\u2463" }], "title": "4.1. The <color> syntax" }, { "refs": [{ "id": "ref-for-funcdef-hsla\u2464" }, { "id": "ref-for-funcdef-hsla\u2465" }], "title": "4.1.2. Legacy (Comma-separated) Color Function Syntax" }, { "refs": [{ "id": "ref-for-funcdef-hsla\u2466" }], "title": "5. sRGB Colors" }, { "refs": [{ "id": "ref-for-funcdef-hsla\u2467" }, { "id": "ref-for-funcdef-hsla\u2468" }, { "id": "ref-for-funcdef-hsla\u2460\u24ea" }], "title": "7. HSL Colors: hsl() and hsla() functions" }, { "refs": [{ "id": "ref-for-funcdef-hsla\u2460\u2460" }], "title": "12. Comparing <color> Values" }, { "refs": [{ "id": "ref-for-funcdef-hsla\u2460\u2461" }], "title": "15.1. Resolving sRGB values" }, { "refs": [{ "id": "ref-for-funcdef-hsla\u2460\u2462" }], "title": "16.2. Serializing sRGB values" }, { "refs": [{ "id": "ref-for-funcdef-hsla\u2460\u2463" }, { "id": "ref-for-funcdef-hsla\u2460\u2464" }], "title": "16.2.2. CSS serialization of sRGB values" }, { "refs": [{ "id": "ref-for-funcdef-hsla\u2460\u2465" }, { "id": "ref-for-funcdef-hsla\u2460\u2466" }, { "id": "ref-for-funcdef-hsla\u2460\u2467" }], "title": "Changes from Colors 3" }], "url": "#funcdef-hsla" },
@@ -15820,7 +16130,7 @@ console<c- p>.</c->log<c- p>(</c->context<c- p>.</c->fillStyle<c- p>);</c-> <c- 
                 "longer": { "dfnID": "longer", "dfnText": "longer", "external": false, "refSections": [], "url": "#longer" },
                 "luminance": { "dfnID": "luminance", "dfnText": "luminance", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-luminance" }], "title": "9.1. CIE Lab and LCH" }, { "refs": [{ "id": "ref-for-luminance\u2460" }], "title": "10.9. The Predefined CIE XYZ Color Spaces: the xyz-d50, xyz-d65, and xyz keywords" }], "url": "#luminance" },
                 "minde": { "dfnID": "minde", "dfnText": "MINDE", "external": false, "refSections": [], "url": "#minde" },
-                "missing-color-component": { "dfnID": "missing-color-component", "dfnText": "missing color components", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-missing-color-component" }], "title": "4.1.1. Modern (Space-separated) Color Function Syntax" }, { "refs": [{ "id": "ref-for-missing-color-component\u2460" }, { "id": "ref-for-missing-color-component\u2461" }, { "id": "ref-for-missing-color-component\u2462" }, { "id": "ref-for-missing-color-component\u2463" }], "title": "4.4. \u201cMissing\u201d Color Components and the none Keyword" }, { "refs": [{ "id": "ref-for-missing-color-component\u2464" }, { "id": "ref-for-missing-color-component\u2465" }], "title": "4.4.1. \u201cPowerless\u201d Color Components" }, { "refs": [{ "id": "ref-for-missing-color-component\u2466" }], "title": "9.5. Converting Lab or Oklab colors to LCH or OkLCh colors" }, { "refs": [{ "id": "ref-for-missing-color-component\u2467" }, { "id": "ref-for-missing-color-component\u2468" }, { "id": "ref-for-missing-color-component\u2460\u24ea" }], "title": "11.2. Algorithm for Converting Colors" }, { "refs": [{ "id": "ref-for-missing-color-component\u2460\u2460" }, { "id": "ref-for-missing-color-component\u2460\u2461" }, { "id": "ref-for-missing-color-component\u2460\u2462" }, { "id": "ref-for-missing-color-component\u2460\u2463" }, { "id": "ref-for-missing-color-component\u2460\u2464" }, { "id": "ref-for-missing-color-component\u2460\u2465" }, { "id": "ref-for-missing-color-component\u2460\u2466" }, { "id": "ref-for-missing-color-component\u2460\u2467" }, { "id": "ref-for-missing-color-component\u2460\u2468" }, { "id": "ref-for-missing-color-component\u2461\u24ea" }, { "id": "ref-for-missing-color-component\u2461\u2460" }, { "id": "ref-for-missing-color-component\u2461\u2461" }, { "id": "ref-for-missing-color-component\u2461\u2462" }, { "id": "ref-for-missing-color-component\u2461\u2463" }, { "id": "ref-for-missing-color-component\u2461\u2464" }, { "id": "ref-for-missing-color-component\u2461\u2465" }], "title": "12. Comparing <color> Values" }, { "refs": [{ "id": "ref-for-missing-color-component\u2461\u2466" }], "title": "13. Color Interpolation" }, { "refs": [{ "id": "ref-for-missing-color-component\u2461\u2467" }, { "id": "ref-for-missing-color-component\u2461\u2468" }, { "id": "ref-for-missing-color-component\u2462\u24ea" }, { "id": "ref-for-missing-color-component\u2462\u2460" }, { "id": "ref-for-missing-color-component\u2462\u2461" }, { "id": "ref-for-missing-color-component\u2462\u2462" }, { "id": "ref-for-missing-color-component\u2462\u2463" }, { "id": "ref-for-missing-color-component\u2462\u2464" }, { "id": "ref-for-missing-color-component\u2462\u2465" }, { "id": "ref-for-missing-color-component\u2462\u2466" }, { "id": "ref-for-missing-color-component\u2462\u2467" }, { "id": "ref-for-missing-color-component\u2462\u2468" }, { "id": "ref-for-missing-color-component\u2463\u24ea" }, { "id": "ref-for-missing-color-component\u2463\u2460" }, { "id": "ref-for-missing-color-component\u2463\u2461" }, { "id": "ref-for-missing-color-component\u2463\u2462" }], "title": "13.3. Interpolating with Missing Components" }, { "refs": [{ "id": "ref-for-missing-color-component\u2463\u2463" }], "title": "13.5. Hue Interpolation" }, { "refs": [{ "id": "ref-for-missing-color-component\u2463\u2464" }], "title": "16. Serializing <color> Values" }, { "refs": [{ "id": "ref-for-missing-color-component\u2463\u2465" }, { "id": "ref-for-missing-color-component\u2463\u2466" }, { "id": "ref-for-missing-color-component\u2463\u2467" }], "title": "16.2. Serializing sRGB values" }, { "refs": [{ "id": "ref-for-missing-color-component\u2463\u2468" }, { "id": "ref-for-missing-color-component\u2464\u24ea" }, { "id": "ref-for-missing-color-component\u2464\u2460" }, { "id": "ref-for-missing-color-component\u2464\u2461" }, { "id": "ref-for-missing-color-component\u2464\u2462" }, { "id": "ref-for-missing-color-component\u2464\u2463" }, { "id": "ref-for-missing-color-component\u2464\u2464" }, { "id": "ref-for-missing-color-component\u2464\u2465" }, { "id": "ref-for-missing-color-component\u2464\u2466" }, { "id": "ref-for-missing-color-component\u2464\u2467" }, { "id": "ref-for-missing-color-component\u2464\u2468" }], "title": "16.2.2. CSS serialization of sRGB values" }, { "refs": [{ "id": "ref-for-missing-color-component\u2465\u24ea" }], "title": "Changes since the Candidate Recommendation Draft of 24 April 2025" }], "url": "#missing-color-component" },
+                "missing-color-component": { "dfnID": "missing-color-component", "dfnText": "missing color components", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-missing-color-component" }], "title": "4.1.1. Modern (Space-separated) Color Function Syntax" }, { "refs": [{ "id": "ref-for-missing-color-component\u2460" }, { "id": "ref-for-missing-color-component\u2461" }, { "id": "ref-for-missing-color-component\u2462" }, { "id": "ref-for-missing-color-component\u2463" }], "title": "4.4. \u201cMissing\u201d Color Components and the none Keyword" }, { "refs": [{ "id": "ref-for-missing-color-component\u2464" }, { "id": "ref-for-missing-color-component\u2465" }], "title": "4.4.1. \u201cPowerless\u201d Color Components" }, { "refs": [{ "id": "ref-for-missing-color-component\u2466" }], "title": "9.5. Converting Lab or Oklab colors to LCH or OkLCh colors" }, { "refs": [{ "id": "ref-for-missing-color-component\u2467" }, { "id": "ref-for-missing-color-component\u2468" }, { "id": "ref-for-missing-color-component\u2460\u24ea" }], "title": "11.2. Algorithm for Converting Colors" }, { "refs": [{ "id": "ref-for-missing-color-component\u2460\u2460" }, { "id": "ref-for-missing-color-component\u2460\u2461" }, { "id": "ref-for-missing-color-component\u2460\u2462" }, { "id": "ref-for-missing-color-component\u2460\u2463" }, { "id": "ref-for-missing-color-component\u2460\u2464" }, { "id": "ref-for-missing-color-component\u2460\u2465" }, { "id": "ref-for-missing-color-component\u2460\u2466" }, { "id": "ref-for-missing-color-component\u2460\u2467" }, { "id": "ref-for-missing-color-component\u2460\u2468" }, { "id": "ref-for-missing-color-component\u2461\u24ea" }, { "id": "ref-for-missing-color-component\u2461\u2460" }, { "id": "ref-for-missing-color-component\u2461\u2461" }, { "id": "ref-for-missing-color-component\u2461\u2462" }, { "id": "ref-for-missing-color-component\u2461\u2463" }, { "id": "ref-for-missing-color-component\u2461\u2464" }, { "id": "ref-for-missing-color-component\u2461\u2465" }], "title": "12. Comparing <color> Values" }, { "refs": [{ "id": "ref-for-missing-color-component\u2461\u2466" }], "title": "13. Color Interpolation" }, { "refs": [{ "id": "ref-for-missing-color-component\u2461\u2467" }, { "id": "ref-for-missing-color-component\u2461\u2468" }, { "id": "ref-for-missing-color-component\u2462\u24ea" }, { "id": "ref-for-missing-color-component\u2462\u2460" }, { "id": "ref-for-missing-color-component\u2462\u2461" }, { "id": "ref-for-missing-color-component\u2462\u2462" }, { "id": "ref-for-missing-color-component\u2462\u2463" }, { "id": "ref-for-missing-color-component\u2462\u2464" }, { "id": "ref-for-missing-color-component\u2462\u2465" }, { "id": "ref-for-missing-color-component\u2462\u2466" }, { "id": "ref-for-missing-color-component\u2462\u2467" }, { "id": "ref-for-missing-color-component\u2462\u2468" }, { "id": "ref-for-missing-color-component\u2463\u24ea" }, { "id": "ref-for-missing-color-component\u2463\u2460" }, { "id": "ref-for-missing-color-component\u2463\u2461" }, { "id": "ref-for-missing-color-component\u2463\u2462" }], "title": "13.3. Interpolating with Missing Components" }, { "refs": [{ "id": "ref-for-missing-color-component\u2463\u2463" }], "title": "13.5. Hue Interpolation" }, { "refs": [{ "id": "ref-for-missing-color-component\u2463\u2464" }], "title": "14.2.4. Sample Pseudocode for the EdgeSeeker Gamut Mapping" }, { "refs": [{ "id": "ref-for-missing-color-component\u2463\u2465" }], "title": "16. Serializing <color> Values" }, { "refs": [{ "id": "ref-for-missing-color-component\u2463\u2466" }, { "id": "ref-for-missing-color-component\u2463\u2467" }, { "id": "ref-for-missing-color-component\u2463\u2468" }], "title": "16.2. Serializing sRGB values" }, { "refs": [{ "id": "ref-for-missing-color-component\u2464\u24ea" }, { "id": "ref-for-missing-color-component\u2464\u2460" }, { "id": "ref-for-missing-color-component\u2464\u2461" }, { "id": "ref-for-missing-color-component\u2464\u2462" }, { "id": "ref-for-missing-color-component\u2464\u2463" }, { "id": "ref-for-missing-color-component\u2464\u2464" }, { "id": "ref-for-missing-color-component\u2464\u2465" }, { "id": "ref-for-missing-color-component\u2464\u2466" }, { "id": "ref-for-missing-color-component\u2464\u2467" }, { "id": "ref-for-missing-color-component\u2464\u2468" }, { "id": "ref-for-missing-color-component\u2465\u24ea" }], "title": "16.2.2. CSS serialization of sRGB values" }, { "refs": [{ "id": "ref-for-missing-color-component\u2465\u2460" }], "title": "Changes since the Candidate Recommendation Draft of 24 April 2025" }], "url": "#missing-color-component" },
                 "modern-color-syntax": { "dfnID": "modern-color-syntax", "dfnText": "modern color syntax", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-modern-color-syntax" }], "title": "4.2. Representing Transparency in Colors: the <alpha-value> syntax" }, { "refs": [{ "id": "ref-for-modern-color-syntax\u2460" }], "title": "16.1. Serializing alpha values" }, { "refs": [{ "id": "ref-for-modern-color-syntax\u2461" }], "title": "16.1.2. Serializing modern alpha values" }], "url": "#modern-color-syntax" },
                 "named-color": { "dfnID": "named-color", "dfnText": "named colors", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-named-color" }], "title": "4. Representing Colors: the <color> type" }, { "refs": [{ "id": "ref-for-named-color\u2460" }], "title": "5. sRGB Colors" }, { "refs": [{ "id": "ref-for-named-color\u2461" }, { "id": "ref-for-named-color\u2462" }], "title": "12. Comparing <color> Values" }, { "refs": [{ "id": "ref-for-named-color\u2463" }, { "id": "ref-for-named-color\u2464" }], "title": "15.1. Resolving sRGB values" }, { "refs": [{ "id": "ref-for-named-color\u2465" }, { "id": "ref-for-named-color\u2466" }], "title": "16.2. Serializing sRGB values" }, { "refs": [{ "id": "ref-for-named-color\u2467" }], "title": "16.2.2. CSS serialization of sRGB values" }], "url": "#named-color" },
                 "opaque-black": { "dfnID": "opaque-black", "dfnText": "opaque black", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-opaque-black" }, { "id": "ref-for-opaque-black\u2460" }], "title": "10.1. Specifying Predefined Colors: the color() function" }], "url": "#opaque-black" },
@@ -15833,6 +16143,7 @@ console<c- p>.</c->log<c- p>(</c->context<c- p>.</c->fillStyle<c- p>);</c-> <c- 
                 "propdef-opacity": { "dfnID": "propdef-opacity", "dfnText": "opacity", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-propdef-opacity" }, { "id": "ref-for-propdef-opacity\u2460" }, { "id": "ref-for-propdef-opacity\u2461" }, { "id": "ref-for-propdef-opacity\u2462" }, { "id": "ref-for-propdef-opacity\u2463" }, { "id": "ref-for-propdef-opacity\u2464" }, { "id": "ref-for-propdef-opacity\u2465" }, { "id": "ref-for-propdef-opacity\u2466" }], "title": "3.3. Transparency: the opacity property" }], "url": "#propdef-opacity" },
                 "ray-trace-gamut-map": { "dfnID": "ray-trace-gamut-map", "dfnText": "Ray Trace Gamut Map", "external": false, "refSections": [], "url": "#ray-trace-gamut-map" },
                 "rectangular-orthogonal-color": { "dfnID": "rectangular-orthogonal-color", "dfnText": "rectangular orthogonal color", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-rectangular-orthogonal-color" }], "title": "4.1. The <color> syntax" }, { "refs": [{ "id": "ref-for-rectangular-orthogonal-color\u2460" }, { "id": "ref-for-rectangular-orthogonal-color\u2461" }], "title": "11.2. Algorithm for Converting Colors" }, { "refs": [{ "id": "ref-for-rectangular-orthogonal-color\u2462" }], "title": "13.4. Interpolating with Alpha" }], "url": "#rectangular-orthogonal-color" },
+                "remove-hue-folds": { "dfnID": "remove-hue-folds", "dfnText": "remove hue folds", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-remove-hue-folds" }], "title": "14.2.4. Sample Pseudocode for the EdgeSeeker Gamut Mapping" }], "url": "#remove-hue-folds" },
                 "resolve-to-srgb": { "dfnID": "resolve-to-srgb", "dfnText": "resolve to sRGB", "external": false, "refSections": [], "url": "#resolve-to-srgb" },
                 "sRGB-linear-space": { "dfnID": "sRGB-linear-space", "dfnText": "sRGB-linear", "external": false, "refSections": [], "url": "#sRGB-linear-space" },
                 "sRGB-space": { "dfnID": "sRGB-space", "dfnText": "sRGB", "external": false, "refSections": [{ "refs": [{ "id": "ref-for-sRGB-space" }], "title": "5. sRGB Colors" }], "url": "#sRGB-space" },
@@ -16497,6 +16808,7 @@ console<c- p>.</c->log<c- p>(</c->context<c- p>.</c->fillStyle<c- p>);</c-> <c- 
                 "#alpha-channel": { "displayText": "alpha component", "export": true, "for_": [], "level": "4", "normative": true, "shortname": "css-color", "spec": "css-color-4", "status": "local", "text": "alpha component", "type": "dfn", "url": "#alpha-channel" },
                 "#analogous-components": { "displayText": "analogous components", "export": true, "for_": [], "level": "4", "normative": true, "shortname": "css-color", "spec": "css-color-4", "status": "local", "text": "analogous components", "type": "dfn", "url": "#analogous-components" },
                 "#analogous-set": { "displayText": "analogous set", "export": true, "for_": [], "level": "4", "normative": true, "shortname": "css-color", "spec": "css-color-4", "status": "local", "text": "analogous set", "type": "dfn", "url": "#analogous-set" },
+                "#calculate-the-curvature": { "displayText": "calculate the curvature", "export": true, "for_": [], "level": "4", "normative": true, "shortname": "css-color", "spec": "css-color-4", "status": "local", "text": "calculate the curvature", "type": "dfn", "url": "#calculate-the-curvature" },
                 "#calibrated": { "displayText": "calibrated", "export": true, "for_": [], "level": "4", "normative": true, "shortname": "css-color", "spec": "css-color-4", "status": "local", "text": "calibrated", "type": "dfn", "url": "#calibrated" },
                 "#can-be-displayed": { "displayText": "can be displayed", "export": true, "for_": [], "level": "4", "normative": true, "shortname": "css-color", "spec": "css-color-4", "status": "local", "text": "can be displayed", "type": "dfn", "url": "#can-be-displayed" },
                 "#cant-be-displayed": { "displayText": "can't be displayed", "export": true, "for_": [], "level": "4", "normative": true, "shortname": "css-color", "spec": "css-color-4", "status": "local", "text": "can't be displayed", "type": "dfn", "url": "#cant-be-displayed" },
@@ -16513,6 +16825,8 @@ console<c- p>.</c->log<c- p>(</c->context<c- p>.</c->fillStyle<c- p>);</c-> <c- 
                 "#d50": { "displayText": "d50", "export": true, "for_": [], "level": "4", "normative": true, "shortname": "css-color", "spec": "css-color-4", "status": "local", "text": "d50", "type": "dfn", "url": "#d50" },
                 "#d65": { "displayText": "d65", "export": true, "for_": [], "level": "4", "normative": true, "shortname": "css-color", "spec": "css-color-4", "status": "local", "text": "d65", "type": "dfn", "url": "#d65" },
                 "#equivalent-colors": { "displayText": "equivalent colors", "export": true, "for_": [], "level": "4", "normative": true, "shortname": "css-color", "spec": "css-color-4", "status": "local", "text": "equivalent colors", "type": "dfn", "url": "#equivalent-colors" },
+                "#find-the-maximum-chroma": { "displayText": "find the maximum chroma", "export": true, "for_": [], "level": "4", "normative": true, "shortname": "css-color", "spec": "css-color-4", "status": "local", "text": "find the maximum chroma", "type": "dfn", "url": "#find-the-maximum-chroma" },
+                "#find-the-normalized-chroma-on-the-upper-gamut-boundary-arc": { "displayText": "find the normalized chroma on the upper gamut boundary arc", "export": true, "for_": [], "level": "4", "normative": true, "shortname": "css-color", "spec": "css-color-4", "status": "local", "text": "find the normalized chroma on the upper gamut boundary arc", "type": "dfn", "url": "#find-the-normalized-chroma-on-the-upper-gamut-boundary-arc" },
                 "#funcdef-color": { "displayText": "color()", "export": true, "for_": [], "level": "4", "normative": true, "shortname": "css-color", "spec": "css-color-4", "status": "local", "text": "color()", "type": "function", "url": "#funcdef-color" },
                 "#funcdef-hsl": { "displayText": "hsl()", "export": true, "for_": [], "level": "4", "normative": true, "shortname": "css-color", "spec": "css-color-4", "status": "local", "text": "hsl()", "type": "function", "url": "#funcdef-hsl" },
                 "#funcdef-hsla": { "displayText": "hsla()", "export": true, "for_": [], "level": "4", "normative": true, "shortname": "css-color", "spec": "css-color-4", "status": "local", "text": "hsla()", "type": "function", "url": "#funcdef-hsla" },
@@ -16538,6 +16852,7 @@ console<c- p>.</c->log<c- p>(</c->context<c- p>.</c->fillStyle<c- p>);</c-> <c- 
                 "#propdef-color": { "displayText": "color", "export": true, "for_": [], "level": "4", "normative": true, "shortname": "css-color", "spec": "css-color-4", "status": "local", "text": "color", "type": "property", "url": "#propdef-color" },
                 "#propdef-opacity": { "displayText": "opacity", "export": true, "for_": [], "level": "4", "normative": true, "shortname": "css-color", "spec": "css-color-4", "status": "local", "text": "opacity", "type": "property", "url": "#propdef-opacity" },
                 "#rectangular-orthogonal-color": { "displayText": "rectangular orthogonal color", "export": true, "for_": [], "level": "4", "normative": true, "shortname": "css-color", "spec": "css-color-4", "status": "local", "text": "rectangular orthogonal color", "type": "dfn", "url": "#rectangular-orthogonal-color" },
+                "#remove-hue-folds": { "displayText": "remove hue folds", "export": true, "for_": [], "level": "4", "normative": true, "shortname": "css-color", "spec": "css-color-4", "status": "local", "text": "remove hue folds", "type": "dfn", "url": "#remove-hue-folds" },
                 "#sRGB-space": { "displayText": "srgb", "export": true, "for_": [], "level": "4", "normative": true, "shortname": "css-color", "spec": "css-color-4", "status": "local", "text": "srgb", "type": "dfn", "url": "#sRGB-space" },
                 "#shorter": { "displayText": "shorter", "export": true, "for_": [], "level": "4", "normative": true, "shortname": "css-color", "spec": "css-color-4", "status": "local", "text": "shorter", "type": "dfn", "url": "#shorter" },
                 "#transparent-black": { "displayText": "transparent black", "export": true, "for_": [], "level": "4", "normative": true, "shortname": "css-color", "spec": "css-color-4", "status": "local", "text": "transparent black", "type": "dfn", "url": "#transparent-black" },
