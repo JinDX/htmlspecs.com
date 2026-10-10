@@ -599,7 +599,7 @@ const linkGroups = [
             {
                 text: "RDF 1.2 Schema",
                 href: "https://htmlspecs.com/rdf12-schema/",
-                src: "https://www.w3.org/TR/2026/WD-rdf12-schema-20260328/",
+                src: "https://www.w3.org/TR/2026/WD-rdf12-schema-20261010/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
