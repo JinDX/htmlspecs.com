@@ -1408,7 +1408,7 @@ const linkGroups = [
                 text: "Autofill Event",
                 href: "https://htmlspecs.com/autofill-event/",
                 src: "https://wicg.github.io/autofill-event/",
-                "last-modified": "Fri, 25 Sep 2026 12:17:00 GMT",
+                "last-modified": "Fri, 09 Oct 2026 14:20:17 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
