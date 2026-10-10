@@ -107,7 +107,7 @@ const linkGroups = [
                 text: "DOM",
                 href: "https://htmlspecs.com/dom/",
                 src: "https://dom.spec.whatwg.org/",
-                "last-modified": "Mon, 05 Oct 2026 19:53:19 GMT",
+                "last-modified": "Fri, 09 Oct 2026 14:00:11 GMT",
                 lang: "cjk",
                 state: "LS"
             },
