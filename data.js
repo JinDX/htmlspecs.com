@@ -1419,12 +1419,12 @@ const linkGroups = [
     {
         names: ["设备、传感器与硬件接口", "기기, 센서 및 하드웨어 인터페이스", "デバイス・センサー・ハードウェアインターフェイス"], items: [
             {
-                text: "Web Serial API",
+                text: "WebSerial",
                 href: "https://htmlspecs.com/serial/",
                 src: "https://serial.spec.whatwg.org/",
                 "last-modified": "Thu, 08 Oct 2026 18:30:17 GMT",
                 lang: "cjk",
-                state: "Draft"
+                state: "LS"
             },
             {
                 text: "WebHID API",
