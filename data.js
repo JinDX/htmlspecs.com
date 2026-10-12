@@ -265,7 +265,7 @@ const linkGroups = [
                 text: "ECMAScript® 2027 Internationalization API Specification",
                 href: "https://htmlspecs.com/ecma402/",
                 src: "https://tc39.es/ecma402/",
-                "last-modified": "Fri, 09 Oct 2026 10:30:19 GMT",
+                "last-modified": "Mon, 12 Oct 2026 02:25:48 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
