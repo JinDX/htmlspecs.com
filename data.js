@@ -2114,7 +2114,7 @@ const linkGroups = [
             {
                 text: "AV1 WebCodecs Registration",
                 href: "https://htmlspecs.com/webcodecs-av1-codec-registration/",
-                src: "https://www.w3.org/TR/2026/DNOTE-webcodecs-av1-codec-registration-20260608/",
+                src: "https://www.w3.org/TR/2026/DNOTE-webcodecs-av1-codec-registration-20261013/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "DNOTE"
