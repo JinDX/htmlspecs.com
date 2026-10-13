@@ -1241,7 +1241,7 @@ const linkGroups = [
                 text: "Cross-Origin Storage",
                 href: "https://htmlspecs.com/cross-origin-storage/",
                 src: "https://wicg.github.io/cross-origin-storage/",
-                "last-modified": "Wed, 07 Oct 2026 07:38:42 GMT",
+                "last-modified": "Mon, 12 Oct 2026 10:46:18 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
