@@ -3060,7 +3060,7 @@ const linkGroups = [
             {
                 text: "Securing Verifiable Credentials using JOSE and COSE",
                 href: "https://htmlspecs.com/vc-jose-cose/",
-                src: "https://www.w3.org/TR/2025/REC-vc-jose-cose-20250515/",
+                src: "https://www.w3.org/TR/2026/REC-vc-jose-cose-20261013/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "REC"
