@@ -1773,7 +1773,7 @@ const linkGroups = [
                 text: "Web Speech API",
                 href: "https://htmlspecs.com/web-speech-api/",
                 src: "https://webaudio.github.io/web-speech-api/",
-                "last-modified": "Fri, 18 Sep 2026 16:43:01 GMT",
+                "last-modified": "Thu, 15 Oct 2026 09:47:34 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
