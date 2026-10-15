@@ -1399,7 +1399,7 @@ const linkGroups = [
             {
                 text: "Input Events Level 2",
                 href: "https://htmlspecs.com/input-events-2/",
-                src: "https://www.w3.org/TR/2026/WD-input-events-2-20260501/",
+                src: "https://www.w3.org/TR/2026/WD-input-events-2-20261015/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
