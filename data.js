@@ -2130,7 +2130,7 @@ const linkGroups = [
             {
                 text: "FLAC WebCodecs Registration",
                 href: "https://htmlspecs.com/webcodecs-flac-codec-registration/",
-                src: "https://www.w3.org/TR/2025/DNOTE-webcodecs-flac-codec-registration-20250514/",
+                src: "https://www.w3.org/TR/2026/DNOTE-webcodecs-flac-codec-registration-20261016/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "DNOTE"
