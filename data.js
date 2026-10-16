@@ -2170,7 +2170,7 @@ const linkGroups = [
             {
                 text: "u-law PCM WebCodecs Registration",
                 href: "https://htmlspecs.com/webcodecs-ulaw-codec-registration/",
-                src: "https://www.w3.org/TR/2025/DNOTE-webcodecs-ulaw-codec-registration-20250514/",
+                src: "https://www.w3.org/TR/2026/DNOTE-webcodecs-ulaw-codec-registration-20261016/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "DNOTE"
