@@ -551,7 +551,7 @@ const linkGroups = [
             {
                 text: "LWS 1.0 Authentication Suite: SAML 2.0",
                 href: "https://htmlspecs.com/lws10-authn-saml/",
-                src: "https://www.w3.org/TR/2026/WD-lws10-authn-saml-20260803/",
+                src: "https://www.w3.org/TR/2026/WD-lws10-authn-saml-20261015/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
