@@ -2186,7 +2186,7 @@ const linkGroups = [
             {
                 text: "VP8 WebCodecs Registration",
                 href: "https://htmlspecs.com/webcodecs-vp8-codec-registration/",
-                src: "https://www.w3.org/TR/2024/DNOTE-webcodecs-vp8-codec-registration-20240909/",
+                src: "https://www.w3.org/TR/2026/DNOTE-webcodecs-vp8-codec-registration-20261016/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "DNOTE"
