@@ -4077,7 +4077,7 @@ const cssLinkGroups = [
             {
                 text: "Incremental Font Transfer",
                 href: "https://htmlspecs.com/IFT/",
-                src: "https://www.w3.org/TR/2025/CRD-IFT-20251118/",
+                src: "https://www.w3.org/TR/2026/CRD-IFT-20261013/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "CRD"
