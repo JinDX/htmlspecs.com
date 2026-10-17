@@ -426,9 +426,144 @@
 
     <link rel="stylesheet" href="local.css">
 
+    <style>
+        /* Tabbed examples: one pane per media type (see the script below). */
+        .example-tabs {
+            margin: 1em 0;
+        }
+
+        .example-tabs>.tab-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: .25em;
+            margin-bottom: -1px;
+        }
+
+        .example-tabs>.tab-bar button {
+            font: inherit;
+            font-size: .85em;
+            padding: .3em .7em;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            border-bottom: none;
+            border-radius: .3em .3em 0 0;
+            background: #f4f4f4;
+            color: inherit;
+        }
+
+        .example-tabs>.tab-bar button[aria-selected="true"] {
+            background: #fff;
+            font-weight: bold;
+        }
+
+        .example-tabs>[data-tab] {
+            border: 1px solid #ccc;
+            padding: 0 .5em;
+        }
+
+        .example-tabs>[data-tab]>pre {
+            margin: .5em 0;
+        }
+
+        /* Without script (and in print), show every pane under its label. */
+        .example-tabs:not(.ready)>[data-tab]::before {
+            content: attr(data-tab);
+            display: block;
+            font-weight: bold;
+            padding-top: .3em;
+        }
+
+        @media print {
+            .example-tabs>.tab-bar {
+                display: none;
+            }
+
+            .example-tabs>[data-tab][hidden] {
+                display: block;
+            }
+        }
+    </style>
+
+    <script>
+        // Tabbed examples: each .example-tabs block gets one tab per child with
+        // a data-tab label. Turtle and N-Triples panes are highlighted here,
+        // because ReSpec's highlighter has no Turtle grammar. Inline so that it
+        // works in PR previews and published copies, which carry no local files.
+        (function () {
+            const esc = (t) => t.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            const span = (c, t) => '<span class="hljs-' + c + '">' + esc(t) + "</span>";
+            const TURTLE = /(#[^\n]*)|(<[^>\s]*>)|("(?:[^"\\\n]|\\.)*")(\^\^|@[A-Za-z-]+)?|(@prefix|@base|\ba\b)|([A-Za-z][\w-]*:[\w.-]*|:[\w.-]+)|(\b\d+\b)/g;
+            function turtle(text) {
+                let out = "", last = 0, m;
+                TURTLE.lastIndex = 0;
+                while ((m = TURTLE.exec(text))) {
+                    out += esc(text.slice(last, m.index));
+                    if (m[1]) out += span("comment", m[1]);
+                    else if (m[2]) out += span("link", m[2]);
+                    else if (m[3]) out += span("string", m[3]) + (m[4] ? esc(m[4]) : "");
+                    else if (m[5]) out += span("keyword", m[5]);
+                    else if (m[6]) {
+                        const i = m[6].indexOf(":") + 1;
+                        out += span("literal", m[6].slice(0, i)) + (i < m[6].length ? span("attr", m[6].slice(i)) : "");
+                    }
+                    else out += span("number", m[7]);
+                    last = TURTLE.lastIndex;
+                }
+                return out + esc(text.slice(last));
+            }
+            function highlight(code) {
+                code.innerHTML = turtle(code.textContent);
+                code.classList.add("hljs");
+                code.dataset.lwsHighlighted = "";
+            }
+            function build() {
+                let n = 0;
+                for (const box of document.querySelectorAll(".example-tabs")) {
+                    for (const old of box.querySelectorAll(":scope > .tab-bar")) old.remove();
+                    const panes = [...box.querySelectorAll(":scope > [data-tab]")];
+                    if (!panes.length) continue;
+                    for (const pane of panes) {
+                        if (!/turtle|n-triples/.test(pane.dataset.tab)) continue;
+                        for (const code of pane.querySelectorAll("pre code.nohighlight:not([data-lws-highlighted])")) highlight(code);
+                    }
+                    const bar = document.createElement("div");
+                    bar.className = "tab-bar";
+                    bar.setAttribute("role", "tablist");
+                    const select = (i) => panes.forEach((pane, j) => {
+                        pane.hidden = i !== j;
+                        bar.children[j].setAttribute("aria-selected", String(i === j));
+                    });
+                    panes.forEach((pane, i) => {
+                        const button = document.createElement("button");
+                        button.type = "button";
+                        const id = "lws-tab-" + n++;
+                        button.id = id;
+                        button.setAttribute("role", "tab");
+                        button.setAttribute("aria-controls", id + "-panel");
+                        pane.id = id + "-panel";
+                        pane.setAttribute("role", "tabpanel");
+                        pane.setAttribute("aria-labelledby", id);
+                        button.textContent = pane.dataset.tab;
+                        button.addEventListener("click", () => select(i));
+                        bar.append(button);
+                    });
+                    box.prepend(bar);
+                    box.classList.add("ready");
+                    select(0);
+                }
+            }
+            function start() {
+                if (document.respec) document.respec.ready.then(build);
+                else build();
+            }
+            if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start);
+            else start();
+        })();
+    </script>
+
 
     <meta name="color-scheme" content="light">
-    <meta name="revision" content="0e7ad1892cab93c623af294cc5d9f36151e297fa">
+    <meta name="revision" content="4f85230da32b8b2e20863ae538b4e9ad31e217be">
     <meta name="description" content="[@@ from charter]">
     <link rel="canonical" href="https://www.w3.org/TR/lws10-core/">
     <script type="application/ld+json">{
@@ -461,14 +596,14 @@
   "name": "Linked Web Storage Protocol 1.0",
   "inLanguage": "en",
   "license": "https://www.w3.org/copyright/software-license-2023/",
-  "datePublished": "2026-10-15",
+  "datePublished": "2026-10-16",
   "copyrightHolder": {
     "name": "World Wide Web Consortium",
     "url": "https://www.w3.org/"
   },
   "discussionUrl": "https://github.com/w3c/lws-protocol/issues/",
   "alternativeHeadline": "",
-  "isBasedOn": "https://www.w3.org/TR/2026/WD-lws10-core-20261014/",
+  "isBasedOn": "https://www.w3.org/TR/2026/WD-lws10-core-20261016/",
   "description": "[@@ from charter]",
   "editor": [
     {
@@ -1009,6 +1144,134 @@
       }
     },
     {
+      "id": "https://www.rfc-editor.org/info/rfc6906/",
+      "type": "TechArticle",
+      "name": "The 'profile' Link Relation Type",
+      "url": "https://www.rfc-editor.org/info/rfc6906/",
+      "creator": [
+        {
+          "name": "E. Wilde"
+        }
+      ],
+      "publisher": {
+        "name": "IETF"
+      }
+    },
+    {
+      "id": "https://www.w3.org/TR/rdf12-concepts/",
+      "type": "TechArticle",
+      "name": "RDF 1.2 Concepts and Abstract Data Model",
+      "url": "https://www.w3.org/TR/rdf12-concepts/",
+      "creator": [
+        {
+          "name": "Andy Seaborne"
+        },
+        {
+          "name": "Gregg Kellogg"
+        },
+        {
+          "name": "Olaf Hartig"
+        },
+        {
+          "name": "Pierre-Antoine Champin"
+        }
+      ],
+      "publisher": {
+        "name": "W3C"
+      }
+    },
+    {
+      "id": "https://www.w3.org/TR/json-ld11/",
+      "type": "TechArticle",
+      "name": "JSON-LD 1.1",
+      "url": "https://www.w3.org/TR/json-ld11/",
+      "creator": [
+        {
+          "name": "Gregg Kellogg"
+        },
+        {
+          "name": "Pierre-Antoine Champin"
+        },
+        {
+          "name": "Dave Longley"
+        }
+      ],
+      "publisher": {
+        "name": "W3C"
+      }
+    },
+    {
+      "id": "https://www.w3.org/TR/rdf12-turtle/",
+      "type": "TechArticle",
+      "name": "RDF 1.2 Turtle",
+      "url": "https://www.w3.org/TR/rdf12-turtle/",
+      "creator": [
+        {
+          "name": "Gregg Kellogg"
+        },
+        {
+          "name": "Andy Seaborne"
+        },
+        {
+          "name": "Dominik Tomaszuk"
+        }
+      ],
+      "publisher": {
+        "name": "W3C"
+      }
+    },
+    {
+      "id": "https://www.w3.org/TR/rdf12-trig/",
+      "type": "TechArticle",
+      "name": "RDF 1.2 TriG",
+      "url": "https://www.w3.org/TR/rdf12-trig/",
+      "creator": [
+        {
+          "name": "Gregg Kellogg"
+        },
+        {
+          "name": "Dominik Tomaszuk"
+        }
+      ],
+      "publisher": {
+        "name": "W3C"
+      }
+    },
+    {
+      "id": "https://www.w3.org/TR/rdf12-n-triples/",
+      "type": "TechArticle",
+      "name": "RDF 1.2 N-Triples",
+      "url": "https://www.w3.org/TR/rdf12-n-triples/",
+      "creator": [
+        {
+          "name": "Gregg Kellogg"
+        },
+        {
+          "name": "Dominik Tomaszuk"
+        }
+      ],
+      "publisher": {
+        "name": "W3C"
+      }
+    },
+    {
+      "id": "https://www.w3.org/TR/rdf12-n-quads/",
+      "type": "TechArticle",
+      "name": "RDF 1.2 N-Quads",
+      "url": "https://www.w3.org/TR/rdf12-n-quads/",
+      "creator": [
+        {
+          "name": "Gregg Kellogg"
+        },
+        {
+          "name": "Dominik Tomaszuk"
+        }
+      ],
+      "publisher": {
+        "name": "W3C"
+      }
+    },
+    {
       "id": "https://www.rfc-editor.org/info/rfc2119/",
       "type": "TechArticle",
       "name": "Key words for use in RFCs to Indicate Requirement Levels",
@@ -1034,26 +1297,6 @@
       ],
       "publisher": {
         "name": "IETF"
-      }
-    },
-    {
-      "id": "https://www.w3.org/TR/json-ld11/",
-      "type": "TechArticle",
-      "name": "JSON-LD 1.1",
-      "url": "https://www.w3.org/TR/json-ld11/",
-      "creator": [
-        {
-          "name": "Gregg Kellogg"
-        },
-        {
-          "name": "Pierre-Antoine Champin"
-        },
-        {
-          "name": "Dave Longley"
-        }
-      ],
-      "publisher": {
-        "name": "W3C"
       }
     },
     {
@@ -1497,12 +1740,12 @@
   "lint": {
     "no-unused-dfns": false
   },
-  "gitRevision": "0e7ad1892cab93c623af294cc5d9f36151e297fa",
-  "publishDate": "2026-10-15",
+  "gitRevision": "4f85230da32b8b2e20863ae538b4e9ad31e217be",
+  "publishDate": "2026-10-16",
   "previousMaturity": "WD",
-  "previousPublishDate": "2026-10-14",
-  "publishISODate": "2026-10-15T00:00:00.000Z",
-  "generatedSubtitle": "W3C Working Draft 15 October 2026"
+  "previousPublishDate": "2026-10-16",
+  "publishISODate": "2026-10-16T00:00:00.000Z",
+  "generatedSubtitle": "W3C Working Draft 16 October 2026"
 }</script>
     <link rel="stylesheet" href="https://www.w3.org/StyleSheets/TR/2021/W3C-WD">
     <link rel="stylesheet" href="https://www.w3.org/StyleSheets/TR/2021/dark.css" disabled="">
@@ -1515,14 +1758,14 @@
             </a></p>
         <h1 id="title" class="title">Linked Web Storage Protocol 1.0</h1>
         <p id="w3c-state"><a href="https://www.w3.org/standards/types#WD">W3C Working Draft</a> <time
-                class="dt-published" datetime="2026-10-15">15 October 2026</time></p>
+                class="dt-published" datetime="2026-10-16">16 October 2026</time></p>
         <details open="">
             <summary>More details about this document</summary>
             <dl>
                 <dt>This version:</dt>
                 <dd>
                     <a class="u-url"
-                        href="https://www.w3.org/TR/2026/WD-lws10-core-20261015/">https://www.w3.org/TR/2026/WD-lws10-core-20261015/</a>
+                        href="https://www.w3.org/TR/2026/WD-lws10-core-20261016/">https://www.w3.org/TR/2026/WD-lws10-core-20261016/</a>
                 </dd>
                 <dt>Latest published version:</dt>
                 <dd>
@@ -1903,19 +2146,21 @@
                     <li class="tocline"><a class="tocxref" href="#lws-media-type-0"><bdi class="secno">12.1 </bdi>LWS
                             Media Type</a>
                         <ol class="toc">
-                            <li class="tocline"><a class="tocxref" href="#media-type-equivalence"><bdi
-                                        class="secno">12.1.1 </bdi>Media Type Equivalence</a></li>
-                            <li class="tocline"><a class="tocxref" href="#pagination"><bdi class="secno">12.1.2
+                            <li class="tocline"><a class="tocxref" href="#lws-profile"><bdi class="secno">12.1.1
+                                    </bdi>LWS Profile</a></li>
+                            <li class="tocline"><a class="tocxref" href="#content-negotiation"><bdi class="secno">12.1.2
+                                    </bdi>Content Negotiation</a></li>
+                            <li class="tocline"><a class="tocxref" href="#pagination"><bdi class="secno">12.1.3
                                     </bdi>Pagination</a>
                                 <ol class="toc">
                                     <li class="tocline"><a class="tocxref" href="#pagination-model"><bdi
-                                                class="secno">12.1.2.1 </bdi>Pagination Model</a></li>
+                                                class="secno">12.1.3.1 </bdi>Pagination Model</a></li>
                                     <li class="tocline"><a class="tocxref" href="#pagination-link-relations"><bdi
-                                                class="secno">12.1.2.2 </bdi>Pagination Link Relations</a></li>
+                                                class="secno">12.1.3.2 </bdi>Pagination Link Relations</a></li>
                                     <li class="tocline"><a class="tocxref" href="#requesting-pages"><bdi
-                                                class="secno">12.1.2.3 </bdi>Requesting Pages</a></li>
+                                                class="secno">12.1.3.3 </bdi>Requesting Pages</a></li>
                                     <li class="tocline"><a class="tocxref" href="#example-paginated-container"><bdi
-                                                class="secno">12.1.2.4 </bdi>Example: Paginated Container</a></li>
+                                                class="secno">12.1.3.4 </bdi>Example: Paginated Container</a></li>
                                 </ol>
                             </li>
                         </ol>
@@ -3596,13 +3841,12 @@ signature</code></pre>
                 <h3 id="x8-1-container-representation"><bdi class="secno">8.1 </bdi>Container Representation</h3><a
                     class="self-link" href="#container-representation" aria-label="Permalink for Section 8.1"></a>
             </div>
-            <p>When a client retrieves a <a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                    id="ref-for-dfn-containers-21">container</a>, the server returns a structured <dfn
-                    data-plurals="container representations" id="dfn-container-representation" tabindex="0"
-                    aria-haspopup="dialog" data-dfn-type="dfn">container representation</dfn> describing the <a
+            <p>An LWS <dfn data-plurals="container representations" id="dfn-container-representation" tabindex="0"
+                    aria-haspopup="dialog" data-dfn-type="dfn">container representation</dfn> describes a <a
                     href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                    id="ref-for-dfn-containers-22">container</a> and its contents. This section defines the required and
-                optional properties of a container representation.</p>
+                    id="ref-for-dfn-containers-21">container</a> and its contents. This section defines its required and
+                optional properties when served as <code>application/lws+json</code>. Representations in other RDF media
+                types can be requested through <a href="#content-negotiation">content negotiation</a>.</p>
             <section id="container-properties">
                 <div class="header-wrapper">
                     <h4 id="x8-1-1-container-properties"><bdi class="secno">8.1.1 </bdi>Container Properties</h4><a
@@ -3611,19 +3855,19 @@ signature</code></pre>
                 <p>A container representation <em class="rfc2119">MUST</em> include the following properties:</p>
                 <ul>
                     <li><strong><code>id</code></strong>: The URI of the <a href="#dfn-containers" class="internalDFN"
-                            data-link-type="dfn" id="ref-for-dfn-containers-23">container</a>.</li>
+                            data-link-type="dfn" id="ref-for-dfn-containers-22">container</a>.</li>
                     <li><strong><code>type</code></strong>: The value <code>"Container"</code>.</li>
                     <li><strong><code>totalItems</code></strong>: An integer indicating the total number of resources
                         contained in the <a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                            id="ref-for-dfn-containers-24">container</a> which can be disclosed to the client. This
+                            id="ref-for-dfn-containers-23">container</a> which can be disclosed to the client. This
                         count <em class="rfc2119">SHOULD</em> be accurate but <em class="rfc2119">MAY</em> be
                         approximate.</li>
                     <li><strong><code>items</code></strong>: An array of contained resource descriptions (see below). If
                         the
                         <a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                            id="ref-for-dfn-containers-25">container</a> is empty, this <em class="rfc2119">MUST</em> be
+                            id="ref-for-dfn-containers-24">container</a> is empty, this <em class="rfc2119">MUST</em> be
                         an empty array. When the <a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                            id="ref-for-dfn-containers-26">container</a> listing is
+                            id="ref-for-dfn-containers-25">container</a> listing is
                         paginated, <code>items</code> contains only the current page of resources; see <a
                             href="#pagination">Pagination</a> for details.
                     </li>
@@ -3637,7 +3881,7 @@ signature</code></pre>
                 </div>
                 <p>Each entry in the <code>items</code> array describes a resource contained in the <a
                         href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                        id="ref-for-dfn-containers-27">container</a>. A contained resource description <em
+                        id="ref-for-dfn-containers-26">container</a>. A contained resource description <em
                         class="rfc2119">MUST</em> include:</p>
                 <ul>
                     <li><strong><code>id</code></strong>: The URI of the contained resource.</li>
@@ -3666,9 +3910,20 @@ signature</code></pre>
                         aria-label="Permalink for Section 8.1.3"></a>
                 </div>
                 <p>The following example shows a <a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                        id="ref-for-dfn-containers-28">container</a> at <code>/alice/notes/</code> containing two
-                    resources:</p>
-                <pre><code class="json hljs" aria-busy="false"><span class="hljs-punctuation">{</span>
+                        id="ref-for-dfn-containers-27">container</a> at
+                    <code>https://storage.example/alice/notes/</code> containing two resources. The other tabs show the
+                    same container in other RDF media types in the <a href="#dfn-lws-profile" class="internalDFN"
+                        data-link-type="dfn" id="ref-for-dfn-lws-profile-1">LWS profile</a>.
+                </p>
+                <div class="example-tabs ready" data-base="https://storage.example/alice/notes/">
+                    <div class="tab-bar" role="tablist"><button type="button" id="lws-tab-0" role="tab"
+                            aria-controls="lws-tab-0-panel" aria-selected="true">application/lws+json</button><button
+                            type="button" id="lws-tab-1" role="tab" aria-controls="lws-tab-1-panel"
+                            aria-selected="false">text/turtle</button><button type="button" id="lws-tab-2" role="tab"
+                            aria-controls="lws-tab-2-panel" aria-selected="false">application/n-triples</button></div>
+                    <div data-tab="application/lws+json" id="lws-tab-0-panel" role="tabpanel"
+                        aria-labelledby="lws-tab-0">
+                        <pre><code class="json hljs" aria-busy="false"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"@context"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"https://www.w3.org/ns/lws/v1"</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"/alice/notes/"</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"Container"</span><span class="hljs-punctuation">,</span>
@@ -3691,6 +3946,47 @@ signature</code></pre>
   <span class="hljs-punctuation">]</span>
 <span class="hljs-punctuation">}</span>
 </code></pre>
+                    </div>
+                    <div data-tab="text/turtle" id="lws-tab-1-panel" role="tabpanel" aria-labelledby="lws-tab-1"
+                        hidden="">
+                        <pre><code class="nohighlight hljs" data-lws-highlighted=""><span class="hljs-keyword">@prefix</span> <span class="hljs-literal">lws:</span> <span class="hljs-link">&lt;https://www.w3.org/ns/lws#&gt;</span> .
+<span class="hljs-keyword">@prefix</span> <span class="hljs-literal">dcterms:</span> <span class="hljs-link">&lt;http://purl.org/dc/terms/&gt;</span> .
+<span class="hljs-keyword">@prefix</span> <span class="hljs-literal">schema:</span> <span class="hljs-link">&lt;http://schema.org/&gt;</span> .
+<span class="hljs-keyword">@prefix</span> <span class="hljs-literal">xsd:</span> <span class="hljs-link">&lt;http://www.w3.org/2001/XMLSchema#&gt;</span> .
+
+<span class="hljs-link">&lt;&gt;</span> <span class="hljs-keyword">a</span> <span class="hljs-literal">lws:</span><span class="hljs-attr">Container</span> ;
+  <span class="hljs-literal">lws:</span><span class="hljs-attr">totalItems</span> <span class="hljs-number">2</span> ;
+  <span class="hljs-literal">lws:</span><span class="hljs-attr">items</span> <span class="hljs-link">&lt;shoppinglist.txt&gt;</span>, <span class="hljs-link">&lt;todo.json&gt;</span> .
+
+<span class="hljs-link">&lt;shoppinglist.txt&gt;</span> <span class="hljs-keyword">a</span> <span class="hljs-literal">lws:</span><span class="hljs-attr">DataResource</span> ;
+  <span class="hljs-literal">dcterms:</span><span class="hljs-attr">format</span> <span class="hljs-string">"text/plain"</span> ;
+  <span class="hljs-literal">schema:</span><span class="hljs-attr">size</span> <span class="hljs-string">"47"</span>^^<span class="hljs-literal">xsd:</span><span class="hljs-attr">long</span> ;
+  <span class="hljs-literal">dcterms:</span><span class="hljs-attr">modified</span> <span class="hljs-string">"2025-11-24T12:00:00Z"</span>^^<span class="hljs-literal">xsd:</span><span class="hljs-attr">dateTime</span> .
+
+<span class="hljs-link">&lt;todo.json&gt;</span> <span class="hljs-keyword">a</span> <span class="hljs-literal">lws:</span><span class="hljs-attr">DataResource</span>, <span class="hljs-link">&lt;http://example.org/customType&gt;</span> ;
+  <span class="hljs-literal">dcterms:</span><span class="hljs-attr">format</span> <span class="hljs-string">"application/json"</span> ;
+  <span class="hljs-literal">schema:</span><span class="hljs-attr">size</span> <span class="hljs-string">"2048"</span>^^<span class="hljs-literal">xsd:</span><span class="hljs-attr">long</span> ;
+  <span class="hljs-literal">dcterms:</span><span class="hljs-attr">modified</span> <span class="hljs-string">"2025-11-24T13:00:00Z"</span>^^<span class="hljs-literal">xsd:</span><span class="hljs-attr">dateTime</span> .
+</code></pre>
+                    </div>
+                    <div data-tab="application/n-triples" id="lws-tab-2-panel" role="tabpanel"
+                        aria-labelledby="lws-tab-2" hidden="">
+                        <pre><code class="nohighlight hljs" data-lws-highlighted=""><span class="hljs-link">&lt;https://storage.example/alice/notes/&gt;</span> <span class="hljs-link">&lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt;</span> <span class="hljs-link">&lt;https://www.w3.org/ns/lws#Container&gt;</span> .
+<span class="hljs-link">&lt;https://storage.example/alice/notes/&gt;</span> <span class="hljs-link">&lt;https://www.w3.org/ns/lws#totalItems&gt;</span> <span class="hljs-string">"2"</span>^^<span class="hljs-link">&lt;http://www.w3.org/2001/XMLSchema#integer&gt;</span> .
+<span class="hljs-link">&lt;https://storage.example/alice/notes/&gt;</span> <span class="hljs-link">&lt;https://www.w3.org/ns/lws#items&gt;</span> <span class="hljs-link">&lt;https://storage.example/alice/notes/shoppinglist.txt&gt;</span> .
+<span class="hljs-link">&lt;https://storage.example/alice/notes/&gt;</span> <span class="hljs-link">&lt;https://www.w3.org/ns/lws#items&gt;</span> <span class="hljs-link">&lt;https://storage.example/alice/notes/todo.json&gt;</span> .
+<span class="hljs-link">&lt;https://storage.example/alice/notes/shoppinglist.txt&gt;</span> <span class="hljs-link">&lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt;</span> <span class="hljs-link">&lt;https://www.w3.org/ns/lws#DataResource&gt;</span> .
+<span class="hljs-link">&lt;https://storage.example/alice/notes/shoppinglist.txt&gt;</span> <span class="hljs-link">&lt;http://purl.org/dc/terms/format&gt;</span> <span class="hljs-string">"text/plain"</span> .
+<span class="hljs-link">&lt;https://storage.example/alice/notes/shoppinglist.txt&gt;</span> <span class="hljs-link">&lt;http://schema.org/size&gt;</span> <span class="hljs-string">"47"</span>^^<span class="hljs-link">&lt;http://www.w3.org/2001/XMLSchema#long&gt;</span> .
+<span class="hljs-link">&lt;https://storage.example/alice/notes/shoppinglist.txt&gt;</span> <span class="hljs-link">&lt;http://purl.org/dc/terms/modified&gt;</span> <span class="hljs-string">"2025-11-24T12:00:00Z"</span>^^<span class="hljs-link">&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt;</span> .
+<span class="hljs-link">&lt;https://storage.example/alice/notes/todo.json&gt;</span> <span class="hljs-link">&lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt;</span> <span class="hljs-link">&lt;https://www.w3.org/ns/lws#DataResource&gt;</span> .
+<span class="hljs-link">&lt;https://storage.example/alice/notes/todo.json&gt;</span> <span class="hljs-link">&lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt;</span> <span class="hljs-link">&lt;http://example.org/customType&gt;</span> .
+<span class="hljs-link">&lt;https://storage.example/alice/notes/todo.json&gt;</span> <span class="hljs-link">&lt;http://purl.org/dc/terms/format&gt;</span> <span class="hljs-string">"application/json"</span> .
+<span class="hljs-link">&lt;https://storage.example/alice/notes/todo.json&gt;</span> <span class="hljs-link">&lt;http://schema.org/size&gt;</span> <span class="hljs-string">"2048"</span>^^<span class="hljs-link">&lt;http://www.w3.org/2001/XMLSchema#long&gt;</span> .
+<span class="hljs-link">&lt;https://storage.example/alice/notes/todo.json&gt;</span> <span class="hljs-link">&lt;http://purl.org/dc/terms/modified&gt;</span> <span class="hljs-string">"2025-11-24T13:00:00Z"</span>^^<span class="hljs-link">&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt;</span> .
+</code></pre>
+                    </div>
+                </div>
             </section>
         </section>
     </section>
@@ -3736,7 +4032,7 @@ signature</code></pre>
             requirements are stated in the descriptive text and tables. Also, while this binding covers HTTP (as the
             initial target protocol), the LWS operations could in principle be bound to other protocols in the future.
             Media type requirements for <a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                id="ref-for-dfn-containers-29">container</a> representations are defined in <a href="#lws-media-type"
+                id="ref-for-dfn-containers-28">container</a> representations are defined in <a href="#lws-media-type"
                 class="sec-ref"><bdi class="secno">12. </bdi>LWS Media Type</a>.</p>
 
         <section id="metadata">
@@ -3751,7 +4047,7 @@ signature</code></pre>
                         title="Web Linking">RFC8288</a></cite>], which allows servers to describe the relationships
                 between resources using typed links. Metadata enhances discoverability, supports self-descriptive APIs,
                 and aligns with resource operations, and <a href="#dfn-containers" class="internalDFN"
-                    data-link-type="dfn" id="ref-for-dfn-containers-30">container</a> hierarchies.</p>
+                    data-link-type="dfn" id="ref-for-dfn-containers-29">container</a> hierarchies.</p>
             <p><strong>Metadata Model</strong>
                 All metadata in LWS is expressed as a set of typed links originating from a resource (the link context).
                 Each link consists of:</p>
@@ -3765,10 +4061,10 @@ signature</code></pre>
                 where applicable. For <a href="#dfn-data-resources" class="internalDFN" data-link-type="dfn"
                     id="ref-for-dfn-data-resources-2">data resources</a>, metadata includes representations, each with
                 format and optional sizeInBytes. For <a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                    id="ref-for-dfn-containers-31">containers</a> and <a href="#dfn-data-resources" class="internalDFN"
+                    id="ref-for-dfn-containers-30">containers</a> and <a href="#dfn-data-resources" class="internalDFN"
                     data-link-type="dfn" id="ref-for-dfn-data-resources-3">data resources</a>, we consider the link to
                 its parent <a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                    id="ref-for-dfn-containers-32">container</a> resource to be part of the metadata of the resource.
+                    id="ref-for-dfn-containers-31">container</a> resource to be part of the metadata of the resource.
             </p>
             <p><strong>The <a href="#dfn-linkset-resource" class="internalDFN" data-link-type="dfn"
                         id="ref-for-dfn-linkset-resource-2">Linkset Resource</a></strong>
@@ -3797,7 +4093,7 @@ signature</code></pre>
                 <li><a href="#dfn-containment" class="internalDFN" data-link-type="dfn"
                         id="ref-for-dfn-containment-8">Containment</a>: Servers <em class="rfc2119">MUST</em> include a
                     Link header with <code>rel="up"</code> pointing to the parent <a href="#dfn-containers"
-                        class="internalDFN" data-link-type="dfn" id="ref-for-dfn-containers-33">container</a> for any
+                        class="internalDFN" data-link-type="dfn" id="ref-for-dfn-containers-32">container</a> for any
                     non-root resource.</li>
                 <li>Preferences: Clients <em class="rfc2119">MAY</em> use the Prefer header [<cite><a class="bibref"
                             data-link-type="biblio" href="#bib-rfc7240"
@@ -3895,13 +4191,13 @@ signature</code></pre>
 
             <p>The <strong>create resource</strong> operation adds a new <a href="#dfn-served-resource"
                     id="ref-for-dfn-served-resource-6">served resource</a> to an existing <a href="#dfn-containers"
-                    class="internalDFN" data-link-type="dfn" id="ref-for-dfn-containers-34">container</a>. This
+                    class="internalDFN" data-link-type="dfn" id="ref-for-dfn-containers-33">container</a>. This
                 operation handles both the creation of <a href="#dfn-data-resources" class="internalDFN"
                     data-link-type="dfn" id="ref-for-dfn-data-resources-4">data resources</a> and sub-containers.</p>
             <p><strong>Inputs:</strong></p>
             <ul>
                 <li><strong>Target container:</strong> The identifier of the <a href="#dfn-containers"
-                        class="internalDFN" data-link-type="dfn" id="ref-for-dfn-containers-35">container</a> where the
+                        class="internalDFN" data-link-type="dfn" id="ref-for-dfn-containers-34">container</a> where the
                     new resource will be created.</li>
                 <li><strong>Identity hint:</strong> An optional suggestion for the new resource's identifier. The server
                     may use this hint but is not required to.</li>
@@ -3912,11 +4208,11 @@ signature</code></pre>
                 <li><strong>Identity generation:</strong> The server determines the final identifier (URI) for the new
                     resource. If an identity hint was provided, the server attempts to incorporate it while ensuring
                     uniqueness and validity within the <a href="#dfn-containers" class="internalDFN"
-                        data-link-type="dfn" id="ref-for-dfn-containers-36">container</a>. If no hint is provided, the
+                        data-link-type="dfn" id="ref-for-dfn-containers-35">container</a>. If no hint is provided, the
                     server generates a unique identifier.</li>
                 <li><strong>Container membership update:</strong> The server atomically adds the new resource to the
                     membership listing of the target <a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                        id="ref-for-dfn-containers-37">container</a>.</li>
+                        id="ref-for-dfn-containers-36">container</a>.</li>
                 <li><strong>Metadata initialization:</strong> The server initializes system metadata for the new
                     resource. If the resource has an associated <a href="#dfn-metadata-resource" class="internalDFN"
                         data-link-type="dfn" id="ref-for-dfn-metadata-resource-2">metadata resource</a> it is also
@@ -3927,11 +4223,11 @@ signature</code></pre>
                 <li><strong id="dfn-created">Created:</strong> The operation succeeded. The server returns the final
                     identifier of the newly created resource.</li>
                 <li><strong>Target Not Found:</strong> The specified target <a href="#dfn-containers"
-                        class="internalDFN" data-link-type="dfn" id="ref-for-dfn-containers-38">container</a> does not
+                        class="internalDFN" data-link-type="dfn" id="ref-for-dfn-containers-37">container</a> does not
                     exist.</li>
                 <li><strong>Not Permitted:</strong> The client's identity is known, but they do not have permission to
                     create resources in this <a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                        id="ref-for-dfn-containers-39">container</a>.</li>
+                        id="ref-for-dfn-containers-38">container</a>.</li>
                 <li><strong>Unknown Requester:</strong> The server does not recognize the client's identity and requires
                     authentication.</li>
                 <li><strong>Conflict:</strong> A resource with the generated identifier already exists, or there is
@@ -3939,7 +4235,7 @@ signature</code></pre>
                 <li><strong>Unknown Error:</strong> An unexpected internal error occurred.</li>
             </ul>
             <p>New resources are created using POST to a target <a href="#dfn-containers" class="internalDFN"
-                    data-link-type="dfn" id="ref-for-dfn-containers-40">container</a> URI, with the server assigning the
+                    data-link-type="dfn" id="ref-for-dfn-containers-39">container</a> URI, with the server assigning the
                 final identifier. Clients <em class="rfc2119">MAY</em> provide initial user-managed metadata for the new
                 resource by including one or more <code>Link</code> headers in the POST request, following the syntax of
                 Web Linking in [<cite><a class="bibref" data-link-type="biblio" href="#bib-rfc8288"
@@ -3949,7 +4245,7 @@ signature</code></pre>
             <p>On success, the server <em class="rfc2119">MUST</em> return the 201 status code with the new URI in the
                 <code>Location</code> header. The server <em class="rfc2119">MUST</em> include <code>Link</code> headers
                 for key server-managed metadata, including a link to the parent <a href="#dfn-containers"
-                    class="internalDFN" data-link-type="dfn" id="ref-for-dfn-containers-41">container</a>
+                    class="internalDFN" data-link-type="dfn" id="ref-for-dfn-containers-40">container</a>
                 (<code>rel="up"</code>), and a link to the created resource's dedicated <a href="#dfn-linkset-resource"
                     class="internalDFN" data-link-type="dfn" id="ref-for-dfn-linkset-resource-7">linkset resource</a>
                 (<code>rel="linkset"; type="application/linkset+json"</code>). Additional links <em
@@ -3961,11 +4257,11 @@ signature</code></pre>
             </p>
             <p><strong>POST (to a container URI)</strong> – <em>Create with server-assigned name:</em>
                 Use POST to add a new resource inside an existing <a href="#dfn-containers" class="internalDFN"
-                    data-link-type="dfn" id="ref-for-dfn-containers-42">container</a>. The server assigns the identifier
+                    data-link-type="dfn" id="ref-for-dfn-containers-41">container</a>. The server assigns the identifier
                 for the resource. Clients indicate the type of resource to create as follows:</p>
             <ul>
                 <li>To create a <strong><a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                            id="ref-for-dfn-containers-43">Container</a></strong>, the client <em
+                            id="ref-for-dfn-containers-42">Container</a></strong>, the client <em
                         class="rfc2119">MUST</em> include a <code>Link</code> header with <code>rel="type"</code>
                     pointing to the Container type:
                     <code>Link: &lt;https://www.w3.org/ns/lws#Container&gt;; rel="type"</code>.
@@ -3989,14 +4285,12 @@ apples
 orange juice
 </code></pre>
             <p>In this example, the client is posting to the <a href="#dfn-containers" class="internalDFN"
-                    data-link-type="dfn" id="ref-for-dfn-containers-44">container</a> <code>/alice/notes/</code>. It
-                provides <code>text/plain</code> content (a grocery list) and suggests the name
-                <code>shoppinglist.txt</code> for the new resource. If <code>/alice/notes/</code> exists and the client
-                is authorized, the server will create a new <a href="#dfn-data-resources" class="internalDFN"
+                    data-link-type="dfn" id="ref-for-dfn-containers-43">container</a> <code>/alice/notes/</code>. It
+                provides <code>text/plain</code> content (a grocery list). If <code>/alice/notes/</code> exists and the
+                client is authorized, the server will create a new <a href="#dfn-data-resources" class="internalDFN"
                     data-link-type="dfn" id="ref-for-dfn-data-resources-6">data resource</a> and add it to the <a
                     href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                    id="ref-for-dfn-containers-45">container</a>'s membership.
-            </p>
+                    id="ref-for-dfn-containers-44">container</a>'s membership.</p>
             <p><strong>Example (Response to POST — Data Resource):</strong></p>
             <pre><code aria-busy="false" class="hljs http"><span class="hljs-meta">HTTP/1.1</span> <span class="hljs-number">201</span> Created
 <span class="hljs-attribute">Location</span><span class="hljs-punctuation">: </span>/alice/notes/shoppinglist.txt
@@ -4009,15 +4303,15 @@ orange juice
             <p>On success, return 201 Created with the new URI in the <code>Location</code> header. The body may be
                 empty or a minimal representation.
                 If the target <a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                    id="ref-for-dfn-containers-46">container</a> <code>/alice/notes/</code> does not exist, the server
+                    id="ref-for-dfn-containers-45">container</a> <code>/alice/notes/</code> does not exist, the server
                 <em class="rfc2119">MUST</em> return a 404 error status unless another status code is more appropriate.
             </p>
             <p><strong>Creating <a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                        id="ref-for-dfn-containers-47">Containers</a>:</strong> To create a new <a
+                        id="ref-for-dfn-containers-46">Containers</a>:</strong> To create a new <a
                     href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                    id="ref-for-dfn-containers-48">container</a>, a client uses POST to an existing parent <a
+                    id="ref-for-dfn-containers-47">container</a>, a client uses POST to an existing parent <a
                     href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                    id="ref-for-dfn-containers-49">container</a> with a <code>Link</code> header indicating the
+                    id="ref-for-dfn-containers-48">container</a> with a <code>Link</code> header indicating the
                 Container type. For example:</p>
             <pre><code aria-busy="false" class="hljs http"><span class="hljs-keyword">POST</span> <span class="hljs-string">/alice/</span> <span class="hljs-meta">HTTP/1.1</span>
 <span class="hljs-attribute">Host</span><span class="hljs-punctuation">: </span>example.com
@@ -4034,7 +4328,7 @@ orange juice
 <span class="hljs-attribute">Content-Length</span><span class="hljs-punctuation">: </span>0
 </code></pre>
             <p>This creates a new <a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                    id="ref-for-dfn-containers-50">container</a> at <code>/alice/notes/</code>, with server-generated
+                    id="ref-for-dfn-containers-49">container</a> at <code>/alice/notes/</code>, with server-generated
                 metadata including <code>rel="type"</code> as <code>https://www.w3.org/ns/lws#Container</code>.</p>
             <p><strong>Additional notes on Create (HTTP binding):</strong></p>
             <ul>
@@ -4065,13 +4359,13 @@ orange juice
             </div>
 
             <p>Retrieves the representation of an existing resource or the listing of a <a href="#dfn-containers"
-                    class="internalDFN" data-link-type="dfn" id="ref-for-dfn-containers-51">container</a>.</p>
+                    class="internalDFN" data-link-type="dfn" id="ref-for-dfn-containers-50">container</a>.</p>
             <ul>
                 <li><strong>Inputs</strong>: Target identifier and optional parameters.</li>
                 <li><strong>Behavior</strong>:<ul>
                         <li>For non-container resources, the server returns the resource content.</li>
                         <li>For <a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                                id="ref-for-dfn-containers-52">containers</a>, the server returns a listing of member
+                                id="ref-for-dfn-containers-51">containers</a>, the server returns a listing of member
                             resources which <em class="rfc2119">MAY</em> be filtered based on <a
                                 href="#container-membership-and-authorization">authorization</a>. Listings must include
                             core metadata for each member.</li>
@@ -4082,7 +4376,7 @@ orange juice
             <p>The read resource operation requests a resource representation with HTTP GET requests (and HEAD for
                 header-only requests). The behavior differs depending on whether the target URL is a <a
                     href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                    id="ref-for-dfn-containers-53">container</a> or a non-container resource (<a
+                    id="ref-for-dfn-containers-52">container</a> or a non-container resource (<a
                     href="#dfn-data-resources" class="internalDFN" data-link-type="dfn"
                     id="ref-for-dfn-data-resources-7">data resource</a>). Servers <em class="rfc2119">MUST</em>
                 distinguish resource types via metadata. All responses <em class="rfc2119">MUST</em> integrate with
@@ -4127,34 +4421,46 @@ eggs
                 for caching and conditional request purposes. The response includes <code>Link</code> headers for
                 metadata discoverability, with mandatory fields such as <code>up</code> and <code>type</code>.</p>
             <p><strong>GET (<a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                        id="ref-for-dfn-containers-54">container</a> resource)</strong> – <em>List a <a
+                        id="ref-for-dfn-containers-53">container</a> resource)</strong> – <em>List a <a
                         href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                        id="ref-for-dfn-containers-55">container</a>'s contents:</em>
+                        id="ref-for-dfn-containers-54">container</a>'s contents:</em>
                 When the target URI corresponds to a <a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                    id="ref-for-dfn-containers-56">container</a> (determined via metadata type), a GET request returns a
+                    id="ref-for-dfn-containers-55">container</a> (determined via metadata type), a GET request returns a
                 listing of the <a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                    id="ref-for-dfn-containers-57">container</a>'s members. The response body is a <a
-                    href="#dfn-container-representation" class="internalDFN" data-link-type="dfn"
-                    id="ref-for-dfn-container-representation-3">container representation</a> as defined in the <a
-                    href="#container-representation">Container Representation</a> section, using the LWS container media
-                type. The listing includes metadata for each member: resource identifiers (<em
-                    class="rfc2119">MUST</em>), types (<em class="rfc2119">MUST</em>), media types (<em
-                    class="rfc2119">MUST</em> for DataResources), sizes (<em class="rfc2119">SHOULD</em>), and
-                modification timestamps (<em class="rfc2119">SHOULD</em>).</p>
-            <p><strong>Example (GET a container):</strong></p>
-            <pre><code aria-busy="false" class="hljs http"><span class="hljs-keyword">GET</span> <span class="hljs-string">/alice/notes/</span> <span class="hljs-meta">HTTP/1.1</span>
+                    id="ref-for-dfn-containers-56">container</a>'s members. A response with
+                <code>Content-Type: application/lws+json</code> is a <a href="#dfn-container-representation"
+                    class="internalDFN" data-link-type="dfn" id="ref-for-dfn-container-representation-3">container
+                    representation</a> as defined in the <a href="#container-representation">Container
+                    Representation</a> section; for this representation, the listing includes metadata for each member:
+                resource identifiers (<em class="rfc2119">MUST</em>), types (<em class="rfc2119">MUST</em>), media types
+                (<em class="rfc2119">MUST</em> for DataResources), sizes (<em class="rfc2119">SHOULD</em>), and
+                modification timestamps (<em class="rfc2119">SHOULD</em>).
+            </p>
+            <p><strong>Example (GET a container):</strong> assuming the <a href="#dfn-containers" class="internalDFN"
+                    data-link-type="dfn" id="ref-for-dfn-containers-57">container</a> exists and the client has access.
+                The tabs show the same request in different media types; see <a href="#content-negotiation"
+                    class="sec-ref"><bdi class="secno">12.1.2 </bdi>Content Negotiation</a>.</p>
+            <div class="example-tabs ready">
+                <div class="tab-bar" role="tablist"><button type="button" id="lws-tab-3" role="tab"
+                        aria-controls="lws-tab-3-panel" aria-selected="true">application/lws+json</button><button
+                        type="button" id="lws-tab-4" role="tab" aria-controls="lws-tab-4-panel"
+                        aria-selected="false">text/turtle (LWS profile)</button></div>
+                <div data-tab="application/lws+json" id="lws-tab-3-panel" role="tabpanel" aria-labelledby="lws-tab-3">
+                    <p>Request:</p>
+                    <pre><code class="http hljs" aria-busy="false"><span class="hljs-keyword">GET</span> <span class="hljs-string">/alice/notes/</span> <span class="hljs-meta">HTTP/1.1</span>
 <span class="hljs-attribute">Authorization</span><span class="hljs-punctuation">: </span>Bearer &lt;token&gt;
 <span class="hljs-attribute">Accept</span><span class="hljs-punctuation">: </span>application/lws+json
 </code></pre>
-            <p>Assuming the container exists and the client has access:</p>
-            <pre><code aria-busy="false" class="hljs http"><span class="hljs-meta">HTTP/1.1</span> <span class="hljs-number">200</span> OK
+                    <p>Response headers:</p>
+                    <pre><code class="http hljs" aria-busy="false"><span class="hljs-meta">HTTP/1.1</span> <span class="hljs-number">200</span> OK
 <span class="hljs-attribute">Content-Type</span><span class="hljs-punctuation">: </span>application/lws+json
 <span class="hljs-attribute">ETag</span><span class="hljs-punctuation">: </span>"container-etag-789"
 <span class="hljs-attribute">Link</span><span class="hljs-punctuation">: </span>&lt;/alice/notes/.meta&gt;; rel="linkset"; type="application/linkset+json"
 <span class="hljs-attribute">Link</span><span class="hljs-punctuation">: </span>&lt;/alice/&gt;; rel="up"
 <span class="hljs-attribute">Link</span><span class="hljs-punctuation">: </span>&lt;https://www.w3.org/ns/lws#Container&gt;; rel="type"
-
-<span class="language-json"><span class="hljs-punctuation">{</span>
+</code></pre>
+                    <p>Response body:</p>
+                    <pre><code class="json hljs" aria-busy="false"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"@context"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"https://www.w3.org/ns/lws/v1"</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"/alice/notes/"</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"Container"</span><span class="hljs-punctuation">,</span>
@@ -4176,7 +4482,45 @@ eggs
     <span class="hljs-punctuation">}</span>
   <span class="hljs-punctuation">]</span>
 <span class="hljs-punctuation">}</span>
-</span></code></pre>
+</code></pre>
+                </div>
+                <div data-tab="text/turtle (LWS profile)" id="lws-tab-4-panel" role="tabpanel"
+                    aria-labelledby="lws-tab-4" hidden="">
+                    <p>Request:</p>
+                    <pre><code class="http hljs" aria-busy="false"><span class="hljs-keyword">GET</span> <span class="hljs-string">/alice/notes/</span> <span class="hljs-meta">HTTP/1.1</span>
+<span class="hljs-attribute">Authorization</span><span class="hljs-punctuation">: </span>Bearer &lt;token&gt;
+<span class="hljs-attribute">Accept</span><span class="hljs-punctuation">: </span>text/turtle; profile="https://www.w3.org/ns/lws/v1"
+</code></pre>
+                    <p>Response headers:</p>
+                    <pre><code class="http hljs" aria-busy="false"><span class="hljs-meta">HTTP/1.1</span> <span class="hljs-number">200</span> OK
+<span class="hljs-attribute">Content-Type</span><span class="hljs-punctuation">: </span>text/turtle; profile="https://www.w3.org/ns/lws/v1"
+<span class="hljs-attribute">ETag</span><span class="hljs-punctuation">: </span>"container-etag-789"
+<span class="hljs-attribute">Link</span><span class="hljs-punctuation">: </span>&lt;/alice/notes/.meta&gt;; rel="linkset"; type="application/linkset+json"
+<span class="hljs-attribute">Link</span><span class="hljs-punctuation">: </span>&lt;/alice/&gt;; rel="up"
+<span class="hljs-attribute">Link</span><span class="hljs-punctuation">: </span>&lt;https://www.w3.org/ns/lws#Container&gt;; rel="type"
+</code></pre>
+                    <p>Response body:</p>
+                    <pre><code class="nohighlight hljs" data-lws-highlighted=""><span class="hljs-keyword">@prefix</span> <span class="hljs-literal">lws:</span> <span class="hljs-link">&lt;https://www.w3.org/ns/lws#&gt;</span> .
+<span class="hljs-keyword">@prefix</span> <span class="hljs-literal">dcterms:</span> <span class="hljs-link">&lt;http://purl.org/dc/terms/&gt;</span> .
+<span class="hljs-keyword">@prefix</span> <span class="hljs-literal">schema:</span> <span class="hljs-link">&lt;http://schema.org/&gt;</span> .
+<span class="hljs-keyword">@prefix</span> <span class="hljs-literal">xsd:</span> <span class="hljs-link">&lt;http://www.w3.org/2001/XMLSchema#&gt;</span> .
+
+<span class="hljs-link">&lt;&gt;</span> <span class="hljs-keyword">a</span> <span class="hljs-literal">lws:</span><span class="hljs-attr">Container</span> ;
+  <span class="hljs-literal">lws:</span><span class="hljs-attr">totalItems</span> <span class="hljs-number">2</span> ;
+  <span class="hljs-literal">lws:</span><span class="hljs-attr">items</span> <span class="hljs-link">&lt;shoppinglist.txt&gt;</span>, <span class="hljs-link">&lt;todo.json&gt;</span> .
+
+<span class="hljs-link">&lt;shoppinglist.txt&gt;</span> <span class="hljs-keyword">a</span> <span class="hljs-literal">lws:</span><span class="hljs-attr">DataResource</span> ;
+  <span class="hljs-literal">dcterms:</span><span class="hljs-attr">format</span> <span class="hljs-string">"text/plain"</span> ;
+  <span class="hljs-literal">schema:</span><span class="hljs-attr">size</span> <span class="hljs-string">"47"</span>^^<span class="hljs-literal">xsd:</span><span class="hljs-attr">long</span> ;
+  <span class="hljs-literal">dcterms:</span><span class="hljs-attr">modified</span> <span class="hljs-string">"2025-11-24T12:00:00Z"</span>^^<span class="hljs-literal">xsd:</span><span class="hljs-attr">dateTime</span> .
+
+<span class="hljs-link">&lt;todo.json&gt;</span> <span class="hljs-keyword">a</span> <span class="hljs-literal">lws:</span><span class="hljs-attr">DataResource</span>, <span class="hljs-link">&lt;http://example.org/customType&gt;</span> ;
+  <span class="hljs-literal">dcterms:</span><span class="hljs-attr">format</span> <span class="hljs-string">"application/json"</span> ;
+  <span class="hljs-literal">schema:</span><span class="hljs-attr">size</span> <span class="hljs-string">"2048"</span>^^<span class="hljs-literal">xsd:</span><span class="hljs-attr">long</span> ;
+  <span class="hljs-literal">dcterms:</span><span class="hljs-attr">modified</span> <span class="hljs-string">"2025-11-24T13:00:00Z"</span>^^<span class="hljs-literal">xsd:</span><span class="hljs-attr">dateTime</span> .
+</code></pre>
+                </div>
+            </div>
             <p>In this example, <code>/alice/notes/</code> is a <a href="#dfn-containers" class="internalDFN"
                     data-link-type="dfn" id="ref-for-dfn-containers-58">container</a>. The response uses JSON-LD with
                 the LWS context, listing members with required metadata. Each item includes its <code>type</code>,
@@ -6187,54 +6531,84 @@ Content-Type: application/linkset+json
                     id="ref-for-dfn-container-representation-4">container representation</a> <em
                     class="rfc2119">MUST</em> support the media type <code>application/lws+json</code>.</p>
             <p>While LWS container representations use JSON-LD conventions, the constraints and requirements for LWS
-                justify the use of a specific media type. Because LWS containers can be considered a restricted profile
-                of JSON-LD, implementations <em class="rfc2119">SHOULD</em> consider the
-                <code>application/ld+json; profile="https://www.w3.org/ns/lws/v1"</code> media type as equivalent to
-                <code>application/lws+json</code>.
-            </p>
-            <section id="media-type-equivalence">
+                justify the use of a specific media type.</p>
+            <section id="lws-profile">
                 <div class="header-wrapper">
-                    <h4 id="x12-1-1-media-type-equivalence"><bdi class="secno">12.1.1 </bdi>Media Type Equivalence</h4>
-                    <a class="self-link" href="#media-type-equivalence" aria-label="Permalink for Section 12.1.1"></a>
+                    <h4 id="x12-1-1-lws-profile"><bdi class="secno">12.1.1 </bdi>LWS Profile</h4><a class="self-link"
+                        href="#lws-profile" aria-label="Permalink for Section 12.1.1"></a>
                 </div>
-                <p>For <a href="#dfn-container-representation" class="internalDFN" data-link-type="dfn"
-                        id="ref-for-dfn-container-representation-5">container representations</a>, the media types
-                    <code>application/lws+json</code>, <code>application/ld+json</code>, and
-                    <code>application/json</code> are equivalent: the response body is the same JSON-LD document
-                    conforming to the <a href="#dfn-container-representation" class="internalDFN" data-link-type="dfn"
-                        id="ref-for-dfn-container-representation-6">container representation</a> structure defined in <a
-                        href="#container-representation" class="sec-ref"><bdi class="secno">8.1 </bdi>Container
-                        Representation</a>, and only the <code>Content-Type</code> response header varies. Servers <em
-                        class="rfc2119">MUST</em> honor a request for any of these media types and <em
-                        class="rfc2119">MUST</em> set the <code>Content-Type</code> response header to the requested
-                    media type.
+                <p>The URI <code>https://www.w3.org/ns/lws/v1</code> identifies the <dfn id="dfn-lws-profile"
+                        tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">LWS profile</dfn> [<cite><a
+                            class="bibref" data-link-type="biblio" href="#bib-rfc6906"
+                            title="The 'profile' Link Relation Type">RFC6906</a></cite>]. A representation of a <a
+                        href="#dfn-containers" class="internalDFN" data-link-type="dfn"
+                        id="ref-for-dfn-containers-73">container</a> conforms to the <a href="#dfn-lws-profile"
+                        class="internalDFN" data-link-type="dfn" id="ref-for-dfn-lws-profile-2">LWS profile</a> if it is
+                    RDF isomorphic to the <code>application/lws+json</code> representation of the same <a
+                        href="#dfn-containers" class="internalDFN" data-link-type="dfn"
+                        id="ref-for-dfn-containers-74">container</a> state and page; that is, if the RDF it encodes is
+                    isomorphic, as defined in <a
+                        href="https://www.w3.org/TR/rdf12-concepts/#section-dataset-isomorphism">RDF Dataset
+                        Comparison</a> [<cite><a class="bibref" data-link-type="biblio" href="#bib-rdf12-concepts"
+                            title="RDF 1.2 Concepts and Abstract Data Model">RDF12-CONCEPTS</a></cite>], to the RDF that
+                    the <code>application/lws+json</code> representation encodes when interpreted as JSON-LD [<cite><a
+                            class="bibref" data-link-type="biblio" href="#bib-json-ld11"
+                            title="JSON-LD 1.1">JSON-LD11</a></cite>]. An <code>application/lws+json</code>
+                    representation always conforms to the <a href="#dfn-lws-profile" class="internalDFN"
+                        data-link-type="dfn" id="ref-for-dfn-lws-profile-3">LWS profile</a>.</p>
+            </section>
+            <section id="content-negotiation">
+                <div class="header-wrapper">
+                    <h4 id="x12-1-2-content-negotiation"><bdi class="secno">12.1.2 </bdi>Content Negotiation</h4><a
+                        class="self-link" href="#content-negotiation" aria-label="Permalink for Section 12.1.2"></a>
+                </div>
+                <p>Servers <em class="rfc2119">MUST</em> honor requests for <code>application/lws+json</code> on <a
+                        href="#dfn-containers" class="internalDFN" data-link-type="dfn"
+                        id="ref-for-dfn-containers-75">containers</a>, and <em class="rfc2119">MUST</em> set the
+                    <code>Content-Type</code> response header to the media type of the selected representation.
                 </p>
-                <p>Because the <code>Content-Type</code> of a container response depends on the request's
-                    <code>Accept</code> header, these responses <em class="rfc2119">SHOULD</em> include a
-                    <code>Vary: Accept</code> header [<cite><a class="bibref" data-link-type="biblio"
-                            href="#bib-rfc9110" title="HTTP Semantics">RFC9110</a></cite>].
+                <p>A client requests a representation in the <a href="#dfn-lws-profile" class="internalDFN"
+                        data-link-type="dfn" id="ref-for-dfn-lws-profile-4">LWS profile</a> by including the <a
+                        href="#dfn-lws-profile" class="internalDFN" data-link-type="dfn"
+                        id="ref-for-dfn-lws-profile-5">LWS profile</a> URI in the <code>profile</code> parameter of an
+                    RDF media type. RDF media types that define this parameter include <code>application/ld+json</code>
+                    [<cite><a class="bibref" data-link-type="biblio" href="#bib-json-ld11"
+                            title="JSON-LD 1.1">JSON-LD11</a></cite>], <code>text/turtle</code> [<cite><a class="bibref"
+                            data-link-type="biblio" href="#bib-rdf12-turtle"
+                            title="RDF 1.2 Turtle">RDF12-TURTLE</a></cite>], <code>application/trig</code> [<cite><a
+                            class="bibref" data-link-type="biblio" href="#bib-rdf12-trig"
+                            title="RDF 1.2 TriG">RDF12-TRIG</a></cite>], <code>application/n-triples</code> [<cite><a
+                            class="bibref" data-link-type="biblio" href="#bib-rdf12-n-triples"
+                            title="RDF 1.2 N-Triples">RDF12-N-TRIPLES</a></cite>], and <code>application/n-quads</code>
+                    [<cite><a class="bibref" data-link-type="biblio" href="#bib-rdf12-n-quads"
+                            title="RDF 1.2 N-Quads">RDF12-N-QUADS</a></cite>]. If the server selects such a media type,
+                    the response <em class="rfc2119">MUST</em> conform to the <a href="#dfn-lws-profile"
+                        class="internalDFN" data-link-type="dfn" id="ref-for-dfn-lws-profile-6">LWS profile</a>, that
+                    is, it <em class="rfc2119">MUST</em> be RDF isomorphic to the <code>application/lws+json</code>
+                    representation, and its <code>Content-Type</code> <em class="rfc2119">MUST</em> include the same
+                    <code>profile</code> parameter. A server <em class="rfc2119">MUST NOT</em> select such a media type
+                    if it cannot produce a representation in the <a href="#dfn-lws-profile" class="internalDFN"
+                        data-link-type="dfn" id="ref-for-dfn-lws-profile-7">LWS profile</a> in it.
                 </p>
-                <p><strong>Note (non-normative):</strong> This equivalence applies only to the three media types above.
-                    As with any HTTP resource, a server can offer additional representations of a container (for
-                    example, <code>text/turtle</code>) through standard content negotiation [<cite><a class="bibref"
-                            data-link-type="biblio" href="#bib-rfc9110" title="HTTP Semantics">RFC9110</a></cite>]; this
-                    specification neither requires nor precludes such support.</p>
+                <p>When the selected representation depends on the request's <code>Accept</code> header, responses <em
+                        class="rfc2119">SHOULD</em> include a <code>Vary: Accept</code> header [<cite><a class="bibref"
+                            data-link-type="biblio" href="#bib-rfc9110" title="HTTP Semantics">RFC9110</a></cite>].</p>
             </section>
             <section id="pagination">
                 <div class="header-wrapper">
-                    <h4 id="x12-1-2-pagination"><bdi class="secno">12.1.2 </bdi>Pagination</h4><a class="self-link"
-                        href="#pagination" aria-label="Permalink for Section 12.1.2"></a>
+                    <h4 id="x12-1-3-pagination"><bdi class="secno">12.1.3 </bdi>Pagination</h4><a class="self-link"
+                        href="#pagination" aria-label="Permalink for Section 12.1.3"></a>
                 </div>
                 <p>Certain composite resources, like <a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                        id="ref-for-dfn-containers-73">containers</a>, may hold a large number of resources.
+                        id="ref-for-dfn-containers-76">containers</a>, may hold a large number of resources.
                     To allow clients to retrieve listings incrementally, servers <em class="rfc2119">SHOULD</em> support
                     pagination for <a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                        id="ref-for-dfn-containers-74">containers</a> whose membership exceeds a server-determined
+                        id="ref-for-dfn-containers-77">containers</a> whose membership exceeds a server-determined
                     threshold.</p>
                 <section id="pagination-model">
                     <div class="header-wrapper">
-                        <h5 id="x12-1-2-1-pagination-model"><bdi class="secno">12.1.2.1 </bdi>Pagination Model</h5><a
-                            class="self-link" href="#pagination-model" aria-label="Permalink for Section 12.1.2.1"></a>
+                        <h5 id="x12-1-3-1-pagination-model"><bdi class="secno">12.1.3.1 </bdi>Pagination Model</h5><a
+                            class="self-link" href="#pagination-model" aria-label="Permalink for Section 12.1.3.1"></a>
                     </div>
                     <p>Pagination is link-based: the server provides pagination URIs via HTTP <code>Link</code> headers
                         [<cite><a class="bibref" data-link-type="biblio" href="#bib-rfc8288"
@@ -6247,9 +6621,9 @@ Content-Type: application/linkset+json
                 </section>
                 <section id="pagination-link-relations">
                     <div class="header-wrapper">
-                        <h5 id="x12-1-2-2-pagination-link-relations"><bdi class="secno">12.1.2.2 </bdi>Pagination Link
+                        <h5 id="x12-1-3-2-pagination-link-relations"><bdi class="secno">12.1.3.2 </bdi>Pagination Link
                             Relations</h5><a class="self-link" href="#pagination-link-relations"
-                            aria-label="Permalink for Section 12.1.2.2"></a>
+                            aria-label="Permalink for Section 12.1.3.2"></a>
                     </div>
                     <p>Pagination URIs are conveyed in <code>Link</code> headers using the following standard link
                         relations:</p>
@@ -6271,8 +6645,8 @@ Content-Type: application/linkset+json
                 </section>
                 <section id="requesting-pages">
                     <div class="header-wrapper">
-                        <h5 id="x12-1-2-3-requesting-pages"><bdi class="secno">12.1.2.3 </bdi>Requesting Pages</h5><a
-                            class="self-link" href="#requesting-pages" aria-label="Permalink for Section 12.1.2.3"></a>
+                        <h5 id="x12-1-3-3-requesting-pages"><bdi class="secno">12.1.3.3 </bdi>Requesting Pages</h5><a
+                            class="self-link" href="#requesting-pages" aria-label="Permalink for Section 12.1.3.3"></a>
                     </div>
                     <p>A client requests the composite resource's URI to obtain the first page. The response includes
                         pagination
@@ -6286,9 +6660,9 @@ Content-Type: application/linkset+json
                 </section>
                 <section id="example-paginated-container">
                     <div class="header-wrapper">
-                        <h5 id="x12-1-2-4-example-paginated-container"><bdi class="secno">12.1.2.4 </bdi>Example:
+                        <h5 id="x12-1-3-4-example-paginated-container"><bdi class="secno">12.1.3.4 </bdi>Example:
                             Paginated Container</h5><a class="self-link" href="#example-paginated-container"
-                            aria-label="Permalink for Section 12.1.2.4"></a>
+                            aria-label="Permalink for Section 12.1.3.4"></a>
                     </div>
                     <p>Request:</p>
                     <pre><code aria-busy="false" class="hljs http"><span class="hljs-keyword">GET</span> <span class="hljs-string">/alice/photos/</span> <span class="hljs-meta">HTTP/1.1</span>
@@ -6906,13 +7280,6 @@ Content-Type: application/linkset+json
                 constraints and additional
                 requirements for LWS implementations that justify the use of a specific media type.
             </p>
-
-            <p>
-                Because LWS containers can be considered a restricted profile of JSON-LD, implementations <em
-                    class="rfc2119">SHOULD</em> consider the
-                <code>application/ld+json; profile="https://www.w3.org/ns/lws/v1"</code> media type as equivalent to
-                <code>application/lws+json</code>.
-            </p>
         </section>
 
         <section id="iana-media-type-cid-registry">
@@ -7026,6 +7393,37 @@ Content-Type: application/linkset+json
                     Mortimore. OpenID Foundation. 15 December 2023. Final. URL: <a
                         href="https://openid.net/specs/openid-connect-core-1_0.html">https://openid.net/specs/openid-connect-core-1_0.html</a>
                 </dd>
+                <dt id="bib-rdf12-concepts">[RDF12-CONCEPTS]</dt>
+                <dd>
+                    <a href="https://www.w3.org/TR/rdf12-concepts/"><cite>RDF 1.2 Concepts and Abstract Data
+                            Model</cite></a>. Andy Seaborne; Gregg Kellogg; Olaf Hartig; Pierre-Antoine Champin. W3C. 7
+                    April 2026. W3C Candidate Recommendation. URL: <a
+                        href="https://www.w3.org/TR/rdf12-concepts/">https://www.w3.org/TR/rdf12-concepts/</a>
+                </dd>
+                <dt id="bib-rdf12-n-quads">[RDF12-N-QUADS]</dt>
+                <dd>
+                    <a href="https://www.w3.org/TR/rdf12-n-quads/"><cite>RDF 1.2 N-Quads</cite></a>. Gregg Kellogg;
+                    Dominik Tomaszuk. W3C. 10 October 2026. W3C Working Draft. URL: <a
+                        href="https://www.w3.org/TR/rdf12-n-quads/">https://www.w3.org/TR/rdf12-n-quads/</a>
+                </dd>
+                <dt id="bib-rdf12-n-triples">[RDF12-N-TRIPLES]</dt>
+                <dd>
+                    <a href="https://www.w3.org/TR/rdf12-n-triples/"><cite>RDF 1.2 N-Triples</cite></a>. Gregg Kellogg;
+                    Dominik Tomaszuk. W3C. 7 October 2026. W3C Working Draft. URL: <a
+                        href="https://www.w3.org/TR/rdf12-n-triples/">https://www.w3.org/TR/rdf12-n-triples/</a>
+                </dd>
+                <dt id="bib-rdf12-trig">[RDF12-TRIG]</dt>
+                <dd>
+                    <a href="https://www.w3.org/TR/rdf12-trig/"><cite>RDF 1.2 TriG</cite></a>. Gregg Kellogg; Dominik
+                    Tomaszuk. W3C. 7 October 2026. W3C Working Draft. URL: <a
+                        href="https://www.w3.org/TR/rdf12-trig/">https://www.w3.org/TR/rdf12-trig/</a>
+                </dd>
+                <dt id="bib-rdf12-turtle">[RDF12-TURTLE]</dt>
+                <dd>
+                    <a href="https://www.w3.org/TR/rdf12-turtle/"><cite>RDF 1.2 Turtle</cite></a>. Gregg Kellogg; Andy
+                    Seaborne; Dominik Tomaszuk. W3C. 7 October 2026. W3C Working Draft. URL: <a
+                        href="https://www.w3.org/TR/rdf12-turtle/">https://www.w3.org/TR/rdf12-turtle/</a>
+                </dd>
                 <dt id="bib-rfc2119">[RFC2119]</dt>
                 <dd>
                     <a href="https://www.rfc-editor.org/info/rfc2119/"><cite>Key words for use in RFCs to Indicate
@@ -7075,6 +7473,12 @@ Content-Type: application/linkset+json
                     <a href="https://www.rfc-editor.org/info/rfc6902/"><cite>JavaScript Object Notation (JSON)
                             Patch</cite></a>. P. Bryan, Ed.; M. Nottingham, Ed. IETF. April 2013. Proposed Standard.
                     URL: <a href="https://www.rfc-editor.org/info/rfc6902/">https://www.rfc-editor.org/info/rfc6902/</a>
+                </dd>
+                <dt id="bib-rfc6906">[RFC6906]</dt>
+                <dd>
+                    <a href="https://www.rfc-editor.org/info/rfc6906/"><cite>The 'profile' Link Relation
+                            Type</cite></a>. E. Wilde. IETF. March 2013. Informational. URL: <a
+                        href="https://www.rfc-editor.org/info/rfc6906/">https://www.rfc-editor.org/info/rfc6906/</a>
                 </dd>
                 <dt id="bib-rfc7231">[RFC7231]</dt>
                 <dd>
@@ -7765,54 +8169,54 @@ Content-Type: application/linkset+json
             </li>
             <li>
                 <a href="#ref-for-dfn-containers-21" title="§ 8.1 Container Representation">§ 8.1 Container
-                    Representation</a> <a href="#ref-for-dfn-containers-22" title="Reference 2">(2)</a>
+                    Representation</a>
             </li>
             <li>
-                <a href="#ref-for-dfn-containers-23" title="§ 8.1.1 Container Properties">§ 8.1.1 Container
-                    Properties</a> <a href="#ref-for-dfn-containers-24" title="Reference 2">(2)</a> <a
-                    href="#ref-for-dfn-containers-25" title="Reference 3">(3)</a> <a href="#ref-for-dfn-containers-26"
+                <a href="#ref-for-dfn-containers-22" title="§ 8.1.1 Container Properties">§ 8.1.1 Container
+                    Properties</a> <a href="#ref-for-dfn-containers-23" title="Reference 2">(2)</a> <a
+                    href="#ref-for-dfn-containers-24" title="Reference 3">(3)</a> <a href="#ref-for-dfn-containers-25"
                     title="Reference 4">(4)</a>
             </li>
             <li>
-                <a href="#ref-for-dfn-containers-27" title="§ 8.1.2 Contained Resource Description">§ 8.1.2 Contained
+                <a href="#ref-for-dfn-containers-26" title="§ 8.1.2 Contained Resource Description">§ 8.1.2 Contained
                     Resource Description</a>
             </li>
             <li>
-                <a href="#ref-for-dfn-containers-28" title="§ 8.1.3 Example Container Representation">§ 8.1.3 Example
+                <a href="#ref-for-dfn-containers-27" title="§ 8.1.3 Example Container Representation">§ 8.1.3 Example
                     Container Representation</a>
             </li>
             <li>
-                <a href="#ref-for-dfn-containers-29" title="§ 9. Operations">§ 9. Operations</a>
+                <a href="#ref-for-dfn-containers-28" title="§ 9. Operations">§ 9. Operations</a>
             </li>
             <li>
-                <a href="#ref-for-dfn-containers-30" title="§ 9.1 Metadata">§ 9.1 Metadata</a> <a
-                    href="#ref-for-dfn-containers-31" title="Reference 2">(2)</a> <a href="#ref-for-dfn-containers-32"
-                    title="Reference 3">(3)</a> <a href="#ref-for-dfn-containers-33" title="Reference 4">(4)</a>
+                <a href="#ref-for-dfn-containers-29" title="§ 9.1 Metadata">§ 9.1 Metadata</a> <a
+                    href="#ref-for-dfn-containers-30" title="Reference 2">(2)</a> <a href="#ref-for-dfn-containers-31"
+                    title="Reference 3">(3)</a> <a href="#ref-for-dfn-containers-32" title="Reference 4">(4)</a>
             </li>
             <li>
-                <a href="#ref-for-dfn-containers-34" title="§ 9.2 Create resource">§ 9.2 Create resource</a> <a
-                    href="#ref-for-dfn-containers-35" title="Reference 2">(2)</a> <a href="#ref-for-dfn-containers-36"
-                    title="Reference 3">(3)</a> <a href="#ref-for-dfn-containers-37" title="Reference 4">(4)</a> <a
-                    href="#ref-for-dfn-containers-38" title="Reference 5">(5)</a> <a href="#ref-for-dfn-containers-39"
-                    title="Reference 6">(6)</a> <a href="#ref-for-dfn-containers-40" title="Reference 7">(7)</a> <a
-                    href="#ref-for-dfn-containers-41" title="Reference 8">(8)</a> <a href="#ref-for-dfn-containers-42"
-                    title="Reference 9">(9)</a> <a href="#ref-for-dfn-containers-43" title="Reference 10">(10)</a> <a
-                    href="#ref-for-dfn-containers-44" title="Reference 11">(11)</a> <a href="#ref-for-dfn-containers-45"
-                    title="Reference 12">(12)</a> <a href="#ref-for-dfn-containers-46" title="Reference 13">(13)</a> <a
-                    href="#ref-for-dfn-containers-47" title="Reference 14">(14)</a> <a href="#ref-for-dfn-containers-48"
-                    title="Reference 15">(15)</a> <a href="#ref-for-dfn-containers-49" title="Reference 16">(16)</a> <a
-                    href="#ref-for-dfn-containers-50" title="Reference 17">(17)</a>
+                <a href="#ref-for-dfn-containers-33" title="§ 9.2 Create resource">§ 9.2 Create resource</a> <a
+                    href="#ref-for-dfn-containers-34" title="Reference 2">(2)</a> <a href="#ref-for-dfn-containers-35"
+                    title="Reference 3">(3)</a> <a href="#ref-for-dfn-containers-36" title="Reference 4">(4)</a> <a
+                    href="#ref-for-dfn-containers-37" title="Reference 5">(5)</a> <a href="#ref-for-dfn-containers-38"
+                    title="Reference 6">(6)</a> <a href="#ref-for-dfn-containers-39" title="Reference 7">(7)</a> <a
+                    href="#ref-for-dfn-containers-40" title="Reference 8">(8)</a> <a href="#ref-for-dfn-containers-41"
+                    title="Reference 9">(9)</a> <a href="#ref-for-dfn-containers-42" title="Reference 10">(10)</a> <a
+                    href="#ref-for-dfn-containers-43" title="Reference 11">(11)</a> <a href="#ref-for-dfn-containers-44"
+                    title="Reference 12">(12)</a> <a href="#ref-for-dfn-containers-45" title="Reference 13">(13)</a> <a
+                    href="#ref-for-dfn-containers-46" title="Reference 14">(14)</a> <a href="#ref-for-dfn-containers-47"
+                    title="Reference 15">(15)</a> <a href="#ref-for-dfn-containers-48" title="Reference 16">(16)</a> <a
+                    href="#ref-for-dfn-containers-49" title="Reference 17">(17)</a>
             </li>
             <li>
-                <a href="#ref-for-dfn-containers-51" title="§ 9.3 Read resource">§ 9.3 Read resource</a> <a
-                    href="#ref-for-dfn-containers-52" title="Reference 2">(2)</a> <a href="#ref-for-dfn-containers-53"
-                    title="Reference 3">(3)</a> <a href="#ref-for-dfn-containers-54" title="Reference 4">(4)</a> <a
-                    href="#ref-for-dfn-containers-55" title="Reference 5">(5)</a> <a href="#ref-for-dfn-containers-56"
-                    title="Reference 6">(6)</a> <a href="#ref-for-dfn-containers-57" title="Reference 7">(7)</a> <a
-                    href="#ref-for-dfn-containers-58" title="Reference 8">(8)</a> <a href="#ref-for-dfn-containers-59"
-                    title="Reference 9">(9)</a> <a href="#ref-for-dfn-containers-60" title="Reference 10">(10)</a> <a
-                    href="#ref-for-dfn-containers-61" title="Reference 11">(11)</a> <a href="#ref-for-dfn-containers-62"
-                    title="Reference 12">(12)</a>
+                <a href="#ref-for-dfn-containers-50" title="§ 9.3 Read resource">§ 9.3 Read resource</a> <a
+                    href="#ref-for-dfn-containers-51" title="Reference 2">(2)</a> <a href="#ref-for-dfn-containers-52"
+                    title="Reference 3">(3)</a> <a href="#ref-for-dfn-containers-53" title="Reference 4">(4)</a> <a
+                    href="#ref-for-dfn-containers-54" title="Reference 5">(5)</a> <a href="#ref-for-dfn-containers-55"
+                    title="Reference 6">(6)</a> <a href="#ref-for-dfn-containers-56" title="Reference 7">(7)</a> <a
+                    href="#ref-for-dfn-containers-57" title="Reference 8">(8)</a> <a href="#ref-for-dfn-containers-58"
+                    title="Reference 9">(9)</a> <a href="#ref-for-dfn-containers-59" title="Reference 10">(10)</a> <a
+                    href="#ref-for-dfn-containers-60" title="Reference 11">(11)</a> <a href="#ref-for-dfn-containers-61"
+                    title="Reference 12">(12)</a> <a href="#ref-for-dfn-containers-62" title="Reference 13">(13)</a>
             </li>
             <li>
                 <a href="#ref-for-dfn-containers-63" title="§ 9.5 Delete resource">§ 9.5 Delete resource</a> <a
@@ -7824,8 +8228,16 @@ Content-Type: application/linkset+json
                     title="Reference 9">(9)</a> <a href="#ref-for-dfn-containers-72" title="Reference 10">(10)</a>
             </li>
             <li>
-                <a href="#ref-for-dfn-containers-73" title="§ 12.1.2 Pagination">§ 12.1.2 Pagination</a> <a
+                <a href="#ref-for-dfn-containers-73" title="§ 12.1.1 LWS Profile">§ 12.1.1 LWS Profile</a> <a
                     href="#ref-for-dfn-containers-74" title="Reference 2">(2)</a>
+            </li>
+            <li>
+                <a href="#ref-for-dfn-containers-75" title="§ 12.1.2 Content Negotiation">§ 12.1.2 Content
+                    Negotiation</a>
+            </li>
+            <li>
+                <a href="#ref-for-dfn-containers-76" title="§ 12.1.3 Pagination">§ 12.1.3 Pagination</a> <a
+                    href="#ref-for-dfn-containers-77" title="Reference 2">(2)</a>
             </li>
         </ul>
     </div>
@@ -8575,9 +8987,32 @@ Content-Type: application/linkset+json
                 <a href="#ref-for-dfn-container-representation-4" title="§ 12.1 LWS Media Type">§ 12.1 LWS Media
                     Type</a>
             </li>
+        </ul>
+    </div>
+    <div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-lws-profile"
+        aria-label="Links in this document to definition: LWS profile">
+        <span class="caret"></span>
+        <div>
+            <a class="self-link" href="#dfn-lws-profile"
+                aria-label="Permalink for definition: LWS profile. Activate to close this dialog.">Permalink</a>
+
+
+        </div>
+        <p><b>Referenced in:</b></p>
+        <ul>
             <li>
-                <a href="#ref-for-dfn-container-representation-5" title="§ 12.1.1 Media Type Equivalence">§ 12.1.1 Media
-                    Type Equivalence</a> <a href="#ref-for-dfn-container-representation-6" title="Reference 2">(2)</a>
+                <a href="#ref-for-dfn-lws-profile-1" title="§ 8.1.3 Example Container Representation">§ 8.1.3 Example
+                    Container Representation</a>
+            </li>
+            <li>
+                <a href="#ref-for-dfn-lws-profile-2" title="§ 12.1.1 LWS Profile">§ 12.1.1 LWS Profile</a> <a
+                    href="#ref-for-dfn-lws-profile-3" title="Reference 2">(2)</a>
+            </li>
+            <li>
+                <a href="#ref-for-dfn-lws-profile-4" title="§ 12.1.2 Content Negotiation">§ 12.1.2 Content
+                    Negotiation</a> <a href="#ref-for-dfn-lws-profile-5" title="Reference 2">(2)</a> <a
+                    href="#ref-for-dfn-lws-profile-6" title="Reference 3">(3)</a> <a href="#ref-for-dfn-lws-profile-7"
+                    title="Reference 4">(4)</a>
             </li>
         </ul>
     </div>

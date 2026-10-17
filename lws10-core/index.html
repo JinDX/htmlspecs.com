@@ -426,6 +426,141 @@
 
     <link rel="stylesheet" href="https://www.w3.org/TR/lws10-core/local.css">
 
+    <style>
+        /* Tabbed examples: one pane per media type (see the script below). */
+        .example-tabs {
+            margin: 1em 0;
+        }
+
+        .example-tabs>.tab-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: .25em;
+            margin-bottom: -1px;
+        }
+
+        .example-tabs>.tab-bar button {
+            font: inherit;
+            font-size: .85em;
+            padding: .3em .7em;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            border-bottom: none;
+            border-radius: .3em .3em 0 0;
+            background: #f4f4f4;
+            color: inherit;
+        }
+
+        .example-tabs>.tab-bar button[aria-selected="true"] {
+            background: #fff;
+            font-weight: bold;
+        }
+
+        .example-tabs>[data-tab] {
+            border: 1px solid #ccc;
+            padding: 0 .5em;
+        }
+
+        .example-tabs>[data-tab]>pre {
+            margin: .5em 0;
+        }
+
+        /* Without script (and in print), show every pane under its label. */
+        .example-tabs:not(.ready)>[data-tab]::before {
+            content: attr(data-tab);
+            display: block;
+            font-weight: bold;
+            padding-top: .3em;
+        }
+
+        @media print {
+            .example-tabs>.tab-bar {
+                display: none;
+            }
+
+            .example-tabs>[data-tab][hidden] {
+                display: block;
+            }
+        }
+    </style>
+
+    <script>
+        // Tabbed examples: each .example-tabs block gets one tab per child with
+        // a data-tab label. Turtle and N-Triples panes are highlighted here,
+        // because ReSpec's highlighter has no Turtle grammar. Inline so that it
+        // works in PR previews and published copies, which carry no local files.
+        (function () {
+            const esc = (t) => t.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            const span = (c, t) => '<span class="hljs-' + c + '">' + esc(t) + "</span>";
+            const TURTLE = /(#[^\n]*)|(<[^>\s]*>)|("(?:[^"\\\n]|\\.)*")(\^\^|@[A-Za-z-]+)?|(@prefix|@base|\ba\b)|([A-Za-z][\w-]*:[\w.-]*|:[\w.-]+)|(\b\d+\b)/g;
+            function turtle(text) {
+                let out = "", last = 0, m;
+                TURTLE.lastIndex = 0;
+                while ((m = TURTLE.exec(text))) {
+                    out += esc(text.slice(last, m.index));
+                    if (m[1]) out += span("comment", m[1]);
+                    else if (m[2]) out += span("link", m[2]);
+                    else if (m[3]) out += span("string", m[3]) + (m[4] ? esc(m[4]) : "");
+                    else if (m[5]) out += span("keyword", m[5]);
+                    else if (m[6]) {
+                        const i = m[6].indexOf(":") + 1;
+                        out += span("literal", m[6].slice(0, i)) + (i < m[6].length ? span("attr", m[6].slice(i)) : "");
+                    }
+                    else out += span("number", m[7]);
+                    last = TURTLE.lastIndex;
+                }
+                return out + esc(text.slice(last));
+            }
+            function highlight(code) {
+                code.innerHTML = turtle(code.textContent);
+                code.classList.add("hljs");
+                code.dataset.lwsHighlighted = "";
+            }
+            function build() {
+                let n = 0;
+                for (const box of document.querySelectorAll(".example-tabs")) {
+                    for (const old of box.querySelectorAll(":scope > .tab-bar")) old.remove();
+                    const panes = [...box.querySelectorAll(":scope > [data-tab]")];
+                    if (!panes.length) continue;
+                    for (const pane of panes) {
+                        if (!/turtle|n-triples/.test(pane.dataset.tab)) continue;
+                        for (const code of pane.querySelectorAll("pre code.nohighlight:not([data-lws-highlighted])")) highlight(code);
+                    }
+                    const bar = document.createElement("div");
+                    bar.className = "tab-bar";
+                    bar.setAttribute("role", "tablist");
+                    const select = (i) => panes.forEach((pane, j) => {
+                        pane.hidden = i !== j;
+                        bar.children[j].setAttribute("aria-selected", String(i === j));
+                    });
+                    panes.forEach((pane, i) => {
+                        const button = document.createElement("button");
+                        button.type = "button";
+                        const id = "lws-tab-" + n++;
+                        button.id = id;
+                        button.setAttribute("role", "tab");
+                        button.setAttribute("aria-controls", id + "-panel");
+                        pane.id = id + "-panel";
+                        pane.setAttribute("role", "tabpanel");
+                        pane.setAttribute("aria-labelledby", id);
+                        button.textContent = pane.dataset.tab;
+                        button.addEventListener("click", () => select(i));
+                        bar.append(button);
+                    });
+                    box.prepend(bar);
+                    box.classList.add("ready");
+                    select(0);
+                }
+            }
+            function start() {
+                if (document.respec) document.respec.ready.then(build);
+                else build();
+            }
+            if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start);
+            else start();
+        })();
+    </script>
+
 
     <meta name="color-scheme" content="light">
     <!-- <meta name="revision" content="d6af1a1dfe22e76ef5637f238d32e20e41b2b23e"> -->
@@ -461,14 +596,14 @@
   "name": "Linked Web Storage Protocol 1.0",
   "inLanguage": "en",
   "license": "https://www.w3.org/copyright/software-license-2023/",
-  "datePublished": "2026-10-15",
+  "datePublished": "2026-10-16",
   "copyrightHolder": {
     "name": "World Wide Web Consortium",
     "url": "https://www.w3.org/"
   },
   "discussionUrl": "https://github.com/w3c/lws-protocol/issues/",
   "alternativeHeadline": "",
-  "isBasedOn": "https://www.w3.org/TR/2026/WD-lws10-core-20261014/",
+  "isBasedOn": "https://www.w3.org/TR/2026/WD-lws10-core-20261016/",
   "description": "[@@ from charter]",
   "editor": [
     {
@@ -1009,6 +1144,134 @@
       }
     },
     {
+      "id": "https://www.rfc-editor.org/info/rfc6906/",
+      "type": "TechArticle",
+      "name": "The 'profile' Link Relation Type",
+      "url": "https://www.rfc-editor.org/info/rfc6906/",
+      "creator": [
+        {
+          "name": "E. Wilde"
+        }
+      ],
+      "publisher": {
+        "name": "IETF"
+      }
+    },
+    {
+      "id": "https://www.w3.org/TR/rdf12-concepts/",
+      "type": "TechArticle",
+      "name": "RDF 1.2 Concepts and Abstract Data Model",
+      "url": "https://www.w3.org/TR/rdf12-concepts/",
+      "creator": [
+        {
+          "name": "Andy Seaborne"
+        },
+        {
+          "name": "Gregg Kellogg"
+        },
+        {
+          "name": "Olaf Hartig"
+        },
+        {
+          "name": "Pierre-Antoine Champin"
+        }
+      ],
+      "publisher": {
+        "name": "W3C"
+      }
+    },
+    {
+      "id": "https://www.w3.org/TR/json-ld11/",
+      "type": "TechArticle",
+      "name": "JSON-LD 1.1",
+      "url": "https://www.w3.org/TR/json-ld11/",
+      "creator": [
+        {
+          "name": "Gregg Kellogg"
+        },
+        {
+          "name": "Pierre-Antoine Champin"
+        },
+        {
+          "name": "Dave Longley"
+        }
+      ],
+      "publisher": {
+        "name": "W3C"
+      }
+    },
+    {
+      "id": "https://www.w3.org/TR/rdf12-turtle/",
+      "type": "TechArticle",
+      "name": "RDF 1.2 Turtle",
+      "url": "https://www.w3.org/TR/rdf12-turtle/",
+      "creator": [
+        {
+          "name": "Gregg Kellogg"
+        },
+        {
+          "name": "Andy Seaborne"
+        },
+        {
+          "name": "Dominik Tomaszuk"
+        }
+      ],
+      "publisher": {
+        "name": "W3C"
+      }
+    },
+    {
+      "id": "https://www.w3.org/TR/rdf12-trig/",
+      "type": "TechArticle",
+      "name": "RDF 1.2 TriG",
+      "url": "https://www.w3.org/TR/rdf12-trig/",
+      "creator": [
+        {
+          "name": "Gregg Kellogg"
+        },
+        {
+          "name": "Dominik Tomaszuk"
+        }
+      ],
+      "publisher": {
+        "name": "W3C"
+      }
+    },
+    {
+      "id": "https://www.w3.org/TR/rdf12-n-triples/",
+      "type": "TechArticle",
+      "name": "RDF 1.2 N-Triples",
+      "url": "https://www.w3.org/TR/rdf12-n-triples/",
+      "creator": [
+        {
+          "name": "Gregg Kellogg"
+        },
+        {
+          "name": "Dominik Tomaszuk"
+        }
+      ],
+      "publisher": {
+        "name": "W3C"
+      }
+    },
+    {
+      "id": "https://www.w3.org/TR/rdf12-n-quads/",
+      "type": "TechArticle",
+      "name": "RDF 1.2 N-Quads",
+      "url": "https://www.w3.org/TR/rdf12-n-quads/",
+      "creator": [
+        {
+          "name": "Gregg Kellogg"
+        },
+        {
+          "name": "Dominik Tomaszuk"
+        }
+      ],
+      "publisher": {
+        "name": "W3C"
+      }
+    },
+    {
       "id": "https://www.rfc-editor.org/info/rfc2119/",
       "type": "TechArticle",
       "name": "Key words for use in RFCs to Indicate Requirement Levels",
@@ -1034,26 +1297,6 @@
       ],
       "publisher": {
         "name": "IETF"
-      }
-    },
-    {
-      "id": "https://www.w3.org/TR/json-ld11/",
-      "type": "TechArticle",
-      "name": "JSON-LD 1.1",
-      "url": "https://www.w3.org/TR/json-ld11/",
-      "creator": [
-        {
-          "name": "Gregg Kellogg"
-        },
-        {
-          "name": "Pierre-Antoine Champin"
-        },
-        {
-          "name": "Dave Longley"
-        }
-      ],
-      "publisher": {
-        "name": "W3C"
       }
     },
     {
@@ -1497,12 +1740,12 @@
   "lint": {
     "no-unused-dfns": false
   },
-  "gitRevision": "0e7ad1892cab93c623af294cc5d9f36151e297fa",
-  "publishDate": "2026-10-15",
+  "gitRevision": "4f85230da32b8b2e20863ae538b4e9ad31e217be",
+  "publishDate": "2026-10-16",
   "previousMaturity": "WD",
-  "previousPublishDate": "2026-10-14",
-  "publishISODate": "2026-10-15T00:00:00.000Z",
-  "generatedSubtitle": "W3C Working Draft 15 October 2026"
+  "previousPublishDate": "2026-10-16",
+  "publishISODate": "2026-10-16T00:00:00.000Z",
+  "generatedSubtitle": "W3C Working Draft 16 October 2026"
 }</script>
     <link rel="stylesheet" href="https://www.w3.org/StyleSheets/TR/2021/W3C-WD">
     <link rel="stylesheet" href="https://www.w3.org/StyleSheets/TR/2021/dark.css" disabled="">
@@ -1515,14 +1758,14 @@
             </a></p>
         <h1 id="title" class="title">链接式 Web 存储协议 1.0</h1>
         <p id="w3c-state"><a href="https://www.w3.org/standards/types#WD">W3C 工作草案</a> <time class="dt-published"
-                datetime="2026-10-15">2026年10月15日</time></p>
+                datetime="2026-10-16">2026年10月16日</time></p>
         <details open="">
             <summary>关于本文档的更多详细信息</summary>
             <dl>
                 <dt>此版本：</dt>
                 <dd>
                     <a class="u-url"
-                        href="https://www.w3.org/TR/2026/WD-lws10-core-20261015/">https://www.w3.org/TR/2026/WD-lws10-core-20261015/</a>
+                        href="https://www.w3.org/TR/2026/WD-lws10-core-20261016/">https://www.w3.org/TR/2026/WD-lws10-core-20261016/</a>
                 </dd>
                 <dt>最新发布版本：</dt>
                 <dd>
@@ -1898,19 +2141,21 @@
                     <li class="tocline"><a class="tocxref" href="#lws-media-type-0"><bdi class="secno">12.1 </bdi>LWS
                             媒体类型</a>
                         <ol class="toc">
-                            <li class="tocline"><a class="tocxref" href="#media-type-equivalence"><bdi
-                                        class="secno">12.1.1 </bdi>媒体类型等价性</a></li>
-                            <li class="tocline"><a class="tocxref" href="#pagination"><bdi class="secno">12.1.2
+                            <li class="tocline"><a class="tocxref" href="#lws-profile"><bdi class="secno">12.1.1
+                                    </bdi>LWS 配置文件</a></li>
+                            <li class="tocline"><a class="tocxref" href="#content-negotiation"><bdi class="secno">12.1.2
+                                    </bdi>内容协商</a></li>
+                            <li class="tocline"><a class="tocxref" href="#pagination"><bdi class="secno">12.1.3
                                     </bdi>分页</a>
                                 <ol class="toc">
                                     <li class="tocline"><a class="tocxref" href="#pagination-model"><bdi
-                                                class="secno">12.1.2.1 </bdi>分页模型</a></li>
+                                                class="secno">12.1.3.1 </bdi>分页模型</a></li>
                                     <li class="tocline"><a class="tocxref" href="#pagination-link-relations"><bdi
-                                                class="secno">12.1.2.2 </bdi>分页链接关系</a></li>
+                                                class="secno">12.1.3.2 </bdi>分页链接关系</a></li>
                                     <li class="tocline"><a class="tocxref" href="#requesting-pages"><bdi
-                                                class="secno">12.1.2.3 </bdi>请求页面</a></li>
+                                                class="secno">12.1.3.3 </bdi>请求页面</a></li>
                                     <li class="tocline"><a class="tocxref" href="#example-paginated-container"><bdi
-                                                class="secno">12.1.2.4 </bdi>示例：分页容器</a></li>
+                                                class="secno">12.1.3.4 </bdi>示例：分页容器</a></li>
                                 </ol>
                             </li>
                         </ol>
@@ -3513,12 +3758,11 @@ signature</code></pre>
                 <h3 id="x8-1-container-representation"><bdi class="secno">8.1 </bdi>容器表示</h3><a class="self-link"
                     href="#container-representation" aria-label="第 8.1 节的永久链接"></a>
             </div>
-            <p>当客户端检索<a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                    id="ref-for-dfn-containers-21">容器</a>时，服务器会返回一个结构化的<dfn data-plurals="container representations"
-                    id="dfn-container-representation" tabindex="0" aria-haspopup="dialog"
-                    data-dfn-type="dfn">容器表示</dfn>，用于描述该<a href="#dfn-containers" class="internalDFN"
-                    data-link-type="dfn" id="ref-for-dfn-containers-22">容器</a>及其内容。本节定义容器表示的必需和
-                可选属性。</p>
+            <p>LWS <dfn data-plurals="container representations" id="dfn-container-representation" tabindex="0"
+                    aria-haspopup="dialog" data-dfn-type="dfn">容器表示</dfn>描述一个<a href="#dfn-containers"
+                    class="internalDFN" data-link-type="dfn" id="ref-for-dfn-containers-21">容器</a>及其内容。本节定义了其必需属性和
+                可选属性（以 <code>application/lws+json</code> 提供时）。其他 RDF 媒体
+                类型的表示可以通过<a href="#content-negotiation">内容协商</a>请求。</p>
             <section id="container-properties">
                 <div class="header-wrapper">
                     <h4 id="x8-1-1-container-properties"><bdi class="secno">8.1.1 </bdi>容器属性</h4><a class="self-link"
@@ -3527,19 +3771,19 @@ signature</code></pre>
                 <p>容器表示<em class="rfc2119">MUST</em> 包含以下属性：</p>
                 <ul>
                     <li><strong><code>id</code></strong>：<a href="#dfn-containers" class="internalDFN"
-                            data-link-type="dfn" id="ref-for-dfn-containers-23">容器</a>的 URI。</li>
+                            data-link-type="dfn" id="ref-for-dfn-containers-22">容器</a>的 URI。</li>
                     <li><strong><code>type</code></strong>：值为 <code>"Container"</code>。</li>
                     <li><strong><code>totalItems</code></strong>：一个整数，表示
                         <a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                            id="ref-for-dfn-containers-24">容器</a>中可向客户端披露的资源总数。此
+                            id="ref-for-dfn-containers-23">容器</a>中可向客户端披露的资源总数。此
                         计数<em class="rfc2119">SHOULD</em> 准确，但<em class="rfc2119">MAY</em> 是
                         近似值。
                     </li>
                     <li><strong><code>items</code></strong>：被包含资源描述的数组（见下文）。如果
                         <a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                            id="ref-for-dfn-containers-25">容器</a>为空，则此项<em class="rfc2119">MUST</em> 是
+                            id="ref-for-dfn-containers-24">容器</a>为空，则此项<em class="rfc2119">MUST</em> 是
                         空数组。当<a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                            id="ref-for-dfn-containers-26">容器</a>列表
+                            id="ref-for-dfn-containers-25">容器</a>列表
                         分页时，<code>items</code> 仅包含当前页的资源；详情见<a href="#pagination">分页</a>。
                     </li>
                 </ul>
@@ -3551,7 +3795,7 @@ signature</code></pre>
                         aria-label="第 8.1.2 节的永久链接"></a>
                 </div>
                 <p><code>items</code> 数组中的每个条目描述<a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                        id="ref-for-dfn-containers-27">容器</a>中包含的一个资源。被包含资源描述<em class="rfc2119">MUST</em> 包含：</p>
+                        id="ref-for-dfn-containers-26">容器</a>中包含的一个资源。被包含资源描述<em class="rfc2119">MUST</em> 包含：</p>
                 <ul>
                     <li><strong><code>id</code></strong>：被包含资源的 URI。</li>
                     <li><strong><code>type</code></strong>：资源的类型。<em class="rfc2119">MUST</em> 是
@@ -3578,10 +3822,21 @@ signature</code></pre>
                         表示示例</h4><a class="self-link" href="#example-container-representation"
                         aria-label="第 8.1.3 节的永久链接"></a>
                 </div>
-                <p>以下示例显示位于 <code>/alice/notes/</code> 的一个<a href="#dfn-containers" class="internalDFN"
-                        data-link-type="dfn" id="ref-for-dfn-containers-28">容器</a>，其中包含两个
-                    资源：</p>
-                <pre><code class="json hljs" aria-busy="false"><span class="hljs-punctuation">{</span>
+                <p>以下示例展示了一个<a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
+                        id="ref-for-dfn-containers-27">容器</a>，位于
+                    <code>https://storage.example/alice/notes/</code>，其中包含两个资源。其他选项卡展示了
+                    同一容器在<a href="#dfn-lws-profile" class="internalDFN" data-link-type="dfn"
+                        id="ref-for-dfn-lws-profile-1">LWS 配置文件</a>中其他 RDF 媒体类型下的表示。
+                </p>
+                <div class="example-tabs ready" data-base="https://storage.example/alice/notes/">
+                    <div class="tab-bar" role="tablist"><button type="button" id="lws-tab-0" role="tab"
+                            aria-controls="lws-tab-0-panel" aria-selected="true">application/lws+json</button><button
+                            type="button" id="lws-tab-1" role="tab" aria-controls="lws-tab-1-panel"
+                            aria-selected="false">text/turtle</button><button type="button" id="lws-tab-2" role="tab"
+                            aria-controls="lws-tab-2-panel" aria-selected="false">application/n-triples</button></div>
+                    <div data-tab="application/lws+json" id="lws-tab-0-panel" role="tabpanel"
+                        aria-labelledby="lws-tab-0">
+                        <pre><code class="json hljs" aria-busy="false"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"@context"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"https://www.w3.org/ns/lws/v1"</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"/alice/notes/"</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"Container"</span><span class="hljs-punctuation">,</span>
@@ -3604,6 +3859,47 @@ signature</code></pre>
   <span class="hljs-punctuation">]</span>
 <span class="hljs-punctuation">}</span>
 </code></pre>
+                    </div>
+                    <div data-tab="text/turtle" id="lws-tab-1-panel" role="tabpanel" aria-labelledby="lws-tab-1"
+                        hidden="">
+                        <pre><code class="nohighlight hljs" data-lws-highlighted=""><span class="hljs-keyword">@prefix</span> <span class="hljs-literal">lws:</span> <span class="hljs-link">&lt;https://www.w3.org/ns/lws#&gt;</span> .
+<span class="hljs-keyword">@prefix</span> <span class="hljs-literal">dcterms:</span> <span class="hljs-link">&lt;http://purl.org/dc/terms/&gt;</span> .
+<span class="hljs-keyword">@prefix</span> <span class="hljs-literal">schema:</span> <span class="hljs-link">&lt;http://schema.org/&gt;</span> .
+<span class="hljs-keyword">@prefix</span> <span class="hljs-literal">xsd:</span> <span class="hljs-link">&lt;http://www.w3.org/2001/XMLSchema#&gt;</span> .
+
+<span class="hljs-link">&lt;&gt;</span> <span class="hljs-keyword">a</span> <span class="hljs-literal">lws:</span><span class="hljs-attr">Container</span> ;
+  <span class="hljs-literal">lws:</span><span class="hljs-attr">totalItems</span> <span class="hljs-number">2</span> ;
+  <span class="hljs-literal">lws:</span><span class="hljs-attr">items</span> <span class="hljs-link">&lt;shoppinglist.txt&gt;</span>, <span class="hljs-link">&lt;todo.json&gt;</span> .
+
+<span class="hljs-link">&lt;shoppinglist.txt&gt;</span> <span class="hljs-keyword">a</span> <span class="hljs-literal">lws:</span><span class="hljs-attr">DataResource</span> ;
+  <span class="hljs-literal">dcterms:</span><span class="hljs-attr">format</span> <span class="hljs-string">"text/plain"</span> ;
+  <span class="hljs-literal">schema:</span><span class="hljs-attr">size</span> <span class="hljs-string">"47"</span>^^<span class="hljs-literal">xsd:</span><span class="hljs-attr">long</span> ;
+  <span class="hljs-literal">dcterms:</span><span class="hljs-attr">modified</span> <span class="hljs-string">"2025-11-24T12:00:00Z"</span>^^<span class="hljs-literal">xsd:</span><span class="hljs-attr">dateTime</span> .
+
+<span class="hljs-link">&lt;todo.json&gt;</span> <span class="hljs-keyword">a</span> <span class="hljs-literal">lws:</span><span class="hljs-attr">DataResource</span>, <span class="hljs-link">&lt;http://example.org/customType&gt;</span> ;
+  <span class="hljs-literal">dcterms:</span><span class="hljs-attr">format</span> <span class="hljs-string">"application/json"</span> ;
+  <span class="hljs-literal">schema:</span><span class="hljs-attr">size</span> <span class="hljs-string">"2048"</span>^^<span class="hljs-literal">xsd:</span><span class="hljs-attr">long</span> ;
+  <span class="hljs-literal">dcterms:</span><span class="hljs-attr">modified</span> <span class="hljs-string">"2025-11-24T13:00:00Z"</span>^^<span class="hljs-literal">xsd:</span><span class="hljs-attr">dateTime</span> .
+</code></pre>
+                    </div>
+                    <div data-tab="application/n-triples" id="lws-tab-2-panel" role="tabpanel"
+                        aria-labelledby="lws-tab-2" hidden="">
+                        <pre><code class="nohighlight hljs" data-lws-highlighted=""><span class="hljs-link">&lt;https://storage.example/alice/notes/&gt;</span> <span class="hljs-link">&lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt;</span> <span class="hljs-link">&lt;https://www.w3.org/ns/lws#Container&gt;</span> .
+<span class="hljs-link">&lt;https://storage.example/alice/notes/&gt;</span> <span class="hljs-link">&lt;https://www.w3.org/ns/lws#totalItems&gt;</span> <span class="hljs-string">"2"</span>^^<span class="hljs-link">&lt;http://www.w3.org/2001/XMLSchema#integer&gt;</span> .
+<span class="hljs-link">&lt;https://storage.example/alice/notes/&gt;</span> <span class="hljs-link">&lt;https://www.w3.org/ns/lws#items&gt;</span> <span class="hljs-link">&lt;https://storage.example/alice/notes/shoppinglist.txt&gt;</span> .
+<span class="hljs-link">&lt;https://storage.example/alice/notes/&gt;</span> <span class="hljs-link">&lt;https://www.w3.org/ns/lws#items&gt;</span> <span class="hljs-link">&lt;https://storage.example/alice/notes/todo.json&gt;</span> .
+<span class="hljs-link">&lt;https://storage.example/alice/notes/shoppinglist.txt&gt;</span> <span class="hljs-link">&lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt;</span> <span class="hljs-link">&lt;https://www.w3.org/ns/lws#DataResource&gt;</span> .
+<span class="hljs-link">&lt;https://storage.example/alice/notes/shoppinglist.txt&gt;</span> <span class="hljs-link">&lt;http://purl.org/dc/terms/format&gt;</span> <span class="hljs-string">"text/plain"</span> .
+<span class="hljs-link">&lt;https://storage.example/alice/notes/shoppinglist.txt&gt;</span> <span class="hljs-link">&lt;http://schema.org/size&gt;</span> <span class="hljs-string">"47"</span>^^<span class="hljs-link">&lt;http://www.w3.org/2001/XMLSchema#long&gt;</span> .
+<span class="hljs-link">&lt;https://storage.example/alice/notes/shoppinglist.txt&gt;</span> <span class="hljs-link">&lt;http://purl.org/dc/terms/modified&gt;</span> <span class="hljs-string">"2025-11-24T12:00:00Z"</span>^^<span class="hljs-link">&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt;</span> .
+<span class="hljs-link">&lt;https://storage.example/alice/notes/todo.json&gt;</span> <span class="hljs-link">&lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt;</span> <span class="hljs-link">&lt;https://www.w3.org/ns/lws#DataResource&gt;</span> .
+<span class="hljs-link">&lt;https://storage.example/alice/notes/todo.json&gt;</span> <span class="hljs-link">&lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt;</span> <span class="hljs-link">&lt;http://example.org/customType&gt;</span> .
+<span class="hljs-link">&lt;https://storage.example/alice/notes/todo.json&gt;</span> <span class="hljs-link">&lt;http://purl.org/dc/terms/format&gt;</span> <span class="hljs-string">"application/json"</span> .
+<span class="hljs-link">&lt;https://storage.example/alice/notes/todo.json&gt;</span> <span class="hljs-link">&lt;http://schema.org/size&gt;</span> <span class="hljs-string">"2048"</span>^^<span class="hljs-link">&lt;http://www.w3.org/2001/XMLSchema#long&gt;</span> .
+<span class="hljs-link">&lt;https://storage.example/alice/notes/todo.json&gt;</span> <span class="hljs-link">&lt;http://purl.org/dc/terms/modified&gt;</span> <span class="hljs-string">"2025-11-24T13:00:00Z"</span>^^<span class="hljs-link">&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt;</span> .
+</code></pre>
+                    </div>
+                </div>
             </section>
         </section>
     </section>
@@ -3647,7 +3943,7 @@ signature</code></pre>
             要求在描述性文本和表格中陈述。此外，虽然此绑定涵盖 HTTP（作为
             初始目标协议），但原则上，LWS 操作将来可以绑定到其他协议。
             <a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                id="ref-for-dfn-containers-29">容器</a>表示的媒体类型要求定义于 <a href="#lws-media-type" class="sec-ref"><bdi
+                id="ref-for-dfn-containers-28">容器</a>表示的媒体类型要求定义于 <a href="#lws-media-type" class="sec-ref"><bdi
                     class="secno">12. </bdi>LWS 媒体类型</a>。
         </p>
 
@@ -3662,7 +3958,7 @@ signature</code></pre>
                         href="#bib-rfc8288" title="Web Linking">RFC8288</a></cite>] 的原则，该原则允许服务器使用带类型的链接描述
                 资源之间的关系。元数据增强可发现性，支持自描述 API，
                 并与资源操作以及<a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                    id="ref-for-dfn-containers-30">容器</a>层次结构保持一致。</p>
+                    id="ref-for-dfn-containers-29">容器</a>层次结构保持一致。</p>
             <p><strong>元数据模型</strong>
                 LWS 中的所有元数据都表示为从资源（链接上下文）发出的带类型链接集合。
                 每个链接由以下部分组成：</p>
@@ -3675,9 +3971,9 @@ signature</code></pre>
                 对于<a href="#dfn-data-resources" class="internalDFN" data-link-type="dfn"
                     id="ref-for-dfn-data-resources-2">数据资源</a>，元数据包括表示形式，每个表示形式具有
                 格式以及可选的 sizeInBytes。对于<a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                    id="ref-for-dfn-containers-31">容器</a>和<a href="#dfn-data-resources" class="internalDFN"
+                    id="ref-for-dfn-containers-30">容器</a>和<a href="#dfn-data-resources" class="internalDFN"
                     data-link-type="dfn" id="ref-for-dfn-data-resources-3">数据资源</a>，我们认为指向其父<a href="#dfn-containers"
-                    class="internalDFN" data-link-type="dfn" id="ref-for-dfn-containers-32">容器</a>资源的链接属于该资源元数据的一部分。
+                    class="internalDFN" data-link-type="dfn" id="ref-for-dfn-containers-31">容器</a>资源的链接属于该资源元数据的一部分。
             </p>
             <p><strong><a href="#dfn-linkset-resource" class="internalDFN" data-link-type="dfn"
                         id="ref-for-dfn-linkset-resource-2">链接集资源</a></strong>
@@ -3708,7 +4004,7 @@ signature</code></pre>
                 <li><a href="#dfn-containment" class="internalDFN" data-link-type="dfn"
                         id="ref-for-dfn-containment-8">包含关系</a>：对于任何非根资源，服务器<em class="rfc2119">必须</em>包含带有
                     <code>rel="up"</code> 且指向父<a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                        id="ref-for-dfn-containers-33">容器</a>的
+                        id="ref-for-dfn-containers-32">容器</a>的
                     Link 标头。
                 </li>
                 <li>偏好：客户端<em class="rfc2119">可以</em>将 Prefer 标头 [<cite><a class="bibref" data-link-type="biblio"
@@ -3808,83 +4104,85 @@ signature</code></pre>
             </div>
 
             <p><strong>创建资源</strong>操作将一个新的<a href="#dfn-served-resource"
-                    id="ref-for-dfn-served-resource-6">被服务资源</a>添加到现有<a href="#dfn-containers" class="internalDFN"
-                    data-link-type="dfn" id="ref-for-dfn-containers-34">容器</a>中。此
-                操作同时处理<a href="#dfn-data-resources" class="internalDFN" data-link-type="dfn"
-                    id="ref-for-dfn-data-resources-4">数据资源</a>和子容器的创建。</p>
+                    id="ref-for-dfn-served-resource-6">提供的资源</a>添加到现有的<a href="#dfn-containers" class="internalDFN"
+                    data-link-type="dfn" id="ref-for-dfn-containers-33">容器</a>中。此
+                操作既处理<a href="#dfn-data-resources" class="internalDFN" data-link-type="dfn"
+                    id="ref-for-dfn-data-resources-4">数据资源</a>的创建，也处理子容器的创建。</p>
             <p><strong>输入：</strong></p>
             <ul>
                 <li><strong>目标容器：</strong>将在其中创建新资源的<a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                        id="ref-for-dfn-containers-35">容器</a>的标识符。</li>
-                <li><strong>身份提示：</strong>新资源标识符的可选建议。服务器
-                    可以使用此提示，但不是必须使用。</li>
+                        id="ref-for-dfn-containers-34">容器</a>的
+                    标识符。</li>
+                <li><strong>标识符提示：</strong>针对新资源标识符的可选建议。服务器
+                    可以使用此提示，但并非必须使用。</li>
                 <li><strong>内容：</strong>新资源的初始内容和类型。</li>
             </ul>
             <p><strong>行为：</strong></p>
             <ul>
-                <li><strong>身份生成：</strong>服务器确定新
-                    资源的最终标识符（URI）。如果提供了身份提示，服务器会尝试
-                    纳入该提示，同时确保其在<a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                        id="ref-for-dfn-containers-36">容器</a>内唯一且有效。如果未提供提示，
-                    服务器会生成唯一标识符。</li>
-                <li><strong>容器成员关系更新：</strong>服务器以原子方式将新资源添加到目标
-                    <a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                        id="ref-for-dfn-containers-37">容器</a>的成员列表中。
-                </li>
-                <li><strong>元数据初始化：</strong>服务器为新
-                    资源初始化系统元数据。如果该资源有关联的<a href="#dfn-metadata-resource" class="internalDFN" data-link-type="dfn"
-                        id="ref-for-dfn-metadata-resource-2">元数据资源</a>，它也会被
-                    初始化。</li>
+                <li><strong>标识符生成：</strong>服务器确定新资源的最终标识符（URI）。
+                    如果提供了标识符提示，服务器会尝试采用该提示，同时确保
+                    其在<a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
+                        id="ref-for-dfn-containers-35">容器</a>内的唯一性和有效性。如果未提供提示，
+                    服务器会生成一个唯一标识符。</li>
+                <li><strong>容器成员关系更新：</strong>服务器以原子方式将新资源添加到
+                    目标<a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
+                        id="ref-for-dfn-containers-36">容器</a>的成员列表中。</li>
+                <li><strong>元数据初始化：</strong>服务器为新资源初始化系统
+                    元数据。如果该资源具有关联的<a href="#dfn-metadata-resource" class="internalDFN" data-link-type="dfn"
+                        id="ref-for-dfn-metadata-resource-2">元数据资源</a>，也会对其
+                    进行初始化。</li>
             </ul>
             <p><strong>可能的响应：</strong></p>
             <ul>
-                <li><strong id="dfn-created">已创建：</strong>操作成功。服务器返回新创建资源的最终
-                    标识符。</li>
-                <li><strong>目标未找到：</strong>指定的目标<a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                        id="ref-for-dfn-containers-38">容器</a>不存在。</li>
-                <li><strong>不允许：</strong>客户端身份已知，但其无权在此<a href="#dfn-containers" class="internalDFN"
-                        data-link-type="dfn" id="ref-for-dfn-containers-39">容器</a>中创建资源。</li>
-                <li><strong>未知请求者：</strong>服务器不识别客户端的身份，需要
-                    身份验证。</li>
-                <li><strong>冲突：</strong>具有生成标识符的资源已存在，或者存在
+                <li><strong id="dfn-created">已创建：</strong>操作成功。服务器返回新创建资源的
+                    最终标识符。</li>
+                <li><strong>未找到目标：</strong>指定的目标<a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
+                        id="ref-for-dfn-containers-37">容器</a>不
+                    存在。</li>
+                <li><strong>不允许：</strong>客户端的身份已知，但该客户端没有权限在
+                    此<a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
+                        id="ref-for-dfn-containers-38">容器</a>中创建资源。</li>
+                <li><strong>未知请求者：</strong>服务器无法识别客户端的身份，并要求
+                    进行身份验证。</li>
+                <li><strong>冲突：</strong>使用生成的标识符的资源已经存在，或者存在
                     其他状态冲突。</li>
                 <li><strong>未知错误：</strong>发生了意外的内部错误。</li>
             </ul>
-            <p>使用 POST 向目标<a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                    id="ref-for-dfn-containers-40">容器</a> URI 创建新资源，由服务器分配
+            <p>通过向目标<a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
+                    id="ref-for-dfn-containers-39">容器</a> URI 发送 POST 请求来创建新资源，由服务器分配
                 最终标识符。客户端<em class="rfc2119">可以</em>通过在 POST 请求中包含一个或多个
-                <code>Link</code> 标头，按照 [<cite><a class="bibref" data-link-type="biblio" href="#bib-rfc8288"
-                        title="Web 链接">RFC8288</a></cite>] 中 Web 链接的语法，为新资源提供初始的用户管理元数据。
-                服务器管理的元数据<em class="rfc2119">必须</em>
-                由服务器在创建时自动生成，并且<em class="rfc2119">不得</em>
+                <code>Link</code> 标头，为新资源提供初始的用户管理元数据，其语法遵循
+                [<cite><a class="bibref" data-link-type="biblio" href="#bib-rfc8288" title="Web 链接">RFC8288</a></cite>]
+                中的 Web 链接规范。服务器管理的元数据<em class="rfc2119">必须</em>
+                在创建时由服务器自动生成，并且<em class="rfc2119">不得</em>
                 被客户端提供的链接覆盖。
             </p>
-            <p>成功后，服务器<em class="rfc2119">必须</em>返回 201 状态码，并在
-                <code>Location</code> 标头中提供新 URI。服务器<em class="rfc2119">必须</em>包含用于
-                关键服务器管理元数据的 <code>Link</code> 标头，其中包括指向父<a href="#dfn-containers" class="internalDFN"
-                    data-link-type="dfn" id="ref-for-dfn-containers-41">容器</a>的链接
-                (<code>rel="up"</code>)，以及指向所创建资源专用<a href="#dfn-linkset-resource" class="internalDFN"
+            <p>成功时，服务器<em class="rfc2119">必须</em>返回 201 状态码，并在
+                <code>Location</code> 标头中包含新 URI。服务器<em class="rfc2119">必须</em>包含用于
+                关键服务器管理元数据的 <code>Link</code> 标头，包括指向父<a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
+                    id="ref-for-dfn-containers-40">容器</a>的链接
+                （<code>rel="up"</code>），以及指向所创建资源的专用<a href="#dfn-linkset-resource" class="internalDFN"
                     data-link-type="dfn" id="ref-for-dfn-linkset-resource-7">链接集资源</a>的链接
-                (<code>rel="linkset"; type="application/linkset+json"</code>)。其他链接<em class="rfc2119">应该</em>包括
-                <code>rel="type"</code>（指示
+                （<code>rel="linkset"; type="application/linkset+json"</code>）。其他链接<em class="rfc2119">应该</em>包括
+                <code>rel="type"</code>（用于指示
                 <code>https://www.w3.org/ns/lws#Container</code> 或
-                <code>https://www.w3.org/ns/lws#DataResource</code>）。响应主体<em class="rfc2119">可以</em>为空，也可以
-                包含资源的最小表示。所有元数据的创建和链接<em class="rfc2119">必须</em>与资源创建以原子方式进行，以保持一致性。
+                <code>https://www.w3.org/ns/lws#DataResource</code>）。响应主体<em class="rfc2119">可以</em>为空，或
+                包含资源的最小表示。所有元数据的创建和链接操作<em class="rfc2119">必须</em>与资源创建以原子方式执行，以保持一致性。
             </p>
-            <p><strong>POST（向容器 URI）</strong> – <em>使用服务器分配的名称创建：</em>
+            <p><strong>POST（发送到容器 URI）</strong> – <em>使用服务器分配的名称创建：</em>
                 使用 POST 在现有<a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                    id="ref-for-dfn-containers-42">容器</a>内添加新资源。服务器为资源分配
-                标识符。客户端按如下方式指示要创建的资源类型：</p>
+                    id="ref-for-dfn-containers-41">容器</a>内添加新资源。服务器为资源
+                分配标识符。客户端按以下方式指示要创建的资源类型：</p>
             <ul>
-                <li>要创建<strong><a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                            id="ref-for-dfn-containers-43">容器</a></strong>，客户端<em class="rfc2119">必须</em>包含一个带有
+                <li>要创建一个<strong><a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
+                            id="ref-for-dfn-containers-42">容器</a></strong>，客户端<em class="rfc2119">必须</em>包含一个带有
                     <code>rel="type"</code> 的 <code>Link</code> 标头，
-                    使其指向容器类型：
+                    指向 Container 类型：
                     <code>Link: &lt;https://www.w3.org/ns/lws#Container&gt;; rel="type"</code>。
                 </li>
-                <li>要创建<strong><a href="#dfn-data-resources" class="internalDFN" data-link-type="dfn"
-                            id="ref-for-dfn-data-resources-5">数据资源</a></strong>，客户端应在请求主体中包含
-                    资源内容，并使用适当的 <code>Content-Type</code> 标头。</li>
+                <li>要创建一个<strong><a href="#dfn-data-resources" class="internalDFN" data-link-type="dfn"
+                            id="ref-for-dfn-data-resources-5">数据资源</a></strong>，客户端需要在
+                    请求主体中包含资源内容，并使用适当的 <code>Content-Type</code> 标头。</li>
             </ul>
             <p><strong>示例（使用 POST 创建新的数据资源）：</strong></p>
             <pre><code aria-busy="false" class="hljs http"><span class="hljs-keyword">POST</span> <span class="hljs-string">/alice/notes/</span> <span class="hljs-meta">HTTP/1.1</span>
@@ -3900,15 +4198,13 @@ butter
 apples
 orange juice
 </code></pre>
-            <p>在此示例中，客户端正在向<a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                    id="ref-for-dfn-containers-44">容器</a> <code>/alice/notes/</code> 发送 POST 请求。它
-                提供 <code>text/plain</code> 内容（一份购物清单），并为新资源建议名称
-                <code>shoppinglist.txt</code>。如果 <code>/alice/notes/</code> 存在且客户端
-                已获得授权，服务器将创建新的<a href="#dfn-data-resources" class="internalDFN" data-link-type="dfn"
+            <p>在此示例中，客户端向<a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
+                    id="ref-for-dfn-containers-43">容器</a> <code>/alice/notes/</code> 发送 POST 请求。
+                它提供了 <code>text/plain</code> 内容（一份购物清单）。如果 <code>/alice/notes/</code> 存在且
+                客户端已获得授权，服务器将创建一个新的<a href="#dfn-data-resources" class="internalDFN" data-link-type="dfn"
                     id="ref-for-dfn-data-resources-6">数据资源</a>，并将其添加到该<a href="#dfn-containers" class="internalDFN"
-                    data-link-type="dfn" id="ref-for-dfn-containers-45">容器</a>的成员中。
-            </p>
-            <p><strong>示例（对 POST 的响应 — 数据资源）：</strong></p>
+                    data-link-type="dfn" id="ref-for-dfn-containers-44">容器</a>的成员列表中。</p>
+            <p><strong>示例（POST 响应——数据资源）：</strong></p>
             <pre><code aria-busy="false" class="hljs http"><span class="hljs-meta">HTTP/1.1</span> <span class="hljs-number">201</span> Created
 <span class="hljs-attribute">Location</span><span class="hljs-punctuation">: </span>/alice/notes/shoppinglist.txt
 <span class="hljs-attribute">Content-Type</span><span class="hljs-punctuation">: </span>text/plain; charset=UTF-8
@@ -3917,25 +4213,25 @@ orange juice
 <span class="hljs-attribute">Link</span><span class="hljs-punctuation">: </span>&lt;https://www.w3.org/ns/lws#DataResource&gt;; rel="type"
 <span class="hljs-attribute">Content-Length</span><span class="hljs-punctuation">: </span>0
 </code></pre>
-            <p>成功后，返回 201 Created，并在 <code>Location</code> 标头中提供新 URI。响应主体可以
-                为空，也可以是最小表示。
+            <p>成功时，返回 201 Created，并在 <code>Location</code> 标头中包含新 URI。响应主体可以
+                为空，也可以包含最小表示。
                 如果目标<a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                    id="ref-for-dfn-containers-46">容器</a> <code>/alice/notes/</code> 不存在，服务器
+                    id="ref-for-dfn-containers-45">容器</a> <code>/alice/notes/</code> 不存在，服务器
                 <em class="rfc2119">必须</em>返回 404 错误状态，除非其他状态码更为适当。
             </p>
             <p><strong>创建<a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                        id="ref-for-dfn-containers-47">容器</a>：</strong>要创建新的<a href="#dfn-containers"
-                    class="internalDFN" data-link-type="dfn" id="ref-for-dfn-containers-48">容器</a>，客户端使用 POST 向现有父<a
+                        id="ref-for-dfn-containers-46">容器</a>：</strong>要创建一个新的<a href="#dfn-containers"
+                    class="internalDFN" data-link-type="dfn" id="ref-for-dfn-containers-47">容器</a>，客户端向现有的父<a
                     href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                    id="ref-for-dfn-containers-49">容器</a>发送请求，并使用 <code>Link</code> 标头指示
-                容器类型。例如：</p>
+                    id="ref-for-dfn-containers-48">容器</a>发送 POST 请求，并附带指示
+                Container 类型的 <code>Link</code> 标头。例如：</p>
             <pre><code aria-busy="false" class="hljs http"><span class="hljs-keyword">POST</span> <span class="hljs-string">/alice/</span> <span class="hljs-meta">HTTP/1.1</span>
 <span class="hljs-attribute">Host</span><span class="hljs-punctuation">: </span>example.com
 <span class="hljs-attribute">Authorization</span><span class="hljs-punctuation">: </span>Bearer &lt;token&gt;
 <span class="hljs-attribute">Content-Length</span><span class="hljs-punctuation">: </span>0
 <span class="hljs-attribute">Link</span><span class="hljs-punctuation">: </span>&lt;https://www.w3.org/ns/lws#Container&gt;; rel="type"
 </code></pre>
-            <p><strong>示例（对 POST 的响应 — 容器）：</strong></p>
+            <p><strong>示例（POST 响应——容器）：</strong></p>
             <pre><code aria-busy="false" class="hljs http"><span class="hljs-meta">HTTP/1.1</span> <span class="hljs-number">201</span> Created
 <span class="hljs-attribute">Location</span><span class="hljs-punctuation">: </span>/alice/notes/
 <span class="hljs-attribute">Link</span><span class="hljs-punctuation">: </span>&lt;/alice/notes/.meta&gt;; rel="linkset"; type="application/linkset+json"
@@ -3943,25 +4239,25 @@ orange juice
 <span class="hljs-attribute">Link</span><span class="hljs-punctuation">: </span>&lt;https://www.w3.org/ns/lws#Container&gt;; rel="type"
 <span class="hljs-attribute">Content-Length</span><span class="hljs-punctuation">: </span>0
 </code></pre>
-            <p>这将在 <code>/alice/notes/</code> 创建新的<a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                    id="ref-for-dfn-containers-50">容器</a>，其中由服务器生成的
-                元数据包括值为 <code>https://www.w3.org/ns/lws#Container</code> 的 <code>rel="type"</code>。</p>
-            <p><strong>有关创建操作的其他说明（HTTP 绑定）：</strong></p>
+            <p>这将在 <code>/alice/notes/</code> 处创建一个新的<a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
+                    id="ref-for-dfn-containers-49">容器</a>，并附带服务器生成的
+                元数据，其中包括值为 <code>https://www.w3.org/ns/lws#Container</code> 的 <code>rel="type"</code>。</p>
+            <p><strong>关于创建操作的补充说明（HTTP 绑定）：</strong></p>
             <ul>
-                <li>POST 不是幂等的。重复执行可能会创建重复资源；客户端<em class="rfc2119">应该</em>
-                    避免无意的重试，或使用唯一标识符/检查来防止这种情况。</li>
-                <li>元数据更新是原子的；服务器<em class="rfc2119">必须</em>确保<a href="#dfn-linkset-resource" class="internalDFN"
-                        data-link-type="dfn" id="ref-for-dfn-linkset-resource-8">链接集资源</a>在返回成功之前已创建并填充
-                    服务器管理的必需字段。</li>
-                <li>为便于发现，服务器<em class="rfc2119">应该</em>在 401 响应中包含带有
-                    <code>rel="https://www.w3.org/ns/lws#storage"</code> 的 <code>Link</code> 标头，以引导没有
+                <li>POST 不具有幂等性。重复执行可能创建重复资源；客户端<em class="rfc2119">应该</em>
+                    避免无意中的重试，或使用唯一标识符及检查机制来防止这种情况。</li>
+                <li>元数据更新具有原子性；服务器<em class="rfc2119">必须</em>确保<a href="#dfn-linkset-resource" class="internalDFN"
+                        data-link-type="dfn" id="ref-for-dfn-linkset-resource-8">链接集资源</a>已创建，并填充了必需的
+                    服务器管理字段，然后才能返回成功响应。</li>
+                <li>为了便于发现，服务器<em class="rfc2119">应该</em>在 401 响应中包含一个
+                    带有 <code>rel="https://www.w3.org/ns/lws#storage"</code> 的 <code>Link</code> 标头，以引导没有
                     硬编码 URI 的客户端。
                 </li>
             </ul>
-            <p><strong>管理和检索元数据（与创建相关）：</strong>
-                尽管元数据主要通过读取操作检索，但它是在创建过程中生成的。客户端可以
+            <p><strong>管理和检索元数据（与创建操作相关）：</strong>
+                虽然元数据主要通过读取操作检索，但它是在创建过程中生成的。客户端可以
                 在创建后立即对新资源 URI 使用 GET 或 HEAD 来检索元数据。客户端可以使用
-                <code>Prefer</code> 标头请求包含特定的元数据链接（通过关系类型）和
+                <code>Prefer</code> 标头，请求包含特定的元数据链接（通过关系类型）及
                 属性。
             </p>
 
@@ -3974,43 +4270,44 @@ orange juice
             </div>
 
             <p>检索现有资源的表示或<a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                    id="ref-for-dfn-containers-51">容器</a>的列表。</p>
+                    id="ref-for-dfn-containers-50">容器</a>的列表。</p>
             <ul>
                 <li><strong>输入</strong>：目标标识符和可选参数。</li>
                 <li><strong>行为</strong>：<ul>
                         <li>对于非容器资源，服务器返回资源内容。</li>
                         <li>对于<a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                                id="ref-for-dfn-containers-52">容器</a>，服务器返回成员
-                            资源的列表，该列表<em class="rfc2119">可以</em>基于<a
-                                href="#container-membership-and-authorization">授权</a>进行过滤。列表必须包括
+                                id="ref-for-dfn-containers-51">容器</a>，服务器返回成员
+                            资源列表，该列表<em class="rfc2119">可以</em>根据<a
+                                href="#container-membership-and-authorization">授权</a>进行过滤。列表必须包含
                             每个成员的核心元数据。</li>
                     </ul>
                 </li>
                 <li><strong>结果</strong>：请求的表示或失败通知。</li>
             </ul>
-            <p>读取资源操作使用 HTTP GET 请求来请求资源表示（对于仅请求
-                标头的请求则使用 HEAD）。其行为取决于目标 URL 是<a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                    id="ref-for-dfn-containers-53">容器</a>还是非容器资源（<a href="#dfn-data-resources" class="internalDFN"
+            <p>读取资源操作使用 HTTP GET 请求获取资源表示（对于
+                仅请求标头的情况使用 HEAD）。其行为取决于目标 URL 是<a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
+                    id="ref-for-dfn-containers-52">容器</a>还是非容器资源（<a href="#dfn-data-resources" class="internalDFN"
                     data-link-type="dfn" id="ref-for-dfn-data-resources-7">数据资源</a>）。服务器<em class="rfc2119">必须</em>
-                通过元数据区分资源类型。所有响应<em class="rfc2119">必须</em>与
-                第 8.1 节中定义的元数据集成，包括用于 <code>rel="linkset"</code>、
-                <code>rel="up"</code> 和 <code>rel="type"</code> 等关键关系的 <code>Link</code> 标头。服务器<em
-                    class="rfc2119">必须</em>在读取期间确保资源状态与其元数据之间的原子性。
+                通过元数据区分资源类型。所有响应<em class="rfc2119">必须</em>按照
+                第 8.1 节的定义集成元数据，包括用于关键关系的 <code>Link</code> 标头，例如
+                <code>rel="linkset"</code>、<code>rel="up"</code> 和 <code>rel="type"</code>。服务器<em
+                    class="rfc2119">必须</em>确保读取期间资源状态与其元数据之间的原子性。
             </p>
             <p><strong>GET（非容器资源）</strong> – <em>检索资源的内容：</em>
-                向资源 URI 发送 GET 以获取完整内容（如果已获授权）。以 200 OK 响应，响应主体包含
-                数据，并且 Content-Type 与存储的媒体类型匹配。服务器<em class="rfc2119">必须</em>按照 [<cite><a class="bibref"
-                        data-link-type="biblio" href="#bib-rfc7233" title="超文本传输协议（HTTP/1.1）：范围请求">RFC7233</a></cite>]
-                支持用于部分
-                检索的范围请求。响应<em class="rfc2119">必须</em>包含 [<cite><a class="bibref" data-link-type="biblio"
-                        href="#bib-rfc9110" title="HTTP 语义">RFC9110</a></cite>] 中定义的 <code>ETag</code> 标头。</p>
-            <p><strong>示例（GET 文件）：</strong></p>
+                向资源 URI 发送 GET 请求，以获取完整内容（如果已获得授权）。服务器以 200 OK 响应，响应主体包含
+                数据，且 Content-Type 与存储的媒体类型匹配。服务器<em class="rfc2119">必须</em>支持
+                [<cite><a class="bibref" data-link-type="biblio" href="#bib-rfc7233"
+                        title="超文本传输协议 (HTTP/1.1)：范围请求">RFC7233</a></cite>] 中规定的范围请求，以进行部分
+                检索。响应<em class="rfc2119">必须</em>包含按照
+                [<cite><a class="bibref" data-link-type="biblio" href="#bib-rfc9110" title="HTTP 语义">RFC9110</a></cite>]
+                定义的 <code>ETag</code> 标头。</p>
+            <p><strong>示例（使用 GET 获取文件）：</strong></p>
             <pre><code aria-busy="false" class="hljs http"><span class="hljs-keyword">GET</span> <span class="hljs-string">/alice/notes/shoppinglist.txt</span> <span class="hljs-meta">HTTP/1.1</span>
 <span class="hljs-attribute">Authorization</span><span class="hljs-punctuation">: </span>Bearer &lt;token&gt;
 <span class="hljs-attribute">Accept</span><span class="hljs-punctuation">: </span>text/plain
 </code></pre>
-            <p>这会请求 <code>/alice/notes/shoppinglist.txt</code> 的内容，并表明客户端希望
-                以文本形式获取它。假设该资源存在、属于文本，并且客户端具有访问权限：</p>
+            <p>此请求获取 <code>/alice/notes/shoppinglist.txt</code> 的内容，表明客户端希望
+                以文本形式获取该内容。假设资源存在、属于文本类型，且客户端具有访问权限：</p>
             <pre><code aria-busy="false" class="hljs http"><span class="hljs-meta">HTTP/1.1</span> <span class="hljs-number">200</span> OK
 <span class="hljs-attribute">Content-Type</span><span class="hljs-punctuation">: </span>text/plain; charset=UTF-8
 <span class="hljs-attribute">Content-Length</span><span class="hljs-punctuation">: </span>34
@@ -4029,36 +4326,49 @@ hash
 eggs
 </code></pre>
             <p>服务器返回了文本内容（总计 34 字节，如 <code>Content-Length</code> 所示）。
-                该内容与文件中存储的数据完全一致。<code>ETag: "abc123456"</code> 是用于
+                该内容与文件中存储的数据完全相同。<code>ETag: "abc123456"</code> 是用于
                 缓存和条件请求的验证器。响应包含用于
-                元数据可发现性的 <code>Link</code> 标头，其中包含 <code>up</code> 和 <code>type</code> 等必需字段。</p>
+                发现元数据的 <code>Link</code> 标头，其中包括 <code>up</code> 和 <code>type</code> 等必需字段。</p>
             <p><strong>GET（<a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                        id="ref-for-dfn-containers-54">容器</a>资源）</strong> – <em>列出<a href="#dfn-containers"
-                        class="internalDFN" data-link-type="dfn" id="ref-for-dfn-containers-55">容器</a>的内容：</em>
-                当目标 URI 对应于<a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                    id="ref-for-dfn-containers-56">容器</a>（通过元数据类型确定）时，GET 请求返回
-                <a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                    id="ref-for-dfn-containers-57">容器</a>成员的列表。响应主体是<a href="#dfn-container-representation"
-                    class="internalDFN" data-link-type="dfn" id="ref-for-dfn-container-representation-3">容器表示</a>，如<a
-                    href="#container-representation">容器表示</a>一节中所定义，并使用 LWS 容器媒体
-                类型。该列表包括每个成员的元数据：资源标识符（<em class="rfc2119">必须</em>）、类型（<em class="rfc2119">必须</em>）、媒体类型（对于
-                DataResources <em class="rfc2119">必须</em>）、大小（<em class="rfc2119">应当</em>）以及
-                修改时间戳（<em class="rfc2119">应当</em>）。
+                        id="ref-for-dfn-containers-53">容器</a>资源）</strong> – <em>列出<a href="#dfn-containers"
+                        class="internalDFN" data-link-type="dfn" id="ref-for-dfn-containers-54">容器</a>的内容：</em>
+                当目标 URI 对应于一个<a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
+                    id="ref-for-dfn-containers-55">容器</a>时（通过元数据类型确定），GET 请求会返回
+                该<a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
+                    id="ref-for-dfn-containers-56">容器</a>的成员列表。具有
+                <code>Content-Type: application/lws+json</code> 的响应是一个<a href="#dfn-container-representation"
+                    class="internalDFN" data-link-type="dfn" id="ref-for-dfn-container-representation-3">容器
+                    表示</a>，如<a href="#container-representation">容器
+                    表示</a>一节所定义；对于这种表示，列表包含每个成员的元数据：
+                资源标识符（<em class="rfc2119">必须</em>）、类型（<em class="rfc2119">必须</em>）、媒体类型
+                （对于 DataResources <em class="rfc2119">必须</em>）、大小（<em class="rfc2119">应该</em>）以及
+                修改时间戳（<em class="rfc2119">应该</em>）。
             </p>
-            <p><strong>示例（GET 容器）：</strong></p>
-            <pre><code aria-busy="false" class="hljs http"><span class="hljs-keyword">GET</span> <span class="hljs-string">/alice/notes/</span> <span class="hljs-meta">HTTP/1.1</span>
+            <p><strong>示例（使用 GET 获取容器）：</strong>假设该<a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
+                    id="ref-for-dfn-containers-57">容器</a>存在，且客户端具有访问权限。
+                选项卡展示了使用不同媒体类型的同一请求；参见<a href="#content-negotiation" class="sec-ref"><bdi class="secno">12.1.2
+                    </bdi>内容协商</a>。</p>
+            <div class="example-tabs ready">
+                <div class="tab-bar" role="tablist"><button type="button" id="lws-tab-3" role="tab"
+                        aria-controls="lws-tab-3-panel" aria-selected="true">application/lws+json</button><button
+                        type="button" id="lws-tab-4" role="tab" aria-controls="lws-tab-4-panel"
+                        aria-selected="false">text/turtle（LWS 配置文件）</button></div>
+                <div data-tab="application/lws+json" id="lws-tab-3-panel" role="tabpanel" aria-labelledby="lws-tab-3">
+                    <p>请求：</p>
+                    <pre><code class="http hljs" aria-busy="false"><span class="hljs-keyword">GET</span> <span class="hljs-string">/alice/notes/</span> <span class="hljs-meta">HTTP/1.1</span>
 <span class="hljs-attribute">Authorization</span><span class="hljs-punctuation">: </span>Bearer &lt;token&gt;
 <span class="hljs-attribute">Accept</span><span class="hljs-punctuation">: </span>application/lws+json
 </code></pre>
-            <p>假设容器存在且客户端具有访问权限：</p>
-            <pre><code aria-busy="false" class="hljs http"><span class="hljs-meta">HTTP/1.1</span> <span class="hljs-number">200</span> OK
+                    <p>响应标头：</p>
+                    <pre><code class="http hljs" aria-busy="false"><span class="hljs-meta">HTTP/1.1</span> <span class="hljs-number">200</span> OK
 <span class="hljs-attribute">Content-Type</span><span class="hljs-punctuation">: </span>application/lws+json
 <span class="hljs-attribute">ETag</span><span class="hljs-punctuation">: </span>"container-etag-789"
 <span class="hljs-attribute">Link</span><span class="hljs-punctuation">: </span>&lt;/alice/notes/.meta&gt;; rel="linkset"; type="application/linkset+json"
 <span class="hljs-attribute">Link</span><span class="hljs-punctuation">: </span>&lt;/alice/&gt;; rel="up"
 <span class="hljs-attribute">Link</span><span class="hljs-punctuation">: </span>&lt;https://www.w3.org/ns/lws#Container&gt;; rel="type"
-
-<span class="language-json"><span class="hljs-punctuation">{</span>
+</code></pre>
+                    <p>响应主体：</p>
+                    <pre><code class="json hljs" aria-busy="false"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"@context"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"https://www.w3.org/ns/lws/v1"</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"/alice/notes/"</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"Container"</span><span class="hljs-punctuation">,</span>
@@ -4080,40 +4390,80 @@ eggs
     <span class="hljs-punctuation">}</span>
   <span class="hljs-punctuation">]</span>
 <span class="hljs-punctuation">}</span>
-</span></code></pre>
+</code></pre>
+                </div>
+                <div data-tab="text/turtle (LWS profile)" id="lws-tab-4-panel" role="tabpanel"
+                    aria-labelledby="lws-tab-4" hidden="">
+                    <p>请求：</p>
+                    <pre><code class="http hljs" aria-busy="false"><span class="hljs-keyword">GET</span> <span class="hljs-string">/alice/notes/</span> <span class="hljs-meta">HTTP/1.1</span>
+<span class="hljs-attribute">Authorization</span><span class="hljs-punctuation">: </span>Bearer &lt;token&gt;
+<span class="hljs-attribute">Accept</span><span class="hljs-punctuation">: </span>text/turtle; profile="https://www.w3.org/ns/lws/v1"
+</code></pre>
+                    <p>响应标头：</p>
+                    <pre><code class="http hljs" aria-busy="false"><span class="hljs-meta">HTTP/1.1</span> <span class="hljs-number">200</span> OK
+<span class="hljs-attribute">Content-Type</span><span class="hljs-punctuation">: </span>text/turtle; profile="https://www.w3.org/ns/lws/v1"
+<span class="hljs-attribute">ETag</span><span class="hljs-punctuation">: </span>"container-etag-789"
+<span class="hljs-attribute">Link</span><span class="hljs-punctuation">: </span>&lt;/alice/notes/.meta&gt;; rel="linkset"; type="application/linkset+json"
+<span class="hljs-attribute">Link</span><span class="hljs-punctuation">: </span>&lt;/alice/&gt;; rel="up"
+<span class="hljs-attribute">Link</span><span class="hljs-punctuation">: </span>&lt;https://www.w3.org/ns/lws#Container&gt;; rel="type"
+</code></pre>
+                    <p>响应主体：</p>
+                    <pre><code class="nohighlight hljs" data-lws-highlighted=""><span class="hljs-keyword">@prefix</span> <span class="hljs-literal">lws:</span> <span class="hljs-link">&lt;https://www.w3.org/ns/lws#&gt;</span> .
+<span class="hljs-keyword">@prefix</span> <span class="hljs-literal">dcterms:</span> <span class="hljs-link">&lt;http://purl.org/dc/terms/&gt;</span> .
+<span class="hljs-keyword">@prefix</span> <span class="hljs-literal">schema:</span> <span class="hljs-link">&lt;http://schema.org/&gt;</span> .
+<span class="hljs-keyword">@prefix</span> <span class="hljs-literal">xsd:</span> <span class="hljs-link">&lt;http://www.w3.org/2001/XMLSchema#&gt;</span> .
+
+<span class="hljs-link">&lt;&gt;</span> <span class="hljs-keyword">a</span> <span class="hljs-literal">lws:</span><span class="hljs-attr">Container</span> ;
+  <span class="hljs-literal">lws:</span><span class="hljs-attr">totalItems</span> <span class="hljs-number">2</span> ;
+  <span class="hljs-literal">lws:</span><span class="hljs-attr">items</span> <span class="hljs-link">&lt;shoppinglist.txt&gt;</span>, <span class="hljs-link">&lt;todo.json&gt;</span> .
+
+<span class="hljs-link">&lt;shoppinglist.txt&gt;</span> <span class="hljs-keyword">a</span> <span class="hljs-literal">lws:</span><span class="hljs-attr">DataResource</span> ;
+  <span class="hljs-literal">dcterms:</span><span class="hljs-attr">format</span> <span class="hljs-string">"text/plain"</span> ;
+  <span class="hljs-literal">schema:</span><span class="hljs-attr">size</span> <span class="hljs-string">"47"</span>^^<span class="hljs-literal">xsd:</span><span class="hljs-attr">long</span> ;
+  <span class="hljs-literal">dcterms:</span><span class="hljs-attr">modified</span> <span class="hljs-string">"2025-11-24T12:00:00Z"</span>^^<span class="hljs-literal">xsd:</span><span class="hljs-attr">dateTime</span> .
+
+<span class="hljs-link">&lt;todo.json&gt;</span> <span class="hljs-keyword">a</span> <span class="hljs-literal">lws:</span><span class="hljs-attr">DataResource</span>, <span class="hljs-link">&lt;http://example.org/customType&gt;</span> ;
+  <span class="hljs-literal">dcterms:</span><span class="hljs-attr">format</span> <span class="hljs-string">"application/json"</span> ;
+  <span class="hljs-literal">schema:</span><span class="hljs-attr">size</span> <span class="hljs-string">"2048"</span>^^<span class="hljs-literal">xsd:</span><span class="hljs-attr">long</span> ;
+  <span class="hljs-literal">dcterms:</span><span class="hljs-attr">modified</span> <span class="hljs-string">"2025-11-24T13:00:00Z"</span>^^<span class="hljs-literal">xsd:</span><span class="hljs-attr">dateTime</span> .
+</code></pre>
+                </div>
+            </div>
             <p>在此示例中，<code>/alice/notes/</code> 是一个<a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
                     id="ref-for-dfn-containers-58">容器</a>。响应使用带有
-                LWS 上下文的 JSON-LD，列出具有必需元数据的成员。每个项目都包含其 <code>type</code>、
-                <code>id</code>、<code>format</code>、<code>size</code> 和 <code>modified</code> 时间戳，并作为扁平
-                属性。
+                LWS 上下文的 JSON-LD，列出成员及其必需的元数据。每个条目均将其 <code>type</code>、
+                <code>id</code>、<code>format</code>、<code>size</code> 和 <code>modified</code> 时间戳作为扁平化
+                属性包含在内。
             </p>
-            <p>在所有情况下，服务器<em class="rfc2119">必须</em>在响应
-                标头中包含以下元数据：[<cite><a class="bibref" data-link-type="biblio" href="#bib-rfc9110"
-                        title="HTTP 语义">RFC9110</a></cite>] 中定义的 <code>ETag</code> 标头，以及带有
-                <code>rel="linkset"</code>、<code>rel="up"</code> 和 <code>rel="type"</code> 的 <code>Link</code>
-                标头，用于表明它是一个
+            <p>在所有情况下，服务器<em class="rfc2119">必须</em>在响应标头中包含以下
+                元数据：按照 [<cite><a class="bibref" data-link-type="biblio" href="#bib-rfc9110"
+                        title="HTTP 语义">RFC9110</a></cite>] 定义的 <code>ETag</code> 标头，以及
+                带有 <code>rel="linkset"</code>、<code>rel="up"</code> 和 <code>rel="type"</code> 的 <code>Link</code>
+                标头，表明它是一个
                 <a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
                     id="ref-for-dfn-containers-59">容器</a>。
             </p>
             <p><strong>HEAD（任何资源或<a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                        id="ref-for-dfn-containers-60">容器</a>）</strong> – <em>仅标头/元数据：</em>
-                LWS 服务器<em class="rfc2119">必须</em>对<a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                    id="ref-for-dfn-containers-61">容器</a>和非容器都支持 [<cite><a class="bibref" data-link-type="biblio"
-                        href="#bib-rfc9110" title="HTTP 语义">RFC9110</a></cite>] 中的 HEAD，并返回与 GET
-                相同的标头（包括 <code>Content-Type</code>、用于元数据的 <code>Link</code>），但不返回响应主体。这使得
+                        id="ref-for-dfn-containers-60">容器</a>）</strong> – <em>仅获取标头/元数据：</em>
+                LWS 服务器<em class="rfc2119">必须</em>按照 [<cite><a class="bibref" data-link-type="biblio"
+                        href="#bib-rfc9110" title="HTTP 语义">RFC9110</a></cite>] 支持对
+                <a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
+                    id="ref-for-dfn-containers-61">容器</a>和非容器资源使用 HEAD，返回与 GET 相同的标头
+                （包括 <code>Content-Type</code>、用于元数据的 <code>Link</code>），但不包含响应主体。这使得
                 无需传输内容即可检索元数据。
             </p>
-            <p><strong>缓存和条件请求：</strong>LWS 利用 HTTP 缓存语义。服务器<em class="rfc2119">应当</em>支持 [<cite><a class="bibref"
+            <p><strong>缓存和条件请求：</strong>LWS 利用 HTTP 缓存语义。服务器<em class="rfc2119">应该</em>支持 [<cite><a class="bibref"
                         data-link-type="biblio" href="#bib-rfc9110" title="HTTP 语义">RFC9110</a></cite>] 中定义的条件请求，
                 包括实体标签（<code>ETags</code>）和基于日期的验证器（例如
                 <code>If-Modified-Since</code> 标头）等机制。如果资源或<a href="#dfn-containers" class="internalDFN"
                     data-link-type="dfn" id="ref-for-dfn-containers-62">容器</a>列表
-                未发生更改，则以 <code>304 Not Modified</code> 响应，以避免冗余传输。
+                未发生变化，则以 <code>304 Not Modified</code> 响应，以避免重复传输。
             </p>
-            <p><strong>可发现性与授权：</strong>为增强可发现性，
-                <code>401 Unauthorized</code> 响应包含一个 <code>WWW-Authenticate</code> 标头，其中带有
-                <code>resource_metadata</code> 参数，如<a href="#authorization-server-discovery">授权服务器发现</a>中所述，以便客户端能够
-                在不硬编码 URI 的情况下定位授权服务器。
+            <p><strong>可发现性和授权：</strong>为了增强可发现性，
+                <code>401 Unauthorized</code> 响应包含一个带有
+                <code>resource_metadata</code> 参数的 <code>WWW-Authenticate</code> 标头，如<a
+                    href="#authorization-server-discovery">授权服务器发现</a>中所述，以便客户端能够
+                在不使用硬编码 URI 的情况下定位授权服务器。
             </p>
 
         </section>
@@ -6034,115 +6384,146 @@ Content-Type: application/linkset+json
                     href="#lws-media-type-0" aria-label="第 12.1 节的永久链接。"></a>
             </div>
             <p>LWS <a href="#dfn-storage-description-resource" class="internalDFN" data-link-type="dfn"
-                    id="ref-for-dfn-storage-description-resource-12">存储描述</a><em class="rfc2119">必须</em>可使用媒体类型
+                    id="ref-for-dfn-storage-description-resource-12">存储描述</a><em class="rfc2119">必须</em>能够使用媒体类型
                 <code>application/lws+cid</code> 进行序列化。
                 <code>application/lws+cid</code> 媒体类型标识一种文档，该文档是
                 <abbr title="万维网联盟">W3C</abbr> 受控标识符文档 [<cite><a class="bibref" data-link-type="biblio"
-                        href="#bib-cid-1-0" title="受控标识符 v1.0">CID-1.0</a></cite>] 的一种特化，并使用 LWS 词汇表进行了扩展。
+                        href="#bib-cid-1-0" title="受控标识符 v1.0">CID-1.0</a></cite>] 的特化形式，并使用 LWS 词汇表进行了扩展。
             </p>
             <p>LWS <a href="#dfn-container-representation" class="internalDFN" data-link-type="dfn"
                     id="ref-for-dfn-container-representation-4">容器表示</a><em class="rfc2119">必须</em>支持媒体类型
                 <code>application/lws+json</code>。
             </p>
             <p>虽然 LWS 容器表示使用 JSON-LD 约定，但 LWS 的约束和要求
-                使使用特定媒体类型具有合理性。由于 LWS 容器可以被视为 JSON-LD 的受限配置文件，
-                实现<em class="rfc2119">应当</em>将
-                <code>application/ld+json; profile="https://www.w3.org/ns/lws/v1"</code> 媒体类型视为等同于
-                <code>application/lws+json</code>。
-            </p>
-            <section id="media-type-equivalence">
+                使得使用特定媒体类型具有合理性。</p>
+            <section id="lws-profile">
                 <div class="header-wrapper">
-                    <h4 id="x12-1-1-media-type-equivalence"><bdi class="secno">12.1.1 </bdi>媒体类型等价性</h4>
-                    <a class="self-link" href="#media-type-equivalence" aria-label="第 12.1.1 节的永久链接。"></a>
+                    <h4 id="x12-1-1-lws-profile"><bdi class="secno">12.1.1 </bdi>LWS 配置文件</h4><a class="self-link"
+                        href="#lws-profile" aria-label="第 12.1.1 节的永久链接"></a>
                 </div>
-                <p>对于<a href="#dfn-container-representation" class="internalDFN" data-link-type="dfn"
-                        id="ref-for-dfn-container-representation-5">容器表示</a>，媒体类型
-                    <code>application/lws+json</code>、<code>application/ld+json</code> 和
-                    <code>application/json</code> 是等价的：响应主体是同一个 JSON-LD 文档，
-                    符合<a href="#dfn-container-representation" class="internalDFN" data-link-type="dfn"
-                        id="ref-for-dfn-container-representation-6">容器表示</a>结构，该结构定义于<a href="#container-representation"
-                        class="sec-ref"><bdi class="secno">8.1 </bdi>容器
-                        表示</a>中，只有 <code>Content-Type</code> 响应标头不同。服务器<em class="rfc2119">必须</em>满足对其中任一媒体类型的请求，并且<em
-                        class="rfc2119">必须</em>将 <code>Content-Type</code> 响应标头设置为所请求的
-                    媒体类型。
+                <p>URI <code>https://www.w3.org/ns/lws/v1</code> 标识 <dfn id="dfn-lws-profile" tabindex="0"
+                        aria-haspopup="dialog" data-dfn-type="dfn">LWS 配置文件</dfn> [<cite><a class="bibref"
+                            data-link-type="biblio" href="#bib-rfc6906"
+                            title="'profile' 链接关系类型">RFC6906</a></cite>]。如果一个<a href="#dfn-containers"
+                        class="internalDFN" data-link-type="dfn" id="ref-for-dfn-containers-73">容器</a>的表示与同一<a
+                        href="#dfn-lws-profile" class="internalDFN" data-link-type="dfn"
+                        id="ref-for-dfn-lws-profile-2">LWS 配置文件</a>所对应的
+                    <code>application/lws+json</code> 表示在 RDF 上同构，则该表示符合相同<a href="#dfn-containers" class="internalDFN"
+                        data-link-type="dfn" id="ref-for-dfn-containers-74">容器</a>状态和页面的要求；也就是说，它所编码的 RDF
+                    与 <a href="https://www.w3.org/TR/rdf12-concepts/#section-dataset-isomorphism">RDF 数据集
+                        比较</a> [<cite><a class="bibref" data-link-type="biblio" href="#bib-rdf12-concepts"
+                            title="RDF 1.2 概念和抽象数据模型">RDF12-CONCEPTS</a></cite>] 中定义的 RDF 同构，
+                    即与 <code>application/lws+json</code> 表示在按 JSON-LD [<cite><a class="bibref" data-link-type="biblio"
+                            href="#bib-json-ld11" title="JSON-LD 1.1">JSON-LD11</a></cite>] 解释时编码的 RDF
+                    同构。<code>application/lws+json</code>
+                    表示始终符合<a href="#dfn-lws-profile" class="internalDFN" data-link-type="dfn"
+                        id="ref-for-dfn-lws-profile-3">LWS 配置文件</a>。
                 </p>
-                <p>由于容器响应的 <code>Content-Type</code> 取决于请求的
-                    <code>Accept</code> 标头，因此这些响应<em class="rfc2119">应当</em>包含
-                    <code>Vary: Accept</code> 标头 [<cite><a class="bibref" data-link-type="biblio" href="#bib-rfc9110"
-                            title="HTTP 语义">RFC9110</a></cite>]。
+            </section>
+            <section id="content-negotiation">
+                <div class="header-wrapper">
+                    <h4 id="x12-1-2-content-negotiation"><bdi class="secno">12.1.2 </bdi>内容协商</h4><a class="self-link"
+                        href="#content-negotiation" aria-label="第 12.1.2 节的永久链接"></a>
+                </div>
+                <p>服务器<em class="rfc2119">必须</em>满足针对<a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
+                        id="ref-for-dfn-containers-75">容器</a>的 <code>application/lws+json</code> 请求，并且<em
+                        class="rfc2119">必须</em>将
+                    <code>Content-Type</code> 响应标头设置为所选表示的媒体类型。
                 </p>
-                <p><strong>注（非规范性）：</strong>此等价性仅适用于上述三种媒体类型。
-                    与任何 HTTP 资源一样，服务器可以通过标准内容协商 [<cite><a class="bibref" data-link-type="biblio" href="#bib-rfc9110"
-                            title="HTTP 语义">RFC9110</a></cite>] 提供容器的其他表示（例如
-                    <code>text/turtle</code>）；本规范既不要求也不排除此类支持。
+                <p>客户端通过在 RDF 媒体类型的 <code>profile</code> 参数中包含<a href="#dfn-lws-profile" class="internalDFN"
+                        data-link-type="dfn" id="ref-for-dfn-lws-profile-4">LWS 配置文件</a> URI，
+                    来请求符合<a href="#dfn-lws-profile" class="internalDFN" data-link-type="dfn"
+                        id="ref-for-dfn-lws-profile-5">LWS 配置文件</a>的表示。定义了此参数的 RDF 媒体类型包括
+                    <code>application/ld+json</code>
+                    [<cite><a class="bibref" data-link-type="biblio" href="#bib-json-ld11"
+                            title="JSON-LD 1.1">JSON-LD11</a></cite>]、<code>text/turtle</code> [<cite><a class="bibref"
+                            data-link-type="biblio" href="#bib-rdf12-turtle"
+                            title="RDF 1.2 Turtle">RDF12-TURTLE</a></cite>]、<code>application/trig</code> [<cite><a
+                            class="bibref" data-link-type="biblio" href="#bib-rdf12-trig"
+                            title="RDF 1.2 TriG">RDF12-TRIG</a></cite>]、<code>application/n-triples</code> [<cite><a
+                            class="bibref" data-link-type="biblio" href="#bib-rdf12-n-triples"
+                            title="RDF 1.2 N-Triples">RDF12-N-TRIPLES</a></cite>] 和 <code>application/n-quads</code>
+                    [<cite><a class="bibref" data-link-type="biblio" href="#bib-rdf12-n-quads"
+                            title="RDF 1.2 N-Quads">RDF12-N-QUADS</a></cite>]。如果服务器选择此类媒体类型，
+                    响应<em class="rfc2119">必须</em>符合<a href="#dfn-lws-profile" class="internalDFN" data-link-type="dfn"
+                        id="ref-for-dfn-lws-profile-6">LWS 配置文件</a>，即
+                    它<em class="rfc2119">必须</em>与 <code>application/lws+json</code>
+                    表示在 RDF 上同构，并且其 <code>Content-Type</code> <em class="rfc2119">必须</em>包含相同的
+                    <code>profile</code> 参数。如果服务器无法以此类媒体类型生成符合<a href="#dfn-lws-profile" class="internalDFN"
+                        data-link-type="dfn" id="ref-for-dfn-lws-profile-7">LWS 配置文件</a>的表示，则<em
+                        class="rfc2119">不得</em>选择该媒体类型。
                 </p>
+                <p>当所选表示取决于请求的 <code>Accept</code> 标头时，响应<em class="rfc2119">应该</em>包含 <code>Vary: Accept</code> 标头
+                    [<cite><a class="bibref" data-link-type="biblio" href="#bib-rfc9110"
+                            title="HTTP 语义">RFC9110</a></cite>]。</p>
             </section>
             <section id="pagination">
                 <div class="header-wrapper">
-                    <h4 id="x12-1-2-pagination"><bdi class="secno">12.1.2 </bdi>分页</h4><a class="self-link"
-                        href="#pagination" aria-label="第 12.1.2 节的永久链接。"></a>
+                    <h4 id="x12-1-3-pagination"><bdi class="secno">12.1.3 </bdi>分页</h4><a class="self-link"
+                        href="#pagination" aria-label="第 12.1.3 节的永久链接"></a>
                 </div>
                 <p>某些复合资源（例如<a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                        id="ref-for-dfn-containers-73">容器</a>）可能包含大量资源。
-                    为了允许客户端增量检索列表，服务器<em class="rfc2119">应当</em>为成员数量超过服务器所确定
-                    阈值的<a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
-                        id="ref-for-dfn-containers-74">容器</a>支持
-                    分页。</p>
+                        id="ref-for-dfn-containers-76">容器</a>）可能包含大量资源。
+                    为了允许客户端逐步检索列表，服务器<em class="rfc2119">应该</em>对
+                    成员数量超过服务器确定的阈值的<a href="#dfn-containers" class="internalDFN" data-link-type="dfn"
+                        id="ref-for-dfn-containers-77">容器</a>支持分页。</p>
                 <section id="pagination-model">
                     <div class="header-wrapper">
-                        <h5 id="x12-1-2-1-pagination-model"><bdi class="secno">12.1.2.1 </bdi>分页模型</h5><a
-                            class="self-link" href="#pagination-model" aria-label="第 12.1.2.1 节的永久链接。"></a>
+                        <h5 id="x12-1-3-1-pagination-model"><bdi class="secno">12.1.3.1 </bdi>分页模型</h5><a
+                            class="self-link" href="#pagination-model" aria-label="第 12.1.3.1 节的永久链接"></a>
                     </div>
                     <p>分页基于链接：服务器通过 HTTP <code>Link</code> 标头提供分页 URI
                         [<cite><a class="bibref" data-link-type="biblio" href="#bib-rfc8288"
                                 title="Web 链接">RFC8288</a></cite>]，
-                        使客户端无需依赖数字偏移量即可遍历完整列表。</p>
-                    <p>当列表分页时，响应主体仅包含当前页面中的项目。复合
-                        资源的 <code>id</code>、<code>type</code> 和 <code>totalItems</code> 属性
+                        使客户端无需依赖数字偏移量即可浏览完整列表。</p>
+                    <p>当列表采用分页形式时，响应主体仅包含当前页面的条目。
+                        复合资源的 <code>id</code>、<code>type</code> 和 <code>totalItems</code> 属性
                         反映完整的成员集合，而 <code>items</code>
-                        仅包含当前页面中的资源。</p>
+                        仅包含当前页面上的资源。</p>
                 </section>
                 <section id="pagination-link-relations">
                     <div class="header-wrapper">
-                        <h5 id="x12-1-2-2-pagination-link-relations"><bdi class="secno">12.1.2.2 </bdi>分页链接
+                        <h5 id="x12-1-3-2-pagination-link-relations"><bdi class="secno">12.1.3.2 </bdi>分页链接
                             关系</h5><a class="self-link" href="#pagination-link-relations"
-                            aria-label="第 12.1.2.2 节的永久链接。"></a>
+                            aria-label="第 12.1.3.2 节的永久链接"></a>
                     </div>
-                    <p>分页 URI 使用以下标准链接关系在 <code>Link</code> 标头中
-                        传递：</p>
+                    <p>分页 URI 通过 <code>Link</code> 标头使用以下标准链接
+                        关系进行传递：</p>
                     <ul>
-                        <li><strong><code>rel="first"</code></strong>：结果第一页的 URI。分页响应中<em class="rfc2119">必须</em>存在。
+                        <li><strong><code>rel="first"</code></strong>：结果第一页的 URI。<em class="rfc2119">必须</em>出现在分页响应中。
                         </li>
-                        <li><strong><code>rel="last"</code></strong>：结果最后一页的 URI。分页响应中<em class="rfc2119">可以</em>存在。
+                        <li><strong><code>rel="last"</code></strong>：结果最后一页的 URI。<em class="rfc2119">可以</em>出现在分页响应中。
                         </li>
                         <li><strong><code>rel="next"</code></strong>：结果下一页的 URI。存在后续
-                            页面时<em class="rfc2119">必须</em>存在。在最后一页中<em class="rfc2119">必须</em>省略。</li>
-                        <li><strong><code>rel="prev"</code></strong>：结果上一页的 URI。存在前面的
-                            页面时<em class="rfc2119">可以</em>存在。在第一页中<em class="rfc2119">必须</em>省略。</li>
+                            页面时<em class="rfc2119">必须</em>提供。
+                            在最后一页上<em class="rfc2119">必须</em>省略。</li>
+                        <li><strong><code>rel="prev"</code></strong>：结果上一页的 URI。存在前面
+                            的页面时<em class="rfc2119">可以</em>提供。
+                            在第一页上<em class="rfc2119">必须</em>省略。</li>
                     </ul>
-                    <p>所有分页 URI 对客户端而言都是不透明的。客户端<em class="rfc2119">不应</em>
-                        构造或修改分页
-                        URI；它们<em class="rfc2119">应当</em>使用服务器提供的 URI。</p>
+                    <p>所有分页 URI 对客户端而言都是不透明的。客户端<em class="rfc2119">不应该</em>
+                        自行构造或修改分页
+                        URI；而<em class="rfc2119">应该</em>使用服务器提供的 URI。</p>
                 </section>
                 <section id="requesting-pages">
                     <div class="header-wrapper">
-                        <h5 id="x12-1-2-3-requesting-pages"><bdi class="secno">12.1.2.3 </bdi>请求页面</h5><a
-                            class="self-link" href="#requesting-pages" aria-label="第 12.1.2.3 节的永久链接。"></a>
+                        <h5 id="x12-1-3-3-requesting-pages"><bdi class="secno">12.1.3.3 </bdi>请求页面</h5><a
+                            class="self-link" href="#requesting-pages" aria-label="第 12.1.3.3 节的永久链接"></a>
                     </div>
                     <p>客户端请求复合资源的 URI 以获取第一页。响应包含
                         分页
-                        Link 标头，客户端跟随这些标头来检索后续页面。服务器<em class="rfc2119">也可以</em>支持
-                        通过先前扫描期间获得的分页 URI 直接访问特定页面。</p>
+                        Link 标头，客户端通过跟随这些标头来检索后续页面。服务器<em class="rfc2119">也可以</em>支持
+                        通过先前扫描过程中获得的分页 URI 直接访问特定页面。</p>
                     <p>返回分页响应时，服务器<em class="rfc2119">必须</em>以 200
                         OK 响应。响应主体中的 <code>totalItems</code>
-                        属性<em class="rfc2119">应当</em>反映所有页面中的项目总数，
-                        而不只是当前页面中的项目数。</p>
+                        属性<em class="rfc2119">应该</em>反映所有页面上的条目总数，
+                        而不仅是当前页面上的条目数。</p>
                 </section>
                 <section id="example-paginated-container">
                     <div class="header-wrapper">
-                        <h5 id="x12-1-2-4-example-paginated-container"><bdi class="secno">12.1.2.4 </bdi>示例：
+                        <h5 id="x12-1-3-4-example-paginated-container"><bdi class="secno">12.1.3.4 </bdi>示例：
                             分页容器</h5><a class="self-link" href="#example-paginated-container"
-                            aria-label="第 12.1.2.4 节的永久链接。"></a>
+                            aria-label="第 12.1.3.4 节的永久链接"></a>
                     </div>
                     <p>请求：</p>
                     <pre><code aria-busy="false" class="hljs http"><span class="hljs-keyword">GET</span> <span class="hljs-string">/alice/photos/</span> <span class="hljs-meta">HTTP/1.1</span>
@@ -6743,11 +7124,6 @@ Content-Type: application/linkset+json
                 要求，足以说明使用特定媒体类型的合理性。
             </p>
 
-            <p>
-                由于 LWS 容器可视为 JSON-LD 的受限配置文件，实现<em class="rfc2119">应当</em>将
-                <code>application/ld+json; profile="https://www.w3.org/ns/lws/v1"</code> 媒体类型视为等同于
-                <code>application/lws+json</code>。
-            </p>
         </section>
 
         <section id="iana-media-type-cid-registry">
@@ -6812,199 +7188,237 @@ Content-Type: application/linkset+json
             <dl class="bibliography">
                 <dt id="bib-activitystreams-core">[ACTIVITYSTREAMS-CORE]</dt>
                 <dd>
-                    <a href="https://www.w3.org/TR/activitystreams-core/"><cite>Activity Streams 2.0</cite></a>. James
-                    Snell; Evan Prodromou. W3C. 2017年5月23日。W3C 推荐标准。URL：<a
+                    <a href="https://www.w3.org/TR/activitystreams-core/"><cite>活动流 2.0</cite></a>。James
+                    Snell; Evan Prodromou。W3C。2017 年 5 月 23 日。W3C 推荐标准。URL：<a
                         href="https://www.w3.org/TR/activitystreams-core/">https://www.w3.org/TR/activitystreams-core/</a>
                 </dd>
                 <dt id="bib-activitystreams-vocabulary">[ACTIVITYSTREAMS-VOCABULARY]</dt>
                 <dd>
-                    <a href="https://www.w3.org/TR/activitystreams-vocabulary/"><cite>活动词汇</cite></a>。
-                    James Snell; Evan Prodromou. W3C. 2017年5月23日。W3C 推荐标准。URL：<a
+                    <a href="https://www.w3.org/TR/activitystreams-vocabulary/"><cite>活动词汇表</cite></a>。
+                    James Snell; Evan Prodromou。W3C。2017 年 5 月 23 日。W3C 推荐标准。URL：<a
                         href="https://www.w3.org/TR/activitystreams-vocabulary/">https://www.w3.org/TR/activitystreams-vocabulary/</a>
                 </dd>
                 <dt id="bib-cid-1-0">[CID-1.0]</dt>
                 <dd>
-                    <a href="https://www.w3.org/TR/cid-1.0/"><cite>受控标识符 v1.0</cite></a>. Michael
-                    Jones; Manu Sporny. W3C. 2025年5月15日。W3C 推荐标准。URL：<a
+                    <a href="https://www.w3.org/TR/cid-1.0/"><cite>受控标识符 v1.0</cite></a>。Michael
+                    Jones; Manu Sporny。W3C。2025 年 5 月 15 日。W3C 推荐标准。URL：<a
                         href="https://www.w3.org/TR/cid-1.0/">https://www.w3.org/TR/cid-1.0/</a>
                 </dd>
                 <dt id="bib-foaf">[FOAF]</dt>
                 <dd>
-                    <a href="http://xmlns.com/foaf/spec/"><cite>FOAF 词汇规范 0.99（Paddington
-                            版）</cite></a>. Dan Brickley; Libby Miller. FOAF 项目。2014年1月14日。URL：<a
+                    <a href="http://xmlns.com/foaf/spec/"><cite>FOAF 词汇表规范 0.99（帕丁顿
+                            版）</cite></a>。Dan Brickley; Libby Miller。FOAF 项目。2014 年 1 月 14 日。URL：<a
                         href="http://xmlns.com/foaf/spec/">http://xmlns.com/foaf/spec/</a>
                 </dd>
                 <dt id="bib-json-ld11">[JSON-LD11]</dt>
                 <dd>
-                    <a href="https://www.w3.org/TR/json-ld11/"><cite>JSON-LD 1.1</cite></a>. Gregg Kellogg;
-                    Pierre-Antoine Champin; Dave Longley. W3C. 2020年7月16日。W3C 推荐标准。URL：<a
+                    <a href="https://www.w3.org/TR/json-ld11/"><cite>JSON-LD 1.1</cite></a>。Gregg Kellogg;
+                    Pierre-Antoine Champin; Dave Longley。W3C。2020 年 7 月 16 日。W3C 推荐标准。URL：<a
                         href="https://www.w3.org/TR/json-ld11/">https://www.w3.org/TR/json-ld11/</a>
                 </dd>
                 <dt id="bib-odrl-model">[ODRL-MODEL]</dt>
                 <dd>
-                    <a href="https://www.w3.org/TR/odrl-model/"><cite>ODRL 信息模型 2.2</cite></a>. Renato
-                    Iannella; Serena Villata. W3C. 2018年2月15日。W3C 推荐标准。URL：<a
+                    <a href="https://www.w3.org/TR/odrl-model/"><cite>ODRL 信息模型 2.2</cite></a>。Renato
+                    Iannella; Serena Villata。W3C。2018 年 2 月 15 日。W3C 推荐标准。URL：<a
                         href="https://www.w3.org/TR/odrl-model/">https://www.w3.org/TR/odrl-model/</a>
                 </dd>
                 <dt id="bib-odrl-vocab">[ODRL-VOCAB]</dt>
                 <dd>
-                    <a href="https://www.w3.org/TR/odrl-vocab/"><cite>ODRL 词汇与表达式 2.2</cite></a>。
-                    Renato Iannella; Michael Steidl; Stuart Myles; Víctor Rodríguez-Doncel. W3C. 2018年2月15日。W3C
+                    <a href="https://www.w3.org/TR/odrl-vocab/"><cite>ODRL 词汇表与表达式 2.2</cite></a>。
+                    Renato Iannella; Michael Steidl; Stuart Myles; Víctor Rodríguez-Doncel。W3C。2018 年 2 月 15 日。W3C
                     推荐标准。URL：<a href="https://www.w3.org/TR/odrl-vocab/">https://www.w3.org/TR/odrl-vocab/</a>
                 </dd>
                 <dt id="bib-openid-connect-core">[OPENID-CONNECT-CORE]</dt>
                 <dd>
-                    <a href="https://openid.net/specs/openid-connect-core-1_0.html"><cite>OpenID Connect Core 1.0
-                            （包含勘误集 2）</cite></a>. N. Sakimura; J. Bradley; M. Jones; B. de Medeiros; C.
-                    Mortimore. OpenID 基金会。2023年12月15日。最终版。URL：<a
+                    <a href="https://openid.net/specs/openid-connect-core-1_0.html"><cite>OpenID Connect 核心规范 1.0
+                            （纳入勘误集 2）</cite></a>。N. Sakimura; J. Bradley; M. Jones; B. de Medeiros; C.
+                    Mortimore。OpenID 基金会。2023 年 12 月 15 日。最终版。URL：<a
                         href="https://openid.net/specs/openid-connect-core-1_0.html">https://openid.net/specs/openid-connect-core-1_0.html</a>
+                </dd>
+                <dt id="bib-rdf12-concepts">[RDF12-CONCEPTS]</dt>
+                <dd>
+                    <a href="https://www.w3.org/TR/rdf12-concepts/"><cite>RDF 1.2 概念与抽象数据
+                            模型</cite></a>。Andy Seaborne; Gregg Kellogg; Olaf Hartig; Pierre-Antoine Champin。W3C。2026 年 4
+                    月 7
+                    日。W3C 候选推荐标准。URL：<a
+                        href="https://www.w3.org/TR/rdf12-concepts/">https://www.w3.org/TR/rdf12-concepts/</a>
+                </dd>
+                <dt id="bib-rdf12-n-quads">[RDF12-N-QUADS]</dt>
+                <dd>
+                    <a href="https://www.w3.org/TR/rdf12-n-quads/"><cite>RDF 1.2 N-Quads</cite></a>。Gregg Kellogg;
+                    Dominik Tomaszuk。W3C。2026 年 10 月 10 日。W3C 工作草案。URL：<a
+                        href="https://www.w3.org/TR/rdf12-n-quads/">https://www.w3.org/TR/rdf12-n-quads/</a>
+                </dd>
+                <dt id="bib-rdf12-n-triples">[RDF12-N-TRIPLES]</dt>
+                <dd>
+                    <a href="https://www.w3.org/TR/rdf12-n-triples/"><cite>RDF 1.2 N-Triples</cite></a>。Gregg Kellogg;
+                    Dominik Tomaszuk。W3C。2026 年 10 月 7 日。W3C 工作草案。URL：<a
+                        href="https://www.w3.org/TR/rdf12-n-triples/">https://www.w3.org/TR/rdf12-n-triples/</a>
+                </dd>
+                <dt id="bib-rdf12-trig">[RDF12-TRIG]</dt>
+                <dd>
+                    <a href="https://www.w3.org/TR/rdf12-trig/"><cite>RDF 1.2 TriG</cite></a>。Gregg Kellogg; Dominik
+                    Tomaszuk。W3C。2026 年 10 月 7 日。W3C 工作草案。URL：<a
+                        href="https://www.w3.org/TR/rdf12-trig/">https://www.w3.org/TR/rdf12-trig/</a>
+                </dd>
+                <dt id="bib-rdf12-turtle">[RDF12-TURTLE]</dt>
+                <dd>
+                    <a href="https://www.w3.org/TR/rdf12-turtle/"><cite>RDF 1.2 Turtle</cite></a>。Gregg Kellogg; Andy
+                    Seaborne; Dominik Tomaszuk。W3C。2026 年 10 月 7 日。W3C 工作草案。URL：<a
+                        href="https://www.w3.org/TR/rdf12-turtle/">https://www.w3.org/TR/rdf12-turtle/</a>
                 </dd>
                 <dt id="bib-rfc2119">[RFC2119]</dt>
                 <dd>
-                    <a href="https://www.rfc-editor.org/info/rfc2119/"><cite>用于 RFC 中指示
-                            要求级别的关键词</cite></a>. S. Bradner. IETF. 1997年3月。最佳当前实践。URL：<a
+                    <a href="https://www.rfc-editor.org/info/rfc2119/"><cite>用于在 RFC 中表示
+                            要求级别的关键词</cite></a>。S. Bradner。IETF。1997 年 3 月。当前最佳实践。URL：<a
                         href="https://www.rfc-editor.org/info/rfc2119/">https://www.rfc-editor.org/info/rfc2119/</a>
                 </dd>
                 <dt id="bib-rfc3339">[RFC3339]</dt>
                 <dd>
-                    <a href="https://www.rfc-editor.org/info/rfc3339/"><cite>互联网日期和时间：
-                            时间戳</cite></a>. G. Klyne; C. Newman. IETF. 2002年7月。提议标准。URL：<a
+                    <a href="https://www.rfc-editor.org/info/rfc3339/"><cite>互联网日期与时间：
+                            时间戳</cite></a>。G. Klyne; C. Newman。IETF。2002 年 7 月。拟议标准。URL：<a
                         href="https://www.rfc-editor.org/info/rfc3339/">https://www.rfc-editor.org/info/rfc3339/</a>
                 </dd>
                 <dt id="bib-rfc3986">[RFC3986]</dt>
                 <dd>
                     <a href="https://www.rfc-editor.org/info/rfc3986/"><cite>统一资源标识符（URI）：通用
-                            语法</cite></a>. T. Berners-Lee; R. Fielding; L. Masinter. IETF. 2005年1月。互联网
+                            语法</cite></a>。T. Berners-Lee; R. Fielding; L. Masinter。IETF。2005 年 1 月。互联网
                     标准。URL：<a
                         href="https://www.rfc-editor.org/info/rfc3986/">https://www.rfc-editor.org/info/rfc3986/</a>
                 </dd>
                 <dt id="bib-rfc4918">[RFC4918]</dt>
                 <dd>
                     <a href="https://www.rfc-editor.org/info/rfc4918/"><cite>用于 Web 分布式
-                            创作和版本控制（WebDAV）的 HTTP 扩展</cite></a>. L. Dusseault，编。IETF. 2007年6月。提议
+                            创作和版本控制（WebDAV）的 HTTP 扩展</cite></a>。L. Dusseault，编。IETF。2007 年 6 月。拟议
                     标准。URL：<a
                         href="https://www.rfc-editor.org/info/rfc4918/">https://www.rfc-editor.org/info/rfc4918/</a>
                 </dd>
                 <dt id="bib-rfc5789">[RFC5789]</dt>
                 <dd>
-                    <a href="https://httpwg.org/specs/rfc5789.html"><cite>HTTP 的 PATCH 方法</cite></a>. L.
-                    Dusseault; J. Snell. IETF. 2010年3月。提议标准。URL：<a
+                    <a href="https://httpwg.org/specs/rfc5789.html"><cite>HTTP 的 PATCH 方法</cite></a>。L.
+                    Dusseault; J. Snell。IETF。2010 年 3 月。拟议标准。URL：<a
                         href="https://httpwg.org/specs/rfc5789.html">https://httpwg.org/specs/rfc5789.html</a>
                 </dd>
                 <dt id="bib-rfc6749">[RFC6749]</dt>
                 <dd>
                     <a href="https://www.rfc-editor.org/info/rfc6749/"><cite>OAuth 2.0 授权
-                            框架</cite></a>. D. Hardt，编。IETF. 2012年10月。提议标准。URL：<a
+                            框架</cite></a>。D. Hardt，编。IETF。2012 年 10 月。拟议标准。URL：<a
                         href="https://www.rfc-editor.org/info/rfc6749/">https://www.rfc-editor.org/info/rfc6749/</a>
                 </dd>
                 <dt id="bib-rfc6750">[RFC6750]</dt>
                 <dd>
                     <a href="https://www.rfc-editor.org/info/rfc6750/"><cite>OAuth 2.0 授权框架：
-                            持有者令牌用法</cite></a>. M. Jones; D. Hardt. IETF. 2012年10月。提议标准。
+                            持有者令牌用法</cite></a>。M. Jones; D. Hardt。IETF。2012 年 10 月。拟议标准。
                     URL：<a href="https://www.rfc-editor.org/info/rfc6750/">https://www.rfc-editor.org/info/rfc6750/</a>
                 </dd>
                 <dt id="bib-rfc6902">[RFC6902]</dt>
                 <dd>
                     <a href="https://www.rfc-editor.org/info/rfc6902/"><cite>JavaScript 对象表示法（JSON）
-                            补丁</cite></a>. P. Bryan，编；M. Nottingham，编。IETF. 2013年4月。提议标准。
+                            补丁</cite></a>。P. Bryan，编；M. Nottingham，编。IETF。2013 年 4 月。拟议标准。
                     URL：<a href="https://www.rfc-editor.org/info/rfc6902/">https://www.rfc-editor.org/info/rfc6902/</a>
+                </dd>
+                <dt id="bib-rfc6906">[RFC6906]</dt>
+                <dd>
+                    <a href="https://www.rfc-editor.org/info/rfc6906/"><cite>“profile”链接关系
+                            类型</cite></a>。E. Wilde。IETF。2013 年 3 月。资料性。URL：<a
+                        href="https://www.rfc-editor.org/info/rfc6906/">https://www.rfc-editor.org/info/rfc6906/</a>
                 </dd>
                 <dt id="bib-rfc7231">[RFC7231]</dt>
                 <dd>
                     <a href="https://httpwg.org/specs/rfc7231.html"><cite>超文本传输协议（HTTP/1.1）：
-                            语义和内容</cite></a>. R. Fielding，编；J. Reschke，编。IETF. 2014年6月。
-                    提议标准。URL：<a href="https://httpwg.org/specs/rfc7231.html">https://httpwg.org/specs/rfc7231.html</a>
+                            语义和内容</cite></a>。R. Fielding，编；J. Reschke，编。IETF。2014 年 6 月。
+                    拟议标准。URL：<a href="https://httpwg.org/specs/rfc7231.html">https://httpwg.org/specs/rfc7231.html</a>
                 </dd>
                 <dt id="bib-rfc7233">[RFC7233]</dt>
                 <dd>
                     <a href="https://httpwg.org/specs/rfc7233.html"><cite>超文本传输协议（HTTP/1.1）：范围
-                            请求</cite></a>. R. Fielding，编；Y. Lafon，编；J. Reschke，编。IETF. 2014年6月。
-                    提议标准。URL：<a href="https://httpwg.org/specs/rfc7233.html">https://httpwg.org/specs/rfc7233.html</a>
+                            请求</cite></a>。R. Fielding，编；Y. Lafon，编；J. Reschke，编。IETF。2014 年 6 月。
+                    拟议标准。URL：<a href="https://httpwg.org/specs/rfc7233.html">https://httpwg.org/specs/rfc7233.html</a>
                 </dd>
                 <dt id="bib-rfc7240">[RFC7240]</dt>
                 <dd>
-                    <a href="https://www.rfc-editor.org/info/rfc7240/"><cite>HTTP 的 Prefer 标头</cite></a>. J.
-                    Snell. IETF. 2014年6月。提议标准。URL：<a
+                    <a href="https://www.rfc-editor.org/info/rfc7240/"><cite>HTTP 的 Prefer 标头</cite></a>。J.
+                    Snell。IETF。2014 年 6 月。拟议标准。URL：<a
                         href="https://www.rfc-editor.org/info/rfc7240/">https://www.rfc-editor.org/info/rfc7240/</a>
                 </dd>
                 <dt id="bib-rfc8174">[RFC8174]</dt>
                 <dd>
-                    <a href="https://www.rfc-editor.org/info/rfc8174/"><cite>RFC 中大写与小写的歧义
-                            2119 关键词</cite></a>. B. Leiba. IETF. 2017年5月。最佳当前实践。URL：<a
+                    <a href="https://www.rfc-editor.org/info/rfc8174/"><cite>RFC
+                            2119 关键词大小写的歧义</cite></a>。B. Leiba。IETF。2017 年 5 月。当前最佳实践。URL：<a
                         href="https://www.rfc-editor.org/info/rfc8174/">https://www.rfc-editor.org/info/rfc8174/</a>
                 </dd>
                 <dt id="bib-rfc8288">[RFC8288]</dt>
                 <dd>
-                    <a href="https://httpwg.org/specs/rfc8288.html"><cite>Web 链接</cite></a>. M. Nottingham. IETF.
-                    2017年10月。提议标准。URL：<a
+                    <a href="https://httpwg.org/specs/rfc8288.html"><cite>Web 链接</cite></a>。M. Nottingham。IETF。
+                    2017 年 10 月。拟议标准。URL：<a
                         href="https://httpwg.org/specs/rfc8288.html">https://httpwg.org/specs/rfc8288.html</a>
                 </dd>
                 <dt id="bib-rfc8414">[RFC8414]</dt>
                 <dd>
                     <a href="https://www.rfc-editor.org/info/rfc8414/"><cite>OAuth 2.0 授权服务器
-                            元数据</cite></a>. M. Jones; N. Sakimura; J. Bradley. IETF. 2018年6月。提议标准。
+                            元数据</cite></a>。M. Jones; N. Sakimura; J. Bradley。IETF。2018 年 6 月。拟议标准。
                     URL：<a href="https://www.rfc-editor.org/info/rfc8414/">https://www.rfc-editor.org/info/rfc8414/</a>
                 </dd>
                 <dt id="bib-rfc8693">[RFC8693]</dt>
                 <dd>
-                    <a href="https://www.rfc-editor.org/info/rfc8693/"><cite>OAuth 2.0 令牌交换</cite></a>. M.
-                    Jones; A. Nadalin; B. Campbell，编；J. Bradley; C. Mortimore. IETF. 2020年1月。提议
+                    <a href="https://www.rfc-editor.org/info/rfc8693/"><cite>OAuth 2.0 令牌交换</cite></a>。M.
+                    Jones; A. Nadalin; B. Campbell，编；J. Bradley; C. Mortimore。IETF。2020 年 1 月。拟议
                     标准。URL：<a
                         href="https://www.rfc-editor.org/info/rfc8693/">https://www.rfc-editor.org/info/rfc8693/</a>
                 </dd>
                 <dt id="bib-rfc9068">[RFC9068]</dt>
                 <dd>
-                    <a href="https://www.rfc-editor.org/info/rfc9068/"><cite>OAuth 2.0 的 JSON Web Token（JWT）配置文件
-                            访问令牌</cite></a>. V. Bertocci. IETF. 2021年10月。提议标准。URL：<a
+                    <a href="https://www.rfc-editor.org/info/rfc9068/"><cite>OAuth 2.0
+                            访问令牌的 JSON Web Token（JWT）配置文件</cite></a>。V. Bertocci。IETF。2021 年 10 月。拟议标准。URL：<a
                         href="https://www.rfc-editor.org/info/rfc9068/">https://www.rfc-editor.org/info/rfc9068/</a>
                 </dd>
                 <dt id="bib-rfc9110">[RFC9110]</dt>
                 <dd>
-                    <a href="https://httpwg.org/specs/rfc9110.html"><cite>HTTP 语义</cite></a>. R. Fielding，编；
-                    M. Nottingham，编；J. Reschke，编。IETF. 2022年6月。互联网标准。URL：<a
+                    <a href="https://httpwg.org/specs/rfc9110.html"><cite>HTTP 语义</cite></a>。R. Fielding，编；
+                    M. Nottingham，编；J. Reschke，编。IETF。2022 年 6 月。互联网标准。URL：<a
                         href="https://httpwg.org/specs/rfc9110.html">https://httpwg.org/specs/rfc9110.html</a>
                 </dd>
                 <dt id="bib-rfc9112">[rfc9112]</dt>
                 <dd>
-                    <a href="https://httpwg.org/specs/rfc9112.html"><cite>HTTP/1.1</cite></a>. R. Fielding，编；M.
-                    Nottingham，编；J. Reschke，编。IETF. 2022年6月。互联网标准。URL：<a
+                    <a href="https://httpwg.org/specs/rfc9112.html"><cite>HTTP/1.1</cite></a>。R. Fielding，编；M.
+                    Nottingham，编；J. Reschke，编。IETF。2022 年 6 月。互联网标准。URL：<a
                         href="https://httpwg.org/specs/rfc9112.html">https://httpwg.org/specs/rfc9112.html</a>
                 </dd>
                 <dt id="bib-rfc9264">[RFC9264]</dt>
                 <dd>
-                    <a href="https://www.rfc-editor.org/info/rfc9264/"><cite>Linkset：媒体类型和链接关系
-                            类型（用于链接集）</cite></a>. E. Wilde; H. Van de Sompel. IETF. 2022年7月。提议
+                    <a href="https://www.rfc-editor.org/info/rfc9264/"><cite>链接集：媒体类型及
+                            用于链接集的链接关系类型</cite></a>。E. Wilde; H. Van de Sompel。IETF。2022 年 7 月。拟议
                     标准。URL：<a
                         href="https://www.rfc-editor.org/info/rfc9264/">https://www.rfc-editor.org/info/rfc9264/</a>
                 </dd>
                 <dt id="bib-rfc9457">[RFC9457]</dt>
                 <dd>
                     <a href="https://www.rfc-editor.org/info/rfc9457/"><cite>HTTP API 的问题详情</cite></a>。
-                    M. Nottingham; E. Wilde; S. Dalal. IETF. 2023年7月。提议标准。URL：<a
+                    M. Nottingham; E. Wilde; S. Dalal。IETF。2023 年 7 月。拟议标准。URL：<a
                         href="https://www.rfc-editor.org/info/rfc9457/">https://www.rfc-editor.org/info/rfc9457/</a>
                 </dd>
                 <dt id="bib-rfc9728">[RFC9728]</dt>
                 <dd>
                     <a href="https://www.rfc-editor.org/info/rfc9728/"><cite>OAuth 2.0 受保护资源
-                            元数据</cite></a>. M.B. Jones; P. Hunt; A. Parecki. IETF. 2025 年 4 月. 拟议标准.
-                    URL: <a href="https://www.rfc-editor.org/info/rfc9728/">https://www.rfc-editor.org/info/rfc9728/</a>
+                            元数据</cite></a>。M.B. Jones; P. Hunt; A. Parecki。IETF。2025 年 4 月。拟议标准。
+                    URL：<a href="https://www.rfc-editor.org/info/rfc9728/">https://www.rfc-editor.org/info/rfc9728/</a>
                 </dd>
                 <dt id="bib-url">[URL]</dt>
                 <dd>
-                    <a href="https://url.spec.whatwg.org/"><cite>URL 标准</cite></a>. Anne van Kesteren. WHATWG.
+                    <a href="https://url.spec.whatwg.org/"><cite>URL 标准</cite></a>。Anne van Kesteren。WHATWG。
                     现行标准。URL：<a href="https://url.spec.whatwg.org/">https://url.spec.whatwg.org/</a>
                 </dd>
                 <dt id="bib-webarch">[WebArch]</dt>
                 <dd>
                     <a href="https://www.w3.org/TR/webarch/"><cite>万维网架构，第一
-                            卷</cite></a>. Ian Jacobs; Norman Walsh. W3C. 2004年12月15日。W3C 推荐标准。URL：<a
+                            卷</cite></a>。Ian Jacobs; Norman Walsh。W3C。2004 年 12 月 15 日。W3C 推荐标准。URL：<a
                         href="https://www.w3.org/TR/webarch/">https://www.w3.org/TR/webarch/</a>
                 </dd>
                 <dt id="bib-xmlschema11-2">[XMLSCHEMA11-2]</dt>
                 <dd>
                     <a href="https://www.w3.org/TR/xmlschema11-2/"><cite>W3C XML 模式定义语言（XSD）1.1
-                            第 2 部分：数据类型</cite></a>. David Peterson; Sandy Gao; Ashok Malhotra; Michael
-                    Sperberg-McQueen; Henry Thompson; Paul V. Biron 等。W3C. 2012年4月5日。W3C 推荐标准。URL：
+                            第 2 部分：数据类型</cite></a>。David Peterson; Sandy Gao; Ashok Malhotra; Michael
+                    Sperberg-McQueen; Henry Thompson; Paul V. Biron 等。W3C。2012 年 4 月 5 日。W3C 推荐标准。URL：
                     <a href="https://www.w3.org/TR/xmlschema11-2/">https://www.w3.org/TR/xmlschema11-2/</a>
                 </dd>
             </dl>
@@ -7596,54 +8010,54 @@ Content-Type: application/linkset+json
             </li>
             <li>
                 <a href="#ref-for-dfn-containers-21" title="§ 8.1 Container Representation">§ 8.1 Container
-                    Representation</a> <a href="#ref-for-dfn-containers-22" title="Reference 2">(2)</a>
+                    Representation</a>
             </li>
             <li>
-                <a href="#ref-for-dfn-containers-23" title="§ 8.1.1 Container Properties">§ 8.1.1 Container
-                    Properties</a> <a href="#ref-for-dfn-containers-24" title="Reference 2">(2)</a> <a
-                    href="#ref-for-dfn-containers-25" title="Reference 3">(3)</a> <a href="#ref-for-dfn-containers-26"
+                <a href="#ref-for-dfn-containers-22" title="§ 8.1.1 Container Properties">§ 8.1.1 Container
+                    Properties</a> <a href="#ref-for-dfn-containers-23" title="Reference 2">(2)</a> <a
+                    href="#ref-for-dfn-containers-24" title="Reference 3">(3)</a> <a href="#ref-for-dfn-containers-25"
                     title="Reference 4">(4)</a>
             </li>
             <li>
-                <a href="#ref-for-dfn-containers-27" title="§ 8.1.2 Contained Resource Description">§ 8.1.2 Contained
+                <a href="#ref-for-dfn-containers-26" title="§ 8.1.2 Contained Resource Description">§ 8.1.2 Contained
                     Resource Description</a>
             </li>
             <li>
-                <a href="#ref-for-dfn-containers-28" title="§ 8.1.3 Example Container Representation">§ 8.1.3 Example
+                <a href="#ref-for-dfn-containers-27" title="§ 8.1.3 Example Container Representation">§ 8.1.3 Example
                     Container Representation</a>
             </li>
             <li>
-                <a href="#ref-for-dfn-containers-29" title="§ 9. Operations">§ 9. Operations</a>
+                <a href="#ref-for-dfn-containers-28" title="§ 9. Operations">§ 9. Operations</a>
             </li>
             <li>
-                <a href="#ref-for-dfn-containers-30" title="§ 9.1 Metadata">§ 9.1 Metadata</a> <a
-                    href="#ref-for-dfn-containers-31" title="Reference 2">(2)</a> <a href="#ref-for-dfn-containers-32"
-                    title="Reference 3">(3)</a> <a href="#ref-for-dfn-containers-33" title="Reference 4">(4)</a>
+                <a href="#ref-for-dfn-containers-29" title="§ 9.1 Metadata">§ 9.1 Metadata</a> <a
+                    href="#ref-for-dfn-containers-30" title="Reference 2">(2)</a> <a href="#ref-for-dfn-containers-31"
+                    title="Reference 3">(3)</a> <a href="#ref-for-dfn-containers-32" title="Reference 4">(4)</a>
             </li>
             <li>
-                <a href="#ref-for-dfn-containers-34" title="§ 9.2 Create resource">§ 9.2 Create resource</a> <a
-                    href="#ref-for-dfn-containers-35" title="Reference 2">(2)</a> <a href="#ref-for-dfn-containers-36"
-                    title="Reference 3">(3)</a> <a href="#ref-for-dfn-containers-37" title="Reference 4">(4)</a> <a
-                    href="#ref-for-dfn-containers-38" title="Reference 5">(5)</a> <a href="#ref-for-dfn-containers-39"
-                    title="Reference 6">(6)</a> <a href="#ref-for-dfn-containers-40" title="Reference 7">(7)</a> <a
-                    href="#ref-for-dfn-containers-41" title="Reference 8">(8)</a> <a href="#ref-for-dfn-containers-42"
-                    title="Reference 9">(9)</a> <a href="#ref-for-dfn-containers-43" title="Reference 10">(10)</a> <a
-                    href="#ref-for-dfn-containers-44" title="Reference 11">(11)</a> <a href="#ref-for-dfn-containers-45"
-                    title="Reference 12">(12)</a> <a href="#ref-for-dfn-containers-46" title="Reference 13">(13)</a> <a
-                    href="#ref-for-dfn-containers-47" title="Reference 14">(14)</a> <a href="#ref-for-dfn-containers-48"
-                    title="Reference 15">(15)</a> <a href="#ref-for-dfn-containers-49" title="Reference 16">(16)</a> <a
-                    href="#ref-for-dfn-containers-50" title="Reference 17">(17)</a>
+                <a href="#ref-for-dfn-containers-33" title="§ 9.2 Create resource">§ 9.2 Create resource</a> <a
+                    href="#ref-for-dfn-containers-34" title="Reference 2">(2)</a> <a href="#ref-for-dfn-containers-35"
+                    title="Reference 3">(3)</a> <a href="#ref-for-dfn-containers-36" title="Reference 4">(4)</a> <a
+                    href="#ref-for-dfn-containers-37" title="Reference 5">(5)</a> <a href="#ref-for-dfn-containers-38"
+                    title="Reference 6">(6)</a> <a href="#ref-for-dfn-containers-39" title="Reference 7">(7)</a> <a
+                    href="#ref-for-dfn-containers-40" title="Reference 8">(8)</a> <a href="#ref-for-dfn-containers-41"
+                    title="Reference 9">(9)</a> <a href="#ref-for-dfn-containers-42" title="Reference 10">(10)</a> <a
+                    href="#ref-for-dfn-containers-43" title="Reference 11">(11)</a> <a href="#ref-for-dfn-containers-44"
+                    title="Reference 12">(12)</a> <a href="#ref-for-dfn-containers-45" title="Reference 13">(13)</a> <a
+                    href="#ref-for-dfn-containers-46" title="Reference 14">(14)</a> <a href="#ref-for-dfn-containers-47"
+                    title="Reference 15">(15)</a> <a href="#ref-for-dfn-containers-48" title="Reference 16">(16)</a> <a
+                    href="#ref-for-dfn-containers-49" title="Reference 17">(17)</a>
             </li>
             <li>
-                <a href="#ref-for-dfn-containers-51" title="§ 9.3 Read resource">§ 9.3 Read resource</a> <a
-                    href="#ref-for-dfn-containers-52" title="Reference 2">(2)</a> <a href="#ref-for-dfn-containers-53"
-                    title="Reference 3">(3)</a> <a href="#ref-for-dfn-containers-54" title="Reference 4">(4)</a> <a
-                    href="#ref-for-dfn-containers-55" title="Reference 5">(5)</a> <a href="#ref-for-dfn-containers-56"
-                    title="Reference 6">(6)</a> <a href="#ref-for-dfn-containers-57" title="Reference 7">(7)</a> <a
-                    href="#ref-for-dfn-containers-58" title="Reference 8">(8)</a> <a href="#ref-for-dfn-containers-59"
-                    title="Reference 9">(9)</a> <a href="#ref-for-dfn-containers-60" title="Reference 10">(10)</a> <a
-                    href="#ref-for-dfn-containers-61" title="Reference 11">(11)</a> <a href="#ref-for-dfn-containers-62"
-                    title="Reference 12">(12)</a>
+                <a href="#ref-for-dfn-containers-50" title="§ 9.3 Read resource">§ 9.3 Read resource</a> <a
+                    href="#ref-for-dfn-containers-51" title="Reference 2">(2)</a> <a href="#ref-for-dfn-containers-52"
+                    title="Reference 3">(3)</a> <a href="#ref-for-dfn-containers-53" title="Reference 4">(4)</a> <a
+                    href="#ref-for-dfn-containers-54" title="Reference 5">(5)</a> <a href="#ref-for-dfn-containers-55"
+                    title="Reference 6">(6)</a> <a href="#ref-for-dfn-containers-56" title="Reference 7">(7)</a> <a
+                    href="#ref-for-dfn-containers-57" title="Reference 8">(8)</a> <a href="#ref-for-dfn-containers-58"
+                    title="Reference 9">(9)</a> <a href="#ref-for-dfn-containers-59" title="Reference 10">(10)</a> <a
+                    href="#ref-for-dfn-containers-60" title="Reference 11">(11)</a> <a href="#ref-for-dfn-containers-61"
+                    title="Reference 12">(12)</a> <a href="#ref-for-dfn-containers-62" title="Reference 13">(13)</a>
             </li>
             <li>
                 <a href="#ref-for-dfn-containers-63" title="§ 9.5 Delete resource">§ 9.5 Delete resource</a> <a
@@ -7655,8 +8069,16 @@ Content-Type: application/linkset+json
                     title="Reference 9">(9)</a> <a href="#ref-for-dfn-containers-72" title="Reference 10">(10)</a>
             </li>
             <li>
-                <a href="#ref-for-dfn-containers-73" title="§ 12.1.2 Pagination">§ 12.1.2 Pagination</a> <a
+                <a href="#ref-for-dfn-containers-73" title="§ 12.1.1 LWS Profile">§ 12.1.1 LWS Profile</a> <a
                     href="#ref-for-dfn-containers-74" title="Reference 2">(2)</a>
+            </li>
+            <li>
+                <a href="#ref-for-dfn-containers-75" title="§ 12.1.2 Content Negotiation">§ 12.1.2 Content
+                    Negotiation</a>
+            </li>
+            <li>
+                <a href="#ref-for-dfn-containers-76" title="§ 12.1.3 Pagination">§ 12.1.3 Pagination</a> <a
+                    href="#ref-for-dfn-containers-77" title="Reference 2">(2)</a>
             </li>
         </ul>
     </div>
@@ -8406,9 +8828,32 @@ Content-Type: application/linkset+json
                 <a href="#ref-for-dfn-container-representation-4" title="§ 12.1 LWS Media Type">§ 12.1 LWS Media
                     Type</a>
             </li>
+        </ul>
+    </div>
+    <div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-lws-profile"
+        aria-label="Links in this document to definition: LWS profile">
+        <span class="caret"></span>
+        <div>
+            <a class="self-link" href="#dfn-lws-profile"
+                aria-label="Permalink for definition: LWS profile. Activate to close this dialog.">Permalink</a>
+
+
+        </div>
+        <p><b>Referenced in:</b></p>
+        <ul>
             <li>
-                <a href="#ref-for-dfn-container-representation-5" title="§ 12.1.1 Media Type Equivalence">§ 12.1.1 Media
-                    Type Equivalence</a> <a href="#ref-for-dfn-container-representation-6" title="Reference 2">(2)</a>
+                <a href="#ref-for-dfn-lws-profile-1" title="§ 8.1.3 Example Container Representation">§ 8.1.3 Example
+                    Container Representation</a>
+            </li>
+            <li>
+                <a href="#ref-for-dfn-lws-profile-2" title="§ 12.1.1 LWS Profile">§ 12.1.1 LWS Profile</a> <a
+                    href="#ref-for-dfn-lws-profile-3" title="Reference 2">(2)</a>
+            </li>
+            <li>
+                <a href="#ref-for-dfn-lws-profile-4" title="§ 12.1.2 Content Negotiation">§ 12.1.2 Content
+                    Negotiation</a> <a href="#ref-for-dfn-lws-profile-5" title="Reference 2">(2)</a> <a
+                    href="#ref-for-dfn-lws-profile-6" title="Reference 3">(3)</a> <a href="#ref-for-dfn-lws-profile-7"
+                    title="Reference 4">(4)</a>
             </li>
         </ul>
     </div>
