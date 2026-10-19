@@ -254,7 +254,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [MediaStreamTrack Insertable Media Processing using Streams](https://htmlspecs.com/mediacapture-transform/)（[Source](https://www.w3.org/TR/2026/WD-mediacapture-transform-20260416/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Autoplay Detection](https://htmlspecs.com/autoplay-detection/)（[Source](https://www.w3.org/TR/2025/WD-autoplay-detection-20250904/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [MediaStream Recording](https://htmlspecs.com/mediastream-recording/)（[Source](https://www.w3.org/TR/2026/WD-mediastream-recording-20260316/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
-- [Media Capabilities](https://htmlspecs.com/media-capabilities/)（[Source](https://www.w3.org/TR/2026/WD-media-capabilities-20260609/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Media Capabilities](https://htmlspecs.com/media-capabilities/)（[Source](https://www.w3.org/TR/2026/WD-media-capabilities-20261018/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [MediaStream Image Capture](https://htmlspecs.com/image-capture/)（[Source](https://www.w3.org/TR/2025/WD-image-capture-20250423/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Encrypted Media Extensions](https://htmlspecs.com/encrypted-media-2/)（[Source](https://www.w3.org/TR/2026/WD-encrypted-media-2-20261013/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Remote Playback](https://htmlspecs.com/remote-playback/)（[Source](https://www.w3.org/TR/2024/CRD-remote-playback-20240430/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）

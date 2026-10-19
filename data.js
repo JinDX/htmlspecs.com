@@ -1987,7 +1987,7 @@ const linkGroups = [
             {
                 text: "Media Capabilities",
                 href: "https://htmlspecs.com/media-capabilities/",
-                src: "https://www.w3.org/TR/2026/WD-media-capabilities-20260609/",
+                src: "https://www.w3.org/TR/2026/WD-media-capabilities-20261018/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
