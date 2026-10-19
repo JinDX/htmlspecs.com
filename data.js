@@ -5024,8 +5024,8 @@ const httpLinkGroups = [
             {
                 text: "The HTTP QUERY Method",
                 href: "https://htmlspecs.com/http/rfc10008.html",
-                src: "https://www.rfc-editor.org/rfc/rfc10008.html",
-                "last-modified": "-",
+                src: "https://httpwg.org/specs/rfc10008.html",
+                "last-modified": "6ad56ed2-16699",
                 lang: "cjk",
                 state: "RFC"
             },
