@@ -331,7 +331,6 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Element Timing API](https://htmlspecs.com/element-timing/)（[Source](https://w3c.github.io/element-timing/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [User Timing Level 2](https://htmlspecs.com/user-timing-2/)（[Source](https://www.w3.org/TR/2019/REC-user-timing-2-20190226/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [User Timing](https://htmlspecs.com/user-timing/)（[Source](https://www.w3.org/TR/2026/CRD-user-timing-20260311/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
-- [Long Tasks API](https://htmlspecs.com/longtasks-1/)（[Source](https://www.w3.org/TR/2026/WD-longtasks-1-20260319/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Long Animation Frames API](https://htmlspecs.com/long-animation-frames/)（[Source](https://www.w3.org/TR/2026/WD-long-animation-frames-20260428/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Server Timing](https://htmlspecs.com/server-timing/)（[Source](https://www.w3.org/TR/2026/WD-server-timing-20260407/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Paint Timing](https://htmlspecs.com/paint-timing/)（[Source](https://www.w3.org/TR/2026/WD-paint-timing-20261014/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
@@ -339,7 +338,6 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Event Timing API](https://htmlspecs.com/event-timing/)（[Source](https://www.w3.org/TR/2026/WD-event-timing-20261013/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Container Timing API](https://htmlspecs.com/container-timing/)（[Source](https://w3c.github.io/container-timing/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Performance measure memory](https://htmlspecs.com/performance-measure-memory/)（[Source](https://wicg.github.io/performance-measure-memory/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
-- [Device Memory API](https://htmlspecs.com/device-memory/)（[Source](https://www.w3.org/TR/2026/WD-device-memory-1-20260330/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Layout Instability API](https://htmlspecs.com/layout-instability/)（[Source](https://wicg.github.io/layout-instability/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 
 ### 调度、生命周期、预加载与报告
