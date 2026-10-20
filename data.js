@@ -211,7 +211,7 @@ const linkGroups = [
                 text: "Quirks Mode",
                 href: "https://htmlspecs.com/quirks/",
                 src: "https://quirks.spec.whatwg.org/",
-                "last-modified": "Wed, 30 Sep 2026 01:49:10 GMT",
+                "last-modified": "Mon, 19 Oct 2026 11:56:37 GMT",
                 lang: "cjk",
                 state: "LS"
             },
