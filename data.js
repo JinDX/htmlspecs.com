@@ -155,7 +155,7 @@ const linkGroups = [
                 text: "MIME Sniffing",
                 href: "https://htmlspecs.com/mimesniff/",
                 src: "https://mimesniff.spec.whatwg.org/",
-                "last-modified": "Fri, 17 Jul 2026 13:17:54 GMT",
+                "last-modified": "Mon, 19 Oct 2026 11:57:09 GMT",
                 lang: "cjk",
                 state: "LS"
             },
