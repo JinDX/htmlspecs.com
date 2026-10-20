@@ -3687,7 +3687,7 @@ const linkGroups = [
                 text: "Test Utils",
                 href: "https://htmlspecs.com/testutils/",
                 src: "https://testutils.spec.whatwg.org/",
-                "last-modified": "Sun, 15 Mar 2026 09:11:28 GMT",
+                "last-modified": "Mon, 19 Oct 2026 11:54:53 GMT",
                 lang: "cjk",
                 state: "LS"
             },
