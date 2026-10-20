@@ -1692,7 +1692,7 @@ const linkGroups = [
                 text: "Fullscreen",
                 href: "https://htmlspecs.com/fullscreen/",
                 src: "https://fullscreen.spec.whatwg.org/",
-                "last-modified": "Fri, 17 Jul 2026 13:21:50 GMT",
+                "last-modified": "Mon, 19 Oct 2026 12:02:41 GMT",
                 lang: "cjk",
                 state: "LS"
             },
