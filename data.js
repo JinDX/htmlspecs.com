@@ -963,7 +963,7 @@ const linkGroups = [
                 text: "WebSockets",
                 href: "https://htmlspecs.com/websockets/",
                 src: "https://websockets.spec.whatwg.org/",
-                "last-modified": "Sun, 15 Mar 2026 11:48:21 GMT",
+                "last-modified": "Mon, 19 Oct 2026 11:54:23 GMT",
                 lang: "cjk",
                 state: "LS"
             },
