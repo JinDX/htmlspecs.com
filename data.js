@@ -1177,7 +1177,7 @@ const linkGroups = [
                 text: "File System",
                 href: "https://htmlspecs.com/fs/",
                 src: "https://fs.spec.whatwg.org/",
-                "last-modified": "Thu, 08 Oct 2026 03:06:05 GMT",
+                "last-modified": "Mon, 19 Oct 2026 11:56:19 GMT",
                 lang: "cjk",
                 state: "LS"
             },
