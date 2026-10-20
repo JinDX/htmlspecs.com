@@ -947,7 +947,7 @@ const linkGroups = [
                 text: "Streams",
                 href: "https://htmlspecs.com/streams/",
                 src: "https://streams.spec.whatwg.org/",
-                "last-modified": "Tue, 18 Aug 2026 11:18:24 GMT",
+                "last-modified": "Mon, 19 Oct 2026 12:02:31 GMT",
                 lang: "cjk",
                 state: "LS"
             },
