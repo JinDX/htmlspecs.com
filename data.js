@@ -203,7 +203,7 @@ const linkGroups = [
                 text: "Compression",
                 href: "https://htmlspecs.com/compression/",
                 src: "https://compression.spec.whatwg.org/",
-                "last-modified": "Mon, 20 Apr 2026 07:59:17 GMT",
+                "last-modified": "Mon, 19 Oct 2026 12:03:57 GMT",
                 lang: "cjk",
                 state: "LS"
             },
