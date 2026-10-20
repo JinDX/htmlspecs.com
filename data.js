@@ -1153,7 +1153,7 @@ const linkGroups = [
                 text: "Storage",
                 href: "https://htmlspecs.com/storage/",
                 src: "https://storage.spec.whatwg.org/",
-                "last-modified": "Tue, 06 Oct 2026 06:36:43 GMT",
+                "last-modified": "Mon, 19 Oct 2026 12:03:39 GMT",
                 lang: "cjk",
                 state: "LS"
             },
