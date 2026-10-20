@@ -1122,7 +1122,7 @@ const linkGroups = [
                 text: "Notifications API",
                 href: "https://htmlspecs.com/notifications/",
                 src: "https://notifications.spec.whatwg.org/",
-                "last-modified": "Wed, 14 Oct 2026 06:58:17 GMT",
+                "last-modified": "Mon, 19 Oct 2026 11:57:39 GMT",
                 lang: "cjk",
                 state: "LS"
             },
