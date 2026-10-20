@@ -2565,14 +2565,6 @@ const linkGroups = [
                 state: "CRD"
             },
             {
-                text: "Long Tasks API",
-                href: "https://htmlspecs.com/longtasks-1/",
-                src: "https://www.w3.org/TR/2026/WD-longtasks-1-20260319/",
-                "last-modified": "-",
-                lang: "cjk",
-                state: "WD"
-            },
-            {
                 text: "Long Animation Frames API",
                 href: "https://htmlspecs.com/long-animation-frames/",
                 src: "https://www.w3.org/TR/2026/WD-long-animation-frames-20260428/",
@@ -2627,14 +2619,6 @@ const linkGroups = [
                 "last-modified": "Fri, 28 May 2021 11:50:10 GMT",
                 lang: "cjk",
                 state: "Draft"
-            },
-            {
-                text: "Device Memory API",
-                href: "https://htmlspecs.com/device-memory/",
-                src: "https://www.w3.org/TR/2026/WD-device-memory-1-20260330/",
-                "last-modified": "-",
-                lang: "cjk",
-                state: "WD"
             },
             {
                 text: "Layout Instability API",
