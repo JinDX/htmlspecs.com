@@ -2053,7 +2053,7 @@ const linkGroups = [
                 src: "https://www.w3.org/TR/2021/CR-ttml2-20210309/",
                 "last-modified": "-",
                 lang: "cjk",
-                state: "REC"
+                state: "CR"
             },
             {
                 text: "IMSC Text Profile 1.3",
