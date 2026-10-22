@@ -168,12 +168,12 @@ const linkGroups = [
                 state: "LS"
             },
             {
-                text: "Web User Agents",
-                href: "https://htmlspecs.com/web-user-agents/",
-                src: "https://www.w3.org/TR/2026/DNOTE-web-user-agents-20261008/",
+                text: "User Agents",
+                href: "https://htmlspecs.com/user-agents/",
+                src: "https://www.w3.org/TR/2026/NOTE-user-agents-20261022/",
                 "last-modified": "-",
                 lang: "cjk",
-                state: "DNOTE"
+                state: "NOTE"
             },
             {
                 text: "Compatibility",
