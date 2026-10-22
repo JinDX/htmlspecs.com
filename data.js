@@ -4505,7 +4505,7 @@ const cssLinkGroups = [
             {
                 text: "CSS Image Animation Module Level 1",
                 href: "https://htmlspecs.com/css/css-image-animation-1/",
-                src: "https://www.w3.org/TR/2026/WD-css-image-animation-1-20260409/",
+                src: "https://www.w3.org/TR/2026/WD-css-image-animation-1-20261021/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
