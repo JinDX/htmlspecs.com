@@ -3036,7 +3036,7 @@ const linkGroups = [
             {
                 text: "Verifiable Credentials Data Model v2.1",
                 href: "https://htmlspecs.com/vc-data-model-2.1/",
-                src: "https://www.w3.org/TR/2026/WD-vc-data-model-2.1-20260930/",
+                src: "https://www.w3.org/TR/2026/WD-vc-data-model-2.1-20261022/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
