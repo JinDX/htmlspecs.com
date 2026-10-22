@@ -1446,7 +1446,7 @@ const linkGroups = [
                 text: "Web Smart Card API",
                 href: "https://htmlspecs.com/web-smart-card/",
                 src: "https://wicg.github.io/web-smart-card/",
-                "last-modified": "Tue, 29 Sep 2026 20:35:06 GMT",
+                "last-modified": "Wed, 21 Oct 2026 22:11:47 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
