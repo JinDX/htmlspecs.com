@@ -3544,7 +3544,7 @@ const linkGroups = [
             {
                 text: "SVG Accessibility API Mappings",
                 href: "https://htmlspecs.com/svg-aam-1.0/",
-                src: "https://www.w3.org/TR/2026/WD-svg-aam-1.0-20261012/",
+                src: "https://www.w3.org/TR/2026/WD-svg-aam-1.0-20261021/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
