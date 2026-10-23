@@ -35,7 +35,7 @@ const linkGroups = [
                 text: "HTML",
                 href: "https://htmlspecs.com/",
                 src: "https://html.spec.whatwg.org/",
-                "last-modified": "Tue, 20 Oct 2026 12:58:41 GMT",
+                "last-modified": "Thu, 22 Oct 2026 21:25:47 GMT",
                 lang: "cjk",
                 state: "LS"
             },
