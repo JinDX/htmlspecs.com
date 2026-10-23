@@ -1021,7 +1021,7 @@
 
                 const img = document.createElement("img");
                 img.src = URL.createObjectURL(blob);
-                img.onload = () => window.URL.revokeObjectURL(this.src);
+                img.onload = () => window.URL.revokeObjectURL(img.src);
 
                 document.body.appendChild(img);
               }
@@ -2287,7 +2287,7 @@
                         <ol>
                             <li>
                                 令 |ndef| 为运行 <a>create NDEF record</a>（给定 |record:NDEFRecordInit|、|context| 和
-                                |recordsDepth|）的结果，或确保底层平台为 |ndef| 提供等效值。若算法抛出异常 |e|，则以 |e| 拒绝 |promise| 并中止这些步骤。
+                                |recordsDepth|）的结果，或确保底层平台为 |ndef| 提供等效值。若算法抛出异常 |e|，则重新抛出 |e|。
                             </li>
                             <li>
                                 将 |ndef| 添加到 |output|。
@@ -2295,8 +2295,8 @@
                         </ol>
                     </li>
                     <li>
-                        若运行 <a>check created records</a>（给定 |output| 和 |context|）抛出 |error: Error|，则以 |error| 拒绝
-                        |promise| 并中止这些步骤。
+                        若运行 <a>check created records</a>（给定 |output| 和 |context|）抛出 |error: Error|，则将 |error|
+                        重新抛出。
                     </li>
                     <li>
                         返回 |output|。
@@ -2359,7 +2359,7 @@
                         </li>
                         <li>
                             按 |record| 的 <a>recordType</a> 分支，使用 |record|、|ndef|、|context| 和 |recordsDepth|
-                            调用下面指定的算法并返回结果。若抛出异常 |e|，则以 |e| 拒绝 |promise| 并中止这些步骤。
+                            调用下面指定的算法并返回结果。若抛出异常 |e|，则重新抛出 |e|。
                             <dl>
                                 <dt>"`empty`"</dt>
                                 <ul>
@@ -2403,23 +2403,23 @@
                             若 |record| 的 <a>recordType</a> 以冒号 `U+003A` (`:`) 开头：
                             <ul>
                                 <li>
-                                    若 |context| 为 `""`（即 |record| 不是另一个 <a>NDEF record</a> 的有效载荷），则以 {{TypeError}} 拒绝
-                                    |promise| 并中止这些步骤。
+                                    若 |context| 为 `""`（即 |record| 不是另一个 <a>NDEF record</a> 的有效载荷），则抛出 {{TypeError}}
+                                    异常。
                                 </li>
                                 <li>
-                                    若对 |record| 的 <a>recordType</a> 运行 <a>validate local type</a> 步骤返回 false，则以
-                                    {{TypeError}} 拒绝 |promise| 并中止这些步骤。
+                                    若对 |record| 的 <a>recordType</a> 运行 <a>validate local type</a> 步骤返回 false，则
+                                    抛出 {{TypeError}} 异常。
                                 </li>
                                 <li>
                                     返回运行 <a>map local type to NDEF</a>（给定 |record|、|ndef|、|context| 和
-                                    |recordsDepth|）的结果。若抛出异常 |e|，则以 |e| 拒绝 |promise| 并中止这些步骤。
+                                    |recordsDepth|）的结果。若抛出异常 |e|，则重新抛出 |e|。
                                 </li>
                             </ul>
                         </li>
                         <li>
                             若对 |record| 的 <a>recordType</a> 运行 <a>validate external type</a> 返回 true，则返回 <a>map external
-                                data to NDEF</a>（给定 |record|、|ndef|、|context| 和 |recordsDepth|）的结果。若抛出异常 |e|，则以 |e| 拒绝
-                            |promise| 并中止这些步骤。
+                                data to NDEF</a>（给定 |record|、|ndef|、|context| 和 |recordsDepth|）的结果。若抛出异常 |e|，则将 |e|
+                            重新抛出。
                         </li>
                         <li>
                             否则，[= exception/throw =] 一个 {{TypeError}} 并中止这些步骤。
@@ -3593,8 +3593,8 @@
                 </div>
                 <aside class="note" data-link-for="NDEFRecord">
                     <p>
-                        Unicode 标准定义了多种编码，如 UTF-8、UTF-16 和 UTF-32。UTF-8 是 Web 上的首选编码，它的优点是与端序无关，因为 [=code points=]
-                        以单个字节表示。
+                        Unicode 标准定义了多种编码，如 UTF-8、UTF-16 和 UTF-32。UTF-8 是 Web 上的首选编码，它的优点是与端序无关，因为文本以单字节码元编码，而 [=code points=]
+                        由 1～4 个字节的序列表示。
                     </p>
                     <p>
                         NDEF 文本记录允许文本以 UTF-8 或 UTF-16 编码。一般而言，Web 上更推荐使用 UTF-8，但与现有系统集成时可能需要 UTF-16。
@@ -3603,7 +3603,7 @@
                         数据传输顺序以及 NDEF 的字节顺序在 [[[NFC-NDEF]]] 中定义为大端（BE），这意味着所有内容都以大端字节序读回。
                     </p>
                     <p>
-                        对于 UTF-16，字节序很重要，因为每个 [=code point=] 占用两个字节，在读写之间可能不同。因此，UTF-16 编码的文本通常包含一个字节序标记（BOM），写作
+                        对于 UTF-16，字节序很重要，因为每个 [=code point=] 由一个或两个 2 字节码元表示，在读写之间可能不同。因此，UTF-16 编码的文本通常包含一个字节序标记（BOM），写作
                         `0xFEFF`。这意味着如果主机与 NDEF 的字节序不同，则将读回为 `0xFFFE`，表明应交换字节序。[[[ENCODING]]] 根据字节序区分 UTF-16 为
                         UTF-16BE（大端）和 UTF-16LE（小端）。
                     </p>
