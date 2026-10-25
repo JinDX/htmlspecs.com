@@ -2027,7 +2027,7 @@ const linkGroups = [
             {
                 text: "Open Screen Network Protocol",
                 href: "https://htmlspecs.com/openscreen-network/",
-                src: "https://www.w3.org/TR/2026/WD-openscreen-network-20260210/",
+                src: "https://www.w3.org/TR/2026/WD-openscreen-network-20261024/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
