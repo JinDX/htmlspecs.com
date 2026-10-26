@@ -51,7 +51,7 @@ const linkGroups = [
                 text: "ECMAScript® 2027 Language Specification",
                 href: "https://ecma262.com/",
                 src: "https://tc39.es/ecma262/",
-                "last-modified": "Fri, 23 Oct 2026 17:27:29 GMT",
+                "last-modified": "Sun, 25 Oct 2026 23:47:08 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
@@ -639,7 +639,7 @@ const linkGroups = [
             {
                 text: "RDF 1.2 XML Syntax",
                 href: "https://htmlspecs.com/rdf12-xml/",
-                src: "https://www.w3.org/TR/2026/WD-rdf12-xml-20261009/",
+                src: "https://www.w3.org/TR/2026/WD-rdf12-xml-20261025/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
@@ -647,7 +647,7 @@ const linkGroups = [
             {
                 text: "SPARQL 1.2 Query Language",
                 href: "https://htmlspecs.com/sparql12-query/",
-                src: "https://www.w3.org/TR/2026/WD-sparql12-query-20261011/",
+                src: "https://www.w3.org/TR/2026/WD-sparql12-query-20261025/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
@@ -663,7 +663,7 @@ const linkGroups = [
             {
                 text: "SHACL 1.2 Core",
                 href: "https://htmlspecs.com/shacl12-core/",
-                src: "https://www.w3.org/TR/2026/WD-shacl12-core-20261014/",
+                src: "https://www.w3.org/TR/2026/WD-shacl12-core-20261025/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
@@ -845,7 +845,7 @@ const linkGroups = [
                 text: "Manifest Incubations",
                 href: "https://htmlspecs.com/manifest-incubations/",
                 src: "https://wicg.github.io/manifest-incubations/",
-                "last-modified": "Tue, 04 Aug 2026 23:51:11 GMT",
+                "last-modified": "Sun, 25 Oct 2026 22:57:57 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
@@ -947,7 +947,7 @@ const linkGroups = [
                 text: "Streams",
                 href: "https://htmlspecs.com/streams/",
                 src: "https://streams.spec.whatwg.org/",
-                "last-modified": "Mon, 19 Oct 2026 12:02:31 GMT",
+                "last-modified": "Sun, 25 Oct 2026 14:00:25 GMT",
                 lang: "cjk",
                 state: "LS"
             },
@@ -1241,7 +1241,7 @@ const linkGroups = [
                 text: "Cross-Origin Storage",
                 href: "https://htmlspecs.com/cross-origin-storage/",
                 src: "https://wicg.github.io/cross-origin-storage/",
-                "last-modified": "Sun, 25 Oct 2026 10:01:09 GMT",
+                "last-modified": "Sun, 25 Oct 2026 17:37:21 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
@@ -3020,7 +3020,7 @@ const linkGroups = [
             {
                 text: "Decentralized Identifier Resolution (DID Resolution) v1",
                 href: "https://htmlspecs.com/did-resolution/",
-                src: "https://www.w3.org/TR/2026/CRD-did-resolution-1.0-20261024/",
+                src: "https://www.w3.org/TR/2026/CRD-did-resolution-1.0-20261025/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "CRD"
