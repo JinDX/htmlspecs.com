@@ -736,7 +736,7 @@ const linkGroups = [
                 text: "OpenAPI Specification v3.2.1",
                 href: "https://htmlspecs.com/openapi/",
                 src: "https://spec.openapis.org/oas/latest.html",
-                "last-modified": "Thu, 22 Oct 2026 09:20:16 GMT",
+                "last-modified": "Mon, 26 Oct 2026 09:50:02 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
@@ -1003,7 +1003,7 @@ const linkGroups = [
                 text: "User-Agent Client Hints",
                 href: "https://htmlspecs.com/ua-client-hints/",
                 src: "https://wicg.github.io/ua-client-hints/",
-                "last-modified": "Tue, 06 Oct 2026 14:39:27 GMT",
+                "last-modified": "Mon, 26 Oct 2026 09:44:24 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
@@ -1241,7 +1241,7 @@ const linkGroups = [
                 text: "Cross-Origin Storage",
                 href: "https://htmlspecs.com/cross-origin-storage/",
                 src: "https://wicg.github.io/cross-origin-storage/",
-                "last-modified": "Sun, 25 Oct 2026 17:37:21 GMT",
+                "last-modified": "Mon, 26 Oct 2026 08:55:45 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
@@ -1485,7 +1485,7 @@ const linkGroups = [
             {
                 text: "Device Orientation and Motion",
                 href: "https://htmlspecs.com/orientation-event/",
-                src: "https://www.w3.org/TR/2025/CRD-orientation-event-20250212/",
+                src: "https://www.w3.org/TR/2026/CRD-orientation-event-20261026/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "CRD"
@@ -1509,7 +1509,7 @@ const linkGroups = [
             {
                 text: "Device Posture API",
                 href: "https://htmlspecs.com/device-posture/",
-                src: "https://www.w3.org/TR/2026/CRD-device-posture-20260520/",
+                src: "https://www.w3.org/TR/2026/CRD-device-posture-20261026/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "CRD"
@@ -1517,7 +1517,7 @@ const linkGroups = [
             {
                 text: "Ambient Light Sensor",
                 href: "https://htmlspecs.com/ambient-light/",
-                src: "https://www.w3.org/TR/2026/WD-ambient-light-20260514/",
+                src: "https://www.w3.org/TR/2026/WD-ambient-light-20261026/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
@@ -1699,7 +1699,7 @@ const linkGroups = [
             {
                 text: "Contact Picker API",
                 href: "https://htmlspecs.com/contact-picker/",
-                src: "https://www.w3.org/TR/2024/WD-contact-picker-20240708/",
+                src: "https://www.w3.org/TR/2026/WD-contact-picker-20261026/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
@@ -2487,7 +2487,7 @@ const linkGroups = [
             {
                 text: "Compute Pressure API",
                 href: "https://htmlspecs.com/compute-pressure/",
-                src: "https://www.w3.org/TR/2026/CRD-compute-pressure-20260514/",
+                src: "https://www.w3.org/TR/2026/CRD-compute-pressure-20261026/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "CRD"
@@ -3242,7 +3242,7 @@ const linkGroups = [
             {
                 text: "Permissions",
                 href: "https://htmlspecs.com/permissions/",
-                src: "https://www.w3.org/TR/2025/WD-permissions-20251006/",
+                src: "https://www.w3.org/TR/2026/WD-permissions-20261026/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"

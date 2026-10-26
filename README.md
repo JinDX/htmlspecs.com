@@ -187,11 +187,11 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Web Bluetooth API](https://htmlspecs.com/bluetooth/)（[Source](https://bluetooth.spec.whatwg.org/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Web NFC API](https://htmlspecs.com/web-nfc/)（[Source](https://w3c-cg.github.io/web-nfc/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Geolocation API](https://htmlspecs.com/geolocation/)（[Source](https://www.w3.org/TR/2026/CR-geolocation-20260326/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
-- [Device Orientation and Motion](https://htmlspecs.com/orientation-event/)（[Source](https://www.w3.org/TR/2025/CRD-orientation-event-20250212/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
+- [Device Orientation and Motion](https://htmlspecs.com/orientation-event/)（[Source](https://www.w3.org/TR/2026/CRD-orientation-event-20261026/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [Motion Sensors Explainer](https://htmlspecs.com/motion-sensors/)（[Source](https://www.w3.org/TR/2017/NOTE-motion-sensors-20170830/) ![Note](https://img.shields.io/badge/NOTE-309c40)）
 - [Orientation Sensor](https://htmlspecs.com/orientation-sensor/)（[Source](https://www.w3.org/TR/2026/WD-orientation-sensor-20260514/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
-- [Device Posture API](https://htmlspecs.com/device-posture/)（[Source](https://www.w3.org/TR/2026/CRD-device-posture-20260520/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
-- [Ambient Light Sensor](https://htmlspecs.com/ambient-light/)（[Source](https://www.w3.org/TR/2026/WD-ambient-light-20260514/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Device Posture API](https://htmlspecs.com/device-posture/)（[Source](https://www.w3.org/TR/2026/CRD-device-posture-20261026/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
+- [Ambient Light Sensor](https://htmlspecs.com/ambient-light/)（[Source](https://www.w3.org/TR/2026/WD-ambient-light-20261026/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Proximity Sensor](https://htmlspecs.com/proximity/)（[Source](https://www.w3.org/TR/2026/WD-proximity-20260514/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Generic Sensor API](https://htmlspecs.com/generic-sensor/)（[Source](https://www.w3.org/TR/2026/CRD-generic-sensor-20260514/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [Battery Status API](https://htmlspecs.com/battery-status/)（[Source](https://www.w3.org/TR/2024/WD-battery-status-20241024/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
@@ -216,7 +216,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Idle Detection API](https://htmlspecs.com/idle-detection/)（[Source](https://wicg.github.io/idle-detection/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [EyeDropper API](https://htmlspecs.com/eyedropper-api/)（[Source](https://wicg.github.io/eyedropper-api/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Fullscreen](https://htmlspecs.com/fullscreen/)（[Source](https://fullscreen.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
-- [Contact Picker API](https://htmlspecs.com/contact-picker/)（[Source](https://www.w3.org/TR/2024/WD-contact-picker-20240708/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Contact Picker API](https://htmlspecs.com/contact-picker/)（[Source](https://www.w3.org/TR/2026/WD-contact-picker-20261026/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Window Controls Overlay](https://htmlspecs.com/window-controls-overlay/)（[Source](https://wicg.github.io/window-controls-overlay/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Window Management](https://htmlspecs.com/window-management/)（[Source](https://www.w3.org/TR/2026/WD-window-management-20260908/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Web Printing API](https://htmlspecs.com/web-printing/)（[Source](https://wicg.github.io/web-printing/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
@@ -321,7 +321,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [CPU Performance API](https://htmlspecs.com/cpu-performance/)（[Source](https://wicg.github.io/cpu-performance/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [JS Self-Profiling API](https://htmlspecs.com/js-self-profiling/)（[Source](https://wicg.github.io/js-self-profiling/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Timing Entry Names Registry](https://htmlspecs.com/timing-entrytypes-registry/)（[Source](https://www.w3.org/TR/2019/WD-timing-entrytypes-registry-20190723/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
-- [Compute Pressure API](https://htmlspecs.com/compute-pressure/)（[Source](https://www.w3.org/TR/2026/CRD-compute-pressure-20260514/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
+- [Compute Pressure API](https://htmlspecs.com/compute-pressure/)（[Source](https://www.w3.org/TR/2026/CRD-compute-pressure-20261026/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [High Resolution Time](https://htmlspecs.com/hr-time-3/)（[Source](https://www.w3.org/TR/2026/WD-hr-time-3-20260901/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Intersection Observer](https://htmlspecs.com/intersection-observer/)（[Source](https://www.w3.org/TR/2023/WD-intersection-observer-20231018/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Resize Observer](https://htmlspecs.com/resize-observer/)（[Source](https://www.w3.org/TR/2020/WD-resize-observer-1-20200211/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
@@ -419,7 +419,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [OAuth 2.0 Dynamic Client Registration Protocol](https://htmlspecs.com/oauth2-dyn-reg/)（[Source](https://www.rfc-editor.org/rfc/rfc7591.html) ![RFC](https://img.shields.io/badge/RFC-0057B8)）
 
 ### 隐私、权限与反跟踪
-- [Permissions](https://htmlspecs.com/permissions/)（[Source](https://www.w3.org/TR/2025/WD-permissions-20251006/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Permissions](https://htmlspecs.com/permissions/)（[Source](https://www.w3.org/TR/2026/WD-permissions-20261026/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Requesting Permissions](https://htmlspecs.com/permissions-request/)（[Source](https://wicg.github.io/permissions-request/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [The HTML Permission Elements](https://htmlspecs.com/permission-elements/)（[Source](https://wicg.github.io/PEPC/permission-elements.html) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Self-Review Questionnaire: Security and Privacy](https://htmlspecs.com/security-privacy-questionnaire/)（[Source](https://www.w3.org/TR/2025/NOTE-security-privacy-questionnaire-20250418/) ![Note](https://img.shields.io/badge/NOTE-309c40)）
