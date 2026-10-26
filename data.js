@@ -131,7 +131,7 @@ const linkGroups = [
                 text: "URL Pattern",
                 href: "https://htmlspecs.com/urlpattern/",
                 src: "https://urlpattern.spec.whatwg.org/",
-                "last-modified": "Mon, 19 Oct 2026 12:04:34 GMT",
+                "last-modified": "Mon, 26 Oct 2026 06:37:13 GMT",
                 lang: "cjk",
                 state: "LS"
             },
