@@ -813,7 +813,7 @@ const linkGroups = [
             {
                 text: "MathML4",
                 href: "https://htmlspecs.com/mathml4/",
-                src: "https://www.w3.org/TR/2026/WD-mathml4-20261026/",
+                src: "https://www.w3.org/TR/2026/WD-mathml4-20261027/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
@@ -2425,7 +2425,7 @@ const linkGroups = [
                 text: "Prompt API",
                 href: "https://htmlspecs.com/prompt-api/",
                 src: "https://webmachinelearning.github.io/prompt-api/",
-                "last-modified": "Fri, 16 Oct 2026 20:40:03 GMT",
+                "last-modified": "Tue, 27 Oct 2026 05:39:14 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
