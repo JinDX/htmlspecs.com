@@ -1427,12 +1427,12 @@ const linkGroups = [
                 state: "LS"
             },
             {
-                text: "WebHID API",
+                text: "WebHID Standard",
                 href: "https://htmlspecs.com/hid/",
                 src: "https://hid.spec.whatwg.org/",
-                "last-modified": "Tue, 15 Sep 2026 19:07:03 GMT",
+                "last-modified": "Mon, 26 Oct 2026 16:22:28 GMT",
                 lang: "cjk",
-                state: "Draft"
+                state: "LS"
             },
             {
                 text: "WebUSB API",
@@ -3291,7 +3291,7 @@ const linkGroups = [
                 text: "Capability Delegation",
                 href: "https://htmlspecs.com/capability-delegation/",
                 src: "https://wicg.github.io/capability-delegation/spec.html",
-                "last-modified": "Fri, 16 Oct 2026 18:01:15 GMT",
+                "last-modified": "Mon, 26 Oct 2026 23:33:13 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
