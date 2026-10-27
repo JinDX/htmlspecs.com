@@ -3958,7 +3958,7 @@ const cssLinkGroups = [
             {
                 text: "CSS Color Module Level 5",
                 href: "https://htmlspecs.com/css/css-color-5/",
-                src: "https://www.w3.org/TR/2026/WD-css-color-5-20260913/",
+                src: "https://www.w3.org/TR/2026/WD-css-color-5-20261026/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
