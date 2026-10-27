@@ -3020,7 +3020,7 @@ const linkGroups = [
             {
                 text: "Decentralized Identifier Resolution (DID Resolution) v1",
                 href: "https://htmlspecs.com/did-resolution/",
-                src: "https://www.w3.org/TR/2026/CRD-did-resolution-1.0-20261025/",
+                src: "https://www.w3.org/TR/2026/CRD-did-resolution-1.0-20261026/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "CRD"
