@@ -90,7 +90,7 @@ const linkGroups = [
             {
                 text: "WebAssembly JavaScript Interface",
                 href: "https://htmlspecs.com/wasm-js-api-2/",
-                src: "https://www.w3.org/TR/2026/CRD-wasm-js-api-2-20261023/",
+                src: "https://www.w3.org/TR/2026/CRD-wasm-js-api-2-20261027/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "CRD"
@@ -98,7 +98,7 @@ const linkGroups = [
             {
                 text: "WebAssembly Web API",
                 href: "https://htmlspecs.com/wasm-web-api-2/",
-                src: "https://www.w3.org/TR/2026/CRD-wasm-web-api-2-20261023/",
+                src: "https://www.w3.org/TR/2026/CRD-wasm-web-api-2-20261027/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "CRD"
@@ -736,7 +736,7 @@ const linkGroups = [
                 text: "OpenAPI Specification v3.2.1",
                 href: "https://htmlspecs.com/openapi/",
                 src: "https://spec.openapis.org/oas/latest.html",
-                "last-modified": "Mon, 26 Oct 2026 09:50:02 GMT",
+                "last-modified": "Tue, 27 Oct 2026 09:52:38 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
@@ -1241,7 +1241,7 @@ const linkGroups = [
                 text: "Cross-Origin Storage",
                 href: "https://htmlspecs.com/cross-origin-storage/",
                 src: "https://wicg.github.io/cross-origin-storage/",
-                "last-modified": "Mon, 26 Oct 2026 08:55:45 GMT",
+                "last-modified": "Tue, 27 Oct 2026 14:28:05 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
@@ -1430,7 +1430,7 @@ const linkGroups = [
                 text: "WebHID Standard",
                 href: "https://htmlspecs.com/hid/",
                 src: "https://hid.spec.whatwg.org/",
-                "last-modified": "Mon, 26 Oct 2026 16:22:28 GMT",
+                "last-modified": "Tue, 27 Oct 2026 15:32:34 GMT",
                 lang: "cjk",
                 state: "LS"
             },
@@ -1773,7 +1773,7 @@ const linkGroups = [
                 text: "Web Speech API",
                 href: "https://htmlspecs.com/web-speech-api/",
                 src: "https://webaudio.github.io/web-speech-api/",
-                "last-modified": "Mon, 26 Oct 2026 06:50:42 GMT",
+                "last-modified": "Tue, 27 Oct 2026 13:36:24 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
@@ -2401,7 +2401,7 @@ const linkGroups = [
                 text: "WebMCP",
                 href: "https://htmlspecs.com/webmcp/",
                 src: "https://webmachinelearning.github.io/webmcp/",
-                "last-modified": "Tue, 20 Oct 2026 14:58:54 GMT",
+                "last-modified": "Tue, 27 Oct 2026 11:43:25 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
@@ -2757,7 +2757,7 @@ const linkGroups = [
             {
                 text: "Content Security Policy Level 3",
                 href: "https://htmlspecs.com/CSP3/",
-                src: "https://www.w3.org/TR/2026/WD-CSP3-20260916/",
+                src: "https://www.w3.org/TR/2026/WD-CSP3-20261027/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
@@ -3291,7 +3291,7 @@ const linkGroups = [
                 text: "Capability Delegation",
                 href: "https://htmlspecs.com/capability-delegation/",
                 src: "https://wicg.github.io/capability-delegation/spec.html",
-                "last-modified": "Mon, 26 Oct 2026 23:33:13 GMT",
+                "last-modified": "Tue, 27 Oct 2026 16:42:50 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
@@ -3639,7 +3639,7 @@ const linkGroups = [
             {
                 text: "EPUB 3.4",
                 href: "https://htmlspecs.com/epub-34/",
-                src: "https://www.w3.org/TR/2026/CRD-epub-34-20261022/",
+                src: "https://www.w3.org/TR/2026/CRD-epub-34-20261027/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "CRD"
@@ -3950,7 +3950,7 @@ const cssLinkGroups = [
             {
                 text: "CSS Color Module Level 4",
                 href: "https://htmlspecs.com/css/css-color-4/",
-                src: "https://www.w3.org/TR/2026/CRD-css-color-4-20261026/",
+                src: "https://www.w3.org/TR/2026/CRD-css-color-4-20261027/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "CRD"
