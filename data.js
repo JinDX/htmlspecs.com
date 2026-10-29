@@ -2003,7 +2003,7 @@ const linkGroups = [
             {
                 text: "Encrypted Media Extensions",
                 href: "https://htmlspecs.com/encrypted-media-2/",
-                src: "https://www.w3.org/TR/2026/WD-encrypted-media-2-20261013/",
+                src: "https://www.w3.org/TR/2026/WD-encrypted-media-2-20261028/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
