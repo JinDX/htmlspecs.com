@@ -79,14 +79,14 @@ const linkGroups = [
             //     lang: "cjk",
             //     state: "Draft"
             // },
-            // {
-            //     text: "WebAssembly Core Specification",
-            //     href: "https://htmlspecs.com/wasm-core-2",
-            //     src: "https://www.w3.org/TR/2026/CRD-wasm-core-2-20260527/",
-            //     "last-modified": "-",
-            //     lang: "cjk",
-            //     state: "CRD"
-            // },
+            {
+                text: "WebAssembly Core Specification",
+                href: "https://htmlspecs.com/wasm-core-2",
+                src: "https://www.w3.org/TR/2026/CRD-wasm-core-2-20261028/",
+                "last-modified": "-",
+                lang: "cjk",
+                state: "CRD"
+            },
             {
                 text: "WebAssembly JavaScript Interface",
                 href: "https://htmlspecs.com/wasm-js-api-2/",
