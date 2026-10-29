@@ -179,7 +179,7 @@ const linkGroups = [
                 text: "Compatibility",
                 href: "https://htmlspecs.com/compat/",
                 src: "https://compat.spec.whatwg.org/",
-                "last-modified": "Mon, 19 Oct 2026 12:00:58 GMT",
+                "last-modified": "Wed, 28 Oct 2026 09:56:36 GMT",
                 lang: "cjk",
                 state: "LS"
             },
