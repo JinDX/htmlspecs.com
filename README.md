@@ -143,7 +143,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Badging API](https://htmlspecs.com/badging/)（[Source](https://www.w3.org/TR/2026/WD-badging-20260427/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 
 ### 存储、文件与数据访问
-- [Indexed Database API 3.0](https://htmlspecs.com/IndexedDB/)（[Source](https://www.w3.org/TR/2025/WD-IndexedDB-3-20250813/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Indexed Database API 3.0](https://htmlspecs.com/IndexedDB/)（[Source](https://www.w3.org/TR/2026/WD-IndexedDB-3-20261029/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Storage](https://htmlspecs.com/storage/)（[Source](https://storage.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [Storage Buckets](https://htmlspecs.com/storage-buckets/)（[Source](https://wicg.github.io/storage-buckets/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [File API](https://htmlspecs.com/FileAPI/)（[Source](https://www.w3.org/TR/2026/WD-FileAPI-20260912/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
@@ -292,9 +292,9 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [WebGL 2.0 Specification](https://htmlspecs.com/webgl2/)（[Source](https://registry.khronos.org/webgl/specs/latest/2.0/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Scalable Vector Graphics (SVG) 2](https://htmlspecs.com/SVG2/)（[Source](https://www.w3.org/TR/2026/CR-SVG2-20261006/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
 - [Scroll-driven Animations](https://htmlspecs.com/scroll-animations-1/)（[Source](https://www.w3.org/TR/2023/WD-scroll-animations-1-20230606/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
-- [WebXR Device API](https://htmlspecs.com/webxr/)（[Source](https://www.w3.org/TR/2026/CRD-webxr-20260609/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
+- [WebXR Device API](https://htmlspecs.com/webxr/)（[Source](https://www.w3.org/TR/2026/CRD-webxr-20261029/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [WebXR Augmented Reality Module - Level 1](https://htmlspecs.com/webxr-ar-module-1/)（[Source](https://www.w3.org/TR/2025/CRD-webxr-ar-module-1-20250425/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
-- [WebXR Hand Input Module - Level 1](https://htmlspecs.com/webxr-hand-input-1/)（[Source](https://www.w3.org/TR/2024/WD-webxr-hand-input-1-20240605/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [WebXR Hand Input Module - Level 1](https://htmlspecs.com/webxr-hand-input-1/)（[Source](https://www.w3.org/TR/2026/WD-webxr-hand-input-1-20261029/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [WebXR Gamepads Module - Level 1](https://htmlspecs.com/webxr-gamepads-module-1/)（[Source](https://www.w3.org/TR/2025/WD-webxr-gamepads-module-1-20250707/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [WebXR Hit Test Module](https://htmlspecs.com/webxr-hit-test-1/)（[Source](https://www.w3.org/TR/2025/WD-webxr-hit-test-1-20251211/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [WebXR Plane Detection Module](https://htmlspecs.com/webxr-plane-detection/)（[Source](https://immersive-web.github.io/plane-detection/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
@@ -388,7 +388,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Credential Management Level 1](https://htmlspecs.com/credential-management-1/)（[Source](https://www.w3.org/TR/2026/WD-credential-management-1-20260903/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Federated Credential Management API (FedCM)](https://htmlspecs.com/fedcm/)（[Source](https://www.w3.org/TR/2024/WD-fedcm-1-20240820/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Email Verification API](https://htmlspecs.com/email-verification/)（[Source](https://wicg.github.io/email-verification/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
-- [Digital Credentials](https://htmlspecs.com/digital-credentials/)（[Source](https://www.w3.org/TR/2026/WD-digital-credentials-20261020/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Digital Credentials](https://htmlspecs.com/digital-credentials/)（[Source](https://www.w3.org/TR/2026/WD-digital-credentials-20261029/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Decentralized Identifiers (DIDs) v1.1](https://htmlspecs.com/did-1.1/)（[Source](https://www.w3.org/TR/2026/CR-did-1.1-20260305/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
 - [Decentralized Identifier Resolution (DID Resolution) v1](https://htmlspecs.com/did-resolution/)（[Source](https://www.w3.org/TR/2026/CRD-did-resolution-1.0-20261026/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [Verifiable Credentials Data Model v2.0](https://htmlspecs.com/vc-data-model-2.0/)（[Source](https://www.w3.org/TR/2025/REC-vc-data-model-2.0-20250515/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
@@ -515,8 +515,8 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 
 ### 颜色、背景、边框与视觉效果
 - [CSS Color Module Level 3](https://htmlspecs.com/css/css-color-3/)（[Source](https://www.w3.org/TR/2022/REC-css-color-3-20220118/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
-- [CSS Color Module Level 4](https://htmlspecs.com/css/css-color-4/)（[Source](https://www.w3.org/TR/2026/CRD-css-color-4-20261027/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
-- [CSS Color Module Level 5](https://htmlspecs.com/css/css-color-5/)（[Source](https://www.w3.org/TR/2026/WD-css-color-5-20261026/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [CSS Color Module Level 4](https://htmlspecs.com/css/css-color-4/)（[Source](https://www.w3.org/TR/2026/CRD-css-color-4-20261029/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
+- [CSS Color Module Level 5](https://htmlspecs.com/css/css-color-5/)（[Source](https://www.w3.org/TR/2026/WD-css-color-5-20261029/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Color Adjustment Module Level 1](https://htmlspecs.com/css/css-color-adjust-1/)（[Source](https://www.w3.org/TR/2025/CR-css-color-adjust-1-20251216/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
 - [CSS Color HDR Module Level 1](https://htmlspecs.com/css/css-color-hdr-1/)（[Source](https://www.w3.org/TR/2026/WD-css-color-hdr-1-20261026/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Filter Effects Module Level 1](https://htmlspecs.com/css/filter-effects-1/)（[Source](https://www.w3.org/TR/2018/WD-filter-effects-1-20181218/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
