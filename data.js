@@ -139,7 +139,7 @@ const linkGroups = [
                 text: "Web IDL",
                 href: "https://htmlspecs.com/webidl/",
                 src: "https://webidl.spec.whatwg.org/",
-                "last-modified": "Mon, 26 Oct 2026 11:52:58 GMT",
+                "last-modified": "Thu, 29 Oct 2026 07:46:03 GMT",
                 lang: "cjk",
                 state: "LS"
             },
@@ -1144,7 +1144,7 @@ const linkGroups = [
             {
                 text: "Indexed Database API 3.0",
                 href: "https://htmlspecs.com/IndexedDB/",
-                src: "https://www.w3.org/TR/2025/WD-IndexedDB-3-20250813/",
+                src: "https://www.w3.org/TR/2026/WD-IndexedDB-3-20261029/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
@@ -2265,7 +2265,7 @@ const linkGroups = [
             {
                 text: "WebXR Device API",
                 href: "https://htmlspecs.com/webxr/",
-                src: "https://www.w3.org/TR/2026/CRD-webxr-20260609/",
+                src: "https://www.w3.org/TR/2026/CRD-webxr-20261029/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "CRD"
@@ -2281,7 +2281,7 @@ const linkGroups = [
             {
                 text: "WebXR Hand Input Module - Level 1",
                 href: "https://htmlspecs.com/webxr-hand-input-1/",
-                src: "https://www.w3.org/TR/2024/WD-webxr-hand-input-1-20240605/",
+                src: "https://www.w3.org/TR/2026/WD-webxr-hand-input-1-20261029/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
@@ -3004,7 +3004,7 @@ const linkGroups = [
             {
                 text: "Digital Credentials",
                 href: "https://htmlspecs.com/digital-credentials/",
-                src: "https://www.w3.org/TR/2026/WD-digital-credentials-20261020/",
+                src: "https://www.w3.org/TR/2026/WD-digital-credentials-20261029/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
@@ -3729,7 +3729,7 @@ const cssLinkGroups = [
                 text: "CSS current work",
                 href: "https://htmlspecs.com/css/",
                 src: "https://www.w3.org/Style/CSS/current-work",
-                "last-modified": "Fri, 23 Oct 2026 06:40:24 GMT",
+                "last-modified": "Thu, 29 Oct 2026 07:40:24 GMT",
                 lang: "cjk",
                 state: ""
             },
@@ -3950,7 +3950,7 @@ const cssLinkGroups = [
             {
                 text: "CSS Color Module Level 4",
                 href: "https://htmlspecs.com/css/css-color-4/",
-                src: "https://www.w3.org/TR/2026/CRD-css-color-4-20261027/",
+                src: "https://www.w3.org/TR/2026/CRD-css-color-4-20261029/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "CRD"
@@ -3958,7 +3958,7 @@ const cssLinkGroups = [
             {
                 text: "CSS Color Module Level 5",
                 href: "https://htmlspecs.com/css/css-color-5/",
-                src: "https://www.w3.org/TR/2026/WD-css-color-5-20261026/",
+                src: "https://www.w3.org/TR/2026/WD-css-color-5-20261029/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
