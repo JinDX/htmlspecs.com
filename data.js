@@ -2773,7 +2773,7 @@ const linkGroups = [
             {
                 text: "Connection Allowlists",
                 href: "https://htmlspecs.com/connection-allowlists/",
-                src: "https://wicg.github.io/connection-allowlists/",
+                src: "https://w3c.github.io/connection-allowlists/",
                 "last-modified": "Tue, 06 Oct 2026 11:25:11 GMT",
                 lang: "cjk",
                 state: "Draft"
