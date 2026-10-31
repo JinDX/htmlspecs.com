@@ -1144,7 +1144,7 @@ const linkGroups = [
             {
                 text: "Indexed Database API 3.0",
                 href: "https://htmlspecs.com/IndexedDB/",
-                src: "https://www.w3.org/TR/2026/WD-IndexedDB-3-20261029/",
+                src: "https://www.w3.org/TR/2026/WD-IndexedDB-3-20261030/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
