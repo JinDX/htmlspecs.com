@@ -187,7 +187,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Web MIDI API](https://htmlspecs.com/webmidi/)（[Source](https://www.w3.org/TR/2026/WD-webmidi-20261020/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Web Bluetooth API](https://htmlspecs.com/bluetooth/)（[Source](https://bluetooth.spec.whatwg.org/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Web NFC API](https://htmlspecs.com/web-nfc/)（[Source](https://w3c-cg.github.io/web-nfc/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
-- [Geolocation API](https://htmlspecs.com/geolocation/)（[Source](https://www.w3.org/TR/2026/CR-geolocation-20260326/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
+- [Geolocation API](https://htmlspecs.com/geolocation/)（[Source](https://www.w3.org/TR/2026/CRD-geolocation-20261030/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [Device Orientation and Motion](https://htmlspecs.com/orientation-event/)（[Source](https://www.w3.org/TR/2026/CRD-orientation-event-20261026/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [Motion Sensors Explainer](https://htmlspecs.com/motion-sensors/)（[Source](https://www.w3.org/TR/2017/NOTE-motion-sensors-20170830/) ![Note](https://img.shields.io/badge/NOTE-309c40)）
 - [Orientation Sensor](https://htmlspecs.com/orientation-sensor/)（[Source](https://www.w3.org/TR/2026/WD-orientation-sensor-20260514/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）

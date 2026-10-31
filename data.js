@@ -1477,10 +1477,10 @@ const linkGroups = [
             {
                 text: "Geolocation API",
                 href: "https://htmlspecs.com/geolocation/",
-                src: "https://www.w3.org/TR/2026/CR-geolocation-20260326/",
+                src: "https://www.w3.org/TR/2026/CRD-geolocation-20261030/",
                 "last-modified": "-",
                 lang: "cjk",
-                state: "CR"
+                state: "CRD"
             },
             {
                 text: "Device Orientation and Motion",
