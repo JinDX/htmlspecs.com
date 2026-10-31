@@ -184,7 +184,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [WebHID Standard](https://htmlspecs.com/hid/)（[Source](https://hid.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [WebUSB API](https://htmlspecs.com/usb/)（[Source](https://usb.spec.whatwg.org/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Web Smart Card API](https://htmlspecs.com/web-smart-card/)（[Source](https://wicg.github.io/web-smart-card/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
-- [Web MIDI API](https://htmlspecs.com/webmidi/)（[Source](https://www.w3.org/TR/2026/WD-webmidi-20261020/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Web MIDI API](https://htmlspecs.com/webmidi/)（[Source](https://www.w3.org/TR/2026/WD-webmidi-20261031/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Web Bluetooth API](https://htmlspecs.com/bluetooth/)（[Source](https://bluetooth.spec.whatwg.org/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Web NFC API](https://htmlspecs.com/web-nfc/)（[Source](https://w3c-cg.github.io/web-nfc/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Geolocation API](https://htmlspecs.com/geolocation/)（[Source](https://www.w3.org/TR/2026/CRD-geolocation-20261030/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）

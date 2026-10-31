@@ -1453,7 +1453,7 @@ const linkGroups = [
             {
                 text: "Web MIDI API",
                 href: "https://htmlspecs.com/webmidi/",
-                src: "https://www.w3.org/TR/2026/WD-webmidi-20261020/",
+                src: "https://www.w3.org/TR/2026/WD-webmidi-20261031/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
