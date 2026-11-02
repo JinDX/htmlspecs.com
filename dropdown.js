@@ -410,9 +410,17 @@ loadDataScript(function () {
         githubButton.style.boxShadow = "0 2px 6px rgba(0, 0, 0, 0.2)";
     };
 
+    function setDropdownExpanded(expanded) {
+        dropdownContent.style.display = expanded ? "block" : "none";
+        dropdownButton.setAttribute("aria-expanded", String(expanded));
+    }
+
     var dropdownButton = createButton("dropdownButton", t.otherStandards, function () {
-        dropdownContent.style.display = dropdownContent.style.display === "block" ? "none" : "block";
+        setDropdownExpanded(dropdownContent.style.display !== "block");
     });
+    dropdownButton.type = "button";
+    dropdownButton.setAttribute("aria-controls", "dropdownContent");
+    dropdownButton.setAttribute("aria-expanded", "false");
 
     var buttonContainer = document.createElement("div");
     buttonContainer.style.cssText = `
@@ -527,13 +535,13 @@ loadDataScript(function () {
         filterCategories(dropdownContent, searchInput.value, noResults);
     };
 
-    window.addEventListener("click", function (event) {
+        window.addEventListener("click", function (event) {
         if (
             event.target instanceof Element &&
             !event.target.closest("#dropdownButton") &&
             !dropdownContent.contains(event.target)
         ) {
-            dropdownContent.style.display = "none";
+            setDropdownExpanded(false);
         }
     });
 
@@ -542,7 +550,7 @@ loadDataScript(function () {
             event.key === "Escape" &&
             dropdownContent.style.display === "block"
         ) {
-            dropdownContent.style.display = "none";
+            setDropdownExpanded(false);
             dropdownButton.focus();
         }
     });
