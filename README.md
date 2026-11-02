@@ -74,12 +74,12 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [RDF 1.2 Concepts and Abstract Data Model](https://htmlspecs.com/rdf12-concepts/)（[Source](https://www.w3.org/TR/2026/CR-rdf12-concepts-20260407/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
 - [RDF 1.2 Primer](https://htmlspecs.com/rdf12-primer/)（[Source](https://www.w3.org/TR/2026/DNOTE-rdf12-primer-20260917/) ![Note Draft](https://img.shields.io/badge/DNOTE-ffcc00)）
 - [RDF 1.2 Schema](https://htmlspecs.com/rdf12-schema/)（[Source](https://www.w3.org/TR/2026/WD-rdf12-schema-20261023/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
-- [RDF 1.2 Turtle](https://htmlspecs.com/rdf12-turtle/)（[Source](https://www.w3.org/TR/2026/WD-rdf12-turtle-20261023/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [RDF 1.2 Turtle](https://htmlspecs.com/rdf12-turtle/)（[Source](https://www.w3.org/TR/2026/WD-rdf12-turtle-20261101/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [RDF 1.2 N-Triples](https://htmlspecs.com/rdf12-n-triples/)（[Source](https://www.w3.org/TR/2026/WD-rdf12-n-triples-20261023/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [RDF 1.2 TriG](https://htmlspecs.com/rdf12-trig/)（[Source](https://www.w3.org/TR/2026/WD-rdf12-trig-20261023/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [RDF 1.2 N-Quads](https://htmlspecs.com/rdf12-n-quads/)（[Source](https://www.w3.org/TR/2026/WD-rdf12-n-quads-20261023/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [RDF 1.2 XML Syntax](https://htmlspecs.com/rdf12-xml/)（[Source](https://www.w3.org/TR/2026/WD-rdf12-xml-20261025/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
-- [SPARQL 1.2 Query Language](https://htmlspecs.com/sparql12-query/)（[Source](https://www.w3.org/TR/2026/WD-sparql12-query-20261025/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [SPARQL 1.2 Query Language](https://htmlspecs.com/sparql12-query/)（[Source](https://www.w3.org/TR/2026/WD-sparql12-query-20261101/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [SPARQL 1.2 Protocol](https://htmlspecs.com/sparql12-protocol/)（[Source](https://www.w3.org/TR/2026/WD-sparql12-protocol-20260723/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [SHACL 1.2 Core](https://htmlspecs.com/shacl12-core/)（[Source](https://www.w3.org/TR/2026/WD-shacl12-core-20261030/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [SHACL 1.2 Profiling](https://htmlspecs.com/shacl12-profiling/)（[Source](https://www.w3.org/TR/2026/WD-shacl12-profiling-20260702/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
@@ -515,7 +515,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 
 ### 颜色、背景、边框与视觉效果
 - [CSS Color Module Level 3](https://htmlspecs.com/css/css-color-3/)（[Source](https://www.w3.org/TR/2022/REC-css-color-3-20220118/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
-- [CSS Color Module Level 4](https://htmlspecs.com/css/css-color-4/)（[Source](https://www.w3.org/TR/2026/CRD-css-color-4-20261029/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
+- [CSS Color Module Level 4](https://htmlspecs.com/css/css-color-4/)（[Source](https://www.w3.org/TR/2026/CRD-css-color-4-20261101/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [CSS Color Module Level 5](https://htmlspecs.com/css/css-color-5/)（[Source](https://www.w3.org/TR/2026/WD-css-color-5-20261029/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Color Adjustment Module Level 1](https://htmlspecs.com/css/css-color-adjust-1/)（[Source](https://www.w3.org/TR/2025/CR-css-color-adjust-1-20251216/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
 - [CSS Color HDR Module Level 1](https://htmlspecs.com/css/css-color-hdr-1/)（[Source](https://www.w3.org/TR/2026/WD-css-color-hdr-1-20261026/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）

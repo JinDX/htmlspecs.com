@@ -607,7 +607,7 @@ const linkGroups = [
             {
                 text: "RDF 1.2 Turtle",
                 href: "https://htmlspecs.com/rdf12-turtle/",
-                src: "https://www.w3.org/TR/2026/WD-rdf12-turtle-20261023/",
+                src: "https://www.w3.org/TR/2026/WD-rdf12-turtle-20261101/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
@@ -647,7 +647,7 @@ const linkGroups = [
             {
                 text: "SPARQL 1.2 Query Language",
                 href: "https://htmlspecs.com/sparql12-query/",
-                src: "https://www.w3.org/TR/2026/WD-sparql12-query-20261025/",
+                src: "https://www.w3.org/TR/2026/WD-sparql12-query-20261101/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
@@ -3950,7 +3950,7 @@ const cssLinkGroups = [
             {
                 text: "CSS Color Module Level 4",
                 href: "https://htmlspecs.com/css/css-color-4/",
-                src: "https://www.w3.org/TR/2026/CRD-css-color-4-20261029/",
+                src: "https://www.w3.org/TR/2026/CRD-css-color-4-20261101/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "CRD"
