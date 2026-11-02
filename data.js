@@ -82,7 +82,7 @@ const linkGroups = [
             {
                 text: "WebAssembly Core Specification",
                 href: "https://htmlspecs.com/wasm-core-2",
-                src: "https://www.w3.org/TR/2026/CRD-wasm-core-2-20261028/",
+                src: "https://www.w3.org/TR/2026/CRD-wasm-core-2-20261102/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "CRD"
@@ -90,7 +90,7 @@ const linkGroups = [
             {
                 text: "WebAssembly JavaScript Interface",
                 href: "https://htmlspecs.com/wasm-js-api-2/",
-                src: "https://www.w3.org/TR/2026/CRD-wasm-js-api-2-20261028/",
+                src: "https://www.w3.org/TR/2026/CRD-wasm-js-api-2-20261102/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "CRD"
@@ -98,7 +98,7 @@ const linkGroups = [
             {
                 text: "WebAssembly Web API",
                 href: "https://htmlspecs.com/wasm-web-api-2/",
-                src: "https://www.w3.org/TR/2026/CRD-wasm-web-api-2-20261028/",
+                src: "https://www.w3.org/TR/2026/CRD-wasm-web-api-2-20261102/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "CRD"
@@ -663,7 +663,7 @@ const linkGroups = [
             {
                 text: "SHACL 1.2 Core",
                 href: "https://htmlspecs.com/shacl12-core/",
-                src: "https://www.w3.org/TR/2026/WD-shacl12-core-20261030/",
+                src: "https://www.w3.org/TR/2026/WD-shacl12-core-20261102/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
@@ -736,7 +736,7 @@ const linkGroups = [
                 text: "OpenAPI Specification v3.2.1",
                 href: "https://htmlspecs.com/openapi/",
                 src: "https://spec.openapis.org/oas/latest.html",
-                "last-modified": "Tue, 27 Oct 2026 09:52:38 GMT",
+                "last-modified": "Mon, 02 Nov 2026 10:33:31 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
@@ -1241,7 +1241,7 @@ const linkGroups = [
                 text: "Cross-Origin Storage",
                 href: "https://htmlspecs.com/cross-origin-storage/",
                 src: "https://wicg.github.io/cross-origin-storage/",
-                "last-modified": "Wed, 28 Oct 2026 19:51:49 GMT",
+                "last-modified": "Mon, 02 Nov 2026 16:14:07 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
@@ -2003,7 +2003,7 @@ const linkGroups = [
             {
                 text: "Encrypted Media Extensions",
                 href: "https://htmlspecs.com/encrypted-media-2/",
-                src: "https://www.w3.org/TR/2026/WD-encrypted-media-2-20261028/",
+                src: "https://www.w3.org/TR/2026/WD-encrypted-media-2-20261102/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
@@ -2082,7 +2082,7 @@ const linkGroups = [
             {
                 text: "WebCodecs",
                 href: "https://htmlspecs.com/webcodecs/",
-                src: "https://www.w3.org/TR/2026/WD-webcodecs-20261026/",
+                src: "https://www.w3.org/TR/2026/WD-webcodecs-20261102/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
@@ -2401,7 +2401,7 @@ const linkGroups = [
                 text: "WebMCP",
                 href: "https://htmlspecs.com/webmcp/",
                 src: "https://webmachinelearning.github.io/webmcp/",
-                "last-modified": "Tue, 27 Oct 2026 11:43:25 GMT",
+                "last-modified": "Mon, 02 Nov 2026 13:12:22 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
@@ -2495,7 +2495,7 @@ const linkGroups = [
             {
                 text: "High Resolution Time",
                 href: "https://htmlspecs.com/hr-time-3/",
-                src: "https://www.w3.org/TR/2026/WD-hr-time-3-20260901/",
+                src: "https://www.w3.org/TR/2026/WD-hr-time-3-20261102/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
@@ -2519,7 +2519,7 @@ const linkGroups = [
             {
                 text: "Navigation Timing Level 2",
                 href: "https://htmlspecs.com/navigation-timing-2/",
-                src: "https://www.w3.org/TR/2026/WD-navigation-timing-2-20260901/",
+                src: "https://www.w3.org/TR/2026/WD-navigation-timing-2-20261102/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
@@ -2535,7 +2535,7 @@ const linkGroups = [
             {
                 text: "Resource Timing",
                 href: "https://htmlspecs.com/resource-timing/",
-                src: "https://www.w3.org/TR/2026/CRD-resource-timing-20260901/",
+                src: "https://www.w3.org/TR/2026/CRD-resource-timing-20261102/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "CRD"
@@ -2575,7 +2575,7 @@ const linkGroups = [
             {
                 text: "Server Timing",
                 href: "https://htmlspecs.com/server-timing/",
-                src: "https://www.w3.org/TR/2026/WD-server-timing-20260407/",
+                src: "https://www.w3.org/TR/2026/WD-server-timing-20261102/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
@@ -3116,7 +3116,7 @@ const linkGroups = [
             {
                 text: "Recognized Entities v1.0",
                 href: "https://htmlspecs.com/vc-recognized-entities-1.0/",
-                src: "https://www.w3.org/TR/2026/WD-vc-recognized-entities-1.0-20260906/",
+                src: "https://www.w3.org/TR/2026/WD-vc-recognized-entities-1.0-20261102/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
@@ -3639,7 +3639,7 @@ const linkGroups = [
             {
                 text: "EPUB 3.4",
                 href: "https://htmlspecs.com/epub-34/",
-                src: "https://www.w3.org/TR/2026/CRD-epub-34-20261028/",
+                src: "https://www.w3.org/TR/2026/CRD-epub-34-20261102/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "CRD"
@@ -3729,7 +3729,7 @@ const cssLinkGroups = [
                 text: "CSS current work",
                 href: "https://htmlspecs.com/css/",
                 src: "https://www.w3.org/Style/CSS/current-work",
-                "last-modified": "Thu, 29 Oct 2026 07:40:24 GMT",
+                "last-modified": "Mon, 02 Nov 2026 15:56:56 GMT",
                 lang: "cjk",
                 state: ""
             },
