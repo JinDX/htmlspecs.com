@@ -2472,7 +2472,7 @@ const linkGroups = [
                 text: "JS Self-Profiling API",
                 href: "https://htmlspecs.com/js-self-profiling/",
                 src: "https://wicg.github.io/js-self-profiling/",
-                "last-modified": "Fri, 11 Sep 2026 21:34:53 GMT",
+                "last-modified": "Tue, 03 Nov 2026 00:25:44 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
