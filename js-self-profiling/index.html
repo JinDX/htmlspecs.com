@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>JS 自我分析 API</title>
+    <title>JS 自分析 API</title>
     <script src="https://www.w3.org/Tools/respec/respec-w3c" class="remove"></script>
     <script class="remove">
         var respecConfig = {
@@ -39,29 +39,29 @@
 <body>
     <section id="abstract">
         <p>
-            本规范描述了一种 API，允许 Web 应用程序控制采样分析器，以
+            本规范描述了一个允许 Web 应用控制采样性能分析器的 API，用于
             测量客户端 JavaScript 的执行时间。
         </p>
     </section>
     <section id="sotd">
     </section>
     <section class="informative" id="introduction">
-        <h2>简介</h2>
+        <h2>引言</h2>
         <p>
-            目前，复杂的 Web 应用程序只能有限地了解客户端的 JS
-            执行时间花在了何处。由于无法高效地
-            收集堆栈样本，应用程序只能在其代码中插入
-            不精确且可能显著降低
-            执行速度的分析钩子。通过提供用于操作采样分析器的 API，
-            应用程序能够以极低的开销收集丰富的执行数据，
-            以便进行汇总和分析。
+            复杂的 Web 应用目前只能有限地了解客户端 JS
+            执行时间的具体消耗位置。由于无法高效地
+            收集栈样本，应用不得不在代码中插入
+            性能分析钩子，而这些钩子既不精确，又可能显著降低
+            执行速度。通过提供一个操控采样性能分析器的 API，
+            应用可以收集丰富的执行数据，以便进行聚合和分析，
+            同时将开销降至最低。
         </p>
         <section class="informative">
             <h2>示例</h2>
-            <p>以下示例演示了用户如何分析一项开销较大的操作，并每隔 10ms 收集一次 JS 执行
-                样本。可以将跟踪数据发送到服务器进行分析，以调试异常值，并汇总分析 JS 执行
-                特征。</p>
-            <pre class="example" title="分析计算密集型操作。">
+            <p>以下示例演示了用户如何对开销较大的操作进行性能分析，每 10ms 收集一次 JS 执行
+                样本。跟踪记录可以发送到服务器进行分析，以调试异常情况，并研究 JS 执行的
+                整体特征。</p>
+            <pre class="example" title="对计算密集型操作进行性能分析。">
         const profiler = new Profiler({ sampleInterval: 10, maxBufferSize: 10000 });
         const start = performance.now();
         for (let i = 0; i &lt; 1000000; i++) {
@@ -75,9 +75,9 @@
         });
         sendTrace(traceJson);
         </pre>
-            <p>另一个常见的实际场景是分析整个页面加载过程中的 JS。此示例分析 onload
-                事件，并将性能计时数据与跟踪数据一起发送。</p>
-            <pre class="example" title="分析页面加载。">
+            <p>另一个常见的实际场景是在整个页面加载过程中对 JS 进行性能分析。此示例对 onload
+                事件进行性能分析，并将性能计时数据与跟踪记录一并发送。</p>
+            <pre class="example" title="对页面加载进行性能分析。">
         const profiler = new Profiler({ sampleInterval: 10, maxBufferSize: 10000 });
 
         window.addEventListener('load', async () => {
@@ -89,7 +89,7 @@
           sendTrace(traceJson);
         });
 
-        // 页面其余部分的 JS 初始化逻辑
+        // 页面的其余 JS 初始化逻辑
         </pre>
         </section>
     </section>
@@ -98,115 +98,178 @@
     <section>
         <h2>定义</h2>
         <p>
-            <dfn data-lt="sample|samples">样本</dfn>是对给定时间点
-            瞬时执行状态的描述。每个样本都与一个<a>堆栈</a>相关联。
+            <dfn data-lt="sample|samples">样本</dfn>是一个描述符，用于描述
+            给定时刻的瞬时执行状态。每个样本都
+            与一个<a>栈</a>关联。
         </p>
         <p>
-            <dfn>堆栈</dfn>是一个<a>帧</a>列表，必须按照
-            从最外层帧到最内层帧的顺序依次排列。
+            <dfn>栈</dfn>是一个<a>帧</a>列表，必须按
+            从最外层帧到最内层帧的顺序排列。
         </p>
         <p>
-            <dfn data-lt="frame|frames">帧</dfn>是<a>堆栈</a>上下文中的一个元素，
+            <dfn data-lt="frame|frames">帧</dfn>是<a>栈</a>上下文中的一个元素，
             包含有关当前执行状态的信息。
         </p>
     </section>
     <section>
-        <h2>分析会话</h2>
+        <h2>性能分析会话</h2>
         <p>
-            <dfn>分析会话</dfn>是<a>样本</a>的抽象生产者。每个会话具有：
+            <dfn>性能分析会话</dfn>是<a>样本</a>的抽象生产者。每个会话具有：
         </p>
         <ol>
             <li>一个<dfn>状态</dfn>，其值为 <code>{started, paused, stopped}</code> 之一。</li>
             <li>
                 一个<dfn>采样间隔</dfn>，定义为会话获取样本的周期。
                 <p class="note">
-                    不要求用户代理以此频率获取样本。但是，建议
-                    优先按照此频率进行采样，以
-                    生成质量更高的跟踪数据。
+                    不要求用户代理按此速率采集样本。但是，
+                    建议优先保证按此速率进行采样，以
+                    生成质量更高的跟踪记录。
                 </p>
             </li>
-            <li>一个要分析的<dfn data-cite="!ECMA-262#agent">代理</dfn>。</li>
-            <li>一个要分析的<dfn data-cite="!ECMA-262#realm">领域</dfn>。</li>
-            <li>一个<dfn data-cite="!HR-TIME-2#dfn-time-origin">时间原点</dfn>，样本的时间戳以它为
-                参照进行测量。</li>
+            <li>一个要进行性能分析的<dfn data-cite="!ECMA-262#agent">代理</dfn>。</li>
+            <li>一个要进行性能分析的<dfn data-cite="!ECMA-262#realm">域</dfn>。</li>
+            <li>一个<dfn data-cite="!HR-TIME-2#dfn-time-origin">时间原点</dfn>，样本时间戳的测量
+                以其为基准。</li>
             <li>一个<dfn>样本缓冲区大小限制</dfn>。</li>
             <li>一个存储已捕获<a>样本</a>的 <a>ProfilerTrace</a>。</li>
         </ol>
         <p>
-            应当支持同一页面上的多个分析会话。
+            应支持在同一页面上运行多个性能分析会话。
         </p>
         <section>
             <h2>状态</h2>
             <p>
-                在 <code>started</code> 状态下，每当<a>采样间隔</a>结束时，用户代理应当尽最大努力
-                [= in parallel =]执行<a>获取样本</a>算法来
-                捕获样本。
+                在 <code>started</code> 状态下，用户代理应尽力
+                通过执行<a>采集样本</a>算法来捕获样本，该算法[= 以
+                并行方式 =]在每次<a>采样间隔</a>过去后执行。
                 在 <code>paused</code> 和 <code>stopped</code> 状态下，用户代理不应捕获样本。
             </p>
             <p>
-                分析会话必须以 <code>started</code> 状态开始。
+                性能分析会话必须以 <code>started</code> 状态开始。
             </p>
             <p>
-                用户代理可以将会话从 <code>started</code> 转换为 <code>paused</code>，也可以从 <code>paused</code>
-                转换为 <code>started</code>。
+                用户代理可以将会话从 <code>started</code> 转为 <code>paused</code>，也可以从 <code>paused</code>
+                转为 <code>started</code>。
             </p>
             <p class="note">
-                如果浏览上下文不在前台，建议用户代理暂停对分析会话的
-                采样。
+                建议用户代理在浏览上下文
+                不处于前台时暂停性能分析会话的采样。
             </p>
             <p>
-                处于 <code>stopped</code> 状态的会话不得转换为 <code>started</code> 或 <code>paused</code> 状态。
+                处于 <code>stopped</code> 状态的会话不得转为 <code>started</code> 或 <code>paused</code> 状态。
             </p>
         </section>
     </section>
     <section>
         <h2>处理模型</h2>
         <p>
-            要在给定一个<a>分析会话</a>的情况下<dfn>获取样本</dfn>，请执行以下步骤：
+            给定一个<a>性能分析会话</a>，要<dfn>采集样本</dfn>，执行以下步骤：
         </p>
         <ol>
-            <li>如果 <a>ProfilerTrace.samples</a> 的长度大于或等于与分析会话关联的<a>样本缓冲区大小
+            <li>如果 <a>ProfilerTrace.samples</a> 的长度大于或等于与性能分析会话关联的<a>样本缓冲区大小
                     限制</a>，则向关联的 <a>Profiler</a> 触发一个类型为
-                <dfn>samplebufferfull</dfn> 的新事件，将状态转换为 <code>stopped</code>，
+                <dfn>samplebufferfull</dfn> 的新事件，将状态转为 <code>stopped</code>，
                 然后返回。
             </li>
             <li>令 <var>sample</var> 为一个新的 <a>ProfilerSample</a>。</li>
-            <li>将 <var>sample</var> 的 <a>ProfilerSample.timestamp</a> 属性设置为相对于
-                <a>分析会话</a>的<a>时间原点</a>的<dfn data-cite="!hr-time-2#dfn-current-high-resolution-time">当前高分辨率时间</dfn>。
-            </li>
-            <li>令 <var>stack</var> 为与分析会话的<a>代理</a>关联的<dfn data-cite="!ECMA-262#execution-context-stack">执行上下文
-                    堆栈</dfn>。</li>
-            <li>将 <var>sample</var> 的 <a>ProfilerSample.stackId</a> 属性设置为对 <var>stack</var> 运行<a>获取堆栈
+            <li>将 <var>sample</var> 的 <a>ProfilerSample.timestamp</a> 属性设置为<dfn
+                    data-cite="!hr-time-2#dfn-current-high-resolution-time">当前高精度时间</dfn>，其基准
+                为<a>性能分析会话</a>的<a>时间原点</a>。</li>
+            <li>令 <var>stack</var> 为与性能分析会话的<a>代理</a>关联的<dfn data-cite="!ECMA-262#execution-context-stack">执行上下文
+                    栈</dfn>。</li>
+            <li>将 <var>sample</var> 的 <a>ProfilerSample.stackId</a> 属性设置为对 <var>stack</var> 运行<a>获取栈
                     ID</a>算法的结果。</li>
+            <li>令 <var>marker</var> 为给定性能分析会话所关联的
+                <a data-cite="HTML5#environment-settings-object">环境设置对象</a>运行<a>捕获标记</a>算法的结果。
+            </li>
+            <li>如果 <var>marker</var> 不为 null，则将 <var>sample</var> 的 <a>ProfilerSample.marker</a> 属性设置为
+                <var>marker</var>。
+            </li>
             <li>将 <var>sample</var> 添加到与会话的
                 <a>ProfilerTrace</a> 关联的 <a>ProfilerTrace.samples</a> 中。
             </li>
         </ol>
         <p>
-            要在给定绑定到 <var>stack</var> 的<a>执行上下文堆栈</a>的情况下<dfn>获取堆栈 ID</dfn>，请执行
+            给定一个<a data-cite="HTML5#environment-settings-object">环境
+                设置对象</a> <var>settings</var>，要<dfn>捕获标记</dfn>，执行以下步骤：
+        </p>
+        <ol>
+            <li>令 <var>candidateMarker</var> 为最能描述以下顶层工作的 <a>ProfilerMarker</a> 值：
+                采集样本时，用户代理正在性能分析会话的<a>代理</a>上执行的工作；如果没有适用的值，
+                则为 null。</li>
+            <li>如果 <var>candidateMarker</var> 为 null，则返回 null。</li>
+            <li>如果 <var>candidateMarker</var> 所描述的工作是为某个特定文档执行的，而该文档不[=
+                同源 =]于
+                <var>settings</var> 的<a data-cite="HTML5#concept-settings-object-origin">源</a>，则返回 null。
+            </li>
+            <li>返回给定 <var>candidateMarker</var> 和
+                <var>settings</var> 运行<a>过滤标记</a>的结果。
+            </li>
+        </ol>
+        <p class="note">
+            用户代理内部活动到 <a>ProfilerMarker</a> 值的映射有意被
+            定义为由实现定义，因为引擎架构各不相同。作为非规范性指导，预期用户代理
+            在执行作者脚本时报告 <code>script</code>，在垃圾回收期间报告 <code>gc</code>，
+            在重新计算已计算样式时报告 <code>style</code>，在计算盒几何信息
+            （即重排）时报告 <code>layout</code>，在栅格化或合成文档内容时报告 <code>paint</code>。
+            <code>other</code> 标记用于不属于上述任一
+            类别的用户代理工作。当没有适用的类别时（例如，代理空闲时），<a>捕获标记</a>
+            算法返回 null，而生成的
+            <a>ProfilerSample</a> 上不设置 <a>ProfilerSample.marker</a> 属性。
+        </p>
+        <p class="note">
+            同源检查确保标记仅描述为与性能分析器[= 同源
+            =]的文档执行的工作，这与 API 不得暴露跨源活动的要求一致。对于
+            无法归属于单一文档的工作 &mdash; 例如，引擎范围的垃圾回收 &mdash; 则
+            不受此检查约束；此类工作仅在性能分析器处于跨源隔离状态时暴露，
+            这一要求由<a>过滤标记</a>强制实施。
+        </p>
+        <p>
+            给定一个 <a>ProfilerMarker</a> <var>marker</var> 和一个<a data-cite="HTML5#environment-settings-object">环境设置对象</a>
+            <var>settings</var>，要<dfn>过滤标记</dfn>，
+            执行以下步骤：
+        </p>
+        <ol>
+            <li>如果 <var>settings</var> 的<a
+                    data-cite="HTML5#concept-settings-object-cross-origin-isolated-capability">跨源隔离
+                    能力</a>为 true，则返回 <var>marker</var>。</li>
+            <li>如果 <var>marker</var> 为 <code>"style"</code> 或 <code>"layout"</code>，则返回 <var>marker</var>。</li>
+            <li>返回 null。</li>
+        </ol>
+        <p class="note">
+            <a>过滤标记</a>算法产生的可观察行为是：在未跨源隔离的
+            上下文中，<a>ProfilerSample</a> 上仅出现 <code>style</code> 和 <code>layout</code> 标记；
+            <code>script</code>、<code>gc</code>、<code>paint</code> 和 <code>other</code> 标记被抑制。请参阅
+            <a href="#conditional-markers">有条件的标记暴露</a>，了解此行为背后的理由。用户
+            代理可以提供选择启用机制（例如，源试用令牌或文档策略），以扩大
+            <a>过滤标记</a>针对特定<a data-cite="HTML5#environment-settings-object">环境设置对象</a>返回的集合；此类选择启用机制不得
+            跨源暴露标记。
+        </p>
+        <p>
+            给定一个绑定到 <var>stack</var> 的<a>执行上下文栈</a>，要<dfn>获取栈 ID</dfn>，执行
             以下步骤：
         <ol>
             <li>如果 <var>stack</var> 为空，则返回 <code>undefined</code>。</li>
-            <li>令 <var>head</var> 为 <var>stack</var> 的顶部元素，令 <var>tail</var> 为从
-                <var>stack</var> 中移除其顶部元素后剩余的部分。
+            <li>令 <var>head</var> 为 <var>stack</var> 的栈顶元素，<var>tail</var> 为
+                <var>stack</var> 移除栈顶元素后的剩余部分。
             </li>
-            <li>令 <var>parentId</var> 为以 <var>tail</var> 递归调用<a>获取堆栈 ID</a>的结果。
+            <li>令 <var>parentId</var> 为对 <var>tail</var> 递归调用<a>获取栈 ID</a>的结果。
             </li>
             <li>令 <var>frameId</var> 为对 <var>head</var> 调用<a>获取帧 ID</a>的结果。</li>
             <li>如果 <var>frameId</var> 为 <code>undefined</code>，则返回 <var>parentId</var>。</li>
             <li>令 <var>profilerStack</var> 为一个新的 <a>ProfilerStack</a>，其 <a>ProfilerStack.frameId</a> 等于
                 <var>frameId</var>，且 <a>ProfilerStack.parentId</a> 等于 <var>parentId</var>。</a>
-            <li>返回以 <var>profilerStack</var> 和
+            <li>返回对 <var>profilerStack</var> 和
                 <a>ProfilerTrace.stacks</a> 运行<a>获取元素 ID</a>的结果。
             </li>
         </ol>
         </p>
         <p>
-            要在给定绑定到 <var>context</var> 的<dfn data-cite="!ECMA-262#sec-execution-contexts">执行
-                上下文</dfn>的情况下<dfn>获取帧 ID</dfn>，请执行以下步骤：
+            给定一个绑定到 <var>context</var> 的<dfn data-cite="!ECMA-262#sec-execution-contexts">执行
+                上下文</dfn>，要<dfn>获取帧 ID</dfn>，执行以下步骤：
         <ol>
-            <li>如果与 <var>context</var> 关联的[= realm =]与分析会话关联的领域
-                不匹配，则返回 <code>undefined</code>。</li>
+            <li>如果与 <var>context</var> 关联的[= 域 =]与
+                性能分析会话关联的域不匹配，则返回 <code>undefined</code>。</li>
             <li>令 <var>instance</var> 等于与 <var>context</var> 关联的<dfn data-cite="!ECMA-262#sec-function-instances">函数
                     实例</dfn>。</li>
             <li>令 <var>scriptOrModule</var> 等于与
@@ -216,20 +279,20 @@
                 令 |attributedScriptOrModule : ScriptOrModule| 等于运行以下
                 算法的结果：
                 <ol>
-                    <li>如果 |scriptOrModule| 非空，则返回 |scriptOrModule|。</li>
+                    <li>如果 |scriptOrModule| 不为 null，则返回 |scriptOrModule|。</li>
                     <li>如果 |instance| 是内置函数对象，则返回包含
                         调用 |instance| 的函数的 <code>ScriptOrModule</code>。
                         <p class="ednote">
-                            上述逻辑旨在确保无法访问的
-                            脚本所调用的内置函数不会暴露在跟踪数据中，方法是使用调用
-                            它们的 <code>ScriptOrModule</code> 进行归属。
+                            上述逻辑的目的是确保不可访问的
+                            脚本所调用的内置函数不会暴露在跟踪记录中，具体通过使用调用
+                            它们的 <code>ScriptOrModule</code> 进行归属判定来实现。
                         </p>
                         <p class="issue">
-                            “包含调用 |instance| 的函数的 <code>ScriptOrModule</code>”
-                            应当得到更严格的定义。我们可以利用堆栈中最顶层且
-                            定义了 <code>ScriptOrModule</code> 的执行上下文来提供此信息，但这并不理想——
-                            理论上可能存在其他机制，将内置函数加入执行
-                            上下文堆栈，在这种情况下归属将无效。
+                            “[…] 包含调用 |instance| 的函数的 <code>ScriptOrModule</code>”
+                            应有更严格的定义。我们可以利用栈中
+                            定义了 <code>ScriptOrModule</code> 的最顶层执行上下文来提供此信息，但这并不理想 --
+                            （理论上）可能存在其他机制将内置函数加入执行
+                            上下文栈，在这种情况下，归属判定将无效。
                         </p>
                     </li>
                     <li>否则，返回 null。</li>
@@ -237,46 +300,48 @@
             </li>
             <li>如果 |attributedScriptOrModule| 为 null，则返回 <code>undefined</code>。</li>
             <li>令 |attributedScript : Script| 为从
-                |attributedScriptOrModule|.[[\HostDefined]] 获取的[= script =]。</li>
+                |attributedScriptOrModule|.[[\HostDefined]] 获得的[= 脚本 =]。</li>
             <li>
-                如果 |attributedScript| 是[= classic script =]，并且其<dfn data-cite="HTML5#muted-errors">静默
+                如果 |attributedScript| 是[= 经典脚本 =]，且其<dfn data-cite="HTML5#muted-errors">静默
                     错误</dfn>布尔值等于 <code>true</code>，则返回 <code>undefined</code>。
                 <p class="ednote">
                     此检查确保我们不会包含通过
-                    CORS 跨源响应提供的跨源脚本中的堆栈帧。我们可能需要考虑重命名<a>静默错误</a>，以便更好地反映
+                    CORS 跨源响应提供的跨源脚本中的栈帧。我们可能需要考虑重命名<a>静默错误</a>，以更好地体现
                     此用例。
                 <p>
             </li>
             <li>令 <var>frame</var> 为一个新的 <a>ProfilerFrame</a>。</li>
-            <li>将 <var>frame</var> 的 <a>ProfilerFrame.name</a> 设置为与
-                |instance| 关联的<dfn data-cite="!ECMA-262#sec-function-instances-name">函数实例名称</dfn>。</li>
+            <li>将 <var>frame</var> 的 <a>ProfilerFrame.name</a> 设置为与 <dfn
+                    data-cite="!ECMA-262#sec-function-instances-name">函数实例名称</dfn>，其关联对象为
+                |instance|。</li>
             <li>
-                如果 |scriptOrModule| 非空：
+                如果 |scriptOrModule| 不为 null：
                 <ol>
                     <li>令 <var>script</var> 为从
-                        <var>scriptOrModule</var>.[[\HostDefined]] 获取的<dfn data-cite="HTML5#concept-script">脚本</dfn>。
+                        <var>scriptOrModule</var>.[[\HostDefined]] 获得的<dfn data-cite="HTML5#concept-script">脚本</dfn>。
                     </li>
-                    <li>令 <var>resourceString</var> 等于 <var>script</var> 的<dfn
-                            data-cite="HTML5#concept-script-base-url">基 URL</dfn>。</li>
-                    <li>将 <a>ProfilerFrame.resourceId</a> 设置为以
+                    <li>令 <var>resourceString</var> 等于 <dfn data-cite="HTML5#concept-script-base-url">基 URL</dfn>，其所属脚本为
+                        <var>script</var>。
+                    </li>
+                    <li>将 <a>ProfilerFrame.resourceId</a> 设置为对
                         <var>resourceString</var> 和 <a>ProfilerTrace.resources</a> 运行<a>获取元素 ID</a>的结果。
                     </li>
-                    <li>将 <var>frame</var> 的 <a>ProfilerFrame.line</a> 设置为 |script| 中定义
-                        <var>instance</var> 的行的从 1 开始的索引。
+                    <li>将 <var>frame</var> 的 <a>ProfilerFrame.line</a> 设置为以下行的从 1 开始的索引：
+                        <var>instance</var> 在 |script| 中的定义所在的行。
                     </li>
-                    <li>将 <var>frame</var> 的 <a>ProfilerFrame.column</a> 设置为 |script| 中定义
-                        <var>instance</var> 的列的从 1 开始的索引。
+                    <li>将 <var>frame</var> 的 <a>ProfilerFrame.column</a> 设置为以下列的从 1 开始的索引：
+                        <var>instance</var> 在 |script| 中的定义所在的列。
                     </li>
                 </ol>
-            <li>返回以 <var>frame</var> 和
+            <li>返回对 <var>frame</var> 和
                 <a>ProfilerTrace.frames</a> 运行<a>获取元素 ID</a>的结果。
             </li>
         </ol>
         </p>
         <p>
-            要为 <var>list</var> 中的 <var>item</var> <dfn>获取元素 ID</dfn>，请执行以下步骤：
+            要获取 <var>list</var> 中 <var>item</var> 的<dfn>获取元素 ID</dfn>，运行以下步骤：
         <ol>
-            <li>如果 <var>list</var> 中存在与 <var>item</var> 按分量相等的元素，则返回其索引。
+            <li>如果 <var>list</var> 中存在一个与 <var>item</var> 逐分量相等的元素，则返回其索引。
             </li>
             <li>否则，将 <var>item</var> 追加到 <var>list</var> 的末尾，并返回其索引。</li>
         </ol>
@@ -295,17 +360,18 @@
         Promise&lt;ProfilerTrace&gt; stop();
       };
       </pre>
-        <p>每个 <a>Profiler</a> 必须恰好与一个<a>分析会话</a>关联。</p>
-        <p><dfn>sampleInterval</dfn> 属性必须反映关联的<a>分析会话</a>的<a>采样间隔</a>，并以 <dfn
-                data-cite="!hr-time-2#sec-domhighrestimestamp">DOMHighResTimeStamp</dfn> 表示。
+        <p>每个 <a>Profiler</a> 必须恰好与一个<a>性能分析会话</a>关联。</p>
+        <p><dfn>sampleInterval</dfn> 属性必须反映所关联的
+            <a>性能分析会话</a>的<a>采样间隔</a>，以 <dfn data-cite="!hr-time-2#sec-domhighrestimestamp">DOMHighResTimeStamp</dfn>
+            表示。
         </p>
-        <p>当且仅当<a>分析会话</a>的状态为
-            <code>stopped</code> 时，<dfn>stopped</dfn> 属性必须为 true。
+        <p><dfn>stopped</dfn> 属性必须为 true，当且仅当<a>性能分析会话</a>的状态为
+            <code>stopped</code>。
         </p>
         <section>
             <h2><dfn data-lt="constructor()">new Profiler(options)</dfn></h2>
-            在给定一个类型为 <a>ProfilerInitOptions</a> 的对象 <var>options</var> 时，
-            <a>new Profiler(options)</a> 运行以下步骤：
+            给定一个类型为
+            <a>ProfilerInitOptions</a> 的对象 <var>options</var>，<a>new Profiler(options)</a> 运行以下步骤：
             <ol>
                 <li>如果 <var>options</var> 的 {{ProfilerInitOptions/sampleInterval}} 小于 0，则抛出
                     <code>RangeError</code>。
@@ -314,22 +380,22 @@
                     令 |globalObject| 为<dfn data-cite="!HTML5#current-global-object">当前全局对象</dfn>。
                 </li>
                 <li>
-                    如果 |globalObject| 是 <dfn data-cite="!HTML5#window">Window</dfn> 或 <dfn
+                    如果 |globalObject| 是一个 <dfn data-cite="!HTML5#window">Window</dfn> 或一个 <dfn
                         data-cite="!HTML5#the-workerglobalscope-common-interface">WorkerGlobalScope</dfn>：
                     <ol>
                         <li>
-                            从 |globalObject| 中<a
+                            <a
                                 href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#algo-get-policy-value">获取
-                                <code>"js-profiling-mode"</code> 的策略值</a>。令
+                                策略值</a>，策略为 |globalObject| 中的 <code>"js-profiling-mode"</code>。令
                             |profilingMode| 为其结果。
                         </li>
                         <li>
                             如果 |profilingMode| 既不是 <code>"eager"</code> 也不是 <code>"lazy"</code>：
                             <ol>
                                 <li>
-                                    从 |globalObject| 中<a
+                                    <a
                                         href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#algo-get-policy-value">获取
-                                        <code>"js-profiling"</code> 的策略值</a>。令
+                                        策略值</a>，策略为 |globalObject| 中的 <code>"js-profiling"</code>。令
                                     |jsProfilingEnabled| 为其结果。
                                 </li>
                                 <li>
@@ -343,48 +409,47 @@
                 <li>
                     否则，抛出一个 <code>"NotAllowedError"</code> DOMException。
                 </li>
-                <li>创建一个新的<a>分析会话</a>，其中：</li>
+                <li>创建一个新的<a>性能分析会话</a>，其中：</li>
                 <ol>
-                    <li>关联的<a>采样间隔</a>设置为 <a>ProfilerInitOptions.sampleInterval</a>
-                        或用户代理支持的下一个更低间隔。</li>
-                    <li>关联的<a>时间原点</a>等于 |globalObject| 的时间原点。</li>
-                    <li>关联的<a>样本缓冲区大小限制</a>设置为 {{ProfilerInitOptions/maxBufferSize}}。
+                    <li>所关联的<a>采样间隔</a>设置为 <a>ProfilerInitOptions.sampleInterval</a>
+                        或用户代理支持的下一个较低间隔。</li>
+                    <li>所关联的<a>时间原点</a>等于 |globalObject| 的时间原点。</li>
+                    <li>所关联的<a>样本缓冲区大小限制</a>设置为 {{ProfilerInitOptions/maxBufferSize}}。
                     </li>
-                    <li>关联的[= agent =]设置为<dfn data-cite="!ECMA-262#surrounding-agent">周围代理</dfn>。</li>
-                    <li>关联的[= realm =]设置为<dfn data-cite="!ECMA-262#current-realm">当前领域
+                    <li>所关联的[= 代理 =]设置为<dfn data-cite="!ECMA-262#surrounding-agent">外围代理</dfn>。</li>
+                    <li>所关联的[= 域 =]设置为<dfn data-cite="!ECMA-262#current-realm">当前域
                             记录</dfn>。</li>
-                    <li>关联的 <a>ProfilerTrace</a> 设置为
+                    <li>所关联的 <a>ProfilerTrace</a> 设置为
                         <code>«[{{ProfilerTrace/resources}} → «», {{ProfilerTrace/frames}} → «», {{ProfilerTrace/stacks}} → «», {{ProfilerTrace/samples}} → «»]»</code>。
                     </li>
                 </ol>
-                <li>返回一个与新创建的<a>分析会话</a>关联的新 <a>Profiler</a>。</li>
+                <li>返回一个与新创建的<a>性能分析会话</a>关联的新 <a>Profiler</a>。</li>
             </ol>
             </p>
         </section>
         <section>
             <h2><dfn>stop()</dfn> 方法</h2>
             <p>
-                停止分析器并返回跟踪数据。此方法必须运行以下步骤：
+                停止性能分析器并返回跟踪记录。此方法必须运行以下步骤：
             </p>
             <ol>
-                <li>如果关联的 [= profiling session =] 的状态为 <code>stopped</code>，则返回以 <code>"InvalidStateError"</code>
-                    DOMException [= a promise
-                    rejected with =]。
-                <li>将 [= profiling session =] 的状态设置为 <code>stopped</code>。</li>
-                <li>令 |p:Promise| 为 [= a new promise =]。</li>
+                <li>如果所关联的[= 性能分析会话 =]的状态为 <code>stopped</code>，则返回[= 一个 promise
+                    其拒绝原因为 =]一个 <code>"InvalidStateError"</code> DOMException。
+                <li>将[= 性能分析会话 =]的状态设置为 <code>stopped</code>。</li>
+                <li>令 |p:Promise| 为[= 一个新 promise =]。</li>
                 <li>
-                    [= in parallel =] 运行以下步骤：
+                    [= 并行 =]运行以下步骤：
                     <ol>
-                        <li>执行停止 [= profiling session =] 所需的任何 [= implementation-defined =] 工作。</li>
-                        <li>使用与分析器的 [= profiling session
-                            =] 关联的 {{ProfilerTrace}} 兑现 |p|。</li>
+                        <li>执行任何[= 由实现定义 =]的工作，以停止[= 性能分析会话 =]。</li>
+                        <li>使用与性能分析器的[= 性能分析会话
+                            =]关联的 {{ProfilerTrace}} 兑现 |p|。</li>
                     </ol>
                 </li>
                 <li>返回 |p|。</li>
             </ol>
             <p>
-                在调用 <a>stop()</a> 后获取的任何<a>样本</a>都不应包含在<a>分析
-                    会话</a>中。
+                <a>性能分析
+                    会话</a>不应包含在调用 <a>stop()</a> 后采集的任何<a>样本</a>。
             </p>
         </section>
     </section>
@@ -400,32 +465,46 @@
         required sequence&lt;ProfilerSample&gt; samples;
       };
       </pre>
-        <p><dfn>resources</dfn> 属性必须返回由<a>获取
+        <p><dfn>resources</dfn> 属性必须返回由<a>采集
                 样本</a>算法设置的 <dfn>ProfilerResource</dfn> 列表。</p>
 
-        <p><dfn>frames</dfn> 属性必须返回由<a>获取样本</a>
+        <p><dfn>frames</dfn> 属性必须返回由<a>采集样本</a>
             算法设置的 <a>ProfilerFrame</a> 列表。</p>
-        <p><dfn>stacks</dfn> 属性必须返回由<a>获取样本</a>
+        <p><dfn>stacks</dfn> 属性必须返回由<a>采集样本</a>
             算法设置的 <a>ProfilerStack</a> 列表。</p>
-        <p><dfn>samples</dfn> 属性必须返回由<a>获取样本</a>
+        <p><dfn>samples</dfn> 属性必须返回由<a>采集样本</a>
             算法设置的 <a>ProfilerSample</a> 列表。</p>
         <p class="note">
-            受 <a href="https://docs.google.com/document/d/1CvAClvFfyA5R-PhYUmn5OOQtYMH4h6I0nSsKchNAySU/preview#">V8 跟踪
+            此表示形式受到<a href="https://docs.google.com/document/d/1CvAClvFfyA5R-PhYUmn5OOQtYMH4h6I0nSsKchNAySU/preview#">V8
+                跟踪
                 事件格式</a>
-            和 <a href="https://github.com/devtools-html/perf.html/blob/master/docs-developer/gecko-profile-format.md">Gecko
-                分析格式</a>的启发，
-            此表示形式旨在易于并能够高效地序列化。
+            和<a href="https://github.com/devtools-html/perf.html/blob/master/docs-developer/gecko-profile-format.md">Gecko
+                性能分析格式</a>的启发，
+            旨在便于高效地序列化。
         </p>
         <section data-dfn-for="ProfilerSample" data-link-for="ProfilerSample">
             <h2><dfn>ProfilerSample</dfn> 字典</h2>
             <pre class="idl">
+        enum ProfilerMarker { "script", "gc", "style", "layout", "paint", "other" };
+
         dictionary ProfilerSample {
           required DOMHighResTimeStamp timestamp;
           unsigned long long stackId;
+          ProfilerMarker? marker;
         };
         </pre>
             <p><dfn>timestamp</dfn> 必须返回其初始化时的值。</p>
             <p><dfn>stackId</dfn> 必须返回其初始化时的值。</p>
+            <p><dfn>marker</dfn> 必须返回<a>采集样本</a>算法为其初始化的值，或者
+                在未设置标记时不存在。允许暴露的标记值集合由
+                <a>过滤标记</a>算法控制。
+            </p>
+            <p class="note">
+                在跨源隔离的上下文中，<a>过滤标记</a>算法返回
+                <a>ProfilerMarker</a> 枚举中的每个值。在未隔离的上下文中，它仅返回 <code>style</code> 和
+                <code>layout</code>，因此其他标记均被抑制（对应的
+                <a>ProfilerSample</a> 上不存在 <a>marker</a> 属性）。
+            </p>
         </section>
         <section data-dfn-for="ProfilerStack" data-link-for="ProfilerStack">
             <h2><dfn>ProfilerStack</dfn> 字典</h2>
@@ -464,44 +543,43 @@
       </pre>
         <p><a>ProfilerInitOptions</a> 必须支持以下字段：</p>
         <ul>
-            <li><dfn>sampleInterval</dfn> 是应用程序期望的<a>采样间隔</a>。此值必须
+            <li><dfn>sampleInterval</dfn> 是应用期望的<a>采样间隔</a>。此值必须
                 大于或等于零。</li>
-            <li><dfn>maxBufferSize</dfn> 是期望的<a>样本缓冲区大小限制</a>，以样本数表示。</li>
+            <li><dfn>maxBufferSize</dfn> 是期望的<a>样本缓冲区大小限制</a>，以样本数计。</li>
         </ul>
     </section>
     <section id="document-policy">
         <h2>文档策略</h2>
         <p>
-            本规范在<a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html">文档
-                策略</a>中定义了<a
-                href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#configuration-point">配置
-                点</a>，用于控制分析能力和初始化行为。
+            本规范在<a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#configuration-point">配置
+                点</a>方面扩展了<a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html">文档
+                策略</a>，以控制性能分析能力和初始化行为。
         </p>
         <section>
             <h2><code>js-profiling-mode</code></h2>
             <p>
-                本规范定义了一个名称为 <code>js-profiling-mode</code> 的<a
+                本规范定义了一个<a
                     href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#configuration-point">配置
-                    点</a>。其<a
+                    点</a>，其名称为 <code>js-profiling-mode</code>。其<a
                     href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#configuration-point-type">类型</a>
-                为 <code>enum</code>，允许值为 <code>"eager"</code> 和 <code>"lazy"</code>。其<a
+                为 <code>enum</code>，允许的值为 <code>"eager"</code> 和 <code>"lazy"</code>。其<a
                     href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#configuration-point-default-value">默认
                     值</a>为空字符串。
             </p>
             <p>
-                设置后，此策略授权脚本使用 JS 自我分析 API。
+                设置后，此策略授权脚本使用 JS 自分析 API。
             </p>
             <section>
                 <h2><code>eager</code></h2>
                 <p>
                     当 <code>js-profiling-mode</code> 设置为 <code>"eager"</code> 时，它向用户代理表明
-                    预计将在页面加载期间进行分析。
+                    预期会在页面加载期间进行性能分析。
                 </p>
                 <p class="note">
-                    用户代理可以使用此提示尽早初始化分析基础设施，并在文档加载期间尽早存储所需的
-                    元数据和预热分析组件。但是，
-                    即使未主动使用分析，这也可能引入不可忽略的性能开销。此
-                    开销可能会对首次内容绘制（FCP）和最大内容
+                    用户代理可以利用此提示尽早初始化性能分析基础设施，在文档加载期间尽早存储所需的
+                    元数据并预热性能分析组件。但是，
+                    即使未主动使用性能分析，这也可能引入不可忽略的性能开销。此
+                    开销可能对首次内容绘制（FCP）和最大内容
                     绘制（LCP）等指标产生负面影响。
                 </p>
             </section>
@@ -509,45 +587,45 @@
                 <h2><code>lazy</code></h2>
                 <p>
                     当 <code>js-profiling-mode</code> 设置为 <code>"lazy"</code> 时，它向用户代理表明
-                    将有条件地使用分析。
+                    性能分析将有条件地使用。
                 </p>
                 <p class="note">
-                    用户代理可以使用此提示，将与分析相关的初始化开销推迟到首次实例化
-                    <a>Profiler</a> 时，从而在未主动使用分析的关键渲染阶段避免
-                    性能开销。但是，如果初始化发生在用户交互
-                    处理期间，则可能对下次绘制交互（INP）产生负面影响。此模式特别
-                    适用于根据采样决策有条件地启用分析的文档。
+                    用户代理可以利用此提示，将性能分析相关的初始化开销推迟到第一个
+                    <a>Profiler</a> 实例化时，从而在未主动使用性能分析时，避免在关键渲染阶段产生
+                    性能成本。但是，如果初始化发生在用户交互
+                    处理期间，则可能对交互到下一次绘制（INP）产生负面影响。此模式尤其
+                    适用于根据采样决策有条件地启用性能分析的文档。
                 </p>
             </section>
         </section>
         <section>
             <h2><code>js-profiling</code>（已弃用）</h2>
             <p>
-                本规范还定义了一个名称为 <code>js-profiling</code> 的<a
+                本规范还定义了一个<a
                     href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#configuration-point">配置
-                    点</a>。其<a
+                    点</a>，其名称为 <code>js-profiling</code>。其<a
                     href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#configuration-point-type">类型</a>
-                为 <code>boolean</code>，<a
+                为 <code>boolean</code>，其<a
                     href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#configuration-point-default-value">默认
                     值</a>为 <code>false</code>。
             </p>
             <p>
-                启用后，此策略授权脚本使用 JS 自我分析 API，并指示用户代理
-                尽早初始化分析基础设施（在语义上等同于
+                启用时，此策略授权脚本使用 JS 自分析 API，并向用户代理表明应
+                尽早初始化性能分析基础设施（在语义上等同于
                 <code>js-profiling-mode=eager</code>）。
             </p>
             <p class="note">
-                <code>js-profiling</code> 布尔配置点已弃用，建议改用
-                <code>js-profiling-mode</code>。如果二者都已指定，则 <code>js-profiling-mode</code> 优先，
-                并且必须忽略 <code>js-profiling</code>。实现应当支持 <code>js-profiling</code>
-                以实现向后兼容，但将来可以移除支持。
+                <code>js-profiling</code> 布尔配置点已弃用，改用
+                <code>js-profiling-mode</code>。如果两者均指定，则 <code>js-profiling-mode</code> 优先，
+                且必须忽略 <code>js-profiling</code>。实现应支持 <code>js-profiling</code>
+                以保持向后兼容，但可以在未来移除支持。
             </p>
         </section>
     </section>
     <section>
         <h2>自动化</h2>
         <p>
-            为了实现用户代理自动化和应用程序测试，本文档定义了以下
+            为支持用户代理自动化和应用测试，本文档定义了以下
             [[WebDriver]] <a data-cite="webdriver#dfn-extension-command">扩展命令</a>。
         </p>
         <section>
@@ -568,62 +646,89 @@
             </table>
             <p>
                 <dfn>强制采样</dfn><a data-cite="webdriver#dfn-extension-command">扩展命令</a>强制
-                所有[=分析会话=][=获取样本=]，以便实现更具确定性的测试。
+                所有[=性能分析会话=][=采集样本=]，以实现确定性更高的测试。
             </p>
             <p>
-                <a data-cite="webdriver#dfn-remote-end-steps">远端步骤</a>如下：
+                <a data-cite="webdriver#dfn-remote-end-steps">远程端步骤</a>为：
             <ol>
                 <li>令 |sessions:list| 为在<a
-                        data-cite="webdriver#dfn-current-browsing-context">当前浏览上下文</a>中创建的所有[=分析会话=]的[=列表=]。</li>
+                        data-cite="webdriver#dfn-current-browsing-context">当前浏览上下文</a>中创建的所有[=性能分析会话=]的[=列表=]。</li>
                 <li>
-                    对 |sessions| 中的每个 |session:profiling session|：
+                    对于 |sessions| 中的每个 |session:profiling session|：
                     <ol>
-                        <li>如果 |session| 的[=状态=]为 <code>started</code>，则以 |session| [=获取样本=]。
+                        <li>如果 |session| 的[=状态=]为 <code>started</code>，则使用 |session| [=采集样本=]。
                         </li>
                     </ol>
                 </li>
-                <li>返回数据为 <code>null</code> 的<a data-cite="webdriver#dfn-success">成功</a>。</li>
+                <li>返回<a data-cite="webdriver#dfn-success">成功</a>，数据为 <code>null</code>。</li>
             </ol>
             </p>
         </section>
     </section>
     <section id="privacy-security" class="informative">
-        <h2>隐私和安全</h2>
-        <p>以下各节详细说明了此 API 的一些隐私和安全设计选择，并阐述了针对
+        <h2>隐私与安全</h2>
+        <p>以下各节详细介绍了 API 在隐私与安全方面的一些选择，并说明针对
             各类攻击的防护策略。</p>
         <section>
             <h2>跨源脚本内容</h2>
             <p>
-                此 API 通过要求所有经由<a>获取样本</a>算法包含的函数都必须定义在通过
-                <a>静默错误</a>属性以 <dfn data-cite="HTML5#cors-same-origin">CORS 同源</dfn>方式提供的脚本中，来避免暴露跨源脚本的内容。
-                浏览器内置函数（例如 <code>performance.now()</code>）也必须仅在由
-                [= CORS-same-origin =]脚本调用时才被包含。
+                该 API 通过 <a>静默错误</a> 属性，要求所有经由
+                <a>采集样本</a>算法纳入的函数均定义于通过<dfn data-cite="HTML5#cors-same-origin">CORS 同源</dfn>方式提供的脚本中，从而避免暴露跨源脚本的内容。
+                浏览器内置函数（例如 <code>performance.now()</code>）也必须仅在从
+                [= CORS 同源 =]脚本调用时才被纳入。
             </p>
             <p>
-                因此，除了通过手动插桩已经能够获得的信息外，此 API 不会暴露任何有关
-                跨源脚本内容或执行特征的新信息。如果用户代理选择支持极低的
-                <a>采样间隔</a>值（例如小于
-                一毫秒），则建议验证这一点仍然成立。
+                因此，除了通过手动插桩已经能够获知的信息外，该 API 不会额外暴露有关
+                跨源脚本内容或执行特征的信息。鼓励用户代理
+                在选择支持极低的<a>采样间隔</a>值（例如，小于
+                一毫秒）时验证这一点仍然成立。
             </p>
         </section>
         <section>
             <h2>跨源执行</h2>
             <p>
-                通过<a>获取样本</a>算法中的领域检查，此 API 不应能够观察到跨源执行上下文。
-                因此，与分析器共享<a>代理</a>的跨源 <code>iframes</code> 和其他执行上下文，
-                其执行情况不会通过此
+                通过
+                <a>采集样本</a>算法中的域检查，API 应无法观察到跨源执行上下文。因此，与性能分析器
+                共享同一个<a>代理</a>的跨源 <code>iframes</code> 和其他执行上下文，其执行情况将无法通过此
                 API 被观察到。
             </p>
         </section>
         <section>
-            <h2>时序攻击</h2>
+            <h2>计时攻击</h2>
             <p>
-                对于任何可能引入新的高分辨率计时
-                信息来源的 API，时序攻击始终是一个需要关注的问题。跟踪数据中收集的时间戳应当与 [[?HR-Time]] 的
-                <a>当前高分辨率时间</a>使用相同来源，以避免暴露新的侧信道攻击途径。
+                对于任何可能引入新的高精度计时
+                信息来源的 API，计时攻击始终是需要关注的问题。跟踪记录中收集的时间戳应与 [[?HR-Time]] 的
+                <a>当前高精度时间</a>来自同一来源，以避免引入新的侧信道攻击途径。
             <p class="note">
                 请参阅 [[?HR-Time]] 中关于<a href="https://www.w3.org/TR/hr-time-2/#clock-resolution">时钟
                     分辨率</a>的讨论。
+            </p>
+        </section>
+        <section id="conditional-markers">
+            <h2>有条件的标记暴露</h2>
+            <p>
+                默认情况下，<a>过滤标记</a>算法仅在性能分析器的<a data-cite="HTML5#environment-settings-object">环境设置对象</a>的<a
+                    data-cite="HTML5#concept-settings-object-cross-origin-isolated-capability">跨源隔离
+                    能力</a>设置为 true 时，才暴露 <code>script</code>、<code>gc</code>、
+                <code>paint</code> 和 <code>other</code> 标记。这些标记可能反映无法可靠归属于
+                单一源的引擎工作 &mdash; 例如，垃圾回收和其他跨上下文的引擎活动可能
+                将不同上下文中的工作关联起来，而绘制可能合成来自其他框架的内容。在没有隔离的情况下暴露
+                此类工作的时间信息，因而可能促成某种跨源侧信道，而这正是
+                <a data-cite="HTML5#concept-settings-object-cross-origin-isolated-capability">跨源
+                    隔离</a>旨在缓解的风险，因此对此类标记的暴露以跨源隔离为前提。用户代理可以通过显式选择启用来扩大所暴露的
+                集合（如上文<a>过滤标记</a>的注记所述），但此类选择启用机制
+                不得跨源暴露标记。
+            </p>
+            <p>
+                <code>style</code> 和 <code>layout</code> 标记无需跨源隔离即可暴露，
+                因为它们揭示的时间信息已经可以在同源范围内观察到。文档已经能够同步地
+                刷新自身的样式和布局，并使用现有 API 测量所需时间 &mdash; 例如，
+                <code>getBoundingClientRect()</code> 会强制执行布局，而 <code>getComputedStyle()</code> 会刷新样式
+                （以及在需要时刷新布局）。为保持此性质，<a>捕获标记</a>算法仅针对以下情况报告
+                标记：工作是为与性能分析器同源的文档执行的；对于无法
+                归属于同源文档的工作，不通过这些标记报告。因此，它们不会暴露
+                同源文档原本无法自行获取的任何
+                时间信息。
             </p>
         </section>
     </section>
