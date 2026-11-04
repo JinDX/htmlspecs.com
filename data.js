@@ -35,7 +35,7 @@ const linkGroups = [
                 text: "HTML",
                 href: "https://htmlspecs.com/",
                 src: "https://html.spec.whatwg.org/",
-                "last-modified": "Fri, 30 Oct 2026 06:16:40 GMT",
+                "last-modified": "Tue, 03 Nov 2026 14:55:02 GMT",
                 lang: "cjk",
                 state: "LS"
             },
@@ -51,7 +51,7 @@ const linkGroups = [
                 text: "ECMAScript® 2027 Language Specification",
                 href: "https://ecma262.com/",
                 src: "https://tc39.es/ecma262/",
-                "last-modified": "Tue, 03 Nov 2026 03:35:00 GMT",
+                "last-modified": "Tue, 03 Nov 2026 16:45:36 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
@@ -67,7 +67,7 @@ const linkGroups = [
                 text: "Source map format specification",
                 href: "https://htmlspecs.com/ecma426/",
                 src: "https://tc39.es/ecma426/",
-                "last-modified": "Mon, 02 Nov 2026 20:17:44 GMT",
+                "last-modified": "Tue, 03 Nov 2026 19:47:32 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
@@ -1241,7 +1241,7 @@ const linkGroups = [
                 text: "Cross-Origin Storage",
                 href: "https://htmlspecs.com/cross-origin-storage/",
                 src: "https://wicg.github.io/cross-origin-storage/",
-                "last-modified": "Mon, 02 Nov 2026 16:14:07 GMT",
+                "last-modified": "Tue, 03 Nov 2026 21:19:39 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
@@ -3020,7 +3020,7 @@ const linkGroups = [
             {
                 text: "Decentralized Identifier Resolution (DID Resolution) v1",
                 href: "https://htmlspecs.com/did-resolution/",
-                src: "https://www.w3.org/TR/2026/CRD-did-resolution-1.0-20261030/",
+                src: "https://www.w3.org/TR/2026/CRD-did-resolution-1.0-20261103/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "CRD"
@@ -3710,7 +3710,7 @@ const linkGroups = [
             {
                 text: "WebDriver BiDi",
                 href: "https://htmlspecs.com/webdriver-bidi/",
-                src: "https://www.w3.org/TR/2026/WD-webdriver-bidi-20261008/",
+                src: "https://www.w3.org/TR/2026/WD-webdriver-bidi-20261103/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
@@ -3950,7 +3950,7 @@ const cssLinkGroups = [
             {
                 text: "CSS Color Module Level 4",
                 href: "https://htmlspecs.com/css/css-color-4/",
-                src: "https://www.w3.org/TR/2026/CRD-css-color-4-20261101/",
+                src: "https://www.w3.org/TR/2026/CRD-css-color-4-20261103/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "CRD"
