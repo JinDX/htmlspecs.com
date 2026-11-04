@@ -390,7 +390,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Email Verification API](https://htmlspecs.com/email-verification/)（[Source](https://wicg.github.io/email-verification/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Digital Credentials](https://htmlspecs.com/digital-credentials/)（[Source](https://www.w3.org/TR/2026/WD-digital-credentials-20261029/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Decentralized Identifiers (DIDs) v1.1](https://htmlspecs.com/did-1.1/)（[Source](https://www.w3.org/TR/2026/CR-did-1.1-20260305/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
-- [Decentralized Identifier Resolution (DID Resolution) v1](https://htmlspecs.com/did-resolution/)（[Source](https://www.w3.org/TR/2026/CRD-did-resolution-1.0-20261030/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
+- [Decentralized Identifier Resolution (DID Resolution) v1](https://htmlspecs.com/did-resolution/)（[Source](https://www.w3.org/TR/2026/CRD-did-resolution-1.0-20261103/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [Verifiable Credentials Data Model v2.0](https://htmlspecs.com/vc-data-model-2.0/)（[Source](https://www.w3.org/TR/2025/REC-vc-data-model-2.0-20250515/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Verifiable Credentials Data Model v2.1](https://htmlspecs.com/vc-data-model-2.1/)（[Source](https://www.w3.org/TR/2026/WD-vc-data-model-2.1-20261022/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Securing Verifiable Credentials using JOSE and COSE](https://htmlspecs.com/vc-jose-cose/)（[Source](https://www.w3.org/TR/2026/REC-vc-jose-cose-20261013/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
@@ -483,7 +483,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Test Utils](https://htmlspecs.com/testutils/)（[Source](https://testutils.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [Console](https://htmlspecs.com/console/)（[Source](https://console.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [WebDriver](https://htmlspecs.com/webdriver2/)（[Source](https://www.w3.org/TR/2026/WD-webdriver2-20260702/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
-- [WebDriver BiDi](https://htmlspecs.com/webdriver-bidi/)（[Source](https://www.w3.org/TR/2026/WD-webdriver-bidi-20261008/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [WebDriver BiDi](https://htmlspecs.com/webdriver-bidi/)（[Source](https://www.w3.org/TR/2026/WD-webdriver-bidi-20261103/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 
 ## CSS
 - [CSS current work](https://htmlspecs.com/css/)（[Source](https://www.w3.org/Style/CSS/current-work)）
@@ -515,7 +515,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 
 ### 颜色、背景、边框与视觉效果
 - [CSS Color Module Level 3](https://htmlspecs.com/css/css-color-3/)（[Source](https://www.w3.org/TR/2022/REC-css-color-3-20220118/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
-- [CSS Color Module Level 4](https://htmlspecs.com/css/css-color-4/)（[Source](https://www.w3.org/TR/2026/CRD-css-color-4-20261101/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
+- [CSS Color Module Level 4](https://htmlspecs.com/css/css-color-4/)（[Source](https://www.w3.org/TR/2026/CRD-css-color-4-20261103/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [CSS Color Module Level 5](https://htmlspecs.com/css/css-color-5/)（[Source](https://www.w3.org/TR/2026/WD-css-color-5-20261029/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Color Adjustment Module Level 1](https://htmlspecs.com/css/css-color-adjust-1/)（[Source](https://www.w3.org/TR/2025/CR-css-color-adjust-1-20251216/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
 - [CSS Color HDR Module Level 1](https://htmlspecs.com/css/css-color-hdr-1/)（[Source](https://www.w3.org/TR/2026/WD-css-color-hdr-1-20261026/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
