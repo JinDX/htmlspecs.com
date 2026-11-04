@@ -3695,7 +3695,7 @@ const linkGroups = [
                 text: "Console",
                 href: "https://htmlspecs.com/console/",
                 src: "https://console.spec.whatwg.org/",
-                "last-modified": "Mon, 19 Oct 2026 11:59:01 GMT",
+                "last-modified": "Wed, 04 Nov 2026 04:41:23 GMT",
                 lang: "cjk",
                 state: "LS"
             },
