@@ -2495,7 +2495,7 @@ const linkGroups = [
             {
                 text: "High Resolution Time",
                 href: "https://htmlspecs.com/hr-time-3/",
-                src: "https://www.w3.org/TR/2026/WD-hr-time-3-20261102/",
+                src: "https://www.w3.org/TR/2026/WD-hr-time-3-20261104/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
