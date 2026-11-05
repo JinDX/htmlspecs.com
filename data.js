@@ -1430,7 +1430,7 @@ const linkGroups = [
                 text: "WebHID Standard",
                 href: "https://htmlspecs.com/hid/",
                 src: "https://hid.spec.whatwg.org/",
-                "last-modified": "Fri, 30 Oct 2026 11:28:31 GMT",
+                "last-modified": "Wed, 04 Nov 2026 22:19:54 GMT",
                 lang: "cjk",
                 state: "LS"
             },
