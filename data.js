@@ -2074,7 +2074,7 @@ const linkGroups = [
             {
                 text: "Media Source Extensions",
                 href: "https://htmlspecs.com/media-source-2/",
-                src: "https://www.w3.org/TR/2026/WD-media-source-2-20260807/",
+                src: "https://www.w3.org/TR/2026/WD-media-source-2-20261104/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
