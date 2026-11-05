@@ -3116,7 +3116,7 @@ const linkGroups = [
             {
                 text: "Recognized Entities v1.0",
                 href: "https://htmlspecs.com/vc-recognized-entities-1.0/",
-                src: "https://www.w3.org/TR/2026/WD-vc-recognized-entities-1.0-20261102/",
+                src: "https://www.w3.org/TR/2026/WD-vc-recognized-entities-1.0-20261104/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
