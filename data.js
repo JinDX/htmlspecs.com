@@ -1477,7 +1477,7 @@ const linkGroups = [
             {
                 text: "Geolocation API",
                 href: "https://htmlspecs.com/geolocation/",
-                src: "https://www.w3.org/TR/2026/CRD-geolocation-20261030/",
+                src: "https://www.w3.org/TR/2026/CRD-geolocation-20261105/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "CRD"
