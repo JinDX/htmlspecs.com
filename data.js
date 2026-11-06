@@ -3710,7 +3710,7 @@ const linkGroups = [
             {
                 text: "WebDriver BiDi",
                 href: "https://htmlspecs.com/webdriver-bidi/",
-                src: "https://www.w3.org/TR/2026/WD-webdriver-bidi-20261103/",
+                src: "https://www.w3.org/TR/2026/WD-webdriver-bidi-20261106/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
