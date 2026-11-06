@@ -1,5 +1,9 @@
 const fs = require('fs');
+const { execFile } = require('child_process');
+const { promisify } = require('util');
 const data = require('./data.js');
+
+const execFileAsync = promisify(execFile);
 
 const SAVE_RESULTS =
   process.env.SAVE_RESULTS === '1' ||
@@ -9,6 +13,11 @@ const RESULT_FILE = 'check-results.md';
 
 const W3C_CONCURRENCY = 5;
 const OTHER_CONCURRENCY = 10;
+
+const CURL_HEAD_URLS = new Set([
+  'https://www.w3.org/Style/CSS/current-work',
+  'https://www.w3.org/Style/CSS/read'
+]);
 
 let progressText = '';
 
@@ -231,19 +240,104 @@ async function mapWithConcurrency(
   await Promise.all(workers);
 }
 
+async function getHeadWithCurl(url) {
+  let stdout;
+
+  try {
+    ({ stdout } = await execFileAsync(
+      'curl',
+      [
+        '--head',
+        '--location',
+        '--silent',
+        '--show-error',
+        '--max-time', '20',
+        '--user-agent', 'htmlspecs-checker/1.0',
+        '--write-out', '\n%{http_code}\t%{url_effective}',
+        '--url', url
+      ],
+      {
+        encoding: 'utf8',
+        timeout: 25000,
+        maxBuffer: 1024 * 1024,
+        windowsHide: true
+      }
+    ));
+  } catch (err) {
+    if (err.code === 'ENOENT') {
+      throw new Error(
+        'curl was not found. Install curl or add it to PATH.'
+      );
+    }
+
+    throw new Error(
+      `curl failed: ${(err.stderr || err.message).trim()}`
+    );
+  }
+
+  const metadataIndex = stdout.lastIndexOf('\n');
+  const metadata = stdout.slice(metadataIndex + 1)
+    .trim()
+    .match(/^([1-5]\d{2})\t(.+)$/);
+
+  if (metadataIndex < 0 || !metadata) {
+    throw new Error('curl returned invalid response metadata');
+  }
+
+  const status = Number(metadata[1]);
+  const finalUrl = metadata[2];
+
+  // Use the final response, after proxy CONNECT and redirect headers.
+  const headerBlocks = stdout.slice(0, metadataIndex)
+    .trim()
+    .split(/\r?\n\r?\n/);
+
+  const headerLines = headerBlocks[headerBlocks.length - 1]
+    .split(/\r?\n/);
+
+  const statusLine = headerLines.shift()
+    .match(/^HTTP\/\S+\s+(\d{3})(?:\s|$)/i);
+
+  if (!statusLine || Number(statusLine[1]) !== status) {
+    throw new Error('curl returned invalid HTTP response headers');
+  }
+
+  const headers = new Headers();
+
+  for (const line of headerLines) {
+    const separator = line.indexOf(':');
+
+    if (separator > 0) {
+      headers.append(
+        line.slice(0, separator).trim(),
+        line.slice(separator + 1).trim()
+      );
+    }
+  }
+
+  return {
+    ok: status >= 200 && status < 300,
+    status,
+    url: finalUrl,
+    headers
+  };
+}
+
 async function getHeadWithRetry(url, maxRetry = 2) {
   for (let attempt = 0; ; attempt++) {
     let res;
 
     try {
-      res = await fetch(url, {
-        method: 'HEAD',
-        headers: {
-          'User-Agent': 'htmlspecs-checker/1.0'
-        },
-        redirect: 'follow',
-        signal: AbortSignal.timeout(15000)
-      });
+      res = CURL_HEAD_URLS.has(url)
+        ? await getHeadWithCurl(url)
+        : await fetch(url, {
+          method: 'HEAD',
+          headers: {
+            'User-Agent': 'htmlspecs-checker/1.0'
+          },
+          redirect: 'follow',
+          signal: AbortSignal.timeout(15000)
+        });
     } catch (err) {
       if (attempt >= maxRetry) {
         throw err;
