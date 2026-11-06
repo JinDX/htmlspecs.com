@@ -615,7 +615,7 @@ const linkGroups = [
             {
                 text: "RDF 1.2 N-Triples",
                 href: "https://htmlspecs.com/rdf12-n-triples/",
-                src: "https://www.w3.org/TR/2026/WD-rdf12-n-triples-20261023/",
+                src: "https://www.w3.org/TR/2026/WD-rdf12-n-triples-20261105/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
