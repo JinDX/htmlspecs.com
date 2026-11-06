@@ -2624,7 +2624,7 @@ const linkGroups = [
                 text: "Layout Instability API",
                 href: "https://htmlspecs.com/layout-instability/",
                 src: "https://wicg.github.io/layout-instability/",
-                "last-modified": "Wed, 04 Nov 2026 21:20:35 GMT",
+                "last-modified": "Fri, 06 Nov 2026 13:25:24 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
