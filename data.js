@@ -35,7 +35,7 @@ const linkGroups = [
                 text: "HTML",
                 href: "https://htmlspecs.com/",
                 src: "https://html.spec.whatwg.org/",
-                "last-modified": "Thu, 05 Nov 2026 13:53:49 GMT",
+                "last-modified": "Fri, 06 Nov 2026 22:04:09 GMT",
                 lang: "cjk",
                 state: "LS"
             },
@@ -51,7 +51,7 @@ const linkGroups = [
                 text: "ECMAScript® 2027 Language Specification",
                 href: "https://ecma262.com/",
                 src: "https://tc39.es/ecma262/",
-                "last-modified": "Fri, 06 Nov 2026 00:14:52 GMT",
+                "last-modified": "Fri, 06 Nov 2026 17:17:56 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
@@ -82,7 +82,7 @@ const linkGroups = [
             {
                 text: "WebAssembly Core Specification",
                 href: "https://htmlspecs.com/wasm-core-2",
-                src: "https://www.w3.org/TR/2026/CRD-wasm-core-2-20261104/",
+                src: "https://www.w3.org/TR/2026/CRD-wasm-core-2-20261106/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "CRD"
@@ -90,7 +90,7 @@ const linkGroups = [
             {
                 text: "WebAssembly JavaScript Interface",
                 href: "https://htmlspecs.com/wasm-js-api-2/",
-                src: "https://www.w3.org/TR/2026/CRD-wasm-js-api-2-20261104/",
+                src: "https://www.w3.org/TR/2026/CRD-wasm-js-api-2-20261106/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "CRD"
@@ -98,7 +98,7 @@ const linkGroups = [
             {
                 text: "WebAssembly Web API",
                 href: "https://htmlspecs.com/wasm-web-api-2/",
-                src: "https://www.w3.org/TR/2026/CRD-wasm-web-api-2-20261104/",
+                src: "https://www.w3.org/TR/2026/CRD-wasm-web-api-2-20261106/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "CRD"
@@ -139,7 +139,7 @@ const linkGroups = [
                 text: "Web IDL",
                 href: "https://htmlspecs.com/webidl/",
                 src: "https://webidl.spec.whatwg.org/",
-                "last-modified": "Wed, 04 Nov 2026 07:26:02 GMT",
+                "last-modified": "Fri, 06 Nov 2026 13:49:20 GMT",
                 lang: "cjk",
                 state: "LS"
             },
@@ -535,7 +535,7 @@ const linkGroups = [
             {
                 text: "Linked Web Storage Protocol 1.0",
                 href: "https://htmlspecs.com/lws10-core/",
-                src: "https://www.w3.org/TR/2026/WD-lws10-core-20261023/",
+                src: "https://www.w3.org/TR/2026/WD-lws10-core-20261106/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
@@ -1241,7 +1241,7 @@ const linkGroups = [
                 text: "Cross-Origin Storage",
                 href: "https://htmlspecs.com/cross-origin-storage/",
                 src: "https://wicg.github.io/cross-origin-storage/",
-                "last-modified": "Tue, 03 Nov 2026 21:19:39 GMT",
+                "last-modified": "Fri, 06 Nov 2026 14:29:01 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
@@ -1408,7 +1408,7 @@ const linkGroups = [
                 text: "Autofill Event",
                 href: "https://htmlspecs.com/autofill-event/",
                 src: "https://wicg.github.io/autofill-event/",
-                "last-modified": "Fri, 09 Oct 2026 14:20:17 GMT",
+                "last-modified": "Fri, 06 Nov 2026 19:57:36 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
@@ -1715,7 +1715,7 @@ const linkGroups = [
             {
                 text: "Window Management",
                 href: "https://htmlspecs.com/window-management/",
-                src: "https://www.w3.org/TR/2026/WD-window-management-20261030/",
+                src: "https://www.w3.org/TR/2026/WD-window-management-20261106/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
@@ -2225,7 +2225,7 @@ const linkGroups = [
             {
                 text: "WebGPU Shading Language",
                 href: "https://htmlspecs.com/WGSL/",
-                src: "https://www.w3.org/TR/2026/CRD-WGSL-20261026/",
+                src: "https://www.w3.org/TR/2026/CRD-WGSL-20261106/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "CRD"
@@ -2433,7 +2433,7 @@ const linkGroups = [
                 text: "Writing Assistance APIs",
                 href: "https://htmlspecs.com/writing-assistance-apis/",
                 src: "https://webmachinelearning.github.io/writing-assistance-apis/",
-                "last-modified": "Tue, 06 Oct 2026 16:53:11 GMT",
+                "last-modified": "Sat, 07 Nov 2026 01:44:22 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
@@ -2495,7 +2495,7 @@ const linkGroups = [
             {
                 text: "High Resolution Time",
                 href: "https://htmlspecs.com/hr-time-3/",
-                src: "https://www.w3.org/TR/2026/WD-hr-time-3-20261104/",
+                src: "https://www.w3.org/TR/2026/WD-hr-time-3-20261106/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
@@ -2624,7 +2624,7 @@ const linkGroups = [
                 text: "Layout Instability API",
                 href: "https://htmlspecs.com/layout-instability/",
                 src: "https://wicg.github.io/layout-instability/",
-                "last-modified": "Wed, 04 Nov 2026 21:20:35 GMT",
+                "last-modified": "Fri, 06 Nov 2026 16:51:16 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
@@ -2695,7 +2695,7 @@ const linkGroups = [
                 text: "Prefetch",
                 href: "https://htmlspecs.com/prefetch/",
                 src: "https://wicg.github.io/nav-speculation/prefetch.html",
-                "last-modified": "Thu, 27 Aug 2026 00:58:33 GMT",
+                "last-modified": "Fri, 06 Nov 2026 09:20:14 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
@@ -2703,7 +2703,7 @@ const linkGroups = [
                 text: "Prerendering Revamped",
                 href: "https://htmlspecs.com/prerendering/",
                 src: "https://wicg.github.io/nav-speculation/prerendering.html",
-                "last-modified": "Thu, 27 Aug 2026 00:58:33 GMT",
+                "last-modified": "Fri, 06 Nov 2026 09:20:14 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
@@ -3052,7 +3052,7 @@ const linkGroups = [
             {
                 text: "Verifiable Credential Data Integrity 1.1",
                 href: "https://htmlspecs.com/vc-data-integrity-1.1/",
-                src: "https://www.w3.org/TR/2026/WD-vc-data-integrity-1.1-20260930/",
+                src: "https://www.w3.org/TR/2026/WD-vc-data-integrity-1.1-20261106/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
@@ -3710,7 +3710,7 @@ const linkGroups = [
             {
                 text: "WebDriver BiDi",
                 href: "https://htmlspecs.com/webdriver-bidi/",
-                src: "https://www.w3.org/TR/2026/WD-webdriver-bidi-20261103/",
+                src: "https://www.w3.org/TR/2026/WD-webdriver-bidi-20261106/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
