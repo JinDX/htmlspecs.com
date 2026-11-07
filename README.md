@@ -6,9 +6,9 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [HTML Ruby Markup Extensions](https://htmlspecs.com/html-ruby-extensions/)（[Source](https://www.w3.org/TR/2026/CR-html-ruby-extensions-20260604/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
 - [ECMAScript® 2027 Language Specification](https://ecma262.com/c)（[Source](https://tc39.es/ecma262/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)），[How to Read](https://htmlspecs.com/es-howto/)（[Source](https://timothygu.me/es-howto/)）
 - [Source map format specification](https://htmlspecs.com/ecma426/)（[Source](https://tc39.es/ecma426/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
-- [WebAssembly Core Specification](https://htmlspecs.com/wasm-core-2)（[Source](https://www.w3.org/TR/2026/CRD-wasm-core-2-20261104/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
-- [WebAssembly JavaScript Interface](https://htmlspecs.com/wasm-js-api-2/)（[Source](https://www.w3.org/TR/2026/CRD-wasm-js-api-2-20261104/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
-- [WebAssembly Web API](https://htmlspecs.com/wasm-web-api-2/)（[Source](https://www.w3.org/TR/2026/CRD-wasm-web-api-2-20261104/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
+- [WebAssembly Core Specification](https://htmlspecs.com/wasm-core-2)（[Source](https://www.w3.org/TR/2026/CRD-wasm-core-2-20261106/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
+- [WebAssembly JavaScript Interface](https://htmlspecs.com/wasm-js-api-2/)（[Source](https://www.w3.org/TR/2026/CRD-wasm-js-api-2-20261106/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
+- [WebAssembly Web API](https://htmlspecs.com/wasm-web-api-2/)（[Source](https://www.w3.org/TR/2026/CRD-wasm-web-api-2-20261106/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [DOM](https://htmlspecs.com/dom/)（[Source](https://dom.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [DOM Parsing and Serialization](https://htmlspecs.com/dom-parsing/)（[Source](https://www.w3.org/TR/2016/WD-DOM-Parsing-20160517/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [URL](https://htmlspecs.com/url/)（[Source](https://url.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
@@ -66,7 +66,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Micropub](https://htmlspecs.com/micropub/)（[Source](https://www.w3.org/TR/2017/REC-micropub-20170523/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Web Annotation Data Model](https://htmlspecs.com/annotation-model/)（[Source](https://www.w3.org/TR/2017/REC-annotation-model-20170223/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Data on the Web Best Practices](https://htmlspecs.com/dwbp/)（[Source](https://www.w3.org/TR/2017/REC-dwbp-20170131/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
-- [Linked Web Storage Protocol 1.0](https://htmlspecs.com/lws10-core/)（[Source](https://www.w3.org/TR/2026/WD-lws10-core-20261023/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Linked Web Storage Protocol 1.0](https://htmlspecs.com/lws10-core/)（[Source](https://www.w3.org/TR/2026/WD-lws10-core-20261106/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [LWS 1.0 Authentication Suite: OpenID Connect](https://htmlspecs.com/lws10-authn-openid/)（[Source](https://www.w3.org/TR/2026/WD-lws10-authn-openid-20261015/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [LWS 1.0 Authentication Suite: SAML 2.0](https://htmlspecs.com/lws10-authn-saml/)（[Source](https://www.w3.org/TR/2026/WD-lws10-authn-saml-20261015/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [LWS 1.0 Authentication Suite: Self-signed Identity using Controlled Identifiers](https://htmlspecs.com/lws10-authn-ssi-cid/)（[Source](https://www.w3.org/TR/2026/WD-lws10-authn-ssi-cid-20261015/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
@@ -219,7 +219,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Fullscreen](https://htmlspecs.com/fullscreen/)（[Source](https://fullscreen.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [Contact Picker API](https://htmlspecs.com/contact-picker/)（[Source](https://www.w3.org/TR/2026/WD-contact-picker-20261026/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Window Controls Overlay](https://htmlspecs.com/window-controls-overlay/)（[Source](https://wicg.github.io/window-controls-overlay/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
-- [Window Management](https://htmlspecs.com/window-management/)（[Source](https://www.w3.org/TR/2026/WD-window-management-20261030/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Window Management](https://htmlspecs.com/window-management/)（[Source](https://www.w3.org/TR/2026/WD-window-management-20261106/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Web Printing API](https://htmlspecs.com/web-printing/)（[Source](https://wicg.github.io/web-printing/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Web Share API](https://htmlspecs.com/web-share/)（[Source](https://www.w3.org/TR/2023/REC-web-share-20230530/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Web Share Target API](https://htmlspecs.com/web-share-target/)（[Source](https://w3c.github.io/web-share-target/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
@@ -287,7 +287,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 ### 图形、图像、GPU 与 WebXR
 - [Accelerated Shape Detection in Images](https://htmlspecs.com/shape-detection-api/)（[Source](https://wicg.github.io/shape-detection-api/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [WebGPU](https://htmlspecs.com/webgpu/)（[Source](https://www.w3.org/TR/2026/CRD-webgpu-20260915/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
-- [WebGPU Shading Language](https://htmlspecs.com/WGSL/)（[Source](https://www.w3.org/TR/2026/CRD-WGSL-20261026/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
+- [WebGPU Shading Language](https://htmlspecs.com/WGSL/)（[Source](https://www.w3.org/TR/2026/CRD-WGSL-20261106/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [WebGL Specification](https://htmlspecs.com/webgl/)（[Source](https://registry.khronos.org/webgl/specs/latest/1.0/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [WebGL 2.0 Specification](https://htmlspecs.com/webgl2/)（[Source](https://registry.khronos.org/webgl/specs/latest/2.0/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Scalable Vector Graphics (SVG) 2](https://htmlspecs.com/SVG2/)（[Source](https://www.w3.org/TR/2026/CR-SVG2-20261006/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
@@ -323,7 +323,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [JS Self-Profiling API](https://htmlspecs.com/js-self-profiling/)（[Source](https://wicg.github.io/js-self-profiling/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Timing Entry Names Registry](https://htmlspecs.com/timing-entrytypes-registry/)（[Source](https://www.w3.org/TR/2019/WD-timing-entrytypes-registry-20190723/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Compute Pressure API](https://htmlspecs.com/compute-pressure/)（[Source](https://www.w3.org/TR/2026/CRD-compute-pressure-20261026/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
-- [High Resolution Time](https://htmlspecs.com/hr-time-3/)（[Source](https://www.w3.org/TR/2026/WD-hr-time-3-20261104/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [High Resolution Time](https://htmlspecs.com/hr-time-3/)（[Source](https://www.w3.org/TR/2026/WD-hr-time-3-20261106/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Intersection Observer](https://htmlspecs.com/intersection-observer/)（[Source](https://www.w3.org/TR/2023/WD-intersection-observer-20231018/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Resize Observer](https://htmlspecs.com/resize-observer/)（[Source](https://www.w3.org/TR/2020/WD-resize-observer-1-20200211/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Navigation Timing Level 2](https://htmlspecs.com/navigation-timing-2/)（[Source](https://www.w3.org/TR/2026/WD-navigation-timing-2-20261102/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
@@ -394,7 +394,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Verifiable Credentials Data Model v2.0](https://htmlspecs.com/vc-data-model-2.0/)（[Source](https://www.w3.org/TR/2025/REC-vc-data-model-2.0-20250515/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Verifiable Credentials Data Model v2.1](https://htmlspecs.com/vc-data-model-2.1/)（[Source](https://www.w3.org/TR/2026/WD-vc-data-model-2.1-20261022/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Securing Verifiable Credentials using JOSE and COSE](https://htmlspecs.com/vc-jose-cose/)（[Source](https://www.w3.org/TR/2026/REC-vc-jose-cose-20261013/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
-- [Verifiable Credential Data Integrity 1.1](https://htmlspecs.com/vc-data-integrity-1.1/)（[Source](https://www.w3.org/TR/2026/WD-vc-data-integrity-1.1-20260930/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Verifiable Credential Data Integrity 1.1](https://htmlspecs.com/vc-data-integrity-1.1/)（[Source](https://www.w3.org/TR/2026/WD-vc-data-integrity-1.1-20261106/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Data Integrity BBS Cryptosuites v1.0](https://htmlspecs.com/vc-di-bbs/)（[Source](https://www.w3.org/TR/2026/CRD-vc-di-bbs-20260910/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [Verifiable Credential Confidence Methods v1.0](https://htmlspecs.com/vc-confidence-method/)（[Source](https://www.w3.org/TR/2026/WD-vc-confidence-method-20261022/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Bitstring Status List v1.0](https://htmlspecs.com/vc-bitstring-status-list/)（[Source](https://www.w3.org/TR/2025/REC-vc-bitstring-status-list-20250515/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
@@ -483,7 +483,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Test Utils](https://htmlspecs.com/testutils/)（[Source](https://testutils.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [Console](https://htmlspecs.com/console/)（[Source](https://console.spec.whatwg.org/) ![Living Standard](https://img.shields.io/badge/LS-3c790a)）
 - [WebDriver](https://htmlspecs.com/webdriver2/)（[Source](https://www.w3.org/TR/2026/WD-webdriver2-20260702/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
-- [WebDriver BiDi](https://htmlspecs.com/webdriver-bidi/)（[Source](https://www.w3.org/TR/2026/WD-webdriver-bidi-20261103/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [WebDriver BiDi](https://htmlspecs.com/webdriver-bidi/)（[Source](https://www.w3.org/TR/2026/WD-webdriver-bidi-20261106/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 
 ## CSS
 - [CSS current work](https://htmlspecs.com/css/)（[Source](https://www.w3.org/Style/CSS/current-work)）
