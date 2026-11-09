@@ -1208,7 +1208,7 @@ const linkGroups = [
             {
                 text: "Web Locks API",
                 href: "https://htmlspecs.com/web-locks/",
-                src: "https://www.w3.org/TR/2025/WD-web-locks-20250924/",
+                src: "https://www.w3.org/TR/2026/WD-web-locks-20261109/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
