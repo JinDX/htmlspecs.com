@@ -3702,7 +3702,7 @@ const linkGroups = [
             {
                 text: "WebDriver",
                 href: "https://htmlspecs.com/webdriver2/",
-                src: "https://www.w3.org/TR/2026/WD-webdriver2-20260702/",
+                src: "https://www.w3.org/TR/2026/WD-webdriver2-20261109/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
