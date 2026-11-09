@@ -1907,7 +1907,7 @@ const linkGroups = [
             {
                 text: "Picture-in-Picture",
                 href: "https://htmlspecs.com/picture-in-picture/",
-                src: "https://www.w3.org/TR/2026/WD-picture-in-picture-20260616/",
+                src: "https://www.w3.org/TR/2026/WD-picture-in-picture-20261109/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
