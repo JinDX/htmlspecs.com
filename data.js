@@ -1804,7 +1804,7 @@ const linkGroups = [
             {
                 text: "Media Session",
                 href: "https://htmlspecs.com/mediasession/",
-                src: "https://www.w3.org/TR/2026/WD-mediasession-20260605/",
+                src: "https://www.w3.org/TR/2026/WD-mediasession-20261109/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
