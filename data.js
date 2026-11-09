@@ -2401,7 +2401,7 @@ const linkGroups = [
                 text: "WebMCP",
                 href: "https://htmlspecs.com/webmcp/",
                 src: "https://webmachinelearning.github.io/webmcp/",
-                "last-modified": "Mon, 02 Nov 2026 13:12:22 GMT",
+                "last-modified": "Mon, 09 Nov 2026 15:49:58 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
