@@ -231,7 +231,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Web Audio API](https://htmlspecs.com/webaudio/)（[Source](https://www.w3.org/TR/2026/WD-webaudio-1.1-20260922/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Audio Output Devices API](https://htmlspecs.com/audio-output/)（[Source](https://www.w3.org/TR/2025/CRD-audio-output-20251009/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [Audio Session](https://htmlspecs.com/audio-session/)（[Source](https://www.w3.org/TR/2024/WD-audio-session-20241113/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
-- [Media Session](https://htmlspecs.com/mediasession/)（[Source](https://www.w3.org/TR/2026/WD-mediasession-20260605/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Media Session](https://htmlspecs.com/mediasession/)（[Source](https://www.w3.org/TR/2026/WD-mediasession-20261109/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 
 ### 音视频采集、WebRTC 与播放
 - [WebRTC](https://htmlspecs.com/webrtc/)（[Source](https://www.w3.org/TR/2025/REC-webrtc-20250313/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
