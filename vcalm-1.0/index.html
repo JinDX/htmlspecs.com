@@ -940,14 +940,14 @@ HTTP 协议，用于签发、验证、出示和管理此类
         <h1 id="title" class="title">VCALM v1.0</h1>
         <h2 id="subtitle" class="subtitle">用于生命周期管理的可验证凭证 API</h2>
         <p id="w3c-state"><a href="https://www.w3.org/standards/types#WD">W3C 工作草案</a> <time class="dt-published"
-                datetime="2026-10-13">2026年10月13日</time></p>
+                datetime="2026-11-10">2026年11月10日</time></p>
         <details open="">
             <summary>关于本文档的更多详细信息</summary>
             <dl>
                 <dt>此版本：</dt>
                 <dd>
                     <a class="u-url"
-                        href="https://www.w3.org/TR/2026/WD-vcalm-1.0-20261013/">https://www.w3.org/TR/2026/WD-vcalm-1.0-20261013/</a>
+                        href="https://www.w3.org/TR/2026/WD-vcalm-1.0-20261110/">https://www.w3.org/TR/2026/WD-vcalm-1.0-20261110/</a>
                 </dd>
                 <dt>最新发布版本：</dt>
                 <dd>
@@ -4475,7 +4475,7 @@ HTTP 协议，用于签发、验证、出示和管理此类
 
                 <p>
                     <code>QueryByExample</code> 的 JSON Schema
-                    <a href="https://www.w3.org/TR/2026/WD-vcalm-1.0-20261013/schemas/qbe.json">在单独文件中提供</a>，用于集成到
+                    <a href="https://www.w3.org/TR/2026/WD-vcalm-1.0-20261110/schemas/qbe.json">在单独文件中提供</a>，用于集成到
                     软件系统中。
                 </p>
 
@@ -9857,6 +9857,7 @@ interaction-url = <a href="https://url.spec.whatwg.org/#concept-url">URL</a></pr
                 提供了如何实现状态列表凭证的规范性
                 示例。
             </p>
+<p>当状态服务管理多个索引分配上下文时，客户端<em class="rfc2119">可以</em>在创建状态列表时提供 <code>indexAllocator</code> 值。该值标识共享的分配状态（例如，按租户或按 <code>statusPurpose</code> 划分的注册表），该状态用于为将引用此列表的凭证分配 <code>statusListIndex</code> 值。如果在创建列表时（或在颁发时首次分配索引时）提供了 <code>indexAllocator</code>，则依赖该分配状态的后续状态更新<em class="rfc2119">必须</em>重用相同的 <code>indexAllocator</code> 值，除非实现可以无歧义地推断出唯一的默认分配器。</p>
 
             <div class="api-detail" data-api-endpoint="post /status-lists">
                 <p>POST /status-lists - 创建新的状态列表</p>
@@ -9878,7 +9879,7 @@ interaction-url = <a href="https://url.spec.whatwg.org/#concept-url">URL</a></pr
                             <td style="vertical-align: top;"><code>id</code> [string]</td>
                             <td>状态列表的可选标识符。如果未提供，服务将生成一个标识符。
                             </td>
-                        </tr>
+                        </tr><tr><td style="vertical-align: top;"><code>indexAllocator</code> [string]</td><td>与此状态列表关联的索引分配上下文的可选标识符。提供此值时，依赖同一分配状态的状态更新必须重用此值（参见 `UpdateCredentialStatusRequest.indexAllocator`）。</td></tr>
                         <tr>
                             <td style="vertical-align: top;"><code>options</code> [object]</td>
                             <td>一个对象</td>
@@ -10079,6 +10080,9 @@ interaction-url = <a href="https://url.spec.whatwg.org/#concept-url">URL</a></pr
                 索引）和新的状态值。状态服务将相应地更新状态
                 列表凭证。
             </p>
+<p>颁发者实例负责为其颁发的可验证凭证分配一个或多个状态条目。颁发者软件应确保不会过量分配或错误分配状态元数据（例如状态列表或列表索引），因为过量分配、错误分配或未使用的信息可能损害可验证凭证持有者和颁发者的隐私。在高可用、水平扩展、分布式架构或这些架构的任意组合中，这一点尤其困难，除非状态分配状态在不同组件之间得到适当共享、标识和引用。<code>indexAllocator</code> 字段可用于标识和引用共享状态，从而更好地协调状态元数据的分配和使用，并使其具有原子性。</p>
+<p>状态机制将每个<a data-link-type="dfn" href="https://www.w3.org/TR/vc-data-model-2.0/#dfn-verifiable-credential">可验证凭证</a>与列表中的 <code>statusListIndex</code> 关联（例如参见<cite><a href="https://www.w3.org/TR/vc-bitstring-status-list/">比特串状态列表 v1.0</a></cite>规范）。分配这些索引的实现通常会跟踪哪些值正在使用，以避免错误地重用索引，并确保状态更新修改正确的条目。当状态服务支持多个这样的跟踪器（例如按租户、部署或 <code>statusPurpose</code> 分别设置分配器）时，可选的 <code>indexAllocator</code> 请求字段指明适用于此次更新的分配器上下文。通常，该标识符会在颁发时最初分配索引时（或在预配列表时）确定或返回，因此即使列表创建和凭证颁发在本规范中是分开的 API 接口，颁发流程与状态更新流程仍保持一致。</p>
+<div class="note" id="note-indexallocator-values"><div class="note-title marker">注: indexAllocator 值</div><p>允许的 <code>indexAllocator</code> 字符串由实现定义；本规范不强制规定其具体值或发现机制。</p></div>
 
             <div class="api-detail" data-api-endpoint="post /credentials/status">
                 <p>POST /credentials/status - 更新已签发凭证的状态</p>
@@ -10119,7 +10123,7 @@ interaction-url = <a href="https://url.spec.whatwg.org/#concept-url">URL</a></pr
                         </tr>
                         <tr>
                             <td style="vertical-align: top;"><code>indexAllocator</code> [string]</td>
-                            <td>供服务用于确定哪些索引正在使用或已分配给 VC。</td>
+                            <td>状态服务对此请求应使用的索引分配上下文的可选标识符。比特串状态列表等状态机制将每个凭证与列表中的 `statusListIndex` 关联；实现通常会维护内部记录（空闲列表、计数器、按租户划分的池等），以避免重复分配索引并确保更新针对正确的行。当存在多个分配器时（例如按租户、环境或 `statusPurpose` 划分的独立流水线），`indexAllocator` 告知服务应结合 `credentialId` 和 `credentialStatus` 查询或更新哪个注册表或策略。当实现可以推断出唯一的默认分配器，或 `credentialStatus` 已完整标识列表条目时，可以省略此字段。允许的值取决于实现；本规范未定义名称注册表。</td>
                         </tr>
                     </tbody>
                 </table>
@@ -11014,7 +11018,7 @@ interaction-url = <a href="https://url.spec.whatwg.org/#concept-url">URL</a></pr
                 <dt id="bib-digital-credentials">[digital-credentials]</dt>
                 <dd>
                     <a href="https://www.w3.org/TR/digital-credentials/"><cite>数字凭证</cite></a>。Marcos
-                    Caceres；Tim Cappalli；Mohamed Amir Yosef。W3C。2026 年 9 月 4 日。W3C 工作草案。URL：<a
+                    Caceres；Tim Cappalli；Mohamed Amir Yosef。W3C。2026 年 11 月 5 日。W3C 工作草案。URL：<a
                         href="https://www.w3.org/TR/digital-credentials/">https://www.w3.org/TR/digital-credentials/</a>
                 </dd>
                 <dt id="bib-infra">[infra]</dt>
@@ -11109,13 +11113,13 @@ interaction-url = <a href="https://url.spec.whatwg.org/#concept-url">URL</a></pr
                 <dt id="bib-vc-recognized-entities">[VC-RECOGNIZED-ENTITIES]</dt>
                 <dd>
                     <a href="https://www.w3.org/TR/vc-recognized-entities-1.0/"><cite>认可实体
-                            v1.0</cite></a>。Manu Sporny。W3C。2026 年 9 月 6 日。W3C 工作草案。URL：<a
+                            v1.0</cite></a>。Manu Sporny。W3C。2026 年 11 月 4 日。W3C 工作草案。URL：<a
                         href="https://www.w3.org/TR/vc-recognized-entities-1.0/">https://www.w3.org/TR/vc-recognized-entities-1.0/</a>
                 </dd>
                 <dt id="bib-vcalm">[VCALM]</dt>
                 <dd>
                     <a href="https://www.w3.org/TR/vcalm-1.0/"><cite>VCALM v1.0</cite></a>。Patrick St-Louis；Kayode
-                    Ezike；Manu Sporny；Ted Thibodeau Jr。W3C。2026 年 10 月 12 日。W3C 工作草案。URL：<a
+                    Ezike；Manu Sporny；Ted Thibodeau Jr。W3C。2026 年 10 月 13 日。W3C 工作草案。URL：<a
                         href="https://www.w3.org/TR/vcalm-1.0/">https://www.w3.org/TR/vcalm-1.0/</a>
                 </dd>
             </dl>
