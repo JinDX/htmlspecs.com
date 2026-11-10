@@ -837,7 +837,7 @@ const linkGroups = [
                 text: "Web App Launch Handler API",
                 href: "https://htmlspecs.com/web-app-launch/",
                 src: "https://wicg.github.io/web-app-launch/",
-                "last-modified": "Mon, 23 Sep 2024 21:28:03 GMT",
+                "last-modified": "Tue, 10 Nov 2026 19:12:26 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
