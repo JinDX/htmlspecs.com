@@ -1312,7 +1312,7 @@ const linkGroups = [
                 text: "Handwriting Recognition API",
                 href: "https://htmlspecs.com/handwriting-recognition/",
                 src: "https://wicg.github.io/handwriting-recognition/",
-                "last-modified": "Wed, 09 Jul 2025 15:17:15 GMT",
+                "last-modified": "Wed, 11 Nov 2026 15:16:44 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
