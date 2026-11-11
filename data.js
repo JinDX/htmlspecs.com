@@ -3655,7 +3655,7 @@ const linkGroups = [
             {
                 text: "EPUB Accessibility 1.2",
                 href: "https://htmlspecs.com/epub-a11y-12/",
-                src: "https://www.w3.org/TR/2026/CRD-epub-a11y-12-20260912/",
+                src: "https://www.w3.org/TR/2026/CRD-epub-a11y-12-20261111/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "CRD"
