@@ -955,7 +955,7 @@ const linkGroups = [
                 text: "XMLHttpRequest",
                 href: "https://htmlspecs.com/xhr/",
                 src: "https://xhr.spec.whatwg.org/",
-                "last-modified": "Wed, 28 Oct 2026 07:20:53 GMT",
+                "last-modified": "Wed, 11 Nov 2026 07:31:22 GMT",
                 lang: "cjk",
                 state: "LS"
             },
