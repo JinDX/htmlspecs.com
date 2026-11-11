@@ -12,7 +12,7 @@ const LANGUAGES = {
         cssRelated: "CSS 相关",
         httpRelated: "HTTP",
         marker: "【注意】",
-        disclaimer: "这是一份志愿者翻译，译文中可能包含错误。本译文仅供参考，应以 W3C 网站上的原始英文版本（<a href='{src}'>{text}</a>）为准。"
+        disclaimer: "本页为非官方译文，可能存在翻译错误。规范内容以英文原文（<a href='{src}'>{text}</a>）为准。"
     },
     jp: {
         otherStandards: "他の仕様",
@@ -24,7 +24,7 @@ const LANGUAGES = {
         cssRelated: "CSS 関連",
         httpRelated: "HTTP",
         marker: "【ご注意】",
-        disclaimer: "これはボランティアによる翻訳です。翻訳には誤りが含まれている可能性があります。参考用にご利用ください。原本は W3C サイトの英語版（<a href='{src}'>{text}</a>）をご参照ください。"
+        disclaimer: "このページは非公式の日本語訳です。訳文には誤りが含まれることがあります。訳文と原文に相違がある場合は、英語の原文（<a href='{src}'>{text}</a>）が優先されます。"
     },
     ko: {
         otherStandards: "다른 표준",
@@ -36,7 +36,7 @@ const LANGUAGES = {
         cssRelated: "CSS 관련",
         httpRelated: "HTTP",
         marker: "【주의】",
-        disclaimer: "이 번역은 자원봉사자의 번역본입니다. 번역에 오류가 있을 수 있습니다. 참고용으로만 사용하시고, 원본은 W3C 웹사이트의 영어 버전(<a href='{src}'>{text}</a>)을 참고하세요."
+        disclaimer: "이 페이지는 비공식 한국어 번역본이며, 번역에 오류가 있을 수 있습니다. 번역본과 원문의 내용이 다를 경우 영문 원문(<a href='{src}'>{text}</a>)을 기준으로 합니다."
     }
 };
 
