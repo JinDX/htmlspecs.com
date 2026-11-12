@@ -1939,7 +1939,7 @@ const linkGroups = [
             {
                 text: "Media Capture and Streams",
                 href: "https://htmlspecs.com/mediacapture-streams/",
-                src: "https://www.w3.org/TR/2025/CRD-mediacapture-streams-20251009/",
+                src: "https://www.w3.org/TR/2026/CRD-mediacapture-streams-20261112/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "CRD"
