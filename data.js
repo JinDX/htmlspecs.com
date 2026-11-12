@@ -1065,7 +1065,7 @@ const linkGroups = [
             {
                 text: "Push API",
                 href: "https://htmlspecs.com/push-api/",
-                src: "https://www.w3.org/TR/2026/WD-push-api-20261111/",
+                src: "https://www.w3.org/TR/2026/WD-push-api-20261112/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
