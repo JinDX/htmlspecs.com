@@ -344,7 +344,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 ### 调度、生命周期、预加载与报告
 - [Observable](https://htmlspecs.com/observable/)（[Source](https://wicg.github.io/observable/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Prioritized Task Scheduling](https://htmlspecs.com/scheduling-apis/)（[Source](https://wicg.github.io/scheduling-apis/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
-- [requestIdleCallback()](https://htmlspecs.com/requestidlecallback/)（[Source](https://www.w3.org/TR/2025/WD-requestidlecallback-20250521/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [requestIdleCallback()](https://htmlspecs.com/requestidlecallback/)（[Source](https://www.w3.org/TR/2026/WD-requestidlecallback-20261112/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Reporting API](https://htmlspecs.com/reporting-1/)（[Source](https://www.w3.org/TR/2025/WD-reporting-1-20250611/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Deprecation Reporting](https://htmlspecs.com/deprecation-reporting/)（[Source](https://wicg.github.io/deprecation-reporting/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Crash Reporting](https://htmlspecs.com/crash-reporting/)（[Source](https://wicg.github.io/crash-reporting/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
