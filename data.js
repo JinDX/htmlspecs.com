@@ -1193,7 +1193,7 @@ const linkGroups = [
                 text: "Cookie Store API",
                 href: "https://htmlspecs.com/cookiestore/",
                 src: "https://cookiestore.spec.whatwg.org/",
-                "last-modified": "Wed, 11 Nov 2026 16:11:48 GMT",
+                "last-modified": "Thu, 12 Nov 2026 13:51:04 GMT",
                 lang: "cjk",
                 state: "LS"
             },
