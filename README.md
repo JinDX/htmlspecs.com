@@ -73,7 +73,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Linked Web Storage Use Cases](https://htmlspecs.com/lws-ucs/)（[Source](https://www.w3.org/TR/2026/DNOTE-lws-ucs-20260210/) ![Note Draft](https://img.shields.io/badge/DNOTE-ffcc00)）
 - [RDF 1.2 Concepts and Abstract Data Model](https://htmlspecs.com/rdf12-concepts/)（[Source](https://www.w3.org/TR/2026/CRD-rdf12-concepts-20261112/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [RDF 1.2 Primer](https://htmlspecs.com/rdf12-primer/)（[Source](https://www.w3.org/TR/2026/DNOTE-rdf12-primer-20260917/) ![Note Draft](https://img.shields.io/badge/DNOTE-ffcc00)）
-- [RDF 1.2 Schema](https://htmlspecs.com/rdf12-schema/)（[Source](https://www.w3.org/TR/2026/WD-rdf12-schema-20261023/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [RDF 1.2 Schema](https://htmlspecs.com/rdf12-schema/)（[Source](https://www.w3.org/TR/2026/WD-rdf12-schema-20261112/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [RDF 1.2 Turtle](https://htmlspecs.com/rdf12-turtle/)（[Source](https://www.w3.org/TR/2026/WD-rdf12-turtle-20261111/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [RDF 1.2 N-Triples](https://htmlspecs.com/rdf12-n-triples/)（[Source](https://www.w3.org/TR/2026/WD-rdf12-n-triples-20261105/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [RDF 1.2 TriG](https://htmlspecs.com/rdf12-trig/)（[Source](https://www.w3.org/TR/2026/WD-rdf12-trig-20261105/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
