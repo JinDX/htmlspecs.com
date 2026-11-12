@@ -583,10 +583,10 @@ const linkGroups = [
             {
                 text: "RDF 1.2 Concepts and Abstract Data Model",
                 href: "https://htmlspecs.com/rdf12-concepts/",
-                src: "https://www.w3.org/TR/2026/CR-rdf12-concepts-20260407/",
+                src: "https://www.w3.org/TR/2026/CRD-rdf12-concepts-20261111/",
                 "last-modified": "-",
                 lang: "cjk",
-                state: "CR"
+                state: "CRD"
             },
             {
                 text: "RDF 1.2 Primer",

@@ -71,7 +71,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [LWS 1.0 Authentication Suite: SAML 2.0](https://htmlspecs.com/lws10-authn-saml/)（[Source](https://www.w3.org/TR/2026/WD-lws10-authn-saml-20261109/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [LWS 1.0 Authentication Suite: Self-signed Identity using Controlled Identifiers](https://htmlspecs.com/lws10-authn-ssi-cid/)（[Source](https://www.w3.org/TR/2026/WD-lws10-authn-ssi-cid-20261015/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Linked Web Storage Use Cases](https://htmlspecs.com/lws-ucs/)（[Source](https://www.w3.org/TR/2026/DNOTE-lws-ucs-20260210/) ![Note Draft](https://img.shields.io/badge/DNOTE-ffcc00)）
-- [RDF 1.2 Concepts and Abstract Data Model](https://htmlspecs.com/rdf12-concepts/)（[Source](https://www.w3.org/TR/2026/CR-rdf12-concepts-20260407/) ![Candidate Recommendation](https://img.shields.io/badge/CR-cfd510)）
+- [RDF 1.2 Concepts and Abstract Data Model](https://htmlspecs.com/rdf12-concepts/)（[Source](https://www.w3.org/TR/2026/CRD-rdf12-concepts-20261111/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [RDF 1.2 Primer](https://htmlspecs.com/rdf12-primer/)（[Source](https://www.w3.org/TR/2026/DNOTE-rdf12-primer-20260917/) ![Note Draft](https://img.shields.io/badge/DNOTE-ffcc00)）
 - [RDF 1.2 Schema](https://htmlspecs.com/rdf12-schema/)（[Source](https://www.w3.org/TR/2026/WD-rdf12-schema-20261023/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [RDF 1.2 Turtle](https://htmlspecs.com/rdf12-turtle/)（[Source](https://www.w3.org/TR/2026/WD-rdf12-turtle-20261111/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
