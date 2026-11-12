@@ -2654,7 +2654,7 @@ const linkGroups = [
             {
                 text: "requestIdleCallback()",
                 href: "https://htmlspecs.com/requestidlecallback/",
-                src: "https://www.w3.org/TR/2025/WD-requestidlecallback-20250521/",
+                src: "https://www.w3.org/TR/2026/WD-requestidlecallback-20261112/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
