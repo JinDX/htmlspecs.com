@@ -1581,7 +1581,7 @@ const linkGroups = [
             {
                 text: "Gamepad",
                 href: "https://htmlspecs.com/gamepad/",
-                src: "https://www.w3.org/TR/2025/WD-gamepad-20250710/",
+                src: "https://www.w3.org/TR/2026/WD-gamepad-20261113/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
