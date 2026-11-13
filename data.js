@@ -139,7 +139,7 @@ const linkGroups = [
                 text: "Web IDL",
                 href: "https://htmlspecs.com/webidl/",
                 src: "https://webidl.spec.whatwg.org/",
-                "last-modified": "Wed, 11 Nov 2026 16:09:03 GMT",
+                "last-modified": "Fri, 13 Nov 2026 07:44:27 GMT",
                 lang: "cjk",
                 state: "LS"
             },
