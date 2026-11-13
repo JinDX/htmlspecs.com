@@ -728,7 +728,7 @@ const linkGroups = [
                 text: "GraphQL",
                 href: "https://htmlspecs.com/graphql/",
                 src: "https://spec.graphql.org/draft/",
-                "last-modified": "Thu, 12 Nov 2026 17:49:38 GMT",
+                "last-modified": "Fri, 13 Nov 2026 11:56:00 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
