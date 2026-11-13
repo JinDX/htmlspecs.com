@@ -2599,7 +2599,7 @@ const linkGroups = [
             {
                 text: "Event Timing API",
                 href: "https://htmlspecs.com/event-timing/",
-                src: "https://www.w3.org/TR/2026/WD-event-timing-20261013/",
+                src: "https://www.w3.org/TR/2026/WD-event-timing-20261113/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
