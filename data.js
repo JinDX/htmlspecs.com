@@ -1971,7 +1971,7 @@ const linkGroups = [
             {
                 text: "Autoplay Detection",
                 href: "https://htmlspecs.com/autoplay-detection/",
-                src: "https://www.w3.org/TR/2026/WD-autoplay-detection-20261109/",
+                src: "https://www.w3.org/TR/2026/WD-autoplay-detection-20261116/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
