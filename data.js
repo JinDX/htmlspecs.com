@@ -655,7 +655,7 @@ const linkGroups = [
             {
                 text: "SPARQL 1.2 Protocol",
                 href: "https://htmlspecs.com/sparql12-protocol/",
-                src: "https://www.w3.org/TR/2026/WD-sparql12-protocol-20260723/",
+                src: "https://www.w3.org/TR/2026/WD-sparql12-protocol-20261116/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
