@@ -884,7 +884,7 @@ const linkGroups = [
             {
                 text: "Service Workers Nightly",
                 href: "https://htmlspecs.com/service-workers/",
-                src: "https://www.w3.org/TR/2026/CRD-service-workers-20261029/",
+                src: "https://www.w3.org/TR/2026/CRD-service-workers-20261117/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "CRD"
