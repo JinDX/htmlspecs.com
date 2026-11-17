@@ -3385,7 +3385,7 @@ const linkGroups = [
             {
                 text: "Payment Request API",
                 href: "https://htmlspecs.com/payment-request/",
-                src: "https://www.w3.org/TR/2026/CRD-payment-request-20260622/",
+                src: "https://www.w3.org/TR/2026/CRD-payment-request-20261117/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "CRD"
