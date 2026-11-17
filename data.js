@@ -1509,7 +1509,7 @@ const linkGroups = [
             {
                 text: "Device Posture API",
                 href: "https://htmlspecs.com/device-posture/",
-                src: "https://www.w3.org/TR/2026/CRD-device-posture-20261026/",
+                src: "https://www.w3.org/TR/2026/CRD-device-posture-20261117/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "CRD"

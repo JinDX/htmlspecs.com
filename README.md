@@ -191,7 +191,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Device Orientation and Motion](https://htmlspecs.com/orientation-event/)（[Source](https://www.w3.org/TR/2026/CRD-orientation-event-20261116/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [Motion Sensors Explainer](https://htmlspecs.com/motion-sensors/)（[Source](https://www.w3.org/TR/2017/NOTE-motion-sensors-20170830/) ![Note](https://img.shields.io/badge/NOTE-309c40)）
 - [Orientation Sensor](https://htmlspecs.com/orientation-sensor/)（[Source](https://www.w3.org/TR/2026/WD-orientation-sensor-20260514/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
-- [Device Posture API](https://htmlspecs.com/device-posture/)（[Source](https://www.w3.org/TR/2026/CRD-device-posture-20261026/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
+- [Device Posture API](https://htmlspecs.com/device-posture/)（[Source](https://www.w3.org/TR/2026/CRD-device-posture-20261117/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
 - [Ambient Light Sensor](https://htmlspecs.com/ambient-light/)（[Source](https://www.w3.org/TR/2026/WD-ambient-light-20261026/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Proximity Sensor](https://htmlspecs.com/proximity/)（[Source](https://www.w3.org/TR/2026/WD-proximity-20260514/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Generic Sensor API](https://htmlspecs.com/generic-sensor/)（[Source](https://www.w3.org/TR/2026/CRD-generic-sensor-20260514/) ![Candidate Recommendation Draft](https://img.shields.io/badge/CRD-e2a669)）
