@@ -419,51 +419,52 @@ function getWebGLSourcePath(src) {
   }
 }
 
-async function checkWebGLSource(link, sourcePath, logResult) {
-  const apiUrl = new URL(
-    'https://api.github.com/repos/KhronosGroup/WebGL/commits'
-  );
+function parseDateString(value) {
+  const time = typeof value === 'string' ? Date.parse(value) : NaN;
+  return Number.isFinite(time) ? new Date(time) : null;
+}
 
-  apiUrl.searchParams.set('path', sourcePath);
-  apiUrl.searchParams.set('per_page', '1');
+async function checkWebGLSource(link, sourcePath, logResult) {
+  const query = new URLSearchParams({ path: sourcePath, per_page: '1' });
+  const apiUrl = `https://api.github.com/repos/KhronosGroup/WebGL/commits?${query}`;
 
   try {
-    const commits = await getJsonWithRetry(apiUrl.href);
+    const commits = await getJsonWithRetry(apiUrl);
     const latest = Array.isArray(commits) ? commits[0] : null;
-    const commitTime = Date.parse(latest?.commit?.committer?.date);
+    const sha = latest?.sha;
+    const validSha = typeof sha === 'string' && /^[a-f0-9]{40}$/i.test(sha);
+    const commitDate = parseDateString(latest?.commit?.committer?.date);
 
-    if (
-      !latest ||
-      !/^[a-f0-9]{40}$/i.test(latest.sha || '') ||
-      !Number.isFinite(commitTime)
-    ) {
+    if (!validSha || !commitDate) {
       throw new Error('GitHub API returned no valid specification commit');
     }
 
-    if (link['last-modified'] === '0') {
+    const baseline = link['last-modified'];
+    if (baseline === '0') {
       return;
     }
 
-    const baselineTime = Date.parse(link['last-modified']);
-
-    if (!Number.isFinite(baselineTime)) {
+    const baselineDate = parseDateString(baseline);
+    if (!baselineDate) {
       throw new Error('Missing or invalid last-modified baseline in data.js');
     }
 
-    if (commitTime > baselineTime) {
-      logResult(
-        `- ${link.text} official source has a newer commit:\n` +
-        `  - Source commit time: ${new Date(commitTime).toUTCString()}\n` +
-        `  - Recorded baseline: ${new Date(baselineTime).toUTCString()}\n` +
-        `  - Commit: https://github.com/KhronosGroup/WebGL/commit/${latest.sha}\n` +
-        `  - Link: ${link.src}\n` +
-        `  - Note: source change detected; registry publication not verified.`
-      );
+    if (commitDate <= baselineDate) {
+      return;
     }
+
+    logResult(
+      `- ${link.text} official source has a newer commit:\n` +
+      `  - Source commit time: ${commitDate.toUTCString()}\n` +
+      `  - Recorded baseline: ${baselineDate.toUTCString()}\n` +
+      `  - Commit: https://github.com/KhronosGroup/WebGL/commit/${sha}\n` +
+      `  - Link: ${link.src}\n` +
+      `  - Note: source change detected; registry publication not verified.`
+    );
   } catch (err) {
     logResult(
       `- Failed to check official WebGL source for ${link.src}: ${err.message} 😢\n` +
-      `  - API: ${apiUrl.href}`
+      `  - API: ${apiUrl}`
     );
   }
 }
