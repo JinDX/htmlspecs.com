@@ -1739,7 +1739,7 @@ const linkGroups = [
             {
                 text: "Web Share Target API",
                 href: "https://htmlspecs.com/web-share-target/",
-                src: "https://w3c.github.io/web-share-target/",
+                src: "https://github.com/w3c/web-share-target/blob/main/index.html",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "Draft"
