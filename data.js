@@ -1485,7 +1485,7 @@ const linkGroups = [
             {
                 text: "Device Orientation and Motion",
                 href: "https://htmlspecs.com/orientation-event/",
-                src: "https://www.w3.org/TR/2026/CRD-orientation-event-20261116/",
+                src: "https://www.w3.org/TR/2026/CRD-orientation-event-20261118/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "CRD"
