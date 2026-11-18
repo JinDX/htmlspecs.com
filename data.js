@@ -3409,7 +3409,7 @@ const linkGroups = [
             {
                 text: "Payment Method Identifiers",
                 href: "https://htmlspecs.com/payment-method-id/",
-                src: "https://www.w3.org/TR/2022/REC-payment-method-id-20220908/",
+                src: "https://www.w3.org/TR/2026/REC-payment-method-id-20261118/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "REC"
