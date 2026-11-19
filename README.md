@@ -222,7 +222,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Window Management](https://htmlspecs.com/window-management/)（[Source](https://www.w3.org/TR/2026/WD-window-management-20261110/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Web Printing API](https://htmlspecs.com/web-printing/)（[Source](https://wicg.github.io/web-printing/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Web Share API](https://htmlspecs.com/web-share/)（[Source](https://www.w3.org/TR/2023/REC-web-share-20230530/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
-- [Web Share Target API](https://htmlspecs.com/web-share-target/)（[Source](https://w3c.github.io/web-share-target/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
+- [Web Share Target API](https://htmlspecs.com/web-share-target/)（[Source](https://wicg.github.io/web-share-target/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Device Attributes API](https://htmlspecs.com/device_attributes/)（[Source](https://wicg.github.io/WebApiDevice/device_attributes/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Save Data API](https://htmlspecs.com/savedata/)（[Source](https://wicg.github.io/savedata/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 
