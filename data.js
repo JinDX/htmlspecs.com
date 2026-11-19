@@ -2997,7 +2997,7 @@ const linkGroups = [
                 text: "Email Verification API",
                 href: "https://htmlspecs.com/email-verification/",
                 src: "https://wicg.github.io/email-verification/",
-                "last-modified": "Fri, 02 Oct 2026 19:17:33 GMT",
+                "last-modified": "Thu, 19 Nov 2026 17:17:55 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
