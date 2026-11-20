@@ -852,7 +852,7 @@ const linkGroups = [
             {
                 text: "Developing Localizable Manifests",
                 href: "https://htmlspecs.com/localizable-manifests/",
-                src: "https://www.w3.org/TR/2025/NOTE-localizable-manifests-20250214/",
+                src: "https://www.w3.org/TR/2026/NOTE-localizable-manifests-20261120/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "NOTE"
