@@ -939,7 +939,7 @@ const linkGroups = [
                 text: "Fetch",
                 href: "https://htmlspecs.com/fetch/",
                 src: "https://fetch.spec.whatwg.org/",
-                "last-modified": "Sat, 14 Nov 2026 16:09:49 GMT",
+                "last-modified": "Fri, 20 Nov 2026 13:36:47 GMT",
                 lang: "cjk",
                 state: "LS"
             },
