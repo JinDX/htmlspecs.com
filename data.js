@@ -272,10 +272,10 @@ const linkGroups = [
             {
                 text: "Language Tags and Locale Identifiers for the World Wide Web",
                 href: "https://htmlspecs.com/ltli/",
-                src: "https://www.w3.org/TR/2020/WD-ltli-20201007",
+                src: "https://www.w3.org/TR/2026/DNOTE-ltli-20261120/",
                 "last-modified": "-",
                 lang: "cjk",
-                state: "WD"
+                state: "DNOTE"
             },
             {
                 text: "Strings on the Web: Language and Direction Metadata",
