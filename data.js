@@ -703,7 +703,7 @@ const linkGroups = [
             {
                 text: "Content Negotiation by Profile",
                 href: "https://htmlspecs.com/dx-prof-conneg/",
-                src: "https://www.w3.org/TR/2026/WD-dx-prof-conneg-20261104/",
+                src: "https://www.w3.org/TR/2026/WD-dx-prof-conneg-20261120/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
