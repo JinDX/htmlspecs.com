@@ -147,7 +147,7 @@ const linkGroups = [
                 text: "Encoding",
                 href: "https://htmlspecs.com/encoding/",
                 src: "https://encoding.spec.whatwg.org/",
-                "last-modified": "Mon, 19 Oct 2026 23:30:10 GMT",
+                "last-modified": "Fri, 20 Nov 2026 15:21:55 GMT",
                 lang: "cjk",
                 state: "LS"
             },
