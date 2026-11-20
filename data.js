@@ -2765,7 +2765,7 @@ const linkGroups = [
             {
                 text: "Content Security Policy: Embedded Enforcement",
                 href: "https://htmlspecs.com/csp-embedded-enforcement/",
-                src: "https://www.w3.org/TR/2026/WD-csp-embedded-enforcement-20260507/",
+                src: "https://www.w3.org/TR/2026/WD-csp-embedded-enforcement-20261119/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
