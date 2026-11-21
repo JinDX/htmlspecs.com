@@ -13,6 +13,7 @@ const siteMetadata = {
 
 const stateMap = {
     LS: ['Living Standard', 'https://img.shields.io/badge/LS-3c790a'],
+    DRY: ['Registry Draft', 'https://img.shields.io/badge/DRY-ffcc00'],
     Draft: ['Draft', 'https://img.shields.io/badge/Draft-ffcc00'],
     WD: ['Working Draft', 'https://img.shields.io/badge/WD-e66e33'],
     REC: ['Recommendation', 'https://img.shields.io/badge/REC-309c40'],
@@ -2078,6 +2079,14 @@ const linkGroups = [
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
+            },
+            {
+                text: "Media Source Extensions Byte Stream Format Registry",
+                href: "https://htmlspecs.com/mse-byte-stream-format-registry/",
+                src: "https://www.w3.org/TR/2026/DRY-mse-byte-stream-format-registry-20261109/",
+                "last-modified": "-",
+                lang: "cjk",
+                state: "DRY"
             },
             {
                 text: "WebCodecs",
