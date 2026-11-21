@@ -138,16 +138,21 @@ function isLaterW3Version(currentUrl, latestUrl) {
 }
 
 async function getJsonWithRetry(url, maxRetry = 2) {
+  const isGitHubApi = new URL(url).origin === 'https://api.github.com';
+  const headers = {
+    Accept: 'application/json',
+    'User-Agent': 'htmlspecs-checker/1.0'
+  };
+  if (isGitHubApi && process.env.GITHUB_TOKEN) {
+    headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
+  }
   let attempt = 0;
 
   while (true) {
     try {
       const res = await fetch(url, {
-        headers: {
-          Accept: 'application/json',
-          'User-Agent': 'htmlspecs-checker/1.0'
-        },
-        redirect: 'follow',
+        headers,
+        redirect: headers.Authorization ? 'error' : 'follow',
         signal: AbortSignal.timeout(15000)
       });
 
@@ -185,15 +190,27 @@ async function getJsonWithRetry(url, maxRetry = 2) {
       }
 
       if (!res.ok) {
-        throw new Error(`HTTP ${res.status}`);
+        const details = [`HTTP ${res.status}`];
+        if (isGitHubApi) {
+          const body = await res.json().catch(() => null);
+          if (typeof body?.message === 'string') {
+            details.push(body.message);
+          }
+          for (const name of ['x-ratelimit-remaining', 'x-ratelimit-reset', 'retry-after']) {
+            const value = res.headers.get(name);
+            if (value !== null) {
+              details.push(`${name}=${value}`);
+            }
+          }
+        }
+        const error = new Error(details.join('; '));
+        error.status = res.status;
+        throw error;
       }
 
       return await res.json();
     } catch (err) {
-      if (
-        err.message &&
-        /^HTTP 4\d\d$/.test(err.message)
-      ) {
+      if (err.status >= 400 && err.status < 500) {
         throw err;
       }
 
