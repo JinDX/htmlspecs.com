@@ -323,21 +323,27 @@ async function getHeadWithCurl(url) {
   };
 }
 
-async function getHeadWithRetry(url, maxRetry = 2) {
+function getHeadWithFetch(url) {
+  return fetch(url, {
+    method: 'HEAD',
+    headers: {
+      'User-Agent': 'htmlspecs-checker/1.0'
+    },
+    redirect: 'follow',
+    signal: AbortSignal.timeout(15000)
+  });
+}
+
+async function getHeadWithRetry(
+  url,
+  maxRetry = 2,
+  requestHead = CURL_HEAD_URLS.has(url) ? getHeadWithCurl : getHeadWithFetch
+) {
   for (let attempt = 0; ; attempt++) {
     let res;
 
     try {
-      res = CURL_HEAD_URLS.has(url)
-        ? await getHeadWithCurl(url)
-        : await fetch(url, {
-          method: 'HEAD',
-          headers: {
-            'User-Agent': 'htmlspecs-checker/1.0'
-          },
-          redirect: 'follow',
-          signal: AbortSignal.timeout(15000)
-        });
+      res = await requestHead(url);
     } catch (err) {
       if (attempt >= maxRetry) {
         throw err;
@@ -399,23 +405,16 @@ async function getHeadWithRetry(url, maxRetry = 2) {
   }
 }
 
-function getWebGLSourcePath(src) {
+function isWebGLSource(src) {
   try {
     const url = new URL(src);
 
-    if (url.hostname !== 'registry.khronos.org') {
-      return null;
-    }
-
-    const match = url.pathname.match(
-      /^\/webgl\/specs\/latest\/(1\.0|2\.0)(?:\/(?:index\.html)?)?$/
+    return (
+      url.hostname === 'registry.khronos.org' &&
+      /^\/webgl\/specs\/latest\/[12]\.0(?:\/(?:index\.html)?)?$/.test(url.pathname)
     );
-
-    return match
-      ? `specs/latest/${match[1]}/index.html`
-      : null;
   } catch {
-    return null;
+    return false;
   }
 }
 
@@ -424,24 +423,17 @@ function parseDateString(value) {
   return Number.isFinite(time) ? new Date(time) : null;
 }
 
-async function checkWebGLSource(link, sourcePath, logResult) {
-  const query = new URLSearchParams({ path: sourcePath, per_page: '1' });
-  const apiUrl = `https://api.github.com/repos/KhronosGroup/WebGL/commits?${query}`;
-
+async function checkWebGLSource(link, logResult) {
   try {
-    const commits = await getJsonWithRetry(apiUrl);
-    const latest = Array.isArray(commits) ? commits[0] : null;
-    const sha = latest?.sha;
-    const validSha = typeof sha === 'string' && /^[a-f0-9]{40}$/i.test(sha);
-    const commitDate = parseDateString(latest?.commit?.committer?.date);
-
-    if (!validSha || !commitDate) {
-      throw new Error('GitHub API returned no valid specification commit');
+    const res = await getHeadWithRetry(link.src, 2, getHeadWithCurl);
+    const baseline = link['last-modified'];
+    if (res.status === 304 || baseline === '0') {
+      return;
     }
 
-    const baseline = link['last-modified'];
-    if (baseline === '0') {
-      return;
+    const lastModified = parseDateString(res.headers.get('last-modified'));
+    if (!lastModified) {
+      throw new Error('Missing or invalid Last-Modified header');
     }
 
     const baselineDate = parseDateString(baseline);
@@ -449,31 +441,26 @@ async function checkWebGLSource(link, sourcePath, logResult) {
       throw new Error('Missing or invalid last-modified baseline in data.js');
     }
 
-    if (commitDate <= baselineDate) {
+    if (lastModified <= baselineDate) {
       return;
     }
 
     logResult(
-      `- ${link.text} official source has a newer commit:\n` +
-      `  - Source commit time: ${commitDate.toUTCString()}\n` +
+      `- ${link.text} has been updated:\n` +
+      `  - Last-Modified: ${lastModified.toUTCString()}\n` +
       `  - Recorded baseline: ${baselineDate.toUTCString()}\n` +
-      `  - Commit: https://github.com/KhronosGroup/WebGL/commit/${sha}\n` +
-      `  - Link: ${link.src}\n` +
-      `  - Note: source change detected; registry publication not verified.`
+      `  - Link: ${link.src}`
     );
   } catch (err) {
     logResult(
-      `- Failed to check official WebGL source for ${link.src}: ${err.message} 😢\n` +
-      `  - API: ${apiUrl}`
+      `- Failed to check official WebGL source for ${link.src}: ${err.message} 😢`
     );
   }
 }
 
 async function checkOtherLink(link, logResult) {
-  const webGLSourcePath = getWebGLSourcePath(link.src);
-
-  if (webGLSourcePath) {
-    await checkWebGLSource(link, webGLSourcePath, logResult);
+  if (isWebGLSource(link.src)) {
+    await checkWebGLSource(link, logResult);
     return;
   }
 
