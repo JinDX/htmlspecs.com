@@ -5169,6 +5169,14 @@ const httpLinkGroups = [
                 state: "RFC"
             },
             {
+                text: "Indicating Character Encoding and Language for HTTP Header Field Parameters",
+                href: "https://htmlspecs.com/http/rfc8187.html",
+                src: "https://www.rfc-editor.org/rfc/rfc8187.html",
+                "last-modified": "-",
+                lang: "cjk",
+                state: "RFC"
+            },
+            {
                 text: "Hypertext Transfer Protocol (HTTP) Client-Initiated Content-Encoding",
                 href: "https://htmlspecs.com/http/rfc7694.html",
                 src: "https://httpwg.org/specs/rfc7694.html",

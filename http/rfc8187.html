@@ -1,0 +1,733 @@
+<html lang="zh-Hans"><pre>﻿
+
+
+
+
+
+Internet Engineering Task Force (IETF)                        J. Reschke
+Request for Comments: 8187                                    greenbytes
+Obsoletes: <a href="https://www.rfc-editor.org/rfc/rfc5987">5987</a>                                           September 2017
+Category: Standards Track
+ISSN: 2070-1721
+
+
+    <span class="h1">指明 HTTP 首部字段参数的</span>
+                               <span class="h1">字符编码和语言</span>
+
+摘要
+
+   默认情况下，超文本传输协议（HTTP）消息中的首部字段值
+   无法轻易携带 US-ASCII 编码字符集以外的字符。
+   <a href="https://www.rfc-editor.org/rfc/rfc2231">RFC 2231</a> 定义了一种编码机制，
+   用于多用途互联网邮件扩展（MIME）首部字段值
+   内部的参数。本文档规定了一种适用于
+   HTTP 首部字段的编码，它兼容以下规范中定义的编码
+   的简化配置：<a href="https://www.rfc-editor.org/rfc/rfc2231">RFC 2231</a>。
+
+   本文档废止 <a href="https://www.rfc-editor.org/rfc/rfc5987">RFC 5987</a>。
+
+本备忘录的状态
+
+   这是一份互联网标准轨道文档。
+
+   本文档是互联网工程任务组（IETF）的产物。
+   它代表了 IETF 社群的共识。
+   本文档已接受公开审查，并经
+   互联网工程指导组（IESG）批准发布。
+   有关互联网标准的更多信息见 <a href="https://www.rfc-editor.org/rfc/rfc7841#section-2">RFC 7841 第 2 节</a>。
+
+   有关本文档当前状态、勘误以及
+   如何提供反馈的信息，可在以下地址获取：
+   <a href="https://www.rfc-editor.org/info/rfc8187">https://www.rfc-editor.org/info/rfc8187</a>。
+
+版权声明
+
+   Copyright (c) 2017 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to <a href="https://www.rfc-editor.org/bcp/bcp78">BCP 78</a> and the IETF Trust's Legal
+   Provisions Relating to IETF Documents
+   (<a href="https://trustee.ietf.org/license-info">https://trustee.ietf.org/license-info</a>) in effect on the date of
+   publication of this document.  Please review these documents
+   carefully, as they describe your rights and restrictions with respect
+   to this document.  Code Components extracted from this document must
+   include Simplified BSD License text as described in <a href="#section-4">Section 4</a>.e of
+
+
+
+<span class="grey">Reschke                      Standards Track                    [Page 1]</span></pre>
+<hr class='noprint'/><!--NewPage--><pre class='newpage'><span id="page-2" ></span>
+<span class="grey"><a href="https://www.rfc-editor.org/rfc/rfc8187">RFC 8187</a>            Charset/Language Encoding in HTTP     September 2017</span>
+
+
+   the Trust Legal Provisions and are provided without warranty as
+   described in the Simplified BSD License.
+
+目录
+
+   <a href="#section-1">1</a>.  引言  . . . . . . . . . . . . . . . . . . . . . . . .   <a href="#page-2">2</a>
+   <a href="#section-2">2</a>.  记法约定  . . . . . . . . . . . . . . . . . . .   <a href="#page-3">3</a>
+   <a href="#section-3">3</a>.  与 <a href="https://www.rfc-editor.org/rfc/rfc2231">RFC 2231</a> 的比较与编码定义 . . . .   <a href="#page-3">3</a>
+     <a href="#section-3.1">3.1</a>.  参数续接 . . . . . . . . . . . . . . . . .   <a href="#page-4">4</a>
+     3.2.  参数值的字符编码和语言
+           信息 . . . . . . . . . . . . . . . . . . . . . . .   <a href="#page-4">4</a>
+       <a href="#section-3.2.1">3.2.1</a>.  定义  . . . . . . . . . . . . . . . . . . . . .   <a href="#page-4">4</a>
+       <a href="#section-3.2.2">3.2.2</a>.  历史说明  . . . . . . . . . . . . . . . . . .   <a href="#page-6">6</a>
+       <a href="#section-3.2.3">3.2.3</a>.  示例  . . . . . . . . . . . . . . . . . . . . . .   <a href="#page-6">6</a>
+     <a href="#section-3.3">3.3</a>.  在编码词中指定语言 . . . . . . . . .   <a href="#page-7">7</a>
+   <a href="#section-4">4</a>.  在 HTTP 首部字段定义中的使用指南 . . . .   <a href="#page-7">7</a>
+     <a href="#section-4.1">4.1</a>.  何时使用此扩展 . . . . . . . . . . . . . . . .   <a href="#page-8">8</a>
+     <a href="#section-4.2">4.2</a>.  错误处理  . . . . . . . . . . . . . . . . . . . . .   <a href="#page-8">8</a>
+   <a href="#section-5">5</a>.  安全考虑 . . . . . . . . . . . . . . . . . . .   <a href="#page-9">9</a>
+   <a href="#section-6">6</a>.  IANA 考虑 . . . . . . . . . . . . . . . . . . . . .   <a href="#page-9">9</a>
+   <a href="#section-7">7</a>.  参考文献  . . . . . . . . . . . . . . . . . . . . . . . . .   <a href="#page-9">9</a>
+     <a href="#section-7.1">7.1</a>.  规范性参考文献  . . . . . . . . . . . . . . . . . .   <a href="#page-9">9</a>
+     <a href="#section-7.2">7.2</a>.  资料性参考文献  . . . . . . . . . . . . . . . . .  <a href="#page-10">10</a>
+   <a href="#appendix-A">附录 A</a>.  相对于以下规范的变更： <a href="https://www.rfc-editor.org/rfc/rfc5987">RFC 5987</a>  . . . . . . . . . . . . . . .  <a href="#page-12">12</a>
+   <a href="#appendix-B">附录 B</a>.  实现报告  . . . . . . . . . . . . . . .  <a href="#page-12">12</a>
+   致谢  . . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-13">13</a>
+   作者地址  . . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-13">13</a>
+
+<span class="h2"><a class="selflink" id="section-1" href="#section-1">1</a>.  引言</span>
+
+   在 HTTP 首部字段中使用 US-ASCII 编码字符集以外的字符
+   （[<a href="https://www.rfc-editor.org/rfc/rfc0020" title="&quot;ASCII format for network interchange&quot;">RFC0020</a>]，首部字段见 [<a href="https://www.rfc-editor.org/rfc/rfc7230" title="&quot;Hypertext Transfer Protocol (HTTP/1.1): Message Syntax and Routing&quot;">RFC7230</a>]）并不简单：
+
+   o  HTTP 规范不鼓励在字段值中使用非 US-ASCII 字符，
+      并将这些字符归入扩充巴科斯-瑙尔范式（ABNF）的
+      "obs-text" 产生式（<a href="https://www.rfc-editor.org/rfc/rfc7230#section-3.2">[RFC7230]，第 3.2 节</a>）。
+
+   o  此外，它没有规定字段值的默认字符编码方案，
+      因此，任何对非 US-ASCII 字符的使用
+      都需要由具体字段的定义予以规定，
+      或者需要其他某种带外信息。
+
+   o  最后，一些 API 假定了默认的字符编码方案，
+      以便将从 HTTP 消息中获得的八位组序列
+      映射为字符序列。例如，XMLHttpRequest
+      API（[<a href="#ref-XMLHttpRequest">XMLHttpRequest</a>]）使用接口定义语言类型
+      "ByteString"，其实际结果相当于使用 ISO-8859-1
+      字符编码方案（[<a href="#ref-ISO-8859-1">ISO-8859-1</a>]）。
+
+
+
+<span class="grey">Reschke                      Standards Track                    [Page 2]</span></pre>
+<hr class='noprint'/><!--NewPage--><pre class='newpage'><span id="page-3" ></span>
+<span class="grey"><a href="https://www.rfc-editor.org/rfc/rfc8187">RFC 8187</a>            Charset/Language Encoding in HTTP     September 2017</span>
+
+
+   另一方面，<a href="https://www.rfc-editor.org/rfc/rfc2231">RFC 2231</a> 为 MIME 首部字段中的
+   参数定义了编码机制（[<a href="https://www.rfc-editor.org/rfc/rfc2231" title="&quot;MIME Parameter Value and Encoded Word Extensions: Character Sets, Languages, and Continuations&quot;">RFC2231</a>]）。与 HTTP 消息不同，
+   MIME 消息确实需要通过非二进制传输机制发送。
+   本文档规定了一种适用于 HTTP 首部字段的编码，
+   该编码兼容以下规范所定义的编码的简化配置：
+   <a href="https://www.rfc-editor.org/rfc/rfc2231">RFC 2231</a>。这种编码可应用于任何采用
+   通用“参数”（"name=value"）语法的 HTTP 首部字段。
+
+   本文档废止 [<a href="https://www.rfc-editor.org/rfc/rfc5987" title="&quot;Character Set and Language Encoding for Hypertext Transfer Protocol (HTTP) Header Field Parameters&quot;">RFC5987</a>] 并将其状态改为“历史”；
+   变更概述见<a href="#appendix-A">附录 A</a>。
+
+      注意：本文档余下部分引用 <a href="https://www.rfc-editor.org/rfc/rfc2231">RFC 2231</a>，
+      仅用于解释为何选择所采用的特性；
+      因此，这些引用完全是资料性的。
+
+      注意：此编码不适用于通过 HTTP 传输的消息载荷，
+      例如使用媒体类型 "multipart/form-data" 时的载荷
+      （[<a href="https://www.rfc-editor.org/rfc/rfc7578" title="&quot;Returning Values from Forms: multipart/ form-data&quot;">RFC7578</a>]）。
+
+<span class="h2"><a class="selflink" id="section-2" href="#section-2">2</a>.  记法约定</span>
+
+   本文档中的关键词 "MUST"、"MUST NOT"、"REQUIRED"、"SHALL"、"SHALL NOT"、
+   "SHOULD"、"SHOULD NOT"、"RECOMMENDED"、"NOT RECOMMENDED"、"MAY" 和
+   "OPTIONAL" 应按以下规范中的说明解释：
+   [<a href="https://www.rfc-editor.org/rfc/rfc2119" title="&quot;Key words for use in RFCs to Indicate Requirement Levels&quot;">RFC2119</a>]。
+
+   本规范使用 [<a href="https://www.rfc-editor.org/rfc/rfc5234" title="&quot;Augmented BNF for Syntax Specifications: ABNF&quot;">RFC5234</a>] 定义的 ABNF 记法。
+   通过引用纳入的核心规则定义于
+   <a href="https://www.rfc-editor.org/rfc/rfc5234#appendix-B.1">[RFC5234] 附录 B.1</a>：ALPHA（字母）、DIGIT（十进制 0-9）、HEXDIG
+   （十六进制 0-9/A-F/a-f）以及 LWSP（线性空白）。
+
+   本规范使用 [<a href="https://www.rfc-editor.org/rfc/rfc6365" title="&quot;Terminology Used in Internationalization in the IETF&quot;">RFC6365</a>] 中定义的术语，即：
+   “字符编码方案”（下文简称“字符编码”）、
+   "charset" 和“编码字符集”。
+
+   注意，这与 <a href="https://www.rfc-editor.org/rfc/rfc2231">RFC 2231</a> 不同；该 RFC 使用“字符集”
+   一词来表示“字符编码方案”。
+
+<span class="h2"><a class="selflink" id="section-3" href="#section-3">3</a>.  与 <a href="https://www.rfc-editor.org/rfc/rfc2231">RFC 2231</a> 的比较与编码定义</span>
+
+   <a href="https://www.rfc-editor.org/rfc/rfc2231">RFC 2231</a> 定义了 MIME 的若干扩展。下文讨论
+   这些扩展是否适用于 HTTP 首部字段，以及如何适用。
+
+   概括如下：
+
+   o  不需要参数续接（<a href="#section-3.1">第 3.1 节</a>），
+
+
+
+
+
+<span class="grey">Reschke                      Standards Track                    [Page 3]</span></pre>
+<hr class='noprint'/><!--NewPage--><pre class='newpage'><span id="page-4" ></span>
+<span class="grey"><a href="https://www.rfc-editor.org/rfc/rfc8187">RFC 8187</a>            Charset/Language Encoding in HTTP     September 2017</span>
+
+
+   o  字符编码和语言信息很有用，
+      因此规定了一个简单的子集（<a href="#section-3.2">第 3.2 节</a>），并且
+
+   o  不需要在编码词中指定语言
+      （<a href="#section-3.3">第 3.3 节</a>）。
+
+<span class="h3"><a class="selflink" id="section-3.1" href="#section-3.1">3.1</a>.  参数续接</span>
+
+   <a href="https://www.rfc-editor.org/rfc/rfc2231#section-3">[RFC2231] 第 3 节</a> 定义了一种机制，
+   用于应对 MIME 首部的长度限制。这些限制
+   不适用于 HTTP（<a href="https://www.rfc-editor.org/rfc/rfc7231#appendix-A.6">[RFC7231]，附录 A.6</a>）。
+
+   因此，参数续接不是本规范定义的
+   编码的一部分。
+
+<span class="h3"><a class="selflink" id="section-3.2" href="#section-3.2">3.2</a>.  参数值的字符编码和语言信息</span>
+
+   <a href="https://www.rfc-editor.org/rfc/rfc2231#section-4">[RFC2231] 第 4 节</a> 规定了如何在参数值中
+   嵌入语言信息，以及如何对非 ASCII 字符进行编码，
+   以应对 MIME 和 HTTP 首部字段
+   参数中的限制。
+
+   但是，<a href="https://www.rfc-editor.org/rfc/rfc2231">RFC 2231</a> 未规定必须实现的字符编码，
+   这使发送方难以决定应使用哪种编码。
+   因此，实现本规范的接收方必须（MUST）支持
+   "UTF-8" 字符编码 [<a href="https://www.rfc-editor.org/rfc/rfc3629" title="&quot;UTF-8, a transformation format of ISO 10646&quot;">RFC3629</a>]。
+
+   此外，<a href="https://www.rfc-editor.org/rfc/rfc2231">RFC 2231</a> 允许省略字符编码信息。
+   本规范定义的编码
+   不允许这样做。
+
+<span class="h4"><a class="selflink" id="section-3.2.1" href="#section-3.2.1">3.2.1</a>.  定义</span>
+
+   通常以星号字符结尾的参数名
+   表示存在扩展参数值。但请注意，
+   这只是一种约定，扩展参数值
+   必须在使用此扩展的首部字段定义中
+   明确规定（见<a href="#section-4">第 4 节</a>）。
+
+   扩展参数值的 ABNF 规定如下：
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Reschke                      Standards Track                    [Page 4]</span></pre>
+<hr class='noprint'/><!--NewPage--><pre class='newpage'><span id="page-5" ></span>
+<span class="grey"><a href="https://www.rfc-editor.org/rfc/rfc8187">RFC 8187</a>            Charset/Language Encoding in HTTP     September 2017</span>
+
+
+     ext-value     = charset  "'" [ language ] "'" value-chars
+                   ; like <a href="https://www.rfc-editor.org/rfc/rfc2231">RFC 2231</a>'s &lt;extended-initial-value&gt;
+                   ; (see <a href="https://www.rfc-editor.org/rfc/rfc2231#section-7">[RFC2231], Section&nbsp;7</a>)
+
+     charset       = "UTF-8" / mime-charset
+
+     mime-charset  = 1*mime-charsetc
+     mime-charsetc = ALPHA / DIGIT
+                   / "!" / "#" / "$" / "%" / "&amp;"
+                   / "+" / "-" / "^" / "_" / "`"
+                   / "{" / "}" / "~"
+                   ; as &lt;mime-charset&gt; in <a href="https://www.rfc-editor.org/rfc/rfc2978#section-2.3">Section&nbsp;2.3 of [RFC2978]</a>
+                   ; except that the single quote is not included
+                   ; SHOULD be registered in the IANA charset registry
+
+     language      = &lt;Language-Tag, see <a href="https://www.rfc-editor.org/rfc/rfc5646#section-2.1">[RFC5646], Section&nbsp;2.1</a>&gt;
+
+     value-chars   = *( pct-encoded / attr-char )
+
+     pct-encoded   = "%" HEXDIG HEXDIG
+                   ; see <a href="https://www.rfc-editor.org/rfc/rfc3986#section-2.1">[RFC3986], Section&nbsp;2.1</a>
+
+     attr-char     = ALPHA / DIGIT
+                   / "!" / "#" / "$" / "&amp;" / "+" / "-" / "."
+                   / "^" / "_" / "`" / "|" / "~"
+                   ; token except ( "*" / "'" / "%" )
+
+   扩展参数的值部分（ext-value）是一个词元，
+   由以下三部分组成：
+
+   1.  必需的（REQUIRED）字符编码名称（charset），
+
+   2.  可选的（OPTIONAL）语言信息（language），以及
+
+   3.  表示实际值的字符序列（value-chars），
+       各部分以单引号字符分隔。
+
+   注意，字符编码名称和语言标签均
+   限制为 US-ASCII 编码字符集，且匹配时不区分大小写
+   （见 <a href="https://www.rfc-editor.org/rfc/rfc2978#section-2.3">[RFC2978] 第 2.3 节</a> 和 <a href="https://www.rfc-editor.org/rfc/rfc5646#section-2.1.1">[RFC5646]
+   第 2.1.1 节</a>）。
+
+   在值部分中，不属于 attr-char 的字符
+   使用指定的字符编码编码为八位组序列。
+   随后，该八位组序列按以下规定进行百分号编码：
+   <a href="https://www.rfc-editor.org/rfc/rfc3986#section-2.1">[RFC3986] 第 2.1 节</a>。
+
+
+
+
+
+<span class="grey">Reschke                      Standards Track                    [Page 5]</span></pre>
+<hr class='noprint'/><!--NewPage--><pre class='newpage'><span id="page-6" ></span>
+<span class="grey"><a href="https://www.rfc-editor.org/rfc/rfc8187">RFC 8187</a>            Charset/Language Encoding in HTTP     September 2017</span>
+
+
+   生成方必须（MUST）使用 "UTF-8"（[<a href="https://www.rfc-editor.org/rfc/rfc3629" title="&quot;UTF-8, a transformation format of ISO 10646&quot;">RFC3629</a>]）字符编码。
+   扩展字符编码（mime-charset）
+   保留供将来使用。
+
+      注意：接收方应准备好稳健地处理编码错误，
+      例如格式错误或不完整的百分号转义序列，
+      或无法解码的八位组序列。
+      本规范不强制要求任何特定行为；
+      例如，以下策略均可接受：
+
+      *  忽略该参数，
+
+      *  去除无法解码的八位组序列，以及
+
+      *  将无法解码的八位组序列替换为替代字符，
+         例如 Unicode 字符 U+FFFD
+         （替代字符）。
+
+<span class="h4"><a class="selflink" id="section-3.2.2" href="#section-3.2.2">3.2.2</a>.  历史说明</span>
+
+   <a href="https://www.rfc-editor.org/rfc/rfc7230">RFC 7230</a> 的 token 产生式（<a href="https://www.rfc-editor.org/rfc/rfc7230#section-3.2.6">[RFC7230]，第 3.2.6 节</a>）不同于
+   <a href="https://www.rfc-editor.org/rfc/rfc2231">RFC 2231</a> 使用的产生式（引自 <a href="https://www.rfc-editor.org/rfc/rfc2045#section-5.1">[RFC2045]
+   第 5.1 节</a>），区别在于排除了花括号（即 "{" 和 "}"）。
+   因此，attr-char 产生式也
+   排除了这两个字符。
+
+   此处定义的 &lt;mime-charset&gt; ABNF 与
+   <a href="https://www.rfc-editor.org/rfc/rfc2978#section-2.3">[RFC2978] 第 2.3 节</a> 中的定义不同，它不允许单引号
+   字符（另见 RFC 勘误 ID 1912 [<a href="#ref-Err1912" title="&quot;Erratum ID 1912, RFC 2978&quot;">Err1912</a>]）。事实上，
+   截至本文撰写时，尚未注册任何使用该字符的
+   字符编码名称。
+
+   为向后兼容 <a href="https://www.rfc-editor.org/rfc/rfc2231">RFC 2231</a>，本规范定义的编码
+   与通用参数语法有所不同：
+   它不允许 quoted-string 记法。使用通用
+   解析器组件的实现可能无法检测到 quoted-string
+   记法的使用，因此即使该格式无效，
+   也可能接受它。
+
+   [<a id="ref-RFC5987">RFC5987</a>] 还曾要求支持 ISO-8859-1（[<a href="#ref-ISO-8859-1">ISO-8859-1</a>]）；
+   为兼容旧代码，鼓励接收方
+   也支持这种编码。
+
+<span class="h4"><a class="selflink" id="section-3.2.3" href="#section-3.2.3">3.2.3</a>.  示例</span>
+
+   使用 "token" 的非扩展记法：
+
+     foo: bar; title=Economy
+
+
+
+<span class="grey">Reschke                      Standards Track                    [Page 6]</span></pre>
+<hr class='noprint'/><!--NewPage--><pre class='newpage'><span id="page-7" ></span>
+<span class="grey"><a href="https://www.rfc-editor.org/rfc/rfc8187">RFC 8187</a>            Charset/Language Encoding in HTTP     September 2017</span>
+
+
+   使用 "quoted-string" 的非扩展记法：
+
+     foo: bar; title="US-$ rates"
+
+   使用 Unicode 字符 U+00A3（"£"，英镑符号）的
+   扩展记法：
+
+     foo: bar; title*=utf-8'en'%C2%A3%20rates
+
+   注意：Unicode 英镑符号字符 U+00A3 先使用
+   UTF-8 字符编码编码为八位组序列 C2 A3，
+   然后进行百分号编码。另请注意，空格字符被编码为
+   %20，因为它不属于 attr-char。
+
+   使用 Unicode 字符 U+00A3（"£"，英镑符号）
+   和 U+20AC（"€"，欧元符号）的扩展记法：
+
+     foo: bar; title*=UTF-8''%c2%a3%20and%20%e2%82%ac%20rates
+
+   注意：Unicode 英镑符号字符 U+00A3 先使用
+   UTF-8 字符编码编码为八位组序列 C2 A3，
+   然后进行百分号编码。同样，Unicode 欧元符号字符 U+20AC
+   先编码为八位组序列 E2 82 AC，再进行百分号
+   编码。还请注意，HEXDIG 同时允许小写和大写
+   字符，因此接收方必须理解这两种形式；语言
+   信息是可选的，而字符编码不是。
+
+<span class="h3"><a class="selflink" id="section-3.3" href="#section-3.3">3.3</a>.  在编码词中指定语言</span>
+
+   <a href="https://www.rfc-editor.org/rfc/rfc2231#section-5">[RFC2231] 第 5 节</a> 扩展了 [<a href="https://www.rfc-editor.org/rfc/rfc2047" title="&quot;MIME (Multipurpose Internet Mail Extensions) Part Three: Message Header Extensions for Non-ASCII Text&quot;">RFC2047</a>] 定义的编码，
+   以支持在编码词中指定语言。现已废止的 HTTP/1.1 规范 <a href="https://www.rfc-editor.org/rfc/rfc2616">RFC 2616</a>
+   曾引用 <a href="https://www.rfc-editor.org/rfc/rfc2047">RFC 2047</a>
+   （<a href="https://www.rfc-editor.org/rfc/rfc2616#section-2.2">[RFC2616]，第 2.2 节</a>），但并未明确它适用于哪个首部
+   字段。因此，HTTP/1.1 规范的当前修订版
+   已弃用以下规范定义的编码形式：<a href="https://www.rfc-editor.org/rfc/rfc2047">RFC</a>
+   <a href="https://www.rfc-editor.org/rfc/rfc2047">2047</a>（见 <a href="https://www.rfc-editor.org/rfc/rfc7230#section-3.2.4">[RFC7230] 第 3.2.4 节</a>）。
+
+   因此，本规范不包含此特性。
+
+<span class="h2"><a class="selflink" id="section-4" href="#section-4">4</a>.  在 HTTP 首部字段定义中的使用指南</span>
+
+   使用下述扩展的 HTTP 首部字段规范
+   应明确声明使用了<a href="#section-3.2">第 3.2 节</a>定义的扩展。
+   一种简单的做法是规范性地引用本规范，
+   并将 ext-value 产生式纳入具体首部字段
+   参数的 ABNF 中。
+
+
+
+
+
+<span class="grey">Reschke                      Standards Track                    [Page 7]</span></pre>
+<hr class='noprint'/><!--NewPage--><pre class='newpage'><span id="page-8" ></span>
+<span class="grey"><a href="https://www.rfc-editor.org/rfc/rfc8187">RFC 8187</a>            Charset/Language Encoding in HTTP     September 2017</span>
+
+
+   例如：
+
+     foo         = token ";" LWSP title-param
+     title-param = "title" LWSP "=" LWSP value
+                 / "title*" LWSP "=" LWSP ext-value
+     ext-value   = &lt;see <a href="https://www.rfc-editor.org/rfc/rfc8187#section-3.2">RFC 8187, Section&nbsp;3.2</a>&gt;
+
+      注意：下述规范定义的参数值续接特性，
+      即 <a href="https://www.rfc-editor.org/rfc/rfc2231#section-3">[RFC2231] 第 3 节</a>，使得具有相同名称的扩展参数
+      不能出现多个实例，因为续接的处理
+      会变得有歧义。因此，
+      建议使用此扩展的规范禁止这种情况，
+      以兼容 <a href="https://www.rfc-editor.org/rfc/rfc2231">RFC 2231</a>。
+
+      注意：本规范不会自动为以星号结尾的
+      参数名赋予新的解释。
+      如上所述，应由非扩展参数的规范
+      决定是否采用此处定义的语法。
+      尽管如此，已知一些现有实现
+      会在参数名以星号结尾时
+      自动切换为这种记法；因此，
+      将以星号结尾的参数名用于其他用途，很可能导致
+      互操作性问题。
+
+<span class="h3"><a class="selflink" id="section-4.1" href="#section-4.1">4.1</a>.  何时使用此扩展</span>
+
+   <a href="https://www.rfc-editor.org/rfc/rfc2277#section-4.2">[RFC2277] 第 4.2 节</a> 要求含有人类可读文本的
+   协议元素能够携带语言信息。因此，
+   当参数值属于文本且其语言已知时，
+   应始终使用 ext-value 产生式。
+
+   此外，只要参数值需要携带
+   US-ASCII 编码字符集之外的字符
+   （[<a href="https://www.rfc-editor.org/rfc/rfc0020" title="&quot;ASCII format for network interchange&quot;">RFC0020</a>]），也应使用此扩展；请注意，
+   定义一个被限制为仅使用 Unicode 字符集某个子集的
+   新参数是不可接受的。
+
+<span class="h3"><a class="selflink" id="section-4.2" href="#section-4.2">4.2</a>.  错误处理</span>
+
+   首部字段规范需要定义是否允许同名参数
+   出现多个实例，以及应如何处理它们。
+   本规范建议使用扩展语法的参数
+   优先。这样，生成方即可同时使用
+   这两种格式，而不会破坏尚不理解扩展语法的
+   接收方的正常工作。
+
+
+
+
+
+
+<span class="grey">Reschke                      Standards Track                    [Page 8]</span></pre>
+<hr class='noprint'/><!--NewPage--><pre class='newpage'><span id="page-9" ></span>
+<span class="grey"><a href="https://www.rfc-editor.org/rfc/rfc8187">RFC 8187</a>            Charset/Language Encoding in HTTP     September 2017</span>
+
+
+   示例：
+
+     foo: bar; title="EURO exchange rates";
+               title*=utf-8''%e2%82%ac%20exchange%20rates
+
+   在此情况下，发送方为旧接收方提供 ASCII 版本的标题，
+   同时也为理解本规范的接收方提供国际化版本。
+   显然，后者应优先使用
+   新语法而非旧语法。
+
+<span class="h2"><a class="selflink" id="section-5" href="#section-5">5</a>.  安全考虑</span>
+
+   本文档描述的格式能够传输非 ASCII 字符，
+   因此可能出现字符“欺骗”情形：
+   显示出的值看起来与其实际内容不同。
+
+   此外，还存在与 UTF-8 解码相关的
+   已知攻击情形。
+
+   有关这两个主题的更多信息，见 <a href="https://www.rfc-editor.org/rfc/rfc3629#section-10">[RFC3629] 第 10 节</a>。
+
+   此外，本文档规定的扩展能够
+   为单个参数传输多个语言版本。
+   当同一参数的不同语言版本并不等价时，
+   这种用法可能允许欺骗攻击。
+   这种攻击是否能够奏效，
+   取决于所规定的参数。
+
+<span class="h2"><a class="selflink" id="section-6" href="#section-6">6</a>.  IANA 考虑</span>
+
+   本文档不要求 IANA 采取任何行动。
+
+<span class="h2"><a class="selflink" id="section-7" href="#section-7">7</a>.  参考文献</span>
+
+<span class="h3"><a class="selflink" id="section-7.1" href="#section-7.1">7.1</a>.  规范性参考文献</span>
+
+   [<a id="ref-RFC0020">RFC0020</a>]  Cerf, V., "ASCII format for network interchange", STD 80,
+              <a href="https://www.rfc-editor.org/rfc/rfc20">RFC 20</a>, DOI 10.17487/RFC0020, October 1969,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc20">https://www.rfc-editor.org/info/rfc20</a>&gt;.
+
+   [<a id="ref-RFC2119">RFC2119</a>]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", <a href="https://www.rfc-editor.org/bcp/bcp14">BCP 14</a>, <a href="https://www.rfc-editor.org/rfc/rfc2119">RFC 2119</a>,
+              DOI 10.17487/RFC2119, March 1997,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc2119">https://www.rfc-editor.org/info/rfc2119</a>&gt;.
+
+   [<a id="ref-RFC2978">RFC2978</a>]  Freed, N. and J. Postel, "IANA Charset Registration
+              Procedures", <a href="https://www.rfc-editor.org/bcp/bcp19">BCP 19</a>, <a href="https://www.rfc-editor.org/rfc/rfc2978">RFC 2978</a>, DOI 10.17487/RFC2978,
+              October 2000, &lt;<a href="https://www.rfc-editor.org/info/rfc2978">https://www.rfc-editor.org/info/rfc2978</a>&gt;.
+
+
+
+<span class="grey">Reschke                      Standards Track                    [Page 9]</span></pre>
+<hr class='noprint'/><!--NewPage--><pre class='newpage'><span id="page-10" ></span>
+<span class="grey"><a href="https://www.rfc-editor.org/rfc/rfc8187">RFC 8187</a>            Charset/Language Encoding in HTTP     September 2017</span>
+
+
+   [<a id="ref-RFC3629">RFC3629</a>]  Yergeau, F., "UTF-8, a transformation format of ISO
+              10646", STD 63, <a href="https://www.rfc-editor.org/rfc/rfc3629">RFC 3629</a>, DOI 10.17487/RFC3629, November
+              2003, &lt;<a href="https://www.rfc-editor.org/info/rfc3629">https://www.rfc-editor.org/info/rfc3629</a>&gt;.
+
+   [<a id="ref-RFC3986">RFC3986</a>]  Berners-Lee, T., Fielding, R., and L. Masinter, "Uniform
+              Resource Identifier (URI): Generic Syntax", STD 66,
+              <a href="https://www.rfc-editor.org/rfc/rfc3986">RFC 3986</a>, DOI 10.17487/RFC3986, January 2005,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc3986">https://www.rfc-editor.org/info/rfc3986</a>&gt;.
+
+   [<a id="ref-RFC5234">RFC5234</a>]  Crocker, D., Ed. and P. Overell, "Augmented BNF for Syntax
+              Specifications: ABNF", STD 68, <a href="https://www.rfc-editor.org/rfc/rfc5234">RFC 5234</a>,
+              DOI 10.17487/RFC5234, January 2008,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc5234">https://www.rfc-editor.org/info/rfc5234</a>&gt;.
+
+   [<a id="ref-RFC5646">RFC5646</a>]  Phillips, A., Ed. and M. Davis, Ed., "Tags for Identifying
+              Languages", <a href="https://www.rfc-editor.org/bcp/bcp47">BCP 47</a>, <a href="https://www.rfc-editor.org/rfc/rfc5646">RFC 5646</a>, DOI 10.17487/RFC5646,
+              September 2009, &lt;<a href="https://www.rfc-editor.org/info/rfc5646">https://www.rfc-editor.org/info/rfc5646</a>&gt;.
+
+   [<a id="ref-RFC7230">RFC7230</a>]  Fielding, R., Ed. and J. Reschke, Ed., "Hypertext Transfer
+              Protocol (HTTP/1.1): Message Syntax and Routing",
+              <a href="https://www.rfc-editor.org/rfc/rfc7230">RFC 7230</a>, DOI 10.17487/RFC7230, June 2014,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc7230">https://www.rfc-editor.org/info/rfc7230</a>&gt;.
+
+   [<a id="ref-RFC7231">RFC7231</a>]  Fielding, R., Ed. and J. Reschke, Ed., "Hypertext Transfer
+              Protocol (HTTP/1.1): Semantics and Content", <a href="https://www.rfc-editor.org/rfc/rfc7231">RFC 7231</a>,
+              DOI 10.17487/RFC7231, June 2014,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc7231">https://www.rfc-editor.org/info/rfc7231</a>&gt;.
+
+<span class="h3"><a class="selflink" id="section-7.2" href="#section-7.2">7.2</a>.  资料性参考文献</span>
+
+   [<a id="ref-Err1912">Err1912</a>]  RFC Errata, "Erratum ID 1912, <a href="https://www.rfc-editor.org/rfc/rfc2978">RFC 2978</a>",
+              &lt;<a href="https://www.rfc-editor.org/errata/eid1912">https://www.rfc-editor.org/errata/eid1912</a>&gt;.
+
+   [<a id="ref-ISO-8859-1">ISO-8859-1</a>]
+              International Organization for Standardization,
+              "Information technology -- 8-bit single-byte coded graphic
+              character sets -- Part 1: Latin alphabet No. 1", ISO/
+              IEC 8859-1:1998, 1998.
+
+   [<a id="ref-RFC2045">RFC2045</a>]  Freed, N. and N. Borenstein, "Multipurpose Internet Mail
+              Extensions (MIME) Part One: Format of Internet Message
+              Bodies", <a href="https://www.rfc-editor.org/rfc/rfc2045">RFC 2045</a>, DOI 10.17487/RFC2045, November 1996,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc2045">https://www.rfc-editor.org/info/rfc2045</a>&gt;.
+
+   [<a id="ref-RFC2047">RFC2047</a>]  Moore, K., "MIME (Multipurpose Internet Mail Extensions)
+              Part Three: Message Header Extensions for Non-ASCII Text",
+              <a href="https://www.rfc-editor.org/rfc/rfc2047">RFC 2047</a>, DOI 10.17487/RFC2047, November 1996,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc2047">https://www.rfc-editor.org/info/rfc2047</a>&gt;.
+
+
+
+<span class="grey">Reschke                      Standards Track                   [Page 10]</span></pre>
+<hr class='noprint'/><!--NewPage--><pre class='newpage'><span id="page-11" ></span>
+<span class="grey"><a href="https://www.rfc-editor.org/rfc/rfc8187">RFC 8187</a>            Charset/Language Encoding in HTTP     September 2017</span>
+
+
+   [<a id="ref-RFC2231">RFC2231</a>]  Freed, N. and K. Moore, "MIME Parameter Value and Encoded
+              Word Extensions: Character Sets, Languages, and
+              Continuations", <a href="https://www.rfc-editor.org/rfc/rfc2231">RFC 2231</a>, DOI 10.17487/RFC2231, November
+              1997, &lt;<a href="https://www.rfc-editor.org/info/rfc2231">https://www.rfc-editor.org/info/rfc2231</a>&gt;.
+
+   [<a id="ref-RFC2277">RFC2277</a>]  Alvestrand, H., "IETF Policy on Character Sets and
+              Languages", <a href="https://www.rfc-editor.org/bcp/bcp18">BCP 18</a>, <a href="https://www.rfc-editor.org/rfc/rfc2277">RFC 2277</a>, DOI 10.17487/RFC2277,
+              January 1998, &lt;<a href="https://www.rfc-editor.org/info/rfc2277">https://www.rfc-editor.org/info/rfc2277</a>&gt;.
+
+   [<a id="ref-RFC2616">RFC2616</a>]  Fielding, R., Gettys, J., Mogul, J., Frystyk, H.,
+              Masinter, L., Leach, P., and T. Berners-Lee, "Hypertext
+              Transfer Protocol -- HTTP/1.1", <a href="https://www.rfc-editor.org/rfc/rfc2616">RFC 2616</a>,
+              DOI 10.17487/RFC2616, June 1999,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc2616">https://www.rfc-editor.org/info/rfc2616</a>&gt;.
+
+   [<a id="ref-RFC5987">RFC5987</a>]  Reschke, J., "Character Set and Language Encoding for
+              Hypertext Transfer Protocol (HTTP) Header Field
+              Parameters", <a href="https://www.rfc-editor.org/rfc/rfc5987">RFC 5987</a>, DOI 10.17487/RFC5987, August 2010,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc5987">https://www.rfc-editor.org/info/rfc5987</a>&gt;.
+
+   [<a id="ref-RFC5988">RFC5988</a>]  Nottingham, M., "Web Linking", <a href="https://www.rfc-editor.org/rfc/rfc5988">RFC 5988</a>,
+              DOI 10.17487/RFC5988, October 2010,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc5988">https://www.rfc-editor.org/info/rfc5988</a>&gt;.
+
+   [<a id="ref-RFC6266">RFC6266</a>]  Reschke, J., "Use of the Content-Disposition Header Field
+              in the Hypertext Transfer Protocol (HTTP)", <a href="https://www.rfc-editor.org/rfc/rfc6266">RFC 6266</a>,
+              DOI 10.17487/RFC6266, June 2011,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc6266">https://www.rfc-editor.org/info/rfc6266</a>&gt;.
+
+   [<a id="ref-RFC6365">RFC6365</a>]  Hoffman, P. and J. Klensin, "Terminology Used in
+              Internationalization in the IETF", <a href="https://www.rfc-editor.org/bcp/bcp166">BCP 166</a>, <a href="https://www.rfc-editor.org/rfc/rfc6365">RFC 6365</a>,
+              DOI 10.17487/RFC6365, September 2011,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc6365">https://www.rfc-editor.org/info/rfc6365</a>&gt;.
+
+   [<a id="ref-RFC7578">RFC7578</a>]  Masinter, L., "Returning Values from Forms: multipart/
+              form-data", <a href="https://www.rfc-editor.org/rfc/rfc7578">RFC 7578</a>, DOI 10.17487/RFC7578, July 2015,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc7578">https://www.rfc-editor.org/info/rfc7578</a>&gt;.
+
+   [<a id="ref-RFC7616">RFC7616</a>]  Shekh-Yusef, R., Ed., Ahrens, D., and S. Bremer, "HTTP
+              Digest Access Authentication", <a href="https://www.rfc-editor.org/rfc/rfc7616">RFC 7616</a>,
+              DOI 10.17487/RFC7616, September 2015,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc7616">https://www.rfc-editor.org/info/rfc7616</a>&gt;.
+
+   [<a id="ref-RFC8053">RFC8053</a>]  Oiwa, Y., Watanabe, H., Takagi, H., Maeda, K., Hayashi,
+              T., and Y. Ioku, "HTTP Authentication Extensions for
+              Interactive Clients", <a href="https://www.rfc-editor.org/rfc/rfc8053">RFC 8053</a>, DOI 10.17487/RFC8053,
+              January 2017, &lt;<a href="https://www.rfc-editor.org/info/rfc8053">https://www.rfc-editor.org/info/rfc8053</a>&gt;.
+
+
+
+
+<span class="grey">Reschke                      Standards Track                   [Page 11]</span></pre>
+<hr class='noprint'/><!--NewPage--><pre class='newpage'><span id="page-12" ></span>
+<span class="grey"><a href="https://www.rfc-editor.org/rfc/rfc8187">RFC 8187</a>            Charset/Language Encoding in HTTP     September 2017</span>
+
+
+   [<a id="ref-XMLHttpRequest">XMLHttpRequest</a>]
+              WhatWG, "XMLHttpRequest", &lt;<a href="https://xhr.spec.whatwg.org/">https://xhr.spec.whatwg.org/</a>&gt;.
+
+<span class="h2"><a class="selflink" id="appendix-A" href="#appendix-A">附录 A</a>.  相对于以下规范的变更： <a href="https://www.rfc-editor.org/rfc/rfc5987">RFC 5987</a></span>
+
+   本节概述相对于 [<a href="https://www.rfc-editor.org/rfc/rfc5987" title="&quot;Character Set and Language Encoding for Hypertext Transfer Protocol (HTTP) Header Field Parameters&quot;">RFC5987</a>] 的变更：
+
+   o  文档标题改为“指明 HTTP 首部字段参数的
+      字符编码和语言”。
+
+   o  重写了引言，以更清楚地解释
+      字段值中非 ASCII 字符的相关问题。
+
+   o  移除了支持 "ISO-8859-1" 编码的要求。
+
+   o  本文档不再尝试重新定义通用“参数”的
+      ABNF（事实证明，HTTP 中并不存在真正通用的
+      参数定义；例如，在空白处理方面
+      存在细微差异）。
+
+   o  删除了关于现有实现中错误处理缺陷的说明，
+      因为该说明已不再准确。
+
+<span class="h2"><a class="selflink" id="appendix-B" href="#appendix-B">附录 B</a>.  实现报告</span>
+
+   本文档定义的编码目前用于四个
+   不同的 HTTP 首部字段：
+
+   o  "Authentication-Control"，定义于 [<a href="https://www.rfc-editor.org/rfc/rfc8053" title="&quot;HTTP Authentication Extensions for Interactive Clients&quot;">RFC8053</a>]，
+
+   o  "Authorization"（用于 HTTP 摘要认证，定义于
+      [<a href="https://www.rfc-editor.org/rfc/rfc7616" title="&quot;HTTP Digest Access Authentication&quot;">RFC7616</a>]），
+
+   o  "Content-Disposition"，定义于 [<a href="https://www.rfc-editor.org/rfc/rfc6266" title="&quot;Use of the Content-Disposition Header Field in the Hypertext Transfer Protocol (HTTP)&quot;">RFC6266</a>]，以及
+
+   o  "Link"，定义于 [<a href="https://www.rfc-editor.org/rfc/rfc5988" title="&quot;Web Linking&quot;">RFC5988</a>]。
+
+   由于该编码是 1997 年
+   [<a href="https://www.rfc-editor.org/rfc/rfc2231" title="&quot;MIME Parameter Value and Encoded Word Extensions: Character Sets, Languages, and Continuations&quot;">RFC2231</a>] 所定义编码的配置／澄清，因此许多用户代理
+   在 [<a href="https://www.rfc-editor.org/rfc/rfc5987" title="&quot;Character Set and Language Encoding for Hypertext Transfer Protocol (HTTP) Header Field Parameters&quot;">RFC5987</a>] 发布时就已支持在 "Content-Disposition" 中使用它。
+
+   自 [<a href="https://www.rfc-editor.org/rfc/rfc5987" title="&quot;Character Set and Language Encoding for Hypertext Transfer Protocol (HTTP) Header Field Parameters&quot;">RFC5987</a>] 发布以来，又有三个流行的桌面用户
+   代理增加了对此编码的支持；详情见
+   &lt;<a href="http://purl.org/NET/http/content-disposition-tests#encoding-2231-char">http://purl.org/NET/http/content-disposition-tests#encoding-</a>
+   <a href="http://purl.org/NET/http/content-disposition-tests#encoding-2231-char">2231-char</a>&gt;。截至本文撰写时，所有主流桌面
+   用户代理的当前版本均支持它。
+
+
+
+
+
+<span class="grey">Reschke                      Standards Track                   [Page 12]</span></pre>
+<hr class='noprint'/><!--NewPage--><pre class='newpage'><span id="page-13" ></span>
+<span class="grey"><a href="https://www.rfc-editor.org/rfc/rfc8187">RFC 8187</a>            Charset/Language Encoding in HTTP     September 2017</span>
+
+
+   注意，Internet Explorer 9 中的实现不支持
+   ISO-8859-1 字符编码；本次文档修订
+   承认 UTF-8 足以表达所有码点，
+   并移除了支持 ISO-8859-1 的要求。
+
+   另一方面，"Link" 首部字段是在较近的时间
+   由 [<a href="https://www.rfc-editor.org/rfc/rfc5988" title="&quot;Web Linking&quot;">RFC5988</a>] 规定的。截至本文撰写时，
+   除 Firefox（从第 15 版开始）外，
+   没有用户代理支持 "title*" 参数。
+
+   <a href="https://www.rfc-editor.org/rfc/rfc7616#section-3.4">[RFC7616] 第 3.4 节</a> 定义了用于 HTTP 摘要认证的
+   "username*" 参数。截至本文撰写时，
+   尚无用户代理实现此扩展。
+
+致谢
+
+   感谢 Martin Dürst 和 Frank Ellermann 帮助厘清 ABNF
+   细节，感谢 Graham Klyne 和 Alexey Melnikov 进行整体审查，感谢
+   Chris Newman 指出与 <a href="https://www.rfc-editor.org/rfc/rfc2231">RFC 2231</a> 的不兼容问题，并感谢
+   Benjamin Carlyle、Roar Lauritzsen、Eric Lawrence 和 James Manger
+   提供实现者反馈。
+
+   此外，感谢 IETF HTTP 工作组成员
+   对此次 <a href="https://www.rfc-editor.org/rfc/rfc5987">RFC 5987</a> 更新提出的反馈。
+
+作者地址
+
+   Julian F. Reschke
+   greenbytes GmbH
+   Hafenweg 16
+   Münster, NW  48155
+   Germany
+
+   Email: julian.reschke@greenbytes.de
+   URI:   <a href="http://greenbytes.de/tech/webdav/">http://greenbytes.de/tech/webdav/</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Reschke                      Standards Track                   [Page 13]
+</pre>
+<p>非官方中文译文；以 IETF 发布的英文原文为准。 <a href="https://www.rfc-editor.org/rfc/rfc8187.html">RFC 8187</a></p>
+<script src="https://htmlspecs.com/dropdown.js"></script>
