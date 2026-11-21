@@ -4124,6 +4124,14 @@ const cssLinkGroups = [
                 state: "CR"
             },
             {
+                text: "Ready-made Counter Styles",
+                href: "https://htmlspecs.com/css/predefined-counter-styles/",
+                src: "https://www.w3.org/TR/2025/NOTE-predefined-counter-styles-20250307/",
+                "last-modified": "-",
+                lang: "cjk",
+                state: "NOTE"
+            },
+            {
                 text: "CSS Lists and Counters Module Level 3",
                 href: "https://htmlspecs.com/css/css-lists-3/",
                 src: "https://www.w3.org/TR/2020/WD-css-lists-3-20201117/",
