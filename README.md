@@ -164,6 +164,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [Pointer Events Level 2](https://htmlspecs.com/pointerevents2/)（[Source](https://www.w3.org/TR/2026/SPSD-pointerevents2-20260630/) ![Superseded Recommendation](https://img.shields.io/badge/SPSD-6c757d)）
 - [Pointer Events Level 3](https://htmlspecs.com/pointerevents3/)（[Source](https://www.w3.org/TR/2026/REC-pointerevents3-20260630/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [Pointer Events Level 4](https://htmlspecs.com/pointerevents4/)（[Source](https://www.w3.org/TR/2026/WD-pointerevents4-20261008/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Touch Events - Level 2](https://htmlspecs.com/touch-events/)（[Source](https://www.w3.org/community/reports/touchevents/CG-FINAL-touch-events-20240704/) ![Community Group Final Report](https://img.shields.io/badge/CG--FINAL-ffcc00)）
 - [Ink API](https://htmlspecs.com/ink-api/)（[Source](https://wicg.github.io/ink-enhancement/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [Handwriting Recognition API](https://htmlspecs.com/handwriting-recognition/)（[Source](https://wicg.github.io/handwriting-recognition/) ![Draft](https://img.shields.io/badge/Draft-ffcc00)）
 - [UI Events](https://htmlspecs.com/uievents/)（[Source](https://www.w3.org/TR/2026/WD-uievents-20260221/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）

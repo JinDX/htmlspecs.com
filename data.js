@@ -1302,6 +1302,14 @@ const linkGroups = [
                 state: "WD"
             },
             {
+                text: "Touch Events - Level 2",
+                href: "https://htmlspecs.com/touch-events/",
+                src: "https://www.w3.org/community/reports/touchevents/CG-FINAL-touch-events-20240704/",
+                "last-modified": "-",
+                lang: "cjk",
+                state: "CG-FINAL"
+            },
+            {
                 text: "Ink API",
                 href: "https://htmlspecs.com/ink-api/",
                 src: "https://wicg.github.io/ink-enhancement/",
