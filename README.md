@@ -79,6 +79,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [RDF 1.2 TriG](https://htmlspecs.com/rdf12-trig/)（[Source](https://www.w3.org/TR/2026/WD-rdf12-trig-20261113/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [RDF 1.2 N-Quads](https://htmlspecs.com/rdf12-n-quads/)（[Source](https://www.w3.org/TR/2026/WD-rdf12-n-quads-20261120/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [RDF 1.2 XML Syntax](https://htmlspecs.com/rdf12-xml/)（[Source](https://www.w3.org/TR/2026/WD-rdf12-xml-20261025/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [RDF Dataset Canonicalization](https://htmlspecs.com/rdf-canon/)（[Source](https://www.w3.org/TR/2024/REC-rdf-canon-20240521/) ![Recommendation](https://img.shields.io/badge/REC-309c40)）
 - [SPARQL 1.2 Query Language](https://htmlspecs.com/sparql12-query/)（[Source](https://www.w3.org/TR/2026/WD-sparql12-query-20261119/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [SPARQL 1.2 Protocol](https://htmlspecs.com/sparql12-protocol/)（[Source](https://www.w3.org/TR/2026/WD-sparql12-protocol-20261120/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [SHACL 1.2 Core](https://htmlspecs.com/shacl12-core/)（[Source](https://www.w3.org/TR/2026/WD-shacl12-core-20261116/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）

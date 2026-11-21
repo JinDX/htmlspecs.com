@@ -646,6 +646,14 @@ const linkGroups = [
                 state: "WD"
             },
             {
+                text: "RDF Dataset Canonicalization",
+                href: "https://htmlspecs.com/rdf-canon/",
+                src: "https://www.w3.org/TR/2024/REC-rdf-canon-20240521/",
+                "last-modified": "-",
+                lang: "cjk",
+                state: "REC"
+            },
+            {
                 text: "SPARQL 1.2 Query Language",
                 href: "https://htmlspecs.com/sparql12-query/",
                 src: "https://www.w3.org/TR/2026/WD-sparql12-query-20261119/",
