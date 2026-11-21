@@ -5364,6 +5364,14 @@ const httpLinkGroups = [
                 state: "RFC"
             },
             {
+                text: "Security Considerations for Optimistic Protocol Transitions in HTTP/1.1",
+                href: "https://htmlspecs.com/http/rfc9931.html",
+                src: "https://www.rfc-editor.org/rfc/rfc9931.html",
+                "last-modified": "-",
+                lang: "cjk",
+                state: "RFC"
+            },
+            {
                 text: "The ORIGIN Extension in HTTP/3",
                 href: "https://htmlspecs.com/http/rfc9412.html",
                 src: "https://httpwg.org/specs/rfc9412.html",
