@@ -604,6 +604,7 @@ HTML 及相关 API，CSS 标准系列，HTTP 标准系列 🌐📡
 - [CSS Transitions Level 2](https://htmlspecs.com/css/css-transitions-2/)（[Source](https://www.w3.org/TR/2026/WD-css-transitions-2-20260204/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Animations Level 1](https://htmlspecs.com/css/css-animations-1/)（[Source](https://www.w3.org/TR/2023/WD-css-animations-1-20230302/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Animations Level 2](https://htmlspecs.com/css/css-animations-2/)（[Source](https://www.w3.org/TR/2023/WD-css-animations-2-20230602/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
+- [Animation Triggers](https://htmlspecs.com/css/animation-triggers-1/)（[Source](https://www.w3.org/TR/2026/WD-animation-triggers-1-20261020/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Web Animations](https://htmlspecs.com/css/web-animations-1/)（[Source](https://www.w3.org/TR/2023/WD-web-animations-1-20230605/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [Web Animations Module Level 2](https://htmlspecs.com/css/web-animations-2/)（[Source](https://www.w3.org/TR/2025/WD-web-animations-2-20251120/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）
 - [CSS Motion Path Module Level 1](https://htmlspecs.com/css/motion-1/)（[Source](https://www.w3.org/TR/2024/WD-motion-1-20241105/) ![Working Draft](https://img.shields.io/badge/WD-e66e33)）

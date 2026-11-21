@@ -4607,6 +4607,14 @@ const cssLinkGroups = [
                 state: "WD"
             },
             {
+                text: "Animation Triggers",
+                href: "https://htmlspecs.com/css/animation-triggers-1/",
+                src: "https://www.w3.org/TR/2026/WD-animation-triggers-1-20261020/",
+                "last-modified": "-",
+                lang: "cjk",
+                state: "WD"
+            },
+            {
                 text: "Web Animations",
                 href: "https://htmlspecs.com/css/web-animations-1/",
                 src: "https://www.w3.org/TR/2023/WD-web-animations-1-20230605/",
