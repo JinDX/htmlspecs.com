@@ -1,0 +1,1869 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>WOFF File Format 2.0</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="canonical" href="https://www.w3.org/TR/WOFF2/">
+<style type="text/css">
+     table.spec {border: 2px solid #444;}
+     span.tt {font-family: monospaced;}
+     :link { text-decoration: none}
+     a:hover { text-decoration: underline}
+	.tt { font-family: monospace }
+    </style>
+<!-- Embedded conformance stylesheet -->
+    <style type="text/css" title="Conformance">
+      .conform:hover {background: #DFD}
+      .conform:target {padding: 2px; border: 2px solid #ACA; background: #DFD }
+
+      .ua::before {
+        background: rgb(153, 255, 153); padding: 4px; border: thin solid green; border-image: none; content: "UA: ";
+      }
+      .ff::before {
+        background: rgb(255, 153, 153); padding: 4px; border: thin solid maroon; border-image: none; content: "FF: ";
+      }
+      .at::before {
+        background: rgb(153, 153, 255); padding: 4px; border: thin solid navy; border-image: none; content: "AT:";
+      }
+      .dc::before {
+      	background: #f4b13d; padding:4px; border: thin solid #c17e0a; border-image: none; content: "DC: ";
+      }
+
+    </style>
+ <!-- -->
+
+<!-- Conformance stylesheet - enable for online viewing -->
+    <link rel="alternate stylesheet" title="Conformance" href="conform.css">
+    <link rel="stylesheet" type="text/css" href="https://www.w3.org/StyleSheets/TR/2021/W3C-REC"/>
+
+  </head>
+  <body>
+    <div class="head">
+      <p>
+        <a href="https://www.w3.org/"><img height="48" width="72" alt="W3C" src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C"/></a>
+      </p>
+      <h1 id="title">WOFF File Format 2.0 </h1>
+      <p id="w3c-state"><a href="https://www.w3.org/standards/types#REC">W3C Recommendation</a>, <time class="dt-updated" datetime="2024-08-08">08 August 2024</time></p>
+      <!-- <p id="w3c-state">Editors Draft
+        <time datetime="2022-03-10">10 March 2022</time>
+      </p> -->
+
+      <details open><summary>More details about this document</summary>
+      <dl>
+        <dt>This version:</dt>
+        <dd><a href="https://www.w3.org/TR/2024/REC-WOFF2-20240808/">https://www.w3.org/TR/2024/REC-WOFF2-20240808/</a></dd>
+        <!-- <dd><a href="https://w3c.github.io/woff/woff2/">https://w3c.github.io/woff/woff2/</a>
+        </dd> -->
+        <dt>Latest version:</dt>
+        <dd> <a href="https://www.w3.org/TR/WOFF2/">https://www.w3.org/TR/WOFF2/</a>
+        </dd>
+        <dt>Previous Version:</dt>
+        <dd><a href="https://www.w3.org/TR/2022/REC-WOFF2-20220310/">https://www.w3.org/TR/2022/REC-WOFF2-20220310/</a>
+        <dt>Latest editor's draft:</dt>
+        <dd><a href="https://w3c.github.io/woff/woff2/">https://w3c.github.io/woff/woff2/</a>
+        </dd>
+        <dt>History:</dt>
+        <dd><a href="https://www.w3.org/standards/history/WOFF2">https://www.w3.org/standards/history/WOFF2</a></dd>
+        <dt>Implementation Report:</dt>
+        <dd><a href="https://www.w3.org/Fonts/WG/WOFF2/Implementation.html">https://www.w3.org/Fonts/WG/WOFF2/Implementation.html</a></dd>
+        <dd><a href="https://w3c.github.io/woff/woff2/ImpRpt/">https://w3c.github.io/woff/woff2/ImpRpt/</a></dd>
+        <dt class="editor">Editor:</dt>
+        <dd class="editor"  data-editor-id="43052">Vladimir Levantovsky (W3C Invited Experts)</dd>
+        <dt>Previous Editor:</dt>
+        <dd class="editor"  data-editor-id="51758">Raph Levien (Google)</dd>
+        <dt>Feedback: </dt>
+        <dd><a href="https://github.com/w3c/woff/issues">WOFF &amp; WOFF2 issues</a></dd>
+        <dt>Errata:</dt>
+        <dd><a href="https://www.w3.org/Fonts/REC-WOFF2-20240808-errata.html">https://www.w3.org/Fonts/REC-WOFF2-20240808-errata.html</a></dd>
+      </dl>
+      </details>
+
+      <!-- <p>Please check the <a href="https://www.w3.org/Fonts/REC-WOFF2-20220310-errata.html">errata</a> for any errors or issues reported since publication.</p> -->
+
+      <p class="copyright"><a href="https://www.w3.org/policies/#copyright">Copyright</a> © 2024 <a href="https://www.w3.org/">World Wide Web Consortium</a>. <abbr title="World Wide Web Consortium">W3C</abbr><sup>®</sup> <a href="https://www.w3.org/policies/#Legal_Disclaimer">liability</a>, <a href="https://www.w3.org/policies/#W3C_Trademarks">trademark</a> and <a href="https://www.w3.org/copyright/software-license/">permissive document license</a> rules apply.</p>
+        <hr title="Separator for header">
+    </div>
+
+    <section id="abstract">
+      <h2 id='abstract-0'>Abstract</h2>
+    <p>Based on experience with WOFF 1.0, which is
+        widely deployed, this specification was developed to provide improved
+        compression and thus lower use of network bandwidth, while still
+        allowing fast decompression even on mobile devices. This is achieved
+        by combining a content-aware preprocessing step and
+        improved entropy coding, compared to the Flate compression used in
+        WOFF 1.0.</p>
+    </section>
+
+    <section id="sotd">
+      <h2 id="status-of-this-document">Status of This Document</h2>
+
+    <p><em>This section describes the status of this document at the time of its publication. A list of current W3C publications and the latest revision of this technical report can be found in the <a href="https://www.w3.org/TR/">W3C technical reports index</a> at https://www.w3.org/TR/.</em></p>
+
+    <p>W3C recommends the wide deployment of this specification as a standard for the Web.</p>
+
+    <p>This document was published by the <a href="https://www.w3.org/groups/wg/webfonts">Web
+      Fonts Working Group</a> as a Recommendation using the <a href="https://www.w3.org/policies/process/20231103/#recs-and-notes">Recommendation track</a>.
+    </p>
+
+    <p>A W3C Recommendation is a specification that, after extensive consensus-building, is endorsed by <abbr title="World Wide Web Consortium">W3C</abbr> and its Members, and has commitments from Working Group members to <a href="https://www.w3.org/policies/patent-policy/#sec-Requirements">royalty-free licensing</a> for implementations.</p>
+
+
+    <p>The WOFF 2.0 specification is implemented in all major browsers, and is widely used on production websites.
+    It supports the entirety of the TrueType and OpenType specifications, including Variable fonts, Chromatic fonts, and font Collections.</p>
+
+
+    <p>A complete <a href="#changes-since-2021">list of
+    changes</a> to this document since the last publication is available.
+    </p>
+
+    <p class=custom>Supporting material, including results of compression measurements, may be found in the
+    companion <a href="https://www.w3.org/TR/WOFF20ER/">WOFF 2.0 Evaluation Report</a>. The Working Group has
+    <a href="https://github.com/w3c/woff2-compiled-tests">created
+    tests</a> for
+    WOFF2 <a href="/Fonts/WG/wiki/TestPlan20-AuthoringTool" title="TestPlan20-AuthoringTool">encoders</a>,
+    <a href="/Fonts/WG/wiki/TestPlan20-Decoder" title="TestPlan20-Decoder">decoders</a>,
+  <a href="/Fonts/WG/wiki/TestPlan20-UserAgent" title="TestPlan20-UserAgent">browsers</a>, and for <a href="/Fonts/WG/wiki/TestPlan20-Format" title="TestPlan20-Format">the format itself</a> (a WOFF2 validator).
+  The source to build these tests is <a href="https://github.com/w3c/woff2-tests">available on GitHub</a>.</p>
+  <p>An <a href="https://www.w3.org/Fonts/WG/WOFF2/Implementation.html">Implementation Report</a> is available.
+    Note that, for OpenType Collections (previously, TrueType Collections) while there are two tested
+    implementations of encoding and of decoding, no user
+    agent is yet shown to <em>use</em> them after decoding.  Browser support
+    for font collections is expected to improve, and once it does WOFF 2.0 already has
+    the needed support.</p>
+
+    <p>Please send comments about this document
+        as <a href="https://github.com/w3c/woff/issues">GitHub issues</a>.
+    <!-- Comments are due by <time class="dt-updated"
+    datetime="2022-05-10">10 May 2022</time>. -->
+  </p>
+
+  <p>This document was produced by a group operating under the <a href="https://www.w3.org/policies/patent-policy/">W3C Patent Policy</a>. W3C maintains a <a rel="disclosure" href="https://www.w3.org/groups/wg/webfonts/ipr/">public list of any patent disclosures</a> made in connection with the deliverables of the group; that page also includes instructions for disclosing a patent. An individual who has actual knowledge of a patent which the individual believes contains <a href="https://www.w3.org/policies/patent-policy/#def-essential">Essential Claim(s)</a> must disclose the information in accordance with <a href="https://www.w3.org/policies/patent-policy/#sec-Disclosure">section 6 of the W3C Patent Policy</a>.</p>
+
+    <!-- <p>For the Brotli compression scheme used in WOFF 2.0, Google has made an
+      <a href="https://www.w3.org/2004/01/pp-impl/44556/show-license#x35662">RF licensing commitment</a> for use in this specification.</p> -->
+
+      <p>For the Brotli compression scheme used in WOFF 2.0, Google has made an
+        <a href="https://www.w3.org/standards/licensing/#google-incs-additional-licensing-information-for-the-web-fonts-working-group-specifications">Royalty Free licensing commitment</a> for use in this specification.</p>
+
+      <p>For WOFF 2.0, Monotype Imaging has made a
+        <a href="https://www.w3.org/standards/licensing/#monotype-imaging-incs-additional-licensing-information-for-the-web-fonts-working-group-specification-woff-file-format-20">Royalty Free licensing commitment</a> for use in this specification.
+      </p>
+
+      <p>This document is governed by the <a id="w3c_process_revision" href="https://www.w3.org/policies/process/20231103/">03 November 2023 W3C Process Document</a>. </p>
+
+
+  </section>
+
+    <nav id="toc">
+        <h2 class="introductory" id="table-of-contents">Table of Contents</h2>
+
+    <ol class='toc'>
+       <li class='tocline'><a href="#Introduction"><span class="secno">1. </span>Introduction</a>
+        <ol class='toc'>
+         <li class='tocline'><a href="#Notation"><span class='secno'>1.1. </span>Notational Conventions</a></li>
+         </ol>
+       </li>
+       <li class='tocline'><a href="#General"><span class='secno'>2. </span>General Requirements</a></li>
+       <li class='tocline'><a href="#FileStructure"><span class='secno'>3. </span>Overall file structure and basic data types</a>
+       <ol class='toc'>
+       <li class='tocline'><a href="#DataTypes"><span class='secno'>3.1. </span>Data types</a></li>
+       <li class='tocline'><a href="#woff20Header"><span class='secno'>3.2. </span>WOFF2 Header</a></li>
+       </ol>
+       </li>
+       <li class='tocline'><a href="#font_directory"><span class='secno'>4. </span>Font directory</a>
+       <ol class='toc'>
+       <li class='tocline'><a href="#table_dir_format"><span class='secno'>4.1. </span>Table directory format</a></li>
+       <li class='tocline'><a href="#collection_dir_format"><span class='secno'>4.2. </span>Collection directory format</a></li>
+       </ol>
+       </li>
+       <li class='tocline'><a href="#table_format"><span class='secno'>5. </span>Compressed data format</a>
+       <ol class='toc'>
+       <li class='tocline'><a href="#glyf_table_format"><span class='secno'>5.1. </span>Transformed glyf table format</a></li>
+       <li class='tocline'><a href="#triplet_decoding"><span class='secno'>5.2. </span>Decoding of variable-length X and Y coordinates</a></li>
+       <li class='tocline'><a href="#loca_table_format"><span class='secno'>5.3. </span>Transformed loca table format</a></li>
+       <li class='tocline'><a href="#hmtx_table_format"><span class='secno'>5.4. </span>Transformed hmtx table format</a></li>
+       <li class='tocline'><a href="#table_order"><span class='secno'>5.5. </span>Table order constraints</a></li>
+       </ol>
+       </li>
+       <li class='tocline'><a href="#Metadata"><span class='secno'>6. </span>Extended Metadata Block</a></li>
+       <li class='tocline'><a href="#Private"><span class='secno'>7. </span>Private Data Block</a></li>
+       <li class='tocline'><a href="#IMT"><span class='secno'>A. </span>Internet Media Type Registration</a></li>
+       <li class='tocline'><a href="#changes"><span class='secno'>B. </span>Changes</a></li>
+       <li class='tocline'><a href="#security-privacy-considerations"><span class='secno'>C. </span>Security and Privacy Considerations</a></li>
+    <li class='tocline'><a href="#References"><span class='secno'>D. </span>References</a>
+      <ol class="toc">
+          <li class='tocline'><a href="#normative"><span class='secno'>D.1 </span>Normative References</a></li>
+          <li class='tocline'><a href="#informative"><span class='secno'>D.2 </span>Informative References</a></li>
+      </ol>
+    </li>
+    </ol>
+    </nav>
+    <section id="Introduction">
+    <h2 id="Introduction-0"><span class='secno'>1. </span>Introduction</h2>
+    <p>This document specifies the WOFF2 font packaging format. This format was
+      designed to provide a reasonably easy-to-implement compression of font data
+      with significantly better compression than previous techniques, suitable for
+      use with CSS <span class=tt>@font-face</span> rules. The improvement in compression rates,
+      compared to previously developed WOFF 1.0 format [<cite><a href="#ref-woff10">WOFF1</a></cite>]
+      are realized due to improved entropy coding and font data preprocessing and
+      optimization step that reduces built-in redundancy of various font data structures.
+      The details about WOFF 2.0 development history can be found in the WOFF 2.0
+      Evaluation Report [<cite><a href="#ref-woff20er">WOFF2ER</a></cite>].</p>
+    <section id="Notation"><h3 id="Notation_1"><span class='secno'>1.1 </span>Notational Conventions</h3>
+    <p>The all-uppercase key words "MUST", "MUST NOT", "REQUIRED", "SHALL",
+      "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL"
+      in this document are to be interpreted as described in RFC 2119 [<cite><a
+      href="#ref-RFC-2119">RFC2119</a></cite>].
+      If these words occur in lower- or mixed case, they should be interpreted
+      in accordance with their normal English meaning. </p>
+    <p>This document includes sections of text that are called out as "Notes"
+      and set off from the main text of the specification. These notes are
+      intended as informative explanations or clarifications, to serve as hints
+      or guides to implementers and users, but are not part of the normative
+      text.</p>
+
+    <p>This document also uses hexadecimal numerical notation "0x..." to define the
+      constant binary values such as magic number or tag values, bitfields
+      / flags format and mask values used in pseudo-code bitwise operators.</p>
+      </section>
+    </section>
+    <section id="General">
+    <h2 id="General-0"><span class='secno'>2. </span>General Requirements</h2>
+    <p>The primary purpose of the WOFF2 format is to efficiently package fonts linked
+      to Web documents by means of CSS <span class=tt>@font-face</span> rules. User agents supporting
+      the WOFF2 file format for linked fonts must respect the requirements of the
+      CSS3 Fonts specification
+      ([<cite><a href="#ref-CSS3-Fonts">CSS3-Fonts</a></cite>]
+      <a href="https://www.w3.org/TR/css-fonts-3/#font-face-rule">
+      Section 4.1: The @font-face rule</A>). In particular,
+      <span class="conform ua" id="conform-css3font-available">such linked fonts are
+      only available to the documents that reference them; they MUST NOT be made
+      available to other applications or documents on the user's system</span>.</p>
+
+    <p>The input font file may contain a number of various font data tables described in the
+      clause 5 of the [<cite><a href="#ref-OFF">OFF</a></cite>] specification. The order of the
+      tables in a font file may differ and, while the entries in the table directory have
+      to be sorted in ascending order by tags, the actual tables can be presented in a font file
+      in arbitrary order.</p>
+
+    <div class="note">
+      <p>When WOFF2 file is decompressed, the decoder must sort the entries in the table directory
+        in ascending alphabetical order by table tags and should arrange the table order in a font file
+        according to the Recommendations (subclause 8.1 "Optimized table ordering") of the
+        [<cite><a href="#ref-OFF">OFF</a></cite>].</p>
+    </div>
+    </section>
+    <section id="FileStructure">
+      <h2 id="FileStructure-0"><span class='secno'>3. </span>Overall file structure and basic data types</h2>
+
+    <p>The structure of WOFF2 files is similar to that of SFNT and WOFF 1.0 font files,
+      in that there is a header followed by a table directory, followed by the data
+      for those tables. The SFNT structure is described fully in the TrueType
+      [<cite><a href="#ref-TTF">TrueType</a></cite>], OpenType
+      [<cite><a href="#ref-OTF">OpenType</a></cite>], and ISO "Open Font Format"
+      [<cite><a href="#ref-OFF">OFF</a></cite>] specifications. However,
+      WOFF2 differs in some important aspects from SFNT. Most notably, the data
+      for the font tables is compressed in a single data stream comprising all the font tables.
+      Similar to WOFF 1.0 format, the optional extended metadata and private data blocks are each
+      presented as separate blocks of data, and are concatenated together into the WOFF 2.0 file.
+      The compression algorithm used for both the compressed font data stream and extended
+      metadata block is Brotli [<cite><a href="#ref-Brotli">Brotli</a></cite>].</p>
+
+    <p>A complete WOFF2 file consists of several blocks of data: a 48-byte header, immediately
+      followed (in this order) by a variable-size Table Directory, an optional Collection
+      Directory (present only if the input font file is a font collection), a compressed font data block,
+      an optional block of Extended Metadata, and an optional block of Private Data. Except
+      for padding with a maximum of three null bytes in places where 4-byte alignment of a
+      table length or block offset is specified,
+      <span class="conform ff" id="conform-noextraneous">there MUST NOT be any extraneous
+      data between the data blocks or WOFF2 header and table directory, or beyond the last
+      such block or table</span>.
+      If such extraneous data is present <span class="conform ua" id="conform-extraneous-reject">
+      a conforming user agent MUST reject the file as invalid</span>. The file
+      <span class="conform ua" id="conform-overlap-reject">MUST also be rejected as invalid
+      if the offsets and lengths of any data blocks or font tables indicate overlapping
+      byte ranges of the file, or ranges that would extend beyond the end of the file</span>.</p>
+
+    <table>
+      <col class="type"/><col class="desc"/>
+      <tr class="header"><th colspan="2" style="background-color: #F8F8F8">WOFF2 File</th></tr>
+      <tr><td>WOFF2Header&nbsp;</td><td>File header with basic font type and version, along with offsets to metadata and private data blocks.</td></tr>
+      <tr><td>TableDirectory&nbsp;</td><td>Directory of font tables, containing size and other info. &nbsp;</td></tr>
+      <tr><td>CollectionDirectory&nbsp;</td><td>An optional table containing the font fragment descriptions of font collection entries. &nbsp;</td></tr>
+      <tr><td>CompressedFontData&nbsp;</td><td>Contents of font tables, compressed for storage in the WOFF2 file. &nbsp;</td></tr>
+      <tr><td>ExtendedMetadata&nbsp;</td><td>An optional block of extended metadata, represented in XML format and compressed for storage in the WOFF2 file. </td></tr>
+      <tr><td>PrivateData&nbsp;</td><td>An optional block of private data for the font designer, foundry, or vendor to use. &nbsp;</td></tr>
+    </table>
+
+    <section  id="DataTypes">
+      <h3 id="DataTypes-0"><span class='secno'>3.1. </span>Data types</h3>
+
+    <table>
+      <col class="type"/><col class="desc"/>
+      <tr class="types"><th colspan="2" style="background-color: #F8F8F8">Data Types</th></tr>
+      <tr><td>UInt8&nbsp;</td><td>8-bit unsigned integer.&nbsp;</td></tr>
+      <tr><td>Int16&nbsp;</td><td>16-bit signed integer in 2's complement format, stored big-endian.&nbsp;</td></tr>
+      <tr><td>UInt16&nbsp;</td><td>16-bit unsigned integer, stored big-endian.&nbsp;</td></tr>
+      <tr>
+          <td>UInt32&nbsp;</td>
+          <td>32-bit unsigned integer, stored big-endian.&nbsp;</td>
+      </tr>
+      <tr><td>255UInt16&nbsp;</td><td>Variable-length encoding of a 16-bit unsigned integer for optimized intermediate font data storage.&nbsp;</td></tr>
+      <tr><td>UIntBase128&nbsp;</td><td>Variable-length encoding of 32-bit unsigned integers.&nbsp;</td></tr>
+    </table>
+    <section  id="255UInt16">
+    <h4 id="255UInt16-0">255UInt16 Data Type</h4>
+    <p>255UInt16 is a variable-length encoding of an unsigned integer in the range
+      0 to 65535 inclusive. This data type is intended to be used as intermediate
+      representation of various font values, which are typically expressed as UInt16 but
+      represent relatively small values. Depending on the encoded value, the length of
+      the data field may be one to three bytes, where the value of the first byte either
+      represents the small value itself or is treated as a code that defines the format of
+      the additional byte(s). The "C-like" pseudo-code describing how to read the 255UInt16
+      format is presented below:</p>
+<!--
+      as described in the following table:</p>
+    <table>
+      <tr>
+       <th style="background-color: #F8F8F8; width: 10%;">Data Type</th>
+       <th style="background-color: #F8F8F8; width: 35%;">Syntax</th>
+       <th style="background-color: #F8F8F8; width: 55%;">Description and Comments</th>
+      </tr>
+      <tr><td>UInt8</td><td>&nbsp;&nbsp;&nbsp;Code</td><td>if (Code &lt; 253) Value = Code; /* [0..252] */</td></tr>
+      <tr><td></td><td>if ((Code == 254) || (Code == 255))</td><td></td></tr>
+      <tr><td>UInt8</td><td>&nbsp;&nbsp;&nbsp;Value1</td>
+      <td>if (Code == 255) Value = 253 + Value1; /* [253..508] */<br/>if (Code == 254) Value = 506 + Value1; /* [506..761] */</td></tr>
+      <tr><td></td><td>else if (Code == 253)</td><td></td></tr>
+      <tr><td>UInt16</td><td>&nbsp;&nbsp;&nbsp;Value</td><td>Value; /* [0..65535] */</td></tr>
+    </table>
+-->
+
+    <pre class='def'>
+    Read255UShort( data )
+    {
+        UInt8 code;
+        UInt16 value, value2;
+
+        const oneMoreByteCode1    = 255;
+        const oneMoreByteCode2    = 254;
+        const wordCode            = 253;
+        const lowestUCode         = 253;
+
+        code = data.getNextUInt8();
+        if ( code == wordCode ) {
+            /* Read two more bytes and concatenate them to form UInt16 value*/
+            value = data.getNextUInt8();
+            value &lt;&lt;= 8;
+            value &amp;= 0xff00;
+            value2 = data.getNextUInt8();
+            value |= value2 &amp; 0x00ff;
+        }
+        else if ( code == oneMoreByteCode1 ) {
+            value = data.getNextUInt8();
+            value = (value + lowestUCode);
+        }
+        else if ( code == oneMoreByteCode2 ) {
+            value = data.getNextUInt8();
+            value = (value + lowestUCode*2);
+        }
+        else {
+            value = code;
+        }
+        return value;
+    }
+    </pre>
+
+    <p>Note that the encoding is not unique. For example, the value 506 can be
+      encoded as [255, 253], [254, 0], and [253, 1, 250]. An encoder may produce
+      any of these, and <span class="conform ua" id="conform-mustAccept255UInt16">
+      a decoder MUST accept them all</span>. An encoder should choose shorter
+      encodings, and must be consistent in choice of encoding for the same value,
+      as this will tend to compress better.</p>
+    </section>
+    <section id="UIntBase128">
+    <h4 id="UIntBase128-0">UIntBase128 Data Type</h4>
+    <p>UIntBase128 is a different variable length encoding of unsigned integers,
+      suitable for values up to 2<sup>32</sup>-1. A UIntBase128 encoded number
+      is a sequence of bytes for which the most significant bit is set for all but
+      the last byte, and clear for the last byte. The number itself is base 128
+      encoded in the lower 7 bits of each byte. Thus, a decoding procedure for
+      a UIntBase128 is: start with value = 0. Consume a byte, setting value =
+      old value times 128 + (byte bitwise-and 127). Repeat last step until
+      the most significant bit of byte is false.</p>
+
+    <p>UIntBase128 encoding format allows a possibility of sub-optimal encoding, where e.g.
+      the same numerical value can be represented with variable number of bytes (utilizing
+      leading 'zeros'). For example, the value 63 could be encoded as either one byte 0x3F
+      or two (or more) bytes: [0x80, 0x3f]. An encoder must not allow this to happen and
+      must produce shortest possible encoding. A decoder
+      <span class="conform ua" id="conform-mustRejectInvalidBase128">
+      MUST reject the font file if it encounters a UintBase128-encoded value with
+      leading zeros (a value that starts with the byte 0x80), if UintBase128-encoded
+      sequence is longer than 5 bytes, or if a UintBase128-encoded value exceeds
+      2<sup>32</sup>-1</span>. The "C-like" pseudo-code describing how to read the
+      UIntBase128 format is presented below:</p>
+
+
+    <pre class='def'>
+    bool ReadUIntBase128( data, *result )
+    {
+        UInt32 accum = 0;
+
+        for (i = 0; i &lt; 5; i++) {
+            UInt8 data_byte = data.getNextUInt8();
+
+            // No leading 0's
+            if (i == 0 &amp;&amp; data_byte == 0x80) return false;
+
+            // If any of top 7 bits are set then &lt;&lt; 7 would overflow
+            if (accum &amp; 0xFE000000) return false;
+
+            *accum = (accum &lt;&lt; 7) | (data_byte &amp; 0x7F);
+
+            // Spin until most significant bit of data byte is false
+            if ((data_byte &amp; 0x80) == 0) {
+                *result = accum;
+                return true;
+            }
+        }
+        // UIntBase128 sequence exceeds 5 bytes
+        return false;
+    }
+    </pre>
+    </section>
+    </section>
+    <section id="woff20Header">
+    <h3 id="woff20Header-0"><span class='secno'>3.2. </span>WOFF2 Header</h3>
+    <p>The WOFF 2.0 header includes an identifying signature and provides the
+      information about the compressed and uncompressed sizes of encapsulated font
+      data. It also indicates the specific kind of font data included in the WOFF 2.0
+      file, font version number and provides offsets to additional data blocks included
+      in the file.</p>
+
+    <table>
+      <col class="type"/><col class="name"/><col class="desc"/>
+      <tr class="header"><th colspan="3" style="background-color: #F8F8F8">WOFF2 Header</th></tr>
+      <tr><td>UInt32</td><td>signature</td><td>0x774F4632 <span class=tt>'wOF2'</span></td></tr>
+      <tr><td>UInt32</td><td>flavor</td><td>The "sfnt version" of the input font.</td></tr>
+      <tr><td>UInt32</td><td>length</td><td>Total size of the WOFF file.</td></tr>
+      <tr><td>UInt16</td><td>numTables</td><td>Number of entries in directory of font
+      tables.</td></tr>
+      <tr><td>UInt16</td><td>reserved</td><td>Reserved; set to 0.</td></tr>
+      <tr><td>UInt32</td><td>totalSfntSize</td><td>Total size needed for the
+      uncompressed font data, including the sfnt header, <br/>directory,
+      and font tables (including padding).</td></tr>
+      <tr><td>UInt32</td><td>totalCompressedSize</td><td>Total length of the compressed data block.</td></tr>
+      <tr><td>UInt16</td><td>majorVersion</td><td>Major version of the WOFF
+      file.</td></tr>
+      <tr><td>UInt16</td><td>minorVersion</td><td>Minor version of the WOFF
+      file.</td></tr>
+      <tr><td>UInt32</td><td>metaOffset</td><td>Offset to metadata block, from
+      beginning of WOFF file.</td></tr>
+      <tr><td>UInt32</td><td>metaLength</td><td>Length of compressed metadata block.</td></tr>
+      <tr><td>UInt32</td><td>metaOrigLength</td><td>Uncompressed size of metadata
+      block.</td></tr>
+      <tr><td>UInt32</td><td>privOffset</td><td>Offset to private data block, from
+      beginning of WOFF file.</td></tr>
+      <tr><td>UInt32</td><td>privLength</td><td>Length of private data block.</td></tr>
+    </table>
+
+    <p>The interpretation of the WOFF2 Header is the same as the WOFF Header in
+      [<cite><a href="#ref-woff10">WOFF1</a></cite>], with the addition of one new
+      <span class="tt">totalCompressedSize</span> field.
+      <span class="conform ff" id="conform-magicNumber">The <span class="tt">signature</span> field
+      in the WOFF2 header MUST contain the value of 0x774F4632 ('wOF2')</span>, which distinguishes
+      it from WOFF 1.0 files. <span class="conform ua" id="conform-noMagicNumber-reject">If the field
+      does not contain this value, user agents MUST reject the file as invalid</span>.
+      A valid WOFF 2.0 file <span class="conform ff" id="conform-mustSetReserved2Zero">
+      MUST have the reserved field set to 'zero'</span>, a decoder
+      <span class="conform ua" id="conform-mustNotUseReservedValue">MUST NOT reject a downloaded
+      font file if the reserved header value is not zero</span>. User agents
+      <span class="conform ua" id="conform-mustNotRejectIncorrectTotalSize">MUST NOT reject correctly
+      decoded font file if the resulting font file size doesn't match the <span class=tt>totalSfntSize
+      </span> value encoded as part of the WOFF2 header</span>.</p>
+
+    <div class="note">
+      <p>The "totalSfntSize" value in the WOFF2 Header is intended to be used for reference purposes
+        only. It may represent the size of the uncompressed input font file, but if the transformed
+        'glyf' and 'loca' tables are present, the uncompressed size of the reconstructed tables and
+        the total decompressed font size may differ substantially from the original total size
+        specified in the WOFF2 Header.
+      </p>
+    </div>
+    </section>
+    </section><section id="font_directory"><h2 id="font_directory-0"><span class='secno'>4. </span>Font directory</h2>
+
+    <p>The font directory section consists of the table directory, containing a single entry for
+      each unique font table in the input font file, and may also include an optional collection
+      directory table, when the input font file is a font collection.</p>
+
+    <section id="table_dir_format"><h3 id="table_dir_format-0"><span class='secno'>4.1. </span>Table directory format</h3>
+
+    <p>The table directory is an array of WOFF2 table directory entries, as defined
+      below. The directory follows immediately after the WOFF2 file header; therefore,
+      there is no explicit offset in the header pointing to this block.
+      Its size is dependent on the exact content; thus, the best strategy for
+      decoding is to process the file as a stream, rather than trying to access
+      it randomly. Each table directory entry specifies the original size of a single
+      font data table and, for those tables where an additional transform has been applied,
+      the size of the transformed table. Transformed tables are identified by their 'flags' field
+      that combines known table tags (bits 0-5, see "Known Table Tags") and transformation
+      version number (bits 6 and 7, see the description below) defining the applied transform.
+      The combination of the table tag and the transform version number defines the exact
+      transform that was applied to a table, currently defined transforms are specified
+      in details in <a href="#table_format">clause 5</a> of this specification.</p>
+
+    <p>Contrary to the way how table directory entries are specified in the original input
+      font file (where table directory entries are sorted in ascending alphabetical order),
+      the WOFF2 table directory entries define the physical order of tables in which they
+      have been processed and encoded as part of the compressed font data stream. It is
+      a decoder responsibility to sort and reorder the reconstructed table directory when
+      the font file is decompressed.</p>
+
+    <p>In order to simplify the font decoding process an encoder
+      <span class="conform at" id="conform-mustReorderGlyfLoca"> MUST reorder the transformed
+      tables so that the associated 'glyf' and 'loca' tables are always present as a pair,
+      with 'loca' table following the 'glyf' table</span>.
+      Please keep in mind that the entry for transformed 'loca' table is just a placeholder indicating
+      the size required to reconstruct the table while consuming no bytes of the data stream.
+      Therefore, the requirement for the 'loca' table entry to immediately follow the transformed
+      'glyf' table in the table directory makes it easier to implement the 'loca' table reconstruction
+      step when the reverse transform (see <a href="#glyf_table_format">subclause 5.1</a> for details)
+      is being applied to the 'glyf' table. For more details on table order constraints see
+      <a href="#table_order">subclause 5.5</a>.</p>
+
+    <p>The format of each individual table directory entry is as follows:</p>
+
+    <table>
+      <tr class="header"><th colspan="3" style="background-color: #F8F8F8">TableDirectoryEntry</th></tr>
+      <tr><td>UInt8</td><td>flags</td><td>table type and flags</td></tr>
+      <tr><td>UInt32</td><td>tag</td><td>4-byte tag (optional)</td></tr>
+      <tr><td>UIntBase128</td><td>origLength</td><td>length of original table</td></tr>
+      <tr><td>UIntBase128</td><td>transformLength</td><td>transformed length (if applicable)</td></tr>
+    </table>
+
+    <p>The interpretation of the flags field is as follows. Bits [0..5] contain an index to
+      the "known tag" table, which represents tags likely to appear in fonts. If the tag is
+      not present in this table, then the value of this bit field is 63. Bits 6 and 7 indicate
+      the preprocessing transformation version number (0-3) that was applied to each table.
+      For all tables in a font, except for 'glyf' and 'loca' tables, transformation version 0
+      indicates the <span class=tt>null</span> transform where the original table data is
+      passed directly to the Brotli compressor for inclusion in the compressed data stream.
+      For 'glyf' and 'loca' tables, transformation version 3 indicates the <span class=tt>null</span>
+      transform where the original table data was passed directly to the Brotli compressor without
+      applying any pre-processing defined in <a href="#glyf_table_format">subclause 5.1</a> and
+      <a href="#loca_table_format">subclause 5.3</a>.
+      The transformed table formats and their associated transformation version numbers are
+      described in details in <a href="#table_format">clause 5</a> of this specification.</p>
+
+    <div class="note">
+      <p>If multiple transformation versions are defined for a given table, an encoder should
+        normally choose the transformation version that results in the smallest transformed table
+        length, unless the reduction is so slight as to be insignificant.</p>
+    </div>
+
+    <p>Where more than one transformation version is defined for a given table tag, an encoder
+      may use any of the defined transformations that is applicable to the input data; a decoder
+      <span class="conform ua" id="conform-mustAcceptAllTransforms">MUST be prepared to accept
+      any of the defined transformations</span>.
+      <span class="conform ua" id="conform-mustBeRejected-FailTransform"> If a decoder
+      encounters a table entry that specifies an unknown transformation version number the
+      entire font MUST be rejected</span> as it cannot be correctly decoded.</p>
+
+    <p>Whether a font table is encoded with a known table tag or explicitly including
+      the four-byte tag has no semantical significance; it is simply a choice of encoding
+      intended to improve compression efficiency. Similarly, whether a particular four-byte
+      tag is present or not in the "Known Table Tags" table is not a normative statement about
+      whether such tags should be included in web fonts.The encoder <span class="conform at"
+      id="conform-mustUseKnownTags">MUST use known table flag when encoding an input
+      font table with a tag that is listed in the "Known Table Tags" table</span>.</p>
+
+    <p>There is a predefined extension mechanism for any custom table tag that is not
+      included in the known tag list (or for any new standard tags that may be defined
+      in the future). If bits [0..5] of the flags byte have the value 63 (0x3f), then
+      following the flag byte is a 4-byte arbitrary tag value. Otherwise, the tag field
+      is omitted in the TableDirectoryEntry structure, and is derived from bits [0..5]
+      of the flag byte from the fixed Known Table Tags table, given below. The decoder
+      <span class="conform ua" id="conform-mayAcceptKnownTagsAsCustom">MAY accept a table
+      entry defined using a custom table tag even if the tag that follows is identified
+      as one of the kown table tags</span>.</p>
+
+    <table>
+      <tr class="header"><th colspan="8" style="background-color: #F8F8F8">Known Table Tags</th></tr>
+      <tr>
+       <th style="background-color: #F8F8F8; width: 6%;">Flag</th>
+       <th style="background-color: #F8F8F8; width: 19%;">Tag</th>
+       <th style="background-color: #F8F8F8; width: 6%;">Flag</th>
+       <th style="background-color: #F8F8F8; width: 19%;">Tag</th>
+       <th style="background-color: #F8F8F8; width: 6%;">Flag</th>
+       <th style="background-color: #F8F8F8; width: 19%;">Tag</th>
+       <th style="background-color: #F8F8F8; width: 6%;">Flag</th>
+       <th style="background-color: #F8F8F8; width: 19%;">Tag</th>
+      </tr>
+      <tr><td> 0</td><td>cmap</td><td>16</td><td>EBLC</td><td>32</td><td>CBDT</td><td>48</td><td>gvar</td></tr>
+      <tr><td> 1</td><td>head</td><td>17</td><td>gasp</td><td>33</td><td>CBLC</td><td>49</td><td>hsty</td></tr>
+      <tr><td> 2</td><td>hhea</td><td>18</td><td>hdmx</td><td>34</td><td>COLR</td><td>50</td><td>just</td></tr>
+      <tr><td> 3</td><td>hmtx</td><td>19</td><td>kern</td><td>35</td><td>CPAL</td><td>51</td><td>lcar</td></tr>
+      <tr><td> 4</td><td>maxp</td><td>20</td><td>LTSH</td><td>36</td><td>SVG </td><td>52</td><td>mort</td></tr>
+      <tr><td> 5</td><td>name</td><td>21</td><td>PCLT</td><td>37</td><td>sbix</td><td>53</td><td>morx</td></tr>
+      <tr><td> 6</td><td>OS/2</td><td>22</td><td>VDMX</td><td>38</td><td>acnt</td><td>54</td><td>opbd</td></tr>
+      <tr><td> 7</td><td>post</td><td>23</td><td>vhea</td><td>39</td><td>avar</td><td>55</td><td>prop</td></tr>
+      <tr><td> 8</td><td>cvt </td><td>24</td><td>vmtx</td><td>40</td><td>bdat</td><td>56</td><td>trak</td></tr>
+      <tr><td> 9</td><td>fpgm</td><td>25</td><td>BASE</td><td>41</td><td>bloc</td><td>57</td><td>Zapf</td></tr>
+      <tr><td>10</td><td>glyf</td><td>26</td><td>GDEF</td><td>42</td><td>bsln</td><td>58</td><td>Silf</td></tr>
+      <tr><td>11</td><td>loca</td><td>27</td><td>GPOS</td><td>43</td><td>cvar</td><td>59</td><td>Glat</td></tr>
+      <tr><td>12</td><td>prep</td><td>28</td><td>GSUB</td><td>44</td><td>fdsc</td><td>60</td><td>Gloc</td></tr>
+      <tr><td>13</td><td>CFF </td><td>29</td><td>EBSC</td><td>45</td><td>feat</td><td>61</td><td>Feat</td></tr>
+      <tr><td>14</td><td>VORG</td><td>30</td><td>JSTF</td><td>46</td><td>fmtx</td><td>62</td><td>Sill</td></tr>
+      <tr><td>15</td><td>EBDT</td><td>31</td><td>MATH</td><td>47</td><td>fvar</td><td>63</td><td>arbitrary tag follows</td></tr>
+    </table>
+
+    <div class="note">
+      <p>Please note that according to the <a href="#References">SFNT-based font format specifications</a>
+        all table tags should consist of four characters. Table tags with less than four letters, such as
+        '<span class=tt>cvt </span>' (tag value 0x63767420) are padded with trailing spaces.</p>
+    </div>
+
+    <p>Following the flags (and the optional tag field) are one or two length values, each in
+      UIntBase128 unsigned integer encoding. The origLength field specifies the length of the
+      table in an uncompressed version of the font. For tables that are subjected to additional
+      <a href="#table_format">transformations</a>, <span class="conform ff" id="conform-mustIncludeTransformLength">
+      the transformLength field that specifies the length of the transformed version of the table
+      MUST be included</span>.</p>
+
+    <p>The transformLength field is present in the table directory entry if, and only if, the table
+      has been processed by a non-null transform prior to Brotli compression. For tables that are
+      not transformed, no transformLength field is present in the directory entry.</p>
+
+    <div class="note">
+      <p>The field containing the transformed length provides information about the transformed
+        table size prior to it being compressed by [<cite><a href="#ref-Brotli">Brotli</a></cite>].
+        This field is optional and is present only for certain tables (see below the description
+        of the "Compressed data format"). Please note that while the transformed length can be
+        relied upon to determined the decompressed table size, the original table length of the
+        transformed font table should be treated with caution.</p>
+        <p>The reconstruction process of transformed tables guarantees preserving the functionality
+        of the tables but may produce binary results that are different from the original
+        data. For example, 'glyf' table records may have outline point coordinates encoded
+        using one- or two-byte format, and the repetitive values can either be explicitly
+        duplicated in the coordinate stream or omitted (which would be indicated by the flags
+        byte of the control point). Therefore, various representations of glyph outline points
+        are possible that would produce identical rendering results; however, the binary data
+        of reconstructed glyph records may differ significantly from the original data. See
+        subclause 5.3.3 of the ISO "Open Font Format" [<cite><a href="#ref-OFF">OFF</a></cite>]
+        specification for details.</p>
+        <p>For this reason, the value of the origLength field of transformed table should be treated
+        only as a reference and should not be relied upon in making memory allocation decisions
+        when the WOFF2 data is decoded.</p>
+    </div>
+
+    </section><section id="collection_dir_format"><h3 id="collection_dir_format-0"><span class='secno'>4.2. </span>Collection directory format</h3>
+
+    <p>The collection directory is present only if the input font is a collection; i.e.
+      if the value of the <a href="#woff20Header">WOFF2 file header</a> "flavor" field is set
+      to 0x74746366 ('ttcf'). If present, the collection directory follows immediately after
+      the table directory. The collection directory consists of a CollectionHeader and one or
+      more CollectionFontEntry records.</p>
+
+    <p>If input font is a collection, the <a href="#table_dir_format">table directory</a> contains
+      a single entry for each unique table in the entire collection, regardless of whether a table
+      is shared among different fonts in a collection or not. Thus, the table directory for a
+      font collection compressed with WOFF2 comprises all tables from all fonts contained in the
+      font collection file.</p>
+
+    <p>The Collection directory starts with the Collection Header followed by an array of Collection
+      Font Entries.</p>
+
+    <table>
+      <col class="type"/><col class="name"/><col class="desc"/>
+      <tr class="header"><th colspan="3" style="background-color: #F8F8F8">CollectionHeader</th></tr>
+      <tr><td>UInt32</td><td>version</td><td>The Version of the TTC Header in the original font.</td></tr>
+      <tr><td>255UInt16</td><td>numFonts</td><td>The number of fonts in the collection.</td></tr>
+    </table>
+
+    <p>Collection font entries specify each font in the collection (defined by CollectionHeader "numFonts"
+      field). The format of each individual collection font entry is as follows:</p>
+
+    <table>
+      <col class="type"/><col class="name"/><col class="desc"/>
+      <tr class="header"><th colspan="3" style="background-color: #F8F8F8">CollectionFontEntry</th></tr>
+      <tr><td>255UInt16</td><td>numTables</td><td>The number of tables in this font</td></tr>
+      <tr><td>UInt32</td><td>flavor</td><td>The "sfnt version" of the font</td></tr>
+      <tr><td>255UInt16</td><td>index[numTables]</td><td>The index identifying an entry in the Table Directory for each table in this font (where the index of the first Table Directory entry is zero.)</td></tr>
+    </table>
+
+    <p>A table whose offset is referred to by multiple Offset Tables in the original collection is
+      considered "shared". An encoder <span class="conform at" id="conform-mustEmitSingleEntryDirectory">
+      MUST emit a single TableDirectoryEntry for each unique font table defined by its offset</span>,
+      regardless of whether that table is shared among multiple fonts in a collection or not.
+      I.e., if a collection contains multiple fonts with their corresponding Table Records referencing
+      shared font tables with the same offsets, <span class="conform at" id="conform-mustNotDuplicateTables">
+      the table data in the WOFF2 compressed data stream MUST NOT be duplicated</span>.</p>
+
+    <p>If an input font file is a font collection that contains multiple unique
+      <span class=tt>glyf</span> and <span class=tt>loca</span> tables, the <a href="#glyf_table_format">
+      transformations</a> described for the <span class=tt>glyf</span> and <span class=tt>loca</span> tables
+      <span class="conform at" id="conform-mustTransformMultipleGlyfLoca">MUST be applied to each
+      pair of the tables</span>.Sharing of <span class=tt>glyf</span> and <span class=tt>loca</span>
+      tables is allowed and encouraged (this is one of the major benefits of a font collection); however,
+      it is possible that font collections may have two or more pairs of the <span class=tt>glyf</span>
+      / <span class=tt>loca</span> tables that may not be shared. When the tables are shared, an encoder
+      <span class="conform at" id="conform-mustVerifyGlyfLocaShared">MUST verify that both tables are
+      shared and that both form an associated pair (if more than one pair of <span class=tt>glyf</span>
+      / <span class=tt>loca</span> tables are present)</span> and
+      <span class="conform at" id="conform-mustRejectSingleGlyfLocaShared">MUST reject a collection
+      containing fonts that share only one of either <span class=tt>glyf</span> or <span class=tt>loca</span></span> table.</p>
+
+    <p>An encoder, when processing a font collection, <span class="conform at" id="conform-mustPreserveFontOrder">
+      MUST preserve the same order of the nested fonts as they are in the input font collection</span> and
+      <span class="conform at" id="conform-mustRecordCollectionEntryIndex">MUST record the index of
+      the matching TableDirectoryEntry into the CollectionFontEntry for each font</span>.</p>
+
+    <p> A decoder <span class="conform dc" id="conform-mustRestoreCollectionOffsetTables">MUST restore
+      the collection with the same number of fonts and their corresponding Offset Tables</span>. The Offset
+      Tables for each font that comprises the output font collection file <span class="conform dc" id="conform-mustFixCollection">
+      MUST have either the same <span class=tt>numTables</span> as the input collection, or one less if DSIG
+      was present in the original input Offset Table. If the value of the version field for the TTC Header
+      in the CollectionHeader is set to "2.0", a decoder MUST either set the TTC Header fields {ulDsigTag,
+      ulDsigLength, ulDsigOffset} in the output collection
+      to <span class=tt>null</span> or convert the TTC header format to version 1 (0x00010000)</span>.</p>
+
+    <p>A decoder, when processing a font collection, <span class="conform dc" id="conform-mustRestoreFontOrder">
+      MUST recreate the same order of the nested fonts as they were in the input collection</span>. The tables
+      within each nested font can be reordered. When processing a font collection with multiple pairs of
+      'glyf'/'loca' tables present, a decoder <span class="conform ua" id="conform-mustCheckRejectMismatchedTables">
+      MUST check CollectionFontEntry indices to make sure that referenced 'glyf' and 'loca' tables are paired
+      with each other, and MUST reject a font collection if a mismatch in table pairing is found</span>. For more
+      details about table pairs see the <a href="#table_dir_format">table directory</a> format description.
+      A conforming user agent <span class="conform ua" id="conform-mustLoadFontCollection">MUST be able to load
+      and use properly formatted font collection file generated by a WOFF2 decoder.</span></p>
+
+
+    </section>
+    </section><section id="table_format"><h2 id="table_format-0"><span class='secno'>5.&nbsp;</span>Compressed data format</h2>
+
+    <p>The CompressedFontData field in a WOFF2 file contains the concatenation of
+      data for each table in the font, in the order that entries appear in the WOFF2
+      <a href="#table_dir_format">table directory</a>.
+      <span class="conform ff" id="conform-noExtraData">There MUST NOT be any extraneous
+      data between the table entries in the decompressed data stream as defined by the table directory</span>.
+      If such extraneous data is present <span class="conform ua" id="conform-mustRejectExtraData">
+      a conforming user agent MUST reject the file as invalid</span>.
+      <span class="conform ff" id="conform-mustUseBrotli-FontData">The CompressedFontData
+      stream MUST be compressed using the Brotli compression algorithm
+      [<cite><a href="#ref-Brotli">Brotli</a></cite>]</span>. If the decompression of the
+      data block fails for any reason, the WOFF2 file is invalid and
+      <span class="conform ua" id="conform-mustBeInvalidated-FailDecompress">
+      MUST NOT be loaded</span>.</p>
+
+      <p>The process of decoding the table data in a WOFF2 font file can be specified
+      by decompressing the byte-level compression of the CompressedFontData field,
+      yielding a "table data block", then applying additional decoding steps as
+      described below. An actual implementation is free to combine these steps or
+      perform some of the steps in an incremental or streaming fashion, but the
+      results must be consistent with the sequential process as specified here.</p>
+
+    <p>Certain tables (such as <span class=tt>glyf</span>, <span class=tt>loca</span> and
+      <span class=tt>hmtx</span> tables, identified by their corresponding tags), are subject
+      to additional transforms. If a font table is not transformed, then the table data appears
+      in the compressed stream in literal form, and occupies origLength bytes of the table data
+      block. Whether or not the table is transformed, and the version number of the applied transform is
+      defined by the two most significant flag bits (see <a href="#table_dir_format">subclause 4.1</a>
+      for details), and the table data must be additionally processed by a transformation specified below.
+      In this case, the transformed table occupies transformLength bytes of the table data block.</p>
+
+<!-- See www-font comments on the EOFF2 spec specific to changing recommended checkSum behavior
+     http://lists.w3.org/Archives/Public/www-font/2015OctDec/0000.html -->
+
+    <p><span class="conform dc" id="conform-mustProduceOFF">The decompressed and reconstructed
+      table data MUST be stored in the format specified by the [<cite><a href="#ref-OFF">OFF</a></cite>]
+      specification.</span> <span class="conform dc" id="conform-mustCalculateCheckSum">Each
+      reconstructed table directory entry MUST contain a valid 'checkSum' value,
+      the decoder MUST recalculate the checkSum value for each decoded table.</span>
+      Also, due to modifying transforms applied to <span class=tt>glyf</span> and <span class=tt>loca</span>
+      tables, <span class="conform dc" id="conform-mustRecalculateHeadCheckSum">the decoder
+      MUST recalculate the <span class=tt>checkSumAdjustment</span> value of the entire
+      font and MUST store the updated value in the <span class=tt>head</span> table.</span></p>
+
+    <div class="note">
+      <p>The known table flag values should not be relied upon in determining the presence of
+        transformed tables, it is feasible that e.g. the <span class=tt>glyf</span> table can be
+        represented in the table directory with either flag = 10 and no tag, or with flag = 63
+        and 'glyf' tag that follows. The combination of flags value that defines a transform
+        version number and the table tag should be used to determine the applied transform.</p>
+    </div>
+
+    <p><span class="conform ff" id="conform-mustMatchUncompressedSize">The sum of the origLength
+      (for non-transformed tables) and transformLength (for transformed tables) fields in the
+      table directory MUST equal the size of the font data block after it has been decompressed
+      using [<cite><a href="#ref-Brotli">Brotli</a></cite>]</span>.If the size
+      of the decompressed font data block doesn't match the sum of lengths defined in the table
+      directory as described above, <span class="conform ua" id="conform-mustBeInvalidated-FailSize">
+      the WOFF2 file MUST NOT be loaded</span>.</p>
+
+    <p>According to the curent version of the WOFF2, a transform can be applied to three types
+      of tables: <span class=tt>glyf</span>, representing outline data, <span class=tt>loca</span>,
+      representing the offsets of the individual glyphs within a <span class=tt>glyf</span> table, and
+      <span class=tt>hmtx</span>, representing glyph horizontal metrics, if these tables are present
+      in a font. An authoring tool can use any applicable transforms taking into consideration
+      additional constraints specified in <a href="#loca_table_format">subclause 5.3</a> and
+      <a href="#table_order">subclause 5.5</a>. The <span class=tt>glyf</span> table transformation
+      is specified in <a href="#glyf_table_format">subclause 5.1</a>, the <span class=tt>loca</span>
+      table transformation is specified in <a href="#loca_table_format">subclause 5.3</a>, and the
+      <span class=tt>hmtx</span> table transformation is specified in
+      <a href="#hmtx_table_format">subclause 5.4</a>.</p>
+
+    <div class="note" id="CFF-de-subroutinization">
+      <p>CFF table processing and de-subroutinization.</p>
+      <p>The majority of OpenType fonts with CFF outlines have CFF data subroutinized for more
+        compact data storage. The experiments conducted as part of WOFF2 development and
+        evaluation have shown that Brotli compression technology works more efficiently
+        and produces better compression gains for WOFF2 fonts if the CFF outline data is
+        de-subroutinized prior to WOFF2 encoding - this will on average reduce the compressed
+        data size by 5-10%. However, the CFF de-subroutinization will, at the same time, increase
+        the output file size by ~10%.</p>
+      <p>Since the CFF pre-processing / de-subroutinization is considered an external step that
+        can be implemented prior to WOFF2 encoding, it is not covered by this specification.
+        Font producers have an opportunity to optimize their production process to either
+        reduce the compressed font size for fastest webfont data transfer at the expense of
+        increasing the output CFF font size (which will also improve rendering performance)
+        or to keep subroutinized CFF data to minimize input/output font size.</p>
+    </div>
+
+    <p>The WOFF 2.0 transformations applied to certain tables are designed to reduce and/or
+      eliminate the built-in redundancies of the SFNT format and restructure the font data
+      stream for more efficient entropy encoding. As a result, the reconstructed font data
+      will retain the exact functionality of the input font file, but due to certain possible
+      encoding variations (such as various levels of optimization of outline point
+      coordinates in the 'glyf' table, and/or difference in offset calculations of the 'loca'
+      table) different WOFF2 decoders may produce an output file that will not be a bitwise
+      match to the input font file. The font tables of the input font file may also be subjected
+      to reordering operations, which may take place either as a part of the encoding process
+      or the tables can be reordered by a decoder to comply with the recommended table order
+      defined by the [<cite><a href="#ref-OFF">OFF</a></cite>] specification &ndash; as a result,
+      even if the content of the font data tables is not affected, the table offsets may change.
+      The differences in binary font data (however minor, due to significant extent to decoder
+      optimizations and table reordering) between encoded and decoded font data structures will
+      invalidate the 'DSIG' table, if one is present. Therefore, the compliant WOFF2 encoder
+      <span class="conform at" id="conform-mustRemoveDSIG">MUST remove the DSIG table from an input
+      font data</span>, prior to applying transformations and entropy coding steps.</p>
+
+    <p>The WOFF 2.0 encoders <span class="conform at" id="conform-mustSetBit11">MUST also set
+      bit 11 of the 'flags' field of the <span class=tt>head</span> table</span>
+      (see [<cite><a href="#ref-OFF">OFF</a></cite>] specification) to indicate that
+      a recreated font file was subjected to lossless modifying transform.</p>
+
+    <section id="glyf_table_format"><h3 id="glyf_table_format-0"><span class='secno'>5.1. </span>Transformed <span class=tt>glyf</span> table format</h3>
+
+    <p>The <span class=tt>glyf</span> table data can be presented in the WOFF2 file in one of two
+      formats defined by the transformation version number (encoded in the table directory flag bits,
+      see <a href="#table_dir_format">subclause 4.1</a> for details). The transformation version "3"
+      defines a null transform where the content of the <span class=tt>glyf</span> table is
+      presented in its original, unmodified format. The transformation version "0", specified below,
+      is optional and can be applied to eliminate certain redundancies in the <span class=tt>glyf</span>
+      table data.</p>
+
+    <p>The version "0" of the <span class=tt>glyf</span> table transformation (as defined
+      by the table directory flag bits, see <a href="#table_dir_format">subclause 4.1</a>
+      for details) specified in this subclause is intended to reduce redundant information
+      and provide a more efficient encoding of the actual TrueType outlines of glyphs.
+      The modified transformation is based on a similar transformation described in MicroType
+      Express [<cite><a href="#ref-mtx">MTX</a></cite>] specification.
+      The reference to MTX is informative; the details of the modified transformation are
+      stated below and this section is normative.</p>
+
+    <div class="note">
+      <p>While <span class=tt>glyf</span> table transformation preserves the functionality and fidelity
+      of rendering for every glyph in a font, it will most likely result in producing a new set of
+      glyph records that will not be a binary match to the original font. According to the encoding
+      rules specified in subclause 5.3.3 of [<cite><a href="#ref-OFF">OFF</a></cite>], there may be
+      multiple valid reconstructions of a glyph record. It is possible that depending on the context
+      and on the level of optimizations being applied to reconstructed <span class=tt>glyf</span>
+      table data, the size of the reconstructed table may be greater than, less than, or equal to the
+      original size of the <span class=tt>glyf</span> table of the input font compressed by WOFF2.
+      Neither this specification nor the [<cite><a href="#ref-OFF">OFF</a></cite>] standard mandate
+      specific optimizations being applied on the font data; therefore, it is the responsibility of
+      WOFF2 decoder implementations to make sure that an adequate amount of memory is allocated when
+      glyph records are being reconstructed from the WOFF2 file &ndash; the original <span class=tt>glyf</span>
+      table size supplied as an origLength value for the transformed <span class=tt>glyf</span> table can
+      only be used as a reference point.</p>
+    </div>
+
+    <p>Regardless of the implementation details of the glyph record reconstruction process
+      and the level of optimizations applied to reconstructed 'glyf' table data
+      <span class="conform ua" id="conform-mustNotRejectGlyfSizeMismatch">User Agents MUST NOT
+      reject correctly decoded font file if the size of the reconstructed 'glyf' table doesn't
+      match the <span class=tt>origLength</span> value encoded as part of the 'glyf' table entry
+      in WOFF2 Table Directory</span>.</p>
+
+    <p>For greater compression effectiveness, the <span class=tt>glyf</span> table is split
+      into several substreams, to group like data together. The transformed table consists of
+      a number of fields specifying the size of each of the substreams, followed by the
+      substreams in sequence. During the decoding process the reverse transformation takes place,
+      where data from various separate substreams are recombined to create a complete glyph
+      record for each entry of the original <span class=tt>glyf</span> table.</p>
+
+    <table>
+      <tr class="header"><th colspan="3" style="background-color: #F8F8F8">Transformed <span class=tt>glyf</span> Table</th></tr>
+      <tr>
+       <th style="background-color: #F8F8F8; width: 10%;">Data Type</th>
+       <th style="background-color: #F8F8F8; width: 30%;">Semantic</th>
+       <th style="background-color: #F8F8F8; width: 60%;">Description and value type (if applicable)</th>
+      </tr>
+      <tr><td>UInt16</td><td>reserved</td><td>0x0000</td></tr>
+      <tr>
+        <td>UInt16</td>
+        <td>optionFlags</td>
+        <td>Bit 0: if set,
+          indicates the presence of the overlapSimpleBitmap[] bit array.
+          Bits 1-15: Reserved.
+        </td>
+      </tr>
+      <tr><td>UInt16</td><td>numGlyphs</td><td>Number of glyphs</td></tr>
+      <tr><td>UInt16</td><td>indexFormat</td><td>Offset format for <span class=tt>loca</span> table, should be consistent with
+                             <span class=tt>indexToLocFormat</span> of the original <span class=tt>head</span> table (see
+                             [<cite><a href="#ref-OFF">OFF</a></cite>] specification)</td></tr>
+      <tr><td>UInt32</td><td>nContourStreamSize</td><td>Size of nContour stream in bytes</td></tr>
+      <tr><td>UInt32</td><td>nPointsStreamSize</td><td>Size of nPoints stream in bytes</td></tr>
+      <tr><td>UInt32</td><td>flagStreamSize</td><td>Size of flag stream in bytes</td></tr>
+      <tr><td>UInt32</td><td>glyphStreamSize</td><td>Size of glyph stream in bytes (a stream of variable-length encoded values, see description below)</td></tr>
+      <tr><td>UInt32</td><td>compositeStreamSize</td><td>Size of composite stream in bytes (a stream of variable-length encoded values, see description below)</td></tr>
+      <tr><td>UInt32</td><td>bboxStreamSize</td><td>Size of bbox data in bytes representing combined length of bboxBitmap (a packed bit array) and bboxStream (a stream of Int16 values)</td></tr>
+      <tr><td>UInt32</td><td>instructionStreamSize</td><td>Size of instruction stream (a stream of UInt8 values)</td></tr>
+      <tr><td>Int16</td><td>nContourStream[]</td><td>Stream of Int16 values representing number of contours for each glyph record</td></tr>
+      <tr><td>255UInt16</td><td>nPointsStream[]</td><td>Stream of values representing number of outline points for each contour in glyph records</td></tr>
+      <tr><td>UInt8</td><td>flagStream[]</td><td>Stream of UInt8 values representing flag values for each outline point.</td></tr>
+      <tr><td>Vary</td><td>glyphStream[]</td><td>Stream of bytes representing point coordinate values using variable length encoding format (defined in <a href="#triplet_decoding">subclause 5.2</a>)</td></tr>
+      <tr><td>Vary</td><td>compositeStream[]</td><td>Stream of bytes representing component flag values and associated composite glyph data</td></tr>
+      <tr><td>UInt8</td><td>bboxBitmap[]</td><td>Bitmap (a numGlyphs-long bit array) indicating explicit bounding boxes</td></tr>
+      <tr><td>Int16</td><td>bboxStream[]</td><td>Stream of Int16 values representing glyph bounding box data</td></tr>
+      <tr><td>UInt8</td><td>instructionStream[]</td><td>Stream of UInt8 values representing a set of instructions for each corresponding glyph</td></tr>
+      <tr id="overlapSimpleBitmap"><td>UInt8</td><td>overlapSimpleBitmap[]</td><td>A numGlyphs-long bit array that provides values for the overlap flag [bit 6] for each
+        simple glyph.
+        (Flag values for composite glyphs
+        are already encoded as part
+        of the compositeStream[]).</td></tr>
+    </table>
+
+    <p>The format is best characterized by describing the decoding process, especially
+      indications of what are valid and invalid data. Note also that this format specifies
+      the decoded result at the semantic level, not specific byte streams.</p>
+
+    <p>Included in the Transformed <span class=tt>glyf</span> Table is a
+      <span class=tt>bboxBitmap</span> indicating for each glyph
+      whether it contains an explicitly encoded bounding box, or whether the bounding
+      box is to be inferred from the coordinate values. The relevant computations to determine
+      the bounding box status must be performed by both an encoder and a decoder. For each
+      simple glyph, <span class="conform at" id="conform-mustCalculateOmitBBoxValues">
+      an encoder MUST calculate the the xMin, yMin, xMax and yMax coordinate values using
+      all outline points (both on- and off-curve points) and compare the calculated values
+      with the encoded bounding box info for the glyph. If the glyph bounding box info matches
+      the calculated values, an encoder MUST omit the bounding box info</span>. Otherwise,
+      <span class="conform at" id="conform-mustCalculateSetBBoxValues">if the
+      calculated bounding box values do not equal the glyph values encoded in a font,
+      an encoder MUST set the corresponding <span class=tt>bboxBitmap</span> flag and record
+      the original bounding box values in the <span class=tt>bboxStream</span>.</span>
+      For glyphs records that contain zero contours, <span class="conform at" id="conform-mustRejectNonEmptyBBox">
+      an encoder MUST check that the glyph bounding box values are all zeros and, if this condition
+      is not met, MUST reject an input font as invalid.</span> For either an empty glyph or
+      a glyph with zero contours, <span class="conform at" id="conform-mustClearEmptyBBox">
+      an encoder MUST always clear the corresponding <span class=tt>bboxBitmap</span> flag.</span>
+      For a composite glyph, <span class="conform at" id="conform-mustSetCompositeBBoxValues">
+      an encoder MUST always set the corresponding <span class=tt>bboxBitmap</span> flag and
+      record the original bounding box values in the <span class=tt>bboxStream</span>.</span></p>
+
+    <p><span class="conform ua" id="conform-mustCalculateBBox">A decoder MUST perform similar
+      calculations if the bounding box is to be inferred. For a given glyph, when a corresponding
+      bit in <span class=tt>bboxBitmap</span> is not set, the xMin, yMin,
+      xMax and yMax values MUST be calculated at the time of decoding using all outline
+      point coordinates</span>. The total number of bytes in <span class=tt>bboxBitmap</span>
+      is equal to 4 * floor((numGlyphs + 31) / 32). The bits are packed
+      so that glyph number 0 corresponds to the most significant bit of the first
+      byte, glyph number 7 corresponds to the least significant bit of the first
+      byte, glyph number 8 corresponds to the most significant bit of the second
+      byte, and so on. A bit=1 value indicates an explicitly set bounding box.</p>
+
+    <p>Upon reading the Transformed <span class=tt>glyf</span> Table, the decoding process
+      iterates one glyph at a time. For each glyph, it reads zero or more bytes from each
+      of the streams referenced in the Transformed <span class=tt>glyf</span> Table.
+      Also, at the point of reconstructing a glyph, a decoder needs to store for each glyph
+      the corresponding offset in the new reconstructed glyph table, and this data will
+      collectively become the contents of the reconstructed <span class=tt>loca</span> table
+      (see <a href="#loca_table_format">subclause 5.3</a> below for more information about
+      the reconstruction of the <span class=tt>loca</span> table).</p>
+
+    <section id="ReconstructingGlyhs">
+       <h4 id="ReconstructingGlyhs-0">Reconstruction of Glyph Records</h4>
+
+    <p>The reconstruction process begins by performing the following step to determine
+      the encoded glyph type (simple, composite or empty glyph):</p>
+
+    <p>Read a Int16 from the nContour stream. Store this in the numberOfContours
+      field in the reconstructed TrueType glyph. The interpretation of the field is
+      the same as the TrueType spec; if it is zero, the glyph is empty. If it is
+      positive, the glyph is simple and the value represents the number of contours in the
+      outline. If the nContour value is equal to -1 (0xffff), then the glyph is composite.
+    </section>
+    <section id="EmptyGlyph">
+
+    <h4 id="EmptyGlyph-0">Decoding of Empty Glyphs</h4>
+
+    <p>Reconstruction of an empty glyph (when nContour = 0) is a simple step that involves
+      incrementing the glyph record count and creating a new entry in the <span class=tt>loca</span>
+      table where <span class=tt>loca[n] = loca[n-1]</span>. If the <span class=tt>bboxBitmap</span>
+      flag indicates that the bounding box values are explicitly encoded in the
+      <span class=tt>bboxStream</span> the decoder
+      <span class="conform ua" id="conform-mustRejectNonEmptyBBox2"> MUST reject WOFF2 file
+      as invalid</span>.</p>
+    </section>
+    <section id="SimpleGlyph-0">
+
+    <h4 id="SimpleGlyph">Decoding of Simple Glyphs</h4>
+
+    <p>For a simple glyph (when nContour &gt; 0), the process continues as follows:</p>
+    <ol>
+    <li>Read numberOfContours 255UInt16 values from the nPoints stream. Each of
+      these is the number of points of that contour. Convert this into the
+      endPtsOfContours[] array by computing the cumulative sum, then subtracting
+      one. For example, if the values in the stream are [2, 4], then the
+      endPtsOfContours array is [1, 5]. Also, the sum of all the values in the
+      array is the total number of points in the glyph, nPoints. In the example
+      given, the value of nPoints is 6.</li>
+
+    <li>Read nPoints UInt8 values from the flags stream. Each corresponds to one
+      point in the reconstructed glyph outline. The interpretation of the flag
+      byte is described in details in <a href="#triplet_decoding">subclause 5.2</a>.</li>
+
+    <li>For each point (i.e. nPoints times), read a number of point coordinate bytes
+      from the glyph stream. The number of point coordinate bytes is a function of the
+      flag byte read in the previous step: for (flag &lt; 0x7f) in the range 0 to 83
+      inclusive, it is one byte. In the range 84 to 119 inclusive, it is two bytes.
+      In the range 120 to 123 inclusive, it is three bytes, and in the range 124 to 127
+      inclusive, it is four bytes. Decode these bytes according to the procedure
+      specified in the <a href="#triplet_decoding">subclause 5.2</a> to reconstruct
+      delta-x and delta-y values of the glyph point coordinates. Store these delta-x
+      and delta-y values in the reconstructed glyph using the standard TrueType glyph
+      encoding [<cite><a href="#ref-OFF">OFF</a></cite>] subclause 5.3.3.</li>
+
+    <li>Read one 255UInt16 value from the glyph stream, which is
+      instructionLength, the number of instruction bytes.</li>
+
+    <li>Read instructionLength bytes from instructionStream, and store these in
+      the reconstituted glyph as instructions.</li>
+    </ol>
+
+    <p>The optionFlags field bit 0 indicates the presence of the additional
+      overlapSimpleBitmap[] bit array. All other bits are reserved and should be cleared.
+      If all simple glyphs of the input font have OVERLAP_SIMPLE flags set to
+      zero, <span class="conform at" id="conform-noOverlap">
+      the encoder MUST clear bit 0 of the optionFlags field and omit the
+      overlapSimpleBitmap[] bit array</span>.
+      If at least one of the simple glyphs in the input
+      font have the flags bit 6 set,
+      <span class="conform at" id="conform-hasOverlap">
+      the encoder must set the optionFlags bit 0 to
+      "1", and MUST create the additional overlapSimpleBitmap[] bit array where the
+      corresponding bits MUST be set to the values of the flag bit 6 of each
+      simple glyph in the input font</span>.</p>
+    <p>The decoder
+      <span class="conform ua" id="conform-mustCheckOptionsFlag0">
+      MUST check the optionFlags bit0 value</span>
+      to determine whether the
+      additional overlapSimpleBitmap[] is included as part of the transformed 'glyf'
+      table. If the additional overlapSimpleBitmap[] bit array is not present, upon
+      reconstruction of the simple glyphs flags
+      <span class="conform ua" id="conform-mustZeroOverlap">
+      the decoder MUST set all
+      OVERLAP_SIMPLE flag values to zero</span>.
+      If overlapSimpleBitmap[] is included, the decoder
+      <span class="conform ua" id="conform-mustReconstructOverlap">
+      MUST use overlapSimpleBitmap[] bit settings to reconstruct OVERLAP_SIMPLE flag
+      values, and set the corresponding overlapSimpleBitmap[] bit value as flag bit 6 on
+      the first flag byte for each simple glyph of the output font</span>.</p>
+    </section>
+
+
+    <section id="CompositeGlyph">
+
+    <h4 id="CompositeGlyph0">Decoding of Composite Glyphs</h4>
+
+    <p>For a composite glyph (nContour == -1), the following steps take the place
+      of steps 1-5 above:</p>
+    <p>1a. Read a UInt16 from compositeStream. This is interpreted as a component
+      flag word as in the TrueType spec. Based on the flag values, there are
+      between 4 and 14 additional argument bytes, interpreted as glyph index,
+      arg1, arg2, and optional scale or affine matrix.</p>
+
+    <p>2a. Read the number of argument bytes as determined in step 1a from the
+      composite stream, and store these in the reconstructed glyph. If the flag
+      word read in step 1a has the FLAG_MORE_COMPONENTS bit (bit 5) set,
+      go back to step 1a.
+
+    <p>3a. If any of the flag words had the FLAG_WE_HAVE_INSTRUCTIONS bit
+     (bit 8) set, then read the instructions from the glyph and store them
+     in the reconstructed glyph, using the same process as described in steps 4 and
+     5 above.
+
+    <h4 id="BoundingBox">Decoding of Bounding Boxes</h4>
+
+    <p>For both simple and composite glyphs, if the corresponding bit
+      in the bounding box bit vector is set, then additionally read 4 Int16 values
+      from the bbox stream, representing xMin, yMin, xMax, and yMax, respectively,
+      and record these into the corresponding fields of the reconstructed glyph.
+      For simple glyphs, if the corresponding bit in the bounding box bit
+      vector is not set, then derive the bounding box by computing the minimum
+      and maximum x and y coordinates in the outline, and storing that.</p>
+
+    <p><span class="conform ff" id="conform-mustHaveCompositeBBox">
+      A composite glyph MUST have an explicitly supplied bounding box</span>.
+      The motivation is that computing bounding boxes is more complicated, and
+      would require resolving references to component glyphs taking into account
+      composite glyph instructions and the specified scales of individual components,
+      which would conflict with a purely streaming implementation of font decoding.
+      <span class="conform ua" id="conform-mustRejectNoCompositeBBox">A decoder MUST
+      check for presence of the bounding box info as part of the composite glyph record
+      and MUST NOT load a font file with the composite bounding box data missing</span>.</p>
+      </section>
+    </section><section id="triplet_decoding"><h3 id="triplet_decoding-0"><span class='secno'>5.2. </span>Decoding of variable-length X and Y coordinates</h3>
+
+    <p><a href="#SimpleGlyph">Simple glyph</a> data structure defines
+      all contours that comprise a glyph outline, which are presented by a sequence of
+      on- and off-curve coordinate points. These point coordinates are encoded as delta
+      values representing the incremental values between the previous and current
+      corresponding X and Y coordinates of a point, the first point of each outline
+      is relative to (0,0) point. To minimize the size of the dataset of point
+      coordinate values, each point is presented as a (flag, xCoordinate,
+      yCoordinate) triplet. The flag value is stored in a separate data stream and
+      the coordinate values are stored as part of the glyph data stream using a
+      variable-length encoding format consuming a total of 2-5 bytes per point.</p>
+
+    <p>The most significant bit of a flag indicates whether the point is on-
+      or off-curve point
+      (if the most significant bit is 0,
+        then the point is on-curve),
+      the remaining seven bits of the flag determine the format of
+      X and Y coordinate values and specify 128 possible combinations of indices that have been
+      assigned taking into consideration typical statistical distribution of data found
+      in TrueType fonts. When X and Y coordinate values are recorded using nibbles
+      (either 4 bits per coordinate or 12 bits per coordinate) the bits are packed in the byte
+      stream with most significant bit of X coordinate first, followed by the value for Y coordinate
+      (most significant bit first). As a result, the size of the glyph dataset is significantly
+      reduced, and the grouping of the similar values (flags, coordinates) in separate and contiguous
+      data streams allows more efficient application of the entropy coding applied as
+      the second stage of encoding process.
+
+    <p>Each of the 128 index values define the following properties and specified
+      in details in the table below:</p>
+
+    <ul>
+       <li>Byte count (total number of bytes used for this set of coordinate values
+           including one byte for 'flag' value).</li>
+       <li>Number of bits used to represent X coordinate value (X bits).</li>
+       <li>Number of bits used to represent Y coordinate value (Y bits).</li>
+       <li>An additional incremental amount to be added to X bits value (delta X).</li>
+       <li>An additional incremental amount to be added to Y bits value (delta Y).</li>
+       <li>The sign of X coordinate value (X sign).</li>
+       <li>The sign of Y coordinate value (Y sign).</li>
+     </ul>
+
+    <p>Please note that &ldquo;Byte Count&rdquo; field reflects total size of the triplet
+      (flag, xCoordinate, yCoordinate), including &lsquo;flag&rsquo; value that is encoded
+      in a separate stream.</p>
+
+    <table>
+      <tr class="header"><th colspan="8" style="background-color: #F8F8F8">Triplet Encoding</th></tr>
+      <tr>
+        <th style="background-color: #F8F8F8;">Index</th>
+        <th style="background-color: #F8F8F8;">Byte Count</th>
+        <th style="background-color: #F8F8F8;">X bits</th>
+        <th style="background-color: #F8F8F8;">Y bits</th>
+        <th style="background-color: #F8F8F8;">Delta X</th>
+        <th style="background-color: #F8F8F8;">Delta Y</th>
+        <th style="background-color: #F8F8F8;">X sign</th>
+        <th style="background-color: #F8F8F8;">Y sign</th>
+      </tr>
+ <tr><td>0</td><td>2</td><td>0</td><td>8</td><td>N/A</td><td>0</td><td>N/A</td><td>-</td></tr>
+ <tr><td>1</td><td></td><td></td><td></td><td></td><td>0</td><td></td><td>+</td></tr>
+ <tr><td>2</td><td></td><td></td><td></td><td></td><td>256</td><td></td><td>-</td></tr>
+ <tr><td>3</td><td></td><td></td><td></td><td></td><td>256</td><td></td><td>+</td></tr>
+ <tr><td>4</td><td></td><td></td><td></td><td></td><td>512</td><td></td><td>-</td></tr>
+ <tr><td>5</td><td></td><td></td><td></td><td></td><td>512</td><td></td><td>+</td></tr>
+ <tr><td>6</td><td></td><td></td><td></td><td></td><td>768</td><td></td><td>-</td></tr>
+ <tr><td>7</td><td></td><td></td><td></td><td></td><td>768</td><td></td><td>+</td></tr>
+ <tr><td>8</td><td></td><td></td><td></td><td></td><td>1024</td><td></td><td>-</td></tr>
+ <tr><td>9</td><td></td><td></td><td></td><td></td><td>1024</td><td></td><td>+</td></tr>
+ <tr><td>10</td><td>2</td><td>8</td><td>0</td><td>0</td><td>N/A</td><td>-</td><td>N/A</td></tr>
+ <tr><td>11</td><td></td><td></td><td></td><td>0</td><td></td><td>+</td><td></td></tr>
+ <tr><td>12</td><td></td><td></td><td></td><td>256</td><td></td><td>-</td><td></td></tr>
+ <tr><td>13</td><td></td><td></td><td></td><td>256</td><td></td><td>+</td><td></td></tr>
+ <tr><td>14</td><td></td><td></td><td></td><td>512</td><td></td><td>-</td><td></td></tr>
+ <tr><td>15</td><td></td><td></td><td></td><td>512</td><td></td><td>+</td><td></td></tr>
+ <tr><td>16</td><td></td><td></td><td></td><td>768</td><td></td><td>-</td><td></td></tr>
+ <tr><td>17</td><td></td><td></td><td></td><td>768</td><td></td><td>+</td><td></td></tr>
+ <tr><td>18</td><td></td><td></td><td></td><td>1024</td><td></td><td>-</td><td></td></tr>
+ <tr><td>19</td><td></td><td></td><td></td><td>1024</td><td></td><td>+</td><td></td></tr>
+ <tr><td>20</td><td>2</td><td>4</td><td>4</td><td>1</td><td>1</td><td>-</td><td>-</td></tr>
+ <tr><td>21</td><td></td><td></td><td></td><td></td><td>1</td><td>+</td><td>-</td></tr>
+ <tr><td>22</td><td></td><td></td><td></td><td></td><td>1</td><td>-</td><td>+</td></tr>
+ <tr><td>23</td><td></td><td></td><td></td><td></td><td>1</td><td>+</td><td>+</td></tr>
+ <tr><td>24</td><td></td><td></td><td></td><td></td><td>17</td><td>-</td><td>-</td></tr>
+ <tr><td>25</td><td></td><td></td><td></td><td></td><td>17</td><td>+</td><td>-</td></tr>
+ <tr><td>26</td><td></td><td></td><td></td><td></td><td>17</td><td>-</td><td>+</td></tr>
+ <tr><td>27</td><td></td><td></td><td></td><td></td><td>17</td><td>+</td><td>+</td></tr>
+ <tr><td>28</td><td></td><td></td><td></td><td></td><td>33</td><td>-</td><td>-</td></tr>
+ <tr><td>29</td><td></td><td></td><td></td><td></td><td>33</td><td>+</td><td>-</td></tr>
+ <tr><td>30</td><td></td><td></td><td></td><td></td><td>33</td><td>-</td><td>+</td></tr>
+ <tr><td>31</td><td></td><td></td><td></td><td></td><td>33</td><td>+</td><td>+</td></tr>
+ <tr><td>32</td><td></td><td></td><td></td><td></td><td>49</td><td>-</td><td>-</td></tr>
+ <tr><td>33</td><td></td><td></td><td></td><td></td><td>49</td><td>+</td><td>-</td></tr>
+ <tr><td>34</td><td></td><td></td><td></td><td></td><td>49</td><td>-</td><td>+</td></tr>
+ <tr><td>35</td><td></td><td></td><td></td><td></td><td>49</td><td>+</td><td>+</td></tr>
+ <tr><td>36</td><td>2</td><td>4</td><td>4</td><td>17</td><td>1</td><td>-</td><td>-</td></tr>
+ <tr><td>37</td><td></td><td></td><td></td><td></td><td>1</td><td>+</td><td>-</td></tr>
+ <tr><td>38</td><td></td><td></td><td></td><td></td><td>1</td><td>-</td><td>+</td></tr>
+ <tr><td>39</td><td></td><td></td><td></td><td></td><td>1</td><td>+</td><td>+</td></tr>
+ <tr><td>40</td><td></td><td></td><td></td><td></td><td>17</td><td>-</td><td>-</td></tr>
+ <tr><td>41</td><td></td><td></td><td></td><td></td><td>17</td><td>+</td><td>-</td></tr>
+ <tr><td>42</td><td></td><td></td><td></td><td></td><td>17</td><td>-</td><td>+</td></tr>
+ <tr><td>43</td><td></td><td></td><td></td><td></td><td>17</td><td>+</td><td>+</td></tr>
+ <tr><td>44</td><td></td><td></td><td></td><td></td><td>33</td><td>-</td><td>-</td></tr>
+ <tr><td>45</td><td></td><td></td><td></td><td></td><td>33</td><td>+</td><td>-</td></tr>
+ <tr><td>46</td><td></td><td></td><td></td><td></td><td>33</td><td>-</td><td>+</td></tr>
+ <tr><td>47</td><td></td><td></td><td></td><td></td><td>33</td><td>+</td><td>+</td></tr>
+ <tr><td>48</td><td></td><td></td><td></td><td></td><td>49</td><td>-</td><td>-</td></tr>
+ <tr><td>49</td><td></td><td></td><td></td><td></td><td>49</td><td>+</td><td>-</td></tr>
+ <tr><td>50</td><td></td><td></td><td></td><td></td><td>49</td><td>-</td><td>+</td></tr>
+ <tr><td>51</td><td></td><td></td><td></td><td></td><td>49</td><td>+</td><td>+</td></tr>
+ <tr><td>52</td><td>2</td><td>4</td><td>4</td><td>33</td><td>1</td><td>-</td><td>-</td></tr>
+ <tr><td>53</td><td></td><td></td><td></td><td></td><td>1</td><td>+</td><td>-</td></tr>
+ <tr><td>54</td><td></td><td></td><td></td><td></td><td>1</td><td>-</td><td>+</td></tr>
+ <tr><td>55</td><td></td><td></td><td></td><td></td><td>1</td><td>+</td><td>+</td></tr>
+ <tr><td>56</td><td></td><td></td><td></td><td></td><td>17</td><td>-</td><td>-</td></tr>
+ <tr><td>57</td><td></td><td></td><td></td><td></td><td>17</td><td>+</td><td>-</td></tr>
+ <tr><td>58</td><td></td><td></td><td></td><td></td><td>17</td><td>-</td><td>+</td></tr>
+ <tr><td>59</td><td></td><td></td><td></td><td></td><td>17</td><td>+</td><td>+</td></tr>
+ <tr><td>60</td><td></td><td></td><td></td><td></td><td>33</td><td>-</td><td>-</td></tr>
+ <tr><td>61</td><td></td><td></td><td></td><td></td><td>33</td><td>+</td><td>-</td></tr>
+ <tr><td>62</td><td></td><td></td><td></td><td></td><td>33</td><td>-</td><td>+</td></tr>
+ <tr><td>63</td><td></td><td></td><td></td><td></td><td>33</td><td>+</td><td>+</td></tr>
+ <tr><td>64</td><td></td><td></td><td></td><td></td><td>49</td><td>-</td><td>-</td></tr>
+ <tr><td>65</td><td></td><td></td><td></td><td></td><td>49</td><td>+</td><td>-</td></tr>
+ <tr><td>66</td><td></td><td></td><td></td><td></td><td>49</td><td>-</td><td>+</td></tr>
+ <tr><td>67</td><td></td><td></td><td></td><td></td><td>49</td><td>+</td><td>+</td></tr>
+ <tr><td>68</td><td>2</td><td>4</td><td>4</td><td>49</td><td>1</td><td>-</td><td>-</td></tr>
+ <tr><td>69</td><td></td><td></td><td></td><td></td><td>1</td><td>+</td><td>-</td></tr>
+ <tr><td>70</td><td></td><td></td><td></td><td></td><td>1</td><td>-</td><td>+</td></tr>
+ <tr><td>71</td><td></td><td></td><td></td><td></td><td>1</td><td>+</td><td>+</td></tr>
+ <tr><td>72</td><td></td><td></td><td></td><td></td><td>17</td><td>-</td><td>-</td></tr>
+ <tr><td>73</td><td></td><td></td><td></td><td></td><td>17</td><td>+</td><td>-</td></tr>
+ <tr><td>74</td><td></td><td></td><td></td><td></td><td>17</td><td>-</td><td>+</td></tr>
+ <tr><td>75</td><td></td><td></td><td></td><td></td><td>17</td><td>+</td><td>+</td></tr>
+ <tr><td>76</td><td></td><td></td><td></td><td></td><td>33</td><td>-</td><td>-</td></tr>
+ <tr><td>77</td><td></td><td></td><td></td><td></td><td>33</td><td>+</td><td>-</td></tr>
+ <tr><td>78</td><td></td><td></td><td></td><td></td><td>33</td><td>-</td><td>+</td></tr>
+ <tr><td>79</td><td></td><td></td><td></td><td></td><td>33</td><td>+</td><td>+</td></tr>
+ <tr><td>80</td><td></td><td></td><td></td><td></td><td>49</td><td>-</td><td>-</td></tr>
+ <tr><td>81</td><td></td><td></td><td></td><td></td><td>49</td><td>+</td><td>-</td></tr>
+ <tr><td>82</td><td></td><td></td><td></td><td></td><td>49</td><td>-</td><td>+</td></tr>
+ <tr><td>83</td><td></td><td></td><td></td><td></td><td>49</td><td>+</td><td>+</td></tr>
+ <tr><td>84</td><td>3</td><td>8</td><td>8</td><td>1</td><td>1</td><td>-</td><td>-</td></tr>
+ <tr><td>85</td><td></td><td></td><td></td><td></td><td>1</td><td>+</td><td>-</td></tr>
+ <tr><td>86</td><td></td><td></td><td></td><td></td><td>1</td><td>-</td><td>+</td></tr>
+ <tr><td>87</td><td></td><td></td><td></td><td></td><td>1</td><td>+</td><td>+</td></tr>
+ <tr><td>88</td><td></td><td></td><td></td><td></td><td>257</td><td>-</td><td>-</td></tr>
+ <tr><td>89</td><td></td><td></td><td></td><td></td><td>257</td><td>+</td><td>-</td></tr>
+ <tr><td>90</td><td></td><td></td><td></td><td></td><td>257</td><td>-</td><td>+</td></tr>
+ <tr><td>91</td><td></td><td></td><td></td><td></td><td>257</td><td>+</td><td>+</td></tr>
+ <tr><td>92</td><td></td><td></td><td></td><td></td><td>513</td><td>-</td><td>-</td></tr>
+ <tr><td>93</td><td></td><td></td><td></td><td></td><td>513</td><td>+</td><td>-</td></tr>
+ <tr><td>94</td><td></td><td></td><td></td><td></td><td>513</td><td>-</td><td>+</td></tr>
+ <tr><td>95</td><td></td><td></td><td></td><td></td><td>513</td><td>+</td><td>+</td></tr>
+ <tr><td>96</td><td>3</td><td>8</td><td>8</td><td>257</td><td>1</td><td>-</td><td>-</td></tr>
+ <tr><td>97</td><td></td><td></td><td></td><td></td><td>1</td><td>+</td><td>-</td></tr>
+ <tr><td>98</td><td></td><td></td><td></td><td></td><td>1</td><td>-</td><td>+</td></tr>
+ <tr><td>99</td><td></td><td></td><td></td><td></td><td>1</td><td>+</td><td>+</td></tr>
+ <tr><td>100</td><td></td><td></td><td></td><td></td><td>257</td><td>-</td><td>-</td></tr>
+ <tr><td>101</td><td></td><td></td><td></td><td></td><td>257</td><td>+</td><td>-</td></tr>
+ <tr><td>102</td><td></td><td></td><td></td><td></td><td>257</td><td>-</td><td>+</td></tr>
+ <tr><td>103</td><td></td><td></td><td></td><td></td><td>257</td><td>+</td><td>+</td></tr>
+ <tr><td>104</td><td></td><td></td><td></td><td></td><td>513</td><td>-</td><td>-</td></tr>
+ <tr><td>105</td><td></td><td></td><td></td><td></td><td>513</td><td>+</td><td>-</td></tr>
+ <tr><td>106</td><td></td><td></td><td></td><td></td><td>513</td><td>-</td><td>+</td></tr>
+ <tr><td>107</td><td></td><td></td><td></td><td></td><td>513</td><td>+</td><td>+</td></tr>
+ <tr><td>108</td><td>3</td><td>8</td><td>8</td><td>513</td><td>1</td><td>-</td><td>-</td></tr>
+ <tr><td>109</td><td></td><td></td><td></td><td></td><td>1</td><td>+</td><td>-</td></tr>
+ <tr><td>110</td><td></td><td></td><td></td><td></td><td>1</td><td>-</td><td>+</td></tr>
+ <tr><td>111</td><td></td><td></td><td></td><td></td><td>1</td><td>+</td><td>+</td></tr>
+ <tr><td>112</td><td></td><td></td><td></td><td></td><td>257</td><td>-</td><td>-</td></tr>
+ <tr><td>113</td><td></td><td></td><td></td><td></td><td>257</td><td>+</td><td>-</td></tr>
+ <tr><td>114</td><td></td><td></td><td></td><td></td><td>257</td><td>-</td><td>+</td></tr>
+ <tr><td>115</td><td></td><td></td><td></td><td></td><td>257</td><td>+</td><td>+</td></tr>
+ <tr><td>116</td><td></td><td></td><td></td><td></td><td>513</td><td>-</td><td>-</td></tr>
+ <tr><td>117</td><td></td><td></td><td></td><td></td><td>513</td><td>+</td><td>-</td></tr>
+ <tr><td>118</td><td></td><td></td><td></td><td></td><td>513</td><td>-</td><td>+</td></tr>
+ <tr><td>119</td><td></td><td></td><td></td><td></td><td>513</td><td>+</td><td>+</td></tr>
+ <tr><td>120</td><td>4</td><td>12</td><td>12</td><td>0</td><td>0</td><td>-</td><td>-</td></tr>
+ <tr><td>121</td><td></td><td></td><td></td><td></td><td></td><td>+</td><td>-</td></tr>
+ <tr><td>122</td><td></td><td></td><td></td><td></td><td></td><td>-</td><td>+</td></tr>
+ <tr><td>123</td><td></td><td></td><td></td><td></td><td></td><td>+</td><td>+</td></tr>
+ <tr><td>124</td><td>5</td><td>16</td><td>16</td><td>0</td><td>0</td><td>-</td><td>-</td></tr>
+ <tr><td>125</td><td></td><td></td><td></td><td></td><td></td><td>+</td><td>-</td></tr>
+ <tr><td>126</td><td></td><td></td><td></td><td></td><td></td><td>-</td><td>+</td></tr>
+ <tr><td>127</td><td></td><td></td><td></td><td></td><td></td><td>+</td><td>+</td></tr>
+</table>
+
+    <p>For additional information and background on the triplet encoding please see
+      section 5.11 of the MTX proposal [<cite><a href="#ref-mtx">MTX</a></cite>].</p>
+
+    </section><section id="loca_table_format"><h3 id="loca_table_format-0"><span class='secno'>5.3. </span>Transformed <span class=tt>loca</span> table format</h3>
+
+    <p>The <span class=tt>loca</span> table data can be presented in the WOFF2 file in one of two
+      formats defined by the transformation version number (encoded in the table directory flag bits,
+      see <a href="#table_dir_format">subclause 4.1</a> for details). The transformation version "3"
+      defines a null transform where the content of the <span class=tt>loca</span> table is
+      presented in its original, unmodified format. The transformation version "0", although optional,
+      <span class="conform ff" id="conform-transformedLocaMustAccompanyGlyf">MUST be applied to the
+      <span class=tt>loca</span> table data whenever <span class=tt>glyf</span>
+      table data is transformed.</span> In other words, both <span class=tt>glyf</span> and
+      <span class=tt>loca</span> tables must either be present in their transformed format or
+      with null transform applied to both tables.</p>
+
+    <p>The version "0" of the <span class=tt>loca</span> table transformation (as defined
+      by the table directory flag bits, see <a href="#table_dir_format">subclause 4.1</a>
+      for details) is specified below.</p>
+
+    <p><span class="conform ff" id="conform-transformedLocaMustBeZero">
+      The transformLength of the transformed <span class=tt>loca</span> table MUST always be zero</span>.
+      <span class="conform ff" id="conform-OriginalLocaSize">
+      The origLength MUST be the appropriate size</span> (determined by numGlyphs+1, times the size per
+      glyph, where that size per glyph is two bytes when <span class=tt>indexFormat</span> (defined in
+      <a href="#glyf_table_format">subclause 5.1.&nbsp;Transformed glyf table format</a>) is zero,
+      otherwise four bytes). If the transformLength of the transformed <span class=tt>loca</span>
+      table is not equal to zero, or if the encoded origLength does not match the calculated size
+      defined above <span class="conform ua" id="conform-mustRejectLoca">the decoder MUST reject the
+      WOFF2 file as invalid</span>.</p>
+
+    <p><span class="conform ua" id="conform-mustReconstructLoca">
+      The <span class=tt>loca</span> table MUST be reconstructed when the
+      <span class=tt>glyf</span> table is decoded</span>.
+      The process for reconstructing the <span class=tt>loca</span> table
+      is specified in <a href="#glyf_table_format">subclause 5.1</a> as part of
+      the transformed <span class=tt>glyf</span> table decoding process. For
+      reconstructed glyph records, <span class="conform dc" id="conform-mustRecordLocaOffsets">
+      a decoder MUST store the corresponding offsets for individual glyphs using
+      a format that is indicated by the <span class=tt>indexFormat</span>
+      field of the Transformed <span class=tt>glyf</span> Table</span>.</p>
+
+    </section><section id="hmtx_table_format"><h3 id="hmtx_table_format-0"><span class='secno'>5.4. </span>Transformed <span class=tt>hmtx</span> table format</h3>
+
+    <p>The <span class=tt>hmtx</span> table data can be presented in the WOFF2 file in one of two
+      formats defined by the transformation version number (encoded in the table directory flag bits,
+      see <a href="#table_dir_format">subclause 4.1</a> for details). The transformation version "0"
+      defines a null transform where the content of the <span class=tt>hmtx</span> table is
+      presented in its original, unmodified format. The transformation version "1", specified below,
+      is optional and can be applied to eliminate certain redundancies in the <span class=tt>hmtx</span>
+      table data.</p>
+
+    <p>The transformation version "1" exploits the built-in redundancy of the TrueType glyphs where
+      the outlines of the glyphs designed according to the TrueType recommendations would likely have
+      their left side bearing values equal to xMin value of the glyph bounding box. The <span class=tt>hmtx</span>
+      table format is specified in subclause 5.2.4 of [<cite><a href="#ref-OFF">OFF</a></cite>] and
+      includes two arrays of left side bearing information for proportional and monospaced glyph
+      runs. Each of these arrays can be eliminated from the original input font data and reconstructed
+      from the glyph bounding box information if certain conditions are met.<p>
+
+    <table>
+      <tr class="header"><th colspan="3" style="background-color: #F8F8F8">Transformed <span class=tt>hmtx</span> table format</th></tr>
+      <tr>
+       <th style="background-color: #F8F8F8; width: 10%;">Data Type</th>
+       <th style="background-color: #F8F8F8; width: 15%;">Semantic</th>
+       <th style="background-color: #F8F8F8; width: 75%;">Description and value type (if applicable)</th>
+      </tr>
+      <tr>
+        <td>UInt8</td>
+        <td>Flags</td>
+        <td>Bitfield indicating the specific details of the applied transform:<br/>
+            Bit 0 - when set, indicates that lsb[] array is not present and needs to be reconstructed from
+            the xMin values in the <span class=tt>glyf</span> table;<br/>
+            Bit 1 - when set, indicates that leftSideBearing[] array is not present and needs to be reconstructed
+            from the xMin values in the <span class=tt>glyf</span> table.<br/>
+            When <span class=tt>hmtx</span> transform is indicated by the table directory, the
+            <span class="conform ff" id="conform-transformFlagsMustBeSet">Flags (bits 0 or 1 or both) MUST be set</span>.
+            Bits 2-7 are reserved and <span class="conform ff" id="conform-reservedFlagsMustBeZero">MUST be zero</span>.</td>
+      </tr>
+      <tr>
+        <td>UInt16</td>
+        <td>advanceWidth[]</td>
+        <td>Stream of Uint16 values representing the advanceWidth values of the horizontal metrics array for proportional
+            glyphs. The stream size is equal to <span class=tt>numOfHMetrics</span> defined in the <span class=tt>hhea</span>
+            table.</td>
+      </tr>
+      <tr>
+        <td>Int16</td>
+        <td>lsb[]</td>
+        <td>Stream of Int16 values representing the left side bearing values of the horizontal metrics array for proportional
+            glyphs. The stream is present only if the bit 0 of the "Flags" field is not set, otherwise this stream is missing.
+            The stream size is equal to <span class=tt>numOfHMetrics</span> defined by the <span class=tt>hhea</span> table.</td>
+      </tr>
+      <tr>
+        <td>Int16</td>
+        <td>leftSideBearing[]</td>
+        <td>Stream of Int16 values representing the left side bearing values of the horizontal metrics array for monospaced
+            glyphs. The stream is present only if the bit 1 of the "Flags" field is not set, otherwise this stream is missing.
+            The stream size is equal to <span class=tt>(numGlyphs - numOfHMetrics)</span>.</td>
+      </tr>
+    </table>
+
+    <div class="note">
+      <p>The transformation version 1 described in this subclause is optional and can only be used when an input font is
+        TrueType-flavoured (i.e. has a <span class=tt>glyf</span> table), and when the leftSideBearing values for each glyph
+        in the proportional or monospaced glyph runs encoded in the <span class=tt>hmtx</span> table exactly match the
+        corresponding xMin values in the <span class=tt>glyf</span> table. A special case needs to be checked when an encoded
+        leftSideBearing value corresponds to an empty glyph, where <span class=tt>hmtx</span> table transform can only be applied
+        if leftSideBearing of an empty glyph is set to zero.</p>
+    </div>
+
+    <p>If the <span class=tt>hmtx</span> table transform is both applicable and desired, the encoder
+      <span class="conform at" id="conform-mustCheckLeftSideBearings"> MUST check that
+      leftSideBearing values match the xMin values of the glyph bounding box for every glyph in a
+      font (or check that leftSideBearing == 0 for an empty glyph) and, for font collections,
+      this check MUST be performed on every corresponding pair of
+      <span class=tt>glyf</span> and <span class=tt>hmtx</span> tables</span>. If
+      the conditions are met for each of the proportional or monospaced glyph runs
+      <span class="conform at" id="conform-mustEliminateLSBs"> the encoder MUST set <span class=tt>hmtx</span>
+      transform version number to "1", MUST eliminate the corresponding array from the <span class=tt>hmtx</span>
+      table and MUST set the appropriate Flags bits.</span> In font collections that have shared <span class=tt>hmtx</span>
+      table, <span class="conform at" id="conform-mustCheckLSBAllGlyfTables">the match between xMin values of glyph bounding
+      boxes and the lsftSideBearing values MUST be checked for all combinations of shared <span class=tt>hmtx</span> and
+      various <span class=tt>glyf</span> tables</span>, and if there is a mismatch
+      <span class="conform at" id="conform-mustNotApplyLSBTransformForOTC">the <span class=tt>hmtx</span> table transform
+      MUST NOT be applied</span>.</p>
+
+    <p>When the table directory flags indicate that the <span class=tt>hmtx</span> transform is applied, the User Agent
+      <span class="conform ua" id="conform-mustCheckLSBFlags">MUST check the Flags values and MUST reject the WOFF2 file
+      if Flags are invalid</span>. The decoder <span class="conform dc" id="conform-mustReconstructLSBs"> MUST reconstruct
+      the lsb[] and/or leftSideBearing[] arrays from the xMin values provided by the glyph bounding box information
+      from the <span class=tt>glyf</span> table</span>.</p>
+
+    </section><section id="table_order"><h3 id="table_order-0"><span class='secno'>5.5. </span>Table order constraints</h3>
+
+    <p>The following constraints on valid WOFF2 files are intended to
+      facilitate a memory-efficient WOFF 2.0 file transfer and decoding process.
+    </p>
+
+    <p><span class="conform ff" id="conform-tableOrdering">
+      The <span class=tt>loca</span> table MUST follow the <span class=tt>glyf</span> table in the
+      table directory. When WOFF2 file contains individually encoded font file, the table directory MAY
+      contain other tables inserted between <span class=tt>glyf</span> and <span class=tt>loca</span>
+      tables; however when WOFF2 contains a font collection file each <span class=tt>loca</span> table
+      MUST immediately follow its corresponding <span class=tt>glyf</span> table</span>.
+      For example, the following order of tables: <span class=tt>'cmap', 'glyf', 'hhea', 'hmtx', 'loca',
+      'maxp' ...</span> is acceptable for individually encoded font files; however, font collection files
+      must have <span class=tt>glyf / loca</span> tables paired with each other, although they don't
+      have to be ordered as a contiguous block of tables, e.g.: <span class=tt>'cmap', 'glyf', 'loca',
+      'hhea', 'hmtx', 'glyf', 'loca', 'maxp', 'post' ...</span> would be acceptable. Additional constraints
+      on the <span class=tt>loca</span> table are given in <a href="#loca_table_format">subclause 5.3</a>.
+    </p>
+    </section>
+    </section>
+    <section id="Metadata">
+      <h2 id="Metadata-0"><span class='secno'>6. </span>Extended Metadata Block</h2>
+
+    <p><span class="conform ff" id="conform-metadata-optional">
+      The WOFF2 file MAY contain a block of extended metadata</span>. The interpretation
+      of this block is exactly the same as [<a href="#ref-woff10">WOFF 1</a>].
+    </p>
+
+    <p>However, while in a WOFF 1 file the extended metadata block is stored with zlib compression,
+      <span class="conform ff" id="conform-mustBeBrotliCompressedMetadata">in a WOFF2 file
+      the metadata MUST be stored compressed with [<cite><a href="#ref-Brotli">Brotli</a></cite>] as a separate stream, if present.</span>.
+      The rationale of this change is to minimize the total number of byte-level compression
+      algorithms needed to implement WOFF2, and also because Brotli is expected to achieve
+      better compression ratios than zlib in most cases.
+    </p>
+
+    <p><span class="conform ff" id="conform-metadata-afterfonttable">The metadata block MUST follow
+      immediately after the compressed font data stream</span>. The beginning of the metadata block
+      <span class="conform ff" id="conform-metadata-padalign">MUST always be 4-byte aligned;
+      when extended metadata is present, the end of the compressed data block must be padded with up
+      to three null bytes if needed to reach a 4-byte boundary</span>.
+      <span class="conform ff" id="conform-metadata-noprivatepad">If the metadata block is the last
+      block in the WOFF file, there SHOULD be no additional padding after the end of the block</span>.
+    </p>
+
+
+    </section>
+    <section id="Private">
+      <h2 id="Private-0"><span class='secno'>7. </span>Private Data Block</h2>
+
+    <p><span class="conform ff" id="conform-private">The WOFF2 file MAY include
+      a block of arbitrary data</span>, allowing font creators to include whatever
+      information they wish. <span class="conform ua" id="conform-private-noeffect">
+      The content of this data MUST NOT affect font usage or load behavior of user
+      agents</span>. User agents should make no assumptions about the content of
+      a private block; it may (for example) contain ASCII or Unicode text, or some
+      vendor-defined binary data, and it may be compressed or encrypted, but it has
+      no publicly defined format. Conformant user agents will not assume anything
+      about the structure of this data. Only the font developer or vendor responsible
+      for the private block is expected to understand its contents.</p>
+
+    <p><span class="conform ff" id="conform-private-last">The private data block,
+      if present, MUST be the last block in the WOFF file, following the compressed font
+      data stream and the extended metadata block, if one is present</span>.
+      <span class="conform ff" id="conform-private-padalign">The private data block
+      MUST begin on a 4-byte boundary in the WOFF file, with up to three null bytes
+      inserted as padding after any preceding block, if needed to ensure this</span>.
+      <span class="conform ff" id="conform-private-end">The end of the private data
+      block MUST correspond to the end of the WOFF2 file</span>.</p>
+
+     <hr style="color: #777; border-style: solid;">
+
+   </section>
+   <section  id="IMT">
+     <h2 id="IMT-0"><span class='secno'>A. </span> Internet Media Type Registration</h2>
+
+   <p>This appendix registers a new Internet Media type, under the
+   <span class="tt">font</span> top level type [<cite><a href="#ref-RFC-8081">RFC8081</a></cite>].
+   This appendix is in conformance with
+     <a href="http://www.ietf.org/rfc/rfc4288.txt">BCP 13</a> and
+     <a href="https://www.w3.org/2002/06/registering-mediatype.html">W3CRegMedia</a>.
+   </p>
+
+<dl>
+  <dt>WOFF 2.0</dt>
+  <dd><dl>
+  <dt>Type name:</dt>
+  <dd>
+    <p>font</p>
+  </dd>
+  <dt>Subtype name:</dt>
+  <dd>
+    <p>woff2</p>
+  </dd>
+  <dt>Required parameters:</dt>
+  <dd>
+    <p>None.</p>
+  </dd>
+  <dt>Optional parameters:</dt>
+  <dd>
+    <p>None.</p>
+  </dd>
+  <dt>Encoding considerations:</dt>
+  <dd>
+   <p>Binary.</p>
+  </dd>
+  <dt>Interoperability considerations:</dt>
+  <dd>
+    <p>WOFF 2.0 is an improvement on WOFF 1.0. The two formats have different Internet Media Types and may be used in parallel. </p>
+  </dd>
+  <dt>Published specification:</dt>
+  <dd>
+    <p>This media type registration is extracted from the <a href="https://www.w3.org/TR/WOFF2/">WOFF 2.0 specification</a> at W3C.</p>
+  </dd>
+  <dt>Applications that use this media type:</dt>
+  <dd>
+    <p>WOFF 2.0 is used by Web browsers, often in conjunction with HTML and CSS.</p>
+  </dd>
+  <dt>Additional information:</dt>
+  <dd>
+  <dl>
+    <dt>Magic number(s):</dt><dd>The signature field in the WOFF header MUST contain the "magic number" 0x774F4632 ('wOF2')</dd>
+    <dt>File extension(s):</dt><dd>woff2</dd>
+    <dt>Macintosh file type code(s):</dt><dd>(no code specified)</dd>
+    <dt>Macintosh Universal Type Identifier code:  </dt><dd><span style="font-family: monospace">org.w3c.woff2</span> </dd>
+    <dt>@font-face Format:</dt><dd>woff2</dd>
+    <dt>Fragment Identifiers</dt><dd>See Section 4.2 of [<a href="#ref-RFC-8081">RFC8081</a>]</dd>
+  </dl>
+  </dd>
+  <dt>Person &amp; email address to contact for further information:</dt>
+  <dd>
+    <p>Chris Lilley (www-font@w3.org).</p>
+  </dd>
+  <dt>Intended usage:</dt>
+  <dd>
+    <p>COMMON</p>
+  </dd>
+  <dt>Restrictions on usage:</dt>
+  <dd>
+    <p>None</p>
+  </dd>
+  <dt>Author:</dt>
+  <dd>
+    <p>The WOFF2 specification is a work product of the World Wide Web Consortium's WebFonts Working Group.</p>
+  </dd>
+  <dt>Change controller:</dt>
+  <dd>
+    <p>The W3C has change control over this specification.</p>
+  </dd>
+  </dl></dd>
+
+</dl>
+
+    </section>
+    <section id="changes" class='informative'>
+      <h2><span class='secno'>B. </span>Changes</h2>
+
+      <p>This appendix is <em>informative</em>.</p>
+
+      <section id="changes-since-2022">
+        <h3>Changes since the <a href="https://www.w3.org/TR/2022/REC-WOFF2-20220310/">W3C Recommendation</a> of 10 March 2022</h3>
+
+        <ul>
+          <li>Previous <a href="https://www.w3.org/TR/2022/REC-WOFF2-20220310/#p1">Proposed Correction 1</a> has been made normative.</li>
+          <li>Previous <a href="https://www.w3.org/TR/2022/REC-WOFF2-20220310/#p2">Proposed Correction 2</a> has been made normative.</li>
+        </ul>
+
+      </section>
+
+      <section id="changes-since-2021">
+        <h3>Changes since the <a href="https://www.w3.org/TR/2021/REC-WOFF2-20210706/">W3C Recommendation</a> of 06 July 2021</h3>
+
+        <ul>
+          <li>Previous Candidate Corrections 1, 3 5 and 6 were deemed editorial and have been merged</li>
+          <li>Previous Candidate Correction 2, concerning the symple glyph overlap flag, is now <a href="https://www.w3.org/TR/2022/REC-WOFF2-20220310/#p1">Proposed Correction 1</a></li>
+          <li>Previous Candidate Correction 4, concerning polarity of on-curve flag bit, is now <a href="https://www.w3.org/TR/2022/REC-WOFF2-20220310/#p2">Proposed Correction 2</a></li>
+          <li>References updated to most current versions</li>
+        </ul>
+
+      </section>
+
+      <section id="changes-since-REC">
+        <h3>Changes since the <a href="https://www.w3.org/TR/2018/REC-WOFF2-20180301/">Recommendation</a> of 01 March 2018</h3>
+        <ul>
+          <li>Candidate Correction 1: <a href="https://www.w3.org/TR/2021/REC-WOFF2-20210706/#c1">for a typo</a></li>
+          <li>Candidate Correction 2: <a href="https://www.w3.org/TR/2021/REC-WOFF2-20210706/#c2">preserve optional symple glyph overlap flag</a> </li>
+          <li>Candidate Correction 3: <a href="https://www.w3.org/TR/2021/REC-WOFF2-20210706/#c3">definition of the UInt32 type was omitted</a></li>
+          <li>Candidate Correction 4: <a href="https://www.w3.org/TR/2021/REC-WOFF2-20210706/#c4">polarity of on-curve flag bit</a></li>
+          <li>Candidate Correction 5: <a href="https://www.w3.org/TR/2021/REC-WOFF2-20210706/#c5">typo in list numbering</a></li>
+          <li>(Editorial) updated IETF links</li>
+        </ul>
+
+      </section>
+
+      <section id="changes-since-CR">
+        <h3>Changes since the <a href="https://www.w3.org/TR/2016/CR-WOFF2-20160315/">Candidate Recommendation</a> of 15 March 2016</h3>
+      <ul>
+        <li>Updated the Brotli reference from an Internet Draft to Informational RFC.</li>
+        <li>Updated the font top-level type reference from an internet Draft to Proposed Standard RFC.</li>
+        <li>Mention of fragment identifiers updated to conform to RFC 8081 (the normative definition), resulting in a change to the
+          Internet Media Type appendix and deletion of a requirement to maintain order in font collections.</li>
+        <li>CSS Fonts 3 was used normatively (<em>must</em>), so moved from Informative to Normative references section.</li>
+      </ul>
+
+      </section>
+
+      <section id="changes-since-WD">
+        <h3>Changes since the <a href="https://www.w3.org/TR/2015/WD-WOFF2-20150414/">Working Draft</a>
+          of 14 April 2015</h3>
+
+    <ul>
+      <li>Added a note describing the reasons for possible variations of reconstructed glyf table data and
+          clarified that determining an adequate size of memory allocations for reconstructed glyf table
+          data is a responsibility of WOFF2 decoder implementations.</li>
+      <li>Added a note describing the optional pre-processing step that can be applied to OpenType CFF fonts,
+          where the process of CFF data de-subroutinization can be applied prior to WOFF2 encoding to minimize
+          the compressed font size.</li>
+      <li>Removed the notion of "nominal size" for decompressed WOFF 2.0 font since the font size can vary
+          dramatically based on applied data optimization steps, and removed conformance requirements
+          associated with the decoder memory allocations and the original glyf table size definition.</li>
+      <li>Added transformation version indication in Table directory flags and added new subclause 5.4 with
+          the description of the 'hmtx' table transform.</li>
+      <li>Updated transformation version indication in Table directory flags adding null trnsform provisions
+          for 'glyf' and 'loca' tables, added clarifications for transform of shared 'hmtx' table.</li>
+      <li>Added pseudo-code for UIntBase128 data type, various editorial updates.</li>
+      <li>Updated the description of empty glyph reconstruction process in 'glyf' table transform, added additional
+          check in the 'hmtx' transform for left side bearing value of an empty glyph, minor editorial updates.</li>
+      <li>Added new confromance requirements for testing mismatch conditions where total font size and the
+          original size of the 'glyf' table differ from the sizes declared as part of the WOFF2 file header
+          or table directory.</li>
+      <li>Added Considerations for Security and Privacy appendix.</li>
+      <li>Referenced new font/* top level type being developed at IETF, trimmed Internet Media Type registration appendix to just WOFF 2.0.</li>
+    </ul>
+    <!-- <p>A <a href="https://dev.w3.org/webfonts/WOFF2/spec/diff.html">color-coded diff</a> between the 14 April 2015 Working Draft and the
+      Editors's Draft used to prepare the Candidate Recommendation is available.
+    </p> -->
+      </section>
+
+      <section id="changes-since-FPWD">
+        <h3>Changes since the <a href="https://www.w3.org/TR/2014/WD-WOFF2-20140508/">First Public
+          Working Draft</a> of May 8, 2014</h3>
+
+    <ul>
+      <li>Clarified that the spec mandates table directory sorting, while the table order itself
+          should follow the OpenType/OFF recommended order.</li>
+      <li>Added requirements for decoders to accept any possible encoding variations for 255UInt16
+          data type, recommend that encoders produced shorter 255UInt16 byte sequences whenever possible.</li>
+      <li>Replaced the table-based description of the 255UInt16 data type with pseudo-code.</li>
+      <li>Added conformance requirements for UIntBase128 data type.</li>
+      <li>Added conformance requirements to WOFF 2.0 Header description mandating the reserved value
+          to be set to zero.</li>
+      <li>Added recommendation and conformance requirement for WOFF 2.0 encoders to remove DSIG table
+          and set the flag (bit 11) of the font 'head' table.</li>
+      <li>Added conformance requirement for decoders to store glyph record offsets in compliance
+          with the specified indexFormat.</li>
+      <li>Added conformance requirements to mandate implicit glyph bounding box calculations.</li>
+      <li>Clarified the "Transformed 'glyf' table" content adding explicit references to every data
+          stream and their overall order.</li>
+      <li>Modified the "Transformed 'glyf' table" subclause adding detailed description of the glyph
+          reconstruction process for empty, simple and composite glyphs.</li>
+      <li>Added support for font collections in WOFF 2.0. As part of font collection support, added new
+          requirement to encode 'glyf' and 'loca' tables as pairs, with 'loca' immediately following the
+          'glyf' table.</li>
+      <li>Removed the conformance requirements for data type definitions and reclassified certain user agent
+          requirements as decoder specific.</li>
+      <li>Clarified the meaning of the uncompressed font data size.</li>
+      <li>Clarified the differences in bounding box calculations for simple and composite glyphs.</li>
+      <li>Added 4-byte alignment requirements for Extended Metadata and Private data blocks to match
+          WOFF 1.0 Recommendation requirements.</li>
+      <li>Added new appendix A with the draft text of top-level media type registration for a new 'font' type.</li>
+      <li>Added this "Changes" appendix.</li>
+    </ul>
+    <!-- <p>A <a href="http://dev.w3.org/cvsweb/webfonts/WOFF2/spec/Overview.html.diff?r1=1.14;r2=1.52;f=h">color-coded diff</a>
+      between the editors draft used to prepare the First Public Working Draft and the editors draft used to prepare
+      the Last Call Working Draft is available.</p> -->
+
+    </section>
+
+    </section>
+    <section id="security-privacy-considerations" class='informative'>
+      <h2 id="security-privacy-considerations-0"><span class='secno'>C. </span>Considerations for Security and Privacy</h2>
+   <p>This appendix is <em>informative</em>.</p>
+   <p>The W3C TAG is developing a <a href="https://w3ctag.github.io/security-questionnaire/">Self-Review Questionnaire: Security and Privacy</a> for editors of specifications to informatively answer.</p>
+   <p>Per the <a href="https://w3ctag.github.io/security-questionnaire/#questions">Questions to Consider</a></p>
+   <ol>
+    <li>
+     Does this specification deal with personally-identifiable information?
+     <p>No.</p>
+    </li><li>
+     Does this specification deal with high-value data?
+     <p>No. Credit card information and the like is not stored in WOFF2. </p>
+    </li><li>
+     Does this specification introduce new state for an origin that persists across browsing sessions?
+     <p>No. Specifically, WOFF2 fonts are only available to the
+     documents that reference them; they <a href="#conform-css3font-available">do not persist</a>
+     for use by other applications or documents on the user's system.</p>
+    </li><li>
+     Does this specification expose persistent, cross-origin state to the web?
+     <p>No.</p>
+    </li><li>
+     Does this specification expose any other data to an origin that it doesn’t currently have access to?
+     <p>No.</p>
+    </li><li>
+     Does this specification enable new script execution/loading mechanisms?
+     <p>No. WOFF2 fonts do not contain, or link to, scripts.</p>
+    </li><li>
+     Does this specification allow an origin access to a user’s location?
+     <p>No.</p>
+    </li><li>
+     Does this specification allow an origin access to sensors on a user’s device?
+     <p>No.</p>
+    </li><li>
+     Does this specification allow an origin access to aspects of a user’s local computing environment?
+     <p>No. WOFF2 fonts are typically generated and stored on a server, and have no access to the
+     user environment when generated. Once decompressed, they contain no active code and cannot
+     inspect the user environment.</p>
+    </li><li>
+     Does this specification allow an origin access to other devices?
+     <p>No.</p>
+    </li><li>
+     Does this specification allow an origin some measure of control over a user agent’s native UI?
+     <p>No.</p>
+    </li><li>
+     Does this specification expose temporary identifiers to the web?
+     <p>No.</p>
+    </li><li>
+     Does this specification distinguish between behavior in first-party and third-party contexts?
+     <p>No.</p>
+    </li><li>
+     How should this specification work in the context of a user agent’s "incognito" mode?
+     <p>No differently.</p>
+    </li><li>
+     Does this specification persist data to a user’s local device?
+     <p>No.</p>
+    </li><li>
+     Does this specification have a "Security Considerations" and "Privacy Considerations" section?
+     <p>Yes.</p>
+    </li><li>
+     Does this specification allow downgrading default security characteristics?
+     <p>No.</p>
+   </li></ol>
+   <p>The Security section of the <span class="tt">font</span> top level type
+   [<cite><a href="#ref-RFC-8081">RFC8081</a></cite>] contains
+   additional security-related information relevant to WOFF2.</p>
+   <p>WOFF2 uses Brotli compression. The Security Considerations section of the Brotli
+   specification [<cite><a href="#ref-Brotli">Brotli</a></cite>] should be consulted, in addition to this appendix.
+
+
+    <hr style="color: #777; border-style: solid;">
+
+    </section>
+    <section id="References">
+      <h2 id="References-0"><span class='secno'>D. </span>References</h2>
+    <section id="normative">
+      <h3 id="normative-references"><span class='secno'>D.1 </span>Normative References</h3>
+
+
+    <dl>
+      <dt id="ref-woff10">[WOFF1]</dt>
+      <dd> <cite><a href="https://www.w3.org/TR/2012/REC-WOFF-20121213/">WOFF
+            File Format 1.0</a> Jonathan Kew, Tal Leming, Erik van Blokland,
+          Editors. World Wide Web Consortium, 13 December 2012. The latest
+          version of the WOFF specification is available at <a href="https://www.w3.org/TR/WOFF/">http://www.w3.org/TR/WOFF/</a><br>
+        </cite></dd>
+      <dt id="ref-OFF">[OFF]</dt>
+      <!-- status at https://www.iso.org/standard/74461.html -->
+      <dd><cite><a href="https://standards.iso.org/ittf/PubliclyAvailableStandards/c074461_ISO_IEC_14496-22_2019.zip">Open
+            Font Format specification</a> (ISO/IEC 14496-22:2019).</cite> together with
+          <cite><a href="https://standards.iso.org/ittf/PubliclyAvailableStandards/c078865_ISO_IEC_14496-22_2019_Amd_1_2020(en).zip">
+            Amendment 1: Color font technology and other updates</a></cite>
+            <!--  and
+          <cite><a href="http://standards.iso.org/ittf/PubliclyAvailableStandards/c070994_ISO_IEC_14496-22_2015_Amd_2_2017.zip">
+            Amendment 2: Updated text layout features and implementations</a></cite></dd> -->
+      <dt id="ref-Brotli">[Brotli]</dt>
+      <dd><cite><a href="https://datatracker.ietf.org/doc/html/rfc7932">Brotli Compressed Data Format, RFC 7932</a> J.
+      Alakuijala and Z. Szabadka, Editors. Internet Engineering Task Force, Informational, July 2016.</cite></dd>
+      <dt id="ref-RFC-2119">[RFC2119]</dt>
+      <dd><cite><a href="https://datatracker.ietf.org/doc/html/rfc2119">RFC 2119:</a> Key
+          words for use in RFCs to Indicate Requirement Levels. S. Bradner,
+          Editor. Internet Engineering Task Force, Best Current practice, March 1997. </cite></dd>
+      <dt id="ref-RFC-8081">[RFC8081]</dt>
+      <dd><cite><a href="https://datatracker.ietf.org/doc/html/rfc8081">The
+      font Top Level Type, RFC 8081 </a> C. Lilley, (Editor). Internet Engineering Task Force,
+      Proposed Standard, February 2017.</cite></dd>
+      <dt id="ref-CSS3-Fonts">[CSS3-Fonts]</dt>
+      <dd><cite><a href="https://www.w3.org/TR/css-fonts-3/">CSS Fonts Module Level 3</a>,
+      John Daggett, Myles C. Maxfield, Chris Lilley (Editors). World Wide Web Consortium Recommendation, 2018. The
+      latest version of CSS3 Fonts is available at <a href="https://www.w3.org/TR/css-fonts-3/">http://www.w3.org/TR/css-fonts-3/</a></cite></dd>
+
+    </dl>
+    </section>
+    <section id="informative">
+      <h3 id="informative-references"><span class='secno'>D.2 </span>Informative References</h3>
+    <dl>
+      <dt id="ref-woff20er">[WOFF2ER]</dt>
+      <dd> <cite><a href="https://www.w3.org/TR/WOFF20ER/">WOFF
+            2.0 Evaluation Report</a> Chris Lilley,
+          Editor. World Wide Web Consortium, 2015.<br>
+        </cite></dd>
+      <dt id="ref-OTF">[OpenType]</dt>
+      <dd> <cite><a href="http://www.microsoft.com/typography/otspec/">Microsoft OpenType
+          specification</a>. OpenType is a registered trademark of Microsoft Corporation.</cite></dd>
+
+      <dt id="ref-TTF">[TrueType]</dt>
+      <dd> <cite><a href="https://developer.apple.com/fonts/TrueType-Reference-Manual/">Apple TrueType
+          Reference manual</a>. Apple, 2014. TrueType is a registered trademark of Apple, Inc.</cite></dd>
+
+      <dt id="ref-mtx">[MTX]</dt>
+      <dd> <cite><a href="https://www.w3.org/submissions/2008/SUBM-MTX-20080305/">MicroType® Express (MTX) Font Format</a> Sarah Martin, Al Ristow, Steve Martin,
+        Vladimir Levantovsky, and Christopher Chapman. W3C Member Submission, 5 March 2008.</cite></dd>
+
+
+    </dl>
+    </section>
+    </section>
+    <p role="navigation" id="back-to-top"><a href="#title"><abbr title="Back to top">↑</abbr></a></p>
+    <script src="//www.w3.org/scripts/TR/2021/fixup.js"></script>
+  </body>
+</html>

@@ -4076,6 +4076,14 @@ const cssLinkGroups = [
                 state: "WD"
             },
             {
+                text: "WOFF File Format 2.0",
+                href: "https://htmlspecs.com/css/woff2/",
+                src: "https://www.w3.org/TR/2024/REC-WOFF2-20240808/",
+                "last-modified": "-",
+                lang: "cjk",
+                state: "REC"
+            },
+            {
                 text: "Incremental Font Transfer",
                 href: "https://htmlspecs.com/IFT/",
                 src: "https://www.w3.org/TR/2026/CRD-IFT-20261013/",
