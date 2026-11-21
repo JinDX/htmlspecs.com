@@ -365,6 +365,7 @@ async function getHeadWithRetry(
     const error = new Error(
       `HTTP ${res.status}${finalUrlInfo}`
     );
+    error.status = res.status;
 
     const retryable =
       res.status === 429 ||
@@ -405,16 +406,18 @@ async function getHeadWithRetry(
   }
 }
 
-function isWebGLSource(src) {
+function getWebGLSourcePath(src) {
   try {
     const url = new URL(src);
 
-    return (
-      url.hostname === 'registry.khronos.org' &&
-      /^\/webgl\/specs\/latest\/[12]\.0(?:\/(?:index\.html)?)?$/.test(url.pathname)
-    );
+    if (url.hostname !== 'registry.khronos.org') {
+      return null;
+    }
+
+    const match = /^\/webgl\/specs\/latest\/([12]\.0)(?:\/(?:index\.html)?)?$/.exec(url.pathname);
+    return match ? `specs/latest/${match[1]}/index.html` : null;
   } catch {
-    return false;
+    return null;
   }
 }
 
@@ -423,15 +426,45 @@ function parseDateString(value) {
   return Number.isFinite(time) ? new Date(time) : null;
 }
 
-async function checkWebGLSource(link, logResult) {
+async function getWebGLRevision(url, sourcePath) {
   try {
-    const res = await getHeadWithRetry(link.src, 2, getHeadWithCurl);
+    const res = await getHeadWithRetry(url, 2, getHeadWithCurl);
+    if (res.status === 304) {
+      return null;
+    }
+    return { date: parseDateString(res.headers.get('last-modified')) };
+  } catch (err) {
+    if (err.status !== 403) {
+      throw err;
+    }
+  }
+
+  const query = new URLSearchParams({ path: sourcePath, per_page: '1' });
+  const apiUrl = `https://api.github.com/repos/KhronosGroup/WebGL/commits?${query}`;
+  try {
+    const commits = await getJsonWithRetry(apiUrl);
+    const latest = Array.isArray(commits) ? commits[0] : null;
+    const sha = latest?.sha;
+    const date = parseDateString(latest?.commit?.committer?.date);
+    if (typeof sha !== 'string' || !/^[a-f0-9]{40}$/i.test(sha) || !date) {
+      throw new Error('No valid commit for the specification file');
+    }
+    console.warn(`WebGL registry returned HTTP 403 for ${url}. Checked ${sourcePath} at ${sha} on GitHub.`);
+    return { date, sha };
+  } catch (err) {
+    throw new Error(`Registry HTTP 403. GitHub source check failed for ${sourcePath}: ${err.message}`);
+  }
+}
+
+async function checkWebGLSource(link, sourcePath, logResult) {
+  try {
+    const revision = await getWebGLRevision(link.src, sourcePath);
     const baseline = link['last-modified'];
-    if (res.status === 304 || baseline === '0') {
+    if (!revision || baseline === '0') {
       return;
     }
 
-    const lastModified = parseDateString(res.headers.get('last-modified'));
+    const lastModified = revision.date;
     if (!lastModified) {
       throw new Error('Missing or invalid Last-Modified header');
     }
@@ -445,9 +478,15 @@ async function checkWebGLSource(link, logResult) {
       return;
     }
 
+    const change = revision.sha
+      ? `- ${link.text} has a newer source commit (registry returned HTTP 403):\n` +
+        `  - Source commit time: ${lastModified.toUTCString()}\n` +
+        `  - Commit: https://github.com/KhronosGroup/WebGL/commit/${revision.sha}\n`
+      : `- ${link.text} has been updated:\n` +
+        `  - Last-Modified: ${lastModified.toUTCString()}\n`;
+
     logResult(
-      `- ${link.text} has been updated:\n` +
-      `  - Last-Modified: ${lastModified.toUTCString()}\n` +
+      change +
       `  - Recorded baseline: ${baselineDate.toUTCString()}\n` +
       `  - Link: ${link.src}`
     );
@@ -459,8 +498,9 @@ async function checkWebGLSource(link, logResult) {
 }
 
 async function checkOtherLink(link, logResult) {
-  if (isWebGLSource(link.src)) {
-    await checkWebGLSource(link, logResult);
+  const sourcePath = getWebGLSourcePath(link.src);
+  if (sourcePath) {
+    await checkWebGLSource(link, sourcePath, logResult);
     return;
   }
 
