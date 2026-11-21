@@ -2235,7 +2235,7 @@ const linkGroups = [
                 text: "Accelerated Shape Detection in Images",
                 href: "https://htmlspecs.com/shape-detection-api/",
                 src: "https://wicg.github.io/shape-detection-api/",
-                "last-modified": "Sat, 12 Sep 2026 02:31:00 GMT",
+                "last-modified": "Sat, 21 Nov 2026 02:46:19 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
