@@ -2512,7 +2512,7 @@ const linkGroups = [
             {
                 text: "Compute Pressure API",
                 href: "https://htmlspecs.com/compute-pressure/",
-                src: "https://www.w3.org/TR/2026/CRD-compute-pressure-20261026/",
+                src: "https://www.w3.org/TR/2026/CRD-compute-pressure-20261121/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "CRD"
