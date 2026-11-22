@@ -1177,7 +1177,7 @@ const linkGroups = [
             {
                 text: "File API",
                 href: "https://htmlspecs.com/FileAPI/",
-                src: "https://www.w3.org/TR/2026/WD-FileAPI-20261114/",
+                src: "https://www.w3.org/TR/2026/WD-FileAPI-20261122/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
