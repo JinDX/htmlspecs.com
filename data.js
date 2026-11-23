@@ -680,7 +680,7 @@ const linkGroups = [
             {
                 text: "SHACL 1.2 Profiling",
                 href: "https://htmlspecs.com/shacl12-profiling/",
-                src: "https://www.w3.org/TR/2026/WD-shacl12-profiling-20260702/",
+                src: "https://www.w3.org/TR/2026/WD-shacl12-profiling-20261123/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
