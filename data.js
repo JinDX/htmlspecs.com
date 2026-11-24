@@ -4694,6 +4694,14 @@ const cssLinkGroups = [
                 lang: "cjk",
                 state: "CRD"
             },
+            {
+                text: "Pointer-driven Animations Module Level 1",
+                href: "https://htmlspecs.com/css/pointer-animations-1/",
+                src: "https://www.w3.org/TR/2026/WD-pointer-animations-1-20261124/",
+                "last-modified": "-",
+                lang: "cjk",
+                state: "WD"
+            },
 
         ]
     },
