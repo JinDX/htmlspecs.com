@@ -1676,7 +1676,7 @@ const linkGroups = [
             {
                 text: "Screen Wake Lock",
                 href: "https://htmlspecs.com/screen-wake-lock/",
-                src: "https://www.w3.org/TR/2026/WD-screen-wake-lock-20261121/",
+                src: "https://www.w3.org/TR/2026/WD-screen-wake-lock-20261124/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
