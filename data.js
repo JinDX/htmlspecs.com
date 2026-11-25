@@ -313,7 +313,7 @@ const linkGroups = [
             {
                 text: "Language enablement index",
                 href: "https://htmlspecs.com/typography/",
-                src: "https://www.w3.org/TR/2024/DNOTE-typography-20241115/",
+                src: "https://www.w3.org/TR/2026/DNOTE-typography-20261125/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "DNOTE"
