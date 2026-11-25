@@ -624,7 +624,7 @@ const linkGroups = [
             {
                 text: "RDF 1.2 TriG",
                 href: "https://htmlspecs.com/rdf12-trig/",
-                src: "https://www.w3.org/TR/2026/WD-rdf12-trig-20261113/",
+                src: "https://www.w3.org/TR/2026/WD-rdf12-trig-20261125/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
