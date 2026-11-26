@@ -1668,7 +1668,7 @@ const linkGroups = [
             {
                 text: "Screen Orientation",
                 href: "https://htmlspecs.com/screen-orientation/",
-                src: "https://www.w3.org/TR/2026/WD-screen-orientation-20261120/",
+                src: "https://www.w3.org/TR/2026/WD-screen-orientation-20261126/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
