@@ -52,7 +52,7 @@ const linkGroups = [
                 text: "ECMAScript® 2027 Language Specification",
                 href: "https://ecma262.com/",
                 src: "https://tc39.es/ecma262/",
-                "last-modified": "Thu, 26 Nov 2026 18:34:59 GMT",
+                "last-modified": "Fri, 27 Nov 2026 21:46:38 GMT",
                 lang: "cjk",
                 state: "Draft"
             },
