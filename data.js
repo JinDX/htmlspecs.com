@@ -3029,7 +3029,7 @@ const linkGroups = [
             {
                 text: "Digital Credentials",
                 href: "https://htmlspecs.com/digital-credentials/",
-                src: "https://www.w3.org/TR/2026/WD-digital-credentials-20261125/",
+                src: "https://www.w3.org/TR/2026/WD-digital-credentials-20261127/",
                 "last-modified": "-",
                 lang: "cjk",
                 state: "WD"
